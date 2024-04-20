@@ -5723,6 +5723,12 @@ namespace SharpMp4
                 tkhd.Width = dim.Width;
                 tkhd.Height = dim.Height;
             }
+            else if (track is H265Track h265Track)
+            {
+                var dim = h265Track.Sps.FirstOrDefault().Value.CalculateDimensions();
+                tkhd.Width = dim.Width;
+                tkhd.Height = dim.Height;
+            }
             else if(track is AACTrack aacTrack)
             {
                 tkhd.Volume = 1;
@@ -5762,6 +5768,10 @@ namespace SharpMp4
             hdlr.HandlerType = track.Handler;
 
             if(track is H264Track h264Track)
+            {
+                hdlr.Name = "Video Handler\0";
+            }
+            else if (track is H265Track h265Track)
             {
                 hdlr.Name = "Video Handler\0";
             }
@@ -5846,6 +5856,11 @@ namespace SharpMp4
             if(track is H264Track h264Track)
             {
                 var video = H264BoxBuilder.CreateVisualSampleEntryBox(parent, h264Track);
+                stsd.Children.Add(video);
+            }
+            else if (track is H265Track h265Track)
+            {
+                var video = H265BoxBuilder.CreateVisualSampleEntryBox(parent, h265Track);
                 stsd.Children.Add(video);
             }
             else if (track is AACTrack aacTrack)
