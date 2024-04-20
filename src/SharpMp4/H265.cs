@@ -496,6 +496,35 @@ namespace SharpMp4
             //hevcConfigurationBox.HevcDecoderConfigurationRecord.TemporalIdNested = sps.SpsTemporalIdNestingFlag;
             hevcConfigurationBox.HevcDecoderConfigurationRecord.LengthSizeMinusOne = 3; // 4 bytes size block inserted in between NAL units
 
+            HevcNalArray spsArray = new HevcNalArray();
+            spsArray.ArrayCompleteness = 1;
+            spsArray.NalUnitType = H265NalUnitTypes.SPS;
+            foreach (var sp in track.Sps.Values)
+            {
+                spsArray.NalUnits.Add(H265SpsNalUnit.Build(sp));
+            }
+
+            HevcNalArray ppsArray = new HevcNalArray();
+            ppsArray.ArrayCompleteness = 1;
+            ppsArray.NalUnitType = H265NalUnitTypes.PPS;
+            foreach (var pp in track.Pps.Values)
+            {
+                ppsArray.NalUnits.Add(H265PpsNalUnit.Build(pp));
+            }
+
+            HevcNalArray vpsArray = new HevcNalArray();
+            vpsArray.ArrayCompleteness = 1;
+            vpsArray.NalUnitType = H265NalUnitTypes.VPS;
+            foreach (var vp in track.Vps.Values)
+            {
+                vpsArray.NalUnits.Add(H265VpsNalUnit.Build(vp));
+            }
+
+            // correct order is VPS, SPS, PPS. Other order produced ffmpeg errors such as "VPS 0 does not exist" and "SPS 0 does not exist."
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.NalArrays.Add(vpsArray);
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.NalArrays.Add(spsArray);
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.NalArrays.Add(ppsArray);
+
             visualSampleEntry.Children.Add(hevcConfigurationBox);
 
             return visualSampleEntry;
