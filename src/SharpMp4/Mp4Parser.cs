@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -3418,7 +3417,7 @@ namespace SharpMp4
 
                 if (read == 0)
                 {
-                    Debug.WriteLine($"Error, end of stream reached! Missing {remaining} bytes.");
+                    if(Log.InfoEnabled) Log.Info($"Error, end of stream reached! Missing {remaining} bytes.");
                     break;
                 }
 
@@ -5180,13 +5179,18 @@ namespace SharpMp4
             uint size = IsoReaderWriter.ReadUInt32(stream);
             string type = IsoReaderWriter.Read4cc(stream);
 
-            Mp4Box p = parent;
-            while (p != null)
+            if (Log.InfoEnabled)
             {
-                Debug.Write("-");
-                p = p.GetParent();
+                StringBuilder log = new StringBuilder();
+                Mp4Box p = parent;
+                while (p != null)
+                {
+                    log.Append("-");
+                    p = p.GetParent();
+                }
+                log.Append($" {type}, size {size}, Position {stream.Position - 8}");
+                Log.Info(log.ToString());
             }
-            Debug.WriteLine($" {type}, size {size}, Position {stream.Position - 8}");
 
             Mp4Box box;
             if (_boxParsers.ContainsKey(type))
@@ -5195,7 +5199,7 @@ namespace SharpMp4
             }
             else
             {
-                Debug.WriteLine($"--- {type} is unknown.");
+                if (Log.WarnEnabled) Log.Warn($"--- {type} is unknown.");
                 box = await UnknownBox.ParseAsync(size, type, parent, stream);
             }
 
@@ -5205,12 +5209,18 @@ namespace SharpMp4
         public static async Task<uint> WriteBox(Stream stream, Mp4Box box)
         {
             Mp4Box p = box.GetParent();
-            while (p != null)
+
+            if (Log.InfoEnabled)
             {
-                Debug.Write("-");
-                p = p.GetParent();
+                StringBuilder log = new StringBuilder();
+                while (p != null)
+                {
+                    log.Append("-");
+                    p = p.GetParent();
+                }
+                log.Append($" {box.Type}, size {box.CalculateSize()}, Position {stream.Position}");
+                Log.Info(log.ToString());
             }
-            Debug.WriteLine($" {box.Type}, size {box.CalculateSize()}, Position {stream.Position}");
 
             uint size = 0;
 
@@ -5250,12 +5260,12 @@ namespace SharpMp4
 
             if (_descriptorParsers[objectTypeIndication].ContainsKey(tag))
             {
-                Debug.WriteLine($"-------- Descriptor - objectTypeIndication: {objectTypeIndication}, tag {tag}");
+                if (Log.InfoEnabled) Log.Info($"-------- Descriptor - objectTypeIndication: {objectTypeIndication}, tag {tag}");
                 descriptor = await _descriptorParsers[objectTypeIndication][tag].Invoke((uint)descriptorSize.sizeOfInstance, stream);
             }
             else
             {
-                Debug.WriteLine($"-------- Unknown Descriptor - objectTypeIndication: {objectTypeIndication}, tag {tag}");
+                if (Log.WarnEnabled) Log.Warn($"-------- Unknown Descriptor - objectTypeIndication: {objectTypeIndication}, tag {tag}");
                 descriptor = await UnknownDescriptor.ParseAsync((uint)descriptorSize.sizeOfInstance, stream, objectTypeIndication, (byte)tag);
             }
 
@@ -5272,7 +5282,7 @@ namespace SharpMp4
             uint descriptorSize = descriptor.CalculateSize();
             size += IsoReaderWriter.WritePackedNumber(stream, descriptorSize);
 
-            Debug.WriteLine($"-------- Descriptor - objectTypeIndication: {objectTypeIndication}, tag {tag}");
+            if (Log.InfoEnabled) Log.Info($"-------- Descriptor - objectTypeIndication: {objectTypeIndication}, tag {tag}");
             if (_descriptorBuilders.ContainsKey(objectTypeIndication) && _descriptorBuilders[objectTypeIndication].ContainsKey(tag))
             {
                 size += await _descriptorBuilders[objectTypeIndication][tag].Invoke(stream, objectTypeIndication, tag, descriptor);
@@ -5283,12 +5293,13 @@ namespace SharpMp4
             }
             else
             {
-                throw new NotSupportedException($"Descriptor {objectTypeIndication}, {tag} is not supported!");
+                if (Log.ErrorEnabled) Log.Error($"Descriptor {objectTypeIndication}, {tag} is not supported!");
             }
 
-            if (size != descriptorSize)
+            uint calculatedSize = descriptor.CalculateSize() + IsoReaderWriter.CalculatePackedNumberLength(descriptorSize) + 1;
+            if (size != calculatedSize)
             {
-                Debug.WriteLine($"Descriptor size mismatch! {objectTypeIndication}, tag {tag}, {size - descriptorSize} bytes");
+                if (Log.WarnEnabled) Log.Warn($"Descriptor size mismatch! {objectTypeIndication}, tag {tag}, {(int)size - (int)calculatedSize} bytes");
             }
 
             return size;
@@ -5341,7 +5352,7 @@ namespace SharpMp4
         {
             _nextFragmentCreateStartTime = _nextFragmentCreateStartTime + duration;
 
-            Debug.WriteLine($"{this.Handler}: {_nextFragmentCreateStartTime / (double)Timescale}");
+            if (Log.InfoEnabled) Log.Info($"{this.Handler}: {_nextFragmentCreateStartTime / (double)Timescale}");
 
             IsoReaderWriter.WriteInt32(_buffer, sample.Length);
             IsoReaderWriter.WriteUInt32(_buffer, duration);
@@ -5401,6 +5412,9 @@ namespace SharpMp4
 
         private async Task<FragmentedMp4> CreateBoxesAsync(double maxFragmentLengthInSeconds, int maxFragmentsPerMoof)
         {
+            if (Tracks.Count == 0)
+                throw new InvalidOperationException("No tracks provided!");
+
             var fmp4 = new FragmentedMp4();
             var ftyp = CreateFtypBox();
             fmp4.Children.Add(ftyp);
@@ -5444,24 +5458,23 @@ namespace SharpMp4
                     isEnd = !Tracks[0].HasMoreData();
                     trackTimes[0] += sample.Duration;
                     fragment.Samples[Tracks[0]].Add(sample);
-                    Debug.WriteLine($"-Video");
                     ulong lcm = Tracks[0].Timescale;
                     if (Tracks.Count > 1)
                     {
-                        lcm = (ulong)Mp4Math.LCM(Tracks[1].Timescale, Tracks[0].Timescale);
-                        Debug.WriteLine($"v: {(trackTimes[0] * lcm / Tracks[0].Timescale)}, a: {(trackTimes[1] * lcm / Tracks[1].Timescale)}");
+                        lcm = (ulong)Mp4Math.LCM(Tracks.Select(x => (long)x.Timescale).ToArray());
+                        if (Log.InfoEnabled) Log.Info($"v: {trackTimes[0] * lcm / Tracks[0].Timescale}, a: {trackTimes[1] * lcm / Tracks[1].Timescale}");
                     }
                     else
                     {
-                        Debug.WriteLine($"v: {(trackTimes[0] * lcm / Tracks[0].Timescale)}");
+                        if (Log.InfoEnabled) Log.Info($"v: {trackTimes[0] * lcm / Tracks[0].Timescale}");
                     }
 
                     fragment.Timescale = lcm;
-                    fragment.EndTime = (trackTimes[0] * lcm / Tracks[0].Timescale);
+                    fragment.EndTime = trackTimes[0] * lcm / Tracks[0].Timescale;
 
                     if ((fragment.EndTime - fragment.StartTime) >= maxFragmentLengthInSeconds * lcm)
                     {
-                        Debug.WriteLine($"--0.5s");
+                        if (Log.InfoEnabled) Log.Info($"--0.5s");
                         fragments.Add(fragment);
 
                         if (fragments.Count >= maxFragmentsPerMoof && !isEnd)
@@ -5487,7 +5500,7 @@ namespace SharpMp4
                 WriteFragments(fmp4, fragments, sequenceNumber++);
             }
 
-            Debug.WriteLine("-End");
+            if (Log.InfoEnabled) Log.Info("-End");
 
             return fmp4;
         }
@@ -5884,7 +5897,7 @@ namespace SharpMp4
         public async Task Build(Stream output)
         {
             var fmp4 = await CreateBoxesAsync(0.5, 8);
-            //Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(fmp4, Newtonsoft.Json.Formatting.Indented, new Newtonsoft.Json.JsonSerializerSettings() { DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore }));
+            //if(Log.InfoEnabled) Log.Info(Newtonsoft.Json.JsonConvert.SerializeObject(fmp4, Newtonsoft.Json.Formatting.Indented, new Newtonsoft.Json.JsonSerializerSettings() { DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore }));
             await FragmentedMp4.BuildAsync(fmp4, output);
         }
     }
