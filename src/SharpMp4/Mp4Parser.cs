@@ -5687,12 +5687,7 @@ namespace SharpMp4
         {
             var mvhd = new MvhdBox(0, parent);
             mvhd.Duration = 0;
-
-            // calculate the timescale
-            uint timescale = (uint)Mp4Math.LCM(this.Tracks.Select(x => (long)x.Timescale).ToArray());
-
-            mvhd.Timescale = timescale;
-
+            mvhd.Timescale = 1000; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
             return mvhd;
         }
 
