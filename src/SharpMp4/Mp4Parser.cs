@@ -5453,12 +5453,12 @@ namespace SharpMp4
                 trackTimes.Add(i, 0);
             }
   
+            ulong lcm = (ulong)Mp4Math.LCM(Tracks.Select(x => (long)x.Timescale).ToArray());
             while (true)
             {
                 for (int i = 1; i < Tracks.Count; i++)
                 {
-                    ulong llcm = (ulong)Mp4Math.LCM(Tracks[i].Timescale, Tracks[0].Timescale);
-                    while (((trackTimes[i] * llcm / Tracks[i].Timescale) < (trackTimes[0] * llcm / Tracks[0].Timescale)) || isEnd)
+                    while (((trackTimes[i] * lcm / Tracks[i].Timescale) < (trackTimes[0] * lcm / Tracks[0].Timescale)) || isEnd)
                     {
                         if (!Tracks[i].HasMoreData())
                             break;
@@ -5479,10 +5479,8 @@ namespace SharpMp4
                     isEnd = !Tracks[0].HasMoreData();
                     trackTimes[0] += sample.Duration;
                     fragment.Samples[Tracks[0]].Add(sample);
-                    ulong lcm = Tracks[0].Timescale;
                     if (Tracks.Count > 1)
                     {
-                        lcm = (ulong)Mp4Math.LCM(Tracks.Select(x => (long)x.Timescale).ToArray());
                         if (Log.DebugEnabled) Log.Debug($"v: {trackTimes[0] * lcm / Tracks[0].Timescale}, a: {trackTimes[1] * lcm / Tracks[1].Timescale}");
                     }
                     else
@@ -5630,7 +5628,7 @@ namespace SharpMp4
         private static TfdtBox CreateTfdtBox(Mp4Box parent, TrackBase track, List<StreamFragment> fragments)
         {
             TfdtBox tfdt = new TfdtBox(0, parent);
-            tfdt.BaseMediaDecodeTime = fragments[0].StartTime;
+            tfdt.BaseMediaDecodeTime = fragments[0].StartTime * track.Timescale / fragments[0].Timescale; // BaseMediaDecodeTime must be in the timescale of the track
             return tfdt;
         }
 
@@ -5691,12 +5689,8 @@ namespace SharpMp4
             mvhd.Duration = 0;
 
             // calculate the timescale
-            List<long> timescales = new List<long>();
-            for (int i = 0; i < this.Tracks.Count; i++)
-            {
-                timescales.Add(this.Tracks[i].Timescale);
-            }
-            uint timescale = (uint)Mp4Math.GCD(timescales.ToArray());
+            uint timescale = (uint)Mp4Math.LCM(this.Tracks.Select(x => (long)x.Timescale).ToArray());
+
             mvhd.Timescale = timescale;
 
             return mvhd;
