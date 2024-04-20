@@ -5352,7 +5352,7 @@ namespace SharpMp4
         {
             _nextFragmentCreateStartTime = _nextFragmentCreateStartTime + duration;
 
-            if (Log.InfoEnabled) Log.Info($"{this.Handler}: {_nextFragmentCreateStartTime / (double)Timescale}");
+            if (Log.DebugEnabled) Log.Debug($"{this.Handler}: {_nextFragmentCreateStartTime / (double)Timescale}");
 
             IsoReaderWriter.WriteInt32(_buffer, sample.Length);
             IsoReaderWriter.WriteUInt32(_buffer, duration);
@@ -5462,11 +5462,11 @@ namespace SharpMp4
                     if (Tracks.Count > 1)
                     {
                         lcm = (ulong)Mp4Math.LCM(Tracks.Select(x => (long)x.Timescale).ToArray());
-                        if (Log.InfoEnabled) Log.Info($"v: {trackTimes[0] * lcm / Tracks[0].Timescale}, a: {trackTimes[1] * lcm / Tracks[1].Timescale}");
+                        if (Log.DebugEnabled) Log.Debug($"v: {trackTimes[0] * lcm / Tracks[0].Timescale}, a: {trackTimes[1] * lcm / Tracks[1].Timescale}");
                     }
                     else
                     {
-                        if (Log.InfoEnabled) Log.Info($"v: {trackTimes[0] * lcm / Tracks[0].Timescale}");
+                        if (Log.DebugEnabled) Log.Debug($"v: {trackTimes[0] * lcm / Tracks[0].Timescale}");
                     }
 
                     fragment.Timescale = lcm;
@@ -5474,7 +5474,7 @@ namespace SharpMp4
 
                     if ((fragment.EndTime - fragment.StartTime) >= maxFragmentLengthInSeconds * lcm)
                     {
-                        if (Log.InfoEnabled) Log.Info($"--0.5s");
+                        if (Log.DebugEnabled) Log.Debug($"- New 0.5s fragment");
                         fragments.Add(fragment);
 
                         if (fragments.Count >= maxFragmentsPerMoof && !isEnd)
@@ -5500,7 +5500,7 @@ namespace SharpMp4
                 WriteFragments(fmp4, fragments, sequenceNumber++);
             }
 
-            if (Log.InfoEnabled) Log.Info("-End");
+            if (Log.DebugEnabled) Log.Debug("- End of fragments");
 
             return fmp4;
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,23 +36,23 @@ namespace SharpMp4
             var header = H264NalUnitHeader.ParseNALHeader(sample[0]);
             if (header.NalUnitType == H264NalUnitTypes.SPS)
             {
-                Debug.WriteLine($"-----------SPS: {ToHexString(sample)}");
+                if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {ToHexString(sample)}");
                 var sps = H264SpsNalUnit.Parse(sample);
                 if (!Sps.ContainsKey(sps.SeqParameterSetId))
                 {
                     Sps.Add(sps.SeqParameterSetId, sps);
                 }
-                Debug.WriteLine($"-----rebuitSPS: {ToHexString(H264SpsNalUnit.Build(sps))}");
+                if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H264SpsNalUnit.Build(sps))}");
             }
             else if (header.NalUnitType == H264NalUnitTypes.PPS)
             {
-                Debug.WriteLine($"-----------PPS: {ToHexString(sample)}");
+                if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {ToHexString(sample)}");
                 var pps = H264PpsNalUnit.Parse(sample);
                 if (!Pps.ContainsKey(pps.PicParameterSetId))
                 {
                     Pps.Add(pps.PicParameterSetId, pps);
                 }
-                Debug.WriteLine($"-----rebuitPPS: {ToHexString(H264PpsNalUnit.Build(pps))}");
+                if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H264PpsNalUnit.Build(pps))}");
             }
             else
             {
@@ -1473,7 +1472,7 @@ namespace SharpMp4
                 frametick = vui.NumUnitsInTick;
                 if (timescale == 0 || frametick == 0)
                 {
-                    Debug.WriteLine($"Invalid values in vui: timescale: {timescale} and frametick: {frametick}. Using default 25 fps.");
+                    if (Log.WarnEnabled) Log.Warn($"Invalid values in vui: timescale: {timescale} and frametick: {frametick}. Using default 25 fps.");
                     timescale = 0;
                     frametick = 0;
                 }
@@ -1481,17 +1480,17 @@ namespace SharpMp4
                 {
                     if (timescale / frametick > 100)
                     {
-                        Debug.WriteLine($"Framerate is {(timescale / frametick)}. Might not be correct.");
+                        if (Log.WarnEnabled) Log.Warn($"Framerate is {(timescale / frametick)}. Might not be correct.");
                     }
                 }
                 else
                 {
-                    Debug.WriteLine($"Frametick is {frametick}. Might not be correct.");
+                    if (Log.WarnEnabled) Log.Warn($"Frametick is {frametick}. Might not be correct.");
                 }
             }
             else
             {
-                Debug.WriteLine("Can't determine frame rate because SPS does not contain vuiParams");
+                if (Log.ErrorEnabled) Log.Error("Can't determine frame rate because SPS does not contain vuiParams");
                 timescale = 0;
                 frametick = 0;
             }
