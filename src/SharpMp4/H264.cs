@@ -1041,7 +1041,7 @@ namespace SharpMp4
             int frameCropTopOffset,
             int frameCropBottomOffset,
             int vuiParametersPresentFlag,
-            VuiParameters vuiParams)
+            H264VuiParameters vuiParams)
         {
             NalHeader = nalHeader;
             ProfileIdc = profileIdc;
@@ -1124,7 +1124,7 @@ namespace SharpMp4
         public int FrameCropTopOffset { get; set; }
         public int FrameCropBottomOffset { get; set; }
         public int VuiParametersPresentFlag { get; set; }
-        public VuiParameters VuiParams { get; set; }
+        public H264VuiParameters VuiParams { get; set; }
 
         public static H264SpsNalUnit Parse(byte[] sps)
         {
@@ -1245,11 +1245,11 @@ namespace SharpMp4
             }
 
             int vuiParametersPresentFlag = bitstream.ReadBit();
-            VuiParameters vuiParams = null;
+            H264VuiParameters vuiParams = null;
 
             if (vuiParametersPresentFlag != 0)
             {
-                vuiParams = VuiParameters.Parse(bitstream);
+                vuiParams = H264VuiParameters.Parse(bitstream);
             }
 
             H264SpsNalUnit sps = new H264SpsNalUnit(
@@ -1394,7 +1394,7 @@ namespace SharpMp4
 
             if (nal.VuiParametersPresentFlag != 0)
             {
-                VuiParameters.Build(bitstream, nal.VuiParams);
+                H264VuiParameters.Build(bitstream, nal.VuiParams);
             }
 
             bitstream.WriteTrailingBit();
@@ -1478,6 +1478,417 @@ namespace SharpMp4
             }
 
             return (timescale, frametick);
+        }
+    }
+
+    public class H264VuiParameters
+    {
+        public H264VuiParameters(
+            int aspectRatioInfoPresentFlag,
+            int aspectRatio,
+            int sarWidth,
+            int sarHeight,
+            int overscanInfoPresentFlag,
+            int overscanAppropriateFlag,
+            int videoSignalTypePresentFlag,
+            int videoFormat,
+            int videoFullRangeFlag,
+            int colorDescriptionPresentFlag,
+            int colorPrimaries,
+            int transferCharacteristics,
+            int matrixCoefficients,
+            int chromaLocInfoPresentFlag,
+            int chromaSampleLocTypeTopField,
+            int chromaSampleLocTypeBottomField,
+            int timingInfoPresentFlag,
+            int numUnitsInTick,
+            int timeScale,
+            int fixedFrameRateFlag,
+            int nalHrdParametersPresentFlag,
+            H264HRDParameters nalHrdParams,
+            int vclHrdParametersPresentFlag,
+            H264HRDParameters vclHrdParams,
+            int lowDelayHrdFlag,
+            int picStructPresentFlag,
+            int bitstreamRestrictionFlag,
+            H264BitstreamRestriction bitstreamRestriction)
+        {
+            AspectRatioInfoPresentFlag = aspectRatioInfoPresentFlag;
+            AspectRatio = aspectRatio;
+            SarWidth = sarWidth;
+            SarHeight = sarHeight;
+            OverscanInfoPresentFlag = overscanInfoPresentFlag;
+            OverscanAppropriateFlag = overscanAppropriateFlag;
+            VideoSignalTypePresentFlag = videoSignalTypePresentFlag;
+            VideoFormat = videoFormat;
+            VideoFullRangeFlag = videoFullRangeFlag;
+            ColorDescriptionPresentFlag = colorDescriptionPresentFlag;
+            ColorPrimaries = colorPrimaries;
+            TransferCharacteristics = transferCharacteristics;
+            MatrixCoefficients = matrixCoefficients;
+            ChromaLocInfoPresentFlag = chromaLocInfoPresentFlag;
+            ChromaSampleLocTypeTopField = chromaSampleLocTypeTopField;
+            ChromaSampleLocTypeBottomField = chromaSampleLocTypeBottomField;
+            TimingInfoPresentFlag = timingInfoPresentFlag;
+            NumUnitsInTick = numUnitsInTick;
+            TimeScale = timeScale;
+            FixedFrameRateFlag = fixedFrameRateFlag;
+            NalHrdParametersPresentFlag = nalHrdParametersPresentFlag;
+            NalHrdParams = nalHrdParams;
+            VclHrdParametersPresentFlag = vclHrdParametersPresentFlag;
+            VclHrdParams = vclHrdParams;
+            LowDelayHrdFlag = lowDelayHrdFlag;
+            PicStructPresentFlag = picStructPresentFlag;
+            BitstreamRestrictionFlag = bitstreamRestrictionFlag;
+            BitstreamRestriction = bitstreamRestriction;
+        }
+
+        public int AspectRatioInfoPresentFlag { get; set; }
+        public int AspectRatio { get; set; }
+        public int SarWidth { get; set; }
+        public int SarHeight { get; set; }
+        public int OverscanInfoPresentFlag { get; set; }
+        public int OverscanAppropriateFlag { get; set; }
+        public int VideoSignalTypePresentFlag { get; set; }
+        public int VideoFormat { get; set; }
+        public int VideoFullRangeFlag { get; set; }
+        public int ColorDescriptionPresentFlag { get; set; }
+        public int ColorPrimaries { get; set; }
+        public int TransferCharacteristics { get; set; }
+        public int MatrixCoefficients { get; set; }
+        public int ChromaLocInfoPresentFlag { get; set; }
+        public int ChromaSampleLocTypeTopField { get; set; }
+        public int ChromaSampleLocTypeBottomField { get; set; }
+        public int TimingInfoPresentFlag { get; set; }
+        public int NumUnitsInTick { get; set; }
+        public int TimeScale { get; set; }
+        public int FixedFrameRateFlag { get; set; }
+        public int NalHrdParametersPresentFlag { get; set; }
+        public H264HRDParameters NalHrdParams { get; set; }
+        public int VclHrdParametersPresentFlag { get; set; }
+        public H264HRDParameters VclHrdParams { get; set; }
+        public int LowDelayHrdFlag { get; set; }
+        public int PicStructPresentFlag { get; set; }
+        public int BitstreamRestrictionFlag { get; set; }
+        public H264BitstreamRestriction BitstreamRestriction { get; set; }
+
+        public static H264VuiParameters Parse(BitStreamReader bitstream)
+        {
+            int aspectRatioInfoPresentFlag = bitstream.ReadBit();
+            int aspectRatio = 0;
+            int sarWidth = 0;
+            int sarHeight = 0;
+            if (aspectRatioInfoPresentFlag != 0)
+            {
+                aspectRatio = bitstream.ReadBits(8);
+                if (aspectRatio == 255)
+                {
+                    sarWidth = bitstream.ReadBits(16);
+                    sarHeight = bitstream.ReadBits(16);
+                }
+            }
+
+            int overscanInfoPresentFlag = bitstream.ReadBit();
+            int overscanAppropriateFlag = 0;
+            if (overscanInfoPresentFlag != 0)
+            {
+                overscanAppropriateFlag = bitstream.ReadBit();
+            }
+
+            int videoSignalTypePresentFlag = bitstream.ReadBit();
+            int videoFormat = 0;
+            int videoFullRangeFlag = 0;
+            int colourDescriptionPresentFlag = 0;
+            int colourPrimaries = 0;
+            int transferCharacteristics = 0;
+            int matrixCoefficients = 0;
+
+            if (videoSignalTypePresentFlag != 0)
+            {
+                videoFormat = bitstream.ReadBits(3);
+                videoFullRangeFlag = bitstream.ReadBit();
+                colourDescriptionPresentFlag = bitstream.ReadBit();
+
+                if (colourDescriptionPresentFlag != 0)
+                {
+                    colourPrimaries = bitstream.ReadBits(8);
+                    transferCharacteristics = bitstream.ReadBits(8);
+                    matrixCoefficients = bitstream.ReadBits(8);
+                }
+            }
+
+            int chromaLocInfoPresentFlag = bitstream.ReadBit();
+            int chromaSampleLocTypeTopField = 0;
+            int chromaSampleLocTypeBottomField = 0;
+
+            if (chromaLocInfoPresentFlag != 0)
+            {
+                chromaSampleLocTypeTopField = bitstream.ReadUE();
+                chromaSampleLocTypeBottomField = bitstream.ReadUE();
+            }
+
+            int timingInfoPresentFlag = bitstream.ReadBit();
+            int numUnitsInTick = 0;
+            int timeScale = 0;
+            int fixedFrameRateFlag = 0;
+            if (timingInfoPresentFlag != 0)
+            {
+                numUnitsInTick = bitstream.ReadBits(32);
+                timeScale = bitstream.ReadBits(32);
+                fixedFrameRateFlag = bitstream.ReadBit();
+            }
+
+            int nalHrdParametersPresentFlag = bitstream.ReadBit();
+            H264HRDParameters nalHRDParams = null;
+            if (nalHrdParametersPresentFlag != 0)
+            {
+                nalHRDParams = H264HRDParameters.Parse(bitstream);
+            }
+
+            int vclHrdParametersPresentFlag = bitstream.ReadBit();
+            H264HRDParameters vclHRDParams = null;
+            if (vclHrdParametersPresentFlag != 0)
+            {
+                vclHRDParams = H264HRDParameters.Parse(bitstream);
+            }
+
+            int lowDelayHrdFlag = 0;
+            if (nalHrdParametersPresentFlag != 0 || vclHrdParametersPresentFlag != 0)
+            {
+                lowDelayHrdFlag = bitstream.ReadBit();
+            }
+
+            int picStructPresentFlag = bitstream.ReadBit();
+            int bitstreamRestrictionFlag = bitstream.ReadBit();
+            H264BitstreamRestriction bitstreamRestriction = null;
+            if (bitstreamRestrictionFlag != 0)
+            {
+                bitstreamRestriction = new H264BitstreamRestriction();
+                bitstreamRestriction.MotionVectorsOverPicBoundariesFlag = bitstream.ReadBit();
+                bitstreamRestriction.MaxBytesPerPicDenom = bitstream.ReadUE();
+                bitstreamRestriction.MaxBitsPerMbDenom = bitstream.ReadUE();
+                bitstreamRestriction.Log2MaxMvLengthHorizontal = bitstream.ReadUE();
+                bitstreamRestriction.Log2MaxMvLengthVertical = bitstream.ReadUE();
+                bitstreamRestriction.NumReorderFrames = bitstream.ReadUE();
+                bitstreamRestriction.MaxDecFrameBuffering = bitstream.ReadUE();
+            }
+
+            return new H264VuiParameters(
+                aspectRatioInfoPresentFlag,
+                aspectRatio,
+                sarWidth,
+                sarHeight,
+                overscanInfoPresentFlag,
+                overscanAppropriateFlag,
+                videoSignalTypePresentFlag,
+                videoFormat,
+                videoFullRangeFlag,
+                colourDescriptionPresentFlag,
+                colourPrimaries,
+                transferCharacteristics,
+                matrixCoefficients,
+                chromaLocInfoPresentFlag,
+                chromaSampleLocTypeTopField,
+                chromaSampleLocTypeBottomField,
+                timingInfoPresentFlag,
+                numUnitsInTick,
+                timeScale,
+                fixedFrameRateFlag,
+                nalHrdParametersPresentFlag,
+                nalHRDParams,
+                vclHrdParametersPresentFlag,
+                vclHRDParams,
+                lowDelayHrdFlag,
+                picStructPresentFlag,
+                bitstreamRestrictionFlag,
+                bitstreamRestriction
+                );
+        }
+
+        public static void Build(BitStreamWriter bitstream, H264VuiParameters vui)
+        {
+            bitstream.WriteBit(vui.AspectRatioInfoPresentFlag);
+            if (vui.AspectRatioInfoPresentFlag != 0)
+            {
+                bitstream.WriteBits(8, vui.AspectRatio);
+                if (vui.AspectRatio == 255)
+                {
+                    bitstream.WriteBits(16, vui.SarWidth);
+                    bitstream.WriteBits(16, vui.SarHeight);
+                }
+            }
+
+            bitstream.WriteBit(vui.OverscanInfoPresentFlag);
+            if (vui.OverscanInfoPresentFlag != 0)
+            {
+                bitstream.WriteBit(vui.OverscanAppropriateFlag);
+            }
+
+            bitstream.WriteBit(vui.VideoSignalTypePresentFlag);
+
+            if (vui.VideoSignalTypePresentFlag != 0)
+            {
+                bitstream.WriteBits(3, vui.VideoFormat);
+                bitstream.WriteBit(vui.VideoFullRangeFlag);
+                bitstream.WriteBit(vui.ColorDescriptionPresentFlag);
+
+                if (vui.ColorDescriptionPresentFlag != 0)
+                {
+                    bitstream.WriteBits(8, vui.ColorPrimaries);
+                    bitstream.WriteBits(8, vui.TransferCharacteristics);
+                    bitstream.WriteBits(8, vui.MatrixCoefficients);
+                }
+            }
+
+            bitstream.WriteBit(vui.ChromaLocInfoPresentFlag);
+
+            if (vui.ChromaLocInfoPresentFlag != 0)
+            {
+                bitstream.WriteUE((uint)vui.ChromaSampleLocTypeTopField);
+                bitstream.WriteUE((uint)vui.ChromaSampleLocTypeBottomField);
+            }
+
+            bitstream.WriteBit(vui.TimingInfoPresentFlag);
+            if (vui.TimingInfoPresentFlag != 0)
+            {
+                bitstream.WriteBits(32, vui.NumUnitsInTick);
+                bitstream.WriteBits(32, vui.TimeScale);
+                bitstream.WriteBit(vui.FixedFrameRateFlag);
+            }
+
+            bitstream.WriteBit(vui.NalHrdParametersPresentFlag);
+            if (vui.NalHrdParametersPresentFlag != 0)
+            {
+                H264HRDParameters.Build(bitstream, vui.NalHrdParams);
+            }
+
+            bitstream.WriteBit(vui.VclHrdParametersPresentFlag);
+
+            if (vui.VclHrdParametersPresentFlag != 0)
+            {
+                H264HRDParameters.Build(bitstream, vui.VclHrdParams);
+            }
+
+            if (vui.NalHrdParametersPresentFlag != 0 || vui.VclHrdParametersPresentFlag != 0)
+            {
+                bitstream.WriteBit(vui.LowDelayHrdFlag);
+            }
+
+            bitstream.WriteBit(vui.PicStructPresentFlag);
+            bitstream.WriteBit(vui.BitstreamRestrictionFlag);
+            if (vui.BitstreamRestrictionFlag != 0)
+            {
+                bitstream.WriteBit(vui.BitstreamRestriction.MotionVectorsOverPicBoundariesFlag);
+                bitstream.WriteUE((uint)vui.BitstreamRestriction.MaxBytesPerPicDenom);
+                bitstream.WriteUE((uint)vui.BitstreamRestriction.MaxBitsPerMbDenom);
+                bitstream.WriteUE((uint)vui.BitstreamRestriction.Log2MaxMvLengthHorizontal);
+                bitstream.WriteUE((uint)vui.BitstreamRestriction.Log2MaxMvLengthVertical);
+                bitstream.WriteUE((uint)vui.BitstreamRestriction.NumReorderFrames);
+                bitstream.WriteUE((uint)vui.BitstreamRestriction.MaxDecFrameBuffering);
+            }
+        }
+    }
+
+    public sealed class H264BitstreamRestriction
+    {
+        public int MotionVectorsOverPicBoundariesFlag { get; set; }
+        public int MaxBytesPerPicDenom { get; set; }
+        public int MaxBitsPerMbDenom { get; set; }
+        public int Log2MaxMvLengthHorizontal { get; set; }
+        public int Log2MaxMvLengthVertical { get; set; }
+        public int NumReorderFrames { get; set; }
+        public int MaxDecFrameBuffering { get; set; }
+    }
+
+    public class H264HRDParameters
+    {
+        public H264HRDParameters(
+            int cpbCntMinus1,
+            int bitRateScale,
+            int cpbSizeScale,
+            int[] bitRateValueMinus1,
+            int[] cpbSizeValueMinus1,
+            int[] cbrFlag,
+            int initialCpbRemovalDelayLengthMinus1,
+            int cpbRemovalDelayLengthMinus1,
+            int dpbOutputDelayLengthMinus1,
+            int timeOffsetLength)
+        {
+            CpbCntMinus1 = cpbCntMinus1;
+            BitRateScale = bitRateScale;
+            CpbSizeScale = cpbSizeScale;
+            BitRateValueMinus1 = bitRateValueMinus1;
+            CpbSizeValueMinus1 = cpbSizeValueMinus1;
+            CbrFlag = cbrFlag;
+            InitialCpbRemovalDelayLengthMinus1 = initialCpbRemovalDelayLengthMinus1;
+            CpbRemovalDelayLengthMinus1 = cpbRemovalDelayLengthMinus1;
+            DpbOutputDelayLengthMinus1 = dpbOutputDelayLengthMinus1;
+            TimeOffsetLength = timeOffsetLength;
+        }
+
+        public int CpbCntMinus1 { get; set; }
+        public int BitRateScale { get; set; }
+        public int CpbSizeScale { get; set; }
+        public int[] BitRateValueMinus1 { get; set; }
+        public int[] CpbSizeValueMinus1 { get; set; }
+        public int[] CbrFlag { get; set; }
+        public int InitialCpbRemovalDelayLengthMinus1 { get; set; }
+        public int CpbRemovalDelayLengthMinus1 { get; set; }
+        public int DpbOutputDelayLengthMinus1 { get; set; }
+        public int TimeOffsetLength { get; set; }
+
+        public static H264HRDParameters Parse(BitStreamReader bitstream)
+        {
+            int cpbCntMinus1 = bitstream.ReadUE();
+            int bitRateScale = bitstream.ReadBits(4);
+            int cpbSizeScale = bitstream.ReadBits(4);
+            int[] bitRateValueMinus1 = new int[cpbCntMinus1 + 1];
+            int[] cpbSizeValueMinus1 = new int[cpbCntMinus1 + 1];
+            int[] cbrFlag = new int[cpbCntMinus1 + 1];
+
+            for (int SchedSelIdx = 0; SchedSelIdx <= cpbCntMinus1; SchedSelIdx++)
+            {
+                bitRateValueMinus1[SchedSelIdx] = bitstream.ReadUE();
+                cpbSizeValueMinus1[SchedSelIdx] = bitstream.ReadUE();
+                cbrFlag[SchedSelIdx] = bitstream.ReadBit();
+            }
+
+            int initialCpbRemovalDelayLengthMinus1 = bitstream.ReadBits(5);
+            int cpbRemovalDelayLengthMinus1 = bitstream.ReadBits(5);
+            int dpbOutputDelayLengthMinus1 = bitstream.ReadBits(5);
+            int timeOffsetLength = bitstream.ReadBits(5);
+
+            return new H264HRDParameters(
+                cpbCntMinus1,
+                bitRateScale,
+                cpbSizeScale,
+                bitRateValueMinus1,
+                cpbSizeValueMinus1,
+                cbrFlag,
+                initialCpbRemovalDelayLengthMinus1,
+                cpbRemovalDelayLengthMinus1,
+                dpbOutputDelayLengthMinus1,
+                timeOffsetLength
+                );
+        }
+
+        public static void Build(BitStreamWriter bitstream, H264HRDParameters hrd)
+        {
+            bitstream.WriteUE((uint)hrd.CpbCntMinus1);
+            bitstream.WriteBits(4, hrd.BitRateScale);
+            bitstream.WriteBits(4, hrd.CpbSizeScale);
+
+            for (int SchedSelIdx = 0; SchedSelIdx <= hrd.CpbCntMinus1; SchedSelIdx++)
+            {
+                bitstream.WriteUE((uint)hrd.BitRateValueMinus1[SchedSelIdx]);
+                bitstream.WriteUE((uint)hrd.CpbSizeValueMinus1[SchedSelIdx]);
+                bitstream.WriteBit(hrd.CbrFlag[SchedSelIdx]);
+            }
+
+            bitstream.WriteBits(5, hrd.InitialCpbRemovalDelayLengthMinus1);
+            bitstream.WriteBits(5, hrd.CpbRemovalDelayLengthMinus1);
+            bitstream.WriteBits(5, hrd.DpbOutputDelayLengthMinus1);
+            bitstream.WriteBits(5, hrd.TimeOffsetLength);
         }
     }
 
