@@ -3387,24 +3387,26 @@ namespace SharpMp4
         }
     }
 
-    public class MdatBox : Mp4Box
+    public class MdatBox : Mp4Box, IDisposable
     {
         public const string TYPE = "mdat";
 
-        private Stream _stream; // TODO: refactoring, dispose!!!
-        public Stream GetStream() { return _stream; }
+        private ITemporaryStorage _storage;
+        private bool _disposedValue;
 
-        public MdatBox(uint size, Mp4Box parent, Stream ms) : base(size, TYPE, parent)
+        public ITemporaryStorage GetStorage() { return _storage; }
+
+        public MdatBox(uint size, Mp4Box parent, ITemporaryStorage storage) : base(size, TYPE, parent)
         {
-            _stream = ms;
+            _storage = storage;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
         {
             byte[] buffer = new byte[1024];
             int remaining = (int)size - 8;
 
-            MemoryStream ms = new MemoryStream();
+            var storage = TemporaryStorage.Factory.Create();
 
             int read = 0;
             while (remaining > 0)
@@ -3412,8 +3414,7 @@ namespace SharpMp4
                 int count = Math.Min(buffer.Length, remaining);
                 read = stream.Read(buffer, 0, count);
 
-                // TODO - dump to memory or file
-                if (read > 0) ms.Write(buffer, 0, read);
+                if (read > 0) await storage.Stream.WriteAsync(buffer, 0, read);
 
                 if (read == 0)
                 {
@@ -3424,30 +3425,50 @@ namespace SharpMp4
                 remaining -= read;
             }
 
-            ms.Flush();
-            ms.Seek(0, SeekOrigin.Begin);
+            await storage.Stream.FlushAsync();
+            storage.Stream.Seek(0, SeekOrigin.Begin);
 
             MdatBox mdat = new MdatBox(
                 size,
                 parent,
-                ms);
+                storage);
 
-            return Task.FromResult((Mp4Box)mdat);
+            return mdat;
         }
 
         public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
         {
             MdatBox mdat = (MdatBox)box;
-            var mdatStream = mdat.GetStream();
-            mdatStream.Seek(0, SeekOrigin.Begin);
-            uint size = (uint)mdatStream.Length;
-            await mdatStream.CopyToAsync(stream);
+            var mdatStorage = mdat.GetStorage();
+            mdatStorage.Stream.Seek(0, SeekOrigin.Begin);
+            uint size = (uint)mdatStorage.Stream.Length;
+            await mdatStorage.Stream.CopyToAsync(stream);
             return size;
         }
 
         public override uint CalculateSize()
         {
-            return base.CalculateSize() + (uint)_stream.Length;
+            return base.CalculateSize() + (uint)_storage.Stream.Length;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    if (_storage != null)
+                        _storage.Dispose();
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 
@@ -5337,8 +5358,7 @@ namespace SharpMp4
         public string Language { get; set; } = "und";
         public string Handler { get; protected set; }
 
-        // TODO: Refactoring, temp file
-        private Stream _buffer = new MemoryStream();
+        private readonly ITemporaryStorage _storage;
 
         public TrackBase(uint trackID)
         {
@@ -5346,6 +5366,7 @@ namespace SharpMp4
                 throw new ArgumentException("TrackID must start at 1!");
 
             TrackID = trackID;
+            _storage = TemporaryStorage.Factory.Create();
         }
 
         public virtual async Task ProcessSampleAsync(byte[] sample, uint duration)
@@ -5354,24 +5375,24 @@ namespace SharpMp4
 
             if (Log.DebugEnabled) Log.Debug($"{this.Handler}: {_nextFragmentCreateStartTime / (double)Timescale}");
 
-            IsoReaderWriter.WriteInt32(_buffer, sample.Length);
-            IsoReaderWriter.WriteUInt32(_buffer, duration);
+            IsoReaderWriter.WriteInt32(_storage.Stream, sample.Length);
+            IsoReaderWriter.WriteUInt32(_storage.Stream, duration);
             //IsoReaderWriter.WriteUInt64(_buffer, _nextFragmentCreateStartTime);
-            await IsoReaderWriter.WriteBytesAsync(_buffer, sample, 0, sample.Length);
+            await IsoReaderWriter.WriteBytesAsync(_storage.Stream, sample, 0, sample.Length);
         }
 
         public void FinalizeTrack()
         {
-            _buffer.Seek(0, SeekOrigin.Begin);
+            _storage.Stream.Seek(0, SeekOrigin.Begin);
         }
 
         public async Task<StreamSample> ReadSampleAsync()
         {
-            int length = IsoReaderWriter.ReadInt32(_buffer);
-            uint duration = IsoReaderWriter.ReadUInt32(_buffer);
+            int length = IsoReaderWriter.ReadInt32(_storage.Stream);
+            uint duration = IsoReaderWriter.ReadUInt32(_storage.Stream);
             //ulong nextFragmentCreateStartTime = IsoReaderWriter.ReadUInt64(_buffer);
             byte[] sample = new byte[length];
-            await IsoReaderWriter.ReadBytesAsync(_buffer, sample, 0, sample.Length);
+            await IsoReaderWriter.ReadBytesAsync(_storage.Stream, sample, 0, sample.Length);
             return new StreamSample()
             {
                 Sample = sample,
@@ -5381,7 +5402,7 @@ namespace SharpMp4
 
         public bool HasMoreData()
         {
-            return _buffer.Position < _buffer.Length;
+            return _storage.Stream.Position < _storage.Stream.Length;
         }
 
         private bool _disposedValue;
@@ -5392,7 +5413,7 @@ namespace SharpMp4
             {
                 if (disposing)
                 {
-                    _buffer.Dispose();
+                    _storage.Stream.Dispose();
                 }
 
                 _disposedValue = true;
@@ -5479,7 +5500,7 @@ namespace SharpMp4
 
                         if (fragments.Count >= maxFragmentsPerMoof && !isEnd)
                         {
-                            WriteFragments(fmp4, fragments, sequenceNumber++);
+                            await WriteFragments(fmp4, fragments, sequenceNumber++);
                             fragments.Clear();
                         }
 
@@ -5497,7 +5518,7 @@ namespace SharpMp4
 
             if (fragments.Count > 0)
             {
-                WriteFragments(fmp4, fragments, sequenceNumber++);
+                await WriteFragments(fmp4, fragments, sequenceNumber++);
             }
 
             if (Log.DebugEnabled) Log.Debug("- End of fragments");
@@ -5505,19 +5526,19 @@ namespace SharpMp4
             return fmp4;
         }
 
-        private void WriteFragments(FragmentedMp4 fmp4, List<StreamFragment> fragments, uint sequenceNumber)
+        private async Task WriteFragments(FragmentedMp4 fmp4, List<StreamFragment> fragments, uint sequenceNumber)
         {
             var moof = CreateMoofBox(sequenceNumber, fragments);
             fmp4.Children.Add(moof);
 
-            var mdat = CreateMdatBox(fragments);
+            var mdat = await CreateMdatBox(fragments);
             fmp4.Children.Add(mdat);
         }
 
-        private MdatBox CreateMdatBox(List<StreamFragment> fragments)
+        private async Task<MdatBox> CreateMdatBox(List<StreamFragment> fragments)
         {
-            var ms = new MemoryStream();
-            var mdat = new MdatBox(0, null, ms);
+            var storage = TemporaryStorage.Factory.Create();
+            var mdat = new MdatBox(0, null, storage);
 
             for (int i = 0; i < fragments.Count; i++)
             {
@@ -5526,7 +5547,7 @@ namespace SharpMp4
                     for (int k = 0; k < track.Value.Count; k++)
                     {
                         var sample = track.Value[k];
-                        ms.Write(sample.Sample, 0, sample.Sample.Length);
+                        await storage.Stream.WriteAsync(sample.Sample, 0, sample.Sample.Length);
                     }
                 } 
             }
