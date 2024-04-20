@@ -452,12 +452,8 @@ namespace SharpMp4
                 ushort sequenceParameterSetLength = IsoReaderWriter.ReadUInt16(stream);
                 byte[] sequenceParameterSetNALUnitBytes = new byte[sequenceParameterSetLength];
                 await IsoReaderWriter.ReadBytesAsync(stream, sequenceParameterSetNALUnitBytes, 0, sequenceParameterSetLength);
-                using (MemoryStream ms = new MemoryStream(sequenceParameterSetNALUnitBytes))
-                {
-                    H264SpsNalUnit sequenceParameterSetNALUnit = H264SpsNalUnit.Parse(sequenceParameterSetLength, ms);
-                    sequenceParameterSets.Add(sequenceParameterSetNALUnit);
-                }
-
+                H264SpsNalUnit sequenceParameterSetNALUnit = H264SpsNalUnit.Parse(sequenceParameterSetNALUnitBytes);
+                sequenceParameterSets.Add(sequenceParameterSetNALUnit);
                 consumedLength = consumedLength + 2 + sequenceParameterSetLength;
             }
             byte numberOfPictureParameterSets = IsoReaderWriter.ReadByte(stream);
@@ -466,11 +462,8 @@ namespace SharpMp4
                 ushort pictureParameterSetLength = IsoReaderWriter.ReadUInt16(stream);
                 byte[] pictureParameterSetNALUnitBytes = new byte[pictureParameterSetLength];
                 await IsoReaderWriter.ReadBytesAsync(stream, pictureParameterSetNALUnitBytes, 0, pictureParameterSetLength);
-                using (MemoryStream ms = new MemoryStream(pictureParameterSetNALUnitBytes))
-                {
-                    H264PpsNalUnit pictureParameterSetNALUnit = H264PpsNalUnit.Parse(pictureParameterSetLength, ms);
-                    pictureParameterSets.Add(pictureParameterSetNALUnit);
-                }
+                H264PpsNalUnit pictureParameterSetNALUnit = H264PpsNalUnit.Parse(pictureParameterSetNALUnitBytes);
+                pictureParameterSets.Add(pictureParameterSetNALUnit);
                 consumedLength = consumedLength + 2 + pictureParameterSetLength;
             }
 
@@ -1539,14 +1532,7 @@ namespace SharpMp4
             visualSampleEntry.CompressorName = "h264\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
             visualSampleEntry.CompressorNameDisplayableData = 4;
 
-            AvcConfigurationBox avcConfigurationBox = new AvcConfigurationBox(0, visualSampleEntry,
-                new AvcDecoderConfigurationRecord()
-                {
-                    SequenceParameterSets = track.Sps.Values.ToList(),
-                    PictureParameterSets = track.Pps.Values.ToList(),
-                    NumberOfPictureParameterSets = (byte)track.Pps.Values.Count
-                }
-            );
+            AvcConfigurationBox avcConfigurationBox = new AvcConfigurationBox(0, visualSampleEntry, new AvcDecoderConfigurationRecord());
             avcConfigurationBox.AvcDecoderConfigurationRecord.SequenceParameterSets = track.Sps.Values.ToList();
             avcConfigurationBox.AvcDecoderConfigurationRecord.NumberOfSeuqenceParameterSets = track.Sps.Count;
             avcConfigurationBox.AvcDecoderConfigurationRecord.PictureParameterSets = track.Pps.Values.ToList();

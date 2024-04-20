@@ -329,6 +329,22 @@ namespace SharpMp4
             // TODO!!!
             return (int)ReadUInt32(stream);
         }
+
+        public static ulong ReadUInt48(Stream stream)
+        {
+            return (ulong)((ReadByte(stream) << 40) + (ReadByte(stream) << 32) + (ReadByte(stream) << 24) + (ReadByte(stream) << 16) + (ReadByte(stream) << 8) + (ReadByte(stream) << 0));
+        }
+
+        public static uint WriteUInt48(Stream stream, ulong value)
+        {
+            WriteByte(stream, (byte)(value >> 40 & 0xFF));
+            WriteByte(stream, (byte)(value >> 32 & 0xFF));
+            WriteByte(stream, (byte)(value >> 24 & 0xFF));
+            WriteByte(stream, (byte)(value >> 16 & 0xFF));
+            WriteByte(stream, (byte)(value >> 8 & 0xFF));
+            WriteByte(stream, (byte)(value & 0xFF));
+            return 6;
+        }
     }
 
     /// <summary>
