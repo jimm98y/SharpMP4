@@ -20,17 +20,6 @@ namespace SharpMp4
         private H264NalSliceHeader _lastSliceHeader;
         private List<byte[]> _nalBuffer = new List<byte[]>();
 
-        public static string ToHexString(byte[] data)
-        {
-#if !NETCOREAPP
-            string hexString = BitConverter.ToString(data);
-            hexString = hexString.Replace("-", "");
-            return hexString;
-#else
-            return Convert.ToHexString(data);
-#endif
-        }
-
         public override async Task ProcessSampleAsync(byte[] sample, uint duration)
         {
             var header = H264NalUnitHeader.ParseNALHeader(sample[0]);

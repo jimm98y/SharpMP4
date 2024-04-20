@@ -5425,6 +5425,17 @@ namespace SharpMp4
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        public static string ToHexString(byte[] data)
+        {
+#if !NETCOREAPP
+            string hexString = BitConverter.ToString(data);
+            hexString = hexString.Replace("-", "");
+            return hexString;
+#else
+            return Convert.ToHexString(data);
+#endif
+        }
     }
 
     public class FragmentedMp4Builder
