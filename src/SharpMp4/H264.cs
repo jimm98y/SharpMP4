@@ -959,25 +959,25 @@ namespace SharpMp4
         }
     }
 
-    public class ChromaFormat
+    public class H264ChromaFormat
     {
-        public static readonly ChromaFormat MONOCHROME = new ChromaFormat(0, 0, 0);
-        public static readonly ChromaFormat YUV_420 = new ChromaFormat(1, 2, 2);
-        public static readonly ChromaFormat YUV_422 = new ChromaFormat(2, 2, 1);
-        public static readonly ChromaFormat YUV_444 = new ChromaFormat(3, 1, 1);
+        public static readonly H264ChromaFormat MONOCHROME = new H264ChromaFormat(0, 0, 0);
+        public static readonly H264ChromaFormat YUV_420 = new H264ChromaFormat(1, 2, 2);
+        public static readonly H264ChromaFormat YUV_422 = new H264ChromaFormat(2, 2, 1);
+        public static readonly H264ChromaFormat YUV_444 = new H264ChromaFormat(3, 1, 1);
 
         public int Id { get; }
         public int SubWidth { get; }
         public int SubHeight { get; }
 
-        public ChromaFormat(int id, int subWidth, int subHeight)
+        public H264ChromaFormat(int id, int subWidth, int subHeight)
         {
             this.Id = id;
             this.SubWidth = subWidth;
             this.SubHeight = subHeight;
         }
 
-        public static ChromaFormat FromId(int id)
+        public static H264ChromaFormat FromId(int id)
         {
             if (id == MONOCHROME.Id)
             {
@@ -1013,7 +1013,7 @@ namespace SharpMp4
             int reservedZero2Bits,
             int levelIdc,
             int seqParameterSetId,
-            ChromaFormat chromaFormat,
+            H264ChromaFormat chromaFormat,
             int residualColorTransformFlag,
             int bitDepthLumaMinus8,
             int bitDepthChromaMinus8,
@@ -1096,7 +1096,7 @@ namespace SharpMp4
         public int ReservedZero2Bits { get; set; }
         public int LevelIdc { get; set; }
         public int SeqParameterSetId { get; set; }
-        public ChromaFormat ChromaFormat { get; set; }
+        public H264ChromaFormat ChromaFormat { get; set; }
         public int ResidualColorTransformFlag { get; set; }
         public int BitDepthLumaMinus8 { get; set; }
         public int BitDepthChromaMinus8 { get; set; }
@@ -1161,7 +1161,7 @@ namespace SharpMp4
 
             int seqParameterSetId = bitstream.ReadUE();
 
-            ChromaFormat chromaFormat;
+            H264ChromaFormat chromaFormat;
             int residualColorTransformFlag = 0;
             int bitDepthLumaMinus8 = 0;
             int bitDepthChromaMinus8 = 0;
@@ -1171,7 +1171,7 @@ namespace SharpMp4
             if (profileIdc == 100 || profileIdc == 110 || profileIdc == 122 || profileIdc == 144)
             {
                 int chromaFormatIdc = bitstream.ReadUE();
-                chromaFormat = ChromaFormat.FromId(chromaFormatIdc);
+                chromaFormat = H264ChromaFormat.FromId(chromaFormatIdc);
                 if (chromaFormat.Id == 3)
                 {
                     residualColorTransformFlag = bitstream.ReadBit();
@@ -1188,7 +1188,7 @@ namespace SharpMp4
             }
             else
             {
-                chromaFormat = ChromaFormat.FromId(1);
+                chromaFormat = H264ChromaFormat.FromId(1);
             }
 
             int log2MaxFrameNumMinus4 = bitstream.ReadUE();
