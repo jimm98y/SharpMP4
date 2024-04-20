@@ -140,70 +140,6 @@ namespace SharpMp4
             return false;
         }
 
-        public enum H264NalSliceType
-        {
-            P, B, I, SP, SI
-        }
-
-        public class H264NalSliceHeader
-        {
-            public H264NalSliceHeader(
-                int firstMbInSlice,
-                int sliceTypeInt,
-                H264NalSliceType sliceType,
-                int picParameterSetId, 
-                int seqParameterSetId,
-                int colorPlaneId,
-                int frameNum,
-                int fieldPicFlag,
-                int bottomFieldFlag,
-                int idrPicId, 
-                int picOrderCntLsb, 
-                int deltaPicOrderCntBottom, 
-                int deltaPicOrderCnt0,
-                int deltaPicOrderCnt1,
-                bool idrPicFlag, 
-                int nalRefIdc, 
-                int picOrderCntType)
-            {
-                FirstMbInSlice = firstMbInSlice;
-                SliceTypeInt = sliceTypeInt;
-                SliceType = sliceType;
-                PicParameterSetId = picParameterSetId;
-                SeqParameterSetId = seqParameterSetId;
-                ColorPlaneId = colorPlaneId;
-                FrameNum = frameNum;
-                FieldPicFlag = fieldPicFlag;
-                BottomFieldFlag = bottomFieldFlag;
-                IdrPicId = idrPicId;
-                PicOrderCntLsb = picOrderCntLsb;
-                DeltaPicOrderCntBottom = deltaPicOrderCntBottom;
-                DeltaPicOrderCnt0 = deltaPicOrderCnt0;
-                DeltaPicOrderCnt1 = deltaPicOrderCnt1;
-                IdrPicFlag = idrPicFlag;
-                NalRefIdc = nalRefIdc;
-                PicOrderCntType = picOrderCntType;
-            }
-
-            public int FirstMbInSlice { get; set; }
-            public int SliceTypeInt { get; set; }
-            public H264NalSliceType SliceType { get; set; }
-            public int PicParameterSetId { get; set; }
-            public int SeqParameterSetId { get; set; }
-            public int ColorPlaneId { get; set; }
-            public int FrameNum { get; set; }
-            public int FieldPicFlag { get; set; }
-            public int BottomFieldFlag { get; set; }
-            public int IdrPicId { get; set; }
-            public int PicOrderCntLsb { get; set; }
-            public int DeltaPicOrderCntBottom { get; set; }
-            public int DeltaPicOrderCnt0 { get; set; }
-            public int DeltaPicOrderCnt1 { get; set; }
-            public bool IdrPicFlag { get; set; }
-            public int NalRefIdc { get; set; }
-            public int PicOrderCntType { get; set; }
-        }
-
         private H264NalSliceHeader ReadSliceHeader(byte[] sample)
         {
             using (BitStreamReader reader = new BitStreamReader(sample))
@@ -323,6 +259,70 @@ namespace SharpMp4
                     sps.PicOrderCntType);
             }
         }
+    }
+
+    public enum H264NalSliceType
+    {
+        P, B, I, SP, SI
+    }
+
+    public class H264NalSliceHeader
+    {
+        public H264NalSliceHeader(
+            int firstMbInSlice,
+            int sliceTypeInt,
+            H264NalSliceType sliceType,
+            int picParameterSetId,
+            int seqParameterSetId,
+            int colorPlaneId,
+            int frameNum,
+            int fieldPicFlag,
+            int bottomFieldFlag,
+            int idrPicId,
+            int picOrderCntLsb,
+            int deltaPicOrderCntBottom,
+            int deltaPicOrderCnt0,
+            int deltaPicOrderCnt1,
+            bool idrPicFlag,
+            int nalRefIdc,
+            int picOrderCntType)
+        {
+            FirstMbInSlice = firstMbInSlice;
+            SliceTypeInt = sliceTypeInt;
+            SliceType = sliceType;
+            PicParameterSetId = picParameterSetId;
+            SeqParameterSetId = seqParameterSetId;
+            ColorPlaneId = colorPlaneId;
+            FrameNum = frameNum;
+            FieldPicFlag = fieldPicFlag;
+            BottomFieldFlag = bottomFieldFlag;
+            IdrPicId = idrPicId;
+            PicOrderCntLsb = picOrderCntLsb;
+            DeltaPicOrderCntBottom = deltaPicOrderCntBottom;
+            DeltaPicOrderCnt0 = deltaPicOrderCnt0;
+            DeltaPicOrderCnt1 = deltaPicOrderCnt1;
+            IdrPicFlag = idrPicFlag;
+            NalRefIdc = nalRefIdc;
+            PicOrderCntType = picOrderCntType;
+        }
+
+        public int FirstMbInSlice { get; set; }
+        public int SliceTypeInt { get; set; }
+        public H264NalSliceType SliceType { get; set; }
+        public int PicParameterSetId { get; set; }
+        public int SeqParameterSetId { get; set; }
+        public int ColorPlaneId { get; set; }
+        public int FrameNum { get; set; }
+        public int FieldPicFlag { get; set; }
+        public int BottomFieldFlag { get; set; }
+        public int IdrPicId { get; set; }
+        public int PicOrderCntLsb { get; set; }
+        public int DeltaPicOrderCntBottom { get; set; }
+        public int DeltaPicOrderCnt0 { get; set; }
+        public int DeltaPicOrderCnt1 { get; set; }
+        public bool IdrPicFlag { get; set; }
+        public int NalRefIdc { get; set; }
+        public int PicOrderCntType { get; set; }
     }
 
     public static class H264NalUnitTypes
