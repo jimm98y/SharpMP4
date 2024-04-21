@@ -1505,9 +1505,9 @@ namespace SharpMp4
             int timeScale,
             int fixedFrameRateFlag,
             int nalHrdParametersPresentFlag,
-            H264HRDParameters nalHrdParams,
+            H264HrdParameters nalHrdParams,
             int vclHrdParametersPresentFlag,
-            H264HRDParameters vclHrdParams,
+            H264HrdParameters vclHrdParams,
             int lowDelayHrdFlag,
             int picStructPresentFlag,
             int bitstreamRestrictionFlag,
@@ -1564,9 +1564,9 @@ namespace SharpMp4
         public int TimeScale { get; set; }
         public int FixedFrameRateFlag { get; set; }
         public int NalHrdParametersPresentFlag { get; set; }
-        public H264HRDParameters NalHrdParams { get; set; }
+        public H264HrdParameters NalHrdParams { get; set; }
         public int VclHrdParametersPresentFlag { get; set; }
-        public H264HRDParameters VclHrdParams { get; set; }
+        public H264HrdParameters VclHrdParams { get; set; }
         public int LowDelayHrdFlag { get; set; }
         public int PicStructPresentFlag { get; set; }
         public int BitstreamRestrictionFlag { get; set; }
@@ -1639,17 +1639,17 @@ namespace SharpMp4
             }
 
             int nalHrdParametersPresentFlag = bitstream.ReadBit();
-            H264HRDParameters nalHRDParams = null;
+            H264HrdParameters nalHRDParams = null;
             if (nalHrdParametersPresentFlag != 0)
             {
-                nalHRDParams = H264HRDParameters.Parse(bitstream);
+                nalHRDParams = H264HrdParameters.Parse(bitstream);
             }
 
             int vclHrdParametersPresentFlag = bitstream.ReadBit();
-            H264HRDParameters vclHRDParams = null;
+            H264HrdParameters vclHRDParams = null;
             if (vclHrdParametersPresentFlag != 0)
             {
-                vclHRDParams = H264HRDParameters.Parse(bitstream);
+                vclHRDParams = H264HrdParameters.Parse(bitstream);
             }
 
             int lowDelayHrdFlag = 0;
@@ -1759,14 +1759,14 @@ namespace SharpMp4
             bitstream.WriteBit(vui.NalHrdParametersPresentFlag);
             if (vui.NalHrdParametersPresentFlag != 0)
             {
-                H264HRDParameters.Build(bitstream, vui.NalHrdParams);
+                H264HrdParameters.Build(bitstream, vui.NalHrdParams);
             }
 
             bitstream.WriteBit(vui.VclHrdParametersPresentFlag);
 
             if (vui.VclHrdParametersPresentFlag != 0)
             {
-                H264HRDParameters.Build(bitstream, vui.VclHrdParams);
+                H264HrdParameters.Build(bitstream, vui.VclHrdParams);
             }
 
             if (vui.NalHrdParametersPresentFlag != 0 || vui.VclHrdParametersPresentFlag != 0)
@@ -1800,9 +1800,9 @@ namespace SharpMp4
         public int MaxDecFrameBuffering { get; set; }
     }
 
-    public class H264HRDParameters
+    public class H264HrdParameters
     {
-        public H264HRDParameters(
+        public H264HrdParameters(
             int cpbCntMinus1,
             int bitRateScale,
             int cpbSizeScale,
@@ -1837,7 +1837,7 @@ namespace SharpMp4
         public int DpbOutputDelayLengthMinus1 { get; set; }
         public int TimeOffsetLength { get; set; }
 
-        public static H264HRDParameters Parse(BitStreamReader bitstream)
+        public static H264HrdParameters Parse(BitStreamReader bitstream)
         {
             int cpbCntMinus1 = bitstream.ReadUE();
             int bitRateScale = bitstream.ReadBits(4);
@@ -1858,7 +1858,7 @@ namespace SharpMp4
             int dpbOutputDelayLengthMinus1 = bitstream.ReadBits(5);
             int timeOffsetLength = bitstream.ReadBits(5);
 
-            return new H264HRDParameters(
+            return new H264HrdParameters(
                 cpbCntMinus1,
                 bitRateScale,
                 cpbSizeScale,
@@ -1872,7 +1872,7 @@ namespace SharpMp4
                 );
         }
 
-        public static void Build(BitStreamWriter bitstream, H264HRDParameters hrd)
+        public static void Build(BitStreamWriter bitstream, H264HrdParameters hrd)
         {
             bitstream.WriteUE((uint)hrd.CpbCntMinus1);
             bitstream.WriteBits(4, hrd.BitRateScale);

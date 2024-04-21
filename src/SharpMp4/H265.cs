@@ -147,6 +147,45 @@ namespace SharpMp4
         }
     }
 
+    public class H265VuiParameters
+    {
+        public static H265VuiParameters Parse(BitStreamReader bitstream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Build(BitStreamWriter bitstream, H265VuiParameters vui)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class H265HrdParameters
+    {
+        public static H265HrdParameters Parse(BitStreamReader bitstream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Build(BitStreamWriter bitstream, H265HrdParameters hrd)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class H265HrdSubLayerParameters
+    {
+        public static H265HrdSubLayerParameters Parse(BitStreamReader bitstream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Build(BitStreamWriter bitstream, H265HrdSubLayerParameters hrd)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class H265PpsNalUnit
     {
         public int PicParameterSetId { get; set; }
