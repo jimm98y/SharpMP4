@@ -98,7 +98,94 @@ namespace SharpMp4
 
     public class H265VpsNalUnit
     {
-        public H265VpsNalUnit(int vpsParameterSetId, int vpsReservedThree2bits, int vpsMaxLayersMinus1, int vpsMaxSubLayersMinus1, int vpsTemporalIdNestingFlag, int vpsReserved0xffff16bits, int generalProfileSpace, int generalTierFlag, int generalProfileIdc, int generalProfileCompatibilityFlags, long generalProfileConstraintIndicatorFlags, int generalLevelIdc, bool[] subLayerProfilePresentFlag, bool[] subLayerLevelPresentFlag, int[] subLayers, int[] subLayerProfileSpace, int[] subLayerTierFlag, int[] subLayerProfileIdc, bool[,] subLayerProfileCompatibilityFlag, bool[] subLayerProgressiveSourceFlag, bool[] subLayerInterlacedSourceFlag, bool[] subLayerNonPackedConstraintFlag, bool[] subLayerFrameOnlyConstraintFlag, int[] subLayerLevelIdc, long[] reservedBits, bool vpsSubLayerOrderingInfoPresentFlag, int[] vpsMaxDecPicBufferingMinus1, int[] vpsMaxNumReorderPics, int[] vpsMaxLatencyIncreasePlus1, int vpsMaxLayerId, int vpsNumLayerSetsMinus1, bool[,] layerIdIncludedFlag, bool vpsTimingInfoPresentFlag, int vpsNumUnitsInTick, int vpsTimeScale, bool vpsPocProportionalToTimingFlag, int vpsNumTicksPocDiffOneMinus1, int vpsNumHrdParameters, int[] hrdLayerSetIdx, bool[] cprmsPresentFlag, H265HrdParameters[] hrdParameters, bool vpsExtensionFlag, List<bool> vpsExtensionDataFlag)
+        public int VpsParameterSetId { get; set; }
+        public int VpsReservedThree2bits { get; set; }
+        public int VpsMaxLayersMinus1 { get; set; }
+        public int VpsMaxSubLayersMinus1 { get; set; }
+        public int VpsTemporalIdNestingFlag { get; set; }
+        public int VpsReserved0xffff16bits { get; set; }
+        public int GeneralProfileSpace { get; set; }
+        public int GeneralTierFlag { get; set; }
+        public int GeneralProfileIdc { get; set; }
+        public int GeneralProfileCompatibilityFlags { get; set; }
+        public long GeneralProfileConstraintIndicatorFlags { get; set; }
+        public int GeneralLevelIdc { get; set; }
+        public bool[] SubLayerProfilePresentFlag { get; set; }
+        public bool[] SubLayerLevelPresentFlag { get; set; }
+        public int[] SubLayers { get; set; }
+        public int[] SubLayerProfileSpace { get; set; }
+        public int[] SubLayerTierFlag { get; set; }
+        public int[] SubLayerProfileIdc { get; set; }
+        public bool[,] SubLayerProfileCompatibilityFlag { get; set; }
+        public bool[] SubLayerProgressiveSourceFlag { get; set; }
+        public bool[] SubLayerInterlacedSourceFlag { get; set; }
+        public bool[] SubLayerNonPackedConstraintFlag { get; set; }
+        public bool[] SubLayerFrameOnlyConstraintFlag { get; set; }
+        public int[] SubLayerLevelIdc { get; set; }
+        public long[] ReservedBits { get; set; }
+        public bool VpsSubLayerOrderingInfoPresentFlag { get; set; }
+        public int[] VpsMaxDecPicBufferingMinus1 { get; set; }
+        public int[] VpsMaxNumReorderPics { get; set; }
+        public int[] VpsMaxLatencyIncreasePlus1 { get; set; }
+        public int VpsMaxLayerId { get; set; }
+        public int VpsNumLayerSetsMinus1 { get; set; }
+        public bool[,] LayerIdIncludedFlag { get; set; }
+        public bool VpsTimingInfoPresentFlag { get; set; }
+        public int VpsNumUnitsInTick { get; set; }
+        public int VpsTimeScale { get; set; }
+        public bool VpsPocProportionalToTimingFlag { get; set; }
+        public int VpsNumTicksPocDiffOneMinus1 { get; set; }
+        public int VpsNumHrdParameters { get; set; }
+        public int[] HrdLayerSetIdx { get; set; }
+        public bool[] CprmsPresentFlag { get; set; }
+        public H265HrdParameters[] HrdParameters { get; set; }
+        public bool VpsExtensionFlag { get; set; }
+        public List<bool> VpsExtensionDataFlag { get; set; } = new List<bool>();
+
+        public H265VpsNalUnit(
+            int vpsParameterSetId,
+            int vpsReservedThree2bits,
+            int vpsMaxLayersMinus1,
+            int vpsMaxSubLayersMinus1, 
+            int vpsTemporalIdNestingFlag,
+            int vpsReserved0xffff16bits,
+            int generalProfileSpace, 
+            int generalTierFlag, 
+            int generalProfileIdc,
+            int generalProfileCompatibilityFlags,
+            long generalProfileConstraintIndicatorFlags,
+            int generalLevelIdc,
+            bool[] subLayerProfilePresentFlag, 
+            bool[] subLayerLevelPresentFlag, 
+            int[] subLayers, 
+            int[] subLayerProfileSpace, 
+            int[] subLayerTierFlag, 
+            int[] subLayerProfileIdc, 
+            bool[,] subLayerProfileCompatibilityFlag, 
+            bool[] subLayerProgressiveSourceFlag, 
+            bool[] subLayerInterlacedSourceFlag,
+            bool[] subLayerNonPackedConstraintFlag, 
+            bool[] subLayerFrameOnlyConstraintFlag, 
+            int[] subLayerLevelIdc, 
+            long[] reservedBits, 
+            bool vpsSubLayerOrderingInfoPresentFlag, 
+            int[] vpsMaxDecPicBufferingMinus1,
+            int[] vpsMaxNumReorderPics, 
+            int[] vpsMaxLatencyIncreasePlus1, 
+            int vpsMaxLayerId, 
+            int vpsNumLayerSetsMinus1, 
+            bool[,] layerIdIncludedFlag, 
+            bool vpsTimingInfoPresentFlag, 
+            int vpsNumUnitsInTick,
+            int vpsTimeScale, 
+            bool vpsPocProportionalToTimingFlag, 
+            int vpsNumTicksPocDiffOneMinus1, 
+            int vpsNumHrdParameters, 
+            int[] hrdLayerSetIdx, 
+            bool[] cprmsPresentFlag, 
+            H265HrdParameters[] hrdParameters, 
+            bool vpsExtensionFlag, 
+            List<bool> vpsExtensionDataFlag)
         {
             VpsParameterSetId = vpsParameterSetId;
             VpsReservedThree2bits = vpsReservedThree2bits;
@@ -144,50 +231,6 @@ namespace SharpMp4
             VpsExtensionFlag = vpsExtensionFlag;
             VpsExtensionDataFlag = vpsExtensionDataFlag;
         }
-
-        public int VpsParameterSetId { get; set; }
-        public int VpsReservedThree2bits { get; set; }
-        public int VpsMaxLayersMinus1 { get; set; }
-        public int VpsMaxSubLayersMinus1 { get; set; }
-        public int VpsTemporalIdNestingFlag { get; set; }
-        public int VpsReserved0xffff16bits { get; set; }
-        public int GeneralProfileSpace { get; set; }
-        public int GeneralTierFlag { get; set; }
-        public int GeneralProfileIdc { get; set; }
-        public int GeneralProfileCompatibilityFlags { get; set; }
-        public long GeneralProfileConstraintIndicatorFlags { get; set; }
-        public int GeneralLevelIdc { get; set; }
-        public bool[] SubLayerProfilePresentFlag { get; set; }
-        public bool[] SubLayerLevelPresentFlag { get; set; }
-        public int[] SubLayers { get; set; }
-        public int[] SubLayerProfileSpace { get; set; }
-        public int[] SubLayerTierFlag { get; set; }
-        public int[] SubLayerProfileIdc { get; set; }
-        public bool[,] SubLayerProfileCompatibilityFlag { get; set; }
-        public bool[] SubLayerProgressiveSourceFlag { get; set; }
-        public bool[] SubLayerInterlacedSourceFlag { get; set; }
-        public bool[] SubLayerNonPackedConstraintFlag { get; set; }
-        public bool[] SubLayerFrameOnlyConstraintFlag { get; set; }
-        public int[] SubLayerLevelIdc { get; set; }
-        public long[] ReservedBits { get; set; }
-        public bool VpsSubLayerOrderingInfoPresentFlag { get; set; }
-        public int[] VpsMaxDecPicBufferingMinus1 { get; set; }
-        public int[] VpsMaxNumReorderPics { get; set; }
-        public int[] VpsMaxLatencyIncreasePlus1 { get; set; }
-        public int VpsMaxLayerId { get; set; }
-        public int VpsNumLayerSetsMinus1 { get; set; }
-        public bool[,] LayerIdIncludedFlag { get; set; }
-        public bool VpsTimingInfoPresentFlag { get; set; }
-        public int VpsNumUnitsInTick { get; set; }
-        public int VpsTimeScale { get; set; }
-        public bool VpsPocProportionalToTimingFlag { get; set; }
-        public int VpsNumTicksPocDiffOneMinus1 { get; set; }
-        public int VpsNumHrdParameters { get; set; }
-        public int[] HrdLayerSetIdx { get; set; }
-        public bool[] CprmsPresentFlag { get; set; }
-        public H265HrdParameters[] HrdParameters { get; set; }
-        public bool VpsExtensionFlag { get; set; }
-        public List<bool> VpsExtensionDataFlag { get; set; }
 
         public static H265VpsNalUnit Parse(byte[] vps)
         {
