@@ -108,11 +108,7 @@ namespace SharpMp4
         public int VpsMaxSubLayersMinus1 { get; set; }
         public int VpsTemporalIdNestingFlag { get; set; }
         public int VpsReserved0xffff16bits { get; set; }
-        public int GeneralProfileSpace { get; set; }
-        public int GeneralTierFlag { get; set; }
-        public int GeneralProfileIdc { get; set; }
-        public int GeneralProfileCompatibilityFlags { get; set; }
-        public long GeneralProfileConstraintIndicatorFlags { get; set; }
+        public H265ProfileTier ProfileTier { get; set; }
         public int GeneralLevelIdc { get; set; }
         public bool[] SubLayerProfilePresentFlag { get; set; }
         public bool[] SubLayerLevelPresentFlag { get; set; }
@@ -154,11 +150,7 @@ namespace SharpMp4
             int vpsMaxSubLayersMinus1, 
             int vpsTemporalIdNestingFlag,
             int vpsReserved0xffff16bits,
-            int generalProfileSpace, 
-            int generalTierFlag, 
-            int generalProfileIdc,
-            int generalProfileCompatibilityFlags,
-            long generalProfileConstraintIndicatorFlags,
+            H265ProfileTier profileTier,
             int generalLevelIdc,
             bool[] subLayerProfilePresentFlag, 
             bool[] subLayerLevelPresentFlag, 
@@ -199,11 +191,7 @@ namespace SharpMp4
             VpsMaxSubLayersMinus1 = vpsMaxSubLayersMinus1;
             VpsTemporalIdNestingFlag = vpsTemporalIdNestingFlag;
             VpsReserved0xffff16bits = vpsReserved0xffff16bits;
-            GeneralProfileSpace = generalProfileSpace;
-            GeneralTierFlag = generalTierFlag;
-            GeneralProfileIdc = generalProfileIdc;
-            GeneralProfileCompatibilityFlags = generalProfileCompatibilityFlags;
-            GeneralProfileConstraintIndicatorFlags = generalProfileConstraintIndicatorFlags;
+            ProfileTier = profileTier;
             GeneralLevelIdc = generalLevelIdc;
             SubLayerProfilePresentFlag = subLayerProfilePresentFlag;
             SubLayerLevelPresentFlag = subLayerLevelPresentFlag;
@@ -252,18 +240,20 @@ namespace SharpMp4
             H265NalUnitHeader header = H265NalUnitHeader.ParseNALHeader(bitstream);
 
             int vpsParameterSetId = bitstream.ReadBits(4);
+
+            // TODO: should be vps_base_layer_internal_flag and vps_base_layer_available_flag  
             int vpsReservedThree2bits = bitstream.ReadBits(2);
+
             int vpsMaxLayersMinus1 = bitstream.ReadBits(6);
             int vpsMaxSubLayersMinus1 = bitstream.ReadBits(3);
             int vpsTemporalIdNestingFlag = bitstream.ReadBit();
             int vpsReserved0xffff16bits = bitstream.ReadBits(16);
 
-            int generalProfileSpace = bitstream.ReadBits(2);
-            int generalTierFlag = bitstream.ReadBit();
-            int generalProfileIdc = bitstream.ReadBits(5);
+            if (vpsReserved0xffff16bits != 0xffff)
+                throw new Exception("Invalid VPS!");
 
-            int generalProfileCompatibilityFlags = bitstream.ReadBits(32);
-            long generalProfileConstraintIndicatorFlags = bitstream.ReadBitsLong(48); // TODO
+            H265ProfileTier profileTier = H265ProfileTier.Parse(bitstream);
+
             int generalLevelIdc = bitstream.ReadBits(8);
 
             bool[] subLayerProfilePresentFlag = new bool[vpsMaxSubLayersMinus1];
@@ -396,11 +386,7 @@ namespace SharpMp4
                 vpsMaxSubLayersMinus1,
                 vpsTemporalIdNestingFlag,
                 vpsReserved0xffff16bits,
-                generalProfileSpace,
-                generalTierFlag,
-                generalProfileIdc,
-                generalProfileCompatibilityFlags,
-                generalProfileConstraintIndicatorFlags,
+                profileTier,
                 generalLevelIdc,
                 subLayerProfilePresentFlag,
                 subLayerLevelPresentFlag,
@@ -442,6 +428,311 @@ namespace SharpMp4
         }
     }
 
+    public class H265ProfileTier
+    {
+        public int GeneralProfileSpace { get; set; }
+        public int GeneralTierFlag { get; set; }
+        public int GeneralProfileIdc { get; set; }
+        public bool[] GeneralProfileCompatibilityFlags { get; set; }
+        public bool GeneralProgressiveSourceFlag { get; set; }
+        public bool GeneralInterlacedSourceFlag { get; set; }
+        public bool GeneralNonPackedConstraintFlag { get; set; }
+        public bool GeneralFrameOnlyConstraintFlag { get; set; }
+        public bool GeneralMax12BitConstraintFlag { get; set; }
+        public bool GeneralMax10BitConstraintFlag { get; set; }
+        public bool GeneralMax8BitConstraintFlag { get; set; }
+        public bool GeneralMax422ChromaConstraintFlag { get; set; }
+        public bool GeneralMax420ChromaConstraintFlag { get; set; }
+        public bool GeneralMaxMonochromeConstraintFlag { get; set; }
+        public bool GeneralIntraConstraintFlag { get; set; }
+        public bool GeneralOnePictureOnlyConstraintFlag { get; set; }
+        public bool GeneralLowerBitRateConstraintFlag { get; set; }
+        public bool GeneralMax14BitConstraintFlag { get; set; }
+        public long GeneralReservedZero33Bits { get; set; }
+        public long GeneralReservedZero34Bits { get; set; }
+        public int GeneralReservedZero7Bits { get; set; }
+        public long GeneralReservedZero35Bits { get; set; }
+        public long GeneralReservedZero43Bits { get; set; }
+        public bool GeneralInbldFlag { get; set; }
+        public bool GeneralReservedZeroBit { get; set; }
+
+        public H265ProfileTier(
+            int generalProfileSpace, 
+            int generalTierFlag, 
+            int generalProfileIdc, 
+            bool[] generalProfileCompatibilityFlags, 
+            bool generalProgressiveSourceFlag, 
+            bool generalInterlacedSourceFlag, 
+            bool generalNonPackedConstraintFlag, 
+            bool generalFrameOnlyConstraintFlag, 
+            bool generalMax12BitConstraintFlag, 
+            bool generalMax10BitConstraintFlag, 
+            bool generalMax8BitConstraintFlag, 
+            bool generalMax422ChromaConstraintFlag, 
+            bool generalMax420ChromaConstraintFlag, 
+            bool generalMaxMonochromeConstraintFlag, 
+            bool generalIntraConstraintFlag, 
+            bool generalOnePictureOnlyConstraintFlag, 
+            bool generalLowerBitRateConstraintFlag,
+            bool generalMax14BitConstraintFlag, 
+            long generalReservedZero33Bits, 
+            long generalReservedZero34Bits, 
+            int generalReservedZero7Bits, 
+            long generalReservedZero35Bits, 
+            long generalReservedZero43Bits, 
+            bool generalInbldFlag, 
+            bool generalReservedZeroBit)
+        {
+            GeneralProfileSpace = generalProfileSpace;
+            GeneralTierFlag = generalTierFlag;
+            GeneralProfileIdc = generalProfileIdc;
+            GeneralProfileCompatibilityFlags = generalProfileCompatibilityFlags;
+            GeneralProgressiveSourceFlag = generalProgressiveSourceFlag;
+            GeneralInterlacedSourceFlag = generalInterlacedSourceFlag;
+            GeneralNonPackedConstraintFlag = generalNonPackedConstraintFlag;
+            GeneralFrameOnlyConstraintFlag = generalFrameOnlyConstraintFlag;
+            GeneralMax12BitConstraintFlag = generalMax12BitConstraintFlag;
+            GeneralMax10BitConstraintFlag = generalMax10BitConstraintFlag;
+            GeneralMax8BitConstraintFlag = generalMax8BitConstraintFlag;
+            GeneralMax422ChromaConstraintFlag = generalMax422ChromaConstraintFlag;
+            GeneralMax420ChromaConstraintFlag = generalMax420ChromaConstraintFlag;
+            GeneralMaxMonochromeConstraintFlag = generalMaxMonochromeConstraintFlag;
+            GeneralIntraConstraintFlag = generalIntraConstraintFlag;
+            GeneralOnePictureOnlyConstraintFlag = generalOnePictureOnlyConstraintFlag;
+            GeneralLowerBitRateConstraintFlag = generalLowerBitRateConstraintFlag;
+            GeneralMax14BitConstraintFlag = generalMax14BitConstraintFlag;
+            GeneralReservedZero33Bits = generalReservedZero33Bits;
+            GeneralReservedZero34Bits = generalReservedZero34Bits;
+            GeneralReservedZero7Bits = generalReservedZero7Bits;
+            GeneralReservedZero35Bits = generalReservedZero35Bits;
+            GeneralReservedZero43Bits = generalReservedZero43Bits;
+            GeneralInbldFlag = generalInbldFlag;
+            GeneralReservedZeroBit = generalReservedZeroBit;
+        }
+
+        public static H265ProfileTier Parse(BitStreamReader bitstream)
+        {
+            int generalProfileSpace = bitstream.ReadBits(2);
+            int generalTierFlag = bitstream.ReadBit();
+            int generalProfileIdc = bitstream.ReadBits(5);
+
+            bool[] generalProfileCompatibilityFlags = new bool[32];
+            for (int i = 0; i < 32; i++)
+            {
+                generalProfileCompatibilityFlags[i] = bitstream.ReadBit() != 0;
+            }
+
+            bool generalProgressiveSourceFlag = bitstream.ReadBit() != 0;
+            bool generalInterlacedSourceFlag = bitstream.ReadBit() != 0;
+            bool generalNonPackedConstraintFlag = bitstream.ReadBit() != 0;
+            bool generalFrameOnlyConstraintFlag = bitstream.ReadBit() != 0;
+
+            bool generalMax12BitConstraintFlag = false;
+            bool generalMax10BitConstraintFlag = false;
+            bool generalMax8BitConstraintFlag = false;
+            bool generalMax422ChromaConstraintFlag = false;
+            bool generalMax420ChromaConstraintFlag = false;
+            bool generalMaxMonochromeConstraintFlag = false;
+            bool generalIntraConstraintFlag = false;
+            bool generalOnePictureOnlyConstraintFlag = false;
+            bool generalLowerBitRateConstraintFlag = false;
+            bool generalMax14BitConstraintFlag = false;
+            long generalReservedZero33Bits = 0;
+            long generalReservedZero34Bits = 0;
+            int generalReservedZero7Bits = 0;
+            long generalReservedZero35Bits = 0;
+            long generalReservedZero43Bits = 0;
+            bool generalInbldFlag = false;
+            bool generalReservedZeroBit = false;
+            if (generalProfileIdc == 4 || generalProfileCompatibilityFlags[4] ||
+                generalProfileIdc == 5 || generalProfileCompatibilityFlags[5] ||
+                generalProfileIdc == 6 || generalProfileCompatibilityFlags[6] ||
+                generalProfileIdc == 7 || generalProfileCompatibilityFlags[7] ||
+                generalProfileIdc == 8 || generalProfileCompatibilityFlags[8] ||
+                generalProfileIdc == 9 || generalProfileCompatibilityFlags[9] ||
+                generalProfileIdc == 10 || generalProfileCompatibilityFlags[10])
+            {
+                generalMax12BitConstraintFlag = bitstream.ReadBit() != 0;
+                generalMax10BitConstraintFlag = bitstream.ReadBit() != 0;
+                generalMax8BitConstraintFlag = bitstream.ReadBit() != 0;
+                generalMax422ChromaConstraintFlag = bitstream.ReadBit() != 0;
+                generalMax420ChromaConstraintFlag = bitstream.ReadBit() != 0;
+                generalMaxMonochromeConstraintFlag = bitstream.ReadBit() != 0;
+                generalIntraConstraintFlag = bitstream.ReadBit() != 0;
+                generalOnePictureOnlyConstraintFlag = bitstream.ReadBit() != 0;
+                generalLowerBitRateConstraintFlag = bitstream.ReadBit() != 0;
+
+                if (generalProfileIdc == 5 || generalProfileCompatibilityFlags[5] ||
+                    generalProfileIdc == 9 || generalProfileCompatibilityFlags[9] ||
+                    generalProfileIdc == 10 || generalProfileCompatibilityFlags[10])
+                {
+                    generalMax14BitConstraintFlag = bitstream.ReadBit() != 0;
+                    generalReservedZero33Bits = bitstream.ReadBitsLong(33);
+                }
+                else
+                {
+                    generalReservedZero34Bits = bitstream.ReadBitsLong(34);
+                }
+            }
+            else if (generalProfileIdc == 2 || generalProfileCompatibilityFlags[2])
+            {
+                generalReservedZero7Bits = bitstream.ReadBits(7);
+                generalOnePictureOnlyConstraintFlag = bitstream.ReadBit() != 0;
+                generalReservedZero35Bits = bitstream.ReadBitsLong(35);
+            }
+            else
+            {
+                generalReservedZero43Bits = bitstream.ReadBitsLong(43);
+            }
+
+            if ((generalProfileIdc >= 1 && generalProfileIdc <= 5) ||
+                generalProfileIdc == 9 ||
+                generalProfileCompatibilityFlags[1] || generalProfileCompatibilityFlags[2] ||
+                generalProfileCompatibilityFlags[3] || generalProfileCompatibilityFlags[4] ||
+                generalProfileCompatibilityFlags[5] || generalProfileCompatibilityFlags[9])
+            {
+                generalInbldFlag = bitstream.ReadBit() != 0;
+            }
+            else
+            {
+                generalReservedZeroBit = bitstream.ReadBit() != 0;
+            }
+
+            return new H265ProfileTier(
+                generalProfileSpace,
+                generalTierFlag,
+                generalProfileIdc,
+                generalProfileCompatibilityFlags,
+                generalProgressiveSourceFlag,
+                generalInterlacedSourceFlag,
+                generalNonPackedConstraintFlag,
+                generalFrameOnlyConstraintFlag,
+                generalMax12BitConstraintFlag,
+                generalMax10BitConstraintFlag,
+                generalMax8BitConstraintFlag,
+                generalMax422ChromaConstraintFlag,
+                generalMax420ChromaConstraintFlag,
+                generalMaxMonochromeConstraintFlag,
+                generalIntraConstraintFlag,
+                generalOnePictureOnlyConstraintFlag,
+                generalLowerBitRateConstraintFlag,
+                generalMax14BitConstraintFlag,
+                generalReservedZero33Bits,
+                generalReservedZero34Bits,
+                generalReservedZero7Bits,
+                generalReservedZero35Bits,
+                generalReservedZero43Bits,
+                generalInbldFlag,
+                generalReservedZeroBit
+            );
+        }
+
+        public static void Build(BitStreamWriter bitstream, H265ProfileTier b)
+        {
+            bitstream.WriteBits(2, b.GeneralProfileSpace);
+            bitstream.WriteBit(b.GeneralTierFlag);
+            bitstream.WriteBits(5, b.GeneralProfileIdc);
+            b.BuildGeneralProfileCompatibilityFlags(bitstream);
+            b.BuildGeneralProfileConstraintIndicatorFlags(bitstream);
+        }
+
+        private void BuildGeneralProfileCompatibilityFlags(BitStreamWriter bitstream)
+        {
+            for (int i = 0; i < 32; i++)
+            {
+                bitstream.WriteBit(GeneralProfileCompatibilityFlags[i]);
+            }
+        }
+
+        private void BuildGeneralProfileConstraintIndicatorFlags(BitStreamWriter bitstream)
+        {
+            bitstream.WriteBit(GeneralProgressiveSourceFlag);
+            bitstream.WriteBit(GeneralInterlacedSourceFlag);
+            bitstream.WriteBit(GeneralNonPackedConstraintFlag);
+            bitstream.WriteBit(GeneralFrameOnlyConstraintFlag);
+
+            if (GeneralProfileIdc == 4 || GeneralProfileCompatibilityFlags[4] ||
+                GeneralProfileIdc == 5 || GeneralProfileCompatibilityFlags[5] ||
+                GeneralProfileIdc == 6 || GeneralProfileCompatibilityFlags[6] ||
+                GeneralProfileIdc == 7 || GeneralProfileCompatibilityFlags[7] ||
+                GeneralProfileIdc == 8 || GeneralProfileCompatibilityFlags[8] ||
+                GeneralProfileIdc == 9 || GeneralProfileCompatibilityFlags[9] ||
+                GeneralProfileIdc == 10 || GeneralProfileCompatibilityFlags[10])
+            {
+                bitstream.WriteBit(GeneralMax12BitConstraintFlag);
+                bitstream.WriteBit(GeneralMax10BitConstraintFlag);
+                bitstream.WriteBit(GeneralMax8BitConstraintFlag);
+                bitstream.WriteBit(GeneralMax422ChromaConstraintFlag);
+                bitstream.WriteBit(GeneralMax420ChromaConstraintFlag);
+                bitstream.WriteBit(GeneralMaxMonochromeConstraintFlag);
+                bitstream.WriteBit(GeneralIntraConstraintFlag);
+                bitstream.WriteBit(GeneralOnePictureOnlyConstraintFlag);
+                bitstream.WriteBit(GeneralLowerBitRateConstraintFlag);
+
+                if (GeneralProfileIdc == 5 || GeneralProfileCompatibilityFlags[5] ||
+                    GeneralProfileIdc == 9 || GeneralProfileCompatibilityFlags[9] ||
+                    GeneralProfileIdc == 10 || GeneralProfileCompatibilityFlags[10])
+                {
+                    bitstream.WriteBit(GeneralMax14BitConstraintFlag);
+                    bitstream.WriteBitsLong(33, GeneralReservedZero33Bits);
+                }
+                else
+                {
+                    bitstream.WriteBitsLong(34, GeneralReservedZero34Bits);
+                }
+            }
+            else if (GeneralProfileIdc == 2 || GeneralProfileCompatibilityFlags[2])
+            {
+                bitstream.WriteBits(7, GeneralReservedZero7Bits);
+                bitstream.WriteBit(GeneralOnePictureOnlyConstraintFlag);
+                bitstream.WriteBitsLong(35, GeneralReservedZero35Bits);
+            }
+            else
+            {
+                bitstream.WriteBitsLong(43, GeneralReservedZero43Bits);
+            }
+
+            if ((GeneralProfileIdc >= 1 && GeneralProfileIdc <= 5) ||
+                GeneralProfileIdc == 9 ||
+                GeneralProfileCompatibilityFlags[1] || GeneralProfileCompatibilityFlags[2] ||
+                GeneralProfileCompatibilityFlags[3] || GeneralProfileCompatibilityFlags[4] ||
+                GeneralProfileCompatibilityFlags[5] || GeneralProfileCompatibilityFlags[9])
+            {
+                bitstream.WriteBit(GeneralInbldFlag);
+            }
+            else
+            {
+                bitstream.WriteBit(GeneralReservedZeroBit);
+            }
+
+            bitstream.Flush();
+        }
+
+        public ulong GetGeneralProfileConstraintIndicatorFlags()
+        {
+            using (var stream = new MemoryStream())
+            {
+                using (BitStreamWriter bitstream = new BitStreamWriter(stream))
+                {
+                    BuildGeneralProfileConstraintIndicatorFlags(bitstream);
+                    return Convert.ToUInt64(stream.ToArray());
+                }
+            }
+        }
+
+        public uint GetGeneralProfileCompatibilityFlags()
+        {
+            using (var stream = new MemoryStream())
+            {
+                using (BitStreamWriter bitstream = new BitStreamWriter(stream))
+                {
+                    BuildGeneralProfileCompatibilityFlags(bitstream);
+                    return Convert.ToUInt32(stream.ToArray());
+                }
+            }
+        }
+    }
+
     public class H265SpsNalUnit
     {
         public H265NalUnitHeader Header { get; set; }
@@ -449,11 +740,7 @@ namespace SharpMp4
         public int SpsVideoParameterSetId { get; set; }
         public int SpsMaxSubLayersMinus1 { get; set; }
         public bool SpsTemporalIdNestingFlag { get; set; }
-        public int GeneralProfileSpace { get; set; }
-        public bool GeneralTierFlag { get; set; }
-        public int GeneralProfileIdc { get; set; }
-        public int GeneralProfileCompatibilityFlags { get; set; }
-        public long GeneralConstraintIndicatorFlags { get; set; }
+        public H265ProfileTier ProfileTier { get; set; }
         public byte GeneralLevelIdc { get; set; }
         public bool[] SubLayerProfilePresentFlag { get; set; }
         public bool[] SubLayerLevelPresentFlag { get; set; }
@@ -524,11 +811,7 @@ namespace SharpMp4
             int spsVideoParameterSetId,
             int spsMaxSubLayersMinus1,
             bool spsTemporalIdNestingFlag,
-            int generalProfileSpace, 
-            bool generalTierFlag, 
-            int generalProfileIdc, 
-            int generalProfileCompatibilityFlags,
-            long generalConstraintIndicatorFlags,
+            H265ProfileTier profileTier,
             byte generalLevelIdc, 
             bool[] subLayerProfilePresentFlag, 
             bool[] subLayerLevelPresentFlag, 
@@ -598,11 +881,7 @@ namespace SharpMp4
             SpsVideoParameterSetId = spsVideoParameterSetId;
             SpsMaxSubLayersMinus1 = spsMaxSubLayersMinus1;
             SpsTemporalIdNestingFlag = spsTemporalIdNestingFlag;
-            GeneralProfileSpace = generalProfileSpace;
-            GeneralTierFlag = generalTierFlag;
-            GeneralProfileIdc = generalProfileIdc;
-            GeneralProfileCompatibilityFlags = generalProfileCompatibilityFlags;
-            GeneralConstraintIndicatorFlags = generalConstraintIndicatorFlags;
+            ProfileTier = profileTier;
             GeneralLevelIdc = generalLevelIdc;
             SubLayerProfilePresentFlag = subLayerProfilePresentFlag;
             SubLayerLevelPresentFlag = subLayerLevelPresentFlag;
@@ -691,11 +970,8 @@ namespace SharpMp4
             int spsMaxSubLayersMinus1 = bitstream.ReadBits(3);
             bool spsTemporalIdNestingFlag = bitstream.ReadBit() != 0;
 
-            int generalProfileSpace = bitstream.ReadBits(2);
-            bool generalTierFlag = bitstream.ReadBit() != 0;
-            int generalProfileIdc = bitstream.ReadBits(5);
-            int generalProfileCompatibilityFlags = bitstream.ReadBits(32);
-            long generalConstraintIndicatorFlags = bitstream.ReadBitsLong(48);
+            H265ProfileTier profileTier = H265ProfileTier.Parse(bitstream);
+
             byte generalLevelIdc = (byte)bitstream.ReadBits(8);
             bool[] subLayerProfilePresentFlag = new bool[spsMaxSubLayersMinus1];
             bool[] subLayerLevelPresentFlag = new bool[spsMaxSubLayersMinus1];
@@ -919,11 +1195,7 @@ namespace SharpMp4
                 spsVideoParameterSetId,
                 spsMaxSubLayersMinus1,
                 spsTemporalIdNestingFlag,
-                generalProfileSpace,
-                generalTierFlag,
-                generalProfileIdc,
-                generalProfileCompatibilityFlags,
-                generalConstraintIndicatorFlags,
+                profileTier,
                 generalLevelIdc,
                 subLayerProfilePresentFlag,
                 subLayerLevelPresentFlag,
@@ -1907,8 +2179,8 @@ namespace SharpMp4
         }
 
         public int NalUnitType { get; set; }
-        public int NuhLayerId { get; }
-        public int NuhTemporalIdPlus1 { get; }
+        public int NuhLayerId { get; set; }
+        public int NuhTemporalIdPlus1 { get; set; }
 
         public static H265NalUnitHeader ParseNALHeader(BitStreamReader bitstream)
         {
@@ -2268,11 +2540,11 @@ namespace SharpMp4
 
             HevcConfigurationBox hevcConfigurationBox = new HevcConfigurationBox(0, visualSampleEntry, new HevcDecoderConfigurationRecord());
             hevcConfigurationBox.HevcDecoderConfigurationRecord.ConfigurationVersion = 1;
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileIdc = sps.GeneralProfileIdc;
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileIdc = sps.ProfileTier.GeneralProfileIdc;
             hevcConfigurationBox.HevcDecoderConfigurationRecord.ChromaFormat = sps.ChromaFormatIdc;
             hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralLevelIdc = sps.GeneralLevelIdc;
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileCompatibilityFlags = (uint)sps.GeneralProfileCompatibilityFlags;
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralConstraintIndicatorFlags = (ulong)vps.GeneralProfileConstraintIndicatorFlags;
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileCompatibilityFlags = (uint)sps.ProfileTier.GetGeneralProfileCompatibilityFlags();
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralConstraintIndicatorFlags = (ulong)vps.ProfileTier.GetGeneralProfileConstraintIndicatorFlags();
             hevcConfigurationBox.HevcDecoderConfigurationRecord.BitDepthChromaMinus8 = sps.BitDepthChromaMinus8;
             hevcConfigurationBox.HevcDecoderConfigurationRecord.BitDepthLumaMinus8 = sps.BitDepthLumaMinus8;
             hevcConfigurationBox.HevcDecoderConfigurationRecord.TemporalIdNested = sps.SpsTemporalIdNestingFlag ? 1 : 0;

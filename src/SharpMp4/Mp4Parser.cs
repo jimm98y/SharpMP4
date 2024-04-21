@@ -554,6 +554,20 @@ namespace SharpMp4
             }
         }
 
+        public void WriteBitsLong(uint count, long value)
+        {
+            if (count > 64)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            while (count > 0)
+            {
+                int bits = (int)count - 1;
+                long mask = 0x1 << bits;
+                WriteBit(((value & mask) >> bits) != 0);
+                count--;
+            }
+        }
+
         public void WriteTrailingBit()
         {
             WriteBit(1);
