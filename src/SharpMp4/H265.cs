@@ -98,12 +98,96 @@ namespace SharpMp4
 
     public class H265VpsNalUnit
     {
-        public int VpsParameterSetId { get; set; }
-
-        public static byte[] Build(H265VpsNalUnit vps)
+        public H265VpsNalUnit(int vpsParameterSetId, int vpsReservedThree2bits, int vpsMaxLayersMinus1, int vpsMaxSubLayersMinus1, int vpsTemporalIdNestingFlag, int vpsReserved0xffff16bits, int generalProfileSpace, int generalTierFlag, int generalProfileIdc, int generalProfileCompatibilityFlags, long generalProfileConstraintIndicatorFlags, int generalLevelIdc, bool[] subLayerProfilePresentFlag, bool[] subLayerLevelPresentFlag, int[] subLayers, int[] subLayerProfileSpace, int[] subLayerTierFlag, int[] subLayerProfileIdc, bool[,] subLayerProfileCompatibilityFlag, bool[] subLayerProgressiveSourceFlag, bool[] subLayerInterlacedSourceFlag, bool[] subLayerNonPackedConstraintFlag, bool[] subLayerFrameOnlyConstraintFlag, int[] subLayerLevelIdc, long[] reservedBits, bool vpsSubLayerOrderingInfoPresentFlag, int[] vpsMaxDecPicBufferingMinus1, int[] vpsMaxNumReorderPics, int[] vpsMaxLatencyIncreasePlus1, int vpsMaxLayerId, int vpsNumLayerSetsMinus1, bool[,] layerIdIncludedFlag, bool vpsTimingInfoPresentFlag, int vpsNumUnitsInTick, int vpsTimeScale, bool vpsPocProportionalToTimingFlag, int vpsNumTicksPocDiffOneMinus1, int vpsNumHrdParameters, int[] hrdLayerSetIdx, bool[] cprmsPresentFlag, H265HrdParameters[] hrdParameters, bool vpsExtensionFlag, List<bool> vpsExtensionDataFlag)
         {
-            throw new NotImplementedException();
+            VpsParameterSetId = vpsParameterSetId;
+            VpsReservedThree2bits = vpsReservedThree2bits;
+            VpsMaxLayersMinus1 = vpsMaxLayersMinus1;
+            VpsMaxSubLayersMinus1 = vpsMaxSubLayersMinus1;
+            VpsTemporalIdNestingFlag = vpsTemporalIdNestingFlag;
+            VpsReserved0xffff16bits = vpsReserved0xffff16bits;
+            GeneralProfileSpace = generalProfileSpace;
+            GeneralTierFlag = generalTierFlag;
+            GeneralProfileIdc = generalProfileIdc;
+            GeneralProfileCompatibilityFlags = generalProfileCompatibilityFlags;
+            GeneralProfileConstraintIndicatorFlags = generalProfileConstraintIndicatorFlags;
+            GeneralLevelIdc = generalLevelIdc;
+            SubLayerProfilePresentFlag = subLayerProfilePresentFlag;
+            SubLayerLevelPresentFlag = subLayerLevelPresentFlag;
+            SubLayers = subLayers;
+            SubLayerProfileSpace = subLayerProfileSpace;
+            SubLayerTierFlag = subLayerTierFlag;
+            SubLayerProfileIdc = subLayerProfileIdc;
+            SubLayerProfileCompatibilityFlag = subLayerProfileCompatibilityFlag;
+            SubLayerProgressiveSourceFlag = subLayerProgressiveSourceFlag;
+            SubLayerInterlacedSourceFlag = subLayerInterlacedSourceFlag;
+            SubLayerNonPackedConstraintFlag = subLayerNonPackedConstraintFlag;
+            SubLayerFrameOnlyConstraintFlag = subLayerFrameOnlyConstraintFlag;
+            SubLayerLevelIdc = subLayerLevelIdc;
+            ReservedBits = reservedBits;
+            VpsSubLayerOrderingInfoPresentFlag = vpsSubLayerOrderingInfoPresentFlag;
+            VpsMaxDecPicBufferingMinus1 = vpsMaxDecPicBufferingMinus1;
+            VpsMaxNumReorderPics = vpsMaxNumReorderPics;
+            VpsMaxLatencyIncreasePlus1 = vpsMaxLatencyIncreasePlus1;
+            VpsMaxLayerId = vpsMaxLayerId;
+            VpsNumLayerSetsMinus1 = vpsNumLayerSetsMinus1;
+            LayerIdIncludedFlag = layerIdIncludedFlag;
+            VpsTimingInfoPresentFlag = vpsTimingInfoPresentFlag;
+            VpsNumUnitsInTick = vpsNumUnitsInTick;
+            VpsTimeScale = vpsTimeScale;
+            VpsPocProportionalToTimingFlag = vpsPocProportionalToTimingFlag;
+            VpsNumTicksPocDiffOneMinus1 = vpsNumTicksPocDiffOneMinus1;
+            VpsNumHrdParameters = vpsNumHrdParameters;
+            HrdLayerSetIdx = hrdLayerSetIdx;
+            CprmsPresentFlag = cprmsPresentFlag;
+            HrdParameters = hrdParameters;
+            VpsExtensionFlag = vpsExtensionFlag;
+            VpsExtensionDataFlag = vpsExtensionDataFlag;
         }
+
+        public int VpsParameterSetId { get; set; }
+        public int VpsReservedThree2bits { get; set; }
+        public int VpsMaxLayersMinus1 { get; set; }
+        public int VpsMaxSubLayersMinus1 { get; set; }
+        public int VpsTemporalIdNestingFlag { get; set; }
+        public int VpsReserved0xffff16bits { get; set; }
+        public int GeneralProfileSpace { get; set; }
+        public int GeneralTierFlag { get; set; }
+        public int GeneralProfileIdc { get; set; }
+        public int GeneralProfileCompatibilityFlags { get; set; }
+        public long GeneralProfileConstraintIndicatorFlags { get; set; }
+        public int GeneralLevelIdc { get; set; }
+        public bool[] SubLayerProfilePresentFlag { get; set; }
+        public bool[] SubLayerLevelPresentFlag { get; set; }
+        public int[] SubLayers { get; set; }
+        public int[] SubLayerProfileSpace { get; set; }
+        public int[] SubLayerTierFlag { get; set; }
+        public int[] SubLayerProfileIdc { get; set; }
+        public bool[,] SubLayerProfileCompatibilityFlag { get; set; }
+        public bool[] SubLayerProgressiveSourceFlag { get; set; }
+        public bool[] SubLayerInterlacedSourceFlag { get; set; }
+        public bool[] SubLayerNonPackedConstraintFlag { get; set; }
+        public bool[] SubLayerFrameOnlyConstraintFlag { get; set; }
+        public int[] SubLayerLevelIdc { get; set; }
+        public long[] ReservedBits { get; set; }
+        public bool VpsSubLayerOrderingInfoPresentFlag { get; set; }
+        public int[] VpsMaxDecPicBufferingMinus1 { get; set; }
+        public int[] VpsMaxNumReorderPics { get; set; }
+        public int[] VpsMaxLatencyIncreasePlus1 { get; set; }
+        public int VpsMaxLayerId { get; set; }
+        public int VpsNumLayerSetsMinus1 { get; set; }
+        public bool[,] LayerIdIncludedFlag { get; set; }
+        public bool VpsTimingInfoPresentFlag { get; set; }
+        public int VpsNumUnitsInTick { get; set; }
+        public int VpsTimeScale { get; set; }
+        public bool VpsPocProportionalToTimingFlag { get; set; }
+        public int VpsNumTicksPocDiffOneMinus1 { get; set; }
+        public int VpsNumHrdParameters { get; set; }
+        public int[] HrdLayerSetIdx { get; set; }
+        public bool[] CprmsPresentFlag { get; set; }
+        public H265HrdParameters[] HrdParameters { get; set; }
+        public bool VpsExtensionFlag { get; set; }
+        public List<bool> VpsExtensionDataFlag { get; set; }
 
         public static H265VpsNalUnit Parse(byte[] vps)
         {
@@ -113,7 +197,195 @@ namespace SharpMp4
             }
         }
 
-        private static H265VpsNalUnit Parse(ushort length, MemoryStream ms)
+        private static H265VpsNalUnit Parse(ushort size, Stream stream)
+        {
+            BitStreamReader bitstream = new BitStreamReader(stream);
+
+            int vpsParameterSetId = bitstream.ReadBits(4);
+            int vpsReservedThree2bits = bitstream.ReadBits(2);
+            int vpsMaxLayersMinus1 = bitstream.ReadBits(6);
+            int vpsMaxSubLayersMinus1 = bitstream.ReadBits(3);
+            int vpsTemporalIdNestingFlag = bitstream.ReadBit();
+            int vpsReserved0xffff16bits = bitstream.ReadBits(16);
+
+            int generalProfileSpace = bitstream.ReadBits(2);
+            int generalTierFlag = bitstream.ReadBit();
+            int generalProfileIdc = bitstream.ReadBits(5);
+
+            int generalProfileCompatibilityFlags = bitstream.ReadBits(32);
+            long generalProfileConstraintIndicatorFlags = bitstream.ReadBitsLong(48); // TODO
+            int generalLevelIdc = bitstream.ReadBits(8);
+
+            bool[] subLayerProfilePresentFlag = new bool[vpsMaxSubLayersMinus1];
+            bool[] subLayerLevelPresentFlag = new bool[vpsMaxSubLayersMinus1];
+            for (int i = 0; i < vpsMaxSubLayersMinus1; i++)
+            {
+                subLayerProfilePresentFlag[i] = bitstream.ReadBit() != 0;
+                subLayerLevelPresentFlag[i] = bitstream.ReadBit() != 0;
+            }
+
+            int[] subLayers = null;
+            if (vpsMaxSubLayersMinus1 > 0)
+            {
+                subLayers = new int[8];
+                for (int i = vpsMaxSubLayersMinus1; i < 8; i++)
+                {
+                    subLayers[i] = bitstream.ReadBits(2);
+                }
+            }
+
+            int[] subLayerProfileSpace = new int[vpsMaxSubLayersMinus1];
+            int[] subLayerTierFlag = new int[vpsMaxSubLayersMinus1];
+            int[] subLayerProfileIdc = new int[vpsMaxSubLayersMinus1];
+            bool[,] subLayerProfileCompatibilityFlag = new bool[vpsMaxSubLayersMinus1, 32];
+            bool[] subLayerProgressiveSourceFlag = new bool[vpsMaxSubLayersMinus1];
+
+            bool[] subLayerInterlacedSourceFlag = new bool[vpsMaxSubLayersMinus1];
+            bool[] subLayerNonPackedConstraintFlag = new bool[vpsMaxSubLayersMinus1];
+            bool[] subLayerFrameOnlyConstraintFlag = new bool[vpsMaxSubLayersMinus1];
+            int[] subLayerLevelIdc = new int[vpsMaxSubLayersMinus1];
+            long[] reservedBits = new long[vpsMaxSubLayersMinus1];
+
+            for (int i = 0; i < vpsMaxSubLayersMinus1; i++)
+            {
+                if (subLayerProfilePresentFlag[i])
+                {
+                    subLayerProfileSpace[i] = bitstream.ReadBits(2);
+                    subLayerTierFlag[i] = bitstream.ReadBit();
+                    subLayerProfileIdc[i] = bitstream.ReadBits(5);
+                    for (int j = 0; j < 32; j++)
+                    {
+                        subLayerProfileCompatibilityFlag[i, j] = bitstream.ReadBit() != 0;
+                    }
+                    subLayerProgressiveSourceFlag[i] = bitstream.ReadBit() != 0;
+                    subLayerInterlacedSourceFlag[i] = bitstream.ReadBit() != 0;
+                    subLayerNonPackedConstraintFlag[i] = bitstream.ReadBit() != 0;
+                    subLayerFrameOnlyConstraintFlag[i] = bitstream.ReadBit() != 0;
+                    reservedBits[i] = bitstream.ReadBitsLong(44); // reserved
+                }
+                if (subLayerLevelPresentFlag[i])
+                    subLayerLevelIdc[i] = bitstream.ReadBits(8);
+            }
+
+            bool vpsSubLayerOrderingInfoPresentFlag = bitstream.ReadBit() != 0;
+            int[] vpsMaxDecPicBufferingMinus1 = new int[vpsSubLayerOrderingInfoPresentFlag ? 1 : vpsMaxSubLayersMinus1 + 1];
+            int[] vpsMaxNumReorderPics = new int[vpsSubLayerOrderingInfoPresentFlag ? 1 : vpsMaxSubLayersMinus1 + 1];
+            int[] vpsMaxLatencyIncreasePlus1 = new int[vpsSubLayerOrderingInfoPresentFlag ? 1 : vpsMaxSubLayersMinus1 + 1];
+            for (int i = (vpsSubLayerOrderingInfoPresentFlag ? 0 : vpsMaxSubLayersMinus1); i <= vpsMaxSubLayersMinus1; i++)
+            {
+                vpsMaxDecPicBufferingMinus1[i] = bitstream.ReadUE();
+                vpsMaxNumReorderPics[i] = bitstream.ReadUE();
+                vpsMaxLatencyIncreasePlus1[i] = bitstream.ReadUE();
+            }
+            int vpsMaxLayerId = bitstream.ReadBits(6);
+            int vpsNumLayerSetsMinus1 = bitstream.ReadUE();
+            bool[,] layerIdIncludedFlag = new bool[vpsNumLayerSetsMinus1, vpsMaxLayerId];
+            for (int i = 1; i <= vpsNumLayerSetsMinus1; i++)
+            {
+                for (int j = 0; j <= vpsMaxLayerId; j++)
+                {
+                    layerIdIncludedFlag[i, j] = bitstream.ReadBit() != 0;
+                }
+            }
+            bool vpsTimingInfoPresentFlag = bitstream.ReadBit() != 0;
+
+            int vpsNumUnitsInTick = 0;
+            int vpsTimeScale = 0;
+            bool vpsPocProportionalToTimingFlag = false;
+            int vpsNumTicksPocDiffOneMinus1 = -1;
+            int vpsNumHrdParameters = 0;
+            int[] hrdLayerSetIdx = null;
+            bool[] cprmsPresentFlag = null;
+            H265HrdParameters[] hrdParameters = null;
+            if (vpsTimingInfoPresentFlag)
+            {
+                vpsNumUnitsInTick = bitstream.ReadBits(32);
+                vpsTimeScale = bitstream.ReadBits(32);
+                vpsPocProportionalToTimingFlag = bitstream.ReadBit() != 0;
+                if (vpsPocProportionalToTimingFlag)
+                {
+                    vpsNumTicksPocDiffOneMinus1 = bitstream.ReadUE();
+                }
+                vpsNumHrdParameters = bitstream.ReadUE();
+                hrdLayerSetIdx = new int[vpsNumHrdParameters];
+                cprmsPresentFlag = new bool[vpsNumHrdParameters];
+                hrdParameters = new H265HrdParameters[vpsNumHrdParameters];
+                for (int i = 0; i < vpsNumHrdParameters; i++)
+                {
+                    hrdLayerSetIdx[i] = bitstream.ReadUE();
+                    if (i > 0)
+                    {
+                        cprmsPresentFlag[i] = bitstream.ReadBit() != 0;
+                    }
+                    else
+                    {
+                        cprmsPresentFlag[0] = true;
+                    }
+
+                    hrdParameters[i] = H265HrdParameters.Parse(bitstream, cprmsPresentFlag[i], vpsMaxSubLayersMinus1);
+                }
+            }
+
+            bool vpsExtensionFlag = bitstream.ReadBit() != 0;
+            List<bool> vpsExtensionDataFlag = new List<bool>();
+            if (vpsExtensionFlag)
+            {
+                while (bitstream.HasMoreRBSPData(size))
+                {
+                    vpsExtensionDataFlag.Add(bitstream.ReadBit() != 0);
+                }
+            }
+
+            bitstream.ReadTrailingBits();
+
+            return new H265VpsNalUnit(
+                vpsParameterSetId,
+                vpsReservedThree2bits,
+                vpsMaxLayersMinus1,
+                vpsMaxSubLayersMinus1,
+                vpsTemporalIdNestingFlag,
+                vpsReserved0xffff16bits,
+                generalProfileSpace,
+                generalTierFlag,
+                generalProfileIdc,
+                generalProfileCompatibilityFlags,
+                generalProfileConstraintIndicatorFlags,
+                generalLevelIdc,
+                subLayerProfilePresentFlag,
+                subLayerLevelPresentFlag,
+                subLayers,
+                subLayerProfileSpace,
+                subLayerTierFlag,
+                subLayerProfileIdc,
+                subLayerProfileCompatibilityFlag,
+                subLayerProgressiveSourceFlag,
+                subLayerInterlacedSourceFlag,
+                subLayerNonPackedConstraintFlag,
+                subLayerFrameOnlyConstraintFlag,
+                subLayerLevelIdc,
+                reservedBits,
+                vpsSubLayerOrderingInfoPresentFlag,
+                vpsMaxDecPicBufferingMinus1,
+                vpsMaxNumReorderPics,
+                vpsMaxLatencyIncreasePlus1,
+                vpsMaxLayerId,
+                vpsNumLayerSetsMinus1,
+                layerIdIncludedFlag,
+                vpsTimingInfoPresentFlag,
+                vpsNumUnitsInTick,
+                vpsTimeScale,
+                vpsPocProportionalToTimingFlag,
+                vpsNumTicksPocDiffOneMinus1,
+                vpsNumHrdParameters,
+                hrdLayerSetIdx,
+                cprmsPresentFlag,
+                hrdParameters,
+                vpsExtensionFlag,
+                vpsExtensionDataFlag
+                );
+        }
+
+        public static byte[] Build(H265VpsNalUnit vps)
         {
             throw new NotImplementedException();
         }
@@ -136,7 +408,7 @@ namespace SharpMp4
             }
         }
 
-        private static H265SpsNalUnit Parse(ushort length, MemoryStream ms)
+        private static H265SpsNalUnit Parse(ushort length, Stream ms)
         {
             throw new NotImplementedException();
         }
@@ -162,9 +434,171 @@ namespace SharpMp4
 
     public class H265HrdParameters
     {
-        public static H265HrdParameters Parse(BitStreamReader bitstream)
+        public bool NalHrdParametersPresentFlag { get; set; }
+        public bool VclHrdParametersPresentFlag { get; set; }
+        public bool SubPicHrdParamsPresentFlag { get; set; }
+        public int TickDivisorMinus2 { get; set; }
+        public int DuCpbRemovalDelayIncrementLengthMinus1 { get; set; }
+        public bool SubPicCpbParamsInPicTimingSeiFlag { get; set; }
+        public int DpbOutputDelayDuLengthMinus1 { get; set; }
+        public int BitRateScale { get; set; }
+        public int CpbSizeScale { get; set; }
+        public int CpbSizeDuScale { get; set; }
+        public int InitialCpbRemovalDelayLengthMinus1 { get; set; }
+        public int AuCpbRemovalDelayLengthMinus1 { get; set; }
+        public int DpbOutputDelayLengthMinus1 { get; set; }
+        public bool[] FixedPicRateGeneralFlag { get; set; }
+        public bool[] FixedPicRateWithinCvsFlag { get; set; }
+        public bool[] LowDelayHrdFlag { get; set; }
+        public int[] CpbCntMinus1 { get; set; }
+        public int[] ElementalDurationInTcMinus1 { get; set; }
+        public H265HrdSubLayerParameters[] NalHrdSubLayerParameters { get; set; }
+        public H265HrdSubLayerParameters[] VclHrdSubLayerParameters { get; set; }
+
+        public H265HrdParameters(
+            bool nalHrdParametersPresentFlag,
+            bool vclHrdParametersPresentFlag,
+            bool subPicHrdParamsPresentFlag,
+            int tickDivisorMinus2, 
+            int duCpbRemovalDelayIncrementLengthMinus1, 
+            bool subPicCpbParamsInPicTimingSeiFlag, 
+            int dpbOutputDelayDuLengthMinus1, 
+            int bitRateScale, 
+            int cpbSizeScale, 
+            int cpbSizeDuScale,
+            int initialCpbRemovalDelayLengthMinus1, 
+            int auCpbRemovalDelayLengthMinus1, 
+            int dpbOutputDelayLengthMinus1,
+            bool[] fixedPicRateGeneralFlag, 
+            bool[] fixedPicRateWithinCvsFlag,
+            bool[] lowDelayHrdFlag, 
+            int[] cpbCntMinus1,
+            int[] elementalDurationInTcMinus1,
+            H265HrdSubLayerParameters[] nalHrdSubLayerParameters,
+            H265HrdSubLayerParameters[] vclHrdSubLayerParameters)
         {
-            throw new NotImplementedException();
+            NalHrdParametersPresentFlag = nalHrdParametersPresentFlag;
+            VclHrdParametersPresentFlag = vclHrdParametersPresentFlag;
+            SubPicHrdParamsPresentFlag = subPicHrdParamsPresentFlag;
+            TickDivisorMinus2 = tickDivisorMinus2;
+            DuCpbRemovalDelayIncrementLengthMinus1 = duCpbRemovalDelayIncrementLengthMinus1;
+            SubPicCpbParamsInPicTimingSeiFlag = subPicCpbParamsInPicTimingSeiFlag;
+            DpbOutputDelayDuLengthMinus1 = dpbOutputDelayDuLengthMinus1;
+            BitRateScale = bitRateScale;
+            CpbSizeScale = cpbSizeScale;
+            CpbSizeDuScale = cpbSizeDuScale;
+            InitialCpbRemovalDelayLengthMinus1 = initialCpbRemovalDelayLengthMinus1;
+            AuCpbRemovalDelayLengthMinus1 = auCpbRemovalDelayLengthMinus1;
+            DpbOutputDelayLengthMinus1 = dpbOutputDelayLengthMinus1;
+            FixedPicRateGeneralFlag = fixedPicRateGeneralFlag;
+            FixedPicRateWithinCvsFlag = fixedPicRateWithinCvsFlag;
+            LowDelayHrdFlag = lowDelayHrdFlag;
+            CpbCntMinus1 = cpbCntMinus1;
+            ElementalDurationInTcMinus1 = elementalDurationInTcMinus1;
+            NalHrdSubLayerParameters = nalHrdSubLayerParameters;
+            VclHrdSubLayerParameters = vclHrdSubLayerParameters;
+        }
+
+        public static H265HrdParameters Parse(BitStreamReader bitstream, bool commonInfPresentFlag, int maxNumSubLayersMinus1)
+        {
+            bool nalHrdParametersPresentFlag = false;
+            bool vclHrdParametersPresentFlag = false;
+            bool subPicHrdParamsPresentFlag = false;
+
+            int tickDivisorMinus2 = -2;
+            int duCpbRemovalDelayIncrementLengthMinus1 = -1;
+            bool subPicCpbParamsInPicTimingSeiFlag = false;
+            int dpbOutputDelayDuLengthMinus1 = -1;
+            int bitRateScale = 0;
+            int cpbSizeScale = 0;
+            int cpbSizeDuScale = 0;
+            int initialCpbRemovalDelayLengthMinus1 = -1;
+            int auCpbRemovalDelayLengthMinus1 = -1;
+            int dpbOutputDelayLengthMinus1 = -1;
+            if (commonInfPresentFlag)
+            {
+                nalHrdParametersPresentFlag = bitstream.ReadBit() != 0;
+                vclHrdParametersPresentFlag = bitstream.ReadBit() != 0;
+                if (nalHrdParametersPresentFlag || vclHrdParametersPresentFlag)
+                {
+                    subPicHrdParamsPresentFlag = bitstream.ReadBit() != 0;
+                    if (subPicHrdParamsPresentFlag)
+                    {
+                        tickDivisorMinus2 = bitstream.ReadBits(8);
+                        duCpbRemovalDelayIncrementLengthMinus1 = bitstream.ReadBits(5);
+                        subPicCpbParamsInPicTimingSeiFlag = bitstream.ReadBit() != 0;
+                        dpbOutputDelayDuLengthMinus1 = bitstream.ReadBits(5);
+                    }
+                    bitRateScale = bitstream.ReadBits(4);
+                    cpbSizeScale = bitstream.ReadBits(4);
+                    if (subPicHrdParamsPresentFlag)
+                    {
+                        cpbSizeDuScale = bitstream.ReadBits(4);
+                    }
+                    initialCpbRemovalDelayLengthMinus1 = bitstream.ReadBits(5);
+                    auCpbRemovalDelayLengthMinus1 = bitstream.ReadBits(5);
+                    dpbOutputDelayLengthMinus1 = bitstream.ReadBits(5);
+                }
+            }
+
+            bool[] fixedPicRateGeneralFlag = new bool[maxNumSubLayersMinus1];
+            bool[] fixedPicRateWithinCvsFlag = new bool[maxNumSubLayersMinus1];
+            bool[] lowDelayHrdFlag = new bool[maxNumSubLayersMinus1];
+            int[] cpbCntMinus1 = new int[maxNumSubLayersMinus1];
+            int[] elementalDurationInTcMinus1 = new int[maxNumSubLayersMinus1];
+            H265HrdSubLayerParameters[] nalHrdSubLayerParameters = new H265HrdSubLayerParameters[maxNumSubLayersMinus1];
+            H265HrdSubLayerParameters[] vclHrdSubLayerParameters = new H265HrdSubLayerParameters[maxNumSubLayersMinus1];
+            for (int i = 0; i <= maxNumSubLayersMinus1; i++)
+            {
+                fixedPicRateGeneralFlag[i] = bitstream.ReadBit() != 0;
+                if (!fixedPicRateGeneralFlag[i])
+                {
+                    fixedPicRateWithinCvsFlag[i] = bitstream.ReadBit() != 0;
+                }
+                if (fixedPicRateWithinCvsFlag[i])
+                {
+                    elementalDurationInTcMinus1[i] = bitstream.ReadUE();
+                }
+                else
+                {
+                    lowDelayHrdFlag[i] = bitstream.ReadBit() != 0;
+                }
+                if (!lowDelayHrdFlag[i])
+                {
+                    cpbCntMinus1[i] = bitstream.ReadUE();
+                }
+                if (nalHrdParametersPresentFlag)
+                {
+                    nalHrdSubLayerParameters[i] = H265HrdSubLayerParameters.Parse(bitstream, cpbCntMinus1[i], subPicHrdParamsPresentFlag);
+                }
+                if (vclHrdParametersPresentFlag)
+                {
+                    vclHrdSubLayerParameters[i] = H265HrdSubLayerParameters.Parse(bitstream, cpbCntMinus1[i], subPicHrdParamsPresentFlag);
+                }
+            }
+
+            return new H265HrdParameters(
+                nalHrdParametersPresentFlag,
+                vclHrdParametersPresentFlag,
+                subPicHrdParamsPresentFlag,
+                tickDivisorMinus2,
+                duCpbRemovalDelayIncrementLengthMinus1,
+                subPicCpbParamsInPicTimingSeiFlag,
+                dpbOutputDelayDuLengthMinus1 ,
+                bitRateScale,
+                cpbSizeScale,
+                cpbSizeDuScale,
+                initialCpbRemovalDelayLengthMinus1,
+                auCpbRemovalDelayLengthMinus1,
+                dpbOutputDelayLengthMinus1,
+                fixedPicRateGeneralFlag,
+                fixedPicRateWithinCvsFlag,
+                lowDelayHrdFlag,
+                cpbCntMinus1,
+                elementalDurationInTcMinus1,
+                nalHrdSubLayerParameters,
+                vclHrdSubLayerParameters
+                );
         }
 
         public static void Build(BitStreamWriter bitstream, H265HrdParameters hrd)
@@ -175,9 +609,48 @@ namespace SharpMp4
 
     public class H265HrdSubLayerParameters
     {
-        public static H265HrdSubLayerParameters Parse(BitStreamReader bitstream)
+        public H265HrdSubLayerParameters(int[] bitRateValueMinus1, int[] cpbSizeValueMinus1, int[] cpbSizeDuValueMinus1, int[] bitRateDuValueMinus1, bool[] cbrFlag)
         {
-            throw new NotImplementedException();
+            BitRateValueMinus1 = bitRateValueMinus1;
+            CpbSizeValueMinus1 = cpbSizeValueMinus1;
+            CpbSizeDuValueMinus1 = cpbSizeDuValueMinus1;
+            BitRateDuValueMinus1 = bitRateDuValueMinus1;
+            CbrFlag = cbrFlag;
+        }
+
+        public int[] BitRateValueMinus1 { get; set; }
+        public int[] CpbSizeValueMinus1 { get; set; }
+        public int[] CpbSizeDuValueMinus1 { get; set; }
+        public int[] BitRateDuValueMinus1 { get; set; }
+        public bool[] CbrFlag { get; set; }
+
+        public static H265HrdSubLayerParameters Parse(BitStreamReader bitstream, int cpbCnt, bool subPicHrdParamsPresentFlag)
+        {
+            int[] bitRateValueMinus1 = new int[cpbCnt];
+            int[] cpbSizeValueMinus1 = new int[cpbCnt];
+            int[] cpbSizeDuValueMinus1 = new int[cpbCnt];
+            int[] bitRateDuValueMinus1 = new int[cpbCnt];
+            bool[] cbrFlag = new bool[cpbCnt];
+
+            for (int i = 0; i <= cpbCnt; i++)
+            {
+                bitRateValueMinus1[i] = bitstream.ReadUE();
+                cpbSizeValueMinus1[i] = bitstream.ReadUE();
+                if (subPicHrdParamsPresentFlag)
+                {
+                    cpbSizeDuValueMinus1[i] = bitstream.ReadUE();
+                    bitRateDuValueMinus1[i] = bitstream.ReadUE();
+                }
+                cbrFlag[i] = bitstream.ReadBit() != 0;
+            }
+
+            return new H265HrdSubLayerParameters(
+                bitRateValueMinus1,
+                cpbSizeValueMinus1,
+                cpbSizeDuValueMinus1,
+                bitRateDuValueMinus1,
+                cbrFlag
+            );
         }
 
         public static void Build(BitStreamWriter bitstream, H265HrdSubLayerParameters hrd)
@@ -203,7 +676,7 @@ namespace SharpMp4
             }
         }
 
-        private static H265PpsNalUnit Parse(ushort length, MemoryStream ms)
+        private static H265PpsNalUnit Parse(ushort size, Stream stream)
         {
             throw new NotImplementedException();
         }

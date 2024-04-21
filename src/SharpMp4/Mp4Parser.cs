@@ -406,6 +406,27 @@ namespace SharpMp4
             return res;
         }
 
+        public long ReadBitsLong(int count)
+        {
+            if (count > 64)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            int res = 0;
+            while (count > 0)
+            {
+                res = res << 1;
+                int u1 = ReadBit();
+
+                if (u1 == -1)
+                    return u1;
+
+                res |= u1;
+                count--;
+            }
+
+            return res;
+        }
+
         public int ReadUE()
         {
             int cnt = 0;
@@ -469,6 +490,11 @@ namespace SharpMp4
             int mask = (tail << 1) - 1;
             bool hasTail = (_currentByte & mask) == tail;
             return !hasTail;
+        }
+
+        public void ReadTrailingBits()
+        {
+            // TODO
         }
     }
 
