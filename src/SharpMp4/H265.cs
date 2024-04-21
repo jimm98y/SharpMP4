@@ -437,6 +437,226 @@ namespace SharpMp4
     public class H265SpsNalUnit
     {
         public int SeqParameterSetId { get; set; }
+        public int SpsVideoParameterSetId { get; set; }
+        public int SpsMaxSubLayersMinus1 { get; set; }
+        public bool SpsTemporalIdNestingFlag { get; set; }
+        public int GeneralProfileSpace { get; set; }
+        public bool GeneralTierFlag { get; set; }
+        public int GeneralProfileIdc { get; set; }
+        public int GeneralProfileCompatibilityFlags { get; set; }
+        public long GeneralConstraintIndicatorFlags { get; set; }
+        public byte GeneralLevelIdc { get; set; }
+        public bool[] SubLayerProfilePresentFlag { get; set; }
+        public bool[] SubLayerLevelPresentFlag { get; set; }
+        public int[] ReservedZero2Bits { get; set; }
+        public int[] SubLayerProfileSpace { get; set; }
+        public bool[] SubLayerTierFlag { get; set; }
+        public int[] SubLayerProfileIdc { get; set; }
+        public bool[,] SubLayerProfileCompatibilityFlag { get; set; }
+        public bool[] SubLayerProgressiveSourceFlag { get; set; }
+        public bool[] SubLayerInterlacedSourceFlag { get; set; }
+        public bool[] SubLayerNonPackedConstraintFlag { get; set; }
+        public bool[] SubLayerFrameOnlyConstraintFlag { get; set; }
+        public long[] SubLayerReservedZero44Bits { get; set; }
+        public int[] SubLayerLevelIdc { get; set; }
+        public int SpsSeqParameterSetId { get; set; }
+        public int ChromaFormatIdc { get; set; }
+        public int SeparateColorPlaneFlag { get; set; }
+        public int PicWidthInLumaSamples { get; set; }
+        public int PicHeightInLumaSamples { get; set; }
+        public bool ConformanceWindowFlag { get; set; }
+        public int ConfWinLeftOffset { get; set; }
+        public int ConfWinRightOffset { get; set; }
+        public int ConfWinTopOffset { get; set; }
+        public int ConfWinBottomOffset { get; set; }
+        public int BitDepthLumaMinus8 { get; set; }
+        public int BitDepthChromaMinus8 { get; set; }
+        public int Log2MaxPicOrderCntLsbMinus4 { get; set; }
+        public bool SpsSubLayerOrderingInfoPresentFlag { get; set; }
+        public int[] SpsMaxDecPicBufferingMinus1 { get; set; }
+        public int[] SpsMaxNumReorderPics { get; set; }
+        public int[] SpsMaxLatencyIncreasePlus1 { get; set; }
+        public int Log2MinLumaCodingBlockSizeMinus3 { get; set; }
+        public int Log2DiffMaxMinLumaCodingBlockSize { get; set; }
+        public int Log2MinTransformBlockSizeMinus2 { get; set; }
+        public int Log2DiffMaxMinTransformBlockSize { get; set; }
+        public int MaxTransformHierarchyDepthInter { get; set; }
+        public int MaxTransformHierarchyDepthIntra { get; set; }
+        public bool ScalingListEnabledFlag { get; set; }
+        public bool SpsScalingListDataPresentFlag { get; set; }
+        public List<H265ScalingListElement> ScalingListElements { get; set; }
+        public bool AmpEnabledFlag { get; set; }
+        public bool SampleAdaptiveOffsetEnabledFlag { get; set; }
+        public bool PcmEnabledFlag { get; set; }
+        public int PcmSampleBitDepthLumaMinus1 { get; set; }
+        public int PcmSampleBitDepthChromaMinus1 { get; set; }
+        public int Log2MinPcmLumaCodingBlockSizeMinus3 { get; set; }
+        public int Log2DiffMaxMinPcmLumaCodingBlockSize { get; set; }
+        public bool PcmLoopFilterDisabledFlag { get; set; }
+        public int NumShortTermRefPicSets { get; set; }
+        public long[] NumDeltaPocs { get; set; }
+        public bool[] DummyBits { get; set; }
+        public int[] DummyUe { get; set; }
+        public bool[] FlagBits { get; set; }
+        public long[] NumNegativePics { get; set; }
+        public long[] NumPositivePics { get; set; }
+        public List<int>[] Pics { get; set; }
+        public bool LongTermRefPicsPresentFlag { get; set; }
+        public int NumLongTermRefPicsSps { get; set; }
+        public int[] LtRefPicPocLsbSps { get; set; }
+        public bool[] UsedByCurrPicLtSpsFlag { get; set; }
+        public bool SpsTemporalMvpEnabledFlag { get; set; }
+        public bool StrongIntraSmoothingEnabledFlag { get; set; }
+        public bool VuiParametersPresentFlag { get; set; }
+        public H265VuiParameters VuiParameters { get; set; }
+
+        public H265SpsNalUnit(
+            int spsVideoParameterSetId,
+            int spsMaxSubLayersMinus1,
+            bool spsTemporalIdNestingFlag,
+            int generalProfileSpace, 
+            bool generalTierFlag, 
+            int generalProfileIdc, 
+            int generalProfileCompatibilityFlags,
+            long generalConstraintIndicatorFlags,
+            byte generalLevelIdc, 
+            bool[] subLayerProfilePresentFlag, 
+            bool[] subLayerLevelPresentFlag, 
+            int[] reservedZero2Bits, 
+            int[] subLayerProfileSpace, 
+            bool[] subLayerTierFlag, 
+            int[] subLayerProfileIdc, 
+            bool[,] subLayerProfileCompatibilityFlag, 
+            bool[] subLayerProgressiveSourceFlag, 
+            bool[] subLayerInterlacedSourceFlag, 
+            bool[] subLayerNonPackedConstraintFlag, 
+            bool[] subLayerFrameOnlyConstraintFlag, 
+            long[] subLayerReservedZero44Bits, 
+            int[] subLayerLevelIdc, 
+            int spsSeqParameterSetId, 
+            int chromaFormatIdc, 
+            int separateColorPlaneFlag, 
+            int picWidthInLumaSamples, 
+            int picHeightInLumaSamples,
+            bool conformanceWindowFlag,
+            int confWinLeftOffset, 
+            int confWinRightOffset, 
+            int confWinTopOffset, 
+            int confWinBottomOffset, 
+            int bitDepthLumaMinus8, 
+            int bitDepthChromaMinus8,
+            int log2MaxPicOrderCntLsbMinus4,
+            bool spsSubLayerOrderingInfoPresentFlag, 
+            int[] spsMaxDecPicBufferingMinus1, 
+            int[] spsMaxNumReorderPics, 
+            int[] spsMaxLatencyIncreasePlus1,
+            int log2MinLumaCodingBlockSizeMinus3,
+            int log2DiffMaxMinLumaCodingBlockSize, 
+            int log2MinTransformBlockSizeMinus2, 
+            int log2DiffMaxMinTransformBlockSize, 
+            int maxTransformHierarchyDepthInter,
+            int maxTransformHierarchyDepthIntra, 
+            bool scalingListEnabledFlag, 
+            bool spsScalingListDataPresentFlag,
+            List<H265ScalingListElement> scalingListElements, 
+            bool ampEnabledFlag, 
+            bool sampleAdaptiveOffsetEnabledFlag, 
+            bool pcmEnabledFlag, 
+            int pcmSampleBitDepthLumaMinus1, 
+            int pcmSampleBitDepthChromaMinus1,
+            int log2MinPcmLumaCodingBlockSizeMinus3, 
+            int log2DiffMaxMinPcmLumaCodingBlockSize, 
+            bool pcmLoopFilterDisabledFlag,
+            int numShortTermRefPicSets, 
+            long[] numDeltaPocs,
+            bool[] dummyBits, 
+            int[] dummyUe, 
+            bool[] flagBits, 
+            long[] numNegativePics,
+            long[] numPositivePics,
+            List<int>[] pics, 
+            bool longTermRefPicsPresentFlag, 
+            int numLongTermRefPicsSps, 
+            int[] ltRefPicPocLsbSps,
+            bool[] usedByCurrPicLtSpsFlag, 
+            bool spsTemporalMvpEnabledFlag,
+            bool strongIntraSmoothingEnabledFlag, 
+            bool vuiParametersPresentFlag, 
+            H265VuiParameters vuiParameters)
+        {
+            SpsVideoParameterSetId = spsVideoParameterSetId;
+            SpsMaxSubLayersMinus1 = spsMaxSubLayersMinus1;
+            SpsTemporalIdNestingFlag = spsTemporalIdNestingFlag;
+            GeneralProfileSpace = generalProfileSpace;
+            GeneralTierFlag = generalTierFlag;
+            GeneralProfileIdc = generalProfileIdc;
+            GeneralProfileCompatibilityFlags = generalProfileCompatibilityFlags;
+            GeneralConstraintIndicatorFlags = generalConstraintIndicatorFlags;
+            GeneralLevelIdc = generalLevelIdc;
+            SubLayerProfilePresentFlag = subLayerProfilePresentFlag;
+            SubLayerLevelPresentFlag = subLayerLevelPresentFlag;
+            ReservedZero2Bits = reservedZero2Bits;
+            SubLayerProfileSpace = subLayerProfileSpace;
+            SubLayerTierFlag = subLayerTierFlag;
+            SubLayerProfileIdc = subLayerProfileIdc;
+            SubLayerProfileCompatibilityFlag = subLayerProfileCompatibilityFlag;
+            SubLayerProgressiveSourceFlag = subLayerProgressiveSourceFlag;
+            SubLayerInterlacedSourceFlag = subLayerInterlacedSourceFlag;
+            SubLayerNonPackedConstraintFlag = subLayerNonPackedConstraintFlag;
+            SubLayerFrameOnlyConstraintFlag = subLayerFrameOnlyConstraintFlag;
+            SubLayerReservedZero44Bits = subLayerReservedZero44Bits;
+            SubLayerLevelIdc = subLayerLevelIdc;
+            SpsSeqParameterSetId = spsSeqParameterSetId;
+            ChromaFormatIdc = chromaFormatIdc;
+            SeparateColorPlaneFlag = separateColorPlaneFlag;
+            PicWidthInLumaSamples = picWidthInLumaSamples;
+            PicHeightInLumaSamples = picHeightInLumaSamples;
+            ConformanceWindowFlag = conformanceWindowFlag;
+            ConfWinLeftOffset = confWinLeftOffset;
+            ConfWinRightOffset = confWinRightOffset;
+            ConfWinTopOffset = confWinTopOffset;
+            ConfWinBottomOffset = confWinBottomOffset;
+            BitDepthLumaMinus8 = bitDepthLumaMinus8;
+            BitDepthChromaMinus8 = bitDepthChromaMinus8;
+            Log2MaxPicOrderCntLsbMinus4 = log2MaxPicOrderCntLsbMinus4;
+            SpsSubLayerOrderingInfoPresentFlag = spsSubLayerOrderingInfoPresentFlag;
+            SpsMaxDecPicBufferingMinus1 = spsMaxDecPicBufferingMinus1;
+            SpsMaxNumReorderPics = spsMaxNumReorderPics;
+            SpsMaxLatencyIncreasePlus1 = spsMaxLatencyIncreasePlus1;
+            Log2MinLumaCodingBlockSizeMinus3 = log2MinLumaCodingBlockSizeMinus3;
+            Log2DiffMaxMinLumaCodingBlockSize = log2DiffMaxMinLumaCodingBlockSize;
+            Log2MinTransformBlockSizeMinus2 = log2MinTransformBlockSizeMinus2;
+            Log2DiffMaxMinTransformBlockSize = log2DiffMaxMinTransformBlockSize;
+            MaxTransformHierarchyDepthInter = maxTransformHierarchyDepthInter;
+            MaxTransformHierarchyDepthIntra = maxTransformHierarchyDepthIntra;
+            ScalingListEnabledFlag = scalingListEnabledFlag;
+            SpsScalingListDataPresentFlag = spsScalingListDataPresentFlag;
+            ScalingListElements = scalingListElements;
+            AmpEnabledFlag = ampEnabledFlag;
+            SampleAdaptiveOffsetEnabledFlag = sampleAdaptiveOffsetEnabledFlag;
+            PcmEnabledFlag = pcmEnabledFlag;
+            PcmSampleBitDepthLumaMinus1 = pcmSampleBitDepthLumaMinus1;
+            PcmSampleBitDepthChromaMinus1 = pcmSampleBitDepthChromaMinus1;
+            Log2MinPcmLumaCodingBlockSizeMinus3 = log2MinPcmLumaCodingBlockSizeMinus3;
+            Log2DiffMaxMinPcmLumaCodingBlockSize = log2DiffMaxMinPcmLumaCodingBlockSize;
+            PcmLoopFilterDisabledFlag = pcmLoopFilterDisabledFlag;
+            NumShortTermRefPicSets = numShortTermRefPicSets;
+            NumDeltaPocs = numDeltaPocs;
+            DummyBits = dummyBits;
+            DummyUe = dummyUe;
+            FlagBits = flagBits;
+            NumNegativePics = numNegativePics;
+            NumPositivePics = numPositivePics;
+            Pics = pics;
+            LongTermRefPicsPresentFlag = longTermRefPicsPresentFlag;
+            NumLongTermRefPicsSps = numLongTermRefPicsSps;
+            LtRefPicPocLsbSps = ltRefPicPocLsbSps;
+            UsedByCurrPicLtSpsFlag = usedByCurrPicLtSpsFlag;
+            SpsTemporalMvpEnabledFlag = spsTemporalMvpEnabledFlag;
+            StrongIntraSmoothingEnabledFlag = strongIntraSmoothingEnabledFlag;
+            VuiParametersPresentFlag = vuiParametersPresentFlag;
+            VuiParameters = vuiParameters;
+        }
 
         public static byte[] Build(H265SpsNalUnit sps)
         {
@@ -451,9 +671,337 @@ namespace SharpMp4
             }
         }
 
-        private static H265SpsNalUnit Parse(ushort length, Stream ms)
+        private static H265SpsNalUnit Parse(ushort size, Stream stream)
         {
-            throw new NotImplementedException();
+            BitStreamReader bitstream = new BitStreamReader(stream);
+            
+            int spsVideoParameterSetId = bitstream.ReadBits(4);
+            int spsMaxSubLayersMinus1 = bitstream.ReadBits(3);
+            bool spsTemporalIdNestingFlag = bitstream.ReadBit() != 0;
+
+            int generalProfileSpace = bitstream.ReadBits(2);
+            bool generalTierFlag = bitstream.ReadBit() != 0;
+            int generalProfileIdc = bitstream.ReadBits(5);
+            int generalProfileCompatibilityFlags = bitstream.ReadBits(32);
+            long generalConstraintIndicatorFlags = bitstream.ReadBitsLong(48);
+            byte generalLevelIdc = (byte)bitstream.ReadBits(8);
+            bool[] subLayerProfilePresentFlag = new bool[spsMaxSubLayersMinus1];
+            bool[] subLayerLevelPresentFlag = new bool[spsMaxSubLayersMinus1];
+            
+            for (int i = 0; i < spsMaxSubLayersMinus1; i++)
+            {
+                subLayerProfilePresentFlag[i] = bitstream.ReadBit() != 0;
+                subLayerLevelPresentFlag[i] = bitstream.ReadBit() != 0;
+            }
+
+            int[] reservedZero2Bits = null;
+            if (spsMaxSubLayersMinus1 > 0)
+            {
+                reservedZero2Bits = new int[8];
+
+                for (int i = spsMaxSubLayersMinus1; i < 8; i++)
+                {
+                    reservedZero2Bits[i] = bitstream.ReadBits(2);
+                }
+            }
+
+            int[] subLayerProfileSpace = new int[spsMaxSubLayersMinus1];
+            bool[] subLayerTierFlag = new bool[spsMaxSubLayersMinus1];
+            int[] subLayerProfileIdc = new int[spsMaxSubLayersMinus1];
+            bool[,] subLayerProfileCompatibilityFlag = new bool[spsMaxSubLayersMinus1, 32];
+            bool[] subLayerProgressiveSourceFlag = new bool[spsMaxSubLayersMinus1];
+            bool[] subLayerInterlacedSourceFlag = new bool[spsMaxSubLayersMinus1];
+            bool[] subLayerNonPackedConstraintFlag = new bool[spsMaxSubLayersMinus1];
+            bool[] subLayerFrameOnlyConstraintFlag = new bool[spsMaxSubLayersMinus1];
+            long[] subLayerReservedZero44Bits = new long[spsMaxSubLayersMinus1];
+            int[] subLayerLevelIdc = new int[spsMaxSubLayersMinus1];
+
+            for (int i = 0; i < spsMaxSubLayersMinus1; i++)
+            {
+                if (subLayerProfilePresentFlag[i])
+                {
+                    subLayerProfileSpace[i] = bitstream.ReadBits(2);
+                    subLayerTierFlag[i] = bitstream.ReadBit() != 0;
+                    subLayerProfileIdc[i] = bitstream.ReadBits(5);
+                    
+                    for (int k = 0; k < 32; k++)
+                    {
+                        subLayerProfileCompatibilityFlag[i, k] = bitstream.ReadBit() != 0;
+                    }
+                    
+                    subLayerProgressiveSourceFlag[i] = bitstream.ReadBit() != 0;
+                    subLayerInterlacedSourceFlag[i] = bitstream.ReadBit() != 0;
+                    subLayerNonPackedConstraintFlag[i] = bitstream.ReadBit() != 0;
+                    subLayerFrameOnlyConstraintFlag[i] = bitstream.ReadBit() != 0;
+                    subLayerReservedZero44Bits[i] = bitstream.ReadBitsLong(44);
+                }
+                if (subLayerLevelPresentFlag[i])
+                {
+                    subLayerLevelIdc[i] = bitstream.ReadBits(8);
+                }
+            }
+
+            int spsSeqParameterSetId = bitstream.ReadUE();
+            int chromaFormatIdc = bitstream.ReadUE();
+            int separateColorPlaneFlag = 0;
+            if (chromaFormatIdc == 3)
+            {
+                separateColorPlaneFlag = bitstream.ReadBit();
+            }
+            int picWidthInLumaSamples = bitstream.ReadUE();
+            int picHeightInLumaSamples = bitstream.ReadUE();
+            bool conformanceWindowFlag = bitstream.ReadBit() != 0;
+
+            int confWinLeftOffset = 0;
+            int confWinRightOffset = 0;
+            int confWinTopOffset = 0;
+            int confWinBottomOffset = 0;
+            if (conformanceWindowFlag)
+            {
+                confWinLeftOffset = bitstream.ReadUE();
+                confWinRightOffset = bitstream.ReadUE();
+                confWinTopOffset = bitstream.ReadUE();
+                confWinBottomOffset = bitstream.ReadUE();
+            }
+
+            int bitDepthLumaMinus8 = bitstream.ReadUE();
+            int bitDepthChromaMinus8 = bitstream.ReadUE();
+            int log2MaxPicOrderCntLsbMinus4 = bitstream.ReadUE();
+            bool spsSubLayerOrderingInfoPresentFlag = bitstream.ReadBit() != 0;
+
+            int jCount = spsMaxSubLayersMinus1 - (spsSubLayerOrderingInfoPresentFlag ? 0 : spsMaxSubLayersMinus1) + 1;
+            int[] spsMaxDecPicBufferingMinus1 = new int[jCount];
+            int[] spsMaxNumReorderPics = new int[jCount];
+            int[] spsMaxLatencyIncreasePlus1 = new int[jCount];
+
+            for (int i = spsSubLayerOrderingInfoPresentFlag ? 0 : spsMaxSubLayersMinus1; i <= spsMaxSubLayersMinus1; i++)
+            {
+                spsMaxDecPicBufferingMinus1[i] = bitstream.ReadUE();
+                spsMaxNumReorderPics[i] = bitstream.ReadUE();
+                spsMaxLatencyIncreasePlus1[i] = bitstream.ReadUE();
+            }
+
+            int log2MinLumaCodingBlockSizeMinus3 = bitstream.ReadUE();
+            int log2DiffMaxMinLumaCodingBlockSize = bitstream.ReadUE();
+            int log2MinTransformBlockSizeMinus2 = bitstream.ReadUE();
+            int log2DiffMaxMinTransformBlockSize = bitstream.ReadUE();
+            int maxTransformHierarchyDepthInter = bitstream.ReadUE();
+            int maxTransformHierarchyDepthIntra = bitstream.ReadUE();
+
+            bool scalingListEnabledFlag = bitstream.ReadBit() != 0;
+            bool spsScalingListDataPresentFlag = false;
+            List<H265ScalingListElement> scalingListElements = null; 
+
+            if (scalingListEnabledFlag)
+            {
+                spsScalingListDataPresentFlag = bitstream.ReadBit() != 0;
+                if (spsScalingListDataPresentFlag)
+                {
+                    scalingListElements = new List<H265ScalingListElement>();
+                    for (int i = 0; i < 4; i++)
+                    {
+                        for (int k = 0; k < (i == 3 ? 2 : 6); k++)
+                        {
+                            var element = new H265ScalingListElement();
+                            element.ScalingListFlag = bitstream.ReadBit() != 0;
+                            if (!element.ScalingListFlag)
+                            {
+                                element.Values.Add(bitstream.ReadUE());
+                            }
+                            else
+                            {
+                                int coef_num = Math.Min(64, 1 << (4 + (i << 1)));
+                                if (i > 1)
+                                {
+                                    element.Values.Add(bitstream.ReadUE());
+                                }
+
+                                for (int l = 0; l < coef_num; l++)
+                                {
+                                    element.Values.Add(bitstream.ReadUE());
+                                }
+                            }
+                            scalingListElements.Add(element);
+                        }
+                    }
+                }
+            }
+
+            bool ampEnabledFlag = bitstream.ReadBit() != 0;
+            bool sampleAdaptiveOffsetEnabledFlag = bitstream.ReadBit() != 0;
+            bool pcmEnabledFlag = bitstream.ReadBit() != 0;
+
+            int pcmSampleBitDepthLumaMinus1 = 0;
+            int pcmSampleBitDepthChromaMinus1 = 0;
+            int log2MinPcmLumaCodingBlockSizeMinus3 = 0;
+            int log2DiffMaxMinPcmLumaCodingBlockSize = 0;
+            bool pcmLoopFilterDisabledFlag = false;
+            if (pcmEnabledFlag)
+            {
+                pcmSampleBitDepthLumaMinus1 = bitstream.ReadBits(4);
+                pcmSampleBitDepthChromaMinus1 = bitstream.ReadBits(4);
+                log2MinPcmLumaCodingBlockSizeMinus3 = bitstream.ReadUE();
+                log2DiffMaxMinPcmLumaCodingBlockSize = bitstream.ReadUE();
+                pcmLoopFilterDisabledFlag = bitstream.ReadBit() != 0;
+            }
+
+            int numShortTermRefPicSets = bitstream.ReadUE();
+
+            if (numShortTermRefPicSets > 64)
+                throw new Exception("Invalid SPS, num_short_term_ref_pic_sets cannot be larger than 64");
+
+            long[] numDeltaPocs = new long[numShortTermRefPicSets];
+            bool[] dummyBits = new bool[numShortTermRefPicSets];
+            int[] dummyUe = new int[numShortTermRefPicSets];
+            bool[] flagBits = new bool[numShortTermRefPicSets];
+            long[] numNegativePics = new long[numShortTermRefPicSets];
+            long[] numPositivePics = new long[numShortTermRefPicSets];
+            List<int>[] pics = new List<int>[numShortTermRefPicSets];
+            for (int rpsIdx = 0; rpsIdx < numShortTermRefPicSets; rpsIdx++)
+            {
+                flagBits[rpsIdx] = bitstream.ReadBit() != 0;
+                pics[rpsIdx] = new List<int>();
+                if (rpsIdx != 0 && flagBits[rpsIdx])
+                {
+                    dummyBits[rpsIdx] = bitstream.ReadBit() != 0;
+                    dummyUe[rpsIdx] = bitstream.ReadUE();
+                    numDeltaPocs[rpsIdx] = 0;
+
+                    for (int i = 0; i <= numDeltaPocs[rpsIdx - 1]; i++)
+                    {
+                        int used_by_curr_pic_flag = bitstream.ReadBit();
+                        int use_delta_flag = 0;
+                        if (used_by_curr_pic_flag == 0)
+                        {
+                            use_delta_flag = bitstream.ReadBit();
+                        }
+                        if (used_by_curr_pic_flag != 0 || use_delta_flag != 0)
+                        {
+                            numDeltaPocs[rpsIdx]++;
+                        }
+                        pics[rpsIdx].Add(used_by_curr_pic_flag);
+                        pics[rpsIdx].Add(use_delta_flag);
+                    }
+                }
+                else
+                {
+                    numNegativePics[rpsIdx] = bitstream.ReadUE();
+                    numPositivePics[rpsIdx] = bitstream.ReadUE();
+                    long delta_pics = numNegativePics[rpsIdx] + numPositivePics[rpsIdx];
+
+                    if (delta_pics < 0 || delta_pics > short.MaxValue)
+                        throw new Exception("Sanity check for delta_pocs has failed!");
+
+                    numDeltaPocs[rpsIdx] = delta_pics;
+
+                    for (long i = 0; i < delta_pics; ++i)
+                    {
+                        int dummy1 = bitstream.ReadUE();
+                        int dummy2 = bitstream.ReadBit();
+                        pics[rpsIdx].Add(dummy1);
+                        pics[rpsIdx].Add(dummy2);
+                    }
+                }
+            }
+
+            bool longTermRefPicsPresentFlag = bitstream.ReadBit() != 0;
+            int numLongTermRefPicsSps = 0;
+            int[] ltRefPicPocLsbSps = null;
+            bool[] usedByCurrPicLtSpsFlag = null;
+            if (longTermRefPicsPresentFlag)
+            {
+                numLongTermRefPicsSps = bitstream.ReadUE();
+                ltRefPicPocLsbSps = new int[numLongTermRefPicsSps];
+                usedByCurrPicLtSpsFlag = new bool[numLongTermRefPicsSps];
+                for (int i = 0; i < numLongTermRefPicsSps; i++)
+                {
+                    ltRefPicPocLsbSps[i] = bitstream.ReadBits(log2MaxPicOrderCntLsbMinus4 + 4);
+                    usedByCurrPicLtSpsFlag[i] = bitstream.ReadBit() != 0;
+                }
+            }
+            bool spsTemporalMvpEnabledFlag = bitstream.ReadBit() != 0;
+            bool strongIntraSmoothingEnabledFlag = bitstream.ReadBit() != 0;
+            bool vuiParametersPresentFlag = bitstream.ReadBit() != 0;
+            H265VuiParameters vuiParameters = null;
+            if (vuiParametersPresentFlag)
+            {
+                vuiParameters = H265VuiParameters.Parse(bitstream, spsMaxSubLayersMinus1);
+            }
+
+            return new H265SpsNalUnit(
+                spsVideoParameterSetId,
+                spsMaxSubLayersMinus1,
+                spsTemporalIdNestingFlag,
+                generalProfileSpace,
+                generalTierFlag,
+                generalProfileIdc,
+                generalProfileCompatibilityFlags,
+                generalConstraintIndicatorFlags,
+                generalLevelIdc,
+                subLayerProfilePresentFlag,
+                subLayerLevelPresentFlag,
+                reservedZero2Bits,
+                subLayerProfileSpace,
+                subLayerTierFlag,
+                subLayerProfileIdc,
+                subLayerProfileCompatibilityFlag,
+                subLayerProgressiveSourceFlag,
+                subLayerInterlacedSourceFlag,
+                subLayerNonPackedConstraintFlag,
+                subLayerFrameOnlyConstraintFlag,
+                subLayerReservedZero44Bits,
+                subLayerLevelIdc,
+                spsSeqParameterSetId,
+                chromaFormatIdc,
+                separateColorPlaneFlag,
+                picWidthInLumaSamples,
+                picHeightInLumaSamples,
+                conformanceWindowFlag,
+                confWinLeftOffset,
+                confWinRightOffset,
+                confWinTopOffset,
+                confWinBottomOffset,
+                bitDepthLumaMinus8,
+                bitDepthChromaMinus8,
+                log2MaxPicOrderCntLsbMinus4,
+                spsSubLayerOrderingInfoPresentFlag,
+                spsMaxDecPicBufferingMinus1,
+                spsMaxNumReorderPics,
+                spsMaxLatencyIncreasePlus1,
+                log2MinLumaCodingBlockSizeMinus3,
+                log2DiffMaxMinLumaCodingBlockSize,
+                log2MinTransformBlockSizeMinus2,
+                log2DiffMaxMinTransformBlockSize,
+                maxTransformHierarchyDepthInter,
+                maxTransformHierarchyDepthIntra,
+                scalingListEnabledFlag,
+                spsScalingListDataPresentFlag,
+                scalingListElements,
+                ampEnabledFlag,
+                sampleAdaptiveOffsetEnabledFlag,
+                pcmEnabledFlag,
+                pcmSampleBitDepthLumaMinus1,
+                pcmSampleBitDepthChromaMinus1,
+                log2MinPcmLumaCodingBlockSizeMinus3,
+                log2DiffMaxMinPcmLumaCodingBlockSize,
+                pcmLoopFilterDisabledFlag,
+                numShortTermRefPicSets,
+                numDeltaPocs,
+                dummyBits,
+                dummyUe,
+                flagBits,
+                numNegativePics,
+                numPositivePics,
+                pics,
+                longTermRefPicsPresentFlag,
+                numLongTermRefPicsSps,
+                ltRefPicPocLsbSps,
+                usedByCurrPicLtSpsFlag,
+                spsTemporalMvpEnabledFlag,
+                strongIntraSmoothingEnabledFlag,
+                vuiParametersPresentFlag,
+                vuiParameters
+            );
         }
 
         public (ushort Width, ushort Height) CalculateDimensions()
@@ -462,11 +1010,290 @@ namespace SharpMp4
         }
     }
 
+    public class H265ScalingListElement
+    {
+        public bool ScalingListFlag { get; set; }
+        public List<int> Values { get; set; } = new List<int>();
+    }
+
     public class H265VuiParameters
     {
-        public static H265VuiParameters Parse(BitStreamReader bitstream)
+        public bool AspectRatioInfoPresentFlag { get; set; }
+        public int AspectRatioIdc { get; set; }
+        public int SarWidth { get; set; }
+        public int SarHeight { get; set; }
+        public bool OverscanInfoPresentFlag { get; set; }
+        public bool OverscanAppropriateFlag { get; set; }
+        public bool VideoSignalTypePresentFlag { get; set; }
+        public int VideoFormat { get; set; }
+        public int VideoFullRangeFlag { get; set; }
+        public bool ColorDescriptionPresentFlag { get; set; }
+        public byte ColorPrimaries { get; set; }
+        public byte TransferCharacteristics { get; set; }
+        public byte MatrixCoeffs { get; set; }
+        public bool ChromaLocInfoPresentFlag { get; set; }
+        public int ChromaSampleLocTypeTopField { get; set; }
+        public int ChromaSampleLocTypeBottomField { get; set; }
+        public bool NeutralChromaIndicationFlag { get; set; }
+        public bool FieldSeqFlag { get; set; }
+        public bool FrameFieldInfoPresentFlag { get; set; }
+        public bool DefaultDisplayWindowFlag { get; set; }
+        public int DefDispWinLeftOffset { get; set; }
+        public int DefDispWinRightOffset { get; set; }
+        public int DefDispWinTopOffset { get; set; }
+        public int DefDispWinBottomOffset { get; set; }
+        public bool VuiTimingInfoPresentFlag { get; set; }
+        public int VuiNumUnitsInTick { get; set; }
+        public int VuiTimeScale { get; set; }
+        public bool VuiPocProportionalToTimingFlag { get; set; }
+        public int VuiNumTicksPocDiffOneMinus1 { get; set; }
+        public bool VuiHrdParametersPresentFlag { get; set; }
+        public H265HrdParameters VuiHrdParameters { get; set; }
+        public bool BitstreamRestrictionFlag { get; set; }
+        public bool TilesFixedStructureFlag { get; set; }
+        public bool MotionVectorsOverPicBoundariesFlag { get; set; }
+        public bool RestrictedRefPicListsFlag { get; set; }
+        public int MinSpatialSegmentationIdc { get; set; }
+        public int MaxBytesPerPicDenom { get; set; }
+        public int MaxBitsPerMinCuDenom { get; set; }
+        public int Log2MaxMvLengthHorizontal { get; set; }
+        public int Log2MaxMvLengthVertical { get; set; }
+
+        public H265VuiParameters(
+            bool aspectRatioInfoPresentFlag, 
+            int aspectRatioIdc, 
+            int sarWidth, 
+            int sarHeight, 
+            bool overscanInfoPresentFlag, 
+            bool overscanAppropriateFlag, 
+            bool videoSignalTypePresentFlag, 
+            int videoFormat, 
+            int videoFullRangeFlag, 
+            bool colorDescriptionPresentFlag, 
+            byte colorPrimaries, 
+            byte transferCharacteristics, 
+            byte matrixCoeffs, 
+            bool chromaLocInfoPresentFlag, 
+            int chromaSampleLocTypeTopField, 
+            int chromaSampleLocTypeBottomField, 
+            bool neutralChromaIndicationFlag, 
+            bool fieldSeqFlag, 
+            bool frameFieldInfoPresentFlag, 
+            bool defaultDisplayWindowFlag, 
+            int defDispWinLeftOffset, 
+            int defDispWinRightOffset, 
+            int defDispWinTopOffset, 
+            int defDispWinBottomOffset, 
+            bool vuiTimingInfoPresentFlag, 
+            int vuiNumUnitsInTick, 
+            int vuiTimeScale, 
+            bool vuiPocProportionalToTimingFlag, 
+            int vuiNumTicksPocDiffOneMinus1, 
+            bool vuiHrdParametersPresentFlag, 
+            H265HrdParameters vuiHrdParameters, 
+            bool bitstreamRestrictionFlag, 
+            bool tilesFixedStructureFlag, 
+            bool motionVectorsOverPicBoundariesFlag, 
+            bool restrictedRefPicListsFlag, 
+            int minSpatialSegmentationIdc, 
+            int maxBytesPerPicDenom, 
+            int maxBitsPerMinCuDenom, 
+            int log2MaxMvLengthHorizontal,
+            int log2MaxMvLengthVertical)
         {
-            throw new NotImplementedException();
+            AspectRatioInfoPresentFlag = aspectRatioInfoPresentFlag;
+            AspectRatioIdc = aspectRatioIdc;
+            SarWidth = sarWidth;
+            SarHeight = sarHeight;
+            OverscanInfoPresentFlag = overscanInfoPresentFlag;
+            OverscanAppropriateFlag = overscanAppropriateFlag;
+            VideoSignalTypePresentFlag = videoSignalTypePresentFlag;
+            VideoFormat = videoFormat;
+            VideoFullRangeFlag = videoFullRangeFlag;
+            ColorDescriptionPresentFlag = colorDescriptionPresentFlag;
+            ColorPrimaries = colorPrimaries;
+            TransferCharacteristics = transferCharacteristics;
+            MatrixCoeffs = matrixCoeffs;
+            ChromaLocInfoPresentFlag = chromaLocInfoPresentFlag;
+            ChromaSampleLocTypeTopField = chromaSampleLocTypeTopField;
+            ChromaSampleLocTypeBottomField = chromaSampleLocTypeBottomField;
+            NeutralChromaIndicationFlag = neutralChromaIndicationFlag;
+            FieldSeqFlag = fieldSeqFlag;
+            FrameFieldInfoPresentFlag = frameFieldInfoPresentFlag;
+            DefaultDisplayWindowFlag = defaultDisplayWindowFlag;
+            DefDispWinLeftOffset = defDispWinLeftOffset;
+            DefDispWinRightOffset = defDispWinRightOffset;
+            DefDispWinTopOffset = defDispWinTopOffset;
+            DefDispWinBottomOffset = defDispWinBottomOffset;
+            VuiTimingInfoPresentFlag = vuiTimingInfoPresentFlag;
+            VuiNumUnitsInTick = vuiNumUnitsInTick;
+            VuiTimeScale = vuiTimeScale;
+            VuiPocProportionalToTimingFlag = vuiPocProportionalToTimingFlag;
+            VuiNumTicksPocDiffOneMinus1 = vuiNumTicksPocDiffOneMinus1;
+            VuiHrdParametersPresentFlag = vuiHrdParametersPresentFlag;
+            VuiHrdParameters = vuiHrdParameters;
+            BitstreamRestrictionFlag = bitstreamRestrictionFlag;
+            TilesFixedStructureFlag = tilesFixedStructureFlag;
+            MotionVectorsOverPicBoundariesFlag = motionVectorsOverPicBoundariesFlag;
+            RestrictedRefPicListsFlag = restrictedRefPicListsFlag;
+            MinSpatialSegmentationIdc = minSpatialSegmentationIdc;
+            MaxBytesPerPicDenom = maxBytesPerPicDenom;
+            MaxBitsPerMinCuDenom = maxBitsPerMinCuDenom;
+            Log2MaxMvLengthHorizontal = log2MaxMvLengthHorizontal;
+            Log2MaxMvLengthVertical = log2MaxMvLengthVertical;
+        }
+
+        public static H265VuiParameters Parse(BitStreamReader bitstream, int spsMaxSubLayersMinus1)
+        {
+            bool aspectRatioInfoPresentFlag = bitstream.ReadBit() != 0;
+            int aspectRatioIdc = 0;
+            int sarWidth = 0;
+            int sarHeight = 0;
+            if (aspectRatioInfoPresentFlag)
+            {
+                aspectRatioIdc = bitstream.ReadBits(8);
+                if (aspectRatioIdc == 255) // EXTENDED_SAR
+                {
+                    sarWidth = bitstream.ReadBits(16);
+                    sarHeight = bitstream.ReadBits(16);
+                }
+            }
+            bool overscanInfoPresentFlag = bitstream.ReadBit() != 0;
+            bool overscanAppropriateFlag = false;
+            if (overscanInfoPresentFlag)
+            {
+                overscanAppropriateFlag = bitstream.ReadBit() != 0;
+            }
+            bool videoSignalTypePresentFlag = bitstream.ReadBit() != 0;
+
+            int videoFormat = 0;
+            int videoFullRangeFlag = 0;
+            bool colorDescriptionPresentFlag = false;
+            byte colorPrimaries = 0;
+            byte transferCharacteristics = 0;
+            byte matrixCoeffs = 0;
+            if (videoSignalTypePresentFlag)
+            {
+                videoFormat = bitstream.ReadBits(3);
+                videoFullRangeFlag = bitstream.ReadBit();
+                colorDescriptionPresentFlag = bitstream.ReadBit() != 0;
+                if (colorDescriptionPresentFlag)
+                {
+                    colorPrimaries = (byte)bitstream.ReadBits(8);
+                    transferCharacteristics = (byte)bitstream.ReadBits(8);
+                    matrixCoeffs = (byte)bitstream.ReadBits(8);
+                }
+            }
+            bool chromaLocInfoPresentFlag = bitstream.ReadBit() != 0;
+            int chromaSampleLocTypeTopField = 0;
+            int chromaSampleLocTypeBottomField = 0;
+            if (chromaLocInfoPresentFlag)
+            {
+                chromaSampleLocTypeTopField = bitstream.ReadUE();
+                chromaSampleLocTypeBottomField = bitstream.ReadUE();
+            }
+            bool neutralChromaIndicationFlag = bitstream.ReadBit() != 0;
+            bool fieldSeqFlag = bitstream.ReadBit() != 0;
+            bool frameFieldInfoPresentFlag = bitstream.ReadBit() != 0;
+            bool defaultDisplayWindowFlag = bitstream.ReadBit() != 0;
+            int defDispWinLeftOffset = 0;
+            int defDispWinRightOffset = 0;
+            int defDispWinTopOffset = 0;
+            int defDispWinBottomOffset = 0;
+            if (defaultDisplayWindowFlag)
+            {
+                defDispWinLeftOffset = bitstream.ReadUE();
+                defDispWinRightOffset = bitstream.ReadUE();
+                defDispWinTopOffset = bitstream.ReadUE();
+                defDispWinBottomOffset = bitstream.ReadUE();
+            }
+            bool vuiTimingInfoPresentFlag = bitstream.ReadBit() != 0;
+
+            int vuiNumUnitsInTick = 0;
+            int vuiTimeScale = 0;
+            bool vuiPocProportionalToTimingFlag = false;
+            int vuiNumTicksPocDiffOneMinus1 = 0;
+            bool vuiHrdParametersPresentFlag = false;
+            H265HrdParameters vuiHrdParameters = null;
+            if (vuiTimingInfoPresentFlag)
+            {
+                vuiNumUnitsInTick = bitstream.ReadBits(32);
+                vuiTimeScale = bitstream.ReadBits(32);
+                vuiPocProportionalToTimingFlag = bitstream.ReadBit() != 0;
+                if (vuiPocProportionalToTimingFlag)
+                {
+                    vuiNumTicksPocDiffOneMinus1 = bitstream.ReadUE();
+                }
+                vuiHrdParametersPresentFlag = bitstream.ReadBit() != 0;
+                if (vuiHrdParametersPresentFlag)
+                {
+                    vuiHrdParameters = H265HrdParameters.Parse(bitstream, true, spsMaxSubLayersMinus1);
+                }
+            }
+            bool bitstreamRestrictionFlag = bitstream.ReadBit() != 0;
+
+            bool tilesFixedStructureFlag = false;
+            bool motionVectorsOverPicBoundariesFlag = false;
+            bool restrictedRefPicListsFlag = false;
+            int minSpatialSegmentationIdc = 0;
+            int maxBytesPerPicDenom = 0;
+            int maxBitsPerMinCuDenom = 0;
+            int log2MaxMvLengthHorizontal = 0;
+            int log2MaxMvLengthVertical = 0;
+            if (bitstreamRestrictionFlag)
+            {
+                tilesFixedStructureFlag = bitstream.ReadBit() != 0;
+                motionVectorsOverPicBoundariesFlag = bitstream.ReadBit() != 0;
+                restrictedRefPicListsFlag = bitstream.ReadBit() != 0;
+                minSpatialSegmentationIdc = bitstream.ReadUE();
+                maxBytesPerPicDenom = bitstream.ReadUE();
+                maxBitsPerMinCuDenom = bitstream.ReadUE();
+                log2MaxMvLengthHorizontal = bitstream.ReadUE();
+                log2MaxMvLengthVertical = bitstream.ReadUE();
+            }
+
+            return new H265VuiParameters(
+                aspectRatioInfoPresentFlag,
+                aspectRatioIdc,
+                sarWidth,
+                sarHeight,
+                overscanInfoPresentFlag,
+                overscanAppropriateFlag,
+                videoSignalTypePresentFlag,
+                videoFormat,
+                videoFullRangeFlag,
+                colorDescriptionPresentFlag,
+                colorPrimaries,
+                transferCharacteristics,
+                matrixCoeffs,
+                chromaLocInfoPresentFlag,
+                chromaSampleLocTypeTopField,
+                chromaSampleLocTypeBottomField,
+                neutralChromaIndicationFlag,
+                fieldSeqFlag,
+                frameFieldInfoPresentFlag,
+                defaultDisplayWindowFlag,
+                defDispWinLeftOffset,
+                defDispWinRightOffset,
+                defDispWinTopOffset,
+                defDispWinBottomOffset,
+                vuiTimingInfoPresentFlag,
+                vuiNumUnitsInTick,
+                vuiTimeScale,
+                vuiPocProportionalToTimingFlag,
+                vuiNumTicksPocDiffOneMinus1,
+                vuiHrdParametersPresentFlag,
+                vuiHrdParameters,
+                bitstreamRestrictionFlag,
+                tilesFixedStructureFlag,
+                motionVectorsOverPicBoundariesFlag,
+                restrictedRefPicListsFlag,
+                minSpatialSegmentationIdc,
+                maxBytesPerPicDenom,
+                maxBitsPerMinCuDenom,
+                log2MaxMvLengthHorizontal,
+                log2MaxMvLengthVertical
+            );
         }
 
         public static void Build(BitStreamWriter bitstream, H265VuiParameters vui)
@@ -542,7 +1369,7 @@ namespace SharpMp4
             VclHrdSubLayerParameters = vclHrdSubLayerParameters;
         }
 
-        public static H265HrdParameters Parse(BitStreamReader bitstream, bool commonInfPresentFlag, int maxNumSubLayersMinus1)
+        public static H265HrdParameters Parse(BitStreamReader bitstream, bool commonInfPresentFlag, int sps_max_sub_layers_minus1)
         {
             bool nalHrdParametersPresentFlag = false;
             bool vclHrdParametersPresentFlag = false;
@@ -584,14 +1411,14 @@ namespace SharpMp4
                 }
             }
 
-            bool[] fixedPicRateGeneralFlag = new bool[maxNumSubLayersMinus1];
-            bool[] fixedPicRateWithinCvsFlag = new bool[maxNumSubLayersMinus1];
-            bool[] lowDelayHrdFlag = new bool[maxNumSubLayersMinus1];
-            int[] cpbCntMinus1 = new int[maxNumSubLayersMinus1];
-            int[] elementalDurationInTcMinus1 = new int[maxNumSubLayersMinus1];
-            H265HrdSubLayerParameters[] nalHrdSubLayerParameters = new H265HrdSubLayerParameters[maxNumSubLayersMinus1];
-            H265HrdSubLayerParameters[] vclHrdSubLayerParameters = new H265HrdSubLayerParameters[maxNumSubLayersMinus1];
-            for (int i = 0; i <= maxNumSubLayersMinus1; i++)
+            bool[] fixedPicRateGeneralFlag = new bool[sps_max_sub_layers_minus1];
+            bool[] fixedPicRateWithinCvsFlag = new bool[sps_max_sub_layers_minus1];
+            bool[] lowDelayHrdFlag = new bool[sps_max_sub_layers_minus1];
+            int[] cpbCntMinus1 = new int[sps_max_sub_layers_minus1];
+            int[] elementalDurationInTcMinus1 = new int[sps_max_sub_layers_minus1];
+            H265HrdSubLayerParameters[] nalHrdSubLayerParameters = new H265HrdSubLayerParameters[sps_max_sub_layers_minus1];
+            H265HrdSubLayerParameters[] vclHrdSubLayerParameters = new H265HrdSubLayerParameters[sps_max_sub_layers_minus1];
+            for (int i = 0; i <= sps_max_sub_layers_minus1; i++)
             {
                 fixedPicRateGeneralFlag[i] = bitstream.ReadBit() != 0;
                 if (!fixedPicRateGeneralFlag[i])
@@ -750,7 +1577,7 @@ namespace SharpMp4
     {
         public const string TYPE = "hvcC";
 
-        public HevcDecoderConfigurationRecord HevcDecoderConfigurationRecord { get; }
+        public HevcDecoderConfigurationRecord HevcDecoderConfigurationRecord { get; set; }
 
         public HevcConfigurationBox(uint size, Mp4Box parent, HevcDecoderConfigurationRecord record) : base(size, TYPE, parent)
         {
