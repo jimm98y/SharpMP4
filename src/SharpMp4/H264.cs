@@ -22,55 +22,58 @@ namespace SharpMp4
 
         public override async Task ProcessSampleAsync(byte[] sample, uint duration)
         {
-            var header = H264NalUnitHeader.ParseNALHeader(sample[0]);
-            if (header.NalUnitType == H264NalUnitTypes.SPS)
+            using (BitStreamReader bitstream = new BitStreamReader(sample))
             {
-                if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {ToHexString(sample)}");
-                var sps = H264SpsNalUnit.Parse(sample);
-                if (!Sps.ContainsKey(sps.SeqParameterSetId))
+                var header = H264NalUnitHeader.ParseNALHeader(bitstream);
+                if (header.NalUnitType == H264NalUnitTypes.SPS)
                 {
-                    Sps.Add(sps.SeqParameterSetId, sps);
-                }
-                if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H264SpsNalUnit.Build(sps))}");
-            }
-            else if (header.NalUnitType == H264NalUnitTypes.PPS)
-            {
-                if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {ToHexString(sample)}");
-                var pps = H264PpsNalUnit.Parse(sample);
-                if (!Pps.ContainsKey(pps.PicParameterSetId))
-                {
-                    Pps.Add(pps.PicParameterSetId, pps);
-                }
-                if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H264PpsNalUnit.Build(pps))}");
-            }
-            else
-            {
-                var sliceHeader = ReadSliceHeader(sample);
-
-                _nalBuffer.Add(sample);
-
-                if (IsNewSample(_lastSliceHeader, sliceHeader))
-                {
-                    int len = sample.Length;
-                    IEnumerable<byte> result = new byte[0];
-
-                    foreach (var nal in _nalBuffer)
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {ToHexString(sample)}");
+                    var sps = H264SpsNalUnit.Parse(sample);
+                    if (!Sps.ContainsKey(sps.SeqParameterSetId))
                     {
-                        // for each NAL, add 4 byte NAL size
-                        byte[] size = new byte[] {
+                        Sps.Add(sps.SeqParameterSetId, sps);
+                    }
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H264SpsNalUnit.Build(sps))}");
+                }
+                else if (header.NalUnitType == H264NalUnitTypes.PPS)
+                {
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {ToHexString(sample)}");
+                    var pps = H264PpsNalUnit.Parse(sample);
+                    if (!Pps.ContainsKey(pps.PicParameterSetId))
+                    {
+                        Pps.Add(pps.PicParameterSetId, pps);
+                    }
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H264PpsNalUnit.Build(pps))}");
+                }
+                else
+                {
+                    var sliceHeader = ReadSliceHeader(sample);
+
+                    _nalBuffer.Add(sample);
+
+                    if (IsNewSample(_lastSliceHeader, sliceHeader))
+                    {
+                        int len = sample.Length;
+                        IEnumerable<byte> result = new byte[0];
+
+                        foreach (var nal in _nalBuffer)
+                        {
+                            // for each NAL, add 4 byte NAL size
+                            byte[] size = new byte[] {
                             (byte)((len & 0xff000000) >> 24),
                             (byte)((len & 0xff0000) >> 16),
                             (byte)((len & 0xff00) >> 8),
                             (byte)(len & 0xff)
                         };
-                        result = result.Concat(size).Concat(sample);
-                    }
-                   
-                    await base.ProcessSampleAsync(result.ToArray(), duration);
-                    _nalBuffer.Clear();
-                }
+                            result = result.Concat(size).Concat(sample);
+                        }
 
-                _lastSliceHeader = sliceHeader;
+                        await base.ProcessSampleAsync(result.ToArray(), duration);
+                        _nalBuffer.Clear();
+                    }
+
+                    _lastSliceHeader = sliceHeader;
+                }
             }
         }
 
@@ -142,14 +145,13 @@ namespace SharpMp4
 
         private H264NalSliceHeader ReadSliceHeader(byte[] sample)
         {
-            using (BitStreamReader reader = new BitStreamReader(sample))
+            using (BitStreamReader bitstream = new BitStreamReader(sample))
             {
-                byte type = (byte)reader.ReadBits(8); // first byte = NAL header
-                H264NalUnitHeader header = H264NalUnitHeader.ParseNALHeader(type);
+                H264NalUnitHeader header = H264NalUnitHeader.ParseNALHeader(bitstream);
                 bool idrPicFlag = header.NalUnitType == H264NalUnitTypes.SLICE_IDR;
 
-                int firstMbInSlice = reader.ReadUE();
-                int sliceTypeInt = reader.ReadUE();
+                int firstMbInSlice = bitstream.ReadUE();
+                int sliceTypeInt = bitstream.ReadUE();
 
                 H264NalSliceType sliceType;
                 switch (sliceTypeInt)
@@ -183,7 +185,7 @@ namespace SharpMp4
                         throw new NotSupportedException($"Unsupported slice type {sliceTypeInt}");
                 }
 
-                int picParameterSetId = reader.ReadUE();
+                int picParameterSetId = bitstream.ReadUE();
                 if (!Pps.ContainsKey(picParameterSetId))
                     throw new Exception($"Missing PPS with ID {picParameterSetId}!");
 
@@ -196,35 +198,35 @@ namespace SharpMp4
                 int colorPlaneId = 0;
                 if (sps.ResidualColorTransformFlag != 0)
                 {
-                    colorPlaneId = reader.ReadBits(2);
+                    colorPlaneId = bitstream.ReadBits(2);
                 }
 
-                int frameNum = reader.ReadBits(sps.Log2MaxFrameNumMinus4 + 4);
+                int frameNum = bitstream.ReadBits(sps.Log2MaxFrameNumMinus4 + 4);
                 int fieldPicFlag = 0;
                 int bottomFieldFlag = 0;
                 if (sps.FrameMbsOnlyFlag == 0)
                 {
-                    fieldPicFlag = reader.ReadBit();
+                    fieldPicFlag = bitstream.ReadBit();
                     if (fieldPicFlag != 0)
                     {
-                        bottomFieldFlag = reader.ReadBit();
+                        bottomFieldFlag = bitstream.ReadBit();
                     }
                 }
 
                 int idrPicId = 0;
                 if (idrPicFlag)
                 {
-                    idrPicId = reader.ReadUE();
+                    idrPicId = bitstream.ReadUE();
                 }
 
                 int picOrderCntLsb = 0;
                 int deltaPicOrderCntBottom = 0;
                 if (sps.PicOrderCntType == 0)
                 {
-                    picOrderCntLsb = reader.ReadBits(sps.Log2MaxPicOrderCntLsbMinus4 + 4);
+                    picOrderCntLsb = bitstream.ReadBits(sps.Log2MaxPicOrderCntLsbMinus4 + 4);
                     if (pps.BottomFieldPicOrderInFramePresentFlag != 0 && fieldPicFlag == 0)
                     {
-                        deltaPicOrderCntBottom = reader.ReadSE();
+                        deltaPicOrderCntBottom = bitstream.ReadSE();
                     }
                 }
 
@@ -232,10 +234,10 @@ namespace SharpMp4
                 int deltaPicOrderCnt1 = 0;
                 if (sps.PicOrderCntType == 1 && sps.DeltaPicOrderAlwaysZeroFlag == 0)
                 {
-                    deltaPicOrderCnt0 = reader.ReadSE();
+                    deltaPicOrderCnt0 = bitstream.ReadSE();
                     if (pps.BottomFieldPicOrderInFramePresentFlag != 0 && fieldPicFlag == 0)
                     {
-                        deltaPicOrderCnt1 = reader.ReadSE();
+                        deltaPicOrderCnt1 = bitstream.ReadSE();
                     }
                 }
 
@@ -432,12 +434,13 @@ namespace SharpMp4
 
         public static async Task<AvcDecoderConfigurationRecord> Parse(uint size, Stream stream)
         {
-            byte configurationVersion = IsoReaderWriter.ReadByte(stream);
-            byte avcProfileIndication = IsoReaderWriter.ReadByte(stream);
-            byte profileCompatibility = IsoReaderWriter.ReadByte(stream);
-            byte avcLevelIndication = IsoReaderWriter.ReadByte(stream);
-
             BitStreamReader bitstream = new BitStreamReader(stream);
+
+            byte configurationVersion = (byte)bitstream.ReadBits(8);
+            byte avcProfileIndication = (byte)bitstream.ReadBits(8);
+            byte profileCompatibility = (byte)bitstream.ReadBits(8);
+            byte avcLevelIndication = (byte)bitstream.ReadBits(8);
+
             int lengthSizeMinusOnePaddingBits = bitstream.ReadBits(6);
             int lengthSizeMinusOne = bitstream.ReadBits(2);
 
@@ -529,12 +532,13 @@ namespace SharpMp4
         public static async Task<uint> Build(AvcDecoderConfigurationRecord b, Stream stream)
         {
             uint size = 0;
-            size += IsoReaderWriter.WriteByte(stream, b.ConfigurationVersion);
-            size += IsoReaderWriter.WriteByte(stream, b.AvcProfileIndication);
-            size += IsoReaderWriter.WriteByte(stream, b.ProfileCompatibility);
-            size += IsoReaderWriter.WriteByte(stream, b.AvcLevelIndication);
-
             BitStreamWriter bitstream = new BitStreamWriter(stream);
+
+            bitstream.WriteBits(8, b.ConfigurationVersion);
+            bitstream.WriteBits(8, b.AvcProfileIndication);
+            bitstream.WriteBits(8, b.ProfileCompatibility);
+            bitstream.WriteBits(8, b.AvcLevelIndication);
+
             bitstream.WriteBits(6, b.LengthSizeMinusOnePaddingBits);
             bitstream.WriteBits(2, b.LengthSizeMinusOne);
             bitstream.WriteBits(3, b.NumberOfSequenceParameterSetsPaddingBits);
@@ -706,8 +710,7 @@ namespace SharpMp4
         public static H264PpsNalUnit Parse(ushort size, Stream stream)
         {
             BitStreamReader bitstream = new BitStreamReader(stream);
-            int type = bitstream.ReadBits(8);
-            H264NalUnitHeader header = H264NalUnitHeader.ParseNALHeader((byte)type);
+            H264NalUnitHeader header = H264NalUnitHeader.ParseNALHeader(bitstream);
 
             int picParameterSetId = bitstream.ReadUE();
             int seqParameterSetId = bitstream.ReadUE();
@@ -830,10 +833,8 @@ namespace SharpMp4
 
         public static uint Build(Stream stream, H264PpsNalUnit nal)
         {
-            byte type = H264NalUnitHeader.BuildNALHeader(nal.NalHeader);
-
             BitStreamWriter bitstream = new BitStreamWriter(stream);
-            bitstream.WriteBits(8, type);
+            H264NalUnitHeader.BuildNALHeader(bitstream, nal.NalHeader);
             bitstream.WriteUE((uint)nal.PicParameterSetId);
             bitstream.WriteUE((uint)nal.SeqParameterSetId);
             bitstream.WriteBit(nal.EntropyCodingModeFlag);
@@ -1137,9 +1138,7 @@ namespace SharpMp4
         public static H264SpsNalUnit Parse(ushort size, Stream stream)
         {
             BitStreamReader bitstream = new BitStreamReader(stream);
-            
-            int type = bitstream.ReadBits(8);
-            H264NalUnitHeader header = H264NalUnitHeader.ParseNALHeader((byte)type);
+            H264NalUnitHeader header = H264NalUnitHeader.ParseNALHeader(bitstream);
             
             // 2nd byte is profile IDC
             int profileIdc = bitstream.ReadBits(8);
@@ -1309,9 +1308,8 @@ namespace SharpMp4
 
         public static uint Build(Stream stream, H264SpsNalUnit nal)
         {
-            byte type = H264NalUnitHeader.BuildNALHeader(nal.NalHeader);
             BitStreamWriter bitstream = new BitStreamWriter(stream);
-            bitstream.WriteBits(8, type);
+            H264NalUnitHeader.BuildNALHeader(bitstream, nal.NalHeader);
             
             // 2nd byte is profile IDC
             bitstream.WriteBits(8, nal.ProfileIdc);
@@ -1894,6 +1892,12 @@ namespace SharpMp4
 
     public class H264NalUnitHeader
     {
+        public H264NalUnitHeader(int nalRefIdc, int nalUnitType)
+        {
+            NalRefIdc = nalRefIdc;
+            NalUnitType = nalUnitType;
+        }
+
         public int NalRefIdc { get; set; }
         public int NalUnitType { get; set; }
         
@@ -1907,21 +1911,24 @@ namespace SharpMp4
             return NalRefIdc > 0;
         }
 
-        public static H264NalUnitHeader ParseNALHeader(byte type)
+        public static H264NalUnitHeader ParseNALHeader(BitStreamReader bitstream)
         {
-            if ((type & 0b10000000) != 0)
+            if (bitstream.ReadBit() != 0)
                 throw new Exception("Invalid NAL header!");
 
-            H264NalUnitHeader nalUnitHeader = new H264NalUnitHeader();
-            nalUnitHeader.NalRefIdc = type >> 5 & 3;
-            nalUnitHeader.NalUnitType = type & 0x1f;
-            return nalUnitHeader;
+            int nalRefIdc = bitstream.ReadBits(2);
+            int nalUnitType = bitstream.ReadBits(5);
+            H264NalUnitHeader header = new H264NalUnitHeader(
+                nalRefIdc,
+                nalUnitType);
+            return header;
         }
 
-        public static byte BuildNALHeader(H264NalUnitHeader nalUnitHeader)
+        public static void BuildNALHeader(BitStreamWriter bitstream, H264NalUnitHeader header)
         {
-            byte type = (byte)(((nalUnitHeader.NalRefIdc & 3) << 5) | (nalUnitHeader.NalUnitType & 0x1f));
-            return type;
+            bitstream.WriteBit(0); // forbidden 0
+            bitstream.WriteBits(2, header.NalRefIdc);
+            bitstream.WriteBits(5, header.NalUnitType);
         }
     }
 

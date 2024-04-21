@@ -23,65 +23,68 @@ namespace SharpMp4
 
         public override async Task ProcessSampleAsync(byte[] sample, uint duration)
         {
-            var header = H265NalUnitHeader.ParseNALHeader(sample[0]);
-            if (header.NalUnitType == H265NalUnitTypes.SPS)
+            using (BitStreamReader bitstream = new BitStreamReader(sample))
             {
-                if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {ToHexString(sample)}");
-                var sps = H265SpsNalUnit.Parse(sample);
-                if (!Sps.ContainsKey(sps.SeqParameterSetId))
+                var header = H265NalUnitHeader.ParseNALHeader(bitstream);
+                if (header.NalUnitType == H265NalUnitTypes.SPS)
                 {
-                    Sps.Add(sps.SeqParameterSetId, sps);
-                }
-                if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H265SpsNalUnit.Build(sps))}");
-            }
-            else if (header.NalUnitType == H265NalUnitTypes.PPS)
-            {
-                if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {ToHexString(sample)}");
-                var pps = H265PpsNalUnit.Parse(sample);
-                if (!Pps.ContainsKey(pps.PicParameterSetId))
-                {
-                    Pps.Add(pps.PicParameterSetId, pps);
-                }
-                if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H265PpsNalUnit.Build(pps))}");
-            }
-            else if (header.NalUnitType == H265NalUnitTypes.VPS)
-            {
-                if (Log.DebugEnabled) Log.Debug($"-Parsed VPS: {ToHexString(sample)}");
-                var vps = H265VpsNalUnit.Parse(sample);
-                if (!Vps.ContainsKey(vps.VpsParameterSetId))
-                {
-                    Vps.Add(vps.VpsParameterSetId, vps);
-                }
-                if (Log.DebugEnabled) Log.Debug($"Rebuilt VPS: {ToHexString(H265VpsNalUnit.Build(vps))}");
-            }
-            else
-            {
-                var sliceHeader = ReadSliceHeader(sample);
-
-                _nalBuffer.Add(sample);
-
-                if (IsNewSample(_lastSliceHeader, sliceHeader))
-                {
-                    int len = sample.Length;
-                    IEnumerable<byte> result = new byte[0];
-
-                    foreach (var nal in _nalBuffer)
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {ToHexString(sample)}");
+                    var sps = H265SpsNalUnit.Parse(sample);
+                    if (!Sps.ContainsKey(sps.SeqParameterSetId))
                     {
-                        // for each NAL, add 4 byte NAL size
-                        byte[] size = new byte[] {
+                        Sps.Add(sps.SeqParameterSetId, sps);
+                    }
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H265SpsNalUnit.Build(sps))}");
+                }
+                else if (header.NalUnitType == H265NalUnitTypes.PPS)
+                {
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {ToHexString(sample)}");
+                    var pps = H265PpsNalUnit.Parse(sample);
+                    if (!Pps.ContainsKey(pps.PicParameterSetId))
+                    {
+                        Pps.Add(pps.PicParameterSetId, pps);
+                    }
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H265PpsNalUnit.Build(pps))}");
+                }
+                else if (header.NalUnitType == H265NalUnitTypes.VPS)
+                {
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed VPS: {ToHexString(sample)}");
+                    var vps = H265VpsNalUnit.Parse(sample);
+                    if (!Vps.ContainsKey(vps.VpsParameterSetId))
+                    {
+                        Vps.Add(vps.VpsParameterSetId, vps);
+                    }
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt VPS: {ToHexString(H265VpsNalUnit.Build(vps))}");
+                }
+                else
+                {
+                    var sliceHeader = ReadSliceHeader(sample);
+
+                    _nalBuffer.Add(sample);
+
+                    if (IsNewSample(_lastSliceHeader, sliceHeader))
+                    {
+                        int len = sample.Length;
+                        IEnumerable<byte> result = new byte[0];
+
+                        foreach (var nal in _nalBuffer)
+                        {
+                            // for each NAL, add 4 byte NAL size
+                            byte[] size = new byte[] {
                             (byte)((len & 0xff000000) >> 24),
                             (byte)((len & 0xff0000) >> 16),
                             (byte)((len & 0xff00) >> 8),
                             (byte)(len & 0xff)
                         };
-                        result = result.Concat(size).Concat(sample);
+                            result = result.Concat(size).Concat(sample);
+                        }
+
+                        await base.ProcessSampleAsync(result.ToArray(), duration);
+                        _nalBuffer.Clear();
                     }
 
-                    await base.ProcessSampleAsync(result.ToArray(), duration);
-                    _nalBuffer.Clear();
+                    _lastSliceHeader = sliceHeader;
                 }
-
-                _lastSliceHeader = sliceHeader;
             }
         }
 
@@ -98,6 +101,7 @@ namespace SharpMp4
 
     public class H265VpsNalUnit
     {
+        public H265NalUnitHeader Header { get; set; }
         public int VpsParameterSetId { get; set; }
         public int VpsReservedThree2bits { get; set; }
         public int VpsMaxLayersMinus1 { get; set; }
@@ -143,6 +147,7 @@ namespace SharpMp4
         public List<bool> VpsExtensionDataFlag { get; set; } = new List<bool>();
 
         public H265VpsNalUnit(
+            H265NalUnitHeader header,
             int vpsParameterSetId,
             int vpsReservedThree2bits,
             int vpsMaxLayersMinus1,
@@ -187,6 +192,7 @@ namespace SharpMp4
             bool vpsExtensionFlag, 
             List<bool> vpsExtensionDataFlag)
         {
+            Header = header;
             VpsParameterSetId = vpsParameterSetId;
             VpsReservedThree2bits = vpsReservedThree2bits;
             VpsMaxLayersMinus1 = vpsMaxLayersMinus1;
@@ -243,6 +249,7 @@ namespace SharpMp4
         private static H265VpsNalUnit Parse(ushort size, Stream stream)
         {
             BitStreamReader bitstream = new BitStreamReader(stream);
+            H265NalUnitHeader header = H265NalUnitHeader.ParseNALHeader(bitstream);
 
             int vpsParameterSetId = bitstream.ReadBits(4);
             int vpsReservedThree2bits = bitstream.ReadBits(2);
@@ -382,6 +389,7 @@ namespace SharpMp4
             bitstream.ReadTrailingBits();
 
             return new H265VpsNalUnit(
+                header,
                 vpsParameterSetId,
                 vpsReservedThree2bits,
                 vpsMaxLayersMinus1,
@@ -436,6 +444,7 @@ namespace SharpMp4
 
     public class H265SpsNalUnit
     {
+        public H265NalUnitHeader Header { get; set; }
         public int SeqParameterSetId { get; set; }
         public int SpsVideoParameterSetId { get; set; }
         public int SpsMaxSubLayersMinus1 { get; set; }
@@ -511,6 +520,7 @@ namespace SharpMp4
         public H265VuiParameters VuiParameters { get; set; }
 
         public H265SpsNalUnit(
+            H265NalUnitHeader header,
             int spsVideoParameterSetId,
             int spsMaxSubLayersMinus1,
             bool spsTemporalIdNestingFlag,
@@ -584,6 +594,7 @@ namespace SharpMp4
             bool vuiParametersPresentFlag, 
             H265VuiParameters vuiParameters)
         {
+            Header = header;
             SpsVideoParameterSetId = spsVideoParameterSetId;
             SpsMaxSubLayersMinus1 = spsMaxSubLayersMinus1;
             SpsTemporalIdNestingFlag = spsTemporalIdNestingFlag;
@@ -674,7 +685,8 @@ namespace SharpMp4
         private static H265SpsNalUnit Parse(ushort size, Stream stream)
         {
             BitStreamReader bitstream = new BitStreamReader(stream);
-            
+            H265NalUnitHeader header = H265NalUnitHeader.ParseNALHeader(bitstream);
+
             int spsVideoParameterSetId = bitstream.ReadBits(4);
             int spsMaxSubLayersMinus1 = bitstream.ReadBits(3);
             bool spsTemporalIdNestingFlag = bitstream.ReadBit() != 0;
@@ -903,6 +915,7 @@ namespace SharpMp4
             }
 
             return new H265SpsNalUnit(
+                header,
                 spsVideoParameterSetId,
                 spsMaxSubLayersMinus1,
                 spsTemporalIdNestingFlag,
@@ -1538,6 +1551,7 @@ namespace SharpMp4
 
     public class H265PpsNalUnit
     {
+        public H265NalUnitHeader Header { get; set; }
         public int PicParameterSetId { get; set; }
         public int PpsPicParameterSetId { get; set; }
         public int PpsSeqParameterSetId { get; set; }
@@ -1587,6 +1601,7 @@ namespace SharpMp4
         public List<bool> PpsExtension4BitsData { get; set; }
 
         public H265PpsNalUnit(
+            H265NalUnitHeader header,
             int ppsPicParameterSetId,
             int ppsSeqParameterSetId,
             bool dependentSliceSegmentsEnabledFlag, 
@@ -1634,6 +1649,7 @@ namespace SharpMp4
             int ppsExtension4Bits, 
             List<bool> ppsExtension4BitsData)
         {
+            Header = header;
             PpsPicParameterSetId = ppsPicParameterSetId;
             PpsSeqParameterSetId = ppsSeqParameterSetId;
             DependentSliceSegmentsEnabledFlag = dependentSliceSegmentsEnabledFlag;
@@ -1698,6 +1714,7 @@ namespace SharpMp4
         private static H265PpsNalUnit Parse(ushort size, Stream stream)
         {
             BitStreamReader bitstream = new BitStreamReader(stream);
+            H265NalUnitHeader header = H265NalUnitHeader.ParseNALHeader(bitstream);
 
             int ppsPicParameterSetId = bitstream.ReadUE();
             int ppsSeqParameterSetId = bitstream.ReadUE();
@@ -1829,6 +1846,7 @@ namespace SharpMp4
             // TODO: trailing bits, 1 stop bit and all zeroes
 
             return new H265PpsNalUnit(
+                        header,
                         ppsPicParameterSetId,
                         ppsSeqParameterSetId,
                         dependentSliceSegmentsEnabledFlag,
@@ -1881,11 +1899,39 @@ namespace SharpMp4
 
     public class H265NalUnitHeader
     {
-        public int NalUnitType { get; set; }
-
-        public static H265NalUnitHeader ParseNALHeader(byte header)
+        public H265NalUnitHeader(int nalUnitType, int nuhLayerId, int nuhTemporalIdPlus1)
         {
-            throw new NotImplementedException();
+            NalUnitType = nalUnitType;
+            NuhLayerId = nuhLayerId;
+            NuhTemporalIdPlus1 = nuhTemporalIdPlus1;
+        }
+
+        public int NalUnitType { get; set; }
+        public int NuhLayerId { get; }
+        public int NuhTemporalIdPlus1 { get; }
+
+        public static H265NalUnitHeader ParseNALHeader(BitStreamReader bitstream)
+        {
+            if(bitstream.ReadBit() != 0) // forbidden zero bit
+                throw new Exception("Invalid NAL header!");
+
+            int nalUnitType = bitstream.ReadBits(6);
+            int nuhLayerId = bitstream.ReadBits(6);
+            int nuhTemporalIdPlus1 = bitstream.ReadBits(3);
+
+            H265NalUnitHeader header = new H265NalUnitHeader(
+                nalUnitType,
+                nuhLayerId,
+                nuhTemporalIdPlus1);
+            return header;
+        }
+
+        public static void BuildNALHeader(BitStreamWriter bitstream, H265NalUnitHeader header)
+        {
+            bitstream.WriteBit(0); // forbidden 0 bit
+            bitstream.WriteBits(6, header.NalUnitType);
+            bitstream.WriteBits(6, header.NuhLayerId);
+            bitstream.WriteBits(3, header.NuhTemporalIdPlus1);
         }
     }
 
