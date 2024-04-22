@@ -359,6 +359,10 @@ namespace SharpMp4
         private byte _currentByte = 0;
         private bool _disposedValue;
 
+        private int _prevByte = -1;
+
+        public bool ShouldUnescapeNals { get; set; } = true;
+
         public BitStreamReader(byte[] bytes) : this(new MemoryStream(bytes), true)
         { }
 
@@ -375,7 +379,22 @@ namespace SharpMp4
 
             if (_currentBytePosition != bytePos)
             {
-                _currentByte = IsoReaderWriter.ReadByte(_stream);
+                byte b = IsoReaderWriter.ReadByte(_stream);
+
+                // remove emulation prevention byte
+                if(ShouldUnescapeNals && _prevByte == 0 && _currentByte == 0 && b == 0x03)
+                {
+                    _prevByte = b;
+                    b = IsoReaderWriter.ReadByte(_stream);
+                    _bitsPosition += 8;
+                    bytePos++;
+                }
+                else
+                {
+                    _prevByte = _currentByte;
+                }
+
+                _currentByte = b;
                 _currentBytePosition = bytePos;
             }
 
@@ -510,6 +529,11 @@ namespace SharpMp4
         private byte _currentByte = 0;
         private bool _disposedValue;
 
+        private int _prevByte = -1;
+        private int _prevPrevByte = -1;
+
+        public bool ShouldEscapeNals { get; set; } = true;
+
         public uint WrittenBytes { get { return _currentBytePosition; } }
 
         public BitStreamWriter(Stream stream, bool disposeUnderlyingStream = false)
@@ -534,8 +558,24 @@ namespace SharpMp4
             uint bytePos = _bitsPosition / 8;
             if (_currentBytePosition != bytePos)
             {
+                if (ShouldEscapeNals)
+                {
+                    // write emulation prevention byte to properly escape sequences of 0x000000, 0x000001, 0x000002, 0x000003 into 0x00000300, 0x00000301, 0x00000302 and 0x00000303 respectively
+                    if (_prevByte == 0x00 && _prevPrevByte == 0x00 && (_currentByte == 0x00 || _currentByte == 0x01 || _currentByte == 0x02 || _currentByte == 0x03))
+                    {
+                        IsoReaderWriter.WriteByte(_stream, 0x03);
+                        bytePos++;
+                        _bitsPosition += 8;
+                        _prevByte = 0x03;
+                    }
+                }
+                
                 IsoReaderWriter.WriteByte(_stream, _currentByte);
                 _currentBytePosition = bytePos;
+
+                _prevPrevByte = _prevByte;
+                _prevByte = _currentByte;
+
                 _currentByte = 0;
             }
         }
@@ -4224,7 +4264,7 @@ namespace SharpMp4
 
         public static Task<DescriptorBase> ParseAsync(uint size, Stream stream)
         {
-            BitStreamReader bitstream = new BitStreamReader(stream);
+            BitStreamReader bitstream = new BitStreamReader(stream) { ShouldUnescapeNals = false }; // TODO: New bitstream?
             int originalAudioObjectType = ReadAudioObjectType(bitstream);
             int audioObjectType = originalAudioObjectType;
             int samplingFrequencyIndex = bitstream.ReadBits(4);
@@ -4413,7 +4453,7 @@ namespace SharpMp4
         {
             uint size = 0;
             AudioSpecificConfigDescriptor asc = (AudioSpecificConfigDescriptor)descriptor;
-            BitStreamWriter bitstream = new BitStreamWriter(stream);
+            BitStreamWriter bitstream = new BitStreamWriter(stream) { ShouldEscapeNals = false };
             WriteAudioObjectType(bitstream, asc.OriginalAudioObjectType);
             bitstream.WriteBits(4, asc.SamplingFrequencyIndex);
 

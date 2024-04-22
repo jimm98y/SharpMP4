@@ -434,7 +434,7 @@ namespace SharpMp4
 
         public static async Task<AvcDecoderConfigurationRecord> Parse(uint size, Stream stream)
         {
-            BitStreamReader bitstream = new BitStreamReader(stream);
+            BitStreamReader bitstream = new BitStreamReader(stream) { ShouldUnescapeNals = false };
 
             byte configurationVersion = (byte)bitstream.ReadBits(8);
             byte avcProfileIndication = (byte)bitstream.ReadBits(8);
@@ -532,7 +532,7 @@ namespace SharpMp4
         public static async Task<uint> Build(AvcDecoderConfigurationRecord b, Stream stream)
         {
             uint size = 0;
-            BitStreamWriter bitstream = new BitStreamWriter(stream);
+            BitStreamWriter bitstream = new BitStreamWriter(stream) { ShouldEscapeNals = false };
 
             bitstream.WriteBits(8, b.ConfigurationVersion);
             bitstream.WriteBits(8, b.AvcProfileIndication);
@@ -563,7 +563,7 @@ namespace SharpMp4
 
             if (b.SequenceParameterSetExts.Count > 0 && (b.AvcProfileIndication == 100 || b.AvcProfileIndication == 110 || b.AvcProfileIndication == 122 || b.AvcProfileIndication == 144))
             {
-                bitstream = new BitStreamWriter(stream);
+                bitstream = new BitStreamWriter(stream) { ShouldEscapeNals = false };
                 bitstream.WriteBits(6, b.SequenceParameterSets.Count);
                 bitstream.WriteBits(2, b.ChromaFormat);
                 bitstream.WriteBits(5, b.BitDepthLumaMinus8PaddingBits);
