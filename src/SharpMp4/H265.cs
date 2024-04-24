@@ -34,7 +34,7 @@ namespace SharpMp4
                     {
                         Sps.Add(sps.SeqParameterSetId, sps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H265SpsNalUnit.Build(sps))}");
+                    //if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H265SpsNalUnit.Build(sps))}");
                 }
                 else if (header.NalUnitType == H265NalUnitTypes.PPS)
                 {
@@ -44,7 +44,7 @@ namespace SharpMp4
                     {
                         Pps.Add(pps.PicParameterSetId, pps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H265PpsNalUnit.Build(pps))}");
+                    //if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H265PpsNalUnit.Build(pps))}");
                 }
                 else if (header.NalUnitType == H265NalUnitTypes.VPS)
                 {
@@ -317,9 +317,82 @@ namespace SharpMp4
                 );
         }
 
-        public static byte[] Build(H265VpsNalUnit vps)
+        public static byte[] Build(H265VpsNalUnit b)
         {
-            throw new NotImplementedException();
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Build(ms, b);
+                ms.Seek(0, SeekOrigin.Begin);
+                return ms.ToArray();
+            }
+        }
+
+        public static void Build(Stream stream, H265VpsNalUnit b)
+        {
+            BitStreamWriter bitstream = new BitStreamWriter(stream);
+            H265NalUnitHeader.BuildNALHeader(bitstream, b.Header);
+
+            bitstream.WriteBits(4, b.VpsParameterSetId);
+
+            bitstream.WriteBit(b.VpsBaseLayerInternalFlag);
+            bitstream.WriteBit(b.VpsBaseLayerAvailableFlag);
+
+            bitstream.WriteBits(6, b.VpsMaxLayersMinus1);
+            bitstream.WriteBits(3, b.VpsMaxSubLayersMinus1);
+            bitstream.WriteBit(b.VpsTemporalIdNestingFlag);
+            bitstream.WriteBits(16, b.VpsReserved0xffff16bits);
+
+            H265ProfileTier.Build(bitstream, b.ProfileTier);
+
+            bitstream.WriteBit(b.VpsSubLayerOrderingInfoPresentFlag);
+            for (int i = b.VpsSubLayerOrderingInfoPresentFlag ? 0 : b.VpsMaxSubLayersMinus1; i <= b.VpsMaxSubLayersMinus1; i++)
+            {
+                bitstream.WriteUE((uint)b.VpsMaxDecPicBufferingMinus1[i]);
+                bitstream.WriteUE((uint)b.VpsMaxNumReorderPics[i]);
+                bitstream.WriteUE((uint)b.VpsMaxLatencyIncreasePlus1[i]);
+            }
+            bitstream.WriteBits(6, b.VpsMaxLayerId);
+            bitstream.WriteUE((uint)b.VpsNumLayerSetsMinus1);
+            for (int i = 1; i <= b.VpsNumLayerSetsMinus1; i++)
+            {
+                for (int j = 0; j <= b.VpsMaxLayerId; j++)
+                {
+                    bitstream.WriteBit(b.LayerIdIncludedFlag[i, j]);
+                }
+            }
+            bitstream.WriteBit(b.VpsTimingInfoPresentFlag);
+
+            if (b.VpsTimingInfoPresentFlag)
+            {
+                bitstream.WriteBits(32, b.VpsNumUnitsInTick);
+                bitstream.WriteBits(32, b.VpsTimeScale);
+                bitstream.WriteBit(b.VpsPocProportionalToTimingFlag);
+                if (b.VpsPocProportionalToTimingFlag)
+                {
+                    bitstream.WriteUE((uint)b.VpsNumTicksPocDiffOneMinus1);
+                }
+                bitstream.WriteUE((uint)b.VpsNumHrdParameters);
+                for (int i = 0; i < b.VpsNumHrdParameters; i++)
+                {
+                    bitstream.WriteUE((uint)b.HrdLayerSetIdx[i]);
+                    if (i > 0)
+                    {
+                        bitstream.WriteBit(b.CprmsPresentFlag[i]);
+                    }
+                   
+                    H265HrdParameters.Build(bitstream, b.HrdParameters[i]);
+                }
+            }
+
+            bitstream.WriteBit(b.VpsExtensionFlag);
+            if (b.VpsExtensionFlag)
+            {
+                foreach(var d in b.VpsExtensionDataFlag)
+                    bitstream.WriteBit(d);
+            }
+
+            bitstream.WriteTrailingBit();
+            bitstream.Flush();
         }
     }
 
