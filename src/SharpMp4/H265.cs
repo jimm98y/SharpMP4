@@ -34,7 +34,7 @@ namespace SharpMp4
                     {
                         Sps.Add(sps.SeqParameterSetId, sps);
                     }
-                    //if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H265SpsNalUnit.Build(sps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H265SpsNalUnit.Build(sps))}");
                 }
                 else if (header.NalUnitType == H265NalUnitTypes.PPS)
                 {
@@ -44,7 +44,7 @@ namespace SharpMp4
                     {
                         Pps.Add(pps.PicParameterSetId, pps);
                     }
-                    //if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H265PpsNalUnit.Build(pps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H265PpsNalUnit.Build(pps))}");
                 }
                 else if (header.NalUnitType == H265NalUnitTypes.VPS)
                 {
@@ -380,7 +380,7 @@ namespace SharpMp4
                         bitstream.WriteBit(b.CprmsPresentFlag[i]);
                     }
                    
-                    H265HrdParameters.Build(bitstream, b.HrdParameters[i]);
+                    H265HrdParameters.Build(bitstream, b.HrdParameters[i], b.VpsMaxSubLayersMinus1);
                 }
             }
 
@@ -1051,9 +1051,139 @@ namespace SharpMp4
             VuiParameters = vuiParameters;
         }
 
-        public static byte[] Build(H265SpsNalUnit sps)
+        public static byte[] Build(H265SpsNalUnit b)
         {
-            throw new NotImplementedException();
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Build(ms, b);
+                ms.Seek(0, SeekOrigin.Begin);
+                return ms.ToArray();
+            }
+        }
+
+        public static void Build(Stream stream, H265SpsNalUnit b)
+        {
+            BitStreamWriter bitstream = new BitStreamWriter(stream);
+            H265NalUnitHeader.BuildNALHeader(bitstream, b.Header);
+
+            bitstream.WriteBits(4, b.SpsVideoParameterSetId);
+            bitstream.WriteBits(3, b.SpsMaxSubLayersMinus1);
+            bitstream.WriteBit(b.SpsTemporalIdNestingFlag);
+
+            H265ProfileTier.Build(bitstream, b.ProfileTier, b.SpsMaxSubLayersMinus1);
+
+            bitstream.WriteUE((uint)b.SpsSeqParameterSetId);
+            bitstream.WriteUE((uint)b.ChromaFormatIdc);
+            if (b.ChromaFormatIdc == 3)
+            {
+                bitstream.WriteBit(b.SeparateColorPlaneFlag);
+            }
+            bitstream.WriteUE((uint)b.PicWidthInLumaSamples);
+            bitstream.WriteUE((uint)b.PicHeightInLumaSamples);
+            bitstream.WriteBit(b.ConformanceWindowFlag);
+
+            if (b.ConformanceWindowFlag)
+            {
+                bitstream.WriteUE((uint)b.ConfWinLeftOffset);
+                bitstream.WriteUE((uint)b.ConfWinRightOffset);
+                bitstream.WriteUE((uint)b.ConfWinTopOffset);
+                bitstream.WriteUE((uint)b.ConfWinBottomOffset);
+            }
+
+            bitstream.WriteUE((uint)b.BitDepthLumaMinus8);
+            bitstream.WriteUE((uint)b.BitDepthChromaMinus8);
+            bitstream.WriteUE((uint)b.Log2MaxPicOrderCntLsbMinus4);
+            bitstream.WriteBit(b.SpsSubLayerOrderingInfoPresentFlag);
+
+            for (int i = b.SpsSubLayerOrderingInfoPresentFlag ? 0 : b.SpsMaxSubLayersMinus1; i <= b.SpsMaxSubLayersMinus1; i++)
+            {
+                bitstream.WriteUE((uint)b.SpsMaxDecPicBufferingMinus1[i]);
+                bitstream.WriteUE((uint)b.SpsMaxNumReorderPics[i]);
+                bitstream.WriteUE((uint)b.SpsMaxLatencyIncreasePlus1[i]);
+            }
+
+            bitstream.WriteUE((uint)b.Log2MinLumaCodingBlockSizeMinus3);
+            bitstream.WriteUE((uint)b.Log2DiffMaxMinLumaCodingBlockSize);
+            bitstream.WriteUE((uint)b.Log2MinTransformBlockSizeMinus2);
+            bitstream.WriteUE((uint)b.Log2DiffMaxMinTransformBlockSize);
+            bitstream.WriteUE((uint)b.MaxTransformHierarchyDepthInter);
+            bitstream.WriteUE((uint)b.MaxTransformHierarchyDepthIntra);
+
+            bitstream.WriteBit(b.ScalingListEnabledFlag);
+
+            if (b.ScalingListEnabledFlag)
+            {
+                bitstream.WriteBit(b.SpsScalingListDataPresentFlag);
+                if (b.SpsScalingListDataPresentFlag)
+                {
+                    H265ScalingListElement.Build(bitstream, b.ScalingListElements);
+                }
+            }
+
+            bitstream.WriteBit(b.AmpEnabledFlag);
+            bitstream.WriteBit(b.SampleAdaptiveOffsetEnabledFlag);
+            bitstream.WriteBit(b.PcmEnabledFlag);
+
+            if (b.PcmEnabledFlag)
+            {
+                bitstream.WriteBits(4, b.PcmSampleBitDepthLumaMinus1);
+                bitstream.WriteBits(4, b.PcmSampleBitDepthChromaMinus1);
+                bitstream.WriteUE((uint)b.Log2MinPcmLumaCodingBlockSizeMinus3);
+                bitstream.WriteUE((uint)b.Log2DiffMaxMinPcmLumaCodingBlockSize);
+                bitstream.WriteBit(b.PcmLoopFilterDisabledFlag);
+            }
+
+            bitstream.WriteUE((uint)b.NumShortTermRefPicSets);
+
+            for (int rpsIdx = 0; rpsIdx < b.NumShortTermRefPicSets; rpsIdx++)
+            {
+                bitstream.WriteBit(b.FlagBits[rpsIdx]);
+                if (rpsIdx != 0 && b.FlagBits[rpsIdx])
+                {
+                    bitstream.WriteBit(b.DummyBits[rpsIdx]);
+                    bitstream.WriteUE((uint)b.DummyUe[rpsIdx]);
+
+                    for (int i = 0; i <= b.NumDeltaPocs[rpsIdx - 1]; i++)
+                    {
+                        foreach(var bbb in b.Pics[rpsIdx])
+                            bitstream.WriteBit(bbb);
+                    }
+                }
+                else
+                {
+                    bitstream.WriteUE((uint)b.NumNegativePics[rpsIdx]);
+                    bitstream.WriteUE((uint)b.NumPositivePics[rpsIdx]);
+                    long delta_pics = (uint)b.NumNegativePics[rpsIdx] + (uint)b.NumPositivePics[rpsIdx];
+
+                    for (long i = 0; i < delta_pics; ++i)
+                    {
+
+                        for (int h = 0; h < b.Pics[rpsIdx].Count; h += 2)
+                        {
+                            bitstream.WriteUE((uint)b.Pics[rpsIdx][h]);
+                            bitstream.WriteBit(b.Pics[rpsIdx][h + 1]);
+                        }
+                    }
+                }
+            }
+
+            bitstream.WriteBit(b.LongTermRefPicsPresentFlag);
+            if (b.LongTermRefPicsPresentFlag)
+            {
+                bitstream.WriteUE((uint)b.NumLongTermRefPicsSps);
+                for (int i = 0; i < b.NumLongTermRefPicsSps; i++)
+                {
+                    bitstream.WriteBits((uint)b.Log2MaxPicOrderCntLsbMinus4 + 4, b.LtRefPicPocLsbSps[i]);
+                    bitstream.WriteBit(b.UsedByCurrPicLtSpsFlag[i]);
+                }
+            }
+            bitstream.WriteBit(b.SpsTemporalMvpEnabledFlag);
+            bitstream.WriteBit(b.StrongIntraSmoothingEnabledFlag);
+            bitstream.WriteBit(b.VuiParametersPresentFlag);
+            if (b.VuiParametersPresentFlag)
+            {
+                H265VuiParameters.Build(bitstream, b.VuiParameters, b.SpsMaxSubLayersMinus1);
+            }
         }
 
         public static H265SpsNalUnit Parse(byte[] sps)
@@ -1338,6 +1468,11 @@ namespace SharpMp4
 
             return scalingListElements;
         }
+
+        internal static void Build(BitStreamWriter bitstream, List<H265ScalingListElement> scalingListElements)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class H265VuiParameters
@@ -1620,9 +1755,84 @@ namespace SharpMp4
             );
         }
 
-        public static void Build(BitStreamWriter bitstream, H265VuiParameters vui)
+        public static void Build(BitStreamWriter bitstream, H265VuiParameters b, int spsMaxSubLayersMinus1)
         {
-            throw new NotImplementedException();
+            bitstream.WriteBit(b.AspectRatioInfoPresentFlag);
+            if (b.AspectRatioInfoPresentFlag)
+            {
+                bitstream.WriteBits(8, b.AspectRatioIdc);
+                if (b.AspectRatioIdc == 255) // EXTENDED_SAR
+                {
+                    bitstream.WriteBits(16, b.SarWidth);
+                    bitstream.WriteBits(16, b.SarHeight);
+                }
+            }
+            bitstream.WriteBit(b.OverscanInfoPresentFlag);
+            if (b.OverscanInfoPresentFlag)
+            {
+                bitstream.WriteBit(b.OverscanAppropriateFlag);
+            }
+            bitstream.WriteBit(b.VideoSignalTypePresentFlag);
+
+            if (b.VideoSignalTypePresentFlag)
+            {
+                bitstream.WriteBits(3, b.VideoFormat);
+                bitstream.WriteBit(b.VideoFullRangeFlag);
+                bitstream.WriteBit(b.ColorDescriptionPresentFlag);
+                if (b.ColorDescriptionPresentFlag)
+                {
+                    bitstream.WriteBits(8, b.ColorPrimaries);
+                    bitstream.WriteBits(8, b.TransferCharacteristics);
+                    bitstream.WriteBits(8, b.MatrixCoeffs);
+                }
+            }
+            bitstream.WriteBit(b.ChromaLocInfoPresentFlag);
+            if (b.ChromaLocInfoPresentFlag)
+            {
+                bitstream.WriteUE((uint)b.ChromaSampleLocTypeTopField);
+                bitstream.WriteUE((uint)b.ChromaSampleLocTypeBottomField);
+            }
+            bitstream.WriteBit(b.NeutralChromaIndicationFlag);
+            bitstream.WriteBit(b.FieldSeqFlag);
+            bitstream.WriteBit(b.FrameFieldInfoPresentFlag);
+            bitstream.WriteBit(b.DefaultDisplayWindowFlag);
+            if (b.DefaultDisplayWindowFlag)
+            {
+                bitstream.WriteUE((uint)b.DefDispWinLeftOffset);
+                bitstream.WriteUE((uint)b.DefDispWinRightOffset);
+                bitstream.WriteUE((uint)b.DefDispWinTopOffset);
+                bitstream.WriteUE((uint)b.DefDispWinBottomOffset);
+            }
+            bitstream.WriteBit(b.VuiTimingInfoPresentFlag);
+
+            if (b.VuiTimingInfoPresentFlag)
+            {
+                bitstream.WriteBits(32, b.VuiNumUnitsInTick);
+                bitstream.WriteBits(32, b.VuiTimeScale);
+                bitstream.WriteBit(b.VuiPocProportionalToTimingFlag);
+                if (b.VuiPocProportionalToTimingFlag)
+                {
+                    bitstream.WriteUE((uint)b.VuiNumTicksPocDiffOneMinus1);
+                }
+                bitstream.WriteBit(b.VuiHrdParametersPresentFlag);
+                if (b.VuiHrdParametersPresentFlag)
+                {
+                    H265HrdParameters.Build(bitstream, b.VuiHrdParameters, spsMaxSubLayersMinus1);
+                }
+            }
+            bitstream.WriteBit(b.BitstreamRestrictionFlag);
+
+            if (b.BitstreamRestrictionFlag)
+            {
+                bitstream.WriteBit(b.TilesFixedStructureFlag);
+                bitstream.WriteBit(b.MotionVectorsOverPicBoundariesFlag);
+                bitstream.WriteBit(b.RestrictedRefPicListsFlag);
+                bitstream.WriteUE((uint)b.MinSpatialSegmentationIdc);
+                bitstream.WriteUE((uint)b.MaxBytesPerPicDenom);
+                bitstream.WriteUE((uint)b.MaxBitsPerMinCuDenom);
+                bitstream.WriteUE((uint)b.Log2MaxMvLengthHorizontal);
+                bitstream.WriteUE((uint)b.Log2MaxMvLengthVertical);
+            }
         }
     }
 
@@ -1795,7 +2005,7 @@ namespace SharpMp4
                 );
         }
 
-        public static void Build(BitStreamWriter bitstream, H265HrdParameters hrd)
+        public static void Build(BitStreamWriter bitstream, H265HrdParameters hrd, int spsMaxSubLayersMinus1)
         {
             throw new NotImplementedException();
         }
