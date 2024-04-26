@@ -342,7 +342,7 @@ namespace SharpMp4
             bitstream.WriteBit(b.VpsTemporalIdNestingFlag);
             bitstream.WriteBits(16, b.VpsReserved0xffff16bits);
 
-            H265ProfileTier.Build(bitstream, b.ProfileTier);
+            H265ProfileTier.Build(bitstream, b.ProfileTier, b.VpsMaxSubLayersMinus1);
 
             bitstream.WriteBit(b.VpsSubLayerOrderingInfoPresentFlag);
             for (int i = b.VpsSubLayerOrderingInfoPresentFlag ? 0 : b.VpsMaxSubLayersMinus1; i <= b.VpsMaxSubLayersMinus1; i++)
@@ -737,13 +737,50 @@ namespace SharpMp4
             );
         }
 
-        public static void Build(BitStreamWriter bitstream, H265ProfileTier b)
+        public static void Build(BitStreamWriter bitstream, H265ProfileTier b, int maxNumSubLayersMinus1)
         {
             bitstream.WriteBits(2, b.GeneralProfileSpace);
             bitstream.WriteBit(b.GeneralTierFlag);
             bitstream.WriteBits(5, b.GeneralProfileIdc);
             b.BuildGeneralProfileCompatibilityFlags(bitstream);
             b.BuildGeneralProfileConstraintIndicatorFlags(bitstream);
+
+            bitstream.WriteBits(8, b.GeneralLevelIdc);
+
+            for (int i = 0; i < maxNumSubLayersMinus1; i++)
+            {
+                bitstream.WriteBit(b.SubLayerProfilePresentFlag[i]);
+                bitstream.WriteBit(b.SubLayerLevelPresentFlag[i]);
+            }
+
+            if (maxNumSubLayersMinus1 > 0)
+            {
+                for (int i = maxNumSubLayersMinus1; i < 8; i++)
+                {
+                    bitstream.WriteBits(2, b.ReservedZero2Bits[i]);
+                }
+            }
+
+            for (int i = 0; i < maxNumSubLayersMinus1; i++)
+            {
+                if (b.SubLayerProfilePresentFlag[i])
+                {
+                    bitstream.WriteBits(2, b.SubLayerProfileSpace[i]);
+                    bitstream.WriteBit(b.SubLayerTierFlag[i]);
+                    bitstream.WriteBits(5, b.SubLayerProfileIdc[i]);
+                    for (int j = 0; j < 32; j++)
+                    {
+                        bitstream.WriteBit(b.SubLayerProfileCompatibilityFlag[i, j]);
+                    }
+                    bitstream.WriteBit(b.SubLayerProgressiveSourceFlag[i]);
+                    bitstream.WriteBit(b.SubLayerInterlacedSourceFlag[i]);
+                    bitstream.WriteBit(b.SubLayerNonPackedConstraintFlag[i]);
+                    bitstream.WriteBit(b.SubLayerFrameOnlyConstraintFlag[i]);
+                    bitstream.WriteBitsLong(44, b.ReservedBits[i]); // reserved
+                }
+                if (b.SubLayerLevelPresentFlag[i])
+                    bitstream.WriteBits(8, b.SubLayerLevelIdc[i]);
+            }
         }
 
         private void BuildGeneralProfileCompatibilityFlags(BitStreamWriter bitstream)
@@ -814,8 +851,6 @@ namespace SharpMp4
             {
                 bitstream.WriteBit(GeneralReservedZeroBit);
             }
-
-            bitstream.Flush();
         }
 
         public ulong GetGeneralProfileConstraintIndicatorFlags()
