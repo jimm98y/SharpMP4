@@ -380,7 +380,7 @@ namespace SharpMp4
                         bitstream.WriteBit(b.CprmsPresentFlag[i]);
                     }
                    
-                    H265HrdParameters.Build(bitstream, b.HrdParameters[i], b.VpsMaxSubLayersMinus1);
+                    H265HrdParameters.Build(bitstream, b.HrdParameters[i], true, b.VpsMaxSubLayersMinus1);
                 }
             }
 
@@ -922,9 +922,9 @@ namespace SharpMp4
         public bool PcmLoopFilterDisabledFlag { get; set; }
         public int NumShortTermRefPicSets { get; set; }
         public long[] NumDeltaPocs { get; set; }
-        public bool[] DummyBits { get; set; }
-        public int[] DummyUe { get; set; }
-        public bool[] FlagBits { get; set; }
+        public bool[] DeltaRpsSign { get; set; }
+        public int[] AbsDeltaRpsMinus1 { get; set; }
+        public bool[] InterRefPicSetPredictionFlag { get; set; }
         public long[] NumNegativePics { get; set; }
         public long[] NumPositivePics { get; set; }
         public List<int>[] Pics { get; set; }
@@ -936,6 +936,7 @@ namespace SharpMp4
         public bool StrongIntraSmoothingEnabledFlag { get; set; }
         public bool VuiParametersPresentFlag { get; set; }
         public H265VuiParameters VuiParameters { get; set; }
+        public bool SpsExtensionPresentFlag { get; set; }
 
         public H265SpsNalUnit(
             H265NalUnitHeader header,
@@ -979,9 +980,9 @@ namespace SharpMp4
             bool pcmLoopFilterDisabledFlag,
             int numShortTermRefPicSets, 
             long[] numDeltaPocs,
-            bool[] dummyBits, 
-            int[] dummyUe, 
-            bool[] flagBits, 
+            bool[] deltaRpsSign, 
+            int[] absDeltaRpsMinus1, 
+            bool[] interRefPicSetPredictionFlag, 
             long[] numNegativePics,
             long[] numPositivePics,
             List<int>[] pics, 
@@ -992,7 +993,8 @@ namespace SharpMp4
             bool spsTemporalMvpEnabledFlag,
             bool strongIntraSmoothingEnabledFlag, 
             bool vuiParametersPresentFlag, 
-            H265VuiParameters vuiParameters)
+            H265VuiParameters vuiParameters,
+            bool spsExtensionPresentFlag)
         {
             Header = header;
             SpsVideoParameterSetId = spsVideoParameterSetId;
@@ -1035,9 +1037,9 @@ namespace SharpMp4
             PcmLoopFilterDisabledFlag = pcmLoopFilterDisabledFlag;
             NumShortTermRefPicSets = numShortTermRefPicSets;
             NumDeltaPocs = numDeltaPocs;
-            DummyBits = dummyBits;
-            DummyUe = dummyUe;
-            FlagBits = flagBits;
+            DeltaRpsSign = deltaRpsSign;
+            AbsDeltaRpsMinus1 = absDeltaRpsMinus1;
+            InterRefPicSetPredictionFlag = interRefPicSetPredictionFlag;
             NumNegativePics = numNegativePics;
             NumPositivePics = numPositivePics;
             Pics = pics;
@@ -1049,6 +1051,7 @@ namespace SharpMp4
             StrongIntraSmoothingEnabledFlag = strongIntraSmoothingEnabledFlag;
             VuiParametersPresentFlag = vuiParametersPresentFlag;
             VuiParameters = vuiParameters;
+            SpsExtensionPresentFlag = spsExtensionPresentFlag;
         }
 
         public static byte[] Build(H265SpsNalUnit b)
@@ -1137,11 +1140,15 @@ namespace SharpMp4
 
             for (int rpsIdx = 0; rpsIdx < b.NumShortTermRefPicSets; rpsIdx++)
             {
-                bitstream.WriteBit(b.FlagBits[rpsIdx]);
-                if (rpsIdx != 0 && b.FlagBits[rpsIdx])
+                if (rpsIdx != 0)
                 {
-                    bitstream.WriteBit(b.DummyBits[rpsIdx]);
-                    bitstream.WriteUE((uint)b.DummyUe[rpsIdx]);
+                    bitstream.WriteBit(b.InterRefPicSetPredictionFlag[rpsIdx]);
+                }
+                
+                if (rpsIdx != 0 && b.InterRefPicSetPredictionFlag[rpsIdx])
+                {
+                    bitstream.WriteBit(b.DeltaRpsSign[rpsIdx]);
+                    bitstream.WriteUE((uint)b.AbsDeltaRpsMinus1[rpsIdx]);
 
                     for (int i = 0; i <= b.NumDeltaPocs[rpsIdx - 1]; i++)
                     {
@@ -1184,6 +1191,16 @@ namespace SharpMp4
             {
                 H265VuiParameters.Build(bitstream, b.VuiParameters, b.SpsMaxSubLayersMinus1);
             }
+
+            bitstream.WriteBit(b.SpsExtensionPresentFlag);
+
+            if(b.SpsExtensionPresentFlag)
+            {
+                throw new NotSupportedException("SPS Extensions not supported yet!");
+            }
+            
+            bitstream.WriteTrailingBit();
+            bitstream.Flush();
         }
 
         public static H265SpsNalUnit Parse(byte[] sps)
@@ -1289,55 +1306,74 @@ namespace SharpMp4
                 throw new Exception("Invalid SPS, num_short_term_ref_pic_sets cannot be larger than 64");
 
             long[] numDeltaPocs = new long[numShortTermRefPicSets];
-            bool[] dummyBits = new bool[numShortTermRefPicSets];
-            int[] dummyUe = new int[numShortTermRefPicSets];
-            bool[] flagBits = new bool[numShortTermRefPicSets];
+            long[] deltaIdxMinus1 = new long[numShortTermRefPicSets];
+            bool[] deltaRpsSign = new bool[numShortTermRefPicSets];
+            int[] absDeltaRpsMinus1 = new int[numShortTermRefPicSets];
+            bool[] interRefPicSetPredictionFlag = new bool[numShortTermRefPicSets];
             long[] numNegativePics = new long[numShortTermRefPicSets];
             long[] numPositivePics = new long[numShortTermRefPicSets];
             List<int>[] pics = new List<int>[numShortTermRefPicSets];
             for (int rpsIdx = 0; rpsIdx < numShortTermRefPicSets; rpsIdx++)
             {
-                flagBits[rpsIdx] = bitstream.ReadBit() != 0;
-                pics[rpsIdx] = new List<int>();
-                if (rpsIdx != 0 && flagBits[rpsIdx])
+                if (rpsIdx != 0)
                 {
-                    dummyBits[rpsIdx] = bitstream.ReadBit() != 0;
-                    dummyUe[rpsIdx] = bitstream.ReadUE();
-                    numDeltaPocs[rpsIdx] = 0;
+                    interRefPicSetPredictionFlag[rpsIdx] = bitstream.ReadBit() != 0;
+                }
 
-                    for (int i = 0; i <= numDeltaPocs[rpsIdx - 1]; i++)
+                pics[rpsIdx] = new List<int>();
+
+                if (rpsIdx != 0 && interRefPicSetPredictionFlag[rpsIdx])
+                {
+                    if (rpsIdx == numShortTermRefPicSets)
+                        deltaIdxMinus1[rpsIdx] = bitstream.ReadUE();
+                    
+                    deltaRpsSign[rpsIdx] = bitstream.ReadBit() != 0;
+                    absDeltaRpsMinus1[rpsIdx] = bitstream.ReadUE();
+
+                    int RefRpsIdx = rpsIdx - ((int)deltaIdxMinus1[rpsIdx] + 1);
+                    for (int i = 0; i <= numDeltaPocs[RefRpsIdx]; i++)
                     {
-                        int used_by_curr_pic_flag = bitstream.ReadBit();
-                        int use_delta_flag = 0;
-                        if (used_by_curr_pic_flag == 0)
+                        int usedByCurrPicFlag = bitstream.ReadBit();
+                        pics[rpsIdx].Add(usedByCurrPicFlag);
+
+                        int useDeltaFlag = 0;
+                        if (usedByCurrPicFlag == 0)
                         {
-                            use_delta_flag = bitstream.ReadBit();
+                            useDeltaFlag = bitstream.ReadBit();
+                            pics[rpsIdx].Add(useDeltaFlag);
                         }
-                        if (used_by_curr_pic_flag != 0 || use_delta_flag != 0)
+
+                        if (usedByCurrPicFlag != 0 || useDeltaFlag != 0)
                         {
                             numDeltaPocs[rpsIdx]++;
                         }
-                        pics[rpsIdx].Add(used_by_curr_pic_flag);
-                        pics[rpsIdx].Add(use_delta_flag);
                     }
                 }
                 else
                 {
                     numNegativePics[rpsIdx] = bitstream.ReadUE();
                     numPositivePics[rpsIdx] = bitstream.ReadUE();
-                    long delta_pics = numNegativePics[rpsIdx] + numPositivePics[rpsIdx];
+                    long deltaPics = numNegativePics[rpsIdx] + numPositivePics[rpsIdx];
 
-                    if (delta_pics < 0 || delta_pics > short.MaxValue)
+                    if (deltaPics < 0 || deltaPics > short.MaxValue)
                         throw new Exception("Sanity check for delta_pocs has failed!");
 
-                    numDeltaPocs[rpsIdx] = delta_pics;
+                    numDeltaPocs[rpsIdx] = deltaPics;
 
-                    for (long i = 0; i < delta_pics; ++i)
+                    for (long i = 0; i < numNegativePics[rpsIdx]; ++i)
                     {
-                        int dummy1 = bitstream.ReadUE();
-                        int dummy2 = bitstream.ReadBit();
-                        pics[rpsIdx].Add(dummy1);
-                        pics[rpsIdx].Add(dummy2);
+                        int deltaPocS0Minus1 = bitstream.ReadUE();
+                        int usedByCurrPicS0Flag = bitstream.ReadBit();
+                        pics[rpsIdx].Add(deltaPocS0Minus1);
+                        pics[rpsIdx].Add(usedByCurrPicS0Flag);
+                    }
+
+                    for (long i = 0; i < numPositivePics[rpsIdx]; ++i)
+                    {
+                        int deltaPocS1Minus1 = bitstream.ReadUE();
+                        int usedByCurrPicS1Flag = bitstream.ReadBit();
+                        pics[rpsIdx].Add(deltaPocS1Minus1);
+                        pics[rpsIdx].Add(usedByCurrPicS1Flag);
                     }
                 }
             }
@@ -1364,6 +1400,12 @@ namespace SharpMp4
             if (vuiParametersPresentFlag)
             {
                 vuiParameters = H265VuiParameters.Parse(bitstream, spsMaxSubLayersMinus1);
+            }
+
+            bool spsExtensionPresentFlag = bitstream.ReadBit() != 0;
+            if(spsExtensionPresentFlag)
+            {
+                throw new NotSupportedException("SPS extensions not supported yet!");
             }
 
             return new H265SpsNalUnit(
@@ -1408,9 +1450,9 @@ namespace SharpMp4
                 pcmLoopFilterDisabledFlag,
                 numShortTermRefPicSets,
                 numDeltaPocs,
-                dummyBits,
-                dummyUe,
-                flagBits,
+                deltaRpsSign,
+                absDeltaRpsMinus1,
+                interRefPicSetPredictionFlag,
                 numNegativePics,
                 numPositivePics,
                 pics,
@@ -1421,7 +1463,8 @@ namespace SharpMp4
                 spsTemporalMvpEnabledFlag,
                 strongIntraSmoothingEnabledFlag,
                 vuiParametersPresentFlag,
-                vuiParameters
+                vuiParameters,
+                spsExtensionPresentFlag
             );
         }
 
@@ -1817,7 +1860,7 @@ namespace SharpMp4
                 bitstream.WriteBit(b.VuiHrdParametersPresentFlag);
                 if (b.VuiHrdParametersPresentFlag)
                 {
-                    H265HrdParameters.Build(bitstream, b.VuiHrdParameters, spsMaxSubLayersMinus1);
+                    H265HrdParameters.Build(bitstream, b.VuiHrdParameters, true, spsMaxSubLayersMinus1);
                 }
             }
             bitstream.WriteBit(b.BitstreamRestrictionFlag);
@@ -1903,7 +1946,7 @@ namespace SharpMp4
             VclHrdSubLayerParameters = vclHrdSubLayerParameters;
         }
 
-        public static H265HrdParameters Parse(BitStreamReader bitstream, bool commonInfPresentFlag, int sps_max_sub_layers_minus1)
+        public static H265HrdParameters Parse(BitStreamReader bitstream, bool commonInfPresentFlag, int spsMaxSubLayersMinus1)
         {
             bool nalHrdParametersPresentFlag = false;
             bool vclHrdParametersPresentFlag = false;
@@ -1945,14 +1988,14 @@ namespace SharpMp4
                 }
             }
 
-            bool[] fixedPicRateGeneralFlag = new bool[sps_max_sub_layers_minus1];
-            bool[] fixedPicRateWithinCvsFlag = new bool[sps_max_sub_layers_minus1];
-            bool[] lowDelayHrdFlag = new bool[sps_max_sub_layers_minus1];
-            int[] cpbCntMinus1 = new int[sps_max_sub_layers_minus1];
-            int[] elementalDurationInTcMinus1 = new int[sps_max_sub_layers_minus1];
-            H265HrdSubLayerParameters[] nalHrdSubLayerParameters = new H265HrdSubLayerParameters[sps_max_sub_layers_minus1];
-            H265HrdSubLayerParameters[] vclHrdSubLayerParameters = new H265HrdSubLayerParameters[sps_max_sub_layers_minus1];
-            for (int i = 0; i <= sps_max_sub_layers_minus1; i++)
+            bool[] fixedPicRateGeneralFlag = new bool[spsMaxSubLayersMinus1 + 1];
+            bool[] fixedPicRateWithinCvsFlag = new bool[spsMaxSubLayersMinus1 + 1];
+            bool[] lowDelayHrdFlag = new bool[spsMaxSubLayersMinus1 + 1];
+            int[] cpbCntMinus1 = new int[spsMaxSubLayersMinus1 + 1];
+            int[] elementalDurationInTcMinus1 = new int[spsMaxSubLayersMinus1 + 1];
+            H265HrdSubLayerParameters[] nalHrdSubLayerParameters = new H265HrdSubLayerParameters[spsMaxSubLayersMinus1 + 1];
+            H265HrdSubLayerParameters[] vclHrdSubLayerParameters = new H265HrdSubLayerParameters[spsMaxSubLayersMinus1 + 1];
+            for (int i = 0; i <= spsMaxSubLayersMinus1; i++)
             {
                 fixedPicRateGeneralFlag[i] = bitstream.ReadBit() != 0;
                 if (!fixedPicRateGeneralFlag[i])
@@ -2005,9 +2048,62 @@ namespace SharpMp4
                 );
         }
 
-        public static void Build(BitStreamWriter bitstream, H265HrdParameters hrd, int spsMaxSubLayersMinus1)
+        public static void Build(BitStreamWriter bitstream, H265HrdParameters b, bool commonInfPresentFlag, int spsMaxSubLayersMinus1)
         {
-            throw new NotImplementedException();
+            if (commonInfPresentFlag)
+            {
+                bitstream.WriteBit(b.NalHrdParametersPresentFlag);
+                bitstream.WriteBit(b.VclHrdParametersPresentFlag);
+                if (b.NalHrdParametersPresentFlag || b.VclHrdParametersPresentFlag)
+                {
+                    bitstream.WriteBit(b.SubPicHrdParamsPresentFlag);
+                    if (b.SubPicHrdParamsPresentFlag)
+                    {
+                        bitstream.WriteBits(8, b.TickDivisorMinus2);
+                        bitstream.WriteBits(5, b.DuCpbRemovalDelayIncrementLengthMinus1);
+                        bitstream.WriteBit(b.SubPicCpbParamsInPicTimingSeiFlag);
+                        bitstream.WriteBits(5, b.DpbOutputDelayDuLengthMinus1);
+                    }
+                    bitstream.WriteBits(4, b.BitRateScale);
+                    bitstream.WriteBits(4, b.CpbSizeScale);
+                    if (b.SubPicHrdParamsPresentFlag)
+                    {
+                        bitstream.WriteBits(4, b.CpbSizeDuScale);
+                    }
+                    bitstream.WriteBits(5, b.InitialCpbRemovalDelayLengthMinus1);
+                    bitstream.WriteBits(5, b.AuCpbRemovalDelayLengthMinus1);
+                    bitstream.WriteBits(5, b.DpbOutputDelayLengthMinus1);
+                }
+            }
+
+            for (int i = 0; i <= spsMaxSubLayersMinus1; i++)
+            {
+                bitstream.WriteBit(b.FixedPicRateGeneralFlag[i]);
+                if (!b.FixedPicRateGeneralFlag[i])
+                {
+                    bitstream.WriteBit(b.FixedPicRateWithinCvsFlag[i]);
+                }
+                if (b.FixedPicRateWithinCvsFlag[i])
+                {
+                    bitstream.WriteUE((uint)b.ElementalDurationInTcMinus1[i]);
+                }
+                else
+                {
+                    bitstream.WriteBit(b.LowDelayHrdFlag[i]);
+                }
+                if (!b.LowDelayHrdFlag[i])
+                {
+                    bitstream.WriteUE((uint)b.CpbCntMinus1[i]);
+                }
+                if (b.NalHrdParametersPresentFlag)
+                {
+                    H265HrdSubLayerParameters.Build(bitstream, b.NalHrdSubLayerParameters[i], b.CpbCntMinus1[i], b.SubPicHrdParamsPresentFlag);
+                }
+                if (b.VclHrdParametersPresentFlag)
+                {
+                    H265HrdSubLayerParameters.Build(bitstream, b.VclHrdSubLayerParameters[i], b.CpbCntMinus1[i], b.SubPicHrdParamsPresentFlag);
+                }
+            }
         }
     }
 
@@ -2028,15 +2124,15 @@ namespace SharpMp4
         public int[] BitRateDuValueMinus1 { get; set; }
         public bool[] CbrFlag { get; set; }
 
-        public static H265HrdSubLayerParameters Parse(BitStreamReader bitstream, int cpbCnt, bool subPicHrdParamsPresentFlag)
+        public static H265HrdSubLayerParameters Parse(BitStreamReader bitstream, int cpbCntMinus1, bool subPicHrdParamsPresentFlag)
         {
-            int[] bitRateValueMinus1 = new int[cpbCnt];
-            int[] cpbSizeValueMinus1 = new int[cpbCnt];
-            int[] cpbSizeDuValueMinus1 = new int[cpbCnt];
-            int[] bitRateDuValueMinus1 = new int[cpbCnt];
-            bool[] cbrFlag = new bool[cpbCnt];
+            int[] bitRateValueMinus1 = new int[cpbCntMinus1 + 1];
+            int[] cpbSizeValueMinus1 = new int[cpbCntMinus1 + 1];
+            int[] cpbSizeDuValueMinus1 = new int[cpbCntMinus1 + 1];
+            int[] bitRateDuValueMinus1 = new int[cpbCntMinus1 + 1];
+            bool[] cbrFlag = new bool[cpbCntMinus1 + 1];
 
-            for (int i = 0; i <= cpbCnt; i++)
+            for (int i = 0; i <= cpbCntMinus1; i++)
             {
                 bitRateValueMinus1[i] = bitstream.ReadUE();
                 cpbSizeValueMinus1[i] = bitstream.ReadUE();
@@ -2057,9 +2153,19 @@ namespace SharpMp4
             );
         }
 
-        public static void Build(BitStreamWriter bitstream, H265HrdSubLayerParameters hrd)
+        public static void Build(BitStreamWriter bitstream, H265HrdSubLayerParameters b, int cpbCntMinus1, bool subPicHrdParamsPresentFlag)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i <= cpbCntMinus1; i++)
+            {
+                bitstream.WriteUE((uint)b.BitRateValueMinus1[i]);
+                bitstream.WriteUE((uint)b.CpbSizeValueMinus1[i]);
+                if (subPicHrdParamsPresentFlag)
+                {
+                    bitstream.WriteUE((uint)b.CpbSizeDuValueMinus1[i]);
+                    bitstream.WriteUE((uint)b.BitRateDuValueMinus1[i]);
+                }
+                bitstream.WriteBit(b.CbrFlag[i]);
+            }
         }
     }
 
