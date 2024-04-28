@@ -5358,6 +5358,7 @@ namespace SharpMp4
                 "isom",
                 "mp42",
                 "avc1"
+                // "hvc1" // TODO: ?
             };
             var ftyp = new FtypBox(0, null, "mp42", 1, compatibleBrands);
             return ftyp;

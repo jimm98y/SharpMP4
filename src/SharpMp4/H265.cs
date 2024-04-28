@@ -19,11 +19,13 @@ namespace SharpMp4
         }
 
         private List<byte[]> _nalBuffer = new List<byte[]>();
+        private bool _vclSeenInAu = false;
 
         public override async Task ProcessSampleAsync(byte[] sample, uint duration)
         {
             using (BitStreamReader bitstream = new BitStreamReader(sample))
             {
+                // for hvc1, SPS, PPS, VPS should not be in MDAT
                 var header = H265NalUnitHeader.ParseNALHeader(bitstream);
                 if (header.NalUnitType == H265NalUnitTypes.SPS)
                 {
@@ -57,31 +59,13 @@ namespace SharpMp4
                 }
                 else
                 {
-                    var sliceHeader = ReadSliceHeader(sample);
+                    if (Log.DebugEnabled) Log.Debug($"NAL: {header.NalUnitType}, {sample.Length}");
 
-                    if (sliceHeader.Header.IsVCL() || (sample[2] & 0xff) != 0)
+                    if (header.IsVCL())
                     {
-                        if (_nalBuffer.Count > 0)
+                        if ((sample[2] & 0x80) != 0)
                         {
-                            IEnumerable<byte> result = new byte[0];
-
-                            foreach (var nal in _nalBuffer)
-                            {
-                                int len = nal.Length;
-
-                                // for each NAL, add 4 byte NAL size
-                                byte[] size = new byte[] {
-                                (byte)((len & 0xff000000) >> 24),
-                                (byte)((len & 0xff0000) >> 16),
-                                (byte)((len & 0xff00) >> 8),
-                                (byte)(len & 0xff)
-                            };
-
-                                result = result.Concat(size).Concat(nal);
-                            }
-
-                            await base.ProcessSampleAsync(result.ToArray(), duration);
-                            _nalBuffer.Clear();
+                            await CreateSample(duration);
                         }
                     }
 
@@ -90,13 +74,32 @@ namespace SharpMp4
             }
         }
 
-        private H265NalSliceHeader ReadSliceHeader(byte[] sample)
+        private async Task CreateSample(uint duration)
         {
-            using (BitStreamReader bitstream = new BitStreamReader(sample))
+            if (_nalBuffer.Count == 0)
+                return;
+
+            IEnumerable<byte> result = new byte[0];
+
+            foreach (var nal in _nalBuffer)
             {
-                H265NalUnitHeader header = H265NalUnitHeader.ParseNALHeader(bitstream);
-                return new H265NalSliceHeader(header);
+                int len = nal.Length;
+
+                // for each NAL, add 4 byte NAL size
+                byte[] size = new byte[]
+                {
+                    (byte)((len & 0xff000000) >> 24),
+                    (byte)((len & 0xff0000) >> 16),
+                    (byte)((len & 0xff00) >> 8),
+                    (byte)(len & 0xff)
+                };
+
+                result = result.Concat(size).Concat(nal);
             }
+
+            await base.ProcessSampleAsync(result.ToArray(), duration);
+            _nalBuffer.Clear();
+            _vclSeenInAu = false;
         }
     }
 
@@ -2730,18 +2733,13 @@ namespace SharpMp4
         public const int VPS = 32;
         public const int SPS = 33;
         public const int PPS = 34;
+        public const int AUD = 35;
+        public const int PREFIX_SEI = 39;
         public const int IDR_W_RADL = 19;
         public const int IDR_N_LP = 20;
-    }
 
-    public class H265NalSliceHeader
-    {
-        public H265NalSliceHeader(H265NalUnitHeader header)
-        {
-            Header = header;
-        }
 
-        public H265NalUnitHeader Header { get; }
+        public const int NAL_TYPE_PREFIX_SEI_NUT = 39;
     }
 
     public class HevcConfigurationBox : Mp4Box
