@@ -5041,7 +5041,8 @@ namespace SharpMp4
     {
         private ulong _nextFragmentCreateStartTime = 0;
         public uint Timescale { get; set; }
-        public uint TrackID { get; set; } = 1; 
+        public uint TrackID { get; set; } = 1;
+        public string CompatibleBrand { get; set; } = null;
         public string Language { get; set; } = "und";
         public string Handler { get; protected set; }
 
@@ -5148,6 +5149,11 @@ namespace SharpMp4
             List<StreamFragment> fragments = new List<StreamFragment>();
             for (int i = 0; i < Tracks.Count; i++)
             {
+                if (!string.IsNullOrEmpty(Tracks[i].CompatibleBrand))
+                {
+                    ftyp.CompatibleBrands.Add(Tracks[i].CompatibleBrand);
+                }
+
                 trackTimes.Add(i, 0);
             }
   
@@ -5356,9 +5362,7 @@ namespace SharpMp4
             var compatibleBrands = new List<string>()
             {
                 "isom",
-                "mp42",
-                "avc1"
-                // "hvc1" // TODO: ?
+                "mp42"
             };
             var ftyp = new FtypBox(0, null, "mp42", 1, compatibleBrands);
             return ftyp;

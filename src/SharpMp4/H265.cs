@@ -14,18 +14,20 @@ namespace SharpMp4
 
         public H265Track(uint trackID, uint timescale) : base(trackID)
         {
+            this.CompatibleBrand = VisualSampleEntryBox.TYPE6; // hvc1
             base.Handler = "vide";
             this.Timescale = timescale;
         }
 
         private List<byte[]> _nalBuffer = new List<byte[]>();
-        private bool _vclSeenInAu = false;
 
         public override async Task ProcessSampleAsync(byte[] sample, uint duration)
         {
             using (BitStreamReader bitstream = new BitStreamReader(sample))
             {
+                // https://www.bing.com/search?pglt=43&q=hevc+hvc1&cvid=a9d4d6d6a96a4cddb12f3d94ac802bdd&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEEUYPNIBCDMyMjhqMGoxqAIAsAIA&FORM=ANNTA1&PC=U531
                 // for hvc1, SPS, PPS, VPS should not be in MDAT
+                // for hev1, SPS, PPS, VPS may be in MDAT
                 var header = H265NalUnitHeader.ParseNALHeader(bitstream);
                 if (header.NalUnitType == H265NalUnitTypes.SPS)
                 {
@@ -63,7 +65,7 @@ namespace SharpMp4
 
                     if (header.IsVCL())
                     {
-                        if ((sample[2] & 0x80) != 0)
+                        if ((sample[2] & 0x80) != 0) // https://stackoverflow.com/questions/69373668/ffmpeg-error-first-slice-in-a-frame-missing-when-decoding-h-265-stream
                         {
                             await CreateSample(duration);
                         }
@@ -99,7 +101,6 @@ namespace SharpMp4
 
             await base.ProcessSampleAsync(result.ToArray(), duration);
             _nalBuffer.Clear();
-            _vclSeenInAu = false;
         }
     }
 
@@ -3051,7 +3052,7 @@ namespace SharpMp4
             var vps = track.Vps.First().Value; // TODO: not sure about multiple VPS values...
             var dim = sps.CalculateDimensions();
 
-            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, parent, "hvc1");
+            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, parent, VisualSampleEntryBox.TYPE6);
             visualSampleEntry.DataReferenceIndex = 1;
             visualSampleEntry.Depth = 24;
             visualSampleEntry.FrameCount = 1;

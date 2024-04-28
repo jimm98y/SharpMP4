@@ -13,6 +13,7 @@ namespace SharpMp4
 
         public H264Track(uint trackID, uint timescale) : base(trackID)
         {
+            this.CompatibleBrand = VisualSampleEntryBox.TYPE3; // avc1
             base.Handler = "vide";
             this.Timescale = timescale;
         }
@@ -1940,7 +1941,7 @@ namespace SharpMp4
             var sps = track.Sps.First().Value; // TODO: not sure about multiple SPS values...
             var dim = sps.CalculateDimensions();
 
-            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, parent, "avc1");
+            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, parent, VisualSampleEntryBox.TYPE3);
             visualSampleEntry.DataReferenceIndex = 1;
             visualSampleEntry.Depth = 24;
             visualSampleEntry.FrameCount = 1;
