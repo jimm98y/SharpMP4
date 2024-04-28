@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 namespace SharpMp4
 {
     /// <summary>
-    /// H265 track.
+    /// H264 track.
     /// </summary>
-    /// <remarks>https://www.itu.int/rec/T-REC-H.264/en</remarks>
+    /// <remarks>
+    /// https://www.itu.int/rec/T-REC-H.264/en
+    /// https://yumichan.net/video-processing/video-compression/introduction-to-h264-nal-unit/
+    /// https://stackoverflow.com/questions/38094302/how-to-understand-header-of-h264
+    /// </remarks>
     public class H264Track : TrackBase
     {
         public Dictionary<int, H264SpsNalUnit> Sps { get; set; } = new Dictionary<int, H264SpsNalUnit>();

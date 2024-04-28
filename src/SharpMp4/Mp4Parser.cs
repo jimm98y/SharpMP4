@@ -2752,8 +2752,7 @@ namespace SharpMp4
             }
 
             public Entry()
-            {
-            }
+            { }
         }
 
         public TrunBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
@@ -3678,6 +3677,7 @@ namespace SharpMp4
     {
         public const int DESCRIPTOR = 0xFF;
         public const int OBJECT_TYPE_INDICATION = -1;
+
         public byte[] Buffer { get; set; }
 
         public UnknownDescriptor() : base(OBJECT_TYPE_INDICATION, DESCRIPTOR)
@@ -4699,6 +4699,10 @@ namespace SharpMp4
         }
     }
 
+    /// <summary>
+    /// Fragmented MP4.
+    /// </summary>
+    /// <remarks>https://stackoverflow.com/questions/35177797/what-exactly-is-fragmented-mp4fmp4-how-is-it-different-from-normal-mp4</remarks>
     public class FragmentedMp4
     {
         public FtypBox GetFtyp() { return Children.SingleOrDefault(x => x.Type == FtypBox.TYPE) as FtypBox; } 
@@ -4729,6 +4733,10 @@ namespace SharpMp4
         }
     }
 
+    /// <summary>
+    /// MP4 Parser.
+    /// </summary>
+    /// <remarks>https://atomicparsley.sourceforge.net/mpeg-4files.html</remarks>
     public static class Mp4Parser
     {
         private static Dictionary<string, Func<uint, string, Mp4Box, Stream, Task<Mp4Box>>> _boxParsers = new Dictionary<string, Func<uint, string, Mp4Box, Stream, Task<Mp4Box>>>();
@@ -5632,32 +5640,11 @@ namespace SharpMp4
 
     public static class Mp4Math
     {
-        public static long GCD(long[] input)
-        {
-            long result = input[0];
-            for (int i = 1; i < input.Length; i++)
-            {
-                result = GCD(result, input[i]);
-            }
-            return result;
-        }
-
         public static long GCD(long a, long b)
         {
             while (b > 0)
             {
                 long temp = b;
-                b = a % b;
-                a = temp;
-            }
-            return a;
-        }
-
-        public static int GCD(int a, int b)
-        {
-            while (b > 0)
-            {
-                int temp = b;
                 b = a % b;
                 a = temp;
             }
@@ -5677,11 +5664,6 @@ namespace SharpMp4
                 result = LCM(result, input[i]);
             }
             return result;
-        }
-
-        public static int LCM(int a, int b)
-        {
-            return a * (b / GCD(a, b));
         }
     }
 }
