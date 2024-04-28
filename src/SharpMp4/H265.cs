@@ -19,7 +19,6 @@ namespace SharpMp4
         }
 
         private List<byte[]> _nalBuffer = new List<byte[]>();
-        private bool _vclNalSeenInAU;
 
         public override async Task ProcessSampleAsync(byte[] sample, uint duration)
         {
@@ -60,32 +59,33 @@ namespace SharpMp4
                 {
                     var sliceHeader = ReadSliceHeader(sample);
 
-                    if (_vclNalSeenInAU && (sliceHeader.Header.IsVCL() || (sample[2] & 0xff) != 0))
+                    if (sliceHeader.Header.IsVCL() || (sample[2] & 0xff) != 0)
                     {
-                        IEnumerable<byte> result = new byte[0];
-
-                        foreach (var nal in _nalBuffer)
+                        if (_nalBuffer.Count > 0)
                         {
-                            int len = nal.Length;
+                            IEnumerable<byte> result = new byte[0];
 
-                            // for each NAL, add 4 byte NAL size
-                            byte[] size = new byte[] {
+                            foreach (var nal in _nalBuffer)
+                            {
+                                int len = nal.Length;
+
+                                // for each NAL, add 4 byte NAL size
+                                byte[] size = new byte[] {
                                 (byte)((len & 0xff000000) >> 24),
                                 (byte)((len & 0xff0000) >> 16),
                                 (byte)((len & 0xff00) >> 8),
                                 (byte)(len & 0xff)
                             };
 
-                            result = result.Concat(size).Concat(nal);
-                        }
+                                result = result.Concat(size).Concat(nal);
+                            }
 
-                        await base.ProcessSampleAsync(result.ToArray(), duration);
-                        _nalBuffer.Clear();
-                        _vclNalSeenInAU = false;
+                            await base.ProcessSampleAsync(result.ToArray(), duration);
+                            _nalBuffer.Clear();
+                        }
                     }
 
                     _nalBuffer.Add(sample);
-                    _vclNalSeenInAU |= sliceHeader.Header.IsVCL();
                 }
             }
         }
@@ -1525,9 +1525,37 @@ namespace SharpMp4
             return scalingListElements;
         }
 
-        internal static void Build(BitStreamWriter bitstream, List<H265ScalingListElement> scalingListElements)
+        public static void Build(BitStreamWriter bitstream, List<H265ScalingListElement> scalingListElements)
         {
-            throw new NotImplementedException();
+            int index = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                for (int k = 0; k < (i == 3 ? 2 : 6); k++)
+                {
+                    var element = scalingListElements[index++];
+                    bitstream.WriteBit(element.ScalingListFlag);
+
+                    int elindex = 0;
+                    if (!element.ScalingListFlag)
+                    {
+                        bitstream.WriteUE((uint)element.Values[elindex++]);
+                    }
+                    else
+                    {
+                        int coef_num = Math.Min(64, 1 << (4 + (i << 1)));
+                        if (i > 1)
+                        {
+                            bitstream.WriteUE((uint)element.Values[elindex++]);
+                        }
+
+                        for (int l = 0; l < coef_num; l++)
+                        {
+                            bitstream.WriteUE((uint)element.Values[elindex++]);
+                        }
+                    }
+                    scalingListElements.Add(element);
+                }
+            }
         }
     }
 
@@ -2331,9 +2359,128 @@ namespace SharpMp4
             PpsExtension4BitsData = ppsExtension4BitsData;
         }
 
-        public static byte[] Build(H265PpsNalUnit pps)
+        public static byte[] Build(H265PpsNalUnit b)
         {
-            throw new NotImplementedException();
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Build(ms, b);
+                ms.Seek(0, SeekOrigin.Begin);
+                return ms.ToArray();
+            }
+        }
+
+        public static void Build(Stream stream, H265PpsNalUnit b)
+        {
+            BitStreamWriter bitstream = new BitStreamWriter(stream);
+            H265NalUnitHeader.BuildNALHeader(bitstream, b.Header);
+
+            bitstream.WriteUE((uint)b.PpsPicParameterSetId);
+            bitstream.WriteUE((uint)b.PpsSeqParameterSetId);
+            bitstream.WriteBit(b.DependentSliceSegmentsEnabledFlag);
+            bitstream.WriteBit(b.OutputFlagPresentFlag);
+            bitstream.WriteBits(3, b.NumExtraSliceHeaderBits);
+            bitstream.WriteBit(b.SignDataHidingEnabledFlag);
+            bitstream.WriteBit(b.CabacInitPresentFlag);
+            bitstream.WriteUE((uint)b.NumRefIdxL0DefaultActiveMinus1);
+            bitstream.WriteUE((uint)b.NumRefIdxL1DefaultActiveMinus1);
+            bitstream.WriteSE(b.InitQpMinus26);
+            bitstream.WriteBit(b.ConstrainedIntraPredFlag);
+            bitstream.WriteBit(b.TransformSkipEnabledFlag);
+            bitstream.WriteBit(b.CuQpDeltaEnabledFlag);
+            if (b.CuQpDeltaEnabledFlag)
+            {
+                bitstream.WriteUE((uint)b.DiffCuQpDeltaDepth);
+            }
+            bitstream.WriteSE(b.PpsCbQpOffset);
+            bitstream.WriteSE(b.PpsCrQpOffset);
+            bitstream.WriteBit(b.PpsSliceChromaQpOffsetsPresentFlag);
+            bitstream.WriteBit(b.WeightedPredFlag);
+            bitstream.WriteBit(b.WeightedBipredFlag);
+            bitstream.WriteBit(b.TransquantBypassEnabledFlag);
+            bitstream.WriteBit(b.TilesEnabledFlag);
+            bitstream.WriteBit(b.EntropyCodingSyncEnabledFlag);
+            if (b.TilesEnabledFlag)
+            {
+                bitstream.WriteUE((uint)b.NumTileColumnsMinus1);
+                bitstream.WriteUE((uint)b.NumTileRowsMinus1);
+                bitstream.WriteBit(b.UniformSpacingFlag);
+                if (!b.UniformSpacingFlag)
+                {
+                    for (int i = 0; i < b.NumTileColumnsMinus1; i++)
+                    {
+                        bitstream.WriteUE((uint)b.ColumnWidthMinus1[i]);
+                    }
+
+                    for (int i = 0; i < b.NumTileRowsMinus1; i++)
+                    {
+                        bitstream.WriteUE((uint)b.RowHeightMinus1[i]);
+                    }
+                }
+
+                bitstream.WriteBit(b.LoopFilterAcrossTilesEnabledFlag);
+            }
+
+            bitstream.WriteBit(b.PpsLoopFilterAcrossSlicesEnabledFlag);
+            bitstream.WriteBit(b.DeblockingFilterControlPresentFlag);
+            if (b.DeblockingFilterControlPresentFlag)
+            {
+                bitstream.WriteBit(b.DeblockingFilterOverrideEnabledFlag);
+                bitstream.WriteBit(b.PpsDeblockingFilterDisabledFlag);
+                if (!b.PpsDeblockingFilterDisabledFlag)
+                {
+                    bitstream.WriteSE(b.PpsBetaOffsetDiv2);
+                    bitstream.WriteSE(b.PpsTcOffsetDiv2);
+                }
+            }
+
+            bitstream.WriteBit(b.PpsScalingListDataPresentFlag);
+            if (b.PpsScalingListDataPresentFlag)
+            {
+                H265ScalingListElement.Build(bitstream, b.PpsScalingList);
+            }
+
+            bitstream.WriteBit(b.ListsModificationPresentFlag);
+            bitstream.WriteUE((uint)b.Log2ParallelMergeLevelMinus2);
+            bitstream.WriteBit(b.SliceSegmentHeaderExtensionPresentFlag);
+            bitstream.WriteBit(b.PpsExtensionPresentFlag);
+            if (b.PpsExtensionPresentFlag)
+            {
+                bitstream.WriteBit(b.PpsRangeExtensionFlag);
+                bitstream.WriteBit(b.PpsMultilayerExtensionFlag);
+                bitstream.WriteBit(b.Pps3dExtensionFlag);
+                bitstream.WriteBit(b.PpsSccExtensionFlag);
+                bitstream.WriteBits(4, b.PpsExtension4Bits);
+            }
+
+            if (b.PpsRangeExtensionFlag)
+            {
+                throw new NotSupportedException("pps_range_extension not supported yet!");
+            }
+
+            if (b.PpsMultilayerExtensionFlag)
+            {
+                throw new NotSupportedException("pps_multilayer_extension not supported yet!");
+            }
+
+            if (b.Pps3dExtensionFlag)
+            {
+                throw new NotSupportedException("pps_3d_extension not supported yet!");
+            }
+
+            if (b.PpsSccExtensionFlag)
+            {
+                throw new NotSupportedException("pps_scaling_extension not supported yet!");
+            }
+
+            List<bool> ppsExtension4BitsData = new List<bool>();
+            if (b.PpsExtension4Bits != 0)
+            {
+                foreach(var bbb in ppsExtension4BitsData)
+                    bitstream.WriteBit(bbb);
+            }
+
+            bitstream.WriteTrailingBit();
+            bitstream.Flush();
         }
 
         public static H265PpsNalUnit Parse(byte[] pps)
