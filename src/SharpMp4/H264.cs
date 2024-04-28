@@ -18,7 +18,6 @@ namespace SharpMp4
             this.Timescale = timescale;
         }
 
-        private H264NalSliceHeader _lastSliceHeader;
         private List<byte[]> _nalBuffer = new List<byte[]>();
 
         public override async Task ProcessSampleAsync(byte[] sample, uint duration)
@@ -48,15 +47,15 @@ namespace SharpMp4
                 }
                 else
                 {
-                    var sliceHeader = ReadSliceHeader(sample);
-
-                    if (IsNewSample(_lastSliceHeader, sliceHeader))
+                    if (header.IsVCL())
                     {
-                        await CreateSample(duration);
+                        if ((sample[1] & 0x80) != 0) // https://stackoverflow.com/questions/69373668/ffmpeg-error-first-slice-in-a-frame-missing-when-decoding-h-265-stream
+                        {
+                            await CreateSample(duration);
+                        }
                     }
 
                     _nalBuffer.Add(sample);
-                    _lastSliceHeader = sliceHeader;
                 }
             }
         }
@@ -75,10 +74,10 @@ namespace SharpMp4
                 // for each NAL, add 4 byte NAL size
                 byte[] size = new byte[]
                 {
-                                (byte)((len & 0xff000000) >> 24),
-                                (byte)((len & 0xff0000) >> 16),
-                                (byte)((len & 0xff00) >> 8),
-                                (byte)(len & 0xff)
+                    (byte)((len & 0xff000000) >> 24),
+                    (byte)((len & 0xff0000) >> 16),
+                    (byte)((len & 0xff00) >> 8),
+                    (byte)(len & 0xff)
                 };
                 result = result.Concat(size).Concat(nal);
             }
@@ -86,255 +85,6 @@ namespace SharpMp4
             await base.ProcessSampleAsync(result.ToArray(), duration);
             _nalBuffer.Clear();
         }
-
-        public static bool IsNewSample(H264NalSliceHeader oldHeader, H264NalSliceHeader newHeader)
-        {
-            if (oldHeader == null)
-            {
-                return true;
-            }
-
-            if (newHeader.FrameNum != oldHeader.FrameNum)
-            {
-                return true;
-            }
-            if (newHeader.PicParameterSetId != oldHeader.PicParameterSetId)
-            {
-                return true;
-            }
-            if (newHeader.FieldPicFlag != oldHeader.FieldPicFlag)
-            {
-                return true;
-            }
-            if (newHeader.FieldPicFlag != 0)
-            {
-                if (newHeader.BottomFieldFlag != oldHeader.BottomFieldFlag)
-                {
-                    return true;
-                }
-            }
-            if (newHeader.NalRefIdc != oldHeader.NalRefIdc)
-            {
-                return true;
-            }
-            if (newHeader.PicOrderCntType == 0 && oldHeader.PicOrderCntType == 0)
-            {
-                if (newHeader.PicOrderCntLsb != oldHeader.PicOrderCntLsb)
-                {
-                    return true;
-                }
-                if (newHeader.DeltaPicOrderCntBottom != oldHeader.DeltaPicOrderCntBottom)
-                {
-                    return true;
-                }
-            }
-            if (newHeader.PicOrderCntType == 1 && oldHeader.PicOrderCntType == 1)
-            {
-                if (newHeader.DeltaPicOrderCnt0 != oldHeader.DeltaPicOrderCnt0)
-                {
-                    return true;
-                }
-                if (newHeader.DeltaPicOrderCnt1 != oldHeader.DeltaPicOrderCnt1)
-                {
-                    return true;
-                }
-            }
-            if (newHeader.IdrPicFlag != oldHeader.IdrPicFlag)
-            {
-                return true;
-            }
-            if (newHeader.IdrPicFlag && oldHeader.IdrPicFlag)
-            {
-                if (newHeader.IdrPicId != oldHeader.IdrPicId)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private H264NalSliceHeader ReadSliceHeader(byte[] sample)
-        {
-            using (BitStreamReader bitstream = new BitStreamReader(sample))
-            {
-                H264NalUnitHeader header = H264NalUnitHeader.ParseNALHeader(bitstream);
-                bool idrPicFlag = header.NalUnitType == H264NalUnitTypes.SLICE_IDR;
-
-                int firstMbInSlice = bitstream.ReadUE();
-                int sliceTypeInt = bitstream.ReadUE();
-
-                H264NalSliceType sliceType;
-                switch (sliceTypeInt)
-                {
-                    case 0:
-                    case 5:
-                        sliceType = H264NalSliceType.P;
-                        break;
-
-                    case 1:
-                    case 6:
-                        sliceType = H264NalSliceType.B;
-                        break;
-
-                    case 2:
-                    case 7:
-                        sliceType = H264NalSliceType.I;
-                        break;
-
-                    case 3:
-                    case 8:
-                        sliceType = H264NalSliceType.SP;
-                        break;
-
-                    case 4:
-                    case 9:
-                        sliceType = H264NalSliceType.SI;
-                        break;
-
-                    default:
-                        throw new NotSupportedException($"Unsupported slice type {sliceTypeInt}");
-                }
-
-                int picParameterSetId = bitstream.ReadUE();
-                if (!Pps.ContainsKey(picParameterSetId))
-                    throw new Exception($"Missing PPS with ID {picParameterSetId}!");
-
-                var pps = Pps[picParameterSetId];
-                int seqParameterSetId = pps.SeqParameterSetId;
-                if (!Sps.ContainsKey(seqParameterSetId))
-                    throw new Exception($"Missing SPS with ID {seqParameterSetId}!");
-
-                var sps = Sps[seqParameterSetId];
-                int colorPlaneId = 0;
-                if (sps.ResidualColorTransformFlag != 0)
-                {
-                    colorPlaneId = bitstream.ReadBits(2);
-                }
-
-                int frameNum = bitstream.ReadBits(sps.Log2MaxFrameNumMinus4 + 4);
-                int fieldPicFlag = 0;
-                int bottomFieldFlag = 0;
-                if (sps.FrameMbsOnlyFlag == 0)
-                {
-                    fieldPicFlag = bitstream.ReadBit();
-                    if (fieldPicFlag != 0)
-                    {
-                        bottomFieldFlag = bitstream.ReadBit();
-                    }
-                }
-
-                int idrPicId = 0;
-                if (idrPicFlag)
-                {
-                    idrPicId = bitstream.ReadUE();
-                }
-
-                int picOrderCntLsb = 0;
-                int deltaPicOrderCntBottom = 0;
-                if (sps.PicOrderCntType == 0)
-                {
-                    picOrderCntLsb = bitstream.ReadBits(sps.Log2MaxPicOrderCntLsbMinus4 + 4);
-                    if (pps.BottomFieldPicOrderInFramePresentFlag != 0 && fieldPicFlag == 0)
-                    {
-                        deltaPicOrderCntBottom = bitstream.ReadSE();
-                    }
-                }
-
-                int deltaPicOrderCnt0 = 0;
-                int deltaPicOrderCnt1 = 0;
-                if (sps.PicOrderCntType == 1 && sps.DeltaPicOrderAlwaysZeroFlag == 0)
-                {
-                    deltaPicOrderCnt0 = bitstream.ReadSE();
-                    if (pps.BottomFieldPicOrderInFramePresentFlag != 0 && fieldPicFlag == 0)
-                    {
-                        deltaPicOrderCnt1 = bitstream.ReadSE();
-                    }
-                }
-
-                return new H264NalSliceHeader(
-                    firstMbInSlice,
-                    sliceTypeInt,
-                    sliceType,
-                    picParameterSetId,
-                    seqParameterSetId,
-                    colorPlaneId,
-                    frameNum,
-                    fieldPicFlag,
-                    bottomFieldFlag,
-                    idrPicId,
-                    picOrderCntLsb,
-                    deltaPicOrderCntBottom,
-                    deltaPicOrderCnt0,
-                    deltaPicOrderCnt1,
-                    idrPicFlag,
-                    header.NalRefIdc, // we add a few more pieces of info to the slice header
-                    sps.PicOrderCntType);
-            }
-        }
-    }
-
-    public enum H264NalSliceType
-    {
-        P, B, I, SP, SI
-    }
-
-    public class H264NalSliceHeader
-    {
-        public H264NalSliceHeader(
-            int firstMbInSlice,
-            int sliceTypeInt,
-            H264NalSliceType sliceType,
-            int picParameterSetId,
-            int seqParameterSetId,
-            int colorPlaneId,
-            int frameNum,
-            int fieldPicFlag,
-            int bottomFieldFlag,
-            int idrPicId,
-            int picOrderCntLsb,
-            int deltaPicOrderCntBottom,
-            int deltaPicOrderCnt0,
-            int deltaPicOrderCnt1,
-            bool idrPicFlag,
-            int nalRefIdc,
-            int picOrderCntType)
-        {
-            FirstMbInSlice = firstMbInSlice;
-            SliceTypeInt = sliceTypeInt;
-            SliceType = sliceType;
-            PicParameterSetId = picParameterSetId;
-            SeqParameterSetId = seqParameterSetId;
-            ColorPlaneId = colorPlaneId;
-            FrameNum = frameNum;
-            FieldPicFlag = fieldPicFlag;
-            BottomFieldFlag = bottomFieldFlag;
-            IdrPicId = idrPicId;
-            PicOrderCntLsb = picOrderCntLsb;
-            DeltaPicOrderCntBottom = deltaPicOrderCntBottom;
-            DeltaPicOrderCnt0 = deltaPicOrderCnt0;
-            DeltaPicOrderCnt1 = deltaPicOrderCnt1;
-            IdrPicFlag = idrPicFlag;
-            NalRefIdc = nalRefIdc;
-            PicOrderCntType = picOrderCntType;
-        }
-
-        public int FirstMbInSlice { get; set; }
-        public int SliceTypeInt { get; set; }
-        public H264NalSliceType SliceType { get; set; }
-        public int PicParameterSetId { get; set; }
-        public int SeqParameterSetId { get; set; }
-        public int ColorPlaneId { get; set; }
-        public int FrameNum { get; set; }
-        public int FieldPicFlag { get; set; }
-        public int BottomFieldFlag { get; set; }
-        public int IdrPicId { get; set; }
-        public int PicOrderCntLsb { get; set; }
-        public int DeltaPicOrderCntBottom { get; set; }
-        public int DeltaPicOrderCnt0 { get; set; }
-        public int DeltaPicOrderCnt1 { get; set; }
-        public bool IdrPicFlag { get; set; }
-        public int NalRefIdc { get; set; }
-        public int PicOrderCntType { get; set; }
     }
 
     public static class H264NalUnitTypes
