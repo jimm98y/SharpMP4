@@ -4795,6 +4795,7 @@ namespace SharpMp4
             _boxParsers.Add(AudioSampleEntryBox.TYPE_ENCRYPTED, AudioSampleEntryBox.ParseAsync);
 
             _boxParsers.Add(AvcConfigurationBox.TYPE, AvcConfigurationBox.ParseAsync);
+            _boxParsers.Add(HevcConfigurationBox.TYPE, HevcConfigurationBox.ParseAsync);
             _boxParsers.Add(EsdsBox.TYPE, EsdsBox.ParseAsync);
 
             // descriptor parsers
@@ -4865,6 +4866,7 @@ namespace SharpMp4
             _boxBuilders.Add(AudioSampleEntryBox.TYPE_ENCRYPTED, AudioSampleEntryBox.BuildAsync);
 
             _boxBuilders.Add(AvcConfigurationBox.TYPE, AvcConfigurationBox.BuildAsync);
+            _boxBuilders.Add(HevcConfigurationBox.TYPE, HevcConfigurationBox.BuildAsync);
             _boxBuilders.Add(EsdsBox.TYPE, EsdsBox.BuildAsync);
 
             // descriptor builders

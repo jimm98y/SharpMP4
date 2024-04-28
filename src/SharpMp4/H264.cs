@@ -49,29 +49,30 @@ namespace SharpMp4
                 {
                     var sliceHeader = ReadSliceHeader(sample);
 
-                    _nalBuffer.Add(sample);
-
                     if (IsNewSample(_lastSliceHeader, sliceHeader))
                     {
-                        int len = sample.Length;
                         IEnumerable<byte> result = new byte[0];
 
                         foreach (var nal in _nalBuffer)
                         {
+                            int len = nal.Length;
+
                             // for each NAL, add 4 byte NAL size
-                            byte[] size = new byte[] {
-                            (byte)((len & 0xff000000) >> 24),
-                            (byte)((len & 0xff0000) >> 16),
-                            (byte)((len & 0xff00) >> 8),
-                            (byte)(len & 0xff)
-                        };
-                            result = result.Concat(size).Concat(sample);
+                            byte[] size = new byte[] 
+                            {
+                                (byte)((len & 0xff000000) >> 24),
+                                (byte)((len & 0xff0000) >> 16),
+                                (byte)((len & 0xff00) >> 8),
+                                (byte)(len & 0xff)
+                            };
+                            result = result.Concat(size).Concat(nal);
                         }
 
                         await base.ProcessSampleAsync(result.ToArray(), duration);
                         _nalBuffer.Clear();
                     }
 
+                    _nalBuffer.Add(sample);
                     _lastSliceHeader = sliceHeader;
                 }
             }

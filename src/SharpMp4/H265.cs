@@ -18,8 +18,8 @@ namespace SharpMp4
             this.Timescale = timescale;
         }
 
-        private H265NalSliceHeader _lastSliceHeader;
         private List<byte[]> _nalBuffer = new List<byte[]>();
+        private bool _vclNalSeenInAU;
 
         public override async Task ProcessSampleAsync(byte[] sample, uint duration)
         {
@@ -60,42 +60,43 @@ namespace SharpMp4
                 {
                     var sliceHeader = ReadSliceHeader(sample);
 
-                    _nalBuffer.Add(sample);
-
-                    if (IsNewSample(_lastSliceHeader, sliceHeader))
+                    if (_vclNalSeenInAU && (sliceHeader.Header.IsVCL() || (sample[2] & 0xff) != 0))
                     {
-                        int len = sample.Length;
                         IEnumerable<byte> result = new byte[0];
 
                         foreach (var nal in _nalBuffer)
                         {
+                            int len = nal.Length;
+
                             // for each NAL, add 4 byte NAL size
                             byte[] size = new byte[] {
-                            (byte)((len & 0xff000000) >> 24),
-                            (byte)((len & 0xff0000) >> 16),
-                            (byte)((len & 0xff00) >> 8),
-                            (byte)(len & 0xff)
-                        };
-                            result = result.Concat(size).Concat(sample);
+                                (byte)((len & 0xff000000) >> 24),
+                                (byte)((len & 0xff0000) >> 16),
+                                (byte)((len & 0xff00) >> 8),
+                                (byte)(len & 0xff)
+                            };
+
+                            result = result.Concat(size).Concat(nal);
                         }
 
                         await base.ProcessSampleAsync(result.ToArray(), duration);
                         _nalBuffer.Clear();
+                        _vclNalSeenInAU = false;
                     }
 
-                    _lastSliceHeader = sliceHeader;
+                    _nalBuffer.Add(sample);
+                    _vclNalSeenInAU |= sliceHeader.Header.IsVCL();
                 }
             }
         }
 
-        public static bool IsNewSample(H265NalSliceHeader oldHeader, H265NalSliceHeader newHeader)
-        {
-            throw new NotImplementedException();
-        }
-
         private H265NalSliceHeader ReadSliceHeader(byte[] sample)
         {
-            throw new NotImplementedException();
+            using (BitStreamReader bitstream = new BitStreamReader(sample))
+            {
+                H265NalUnitHeader header = H265NalUnitHeader.ParseNALHeader(bitstream);
+                return new H265NalSliceHeader(header);
+            }
         }
     }
 
@@ -860,7 +861,12 @@ namespace SharpMp4
                 using (BitStreamWriter bitstream = new BitStreamWriter(stream) { ShouldEscapeNals = false })
                 {
                     BuildGeneralProfileConstraintIndicatorFlags(bitstream);
-                    return Convert.ToUInt64(stream.ToArray());
+                    bitstream.Flush();
+                    while(stream.Length < 8)
+                    {
+                        bitstream.WriteBits(8, 0);
+                    }
+                    return BitConverter.ToUInt64(stream.ToArray(), 0);
                 }
             }
         }
@@ -872,7 +878,12 @@ namespace SharpMp4
                 using (BitStreamWriter bitstream = new BitStreamWriter(stream) { ShouldEscapeNals = false })
                 {
                     BuildGeneralProfileCompatibilityFlags(bitstream);
-                    return Convert.ToUInt32(stream.ToArray());
+                    bitstream.Flush();
+                    while (stream.Length < 4)
+                    {
+                        bitstream.WriteBits(8, 0);
+                    }
+                    return BitConverter.ToUInt32(stream.ToArray(), 0);
                 }
             }
         }
@@ -1470,7 +1481,9 @@ namespace SharpMp4
 
         public (ushort Width, ushort Height) CalculateDimensions()
         {
-            throw new NotImplementedException();
+            int width = this.PicWidthInLumaSamples;
+            int height = this.PicHeightInLumaSamples;
+            return ((ushort)width, (ushort)height);
         }
     }
 
@@ -2530,6 +2543,16 @@ namespace SharpMp4
         public int NuhLayerId { get; set; }
         public int NuhTemporalIdPlus1 { get; set; }
 
+        public bool IsVCL()
+        {
+            return NalUnitType >= 0 && NalUnitType <= 31;
+        }
+        
+        public bool IsIDR()
+        {
+            return IsVCL() && (NalUnitType == H265NalUnitTypes.IDR_N_LP || NalUnitType == H265NalUnitTypes.IDR_W_RADL);
+        }
+
         public static H265NalUnitHeader ParseNALHeader(BitStreamReader bitstream)
         {
             if(bitstream.ReadBit() != 0) // forbidden zero bit
@@ -2560,10 +2583,18 @@ namespace SharpMp4
         public const int VPS = 32;
         public const int SPS = 33;
         public const int PPS = 34;
+        public const int IDR_W_RADL = 19;
+        public const int IDR_N_LP = 20;
     }
 
     public class H265NalSliceHeader
     {
+        public H265NalSliceHeader(H265NalUnitHeader header)
+        {
+            Header = header;
+        }
+
+        public H265NalUnitHeader Header { get; }
     }
 
     public class HevcConfigurationBox : Mp4Box
