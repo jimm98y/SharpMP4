@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace SharpMp4
 {
+    /// <summary>
+    /// H265 track.
+    /// </summary>
+    /// <remarks>https://www.itu.int/rec/T-REC-H.265/en</remarks>
     public class H265Track : TrackBase
     {
         public Dictionary<int, H265SpsNalUnit> Sps { get; set; } = new Dictionary<int, H265SpsNalUnit>();
@@ -2699,11 +2703,6 @@ namespace SharpMp4
             return NalUnitType >= 0 && NalUnitType <= 31;
         }
         
-        public bool IsIDR()
-        {
-            return IsVCL() && (NalUnitType == H265NalUnitTypes.IDR_N_LP || NalUnitType == H265NalUnitTypes.IDR_W_RADL);
-        }
-
         public static H265NalUnitHeader ParseNALHeader(BitStreamReader bitstream)
         {
             if(bitstream.ReadBit() != 0) // forbidden zero bit
@@ -2734,13 +2733,6 @@ namespace SharpMp4
         public const int VPS = 32;
         public const int SPS = 33;
         public const int PPS = 34;
-        public const int AUD = 35;
-        public const int PREFIX_SEI = 39;
-        public const int IDR_W_RADL = 19;
-        public const int IDR_N_LP = 20;
-
-
-        public const int NAL_TYPE_PREFIX_SEI_NUT = 39;
     }
 
     public class HevcConfigurationBox : Mp4Box

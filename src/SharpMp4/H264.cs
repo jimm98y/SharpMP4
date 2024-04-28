@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace SharpMp4
 {
+    /// <summary>
+    /// H265 track.
+    /// </summary>
+    /// <remarks>https://www.itu.int/rec/T-REC-H.264/en</remarks>
     public class H264Track : TrackBase
     {
         public Dictionary<int, H264SpsNalUnit> Sps { get; set; } = new Dictionary<int, H264SpsNalUnit>();
@@ -89,8 +93,6 @@ namespace SharpMp4
 
     public static class H264NalUnitTypes
     {
-        // TODO
-        public const int SLICE_IDR = 5;
         public const int SPS = 7;
         public const int PPS = 8;
     }
