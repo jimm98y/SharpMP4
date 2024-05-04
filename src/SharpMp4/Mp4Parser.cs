@@ -5136,79 +5136,103 @@ namespace SharpMp4
 
     public class FragmentedMp4Builder
     {
-        public List<TrackBase> Tracks { get; } = new List<TrackBase>();
+        private Stream _output;
+        private double _maxFragmentLengthInSeconds;
+        private int _maxFragmentsPerMoof;
 
-        private async Task<FragmentedMp4> CreateBoxesAsync(double maxFragmentLengthInSeconds, int maxFragmentsPerMoof)
+        public FragmentedMp4Builder(Stream output, double maxFragmentLengthInSeconds, int maxFragmentsPerMoof)
         {
-            if (Tracks.Count == 0)
-                throw new InvalidOperationException("No tracks provided!");
+            this._output = output;
+            this._maxFragmentLengthInSeconds = maxFragmentLengthInSeconds;
+            this._maxFragmentsPerMoof = maxFragmentsPerMoof;
+        }
 
-            var fmp4 = new FragmentedMp4();
+        private readonly List<TrackBase> _tracks = new List<TrackBase>();
+
+        public void AddTrack(TrackBase track)
+        {
+            _tracks.Add(track);
+        }
+
+        private void CreateMediaInitialization(FragmentedMp4 fmp4)
+        {
             var ftyp = CreateFtypBox();
             fmp4.Children.Add(ftyp);
 
+            for (int i = 0; i < _tracks.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(_tracks[i].CompatibleBrand))
+                {
+                    ftyp.CompatibleBrands.Add(_tracks[i].CompatibleBrand);
+                }
+            }
+
             var moov = CreateMoovBox();
             fmp4.Children.Add(moov);
+        }
+
+        private async Task<FragmentedMp4> CreateBoxesAsync()
+        {
+            if (_tracks.Count == 0)
+                throw new InvalidOperationException("No tracks provided!");
+
+            var fmp4 = new FragmentedMp4();
+            CreateMediaInitialization(fmp4);
 
             bool isEnd = false;
             uint sequenceNumber = 1;
             Dictionary<int, ulong> trackTimes = new Dictionary<int, ulong>();
-            StreamFragment fragment = new StreamFragment(Tracks);
+            StreamFragment fragment = new StreamFragment(_tracks);
             List<StreamFragment> fragments = new List<StreamFragment>();
-            for (int i = 0; i < Tracks.Count; i++)
+            for (int i = 0; i < _tracks.Count; i++)
             {
-                if (!string.IsNullOrEmpty(Tracks[i].CompatibleBrand))
-                {
-                    ftyp.CompatibleBrands.Add(Tracks[i].CompatibleBrand);
-                }
-
                 trackTimes.Add(i, 0);
             }
   
-            ulong lcm = (ulong)Mp4Math.LCM(Tracks.Select(x => (long)x.Timescale).ToArray());
+            ulong lcm = (ulong)Mp4Math.LCM(_tracks.Select(x => (long)x.Timescale).ToArray());
             while (true)
             {
-                for (int i = 1; i < Tracks.Count; i++)
+                for (int i = 1; i < _tracks.Count; i++)
                 {
-                    while (((trackTimes[i] * lcm / Tracks[i].Timescale) < (trackTimes[0] * lcm / Tracks[0].Timescale)) || isEnd)
+                    while (((trackTimes[i] * lcm / _tracks[i].Timescale) < (trackTimes[0] * lcm / _tracks[0].Timescale)) || isEnd)
                     {
-                        if (!Tracks[i].HasMoreData())
+                        if (!_tracks[i].HasMoreData())
                             break;
 
-                        var trackSample = await Tracks[i].ReadSampleAsync();
+                        var trackSample = await _tracks[i].ReadSampleAsync();
                         trackTimes[i] += trackSample.Duration;
-                        fragment.Samples[Tracks[i]].Add(trackSample);
+                        fragment.Samples[_tracks[i]].Add(trackSample);
                     }
                 }
 
                 if (!isEnd)
                 {
                     StreamSample sample;
-                    if (!Tracks[0].HasMoreData())
+                    if (!_tracks[0].HasMoreData())
                         break;
 
-                    sample = await Tracks[0].ReadSampleAsync();
-                    isEnd = !Tracks[0].HasMoreData();
+                    sample = await _tracks[0].ReadSampleAsync();
+                    isEnd = !_tracks[0].HasMoreData();
                     trackTimes[0] += sample.Duration;
-                    fragment.Samples[Tracks[0]].Add(sample);
-                    if (Tracks.Count > 1)
+                    fragment.Samples[_tracks[0]].Add(sample);
+                    if (_tracks.Count > 1)
                     {
-                        if (Log.DebugEnabled) Log.Debug($"v: {trackTimes[0] * lcm / Tracks[0].Timescale}, a: {trackTimes[1] * lcm / Tracks[1].Timescale}");
+                        if (Log.DebugEnabled) Log.Debug($"v: {trackTimes[0] * lcm / _tracks[0].Timescale}, a: {trackTimes[1] * lcm / _tracks[1].Timescale}");
                     }
                     else
                     {
-                        if (Log.DebugEnabled) Log.Debug($"v: {trackTimes[0] * lcm / Tracks[0].Timescale}");
+                        if (Log.DebugEnabled) Log.Debug($"v: {trackTimes[0] * lcm / _tracks[0].Timescale}");
                     }
 
                     fragment.Timescale = lcm;
-                    fragment.EndTime = trackTimes[0] * lcm / Tracks[0].Timescale;
+                    fragment.EndTime = trackTimes[0] * lcm / _tracks[0].Timescale;
 
-                    if ((fragment.EndTime - fragment.StartTime) >= maxFragmentLengthInSeconds * lcm)
+                    if ((fragment.EndTime - fragment.StartTime) >= this._maxFragmentLengthInSeconds * lcm)
                     {
                         if (Log.DebugEnabled) Log.Debug($"- New 0.5s fragment");
                         fragments.Add(fragment);
 
-                        if (fragments.Count >= maxFragmentsPerMoof && !isEnd)
+                        if (fragments.Count >= this._maxFragmentsPerMoof && !isEnd)
                         {
                             await WriteFragments(fmp4, fragments, sequenceNumber++);
                             fragments.Clear();
@@ -5216,7 +5240,7 @@ namespace SharpMp4
 
                         if (!isEnd)
                         {
-                            fragment = new StreamFragment(Tracks) { StartTime = fragment.EndTime };
+                            fragment = new StreamFragment(_tracks) { StartTime = fragment.EndTime };
                         }
                     }
                 }
@@ -5382,9 +5406,9 @@ namespace SharpMp4
             var mvhd = CreateMvhdBox(moov);
             moov.Children.Add(mvhd);
 
-            for (int i = 0; i < this.Tracks.Count; i++)
+            for (int i = 0; i < this._tracks.Count; i++)
             { 
-                var trak = CreateTrakBox(moov, this.Tracks[i]);
+                var trak = CreateTrakBox(moov, this._tracks[i]);
                 moov.Children.Add(trak);
             }
 
@@ -5608,9 +5632,9 @@ namespace SharpMp4
             mehd.FragmentDuration = 0;
             mvex.Children.Add(mehd);
 
-            for (int i = 0; i < this.Tracks.Count; i++)
+            for (int i = 0; i < this._tracks.Count; i++)
             {
-                var trex = CreateTrexBox(mvex, this.Tracks[i]);
+                var trex = CreateTrexBox(mvex, this._tracks[i]);
                 mvex.Children.Add(trex);
             }
 
@@ -5630,11 +5654,11 @@ namespace SharpMp4
             return trex;
         }
 
-        public async Task Build(Stream output)
+        public async Task Build()
         {
-            var fmp4 = await CreateBoxesAsync(0.5, 8);
+            var fmp4 = await CreateBoxesAsync();
             //if(Log.InfoEnabled) Log.Info(Newtonsoft.Json.JsonConvert.SerializeObject(fmp4, Newtonsoft.Json.Formatting.Indented, new Newtonsoft.Json.JsonSerializerSettings() { DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore }));
-            await FragmentedMp4.BuildAsync(fmp4, output);
+            await FragmentedMp4.BuildAsync(fmp4, _output);
         }
     }
 
