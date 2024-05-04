@@ -5005,20 +5005,17 @@ namespace SharpMp4
 
     public class StreamFragment
     {
-        public StreamFragment(List<TrackBase> tracks, ulong timescale, ulong _lastFragmentEndTime)
+        public StreamFragment(List<TrackBase> tracks, long[] startTimes)
         {
-            Timescale = timescale;
-            StartTime = _lastFragmentEndTime;
-
+            StartTimes = startTimes;
             for (int i = 0; i < tracks.Count; i++)
             {
-                Samples.Add(tracks[i], new List<StreamSample>());
+                Samples.Add(new List<StreamSample>());
             }
         }
 
-        public Dictionary<TrackBase, List<StreamSample>> Samples { get; } = new Dictionary<TrackBase, List<StreamSample>>();
-        public ulong Timescale { get; internal set; }
-        public ulong StartTime { get; internal set; }
+        public List<List<StreamSample>> Samples { get; } = new List<List<StreamSample>>();
+        public long[] StartTimes { get; }
     }
 
     public abstract class TrackBase
@@ -5109,8 +5106,10 @@ namespace SharpMp4
         private int _maxFragmentsPerMoof;
         private ulong _lcm = 0;
         private uint _sequenceNumber = 1;
-        private ulong _lastFragmentEndTime = 0;
         protected SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+
+        private readonly List<TrackBase> _tracks = new List<TrackBase>();
+        private readonly List<long> _trackEndTimes = new List<long>();
 
         public FragmentedMp4Builder(Stream output, double maxFragmentLengthInSeconds, int maxFragmentsPerMoof)
         {
@@ -5119,13 +5118,13 @@ namespace SharpMp4
             this._maxFragmentsPerMoof = maxFragmentsPerMoof;
         }
 
-        private readonly List<TrackBase> _tracks = new List<TrackBase>();
-
         public void AddTrack(TrackBase track)
         {
             _tracks.Add(track);
+            _trackEndTimes.Add(0);
             track.SetSink(this);
         }
+
 
         internal async Task NotifySampleAdded(TrackBase track)
         {
@@ -5160,33 +5159,27 @@ namespace SharpMp4
                 List<StreamFragment> fragments = new List<StreamFragment>();
                 for (int j = 0; j < _maxFragmentsPerMoof; j++)
                 {
-                    var fragment = new StreamFragment(_tracks, _lcm, _lastFragmentEndTime);
-                    long totalDuration = 0;
+                    var fragment = new StreamFragment(_tracks, _trackEndTimes.ToArray());
 
                     for (int i = 0; i < _tracks.Count; i++)
                     {
                         double targetDuration = _tracks[i].Timescale * _maxFragmentLengthInSeconds;
                         long currentDuration = 0;
 
-                        while (currentDuration < targetDuration && _tracks[i].HasSamples())
+                        while (currentDuration < targetDuration && _tracks[i].HasSamples()) // HasSamples is necessary in case the synchronization of the tracks is not precisely aligned
                         {
                             var sample = _tracks[i].ReadSample();
                             currentDuration += sample.Duration;
-                            fragment.Samples[_tracks[i]].Add(sample);
+                            fragment.Samples[i].Add(sample);
                         }
 
-                        if (i == 0)
-                        {
-                            totalDuration += currentDuration;
-                        }
+                        _trackEndTimes[i] += currentDuration;
                     }
-
-                    _lastFragmentEndTime = _lastFragmentEndTime + ((ulong)totalDuration * _lcm / _tracks[0].Timescale);
 
                     fragments.Add(fragment);
                 }
 
-                await CreateMediaFragment(fmp4, fragments, _sequenceNumber++);
+                await CreateMediaFragment(fmp4, _tracks, fragments, _sequenceNumber++);
                 await FragmentedMp4.BuildAsync(fmp4, _output);
             }
             finally
@@ -5212,9 +5205,9 @@ namespace SharpMp4
             fmp4.Children.Add(moov);
         }
 
-        private async Task CreateMediaFragment(FragmentedMp4 fmp4, List<StreamFragment> fragments, uint sequenceNumber)
+        private async Task CreateMediaFragment(FragmentedMp4 fmp4, List<TrackBase> tracks, List<StreamFragment> fragments, uint sequenceNumber)
         {
-            var moof = CreateMoofBox(sequenceNumber, fragments);
+            var moof = CreateMoofBox(tracks, sequenceNumber, fragments);
             fmp4.Children.Add(moof);
 
             var mdat = await CreateMdatBox(fragments);
@@ -5230,9 +5223,9 @@ namespace SharpMp4
             {
                 foreach(var track in fragments[i].Samples)
                 {
-                    for (int k = 0; k < track.Value.Count; k++)
+                    for (int k = 0; k < track.Count; k++)
                     {
-                        var sample = track.Value[k];
+                        var sample = track[k];
                         await storage.Stream.WriteAsync(sample.Sample, 0, sample.Sample.Length);
                     }
                 } 
@@ -5241,7 +5234,7 @@ namespace SharpMp4
             return mdat;
         }
 
-        private static MoofBox CreateMoofBox(uint sequenceNumber, List<StreamFragment> fragments)
+        private static MoofBox CreateMoofBox(List<TrackBase> tracks, uint sequenceNumber, List<StreamFragment> fragments)
         {
             MoofBox moof = new MoofBox(0, null);
 
@@ -5249,10 +5242,9 @@ namespace SharpMp4
             moof.Children.Add(mfhd);
 
             List<TrafBox> trafs = new List<TrafBox>();
-            var tracks = fragments[0].Samples.Keys.ToList();
             for (int i = 0; i < tracks.Count; i++)
             {        
-                TrafBox traf = CreateTrafBox(moof, tracks[i], fragments, i == 0);
+                TrafBox traf = CreateTrafBox(moof, tracks, i, fragments);
                 moof.Children.Add(traf);
                 trafs.Add(traf);
             }
@@ -5279,17 +5271,18 @@ namespace SharpMp4
             return mfhd;
         }
 
-        private static TrafBox CreateTrafBox(Mp4Box parent, TrackBase track, List<StreamFragment> fragments, bool isFirst)
+        private static TrafBox CreateTrafBox(Mp4Box parent, List<TrackBase> tracks, int trackIndex, List<StreamFragment> fragments)
         {
             TrafBox traf = new TrafBox(0, parent);
-            TfhdBox tfhd = CreateTfhdBox(traf, track);
+            TfhdBox tfhd = CreateTfhdBox(traf, tracks[trackIndex]);
             traf.Children.Add(tfhd);
-            TfdtBox tfdt = CreateTfdtBox(traf, track, fragments);
+            TfdtBox tfdt = CreateTfdtBox(traf, trackIndex, fragments);
             traf.Children.Add(tfdt);
 
             for (int i = 0; i < fragments.Count; i++)
             {
-                TrunBox trun = CreateTrunBox(traf, track, fragments[i], isFirst && i == 0);
+                // TODO: review trackIndex == 0 && i == 0
+                TrunBox trun = CreateTrunBox(traf, trackIndex, fragments[i], trackIndex == 0 && i == 0);
                 traf.Children.Add(trun);
             }
             return traf;
@@ -5313,14 +5306,14 @@ namespace SharpMp4
             return tfhd;
         }
 
-        private static TfdtBox CreateTfdtBox(Mp4Box parent, TrackBase track, List<StreamFragment> fragments)
+        private static TfdtBox CreateTfdtBox(Mp4Box parent, int trackIndex, List<StreamFragment> fragments)
         {
             TfdtBox tfdt = new TfdtBox(0, parent);
-            tfdt.BaseMediaDecodeTime = fragments[0].StartTime * track.Timescale / fragments[0].Timescale; // BaseMediaDecodeTime must be in the timescale of the track
+            tfdt.BaseMediaDecodeTime = (ulong)fragments[0].StartTimes[trackIndex]; // BaseMediaDecodeTime must be in the timescale of the track
             return tfdt;
         }
 
-        private static TrunBox CreateTrunBox(Mp4Box parent, TrackBase track, StreamFragment fragment, bool isFirst)
+        private static TrunBox CreateTrunBox(Mp4Box parent, int trackIndex, StreamFragment fragment, bool isFirst)
         {
             TrunBox trun = new TrunBox(0, parent);
 
@@ -5332,9 +5325,9 @@ namespace SharpMp4
             trun.DataOffset = 0;
             trun.Flags = (uint)(isFirst ? 773 : 769);
 
-            for (int i = 0; i < fragment.Samples[track].Count; i++)
+            for (int i = 0; i < fragment.Samples[trackIndex].Count; i++)
             {
-                var sample = fragment.Samples[track][i];
+                var sample = fragment.Samples[trackIndex][i];
                 trun.Entries.Add(new TrunBox.Entry(sample.Duration, (uint)sample.Sample.Length, 0, 0));
             }            
 
