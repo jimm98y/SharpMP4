@@ -48,8 +48,8 @@ namespace SharpMp4
                         var timescale = sps.CalculateTimescale();
                         if (timescale.Timescale != 0 && timescale.FrameTick != 0)
                         {
-                            Timescale = (uint)timescale.Timescale >> 1; // MaxFPS = Ceil( time_scale / ( 2 * num_units_in_tick ) )
-                            SampleDuration = (uint)timescale.FrameTick;
+                            Timescale = (uint)timescale.Timescale; // MaxFPS = Ceil( time_scale / ( 2 * num_units_in_tick ) )
+                            SampleDuration = (uint)timescale.FrameTick * 2;
                         }
                     }
                 }

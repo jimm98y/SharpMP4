@@ -5129,14 +5129,14 @@ namespace SharpMp4
 
         internal async Task NotifySampleAdded(TrackBase track)
         {
-            double duration = _maxFragmentLengthInSeconds * _maxFragmentsPerMoof;
-            if (!track.ContainsEnoughSamples(duration))
-                return;
-
             // make sure only 1 thread at a time can write
             await _semaphore.WaitAsync();
             try
             {
+                double duration = _maxFragmentLengthInSeconds * _maxFragmentsPerMoof;
+                if (!track.ContainsEnoughSamples(duration))
+                    return;
+
                 for (int i = 1; i < _tracks.Count; i++)
                 {
                     if (!_tracks[i].ContainsEnoughSamples(duration))
