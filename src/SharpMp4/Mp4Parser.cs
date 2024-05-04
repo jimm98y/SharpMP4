@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -5031,8 +5032,11 @@ namespace SharpMp4
 
     public class StreamFragment
     {
-        public StreamFragment(List<TrackBase> tracks)
+        public StreamFragment(List<TrackBase> tracks, ulong timescale, ulong _lastFragmentEndTime)
         {
+            Timescale = timescale;
+            StartTime = _lastFragmentEndTime;
+
             for (int i = 0; i < tracks.Count; i++)
             {
                 Samples.Add(tracks[i], new List<StreamSample>());
@@ -5042,10 +5046,9 @@ namespace SharpMp4
         public Dictionary<TrackBase, List<StreamSample>> Samples { get; } = new Dictionary<TrackBase, List<StreamSample>>();
         public ulong Timescale { get; internal set; }
         public ulong StartTime { get; internal set; }
-        public ulong EndTime { get; internal set; }
     }
 
-    public abstract class TrackBase : IDisposable
+    public abstract class TrackBase
     {
         private ulong _nextFragmentCreateStartTime = 0;
         public uint Timescale { get; set; }
@@ -5054,7 +5057,9 @@ namespace SharpMp4
         public string Language { get; set; } = "und";
         public string Handler { get; protected set; }
 
-        private readonly ITemporaryStorage _storage;
+        public ConcurrentQueue<StreamSample> _samples = new ConcurrentQueue<StreamSample>();
+        private long _queuedSamplesLength = 0;
+        private FragmentedMp4Builder _sink;
 
         public TrackBase(uint trackID)
         {
@@ -5062,66 +5067,25 @@ namespace SharpMp4
                 throw new ArgumentException("TrackID must start at 1!");
 
             TrackID = trackID;
-            _storage = TemporaryStorage.Factory.Create();
         }
 
         public virtual async Task ProcessSampleAsync(byte[] sample, uint duration)
         {
             _nextFragmentCreateStartTime = _nextFragmentCreateStartTime + duration;
+            Interlocked.Add(ref _queuedSamplesLength, duration);
 
             if (Log.DebugEnabled) Log.Debug($"{this.Handler}: {_nextFragmentCreateStartTime / (double)Timescale}");
 
-            IsoReaderWriter.WriteInt32(_storage.Stream, sample.Length);
-            IsoReaderWriter.WriteUInt32(_storage.Stream, duration);
-            //IsoReaderWriter.WriteUInt64(_buffer, _nextFragmentCreateStartTime);
-            await IsoReaderWriter.WriteBytesAsync(_storage.Stream, sample, 0, sample.Length);
-        }
-
-        public void FinalizeTrack()
-        {
-            _storage.Stream.Seek(0, SeekOrigin.Begin);
-        }
-
-        public async Task<StreamSample> ReadSampleAsync()
-        {
-            int length = IsoReaderWriter.ReadInt32(_storage.Stream);
-            uint duration = IsoReaderWriter.ReadUInt32(_storage.Stream);
-            //ulong nextFragmentCreateStartTime = IsoReaderWriter.ReadUInt64(_buffer);
-            byte[] sample = new byte[length];
-            await IsoReaderWriter.ReadBytesAsync(_storage.Stream, sample, 0, sample.Length);
-            return new StreamSample()
+            var s = new StreamSample()
             {
                 Sample = sample,
                 Duration = duration
             };
+            _samples.Enqueue(s);
+
+            await _sink.NotifySampleAdded(this);
         }
-
-        public bool HasMoreData()
-        {
-            return _storage.Stream.Position < _storage.Stream.Length;
-        }
-
-        private bool _disposedValue;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    _storage.Stream.Dispose();
-                }
-
-                _disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
+       
         public static string ToHexString(byte[] data)
         {
 #if !NETCOREAPP
@@ -5132,6 +5096,32 @@ namespace SharpMp4
             return Convert.ToHexString(data);
 #endif
         }
+
+        internal StreamSample ReadSample()
+        {
+            if (_samples.TryDequeue(out var a))
+            {
+                Interlocked.Add(ref _queuedSamplesLength, -1 * a.Duration);
+                return a;
+            }
+
+            throw new Exception();
+        }
+
+        internal void SetSink(FragmentedMp4Builder fmp4)
+        {
+            this._sink = fmp4;
+        }
+
+        internal bool ContainsEnoughSamples(double durationInSeconds)
+        {
+            return _queuedSamplesLength > durationInSeconds * Timescale;
+        }
+
+        internal bool HasSamples()
+        {
+            return _samples.Count > 0;
+        }
     }
 
     public class FragmentedMp4Builder
@@ -5139,6 +5129,9 @@ namespace SharpMp4
         private Stream _output;
         private double _maxFragmentLengthInSeconds;
         private int _maxFragmentsPerMoof;
+        private ulong _lcm = 1000;
+        private uint _sequenceNumber = 1;
+        private ulong _lastFragmentEndTime = 0;
 
         public FragmentedMp4Builder(Stream output, double maxFragmentLengthInSeconds, int maxFragmentsPerMoof)
         {
@@ -5152,6 +5145,65 @@ namespace SharpMp4
         public void AddTrack(TrackBase track)
         {
             _tracks.Add(track);
+            track.SetSink(this);
+            _lcm = (ulong)Mp4Math.LCM(_tracks.Select(x => (long)x.Timescale).ToArray());
+        }
+
+        internal async Task NotifySampleAdded(TrackBase track)
+        {
+            double duration = _maxFragmentLengthInSeconds * _maxFragmentsPerMoof;
+            if (!track.ContainsEnoughSamples(duration))
+                return;
+
+            for (int i = 1; i < _tracks.Count; i++)
+            {
+                if (!_tracks[i].ContainsEnoughSamples(duration))
+                    return;
+            }
+
+            FragmentedMp4 fmp4 = new FragmentedMp4();
+
+            // first check if we need to produce the media initialization segment
+            if (_sequenceNumber == 1)
+            {
+                await CreateMediaInitialization(fmp4);
+                await FragmentedMp4.BuildAsync(fmp4, _output);
+
+                fmp4 = new FragmentedMp4();
+            }
+
+            // all tracks have enough samples to produce a fragment
+            List<StreamFragment> fragments = new List<StreamFragment>();
+            for (int j = 0; j < _maxFragmentsPerMoof; j++)
+            {
+                var fragment = new StreamFragment(_tracks, _lcm, _lastFragmentEndTime);
+                long totalDuration = 0;
+
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    double targetDuration = _tracks[i].Timescale * _maxFragmentLengthInSeconds;
+                    long currentDuration = 0;
+
+                    while (currentDuration < targetDuration && _tracks[i].HasSamples())
+                    {
+                        var sample = _tracks[i].ReadSample();
+                        currentDuration += sample.Duration;
+                        fragment.Samples[_tracks[i]].Add(sample);
+                    }
+
+                    if (i == 0)
+                    {
+                        totalDuration += currentDuration;
+                    }
+                }
+
+                _lastFragmentEndTime = _lastFragmentEndTime + ((ulong)totalDuration * _lcm / _tracks[0].Timescale);
+
+                fragments.Add(fragment);
+            }
+
+            await CreateMediaFragment(fmp4, fragments, _sequenceNumber++);
+            await FragmentedMp4.BuildAsync(fmp4, _output);
         }
 
         private async Task CreateMediaInitialization(FragmentedMp4 fmp4)
@@ -5178,95 +5230,6 @@ namespace SharpMp4
 
             var mdat = await CreateMdatBox(fragments);
             fmp4.Children.Add(mdat);
-        }
-
-        private async Task<FragmentedMp4> CreateBoxesAsync()
-        {
-            if (_tracks.Count == 0)
-                throw new InvalidOperationException("No tracks provided!");
-
-            var fmp4 = new FragmentedMp4();
-            await CreateMediaInitialization(fmp4);
-
-            bool isEnd = false;
-            uint sequenceNumber = 1;
-            Dictionary<int, ulong> trackTimes = new Dictionary<int, ulong>();
-            StreamFragment fragment = new StreamFragment(_tracks);
-            List<StreamFragment> fragments = new List<StreamFragment>();
-            for (int i = 0; i < _tracks.Count; i++)
-            {
-                trackTimes.Add(i, 0);
-            }
-  
-            ulong lcm = (ulong)Mp4Math.LCM(_tracks.Select(x => (long)x.Timescale).ToArray());
-            while (true)
-            {
-                for (int i = 1; i < _tracks.Count; i++)
-                {
-                    while (((trackTimes[i] * lcm / _tracks[i].Timescale) < (trackTimes[0] * lcm / _tracks[0].Timescale)) || isEnd)
-                    {
-                        if (!_tracks[i].HasMoreData())
-                            break;
-
-                        var trackSample = await _tracks[i].ReadSampleAsync();
-                        trackTimes[i] += trackSample.Duration;
-                        fragment.Samples[_tracks[i]].Add(trackSample);
-                    }
-                }
-
-                if (!isEnd)
-                {
-                    StreamSample sample;
-                    if (!_tracks[0].HasMoreData())
-                        break;
-
-                    sample = await _tracks[0].ReadSampleAsync();
-                    isEnd = !_tracks[0].HasMoreData();
-                    trackTimes[0] += sample.Duration;
-                    fragment.Samples[_tracks[0]].Add(sample);
-                    if (_tracks.Count > 1)
-                    {
-                        if (Log.DebugEnabled) Log.Debug($"v: {trackTimes[0] * lcm / _tracks[0].Timescale}, a: {trackTimes[1] * lcm / _tracks[1].Timescale}");
-                    }
-                    else
-                    {
-                        if (Log.DebugEnabled) Log.Debug($"v: {trackTimes[0] * lcm / _tracks[0].Timescale}");
-                    }
-
-                    fragment.Timescale = lcm;
-                    fragment.EndTime = trackTimes[0] * lcm / _tracks[0].Timescale;
-
-                    if ((fragment.EndTime - fragment.StartTime) >= this._maxFragmentLengthInSeconds * lcm)
-                    {
-                        if (Log.DebugEnabled) Log.Debug($"- New 0.5s fragment");
-                        fragments.Add(fragment);
-
-                        if (fragments.Count >= this._maxFragmentsPerMoof && !isEnd)
-                        {
-                            await CreateMediaFragment(fmp4, fragments, sequenceNumber++);
-                            fragments.Clear();
-                        }
-
-                        if (!isEnd)
-                        {
-                            fragment = new StreamFragment(_tracks) { StartTime = fragment.EndTime };
-                        }
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            if (fragments.Count > 0)
-            {
-                await CreateMediaFragment(fmp4, fragments, sequenceNumber++);
-            }
-
-            if (Log.DebugEnabled) Log.Debug("- End of fragments");
-
-            return fmp4;
         }
 
         private async Task<MdatBox> CreateMdatBox(List<StreamFragment> fragments)
@@ -5652,13 +5615,6 @@ namespace SharpMp4
             // TODO: trex.A = SampleFlags;
 
             return trex;
-        }
-
-        public async Task Build()
-        {
-            var fmp4 = await CreateBoxesAsync();
-            //if(Log.InfoEnabled) Log.Info(Newtonsoft.Json.JsonConvert.SerializeObject(fmp4, Newtonsoft.Json.Formatting.Indented, new Newtonsoft.Json.JsonSerializerSettings() { DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore }));
-            await FragmentedMp4.BuildAsync(fmp4, _output);
         }
     }
 
