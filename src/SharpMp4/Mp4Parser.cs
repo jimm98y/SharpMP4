@@ -12,6 +12,10 @@ namespace SharpMp4
 {
     public static class IsoReaderWriter
     {
+#if DEBUG
+        private const int HEX_DEBUG_POSITION = 13;
+#endif
+
         public static readonly DateTime DateTimeBase = new DateTime(1904, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         public static DateTime ToDate(ulong seconds)
@@ -26,16 +30,20 @@ namespace SharpMp4
 
         public static uint WriteByte(Stream stream, byte value)
         {
-            //if (stream.Position == 28)
-            //{ }
+#if DEBUG
+            if (stream.Position == HEX_DEBUG_POSITION)
+            { }
+#endif
             stream.WriteByte(value);
             return 1;
         }
 
         public static byte ReadByte(Stream stream)
         {
-            //if (stream.Position == 28)
-            //{ }
+#if DEBUG
+            if (stream.Position == HEX_DEBUG_POSITION)
+            { }
+#endif      
             int read = stream.ReadByte();
             if (read == -1) throw new EndOfStreamException();
             byte value = (byte)(read & 0xff);
@@ -44,16 +52,20 @@ namespace SharpMp4
 
         public static async Task<uint> WriteBytesAsync(Stream stream, byte[] bytes, int offset, int length)
         {
-            //if (stream.Position == 28)
-            //{ }
+#if DEBUG
+            if (stream.Position == HEX_DEBUG_POSITION)
+            { }
+#endif
             await stream.WriteAsync(bytes, offset, length);
             return (uint)length;
         }
 
         public static async Task ReadBytesAsync(Stream stream, byte[] bytes, int offset, int length)
         {
-            //if (stream.Position == 28)
-            //{ }
+#if DEBUG
+            if (stream.Position == HEX_DEBUG_POSITION)
+            { }
+#endif      
             await stream.ReadExactlyAsync(bytes, offset, length);
         }
 
