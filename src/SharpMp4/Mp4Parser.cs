@@ -5154,7 +5154,7 @@ namespace SharpMp4
             _tracks.Add(track);
         }
 
-        private void CreateMediaInitialization(FragmentedMp4 fmp4)
+        private async Task CreateMediaInitialization(FragmentedMp4 fmp4)
         {
             var ftyp = CreateFtypBox();
             fmp4.Children.Add(ftyp);
@@ -5171,13 +5171,22 @@ namespace SharpMp4
             fmp4.Children.Add(moov);
         }
 
+        private async Task CreateMediaFragment(FragmentedMp4 fmp4, List<StreamFragment> fragments, uint sequenceNumber)
+        {
+            var moof = CreateMoofBox(sequenceNumber, fragments);
+            fmp4.Children.Add(moof);
+
+            var mdat = await CreateMdatBox(fragments);
+            fmp4.Children.Add(mdat);
+        }
+
         private async Task<FragmentedMp4> CreateBoxesAsync()
         {
             if (_tracks.Count == 0)
                 throw new InvalidOperationException("No tracks provided!");
 
             var fmp4 = new FragmentedMp4();
-            CreateMediaInitialization(fmp4);
+            await CreateMediaInitialization(fmp4);
 
             bool isEnd = false;
             uint sequenceNumber = 1;
@@ -5234,7 +5243,7 @@ namespace SharpMp4
 
                         if (fragments.Count >= this._maxFragmentsPerMoof && !isEnd)
                         {
-                            await WriteFragments(fmp4, fragments, sequenceNumber++);
+                            await CreateMediaFragment(fmp4, fragments, sequenceNumber++);
                             fragments.Clear();
                         }
 
@@ -5252,21 +5261,12 @@ namespace SharpMp4
 
             if (fragments.Count > 0)
             {
-                await WriteFragments(fmp4, fragments, sequenceNumber++);
+                await CreateMediaFragment(fmp4, fragments, sequenceNumber++);
             }
 
             if (Log.DebugEnabled) Log.Debug("- End of fragments");
 
             return fmp4;
-        }
-
-        private async Task WriteFragments(FragmentedMp4 fmp4, List<StreamFragment> fragments, uint sequenceNumber)
-        {
-            var moof = CreateMoofBox(sequenceNumber, fragments);
-            fmp4.Children.Add(moof);
-
-            var mdat = await CreateMdatBox(fragments);
-            fmp4.Children.Add(mdat);
         }
 
         private async Task<MdatBox> CreateMdatBox(List<StreamFragment> fragments)
