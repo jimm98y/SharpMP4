@@ -10,33 +10,6 @@ using System.Threading.Tasks;
 
 namespace SharpMp4
 {
-#if !NET7_0_OR_GREATER
-    public static class Mp4StreamExtensions
-    {
-        public static Task<int> ReadExactlyAsync(this Stream stream, byte[] buffer, int offset, int count)
-        {
-            return ReadExactlyAsync(stream, buffer, offset, count, CancellationToken.None);
-        }
-         
-        public static async Task<int> ReadExactlyAsync(this Stream stream, byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            int totalRead = 0;
-            while (totalRead < count)
-            {
-                int read = await stream.ReadAsync(buffer, offset + totalRead, count - totalRead, cancellationToken).ConfigureAwait(false);
-                if (read == 0)
-                {
-                    return totalRead;
-                }
-
-                totalRead += read;
-            }
-
-            return totalRead;
-        }
-    }
-#endif
-
     public static class IsoReaderWriter
     {
         public static readonly DateTime DateTimeBase = new DateTime(1904, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -5057,6 +5030,8 @@ namespace SharpMp4
         public string Language { get; set; } = "und";
         public string Handler { get; protected set; }
 
+        public uint SampleDuration { get; set; }
+
         public ConcurrentQueue<StreamSample> _samples = new ConcurrentQueue<StreamSample>();
         private long _queuedSamplesLength = 0;
         private FragmentedMp4Builder _sink;
@@ -5069,17 +5044,20 @@ namespace SharpMp4
             TrackID = trackID;
         }
 
-        public virtual async Task ProcessSampleAsync(byte[] sample, uint duration)
+        public virtual async Task ProcessSampleAsync(byte[] sample)
         {
-            _nextFragmentCreateStartTime = _nextFragmentCreateStartTime + duration;
-            Interlocked.Add(ref _queuedSamplesLength, duration);
+            if (SampleDuration == 0)
+                return;
+
+            _nextFragmentCreateStartTime = _nextFragmentCreateStartTime + SampleDuration;
+            Interlocked.Add(ref _queuedSamplesLength, SampleDuration);
 
             if (Log.DebugEnabled) Log.Debug($"{this.Handler}: {_nextFragmentCreateStartTime / (double)Timescale}");
 
             var s = new StreamSample()
             {
                 Sample = sample,
-                Duration = duration
+                Duration = SampleDuration
             };
             _samples.Enqueue(s);
 
@@ -5129,9 +5107,10 @@ namespace SharpMp4
         private Stream _output;
         private double _maxFragmentLengthInSeconds;
         private int _maxFragmentsPerMoof;
-        private ulong _lcm = 1000;
+        private ulong _lcm = 0;
         private uint _sequenceNumber = 1;
         private ulong _lastFragmentEndTime = 0;
+        protected SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         public FragmentedMp4Builder(Stream output, double maxFragmentLengthInSeconds, int maxFragmentsPerMoof)
         {
@@ -5146,7 +5125,6 @@ namespace SharpMp4
         {
             _tracks.Add(track);
             track.SetSink(this);
-            _lcm = (ulong)Mp4Math.LCM(_tracks.Select(x => (long)x.Timescale).ToArray());
         }
 
         internal async Task NotifySampleAdded(TrackBase track)
@@ -5155,55 +5133,66 @@ namespace SharpMp4
             if (!track.ContainsEnoughSamples(duration))
                 return;
 
-            for (int i = 1; i < _tracks.Count; i++)
+            // make sure only 1 thread at a time can write
+            await _semaphore.WaitAsync();
+            try
             {
-                if (!_tracks[i].ContainsEnoughSamples(duration))
-                    return;
-            }
-
-            FragmentedMp4 fmp4 = new FragmentedMp4();
-
-            // first check if we need to produce the media initialization segment
-            if (_sequenceNumber == 1)
-            {
-                await CreateMediaInitialization(fmp4);
-                await FragmentedMp4.BuildAsync(fmp4, _output);
-
-                fmp4 = new FragmentedMp4();
-            }
-
-            // all tracks have enough samples to produce a fragment
-            List<StreamFragment> fragments = new List<StreamFragment>();
-            for (int j = 0; j < _maxFragmentsPerMoof; j++)
-            {
-                var fragment = new StreamFragment(_tracks, _lcm, _lastFragmentEndTime);
-                long totalDuration = 0;
-
-                for (int i = 0; i < _tracks.Count; i++)
+                for (int i = 1; i < _tracks.Count; i++)
                 {
-                    double targetDuration = _tracks[i].Timescale * _maxFragmentLengthInSeconds;
-                    long currentDuration = 0;
-
-                    while (currentDuration < targetDuration && _tracks[i].HasSamples())
-                    {
-                        var sample = _tracks[i].ReadSample();
-                        currentDuration += sample.Duration;
-                        fragment.Samples[_tracks[i]].Add(sample);
-                    }
-
-                    if (i == 0)
-                    {
-                        totalDuration += currentDuration;
-                    }
+                    if (!_tracks[i].ContainsEnoughSamples(duration))
+                        return;
                 }
 
-                _lastFragmentEndTime = _lastFragmentEndTime + ((ulong)totalDuration * _lcm / _tracks[0].Timescale);
+                FragmentedMp4 fmp4 = new FragmentedMp4();
 
-                fragments.Add(fragment);
+                // first check if we need to produce the media initialization segment
+                if (_sequenceNumber == 1)
+                {
+                    _lcm = (ulong)Mp4Math.LCM(_tracks.Select(x => (long)x.Timescale).ToArray());
+
+                    await CreateMediaInitialization(fmp4);
+                    await FragmentedMp4.BuildAsync(fmp4, _output);
+
+                    fmp4 = new FragmentedMp4();
+                }
+
+                // all tracks have enough samples to produce a fragment
+                List<StreamFragment> fragments = new List<StreamFragment>();
+                for (int j = 0; j < _maxFragmentsPerMoof; j++)
+                {
+                    var fragment = new StreamFragment(_tracks, _lcm, _lastFragmentEndTime);
+                    long totalDuration = 0;
+
+                    for (int i = 0; i < _tracks.Count; i++)
+                    {
+                        double targetDuration = _tracks[i].Timescale * _maxFragmentLengthInSeconds;
+                        long currentDuration = 0;
+
+                        while (currentDuration < targetDuration && _tracks[i].HasSamples())
+                        {
+                            var sample = _tracks[i].ReadSample();
+                            currentDuration += sample.Duration;
+                            fragment.Samples[_tracks[i]].Add(sample);
+                        }
+
+                        if (i == 0)
+                        {
+                            totalDuration += currentDuration;
+                        }
+                    }
+
+                    _lastFragmentEndTime = _lastFragmentEndTime + ((ulong)totalDuration * _lcm / _tracks[0].Timescale);
+
+                    fragments.Add(fragment);
+                }
+
+                await CreateMediaFragment(fmp4, fragments, _sequenceNumber++);
+                await FragmentedMp4.BuildAsync(fmp4, _output);
             }
-
-            await CreateMediaFragment(fmp4, fragments, _sequenceNumber++);
-            await FragmentedMp4.BuildAsync(fmp4, _output);
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
         private async Task CreateMediaInitialization(FragmentedMp4 fmp4)
@@ -5646,4 +5635,31 @@ namespace SharpMp4
             return result;
         }
     }
+
+#if !NET7_0_OR_GREATER
+    public static class Mp4StreamExtensions
+    {
+        public static Task<int> ReadExactlyAsync(this Stream stream, byte[] buffer, int offset, int count)
+        {
+            return ReadExactlyAsync(stream, buffer, offset, count, CancellationToken.None);
+        }
+
+        public static async Task<int> ReadExactlyAsync(this Stream stream, byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            int totalRead = 0;
+            while (totalRead < count)
+            {
+                int read = await stream.ReadAsync(buffer, offset + totalRead, count - totalRead, cancellationToken).ConfigureAwait(false);
+                if (read == 0)
+                {
+                    return totalRead;
+                }
+
+                totalRead += read;
+            }
+
+            return totalRead;
+        }
+    }
+#endif
 }

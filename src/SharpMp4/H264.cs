@@ -19,16 +19,15 @@ namespace SharpMp4
         public Dictionary<int, H264SpsNalUnit> Sps { get; set; } = new Dictionary<int, H264SpsNalUnit>();
         public Dictionary<int, H264PpsNalUnit> Pps { get; set; } = new Dictionary<int, H264PpsNalUnit>();
 
-        public H264Track(uint trackID, uint timescale) : base(trackID)
+        public H264Track(uint trackID) : base(trackID)
         {
             this.CompatibleBrand = VisualSampleEntryBox.TYPE3; // avc1
             base.Handler = "vide";
-            this.Timescale = timescale;
         }
 
         private List<byte[]> _nalBuffer = new List<byte[]>();
 
-        public override async Task ProcessSampleAsync(byte[] sample, uint duration)
+        public override async Task ProcessSampleAsync(byte[] sample)
         {
             using (BitStreamReader bitstream = new BitStreamReader(sample))
             {
@@ -42,6 +41,17 @@ namespace SharpMp4
                         Sps.Add(sps.SeqParameterSetId, sps);
                     }
                     if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H264SpsNalUnit.Build(sps))}");
+
+                    // if SPS contains the timescale, set it
+                    if (Timescale == 0 || SampleDuration == 0)
+                    {
+                        var timescale = sps.CalculateTimescale();
+                        if (timescale.Timescale != 0 && timescale.FrameTick != 0)
+                        {
+                            Timescale = (uint)timescale.Timescale >> 1; // MaxFPS = Ceil( time_scale / ( 2 * num_units_in_tick ) )
+                            SampleDuration = (uint)timescale.FrameTick;
+                        }
+                    }
                 }
                 else if (header.NalUnitType == H264NalUnitTypes.PPS)
                 {
@@ -59,7 +69,7 @@ namespace SharpMp4
                     {
                         if ((sample[1] & 0x80) != 0) // https://stackoverflow.com/questions/69373668/ffmpeg-error-first-slice-in-a-frame-missing-when-decoding-h-265-stream
                         {
-                            await CreateSample(duration);
+                            await CreateSample();
                         }
                     }
 
@@ -68,7 +78,7 @@ namespace SharpMp4
             }
         }
 
-        private async Task CreateSample(uint duration)
+        private async Task CreateSample()
         {
             if (_nalBuffer.Count == 0)
                 return;
@@ -90,7 +100,7 @@ namespace SharpMp4
                 result = result.Concat(size).Concat(nal);
             }
 
-            await base.ProcessSampleAsync(result.ToArray(), duration);
+            await base.ProcessSampleAsync(result.ToArray());
             _nalBuffer.Clear();
         }
     }
@@ -808,7 +818,7 @@ namespace SharpMp4
             int frameCropTopOffset,
             int frameCropBottomOffset,
             int vuiParametersPresentFlag,
-            H264VuiParameters vuiParams)
+            H264VuiParameters vuiParameters)
         {
             NalHeader = nalHeader;
             ProfileIdc = profileIdc;
@@ -849,7 +859,7 @@ namespace SharpMp4
             FrameCropTopOffset = frameCropTopOffset;
             FrameCropBottomOffset = frameCropBottomOffset;
             VuiParametersPresentFlag = vuiParametersPresentFlag;
-            VuiParams = vuiParams;
+            VuiParameters = vuiParameters;
         }
 
         public H264NalUnitHeader NalHeader { get; set; }
@@ -891,7 +901,7 @@ namespace SharpMp4
         public int FrameCropTopOffset { get; set; }
         public int FrameCropBottomOffset { get; set; }
         public int VuiParametersPresentFlag { get; set; }
-        public H264VuiParameters VuiParams { get; set; }
+        public H264VuiParameters VuiParameters { get; set; }
 
         public static H264SpsNalUnit Parse(byte[] sps)
         {
@@ -1158,7 +1168,7 @@ namespace SharpMp4
 
             if (nal.VuiParametersPresentFlag != 0)
             {
-                H264VuiParameters.Build(bitstream, nal.VuiParams);
+                H264VuiParameters.Build(bitstream, nal.VuiParameters);
             }
 
             bitstream.WriteTrailingBit();
@@ -1211,34 +1221,23 @@ namespace SharpMp4
         {
             int timescale = 0;
             int frametick = 0;
-            var vui = this.VuiParams;
-            if (vui != null)
+            var vui = this.VuiParameters;
+            if (vui != null && vui.TimingInfoPresentFlag != 0)
             {
-                timescale = vui.TimeScale >> 1; // Not sure why, but I found this in several places, and it works...
+                // MaxFPS = Ceil( time_scale / ( 2 * num_units_in_tick ) )
+                timescale = vui.TimeScale;
                 frametick = vui.NumUnitsInTick;
+                
                 if (timescale == 0 || frametick == 0)
                 {
-                    if (Log.WarnEnabled) Log.Warn($"Invalid values in vui: timescale: {timescale} and frametick: {frametick}. Using default 25 fps.");
+                    if (Log.WarnEnabled) Log.Warn($"Invalid values in vui: timescale: {timescale} and frametick: {frametick}.");
                     timescale = 0;
                     frametick = 0;
-                }
-                if (frametick > 0)
-                {
-                    if (timescale / frametick > 100)
-                    {
-                        if (Log.WarnEnabled) Log.Warn($"Framerate is {(timescale / frametick)}. Might not be correct.");
-                    }
-                }
-                else
-                {
-                    if (Log.WarnEnabled) Log.Warn($"Frametick is {frametick}. Might not be correct.");
                 }
             }
             else
             {
                 if (Log.ErrorEnabled) Log.Error("Can't determine frame rate because SPS does not contain vuiParams");
-                timescale = 0;
-                frametick = 0;
             }
 
             return (timescale, frametick);

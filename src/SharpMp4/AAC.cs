@@ -11,6 +11,7 @@ namespace SharpMp4
             this.ChannelCount = channelCount;   
             this.SampleRate = sampleRate;
             this.SampleSize = sampleSize;
+            this.SampleDuration = 1000;
         }
 
         public ushort ChannelCount { get; private set; }
