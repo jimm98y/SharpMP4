@@ -50,7 +50,7 @@ namespace SharpMp4
             track.SetSink(this);
         }
 
-        internal async Task NotifySampleAdded()
+        public async Task NotifySampleAdded()
         {
             // make sure only 1 thread at a time can write
             await _semaphore.WaitAsync();
@@ -5417,12 +5417,38 @@ namespace SharpMp4
 
         public static void RegisterDescriptor(int objectTypeIndication, int type, Func<uint, Stream, Task<DescriptorBase>> parseFunction, Func<Stream, int, byte, DescriptorBase, Task<uint>> buildFunction)
         {
-            throw new NotImplementedException();
+            if(_descriptorBuilders.ContainsKey(objectTypeIndication) && _descriptorBuilders[objectTypeIndication].ContainsKey(type))
+                throw new InvalidOperationException("Descriptor builder already registered!");
+
+            if (_descriptorParsers.ContainsKey(objectTypeIndication) && _descriptorParsers[objectTypeIndication].ContainsKey(type))
+                throw new InvalidOperationException("Descriptor parser already registered!");
+
+            if (!_descriptorBuilders.ContainsKey(objectTypeIndication))
+            {
+                Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>> descriptorDictionary = new Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>>();
+                _descriptorBuilders.Add(objectTypeIndication, descriptorDictionary);
+            }
+
+            if (!_descriptorParsers.ContainsKey(objectTypeIndication))
+            {
+                Dictionary<int, Func<uint, Stream, Task<DescriptorBase>>> descriptorDictionary = new Dictionary<int, Func<uint, Stream, Task<DescriptorBase>>>();
+                _descriptorParsers.Add(objectTypeIndication, descriptorDictionary);
+            }
+
+            _descriptorBuilders[objectTypeIndication].Add(type, buildFunction);
+            _descriptorParsers[objectTypeIndication].Add(type, parseFunction);
         }
 
         public static void UnregisterDescriptor(int objectTypeIndication, int type)
         {
-            throw new NotImplementedException();
+            if(!_descriptorBuilders.ContainsKey(objectTypeIndication) || !_descriptorBuilders[objectTypeIndication].ContainsKey(type))
+                throw new InvalidOperationException("Descriptor builder not registered!");
+
+            if (!_descriptorParsers.ContainsKey(objectTypeIndication) || !_descriptorParsers[objectTypeIndication].ContainsKey(type))
+                throw new InvalidOperationException("Descriptor parser not registered!");
+
+            _descriptorBuilders[objectTypeIndication].Remove(type);
+            _descriptorParsers[objectTypeIndication].Remove(type);
         }
 
         static Mp4Parser()

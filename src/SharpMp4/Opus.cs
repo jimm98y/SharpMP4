@@ -63,6 +63,7 @@ namespace SharpMp4
             audioSampleEntry.DataReferenceIndex = 1;
             audioSampleEntry.SampleSize = opusTrack.SampleSize;
 
+            // TODO: It should be possible to parse the Opus payload and get these parameters
             OpusSpecificBox opusSpecificBox = new OpusSpecificBox(
                 0,
                 audioSampleEntry,
