@@ -3656,6 +3656,7 @@ namespace SharpMp4
         public const string TYPE10 = "dtsl";
         public const string TYPE11 = "dtsh";
         public const string TYPE12 = "dtse";
+        public const string TYPE_OPUS = "opus";
         public const string TYPE_ENCRYPTED = "enca";
 
         public AudioSampleEntryBox(
@@ -5378,6 +5379,40 @@ namespace SharpMp4
         private static Dictionary<int, Dictionary<int, Func<uint, Stream, Task<DescriptorBase>>>> _descriptorParsers = new Dictionary<int, Dictionary<int, Func<uint, Stream, Task<DescriptorBase>>>>();
         private static Dictionary<int, Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>>> _descriptorBuilders = new Dictionary<int, Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>>>();
 
+        public static void RegisterBox(string box, Func<uint, string, Mp4Box, Stream, Task<Mp4Box>> parseFunction, Func<Mp4Box, Stream, Task<uint>> buildFunction)
+        {
+            if (_boxParsers.ContainsKey(box))
+                throw new InvalidOperationException("Box parser already registered!");
+
+            if (_boxBuilders.ContainsKey(box))
+                throw new InvalidOperationException("Box builder already registered!");
+
+            _boxParsers.Add(box, parseFunction);
+            _boxBuilders.Add(box, buildFunction);
+        }
+
+        public static void UnregisterBox(string box)
+        {
+            if (!_boxParsers.ContainsKey(box))
+                throw new InvalidOperationException("Box parser not registered!");
+
+            if (!_boxBuilders.ContainsKey(box))
+                throw new InvalidOperationException("Box builder not registered!");
+
+            _boxParsers.Remove(box);
+            _boxBuilders.Remove(box);
+        }
+
+        public static void RegisterDescriptor(int objectTypeIndication, int type, Func<uint, Stream, Task<DescriptorBase>> parseFunction, Func<Stream, int, byte, DescriptorBase, Task<uint>> buildFunction)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void UnregisterDescriptor(int objectTypeIndication, int type)
+        {
+            throw new NotImplementedException();
+        }
+
         static Mp4Parser()
         {
             // box parsers
@@ -5433,10 +5468,12 @@ namespace SharpMp4
             _boxParsers.Add(AudioSampleEntryBox.TYPE10, AudioSampleEntryBox.ParseAsync);
             _boxParsers.Add(AudioSampleEntryBox.TYPE11, AudioSampleEntryBox.ParseAsync);
             _boxParsers.Add(AudioSampleEntryBox.TYPE12, AudioSampleEntryBox.ParseAsync);
+            _boxParsers.Add(AudioSampleEntryBox.TYPE_OPUS, AudioSampleEntryBox.ParseAsync);
             _boxParsers.Add(AudioSampleEntryBox.TYPE_ENCRYPTED, AudioSampleEntryBox.ParseAsync);
 
             _boxParsers.Add(AvcConfigurationBox.TYPE, AvcConfigurationBox.ParseAsync);
             _boxParsers.Add(HevcConfigurationBox.TYPE, HevcConfigurationBox.ParseAsync);
+            _boxParsers.Add(OpusSpecificBox.TYPE, OpusSpecificBox.ParseAsync);
             _boxParsers.Add(EsdsBox.TYPE, EsdsBox.ParseAsync);
 
             // descriptor parsers
@@ -5504,10 +5541,12 @@ namespace SharpMp4
             _boxBuilders.Add(AudioSampleEntryBox.TYPE10, AudioSampleEntryBox.BuildAsync);
             _boxBuilders.Add(AudioSampleEntryBox.TYPE11, AudioSampleEntryBox.BuildAsync);
             _boxBuilders.Add(AudioSampleEntryBox.TYPE12, AudioSampleEntryBox.BuildAsync);
+            _boxBuilders.Add(AudioSampleEntryBox.TYPE_OPUS, AudioSampleEntryBox.BuildAsync);
             _boxBuilders.Add(AudioSampleEntryBox.TYPE_ENCRYPTED, AudioSampleEntryBox.BuildAsync);
 
             _boxBuilders.Add(AvcConfigurationBox.TYPE, AvcConfigurationBox.BuildAsync);
             _boxBuilders.Add(HevcConfigurationBox.TYPE, HevcConfigurationBox.BuildAsync);
+            _boxBuilders.Add(OpusSpecificBox.TYPE, OpusSpecificBox.BuildAsync);
             _boxBuilders.Add(EsdsBox.TYPE, EsdsBox.BuildAsync);
 
             // descriptor builders
