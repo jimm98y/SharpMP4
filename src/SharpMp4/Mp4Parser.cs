@@ -13,7 +13,7 @@ namespace SharpMp4
     /// <summary>
     /// Fragmented MP4 (fMP4) builder.
     /// </summary>
-    public class FragmentedMp4Builder
+    public class FragmentedMp4Builder : IDisposable
     {
         private Stream _output;
         private uint _moofSequenceNumber = 1;
@@ -507,6 +507,27 @@ namespace SharpMp4
             // TODO: trex.A = SampleFlags;
 
             return trex;
+        }
+
+        private bool _disposedValue;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _semaphore.Dispose();
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 
