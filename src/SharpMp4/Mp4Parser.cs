@@ -10,6 +10,590 @@ using System.Threading.Tasks;
 
 namespace SharpMp4
 {
+    /// <summary>
+    /// Fragmented MP4 (fMP4) builder.
+    /// </summary>
+    public class FragmentedMp4Builder
+    {
+        private Stream _output;
+        private uint _moofSequenceNumber = 1;
+
+        private readonly double _maxSampleLengthInSeconds;
+        private readonly int _maxSamplesPerFragment;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+
+        private readonly List<TrackBase> _tracks = new List<TrackBase>();
+        private readonly List<long> _trackEndTimes = new List<long>();
+
+        /// <summary>
+        /// Ctor.
+        /// </summary>
+        /// <param name="output">Output stream. Will be progressively written while recording.</param>
+        /// <param name="maxSampleLengthInSeconds">Maximum duration of 1 sample. Default is 0.5 sec.</param>
+        /// <param name="maxSamplesPerFragment">Maximum number of samples per fragment (MOOF). Default is 8.</param>
+        public FragmentedMp4Builder(Stream output, double maxSampleLengthInSeconds = 0.5, int maxSamplesPerFragment = 8)
+        {
+            this._output = output;
+            this._maxSampleLengthInSeconds = maxSampleLengthInSeconds;
+            this._maxSamplesPerFragment = maxSamplesPerFragment;
+        }
+
+        /// <summary>
+        /// Add a track to the fMP4.
+        /// </summary>
+        /// <param name="track">Track to add: <see cref="TrackBase"/>.</param>
+        public void AddTrack(TrackBase track)
+        {
+            _tracks.Add(track);
+            _trackEndTimes.Add(0);
+            track.TrackID = (uint)_tracks.IndexOf(track) + 1;
+            track.SetSink(this);
+        }
+
+        internal async Task NotifySampleAdded()
+        {
+            // make sure only 1 thread at a time can write
+            await _semaphore.WaitAsync();
+            try
+            {
+                double duration = _maxSampleLengthInSeconds * _maxSamplesPerFragment;
+
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    if (!_tracks[i].ContainsEnoughSamples(duration))
+                        return;
+                }
+
+                await WriteFragment();
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
+
+        /// <summary>
+        /// Flush all samples and create an incomplete fragment (MOOF).
+        /// </summary>
+        /// <returns><see cref="Task"/></returns>
+        public async Task FlushAsync()
+        {
+            // make sure only 1 thread at a time can write
+            await _semaphore.WaitAsync();
+            try
+            {
+                if (_tracks.FirstOrDefault(x => x.HasSamples()) != null)
+                {
+                    await WriteFragment(true);
+                }
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
+
+        private async Task WriteFragment(bool isFlushing = false)
+        {
+            FragmentedMp4 fmp4 = new FragmentedMp4();
+
+            // first check if we need to produce the media initialization segment
+            if (_moofSequenceNumber == 1)
+            {
+                await CreateMediaInitialization(fmp4);
+                await FragmentedMp4.BuildAsync(fmp4, _output);
+
+                fmp4 = new FragmentedMp4();
+            }
+
+            // all tracks have enough samples to produce a fragment
+            List<StreamFragment> fragments = new List<StreamFragment>();
+            bool hasMoreSamples = true;
+            for (int j = 0; j < _maxSamplesPerFragment && hasMoreSamples; j++)
+            {
+                var fragment = new StreamFragment(_tracks, _trackEndTimes.ToArray());
+                hasMoreSamples = false;
+
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    double targetDuration = _tracks[i].Timescale * _maxSampleLengthInSeconds;
+                    long currentDuration = 0;
+
+                    while (currentDuration < targetDuration && _tracks[i].HasSamples()) // HasSamples is necessary in case the synchronization of the tracks is not precisely aligned
+                    {
+                        var sample = _tracks[i].ReadSample();
+                        currentDuration += sample.Duration;
+                        fragment.Samples[i].Add(sample);
+                    }
+
+                    _trackEndTimes[i] += currentDuration;
+
+                    hasMoreSamples = hasMoreSamples || _tracks[i].HasSamples(); // stop condition
+                }
+
+                fragments.Add(fragment);
+            }
+
+            if (isFlushing)
+            {
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    while (_tracks[i].HasSamples())
+                    {
+                        var sample = _tracks[i].ReadSample();
+                        _trackEndTimes[i] += sample.Duration;
+                        fragments.Last().Samples[i].Add(sample);
+                    }
+                }
+            }
+
+            await CreateMediaFragment(fmp4, _tracks, fragments, _moofSequenceNumber++);
+            await FragmentedMp4.BuildAsync(fmp4, _output);
+        }
+
+        private Task CreateMediaInitialization(FragmentedMp4 fmp4)
+        {
+            var ftyp = CreateFtypBox();
+            fmp4.Children.Add(ftyp);
+
+            for (int i = 0; i < _tracks.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(_tracks[i].CompatibleBrand))
+                {
+                    ftyp.CompatibleBrands.Add(_tracks[i].CompatibleBrand);
+                }
+            }
+
+            var moov = CreateMoovBox();
+            fmp4.Children.Add(moov);
+
+            return Task.CompletedTask;
+        }
+
+        private async Task CreateMediaFragment(FragmentedMp4 fmp4, List<TrackBase> tracks, List<StreamFragment> fragments, uint sequenceNumber)
+        {
+            var moof = CreateMoofBox(tracks, sequenceNumber, fragments);
+            fmp4.Children.Add(moof);
+
+            var mdat = await CreateMdatBox(fragments);
+            fmp4.Children.Add(mdat);
+        }
+
+        private async Task<MdatBox> CreateMdatBox(List<StreamFragment> fragments)
+        {
+            var storage = TemporaryStorage.Factory.Create();
+            var mdat = new MdatBox(0, null, storage);
+
+            for (int i = 0; i < fragments.Count; i++)
+            {
+                foreach (var track in fragments[i].Samples)
+                {
+                    for (int k = 0; k < track.Count; k++)
+                    {
+                        var sample = track[k];
+                        await storage.Stream.WriteAsync(sample.Sample, 0, sample.Sample.Length);
+                    }
+                }
+            }
+
+            return mdat;
+        }
+
+        private static MoofBox CreateMoofBox(List<TrackBase> tracks, uint sequenceNumber, List<StreamFragment> fragments)
+        {
+            MoofBox moof = new MoofBox(0, null);
+
+            MfhdBox mfhd = CreateMfhdBox(moof, sequenceNumber);
+            moof.Children.Add(mfhd);
+
+            List<TrafBox> trafs = new List<TrafBox>();
+            for (int i = 0; i < tracks.Count; i++)
+            {
+                TrafBox traf = CreateTrafBox(moof, tracks, i, fragments);
+                moof.Children.Add(traf);
+                trafs.Add(traf);
+            }
+
+            long offset = moof.CalculateSize() + 8;
+
+            for (int j = 0; j < trafs[0].GetTrun().Count(); j++)
+            {
+                for (int i = 0; i < trafs.Count; i++)
+                {
+                    var trun = trafs[i].GetTrun().ElementAt(j);
+                    trun.DataOffset = (int)offset;
+                    offset += (int)trun.Entries.Sum(x => x.SampleSize);
+                }
+            }
+
+            return moof;
+        }
+
+        private static MfhdBox CreateMfhdBox(Mp4Box parent, uint sequenceNumber)
+        {
+            MfhdBox mfhd = new MfhdBox(0, parent);
+            mfhd.SequenceNumber = sequenceNumber;
+            return mfhd;
+        }
+
+        private static TrafBox CreateTrafBox(Mp4Box parent, List<TrackBase> tracks, int trackIndex, List<StreamFragment> fragments)
+        {
+            TrafBox traf = new TrafBox(0, parent);
+            TfhdBox tfhd = CreateTfhdBox(traf, tracks[trackIndex]);
+            traf.Children.Add(tfhd);
+            TfdtBox tfdt = CreateTfdtBox(traf, trackIndex, fragments);
+            traf.Children.Add(tfdt);
+
+            for (int i = 0; i < fragments.Count; i++)
+            {
+                // TODO: review trackIndex == 0 && i == 0
+                TrunBox trun = CreateTrunBox(traf, trackIndex, fragments[i], trackIndex == 0 && i == 0);
+                traf.Children.Add(trun);
+            }
+            return traf;
+        }
+
+        private static TfhdBox CreateTfhdBox(Mp4Box parent, TrackBase track)
+        {
+            TfhdBox tfhd = new TfhdBox(0, parent);
+            tfhd.TrackId = track.TrackID;
+            // TODO: DefaultSampleFlags
+            if (track.TrackID == 1)
+            {
+                tfhd.Flags = 131104;
+                tfhd.DefaultSampleFlags = 16842752;
+            }
+            else
+            {
+                tfhd.Flags = 131072;
+            }
+            tfhd.DefaultBaseIsMoof = true;
+            return tfhd;
+        }
+
+        private static TfdtBox CreateTfdtBox(Mp4Box parent, int trackIndex, List<StreamFragment> fragments)
+        {
+            TfdtBox tfdt = new TfdtBox(0, parent);
+            tfdt.BaseMediaDecodeTime = (ulong)fragments[0].StartTimes[trackIndex]; // BaseMediaDecodeTime must be in the timescale of the track
+            return tfdt;
+        }
+
+        private static TrunBox CreateTrunBox(Mp4Box parent, int trackIndex, StreamFragment fragment, bool isFirst)
+        {
+            TrunBox trun = new TrunBox(0, parent);
+
+            // TODO
+            if (isFirst)
+            {
+                trun.FirstSampleFlags = 33554432;
+            }
+            trun.DataOffset = 0;
+            trun.Flags = (uint)(isFirst ? 773 : 769);
+
+            for (int i = 0; i < fragment.Samples[trackIndex].Count; i++)
+            {
+                var sample = fragment.Samples[trackIndex][i];
+                trun.Entries.Add(new TrunBox.Entry(sample.Duration, (uint)sample.Sample.Length, 0, 0));
+            }
+
+            return trun;
+        }
+
+        public static FtypBox CreateFtypBox()
+        {
+            var compatibleBrands = new List<string>()
+            {
+                "isom",
+                "mp42"
+            };
+            var ftyp = new FtypBox(0, null, "mp42", 1, compatibleBrands);
+            return ftyp;
+        }
+
+        private MoovBox CreateMoovBox()
+        {
+            var moov = new MoovBox(0, null);
+            var mvhd = CreateMvhdBox(moov);
+            moov.Children.Add(mvhd);
+
+            for (int i = 0; i < this._tracks.Count; i++)
+            {
+                var trak = CreateTrakBox(moov, this._tracks[i]);
+                moov.Children.Add(trak);
+            }
+
+            var mvex = CreateMvexBox(moov);
+            moov.Children.Add(mvex);
+
+            return moov;
+        }
+
+        private MvhdBox CreateMvhdBox(Mp4Box parent)
+        {
+            var mvhd = new MvhdBox(0, parent);
+            mvhd.Duration = 0;
+            mvhd.Timescale = 1000; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
+            return mvhd;
+        }
+
+        private TrakBox CreateTrakBox(Mp4Box parent, TrackBase track)
+        {
+            var trak = new TrakBox(0, parent);
+            var tkhd = CreateTkhdBox(trak, track);
+            var mdia = CreateMdiaBox(trak, track);
+            trak.Children.Add(tkhd);
+            trak.Children.Add(mdia);
+            return trak;
+        }
+
+        private TkhdBox CreateTkhdBox(Mp4Box parent, TrackBase track)
+        {
+            var tkhd = new TkhdBox(0, parent);
+            tkhd.TrackId = track.TrackID;
+            track.FillTkhdBox(tkhd);
+            return tkhd;
+        }
+
+        private MdiaBox CreateMdiaBox(Mp4Box parent, TrackBase track)
+        {
+            var mdia = new MdiaBox(0, parent);
+            var mdhd = CreateMdhdBox(mdia, track);
+            mdia.Children.Add(mdhd);
+            var hdlr = CreateHdlrBox(mdia, track);
+            mdia.Children.Add(hdlr);
+            var minf = CreateMinfBox(mdia, track);
+            mdia.Children.Add(minf);
+            return mdia;
+        }
+
+        private MdhdBox CreateMdhdBox(Mp4Box parent, TrackBase track)
+        {
+            MdhdBox mdhd = new MdhdBox(0, parent);
+            mdhd.Duration = 0;
+            mdhd.Timescale = track.Timescale;
+            mdhd.Language = track.Language;
+            return mdhd;
+        }
+
+        private HdlrBox CreateHdlrBox(Mp4Box parent, TrackBase track)
+        {
+            HdlrBox hdlr = new HdlrBox(0, parent);
+            hdlr.HandlerType = track.Handler;
+            hdlr.Name = track.HdlrName;
+            return hdlr;
+        }
+
+        private MinfBox CreateMinfBox(Mp4Box parent, TrackBase track)
+        {
+            MinfBox minf = new MinfBox(0, parent);
+            switch (track.Handler)
+            {
+                case "vide":
+                    {
+                        minf.Children.Add(new VmhdBox(0, minf));
+                    }
+                    break;
+
+                case "soun":
+                    {
+                        minf.Children.Add(new SmhdBox(0, minf));
+                    }
+                    break;
+
+                default:
+                    throw new NotSupportedException(track.Handler);
+            }
+
+            var dinf = CreateDinfBox(minf);
+            minf.Children.Add(dinf);
+
+            var stbl = CreateStblBox(minf, track);
+            minf.Children.Add(stbl);
+
+            return minf;
+        }
+
+        private DinfBox CreateDinfBox(Mp4Box parent)
+        {
+            DinfBox dinf = new DinfBox(0, parent);
+            var dref = new DrefBox(0, dinf);
+            dinf.Children.Add(dref);
+            var url = new UrlBox(0, dref);
+            dref.Children.Add(url);
+            return dinf;
+        }
+
+        private StblBox CreateStblBox(Mp4Box parent, TrackBase track)
+        {
+            StblBox stbl = new StblBox(0, parent);
+
+            var stsd = CreateStsdBox(stbl, track);
+            stbl.Children.Add(stsd);
+
+            var stsz = CreateStszBox(stbl, track);
+            stbl.Children.Add(stsz);
+
+            var stsc = CreateStscBox(stbl, track);
+            stbl.Children.Add(stsc);
+
+            var stts = CreateSttsBox(stbl, track);
+            stbl.Children.Add(stts);
+
+            var stco = CreateStcoBox(stbl, track);
+            stbl.Children.Add(stco);
+
+            return stbl;
+        }
+
+        private StsdBox CreateStsdBox(Mp4Box parent, TrackBase track)
+        {
+            var stsd = new StsdBox(0, parent);
+
+            var sampleEntryBox = track.CreateSampleEntryBox(parent);
+            stsd.Children.Add(sampleEntryBox);
+
+            return stsd;
+        }
+
+        private SttsBox CreateSttsBox(Mp4Box parent, TrackBase track)
+        {
+            var stts = new SttsBox(0, parent);
+            return stts;
+        }
+
+        private StscBox CreateStscBox(Mp4Box parent, TrackBase track)
+        {
+            var stsc = new StscBox(0, parent);
+            return stsc;
+        }
+
+        private StszBox CreateStszBox(Mp4Box parent, TrackBase track)
+        {
+            var stsz = new StszBox(0, parent);
+            return stsz;
+        }
+
+        private StcoBox CreateStcoBox(Mp4Box parent, TrackBase track)
+        {
+            var stco = new StcoBox(0, parent);
+            return stco;
+        }
+
+        private MvexBox CreateMvexBox(Mp4Box parent)
+        {
+            var mvex = new MvexBox(0, parent);
+
+            var mehd = new MehdBox(0, mvex);
+            mehd.FragmentDuration = 0;
+            mvex.Children.Add(mehd);
+
+            for (int i = 0; i < this._tracks.Count; i++)
+            {
+                var trex = CreateTrexBox(mvex, this._tracks[i]);
+                mvex.Children.Add(trex);
+            }
+
+            return mvex;
+        }
+
+        private Mp4Box CreateTrexBox(Mp4Box parent, TrackBase track)
+        {
+            TrexBox trex = new TrexBox(0, parent);
+
+            trex.TrackId = track.TrackID;
+            trex.DefaultSampleDescriptionIndex = 1;
+            trex.DefaultSampleDuration = 0;
+            trex.DefaultSampleSize = 0;
+            // TODO: trex.A = SampleFlags;
+
+            return trex;
+        }
+    }
+
+    public abstract class TrackBase
+    {
+        public abstract string HdlrName { get; }
+
+        private ulong _nextFragmentCreateStartTime = 0;
+        public uint Timescale { get; set; }
+        public uint TrackID { get; set; } = 1;
+        public string CompatibleBrand { get; set; } = null;
+        public string Language { get; set; } = "und";
+        public string Handler { get; protected set; }
+
+        public uint SampleDuration { get; set; }
+
+        public ConcurrentQueue<StreamSample> _samples = new ConcurrentQueue<StreamSample>();
+        private long _queuedSamplesLength = 0;
+        private FragmentedMp4Builder _sink;
+
+        public virtual async Task ProcessSampleAsync(byte[] sample)
+        {
+            if (SampleDuration == 0)
+                return;
+
+            _nextFragmentCreateStartTime = _nextFragmentCreateStartTime + SampleDuration;
+            Interlocked.Add(ref _queuedSamplesLength, SampleDuration);
+
+            if (Log.DebugEnabled) Log.Debug($"{this.Handler}: {_nextFragmentCreateStartTime / (double)Timescale}");
+
+            var s = new StreamSample()
+            {
+                Sample = sample,
+                Duration = SampleDuration
+            };
+            _samples.Enqueue(s);
+
+            await _sink.NotifySampleAdded();
+        }
+
+        public static string ToHexString(byte[] data)
+        {
+#if !NETCOREAPP
+            string hexString = BitConverter.ToString(data);
+            hexString = hexString.Replace("-", "");
+            return hexString;
+#else
+            return Convert.ToHexString(data);
+#endif
+        }
+
+        public StreamSample ReadSample()
+        {
+            if (_samples.TryDequeue(out var a))
+            {
+                Interlocked.Add(ref _queuedSamplesLength, -1 * a.Duration);
+                return a;
+            }
+
+            throw new Exception();
+        }
+
+        public void SetSink(FragmentedMp4Builder fmp4)
+        {
+            this._sink = fmp4;
+        }
+
+        public bool ContainsEnoughSamples(double durationInSeconds)
+        {
+            return HasSamples() && Timescale != 0 && _queuedSamplesLength >= durationInSeconds * Timescale;
+        }
+
+        public bool HasSamples()
+        {
+            return _samples.Count > 0;
+        }
+
+        public virtual Task FlushAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        public abstract Mp4Box CreateSampleEntryBox(Mp4Box parent);
+
+        public abstract void FillTkhdBox(TkhdBox tkhd);
+    }
+
     public static class IsoReaderWriter
     {
 #if DEBUG
@@ -1445,6 +2029,12 @@ namespace SharpMp4
             contentSize += 2;
             return base.CalculateSize() + contentSize;
         }
+    }
+
+    public static class HdlrNames
+    {
+        public const string Video = "Video Handler\0";
+        public const string Sound = "Sound Handler\0";
     }
 
     public class HdlrBox : Mp4Box
@@ -5058,621 +5648,6 @@ namespace SharpMp4
 
         public List<List<StreamSample>> Samples { get; } = new List<List<StreamSample>>();
         public long[] StartTimes { get; }
-    }
-
-    public abstract class TrackBase
-    {
-        private ulong _nextFragmentCreateStartTime = 0;
-        public uint Timescale { get; set; }
-        public uint TrackID { get; set; } = 1;
-        public string CompatibleBrand { get; set; } = null;
-        public string Language { get; set; } = "und";
-        public string Handler { get; protected set; }
-
-        public uint SampleDuration { get; set; }
-
-        public ConcurrentQueue<StreamSample> _samples = new ConcurrentQueue<StreamSample>();
-        private long _queuedSamplesLength = 0;
-        private FragmentedMp4Builder _sink;
-
-        public virtual async Task ProcessSampleAsync(byte[] sample)
-        {
-            if (SampleDuration == 0)
-                return;
-
-            _nextFragmentCreateStartTime = _nextFragmentCreateStartTime + SampleDuration;
-            Interlocked.Add(ref _queuedSamplesLength, SampleDuration);
-
-            if (Log.DebugEnabled) Log.Debug($"{this.Handler}: {_nextFragmentCreateStartTime / (double)Timescale}");
-
-            var s = new StreamSample()
-            {
-                Sample = sample,
-                Duration = SampleDuration
-            };
-            _samples.Enqueue(s);
-
-            await _sink.NotifySampleAdded();
-        }
-       
-        public static string ToHexString(byte[] data)
-        {
-#if !NETCOREAPP
-            string hexString = BitConverter.ToString(data);
-            hexString = hexString.Replace("-", "");
-            return hexString;
-#else
-            return Convert.ToHexString(data);
-#endif
-        }
-
-        public StreamSample ReadSample()
-        {
-            if (_samples.TryDequeue(out var a))
-            {
-                Interlocked.Add(ref _queuedSamplesLength, -1 * a.Duration);
-                return a;
-            }
-
-            throw new Exception();
-        }
-
-        public void SetSink(FragmentedMp4Builder fmp4)
-        {
-            this._sink = fmp4;
-        }
-
-        public bool ContainsEnoughSamples(double durationInSeconds)
-        {
-            return HasSamples() && Timescale != 0 && _queuedSamplesLength >= durationInSeconds * Timescale;
-        }
-
-        public bool HasSamples()
-        {
-            return _samples.Count > 0;
-        }
-
-        public virtual Task FlushAsync()
-        {
-            return Task.CompletedTask;
-        }
-    }
-
-    public class FragmentedMp4Builder
-    {
-        private Stream _output;
-        private double _maxFragmentLengthInSeconds;
-        private int _maxFragmentsPerMoof;
-        private uint _sequenceNumber = 1;
-        protected SemaphoreSlim _semaphore = new SemaphoreSlim(1);
-
-        private readonly List<TrackBase> _tracks = new List<TrackBase>();
-        private readonly List<long> _trackEndTimes = new List<long>();
-
-        public FragmentedMp4Builder(Stream output, double maxFragmentLengthInSeconds = 0.5, int maxFragmentsPerMoof = 8)
-        {
-            this._output = output;
-            this._maxFragmentLengthInSeconds = maxFragmentLengthInSeconds;
-            this._maxFragmentsPerMoof = maxFragmentsPerMoof;
-        }
-
-        public void AddTrack(TrackBase track)
-        {
-            _tracks.Add(track);
-            _trackEndTimes.Add(0);
-            track.TrackID = (uint)_tracks.IndexOf(track) + 1;
-            track.SetSink(this);
-        }
-
-        internal async Task NotifySampleAdded()
-        {
-            // make sure only 1 thread at a time can write
-            await _semaphore.WaitAsync();
-            try
-            {
-                double duration = _maxFragmentLengthInSeconds * _maxFragmentsPerMoof;
-
-                for (int i = 0; i < _tracks.Count; i++)
-                {
-                    if (!_tracks[i].ContainsEnoughSamples(duration))
-                        return;
-                }
-
-                await WriteFragment();
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-        }
-
-        public async Task FlushAsync()
-        {
-            // make sure only 1 thread at a time can write
-            await _semaphore.WaitAsync();
-            try
-            {
-                if (_tracks.FirstOrDefault(x => x.HasSamples()) != null)
-                {
-                    await WriteFragment(true);
-                }
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-        }
-
-        private async Task WriteFragment(bool isFlushing = false)
-        {
-            FragmentedMp4 fmp4 = new FragmentedMp4();
-
-            // first check if we need to produce the media initialization segment
-            if (_sequenceNumber == 1)
-            {
-                await CreateMediaInitialization(fmp4);
-                await FragmentedMp4.BuildAsync(fmp4, _output);
-
-                fmp4 = new FragmentedMp4();
-            }
-
-            // all tracks have enough samples to produce a fragment
-            List<StreamFragment> fragments = new List<StreamFragment>();
-            bool hasMoreSamples = true;
-            for (int j = 0; j < _maxFragmentsPerMoof && hasMoreSamples; j++)
-            {
-                var fragment = new StreamFragment(_tracks, _trackEndTimes.ToArray());
-                hasMoreSamples = false;
-
-                for (int i = 0; i < _tracks.Count; i++)
-                {
-                    double targetDuration = _tracks[i].Timescale * _maxFragmentLengthInSeconds;
-                    long currentDuration = 0;
-
-                    while (currentDuration < targetDuration && _tracks[i].HasSamples()) // HasSamples is necessary in case the synchronization of the tracks is not precisely aligned
-                    {
-                        var sample = _tracks[i].ReadSample();
-                        currentDuration += sample.Duration;
-                        fragment.Samples[i].Add(sample);
-                    }
-
-                    _trackEndTimes[i] += currentDuration;
-
-                    hasMoreSamples = hasMoreSamples || _tracks[i].HasSamples(); // stop condition
-                }
-
-                fragments.Add(fragment);
-            }
-
-            if (isFlushing)
-            {
-                for (int i = 0; i < _tracks.Count; i++)
-                {
-                    while (_tracks[i].HasSamples())
-                    {
-                        var sample = _tracks[i].ReadSample();
-                        _trackEndTimes[i] += sample.Duration;
-                        fragments.Last().Samples[i].Add(sample);
-                    }
-                }
-            }
-
-            await CreateMediaFragment(fmp4, _tracks, fragments, _sequenceNumber++);
-            await FragmentedMp4.BuildAsync(fmp4, _output);
-        }
-
-        private Task CreateMediaInitialization(FragmentedMp4 fmp4)
-        {
-            var ftyp = CreateFtypBox();
-            fmp4.Children.Add(ftyp);
-
-            for (int i = 0; i < _tracks.Count; i++)
-            {
-                if (!string.IsNullOrEmpty(_tracks[i].CompatibleBrand))
-                {
-                    ftyp.CompatibleBrands.Add(_tracks[i].CompatibleBrand);
-                }
-            }
-
-            var moov = CreateMoovBox();
-            fmp4.Children.Add(moov);
-
-            return Task.CompletedTask;
-        }
-
-        private async Task CreateMediaFragment(FragmentedMp4 fmp4, List<TrackBase> tracks, List<StreamFragment> fragments, uint sequenceNumber)
-        {
-            var moof = CreateMoofBox(tracks, sequenceNumber, fragments);
-            fmp4.Children.Add(moof);
-
-            var mdat = await CreateMdatBox(fragments);
-            fmp4.Children.Add(mdat);
-        }
-
-        private async Task<MdatBox> CreateMdatBox(List<StreamFragment> fragments)
-        {
-            var storage = TemporaryStorage.Factory.Create();
-            var mdat = new MdatBox(0, null, storage);
-
-            for (int i = 0; i < fragments.Count; i++)
-            {
-                foreach(var track in fragments[i].Samples)
-                {
-                    for (int k = 0; k < track.Count; k++)
-                    {
-                        var sample = track[k];
-                        await storage.Stream.WriteAsync(sample.Sample, 0, sample.Sample.Length);
-                    }
-                } 
-            }
-
-            return mdat;
-        }
-
-        private static MoofBox CreateMoofBox(List<TrackBase> tracks, uint sequenceNumber, List<StreamFragment> fragments)
-        {
-            MoofBox moof = new MoofBox(0, null);
-
-            MfhdBox mfhd = CreateMfhdBox(moof, sequenceNumber);
-            moof.Children.Add(mfhd);
-
-            List<TrafBox> trafs = new List<TrafBox>();
-            for (int i = 0; i < tracks.Count; i++)
-            {        
-                TrafBox traf = CreateTrafBox(moof, tracks, i, fragments);
-                moof.Children.Add(traf);
-                trafs.Add(traf);
-            }
-
-            long offset = moof.CalculateSize() + 8;
-
-            for(int j = 0; j < trafs[0].GetTrun().Count(); j++)
-            {
-                for(int i = 0; i < trafs.Count; i++)
-                {
-                    var trun = trafs[i].GetTrun().ElementAt(j);
-                    trun.DataOffset = (int)offset;
-                    offset += (int)trun.Entries.Sum(x => x.SampleSize);
-                }
-            }
-
-            return moof;
-        }
-
-        private static MfhdBox CreateMfhdBox(Mp4Box parent, uint sequenceNumber)
-        {
-            MfhdBox mfhd = new MfhdBox(0, parent);
-            mfhd.SequenceNumber = sequenceNumber;
-            return mfhd;
-        }
-
-        private static TrafBox CreateTrafBox(Mp4Box parent, List<TrackBase> tracks, int trackIndex, List<StreamFragment> fragments)
-        {
-            TrafBox traf = new TrafBox(0, parent);
-            TfhdBox tfhd = CreateTfhdBox(traf, tracks[trackIndex]);
-            traf.Children.Add(tfhd);
-            TfdtBox tfdt = CreateTfdtBox(traf, trackIndex, fragments);
-            traf.Children.Add(tfdt);
-
-            for (int i = 0; i < fragments.Count; i++)
-            {
-                // TODO: review trackIndex == 0 && i == 0
-                TrunBox trun = CreateTrunBox(traf, trackIndex, fragments[i], trackIndex == 0 && i == 0);
-                traf.Children.Add(trun);
-            }
-            return traf;
-        }
-
-        private static TfhdBox CreateTfhdBox(Mp4Box parent, TrackBase track)
-        {
-            TfhdBox tfhd = new TfhdBox(0, parent);
-            tfhd.TrackId = track.TrackID;
-            // TODO: DefaultSampleFlags
-            if (track.TrackID == 1)
-            {
-                tfhd.Flags = 131104;
-                tfhd.DefaultSampleFlags = 16842752;
-            }
-            else
-            {
-                tfhd.Flags = 131072;
-            }
-            tfhd.DefaultBaseIsMoof = true;
-            return tfhd;
-        }
-
-        private static TfdtBox CreateTfdtBox(Mp4Box parent, int trackIndex, List<StreamFragment> fragments)
-        {
-            TfdtBox tfdt = new TfdtBox(0, parent);
-            tfdt.BaseMediaDecodeTime = (ulong)fragments[0].StartTimes[trackIndex]; // BaseMediaDecodeTime must be in the timescale of the track
-            return tfdt;
-        }
-
-        private static TrunBox CreateTrunBox(Mp4Box parent, int trackIndex, StreamFragment fragment, bool isFirst)
-        {
-            TrunBox trun = new TrunBox(0, parent);
-
-            // TODO
-            if(isFirst)
-            {
-                trun.FirstSampleFlags = 33554432;
-            }
-            trun.DataOffset = 0;
-            trun.Flags = (uint)(isFirst ? 773 : 769);
-
-            for (int i = 0; i < fragment.Samples[trackIndex].Count; i++)
-            {
-                var sample = fragment.Samples[trackIndex][i];
-                trun.Entries.Add(new TrunBox.Entry(sample.Duration, (uint)sample.Sample.Length, 0, 0));
-            }            
-
-            return trun;
-        }
-
-        public static FtypBox CreateFtypBox()
-        {
-            var compatibleBrands = new List<string>()
-            {
-                "isom",
-                "mp42"
-            };
-            var ftyp = new FtypBox(0, null, "mp42", 1, compatibleBrands);
-            return ftyp;
-        }
-
-        private MoovBox CreateMoovBox()
-        {
-            var moov = new MoovBox(0, null);
-            var mvhd = CreateMvhdBox(moov);
-            moov.Children.Add(mvhd);
-
-            for (int i = 0; i < this._tracks.Count; i++)
-            { 
-                var trak = CreateTrakBox(moov, this._tracks[i]);
-                moov.Children.Add(trak);
-            }
-
-            var mvex = CreateMvexBox(moov);
-            moov.Children.Add(mvex);
-
-            return moov;
-        }
-
-        private MvhdBox CreateMvhdBox(Mp4Box parent)
-        {
-            var mvhd = new MvhdBox(0, parent);
-            mvhd.Duration = 0;
-            mvhd.Timescale = 1000; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
-            return mvhd;
-        }
-
-        private TrakBox CreateTrakBox(Mp4Box parent, TrackBase track)
-        {
-            var trak = new TrakBox(0, parent);
-            var tkhd = CreateTkhdBox(trak, track);
-            var mdia = CreateMdiaBox(trak, track);
-            trak.Children.Add(tkhd);
-            trak.Children.Add(mdia);
-            return trak;
-        }
-
-        private TkhdBox CreateTkhdBox(Mp4Box parent, TrackBase track)
-        {
-            var tkhd = new TkhdBox(0, parent);
-            tkhd.TrackId = track.TrackID;
-
-            if(track is H264Track h264Track)
-            {
-                var dim = h264Track.Sps.FirstOrDefault().Value.CalculateDimensions();
-                tkhd.Width = dim.Width;
-                tkhd.Height = dim.Height;
-            }
-            else if (track is H265Track h265Track)
-            {
-                var dim = h265Track.Sps.FirstOrDefault().Value.CalculateDimensions();
-                tkhd.Width = dim.Width;
-                tkhd.Height = dim.Height;
-            }
-            else if(track is AACTrack aacTrack)
-            {
-                tkhd.Volume = 1;
-            }
-            else
-            {
-                throw new NotSupportedException();
-            }
-
-            return tkhd;
-        }
-
-        private MdiaBox CreateMdiaBox(Mp4Box parent, TrackBase track)
-        {
-            var mdia = new MdiaBox(0, parent);
-            var mdhd = CreateMdhdBox(mdia, track);
-            mdia.Children.Add(mdhd);
-            var hdlr = CreateHdlrBox(mdia, track);
-            mdia.Children.Add(hdlr);
-            var minf = CreateMinfBox(mdia, track);
-            mdia.Children.Add(minf);
-            return mdia;
-        }
-
-        private MdhdBox CreateMdhdBox(Mp4Box parent, TrackBase track)
-        {
-            MdhdBox mdhd = new MdhdBox(0, parent);
-            mdhd.Duration = 0;
-            mdhd.Timescale = track.Timescale;
-            mdhd.Language = track.Language;
-            return mdhd;
-        }
-
-        private HdlrBox CreateHdlrBox(Mp4Box parent, TrackBase track)
-        {
-            HdlrBox hdlr = new HdlrBox(0, parent);
-            hdlr.HandlerType = track.Handler;
-
-            if(track is H264Track h264Track)
-            {
-                hdlr.Name = "Video Handler\0";
-            }
-            else if (track is H265Track h265Track)
-            {
-                hdlr.Name = "Video Handler\0";
-            }
-            else if(track is AACTrack aacTrack)
-            {
-                hdlr.Name = "Sound Handler\0";
-            }
-            else
-            {
-                throw new NotSupportedException();
-            }
-
-            return hdlr;
-        }
-
-        private MinfBox CreateMinfBox(Mp4Box parent, TrackBase track)
-        {
-            MinfBox minf = new MinfBox(0, parent);
-            switch(track.Handler)
-            {
-                case "vide":
-                    {
-                        minf.Children.Add(new VmhdBox(0, minf));
-                    }
-                    break;
-
-                case "soun":
-                    {
-                        minf.Children.Add(new SmhdBox(0, minf));
-                    }
-                    break;
-
-                default:
-                    throw new NotSupportedException(track.Handler);
-            }
-
-            var dinf = CreateDinfBox(minf);
-            minf.Children.Add(dinf);
-
-            var stbl = CreateStblBox(minf, track);
-            minf.Children.Add(stbl);
-
-            return minf;
-        }
-
-        private DinfBox CreateDinfBox(Mp4Box parent)
-        {
-            DinfBox dinf = new DinfBox(0, parent);
-            var dref = new DrefBox(0, dinf);
-            dinf.Children.Add(dref);
-            var url = new UrlBox(0, dref);
-            dref.Children.Add(url);
-            return dinf;
-        }
-
-        private StblBox CreateStblBox(Mp4Box parent, TrackBase track)
-        {
-            StblBox stbl = new StblBox(0, parent);
-
-            var stsd = CreateStsdBox(stbl, track);
-            stbl.Children.Add(stsd);
-
-            var stsz = CreateStszBox(stbl, track);
-            stbl.Children.Add(stsz);
-
-            var stsc = CreateStscBox(stbl, track);
-            stbl.Children.Add(stsc);
-
-            var stts = CreateSttsBox(stbl, track);
-            stbl.Children.Add(stts);
-
-            var stco = CreateStcoBox(stbl, track);
-            stbl.Children.Add(stco);
-
-            return stbl;
-        }
-
-        private StsdBox CreateStsdBox(Mp4Box parent, TrackBase track)
-        {
-            var stsd = new StsdBox(0, parent);
-           
-            if(track is H264Track h264Track)
-            {
-                var video = H264BoxBuilder.CreateVisualSampleEntryBox(parent, h264Track);
-                stsd.Children.Add(video);
-            }
-            else if (track is H265Track h265Track)
-            {
-                var video = H265BoxBuilder.CreateVisualSampleEntryBox(parent, h265Track);
-                stsd.Children.Add(video);
-            }
-            else if (track is AACTrack aacTrack)
-            {
-                var audio = AACBoxBuilder.CreateAudioSampleEntryBox(parent, aacTrack);
-                stsd.Children.Add(audio);
-            }
-            else
-            {
-                throw new NotSupportedException();
-            }
-
-            return stsd;
-        }
-
-        private SttsBox CreateSttsBox(Mp4Box parent, TrackBase track)
-        {
-            var stts = new SttsBox(0, parent);
-            return stts;
-        }
-
-        private StscBox CreateStscBox(Mp4Box parent, TrackBase track)
-        {
-            var stsc = new StscBox(0, parent);
-            return stsc;
-        }
-
-        private StszBox CreateStszBox(Mp4Box parent, TrackBase track)
-        {
-            var stsz = new StszBox(0, parent);
-            return stsz;
-        }
-
-        private StcoBox CreateStcoBox(Mp4Box parent, TrackBase track)
-        {
-            var stco = new StcoBox(0, parent);
-            return stco;
-        }
-
-        private MvexBox CreateMvexBox(Mp4Box parent)
-        {
-            var mvex = new MvexBox(0, parent);
-            
-            var mehd = new MehdBox(0, mvex);
-            mehd.FragmentDuration = 0;
-            mvex.Children.Add(mehd);
-
-            for (int i = 0; i < this._tracks.Count; i++)
-            {
-                var trex = CreateTrexBox(mvex, this._tracks[i]);
-                mvex.Children.Add(trex);
-            }
-
-            return mvex;
-        }
-
-        private Mp4Box CreateTrexBox(Mp4Box parent, TrackBase track)
-        {
-            TrexBox trex = new TrexBox(0, parent);
-
-            trex.TrackId = track.TrackID;
-            trex.DefaultSampleDescriptionIndex = 1;
-            trex.DefaultSampleDuration = 0;
-            trex.DefaultSampleSize = 0;
-            // TODO: trex.A = SampleFlags;
-
-            return trex;
-        }
     }
 
 #if !NET7_0_OR_GREATER

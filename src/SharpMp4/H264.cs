@@ -16,17 +16,34 @@ namespace SharpMp4
     /// </remarks>
     public class H264Track : TrackBase
     {
+        private List<byte[]> _nalBuffer = new List<byte[]>();
+
+        /// <summary>
+        /// SPS (Sequence Parameter Set) NAL units.
+        /// </summary>
         public Dictionary<int, H264SpsNalUnit> Sps { get; set; } = new Dictionary<int, H264SpsNalUnit>();
+
+        /// <summary>
+        /// PPS (Picture Parameter Set) NAL units.
+        /// </summary>
         public Dictionary<int, H264PpsNalUnit> Pps { get; set; } = new Dictionary<int, H264PpsNalUnit>();
 
+        public override string HdlrName => HdlrNames.Video;
+
+        /// <summary>
+        /// Ctor.
+        /// </summary>
         public H264Track()
         {
             this.CompatibleBrand = VisualSampleEntryBox.TYPE3; // avc1
             base.Handler = "vide";
         }
 
-        private List<byte[]> _nalBuffer = new List<byte[]>();
-
+        /// <summary>
+        /// Process 1 NAL (Network Abstraction Layer) unit.
+        /// </summary>
+        /// <param name="sample">NAL bytes.</param>
+        /// <returns><see cref="Task"/></returns>
         public override async Task ProcessSampleAsync(byte[] sample)
         {
             using (NalBitStreamReader bitstream = new NalBitStreamReader(sample))
@@ -78,6 +95,10 @@ namespace SharpMp4
             }
         }
 
+        /// <summary>
+        /// Flush all remaining NAL units from the buffer.
+        /// </summary>
+        /// <returns><see cref="Task"/></returns>
         public override async Task FlushAsync()
         {
             if (_nalBuffer.Count == 0)
@@ -89,7 +110,7 @@ namespace SharpMp4
             }
             else
             {
-                if (Log.WarnEnabled) Log.Warn($"Invalid AU in the NAL buffer");
+                if (Log.WarnEnabled) Log.Warn($"Invalid NAL in the buffer");
             }
         }
 
@@ -117,6 +138,18 @@ namespace SharpMp4
 
             await base.ProcessSampleAsync(result.ToArray());
             _nalBuffer.Clear();
+        }
+
+        public override Mp4Box CreateSampleEntryBox(Mp4Box parent)
+        {
+            return H264BoxBuilder.CreateVisualSampleEntryBox(parent, this);
+        }
+
+        public override void FillTkhdBox(TkhdBox tkhd)
+        {
+            var dim = Sps.FirstOrDefault().Value.CalculateDimensions();
+            tkhd.Width = dim.Width;
+            tkhd.Height = dim.Height;
         }
     }
 
