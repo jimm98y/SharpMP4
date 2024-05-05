@@ -41,6 +41,7 @@ namespace SharpMp4
         public ushort SampleSize { get; private set; }
 
         public override string HdlrName => HdlrNames.Sound;
+        public override string HdlrType => HdlrTypes.Sound;
 
         /// <summary>
         /// Ctor.
@@ -56,7 +57,6 @@ namespace SharpMp4
             if(sampleSizeInBits % 8 != 0) 
                 throw new ArgumentOutOfRangeException("Invalid sample size!");
 
-            base.Handler = "soun";
             this.Timescale = (uint)samplingRateInHz;
             this.ChannelCount = channelCount;   
             this.SamplingRate = samplingRateInHz;

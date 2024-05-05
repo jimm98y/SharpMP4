@@ -378,7 +378,7 @@ namespace SharpMp4
         private HdlrBox CreateHdlrBox(Mp4Box parent, TrackBase track)
         {
             HdlrBox hdlr = new HdlrBox(0, parent);
-            hdlr.HandlerType = track.Handler;
+            hdlr.HandlerType = track.HdlrType;
             hdlr.Name = track.HdlrName;
             return hdlr;
         }
@@ -386,7 +386,7 @@ namespace SharpMp4
         private MinfBox CreateMinfBox(Mp4Box parent, TrackBase track)
         {
             MinfBox minf = new MinfBox(0, parent);
-            switch (track.Handler)
+            switch (track.HdlrType)
             {
                 case "vide":
                     {
@@ -401,7 +401,7 @@ namespace SharpMp4
                     break;
 
                 default:
-                    throw new NotSupportedException(track.Handler);
+                    throw new NotSupportedException(track.HdlrType);
             }
 
             var dinf = CreateDinfBox(minf);
@@ -534,13 +534,13 @@ namespace SharpMp4
     public abstract class TrackBase
     {
         public abstract string HdlrName { get; }
+        public abstract string HdlrType { get; }
 
         private ulong _nextFragmentCreateStartTime = 0;
         public uint Timescale { get; set; }
         public uint TrackID { get; set; } = 1;
         public string CompatibleBrand { get; set; } = null;
         public string Language { get; set; } = "und";
-        public string Handler { get; protected set; }
 
         public uint SampleDuration { get; set; }
 
@@ -556,7 +556,7 @@ namespace SharpMp4
             _nextFragmentCreateStartTime = _nextFragmentCreateStartTime + SampleDuration;
             Interlocked.Add(ref _queuedSamplesLength, SampleDuration);
 
-            if (Log.DebugEnabled) Log.Debug($"{this.Handler}: {_nextFragmentCreateStartTime / (double)Timescale}");
+            if (Log.DebugEnabled) Log.Debug($"{this.HdlrType}: {_nextFragmentCreateStartTime / (double)Timescale}");
 
             var s = new StreamSample()
             {
@@ -2056,6 +2056,12 @@ namespace SharpMp4
     {
         public const string Video = "Video Handler\0";
         public const string Sound = "Sound Handler\0";
+    }
+
+    public static class HdlrTypes
+    {
+        public const string Video = "vide";
+        public const string Sound = "soun";
     }
 
     public class HdlrBox : Mp4Box

@@ -29,6 +29,7 @@ namespace SharpMp4
         public Dictionary<int, H264PpsNalUnit> Pps { get; set; } = new Dictionary<int, H264PpsNalUnit>();
 
         public override string HdlrName => HdlrNames.Video;
+        public override string HdlrType => HdlrTypes.Video;
 
         /// <summary>
         /// Ctor.
@@ -36,7 +37,6 @@ namespace SharpMp4
         public H264Track()
         {
             this.CompatibleBrand = VisualSampleEntryBox.TYPE3; // avc1
-            base.Handler = "vide";
         }
 
         /// <summary>
