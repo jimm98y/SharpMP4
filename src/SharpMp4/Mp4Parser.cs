@@ -5045,14 +5045,6 @@ namespace SharpMp4
         private long _queuedSamplesLength = 0;
         private FragmentedMp4Builder _sink;
 
-        public TrackBase(uint trackID)
-        {
-            if (trackID == 0)
-                throw new ArgumentException("TrackID must start at 1!");
-
-            TrackID = trackID;
-        }
-
         public virtual async Task ProcessSampleAsync(byte[] sample)
         {
             if (SampleDuration == 0)
@@ -5116,7 +5108,6 @@ namespace SharpMp4
         private Stream _output;
         private double _maxFragmentLengthInSeconds;
         private int _maxFragmentsPerMoof;
-        private ulong _lcm = 0;
         private uint _sequenceNumber = 1;
         protected SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
@@ -5134,9 +5125,9 @@ namespace SharpMp4
         {
             _tracks.Add(track);
             _trackEndTimes.Add(0);
+            track.TrackID = (uint)_tracks.IndexOf(track);
             track.SetSink(this);
         }
-
 
         internal async Task NotifySampleAdded(TrackBase track)
         {
@@ -5159,8 +5150,6 @@ namespace SharpMp4
                 // first check if we need to produce the media initialization segment
                 if (_sequenceNumber == 1)
                 {
-                    _lcm = (ulong)Mp4Math.LCM(_tracks.Select(x => (long)x.Timescale).ToArray());
-
                     await CreateMediaInitialization(fmp4);
                     await FragmentedMp4.BuildAsync(fmp4, _output);
 
@@ -5609,35 +5598,6 @@ namespace SharpMp4
             // TODO: trex.A = SampleFlags;
 
             return trex;
-        }
-    }
-
-    public static class Mp4Math
-    {
-        public static long GCD(long a, long b)
-        {
-            while (b > 0)
-            {
-                long temp = b;
-                b = a % b;
-                a = temp;
-            }
-            return a;
-        }
-
-        public static long LCM(long a, long b)
-        {
-            return a * (b / GCD(a, b));
-        }
-
-        public static long LCM(long[] input)
-        {
-            long result = input[0];
-            for (int i = 1; i < input.Length; i++)
-            {
-                result = LCM(result, input[i]);
-            }
-            return result;
         }
     }
 

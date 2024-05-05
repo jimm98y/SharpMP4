@@ -16,7 +16,7 @@ namespace SharpMp4
         public Dictionary<int, H265PpsNalUnit> Pps { get; set; } = new Dictionary<int, H265PpsNalUnit>();
         public Dictionary<int, H265VpsNalUnit> Vps { get; set; } = new Dictionary<int, H265VpsNalUnit>();
 
-        public H265Track(uint trackID) : base(trackID)
+        public H265Track()
         {
             this.CompatibleBrand = VisualSampleEntryBox.TYPE6; // hvc1
             base.Handler = "vide";

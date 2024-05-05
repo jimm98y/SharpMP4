@@ -4,7 +4,7 @@ namespace SharpMp4
 {
     public class AACTrack : TrackBase
     {
-        public AACTrack(uint trackID, ushort channelCount, int sampleRate, ushort sampleSize) : base(trackID)
+        public AACTrack(ushort channelCount, int sampleRate, ushort sampleSize)
         {
             base.Handler = "soun";
             this.Timescale = (uint)sampleRate;
