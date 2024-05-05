@@ -5124,12 +5124,17 @@ namespace SharpMp4
 
         public bool ContainsEnoughSamples(double durationInSeconds)
         {
-            return _queuedSamplesLength >= durationInSeconds * Timescale;
+            return HasSamples() && Timescale != 0 && _queuedSamplesLength >= durationInSeconds * Timescale;
         }
 
         public bool HasSamples()
         {
             return _samples.Count > 0;
+        }
+
+        public virtual Task FlushAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 

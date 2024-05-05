@@ -90,6 +90,21 @@ namespace SharpMp4
             }
         }
 
+        public override async Task FlushAsync()
+        {
+            if (_nalBuffer.Count == 0)
+                return;
+
+            if ((_nalBuffer[0][2] & 0x80) != 0) 
+            {
+                await CreateSample();
+            }
+            else
+            {
+                if (Log.WarnEnabled) Log.Warn($"Invalid AU in the NAL buffer");
+            }
+        }
+
         private async Task CreateSample()
         {
             if (_nalBuffer.Count == 0)
