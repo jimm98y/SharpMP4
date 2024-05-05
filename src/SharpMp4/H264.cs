@@ -147,7 +147,7 @@ namespace SharpMp4
 
         private static VisualSampleEntryBox CreateVisualSampleEntryBox(Mp4Box parent, H264Track track)
         {
-            var sps = track.Sps.First().Value; // TODO: not sure about multiple SPS values...
+            var sps = track.Sps.First().Value; 
             var dim = sps.CalculateDimensions();
 
             VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, parent, VisualSampleEntryBox.TYPE3);

@@ -88,7 +88,7 @@ namespace SharpMp4
             decoderConfigDescriptor.AvgBitRate = (uint)aacTrack.SamplingRate;
 
             AudioSpecificConfigDescriptor audioSpecificConfig = new AudioSpecificConfigDescriptor();
-            audioSpecificConfig.GaSpecificConfig = true; // TODO: should be set automatically?
+            audioSpecificConfig.GaSpecificConfig = true; 
             audioSpecificConfig.OriginalAudioObjectType = 2; // AAC LC
             audioSpecificConfig.SamplingFrequencyIndex = SamplingFrequencyMap[aacTrack.SamplingRate];
             audioSpecificConfig.ChannelConfiguration = aacTrack.ChannelCount;

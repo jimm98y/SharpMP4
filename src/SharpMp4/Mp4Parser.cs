@@ -282,7 +282,7 @@ namespace SharpMp4
         {
             TrunBox trun = new TrunBox(0, parent);
 
-            // TODO
+            // TODO FirstSampleFlags
             if (isFirst)
             {
                 trun.FirstSampleFlags = 33554432;
@@ -2950,7 +2950,7 @@ namespace SharpMp4
             uint defaultSampleDuration = IsoReaderWriter.ReadUInt32(stream);
             uint defaultSampleSize = IsoReaderWriter.ReadUInt32(stream);
             uint a = IsoReaderWriter.ReadUInt32(stream);
-            // TODO
+            // TODO Flags
             /*
             reserved = (byte)((a & 0xF0000000) >> 28);
             isLeading = (byte)((a & 0x0C000000) >> 26);
