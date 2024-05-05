@@ -29,7 +29,7 @@ namespace SharpMp4
 
         public override async Task ProcessSampleAsync(byte[] sample)
         {
-            using (BitStreamReader bitstream = new BitStreamReader(sample))
+            using (NalBitStreamReader bitstream = new NalBitStreamReader(sample))
             {
                 var header = H264NalUnitHeader.ParseNALHeader(bitstream);
                 if (header.NalUnitType == H264NalUnitTypes.SPS)
@@ -210,7 +210,7 @@ namespace SharpMp4
 
         public static async Task<AvcDecoderConfigurationRecord> Parse(uint size, Stream stream)
         {
-            BitStreamReader bitstream = new BitStreamReader(stream) { ShouldUnescapeNals = false };
+            RawBitStreamReader bitstream = new RawBitStreamReader(stream);
 
             byte configurationVersion = (byte)bitstream.ReadBits(8);
             byte avcProfileIndication = (byte)bitstream.ReadBits(8);
@@ -307,8 +307,9 @@ namespace SharpMp4
 
         public static async Task<uint> Build(AvcDecoderConfigurationRecord b, Stream stream)
         {
+            // TODO fix mixed readers/writers
             uint size = 0;
-            BitStreamWriter bitstream = new BitStreamWriter(stream) { ShouldEscapeNals = false };
+            RawBitStreamWriter bitstream = new RawBitStreamWriter(stream);
 
             bitstream.WriteBits(8, b.ConfigurationVersion);
             bitstream.WriteBits(8, b.AvcProfileIndication);
@@ -339,7 +340,7 @@ namespace SharpMp4
 
             if (b.SequenceParameterSetExts.Count > 0 && (b.AvcProfileIndication == 100 || b.AvcProfileIndication == 110 || b.AvcProfileIndication == 122 || b.AvcProfileIndication == 144))
             {
-                bitstream = new BitStreamWriter(stream) { ShouldEscapeNals = false };
+                bitstream = new RawBitStreamWriter(stream);
                 bitstream.WriteBits(6, b.SequenceParameterSets.Count);
                 bitstream.WriteBits(2, b.ChromaFormat);
                 bitstream.WriteBits(5, b.BitDepthLumaMinus8PaddingBits);
@@ -485,7 +486,7 @@ namespace SharpMp4
 
         public static H264PpsNalUnit Parse(ushort size, Stream stream)
         {
-            BitStreamReader bitstream = new BitStreamReader(stream);
+            NalBitStreamReader bitstream = new NalBitStreamReader(stream);
             H264NalUnitHeader header = H264NalUnitHeader.ParseNALHeader(bitstream);
 
             int picParameterSetId = bitstream.ReadUE();
@@ -609,7 +610,7 @@ namespace SharpMp4
 
         public static uint Build(Stream stream, H264PpsNalUnit nal)
         {
-            BitStreamWriter bitstream = new BitStreamWriter(stream);
+            NalBitStreamWriter bitstream = new NalBitStreamWriter(stream);
             H264NalUnitHeader.BuildNALHeader(bitstream, nal.NalHeader);
             bitstream.WriteUE((uint)nal.PicParameterSetId);
             bitstream.WriteUE((uint)nal.SeqParameterSetId);
@@ -702,7 +703,7 @@ namespace SharpMp4
         public int PicScalingListPresentFlag { get; set; }
         public int SecondChromaQpIndexOffset { get; set; }
 
-        public static H264PpsExt Parse(BitStreamReader bitstream)
+        public static H264PpsExt Parse(NalBitStreamReader bitstream)
         {
             int transform8x8ModeFlag = bitstream.ReadBit();
             int picScalingMatrixPresentFlag = bitstream.ReadBit();
@@ -723,7 +724,7 @@ namespace SharpMp4
             return ppsExt;
         }
 
-        public static void Build(BitStreamWriter bitstream, H264PpsExt ext)
+        public static void Build(NalBitStreamWriter bitstream, H264PpsExt ext)
         {
             bitstream.WriteBit(ext.Transform8x8ModeFlag);
             bitstream.WriteBit(ext.PicScalingMatrixPresentFlag);
@@ -913,7 +914,7 @@ namespace SharpMp4
 
         public static H264SpsNalUnit Parse(ushort size, Stream stream)
         {
-            BitStreamReader bitstream = new BitStreamReader(stream);
+            NalBitStreamReader bitstream = new NalBitStreamReader(stream);
             H264NalUnitHeader header = H264NalUnitHeader.ParseNALHeader(bitstream);
             
             // 2nd byte is profile IDC
@@ -1084,7 +1085,7 @@ namespace SharpMp4
 
         public static uint Build(Stream stream, H264SpsNalUnit nal)
         {
-            BitStreamWriter bitstream = new BitStreamWriter(stream);
+            NalBitStreamWriter bitstream = new NalBitStreamWriter(stream);
             H264NalUnitHeader.BuildNALHeader(bitstream, nal.NalHeader);
             
             // 2nd byte is profile IDC
@@ -1335,7 +1336,7 @@ namespace SharpMp4
         public int BitstreamRestrictionFlag { get; set; }
         public H264BitstreamRestriction BitstreamRestriction { get; set; }
 
-        public static H264VuiParameters Parse(BitStreamReader bitstream)
+        public static H264VuiParameters Parse(NalBitStreamReader bitstream)
         {
             int aspectRatioInfoPresentFlag = bitstream.ReadBit();
             int aspectRatio = 0;
@@ -1468,7 +1469,7 @@ namespace SharpMp4
                 );
         }
 
-        public static void Build(BitStreamWriter bitstream, H264VuiParameters vui)
+        public static void Build(NalBitStreamWriter bitstream, H264VuiParameters vui)
         {
             bitstream.WriteBit(vui.AspectRatioInfoPresentFlag);
             if (vui.AspectRatioInfoPresentFlag != 0)
@@ -1600,7 +1601,7 @@ namespace SharpMp4
         public int DpbOutputDelayLengthMinus1 { get; set; }
         public int TimeOffsetLength { get; set; }
 
-        public static H264HrdParameters Parse(BitStreamReader bitstream)
+        public static H264HrdParameters Parse(NalBitStreamReader bitstream)
         {
             int cpbCntMinus1 = bitstream.ReadUE();
             int bitRateScale = bitstream.ReadBits(4);
@@ -1635,7 +1636,7 @@ namespace SharpMp4
                 );
         }
 
-        public static void Build(BitStreamWriter bitstream, H264HrdParameters hrd)
+        public static void Build(NalBitStreamWriter bitstream, H264HrdParameters hrd)
         {
             bitstream.WriteUE((uint)hrd.CpbCntMinus1);
             bitstream.WriteBits(4, hrd.BitRateScale);
@@ -1676,7 +1677,7 @@ namespace SharpMp4
             return NalRefIdc > 0;
         }
 
-        public static H264NalUnitHeader ParseNALHeader(BitStreamReader bitstream)
+        public static H264NalUnitHeader ParseNALHeader(NalBitStreamReader bitstream)
         {
             if (bitstream.ReadBit() != 0)
                 throw new Exception("Invalid NAL header!");
@@ -1689,7 +1690,7 @@ namespace SharpMp4
             return header;
         }
 
-        public static void BuildNALHeader(BitStreamWriter bitstream, H264NalUnitHeader header)
+        public static void BuildNALHeader(NalBitStreamWriter bitstream, H264NalUnitHeader header)
         {
             bitstream.WriteBit(0); // forbidden 0
             bitstream.WriteBits(2, header.NalRefIdc);

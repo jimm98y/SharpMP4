@@ -333,11 +333,24 @@ namespace SharpMp4
         }
     }
 
+    public class NalBitStreamReader : RawBitStreamReader
+    {
+        public NalBitStreamReader(byte[] bytes) : this(new MemoryStream(bytes), true)
+        { }
+
+        public NalBitStreamReader(Stream stream, bool disposeUnderlyingStream = false) : base(stream, disposeUnderlyingStream)
+        {
+            _shouldUnescapeNals = true;
+        }
+    }
+
     /// <summary>
     /// Consumes bits, reading and caching 1 byte at a time.
     /// </summary>
-    public class BitStreamReader : IDisposable
+    public class RawBitStreamReader : IDisposable
     {
+        protected bool _shouldUnescapeNals = false;
+
         private readonly bool _disposeStream;
         private Stream _stream;
         private int _bitsPosition;
@@ -347,12 +360,10 @@ namespace SharpMp4
 
         private int _prevByte = -1;
 
-        public bool ShouldUnescapeNals { get; set; } = true;
-
-        public BitStreamReader(byte[] bytes) : this(new MemoryStream(bytes), true)
+        public RawBitStreamReader(byte[] bytes) : this(new MemoryStream(bytes), true)
         { }
 
-        public BitStreamReader(Stream stream, bool disposeUnderlyingStream = false)
+        public RawBitStreamReader(Stream stream, bool disposeUnderlyingStream = false)
         {
             _disposeStream = disposeUnderlyingStream;
             _stream = stream;
@@ -368,7 +379,7 @@ namespace SharpMp4
                 byte b = IsoReaderWriter.ReadByte(_stream);
 
                 // remove emulation prevention byte
-                if(ShouldUnescapeNals && _prevByte == 0 && _currentByte == 0 && b == 0x03)
+                if(_shouldUnescapeNals && _prevByte == 0 && _currentByte == 0 && b == 0x03)
                 {
                     _prevByte = b;
                     b = IsoReaderWriter.ReadByte(_stream);
@@ -503,11 +514,21 @@ namespace SharpMp4
         }
     }
 
+    public class NalBitStreamWriter : RawBitStreamWriter
+    {
+        public NalBitStreamWriter(Stream stream, bool disposeUnderlyingStream = false) : base(stream ,disposeUnderlyingStream)
+        {
+            _shouldEscapeNals = true;
+        }
+    }
+
     /// <summary>
     /// Writes bits, caching 1 byte at a time.
     /// </summary>
-    public class BitStreamWriter : IDisposable
+    public class RawBitStreamWriter : IDisposable
     {
+        protected bool _shouldEscapeNals = false;
+
         private readonly bool _disposeStream;
         private Stream _stream;
         private uint _bitsPosition;
@@ -518,11 +539,9 @@ namespace SharpMp4
         private int _prevByte = -1;
         private int _prevPrevByte = -1;
 
-        public bool ShouldEscapeNals { get; set; } = true;
-
         public uint WrittenBytes { get { return _currentBytePosition; } }
 
-        public BitStreamWriter(Stream stream, bool disposeUnderlyingStream = false)
+        public RawBitStreamWriter(Stream stream, bool disposeUnderlyingStream = false)
         {
             _disposeStream = disposeUnderlyingStream;
             _stream = stream;
@@ -544,7 +563,7 @@ namespace SharpMp4
             uint bytePos = _bitsPosition / 8;
             if (_currentBytePosition != bytePos)
             {
-                if (ShouldEscapeNals)
+                if (_shouldEscapeNals)
                 {
                     // write emulation prevention byte to properly escape sequences of 0x000000, 0x000001, 0x000002, 0x000003 into 0x00000300, 0x00000301, 0x00000302 and 0x00000303 respectively
                     if (_prevByte == 0x00 && _prevPrevByte == 0x00 && (_currentByte == 0x00 || _currentByte == 0x01 || _currentByte == 0x02 || _currentByte == 0x03))
@@ -3558,7 +3577,7 @@ namespace SharpMp4
         public ScalingList[] ScalingList4x4 { get; set; }
         public ScalingList[] ScalingList8x8 { get; set; }
 
-        public static ScalingMatrix Parse(BitStreamReader bitstream)
+        public static ScalingMatrix Parse(RawBitStreamReader bitstream)
         {
             ScalingMatrix scalingMatrix = new ScalingMatrix();
             for (int i = 0; i < 8; i++)
@@ -3582,7 +3601,7 @@ namespace SharpMp4
             return scalingMatrix;
         }
 
-        public static void Build(BitStreamWriter bitstream, ScalingMatrix scalingMatrix)
+        public static void Build(RawBitStreamWriter bitstream, ScalingMatrix scalingMatrix)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -3615,7 +3634,7 @@ namespace SharpMp4
         public int[] List { get; set; }
         public bool UseDefaultScalingMatrixFlag { get; set; }
 
-        public static ScalingList Parse(BitStreamReader bitstream, int size)
+        public static ScalingList Parse(RawBitStreamReader bitstream, int size)
         {
             ScalingList sl = new ScalingList();
             sl.List = new int[size];
@@ -3637,7 +3656,7 @@ namespace SharpMp4
             return sl;
         }
 
-        public static void Build(BitStreamWriter bitstream, ScalingList sl)
+        public static void Build(RawBitStreamWriter bitstream, ScalingList sl)
         {
             if (sl.UseDefaultScalingMatrixFlag)
             {
@@ -4250,7 +4269,7 @@ namespace SharpMp4
 
         public static Task<DescriptorBase> ParseAsync(uint size, Stream stream)
         {
-            BitStreamReader bitstream = new BitStreamReader(stream) { ShouldUnescapeNals = false }; // TODO: New bitstream?
+            RawBitStreamReader bitstream = new RawBitStreamReader(stream);
             int originalAudioObjectType = ReadAudioObjectType(bitstream);
             int audioObjectType = originalAudioObjectType;
             int samplingFrequencyIndex = bitstream.ReadBits(4);
@@ -4439,7 +4458,7 @@ namespace SharpMp4
         {
             uint size = 0;
             AudioSpecificConfigDescriptor asc = (AudioSpecificConfigDescriptor)descriptor;
-            BitStreamWriter bitstream = new BitStreamWriter(stream) { ShouldEscapeNals = false };
+            RawBitStreamWriter bitstream = new RawBitStreamWriter(stream);
             WriteAudioObjectType(bitstream, asc.OriginalAudioObjectType);
             bitstream.WriteBits(4, asc.SamplingFrequencyIndex);
 
@@ -4572,7 +4591,7 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        private static int ReadAudioObjectType(BitStreamReader bitstream)
+        private static int ReadAudioObjectType(RawBitStreamReader bitstream)
         {
             int audioObjectType = bitstream.ReadBits(5);
             if (audioObjectType == 31)
@@ -4582,7 +4601,7 @@ namespace SharpMp4
             return audioObjectType;
         }
 
-        private static void WriteAudioObjectType(BitStreamWriter bitstream, int audioObjectType)
+        private static void WriteAudioObjectType(RawBitStreamWriter bitstream, int audioObjectType)
         {
             if (audioObjectType >= 32)
             {
