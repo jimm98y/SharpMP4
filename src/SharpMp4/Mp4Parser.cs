@@ -921,6 +921,18 @@ namespace SharpMp4
             return (int)ReadUInt32(stream);
         }
 
+        public static short ReadInt16(Stream stream)
+        {
+            // TODO!!!
+            return (short)ReadUInt16(stream);
+        }
+
+        public static uint WriteInt16(Stream stream, short value)
+        {
+            // TODO
+            return WriteUInt16(stream, (ushort)value);
+        }
+
         public static ulong ReadUInt48(Stream stream)
         {
             return (ulong)((ReadByte(stream) << 40) + (ReadByte(stream) << 32) + (ReadByte(stream) << 24) + (ReadByte(stream) << 16) + (ReadByte(stream) << 8) + (ReadByte(stream) << 0));
@@ -3656,7 +3668,7 @@ namespace SharpMp4
         public const string TYPE10 = "dtsl";
         public const string TYPE11 = "dtsh";
         public const string TYPE12 = "dtse";
-        public const string TYPE_OPUS = "opus";
+        public const string TYPE_OPUS = "Opus";
         public const string TYPE_ENCRYPTED = "enca";
 
         public AudioSampleEntryBox(
