@@ -4183,8 +4183,8 @@ namespace SharpMp4
             ScalingMatrix scalingMatrix = new ScalingMatrix();
             for (int i = 0; i < 8; i++)
             {
-                int seqScalingListPresentFlag = bitstream.ReadBit();
-                if (seqScalingListPresentFlag != 0)
+                bool seqScalingListPresentFlag = bitstream.ReadBit() != 0;
+                if (seqScalingListPresentFlag)
                 {
                     scalingMatrix.ScalingList4x4 = new ScalingList[8];
                     scalingMatrix.ScalingList8x8 = new ScalingList[8];
@@ -4206,16 +4206,16 @@ namespace SharpMp4
         {
             for (int i = 0; i < 8; i++)
             {
-                int seqScalingListPresentFlag = 0;
+                bool seqScalingListPresentFlag = false;
                 if ((scalingMatrix.ScalingList4x4 != null && scalingMatrix.ScalingList4x4[i] != null) ||
                     (scalingMatrix.ScalingList8x8 != null && scalingMatrix.ScalingList8x8[i] != null))
                 {
-                    seqScalingListPresentFlag = 1;
+                    seqScalingListPresentFlag = true;
                 }
 
                 bitstream.WriteBit(seqScalingListPresentFlag);
 
-                if (seqScalingListPresentFlag != 0)
+                if (seqScalingListPresentFlag)
                 {
                     if (i < 6)
                     {
@@ -4329,9 +4329,9 @@ namespace SharpMp4
 
         public ESDescriptor(
             ushort esId,
-            int streamDependenceFlag,
-            int urlFlag,
-            int ocrStreamFlag,
+            bool streamDependenceFlag,
+            bool urlFlag,
+            bool ocrStreamFlag,
             int streamPriority,
             ushort dependsOnEsId,
             byte urlLength,
@@ -4350,9 +4350,9 @@ namespace SharpMp4
         }
 
         public ushort EsId { get; set; }
-        public int StreamDependenceFlag { get; set; }
-        public int UrlFlag { get; set; }
-        public int OcrStreamFlag { get; set; }
+        public bool StreamDependenceFlag { get; set; }
+        public bool UrlFlag { get; set; }
+        public bool OcrStreamFlag { get; set; }
         public int StreamPriority { get; set; }
         public ushort DependsOnEsId { get; set; }
         public byte UrlLength { get; set; }
@@ -4365,15 +4365,15 @@ namespace SharpMp4
             ushort esId = IsoReaderWriter.ReadUInt16(stream);
 
             byte data = IsoReaderWriter.ReadByte(stream);
-            int streamDependenceFlag = (int)((uint)data >> 7);
-            int urlFlag = (int)((uint)data >> 6) & 0x1;
-            int ocrStreamFlag = (int)((uint)data >> 5) & 0x1;
+            bool streamDependenceFlag = ((uint)data >> 7) != 0;
+            bool urlFlag = (((uint)data >> 6) & 0x1) != 0;
+            bool ocrStreamFlag = (((uint)data >> 5) & 0x1) != 0;
             int streamPriority = data & 0x1f;
 
             uint consumedLength = 3; // so far we've read 3 bytes
 
             ushort dependsOnEsId = 0;
-            if (streamDependenceFlag == 1)
+            if (streamDependenceFlag)
             {
                 dependsOnEsId = IsoReaderWriter.ReadUInt16(stream);
                 consumedLength = consumedLength + 2;
@@ -4381,7 +4381,7 @@ namespace SharpMp4
 
             byte urlLength = 0;
             string urlString = "";
-            if (urlFlag == 1)
+            if (urlFlag)
             {
                 urlLength = IsoReaderWriter.ReadByte(stream);
                 urlString = await IsoReaderWriter.ReadStringAsync(stream, urlLength);
@@ -4389,7 +4389,7 @@ namespace SharpMp4
             }
 
             ushort ocrEsId = 0;
-            if (ocrStreamFlag == 1)
+            if (ocrStreamFlag)
             {
                 ocrEsId = IsoReaderWriter.ReadUInt16(stream);
                 consumedLength = consumedLength + 2;
@@ -4423,18 +4423,18 @@ namespace SharpMp4
             uint size = 0;
             ESDescriptor esd = (ESDescriptor)descriptor;
             size += IsoReaderWriter.WriteUInt16(stream, esd.EsId);
-            int flags = esd.StreamDependenceFlag << 7 | esd.UrlFlag << 6 | esd.OcrStreamFlag << 5 | esd.StreamPriority & 0x1f;
+            int flags = (esd.StreamDependenceFlag ? 1 : 0) << 7 | (esd.UrlFlag ? 1 : 0) << 6 | (esd.OcrStreamFlag ? 1 : 0) << 5 | esd.StreamPriority & 0x1f;
             size += IsoReaderWriter.WriteByte(stream, (byte)flags);
-            if (esd.StreamDependenceFlag == 1)
+            if (esd.StreamDependenceFlag)
             {
                 size += IsoReaderWriter.WriteUInt16(stream, esd.DependsOnEsId);
             }
-            if (esd.UrlFlag == 1)
+            if (esd.UrlFlag)
             {
                 size += IsoReaderWriter.WriteByte(stream, esd.UrlLength);
                 size += IsoReaderWriter.WriteString(stream, esd.UrlString);
             }
-            if (esd.OcrStreamFlag == 1)
+            if (esd.OcrStreamFlag)
             {
                 size += IsoReaderWriter.WriteUInt16(stream, esd.OcrEsId);
             }
@@ -4451,15 +4451,15 @@ namespace SharpMp4
         public override uint CalculateSize()
         {
             uint output = 3;
-            if (StreamDependenceFlag == 1)
+            if (StreamDependenceFlag)
             {
                 output += 2;
             }
-            if (UrlFlag == 1)
+            if (UrlFlag)
             {
                 output = output + 1 + UrlLength;
             }
-            if (OcrStreamFlag == 1)
+            if (OcrStreamFlag)
             {
                 output += 2;
             }
@@ -4680,17 +4680,17 @@ namespace SharpMp4
             bool sbrPresentFlag,
             bool psPresentFlag,
             bool gaSpecificConfig,
-            int frameLengthFlag,
+            bool frameLengthFlag,
             int dependsOnCoreCoder,
             int coreCoderDelay,
-            int extensionFlag,
+            bool extensionFlag,
             int layerNr,
             int numOfSubFrame,
             int layerLength,
-            int aacSectionDataResilienceFlag,
-            int aacScalefactorDataResilienceFlag,
-            int aacSpectralDataResilienceFlag,
-            int extensionFlag3,
+            bool aacSectionDataResilienceFlag,
+            bool aacScalefactorDataResilienceFlag,
+            bool aacSpectralDataResilienceFlag,
+            bool extension3Flag,
             int outerSyncExtensionType,
             int syncExtensionType,
             int innerSyncExtensionType) : this()
@@ -4716,7 +4716,7 @@ namespace SharpMp4
             AacSectionDataResilienceFlag = aacSectionDataResilienceFlag;
             AacScalefactorDataResilienceFlag = aacScalefactorDataResilienceFlag;
             AacSpectralDataResilienceFlag = aacSpectralDataResilienceFlag;
-            ExtensionFlag3 = extensionFlag3;
+            Extension3Flag = extension3Flag;
             OuterSyncExtensionType = outerSyncExtensionType;
             SyncExtensionType = syncExtensionType;
             InnerSyncExtensionType = innerSyncExtensionType;
@@ -4734,17 +4734,17 @@ namespace SharpMp4
         public bool SbrPresentFlag { get; set; }
         public bool PsPresentFlag { get; set; }
         public bool GaSpecificConfig { get; set; }
-        public int FrameLengthFlag { get; set; }
+        public bool FrameLengthFlag { get; set; }
         public int DependsOnCoreCoder { get; set; }
         public int CoreCoderDelay { get; set; }
-        public int ExtensionFlag { get; set; }
+        public bool ExtensionFlag { get; set; }
         public int LayerNr { get; set; }
         public int NumOfSubFrame { get; set; }
         public int LayerLength { get; set; }
-        public int AacSectionDataResilienceFlag { get; set; }
-        public int AacScalefactorDataResilienceFlag { get; set; }
-        public int AacSpectralDataResilienceFlag { get; set; }
-        public int ExtensionFlag3 { get; set; }
+        public bool AacSectionDataResilienceFlag { get; set; }
+        public bool AacScalefactorDataResilienceFlag { get; set; }
+        public bool AacSpectralDataResilienceFlag { get; set; }
+        public bool Extension3Flag { get; set; }
         public int OuterSyncExtensionType { get; set; } = -1;
         public int SyncExtensionType { get; set; } = -1;
         public int InnerSyncExtensionType { get; set; } = -1;
@@ -4846,7 +4846,7 @@ namespace SharpMp4
             {
                 n += 3;
             }
-            if (ExtensionFlag == 1)
+            if (ExtensionFlag)
             {
                 if (OriginalAudioObjectType == 22)
                 {
@@ -4860,7 +4860,7 @@ namespace SharpMp4
                     n += 1;
                 }
                 n += 1;
-                if (ExtensionFlag3 == 1)
+                if (Extension3Flag)
                 {
                     throw new NotImplementedException();
                 }
@@ -4910,17 +4910,17 @@ namespace SharpMp4
             }
 
             bool gaSpecificConfig = false;
-            int frameLengthFlag = 0;
+            bool frameLengthFlag = false;
             int dependsOnCoreCoder = 0;
             int coreCoderDelay = 0;
-            int extensionFlag = 0;
+            bool extensionFlag = false;
             int layerNr = 0;
             int numOfSubFrame = 0;
             int layerLength = 0;
-            int aacSectionDataResilienceFlag = 0;
-            int aacScalefactorDataResilienceFlag = 0;
-            int aacSpectralDataResilienceFlag = 0;
-            int extensionFlag3 = 0;
+            bool aacSectionDataResilienceFlag = false;
+            bool aacScalefactorDataResilienceFlag = false;
+            bool aacSpectralDataResilienceFlag = false;
+            bool extension3Flag = false;
 
             switch (audioObjectType)
             {
@@ -4937,13 +4937,13 @@ namespace SharpMp4
                 case 22:
                 case 23:
                     {
-                        frameLengthFlag = bitstream.ReadBit();
+                        frameLengthFlag = bitstream.ReadBit() != 0;
                         dependsOnCoreCoder = bitstream.ReadBit();
                         if (dependsOnCoreCoder == 1)
                         {
                             coreCoderDelay = bitstream.ReadBits(14);
                         }
-                        extensionFlag = bitstream.ReadBit();
+                        extensionFlag = bitstream.ReadBit() != 0;
                         if (channelConfiguration == 0)
                         {
                             throw new NotSupportedException("Cannot parse program_config_element yet");
@@ -4952,7 +4952,7 @@ namespace SharpMp4
                         {
                             layerNr = bitstream.ReadBits(3);
                         }
-                        if (extensionFlag == 1)
+                        if (extensionFlag)
                         {
                             if (audioObjectType == 22)
                             {
@@ -4961,12 +4961,12 @@ namespace SharpMp4
                             }
                             if (audioObjectType == 17 || audioObjectType == 19 || audioObjectType == 20 || audioObjectType == 23)
                             {
-                                aacSectionDataResilienceFlag = bitstream.ReadBit();
-                                aacScalefactorDataResilienceFlag = bitstream.ReadBit();
-                                aacSpectralDataResilienceFlag = bitstream.ReadBit();
+                                aacSectionDataResilienceFlag = bitstream.ReadBit() != 0;
+                                aacScalefactorDataResilienceFlag = bitstream.ReadBit() != 0;
+                                aacSpectralDataResilienceFlag = bitstream.ReadBit() != 0;
                             }
-                            extensionFlag3 = bitstream.ReadBit();
-                            if (extensionFlag3 == 1)
+                            extension3Flag = bitstream.ReadBit() != 0;
+                            if (extension3Flag)
                             {
                                 throw new NotImplementedException();
                             }
@@ -5047,7 +5047,7 @@ namespace SharpMp4
                 aacSectionDataResilienceFlag,
                 aacScalefactorDataResilienceFlag,
                 aacSpectralDataResilienceFlag,
-                extensionFlag3,
+                extension3Flag,
                 outerSyncExtensionType,
                 syncExtensionType,
                 innerSyncExtensionType
@@ -5118,7 +5118,7 @@ namespace SharpMp4
                     {
                         bitstream.WriteBits(3, asc.LayerNr);
                     }
-                    if (asc.ExtensionFlag == 1)
+                    if (asc.ExtensionFlag)
                     {
                         if (asc.OriginalAudioObjectType == 22)
                         {
@@ -5131,8 +5131,8 @@ namespace SharpMp4
                             bitstream.WriteBit(asc.AacScalefactorDataResilienceFlag);
                             bitstream.WriteBit(asc.AacSpectralDataResilienceFlag);
                         }
-                        bitstream.WriteBits(1, asc.ExtensionFlag3);
-                        if (asc.ExtensionFlag3 == 1)
+                        bitstream.WriteBit(asc.Extension3Flag);
+                        if (asc.Extension3Flag)
                         {
                             throw new NotImplementedException();
                         }
