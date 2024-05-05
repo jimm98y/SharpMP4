@@ -126,7 +126,7 @@ namespace SharpMp4
         public bool VpsBaseLayerAvailableFlag { get; set; }
         public int VpsMaxLayersMinus1 { get; set; }
         public int VpsMaxSubLayersMinus1 { get; set; }
-        public int VpsTemporalIdNestingFlag { get; set; }
+        public bool VpsTemporalIdNestingFlag { get; set; }
         public int VpsReserved0xffff16bits { get; set; }
         public H265ProfileTier ProfileTier { get; set; }
         public bool VpsSubLayerOrderingInfoPresentFlag { get; set; }
@@ -155,7 +155,7 @@ namespace SharpMp4
             bool vpsBaseLayerAvailableFlag,
             int vpsMaxLayersMinus1,
             int vpsMaxSubLayersMinus1, 
-            int vpsTemporalIdNestingFlag,
+            bool vpsTemporalIdNestingFlag,
             int vpsReserved0xffff16bits,
             H265ProfileTier profileTier,
             bool vpsSubLayerOrderingInfoPresentFlag, 
@@ -226,7 +226,7 @@ namespace SharpMp4
 
             int vpsMaxLayersMinus1 = bitstream.ReadBits(6);
             int vpsMaxSubLayersMinus1 = bitstream.ReadBits(3);
-            int vpsTemporalIdNestingFlag = bitstream.ReadBit();
+            bool vpsTemporalIdNestingFlag = bitstream.ReadBit() != 0;
             int vpsReserved0xffff16bits = bitstream.ReadBits(16);
 
             if (vpsReserved0xffff16bits != 0xffff)
@@ -418,7 +418,7 @@ namespace SharpMp4
     public class H265ProfileTier
     {
         public int GeneralProfileSpace { get; set; }
-        public int GeneralTierFlag { get; set; }
+        public bool GeneralTierFlag { get; set; }
         public int GeneralProfileIdc { get; set; }
         public bool[] GeneralProfileCompatibilityFlags { get; set; }
         public bool GeneralProgressiveSourceFlag { get; set; }
@@ -447,7 +447,7 @@ namespace SharpMp4
         public bool[] SubLayerLevelPresentFlag { get; }
         public int[] ReservedZero2Bits { get; }
         public int[] SubLayerProfileSpace { get; }
-        public int[] SubLayerTierFlag { get; }
+        public bool[] SubLayerTierFlag { get; }
         public int[] SubLayerProfileIdc { get; }
         public bool[,] SubLayerProfileCompatibilityFlag { get; }
         public bool[] SubLayerProgressiveSourceFlag { get; }
@@ -459,7 +459,7 @@ namespace SharpMp4
 
         public H265ProfileTier(
             int generalProfileSpace,
-            int generalTierFlag,
+            bool generalTierFlag,
             int generalProfileIdc,
             bool[] generalProfileCompatibilityFlags, 
             bool generalProgressiveSourceFlag, 
@@ -488,7 +488,7 @@ namespace SharpMp4
             bool[] subLayerLevelPresentFlag, 
             int[] reservedZero2Bits, 
             int[] subLayerProfileSpace, 
-            int[] subLayerTierFlag, 
+            bool[] subLayerTierFlag, 
             int[] subLayerProfileIdc, 
             bool[,] subLayerProfileCompatibilityFlag,
             bool[] subLayerProgressiveSourceFlag, 
@@ -542,7 +542,7 @@ namespace SharpMp4
         public static H265ProfileTier Parse(NalBitStreamReader bitstream, bool profilePresent, int maxNumSubLayersMinus1)
         {
             int generalProfileSpace = 0;
-            int generalTierFlag = 0;
+            bool generalTierFlag = false;
             int generalProfileIdc = 0;
             bool[] generalProfileCompatibilityFlags = new bool[32];
             bool generalProgressiveSourceFlag = false;
@@ -570,7 +570,7 @@ namespace SharpMp4
             if (profilePresent)
             {
                 generalProfileSpace = bitstream.ReadBits(2);
-                generalTierFlag = bitstream.ReadBit();
+                generalTierFlag = bitstream.ReadBit() != 0;
                 generalProfileIdc = bitstream.ReadBits(5);
 
                 for (int i = 0; i < 32; i++)
@@ -681,7 +681,7 @@ namespace SharpMp4
             }
 
             int[] subLayerProfileSpace = new int[maxNumSubLayersMinus1];
-            int[] subLayerTierFlag = new int[maxNumSubLayersMinus1];
+            bool[] subLayerTierFlag = new bool[maxNumSubLayersMinus1];
             int[] subLayerProfileIdc = new int[maxNumSubLayersMinus1];
             bool[,] subLayerProfileCompatibilityFlag = new bool[maxNumSubLayersMinus1, 32];
             bool[] subLayerProgressiveSourceFlag = new bool[maxNumSubLayersMinus1];
@@ -697,7 +697,7 @@ namespace SharpMp4
                 if (subLayerProfilePresentFlag[i])
                 {
                     subLayerProfileSpace[i] = bitstream.ReadBits(2);
-                    subLayerTierFlag[i] = bitstream.ReadBit();
+                    subLayerTierFlag[i] = bitstream.ReadBit() != 0;
                     subLayerProfileIdc[i] = bitstream.ReadBits(5);
                     for (int j = 0; j < 32; j++)
                     {
@@ -917,7 +917,7 @@ namespace SharpMp4
         public H265ProfileTier ProfileTier { get; set; }
         public int SpsSeqParameterSetId { get; set; }
         public int ChromaFormatIdc { get; set; }
-        public int SeparateColorPlaneFlag { get; set; }
+        public bool SeparateColorPlaneFlag { get; set; }
         public int PicWidthInLumaSamples { get; set; }
         public int PicHeightInLumaSamples { get; set; }
         public bool ConformanceWindowFlag { get; set; }
@@ -975,7 +975,7 @@ namespace SharpMp4
             H265ProfileTier profileTier,
             int spsSeqParameterSetId, 
             int chromaFormatIdc, 
-            int separateColorPlaneFlag, 
+            bool separateColorPlaneFlag, 
             int picWidthInLumaSamples, 
             int picHeightInLumaSamples,
             bool conformanceWindowFlag,
@@ -1253,10 +1253,10 @@ namespace SharpMp4
                         
             int spsSeqParameterSetId = bitstream.ReadUE();
             int chromaFormatIdc = bitstream.ReadUE();
-            int separateColorPlaneFlag = 0;
+            bool separateColorPlaneFlag = false;
             if (chromaFormatIdc == 3)
             {
-                separateColorPlaneFlag = bitstream.ReadBit();
+                separateColorPlaneFlag = bitstream.ReadBit() != 0;
             }
             int picWidthInLumaSamples = bitstream.ReadUE();
             int picHeightInLumaSamples = bitstream.ReadUE();
@@ -1615,7 +1615,7 @@ namespace SharpMp4
         public bool OverscanAppropriateFlag { get; set; }
         public bool VideoSignalTypePresentFlag { get; set; }
         public int VideoFormat { get; set; }
-        public int VideoFullRangeFlag { get; set; }
+        public bool VideoFullRangeFlag { get; set; }
         public bool ColorDescriptionPresentFlag { get; set; }
         public byte ColorPrimaries { get; set; }
         public byte TransferCharacteristics { get; set; }
@@ -1657,7 +1657,7 @@ namespace SharpMp4
             bool overscanAppropriateFlag, 
             bool videoSignalTypePresentFlag, 
             int videoFormat, 
-            int videoFullRangeFlag, 
+            bool videoFullRangeFlag, 
             bool colorDescriptionPresentFlag, 
             byte colorPrimaries, 
             byte transferCharacteristics, 
@@ -1756,7 +1756,7 @@ namespace SharpMp4
             bool videoSignalTypePresentFlag = bitstream.ReadBit() != 0;
 
             int videoFormat = 0;
-            int videoFullRangeFlag = 0;
+            bool videoFullRangeFlag = false;
             bool colorDescriptionPresentFlag = false;
             byte colorPrimaries = 0;
             byte transferCharacteristics = 0;
@@ -1764,7 +1764,7 @@ namespace SharpMp4
             if (videoSignalTypePresentFlag)
             {
                 videoFormat = bitstream.ReadBits(3);
-                videoFullRangeFlag = bitstream.ReadBit();
+                videoFullRangeFlag = bitstream.ReadBit() != 0;
                 colorDescriptionPresentFlag = bitstream.ReadBit() != 0;
                 if (colorDescriptionPresentFlag)
                 {
@@ -2810,14 +2810,14 @@ namespace SharpMp4
     {
         public byte ConfigurationVersion { get; set; }
         public int GeneralProfileSpace { get; set; }
-        public int GeneralTierFlag { get; set; }
+        public bool GeneralTierFlag { get; set; }
         public int GeneralProfileIdc { get; set; }
         public uint GeneralProfileCompatibilityFlags { get; set; }
         public ulong GeneralConstraintIndicatorFlags { get; set; }
-        public int FrameOnlyConstraintFlag { get; set; }
-        public int NonPackedConstraintFlag { get; set; }
-        public int InterlacedSourceFlag { get; set; }
-        public int ProgressiveSourceFlag { get; set; }
+        public bool FrameOnlyConstraintFlag { get; set; }
+        public bool NonPackedConstraintFlag { get; set; }
+        public bool InterlacedSourceFlag { get; set; }
+        public bool ProgressiveSourceFlag { get; set; }
         public byte GeneralLevelIdc { get; set; }
         public int Reserved1 { get; set; }
         public int MinSpatialSegmentationIdc { get; set; }
@@ -2842,14 +2842,14 @@ namespace SharpMp4
         public HevcDecoderConfigurationRecord(
             byte configurationVersion, 
             int generalProfileSpace, 
-            int generalTierFlag, 
+            bool generalTierFlag, 
             int generalProfileIdc,
             uint generalProfileCompatibilityFlags,
             ulong generalConstraintIndicatorFlags, 
-            int frameOnlyConstraintFlag, 
-            int nonPackedConstraintFlag, 
-            int interlacedSourceFlag,
-            int progressiveSourceFlag, 
+            bool frameOnlyConstraintFlag, 
+            bool nonPackedConstraintFlag, 
+            bool interlacedSourceFlag,
+            bool progressiveSourceFlag, 
             byte generalLevelIdc, 
             int reserved1, 
             int minSpatialSegmentationIdc,
@@ -2903,16 +2903,16 @@ namespace SharpMp4
 
             int a = IsoReaderWriter.ReadByte(stream);
             int generalProfileSpace = (a & 0xC0) >> 6;
-            int generalTierFlag = (a & 0x20) > 0 ? 1 : 0;
+            bool generalTierFlag = (a & 0x20) > 0;
             int generalProfileIdc = a & 0x1F;
 
             uint generalProfileCompatibilityFlags = IsoReaderWriter.ReadUInt32(stream);
             ulong generalConstraintIndicatorFlags = IsoReaderWriter.ReadUInt48(stream);
 
-            int frameOnlyConstraintFlag = (generalConstraintIndicatorFlags >> 44 & 0x08) > 0 ? 1 : 0;
-            int nonPackedConstraintFlag = (generalConstraintIndicatorFlags >> 44 & 0x04) > 0 ? 1 : 0;
-            int interlacedSourceFlag = (generalConstraintIndicatorFlags >> 44 & 0x02) > 0 ? 1 : 0;
-            int progressiveSourceFlag = (generalConstraintIndicatorFlags >> 44 & 0x01) > 0 ? 1 : 0;
+            bool frameOnlyConstraintFlag = (generalConstraintIndicatorFlags >> 44 & 0x08) > 0;
+            bool nonPackedConstraintFlag = (generalConstraintIndicatorFlags >> 44 & 0x04) > 0;
+            bool interlacedSourceFlag = (generalConstraintIndicatorFlags >> 44 & 0x02) > 0;
+            bool progressiveSourceFlag = (generalConstraintIndicatorFlags >> 44 & 0x01) > 0;
 
             generalConstraintIndicatorFlags &= 0x7fffffffffffL;
 
@@ -3018,23 +3018,23 @@ namespace SharpMp4
         {
             uint size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.ConfigurationVersion);
-            size += IsoReaderWriter.WriteByte(stream, (byte)((b.GeneralProfileSpace << 6) + (b.GeneralTierFlag == 1 ? 0x20 : 0) + b.GeneralProfileIdc));
+            size += IsoReaderWriter.WriteByte(stream, (byte)((b.GeneralProfileSpace << 6) + (b.GeneralTierFlag ? 0x20 : 0) + b.GeneralProfileIdc));
             size += IsoReaderWriter.WriteUInt32(stream, b.GeneralProfileCompatibilityFlags);
             
             ulong generalConstraintIndicatorFlags = b.GeneralConstraintIndicatorFlags;
-            if (b.FrameOnlyConstraintFlag != 0)
+            if (b.FrameOnlyConstraintFlag)
             {
                 generalConstraintIndicatorFlags |= 1L << 47;
             }
-            if (b.NonPackedConstraintFlag != 0)
+            if (b.NonPackedConstraintFlag)
             {
                 generalConstraintIndicatorFlags |= 1L << 46;
             }
-            if (b.InterlacedSourceFlag != 0)
+            if (b.InterlacedSourceFlag)
             {
                 generalConstraintIndicatorFlags |= 1L << 45;
             }
-            if (b.ProgressiveSourceFlag != 0)
+            if (b.ProgressiveSourceFlag)
             {
                 generalConstraintIndicatorFlags |= 1L << 44;
             }

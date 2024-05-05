@@ -397,28 +397,28 @@ namespace SharpMp4
             H264NalUnitHeader nalHeader,
             int picParameterSetId,
             int seqParameterSetId,
-            int entropyCodingModeFlag,
-            int bottomFieldPicOrderInFramePresentFlag,
+            bool entropyCodingModeFlag,
+            bool bottomFieldPicOrderInFramePresentFlag,
             int numSliceGroupsMinus1,
             int sliceGroupMapType,
             int[] topLeft,
             int[] bottomRight,
             int[] runLengthMinus1,
-            int sliceGroupChangeDirectionFlag,
+            bool sliceGroupChangeDirectionFlag,
             int sliceGroupChangeRateMinus1,
             int numberBitsPerSliceGroupId,
             int picSizeInMapUnitsMinus1,
             int[] sliceGroupId,
             int numRefIdxL0ActiveMinus1,
             int numRefIdxL1ActiveMinus1,
-            int weightedPredFlag,
+            bool weightedPredFlag,
             int weightedBipredIdc,
             int picInitQpMinus26,
             int picInitQsMinus26,
             int chromaQpIndexOffset,
-            int deblockingFilterControlPresentFlag,
-            int constrainedIntraPredFlag,
-            int redundantPicCntPresentFlag,
+            bool deblockingFilterControlPresentFlag,
+            bool constrainedIntraPredFlag,
+            bool redundantPicCntPresentFlag,
             H264PpsExt extended)
         {
             NalHeader = nalHeader;
@@ -452,28 +452,28 @@ namespace SharpMp4
         public H264NalUnitHeader NalHeader { get; set; }
         public int PicParameterSetId { get; set; }
         public int SeqParameterSetId { get; set; }
-        public int EntropyCodingModeFlag { get; set; }
-        public int BottomFieldPicOrderInFramePresentFlag { get; set; }
+        public bool EntropyCodingModeFlag { get; set; }
+        public bool BottomFieldPicOrderInFramePresentFlag { get; set; }
         public int NumSliceGroupsMinus1 { get; set; }
         public int SliceGroupMapType { get; set; }
         public int[] TopLeft { get; set; }
         public int[] BottomRight { get; set; }
         public int[] RunLengthMinus1 { get; set; }
-        public int SliceGroupChangeDirectionFlag { get; set; }
+        public bool SliceGroupChangeDirectionFlag { get; set; }
         public int SliceGroupChangeRateMinus1 { get; set; }
         public int NumberBitsPerSliceGroupId { get; set; }
         public int PicSizeInMapUnitsMinus1 { get; set; }
         public int[] SliceGroupId { get; set; }
         public int NumRefIdxL0ActiveMinus1 { get; set; }
         public int NumRefIdxL1ActiveMinus1 { get; set; }
-        public int WeightedPredFlag { get; set; }
+        public bool WeightedPredFlag { get; set; }
         public int WeightedBipredIdc { get; set; }
         public int PicInitQpMinus26 { get; set; }
         public int PicInitQsMinus26 { get; set; }
         public int ChromaQpIndexOffset { get; set; }
-        public int DeblockingFilterControlPresentFlag { get; set; }
-        public int ConstrainedIntraPredFlag { get; set; }
-        public int RedundantPicCntPresentFlag { get; set; }
+        public bool DeblockingFilterControlPresentFlag { get; set; }
+        public bool ConstrainedIntraPredFlag { get; set; }
+        public bool RedundantPicCntPresentFlag { get; set; }
         public H264PpsExt Extended { get; set; }
 
         public static H264PpsNalUnit Parse(byte[] pps)
@@ -491,15 +491,15 @@ namespace SharpMp4
 
             int picParameterSetId = bitstream.ReadUE();
             int seqParameterSetId = bitstream.ReadUE();
-            int entropyCodingModeFlag = bitstream.ReadBit();
-            int bottomFieldPicOrderInFramePresentFlag = bitstream.ReadBit();
+            bool entropyCodingModeFlag = bitstream.ReadBit() != 0;
+            bool bottomFieldPicOrderInFramePresentFlag = bitstream.ReadBit() != 0;
             int numSliceGroupsMinus1 = bitstream.ReadUE();
 
             int sliceGroupMapType = 0;
             int[] topLeft = null;
             int[] bottomRight = null;
             int[] runLengthMinus1 = null;
-            int sliceGroupChangeDirectionFlag = 0;
+            bool sliceGroupChangeDirectionFlag = false;
             int sliceGroupChangeRateMinus1 = 0;
             int NumberBitsPerSliceGroupId = 0;
             int picSizeInMapUnitsMinus1 = 0;
@@ -528,7 +528,7 @@ namespace SharpMp4
                 }
                 else if (sliceGroupMapType == 3 || sliceGroupMapType == 4 || sliceGroupMapType == 5)
                 {
-                    sliceGroupChangeDirectionFlag = bitstream.ReadBit();
+                    sliceGroupChangeDirectionFlag = bitstream.ReadBit() != 0;
                     sliceGroupChangeRateMinus1 = bitstream.ReadUE();
                 }
                 else if (sliceGroupMapType == 6)
@@ -550,14 +550,14 @@ namespace SharpMp4
 
             int numRefIdxL0ActiveMinus1 = bitstream.ReadUE();
             int numRefIdxL1ActiveMinus1 = bitstream.ReadUE();
-            int weightedPredFlag = bitstream.ReadBit();
+            bool weightedPredFlag = bitstream.ReadBit() != 0;
             int weightedBipredIdc = bitstream.ReadBits(2);
             int picInitQpMinus26 = bitstream.ReadSE();
             int picInitQsMinus26 = bitstream.ReadSE();
             int chromaQpIndexOffset = bitstream.ReadSE();
-            int deblockingFilterControlPresentFlag = bitstream.ReadBit();
-            int constrainedIntraPredFlag = bitstream.ReadBit();
-            int redundantPicCntPresentFlag = bitstream.ReadBit();
+            bool deblockingFilterControlPresentFlag = bitstream.ReadBit() != 0;
+            bool constrainedIntraPredFlag = bitstream.ReadBit() != 0;
+            bool redundantPicCntPresentFlag = bitstream.ReadBit() != 0;
 
             H264PpsExt extended = null;
 
@@ -691,7 +691,7 @@ namespace SharpMp4
         public H264PpsExt()
         { }
 
-        public H264PpsExt(int transform8x8ModeFlag, int picScalingMatrixPresentFlag, ScalingMatrix scalingMatrix, int secondChromaQpIndexOffset)
+        public H264PpsExt(bool transform8x8ModeFlag, bool picScalingMatrixPresentFlag, ScalingMatrix scalingMatrix, int secondChromaQpIndexOffset)
         {
             Transform8x8ModeFlag = transform8x8ModeFlag;
             PicScalingMatrixPresentFlag = picScalingMatrixPresentFlag;
@@ -699,18 +699,18 @@ namespace SharpMp4
             SecondChromaQpIndexOffset = secondChromaQpIndexOffset;
         }
 
-        public int Transform8x8ModeFlag { get; set; }
-        public int PicScalingMatrixPresentFlag { get; set; }
+        public bool Transform8x8ModeFlag { get; set; }
+        public bool PicScalingMatrixPresentFlag { get; set; }
         public ScalingMatrix ScalingMatrix { get; set; }
-        public int PicScalingListPresentFlag { get; set; }
+        public bool PicScalingListPresentFlag { get; set; }
         public int SecondChromaQpIndexOffset { get; set; }
 
         public static H264PpsExt Parse(NalBitStreamReader bitstream)
         {
-            int transform8x8ModeFlag = bitstream.ReadBit();
-            int picScalingMatrixPresentFlag = bitstream.ReadBit();
+            bool transform8x8ModeFlag = bitstream.ReadBit() != 0;
+            bool picScalingMatrixPresentFlag = bitstream.ReadBit() != 0;
             ScalingMatrix scalingMatrix = null;
-            if (picScalingMatrixPresentFlag != 0)
+            if (picScalingMatrixPresentFlag)
             {
                 scalingMatrix = ScalingMatrix.Parse(bitstream);
             }
@@ -730,7 +730,7 @@ namespace SharpMp4
         {
             bitstream.WriteBit(ext.Transform8x8ModeFlag);
             bitstream.WriteBit(ext.PicScalingMatrixPresentFlag);
-            if (ext.PicScalingMatrixPresentFlag != 0)
+            if (ext.PicScalingMatrixPresentFlag)
             {
                 ScalingMatrix.Build(bitstream, ext.ScalingMatrix);
             }
@@ -794,33 +794,33 @@ namespace SharpMp4
             int levelIdc,
             int seqParameterSetId,
             H264ChromaFormat chromaFormat,
-            int residualColorTransformFlag,
+            bool residualColorTransformFlag,
             int bitDepthLumaMinus8,
             int bitDepthChromaMinus8,
-            int qpprimeYZeroTransformBypassFlag,
+            bool qpprimeYZeroTransformBypassFlag,
             int seqScalingMatrixPresent,
             ScalingMatrix scalingMatrix,
             int log2MaxFrameNumMinus4,
             int picOrderCntType,
             int log2MaxPicOrderCntLsbMinus4,
-            int deltaPicOrderAlwaysZeroFlag,
+            bool deltaPicOrderAlwaysZeroFlag,
             int offsetForNonRefPic,
             int offsetForTopToBottomField,
             int numRefFramesInPicOrderCntCycle,
             int[] offsetForRefFrame,
             int numRefFrames,
-            int gapsInFrameNumValueAllowedFlag,
+            bool gapsInFrameNumValueAllowedFlag,
             int picWidthInMbsMinus1,
             int picHeightInMapUnitsMinus1,
-            int frameMbsOnlyFlag,
-            int mbAdaptiveFrameFieldFlag,
-            int direct8x8InferenceFlag,
-            int frameCroppingFlag,
+            bool frameMbsOnlyFlag,
+            bool mbAdaptiveFrameFieldFlag,
+            bool direct8x8InferenceFlag,
+            bool frameCroppingFlag,
             int frameCropLeftOffset,
             int frameCropRightOffset,
             int frameCropTopOffset,
             int frameCropBottomOffset,
-            int vuiParametersPresentFlag,
+            bool vuiParametersPresentFlag,
             H264VuiParameters vuiParameters)
         {
             NalHeader = nalHeader;
@@ -877,33 +877,33 @@ namespace SharpMp4
         public int LevelIdc { get; set; }
         public int SeqParameterSetId { get; set; }
         public H264ChromaFormat ChromaFormat { get; set; }
-        public int ResidualColorTransformFlag { get; set; }
+        public bool ResidualColorTransformFlag { get; set; }
         public int BitDepthLumaMinus8 { get; set; }
         public int BitDepthChromaMinus8 { get; set; }
-        public int QpprimeYZeroTransformBypassFlag { get; set; }
+        public bool QpprimeYZeroTransformBypassFlag { get; set; }
         public int SeqScalingMatrixPresent { get; set; }
         public ScalingMatrix ScalingMatrix { get; set; }
         public int Log2MaxFrameNumMinus4 { get; set; }
         public int PicOrderCntType { get; set; }
         public int Log2MaxPicOrderCntLsbMinus4 { get; set; }
-        public int DeltaPicOrderAlwaysZeroFlag { get; set; }
+        public bool DeltaPicOrderAlwaysZeroFlag { get; set; }
         public int OffsetForNonRefPic { get; set; }
         public int OffsetForTopToBottomField { get; set; }
         public int NumRefFramesInPicOrderCntCycle { get; set; }
         public int[] OffsetForRefFrame { get; set; }
         public int NumRefFrames { get; set; }
-        public int GapsInFrameNumValueAllowedFlag { get; set; }
+        public bool GapsInFrameNumValueAllowedFlag { get; set; }
         public int PicWidthInMbsMinus1 { get; set; }
         public int PicHeightInMapUnitsMinus1 { get; set; }
-        public int FrameMbsOnlyFlag { get; set; }
-        public int MbAdaptiveFrameFieldFlag { get; set; }
-        public int Direct8x8InferenceFlag { get; set; }
-        public int FrameCroppingFlag { get; set; }
+        public bool FrameMbsOnlyFlag { get; set; }
+        public bool MbAdaptiveFrameFieldFlag { get; set; }
+        public bool Direct8x8InferenceFlag { get; set; }
+        public bool FrameCroppingFlag { get; set; }
         public int FrameCropLeftOffset { get; set; }
         public int FrameCropRightOffset { get; set; }
         public int FrameCropTopOffset { get; set; }
         public int FrameCropBottomOffset { get; set; }
-        public int VuiParametersPresentFlag { get; set; }
+        public bool VuiParametersPresentFlag { get; set; }
         public H264VuiParameters VuiParameters { get; set; }
 
         public static H264SpsNalUnit Parse(byte[] sps)
@@ -940,10 +940,10 @@ namespace SharpMp4
             int seqParameterSetId = bitstream.ReadUE();
 
             H264ChromaFormat chromaFormat;
-            int residualColorTransformFlag = 0;
+            bool residualColorTransformFlag = false;
             int bitDepthLumaMinus8 = 0;
             int bitDepthChromaMinus8 = 0;
-            int qpprimeYZeroTransformBypassFlag = 0;
+            bool qpprimeYZeroTransformBypassFlag = false;
             int seqScalingMatrixPresent = 0;
             ScalingMatrix scalingMatrix = null;
             if (profileIdc == 100 || profileIdc == 110 || profileIdc == 122 || profileIdc == 144)
@@ -952,12 +952,12 @@ namespace SharpMp4
                 chromaFormat = H264ChromaFormat.FromId(chromaFormatIdc);
                 if (chromaFormat.Id == 3)
                 {
-                    residualColorTransformFlag = bitstream.ReadBit();
+                    residualColorTransformFlag = bitstream.ReadBit() != 0;
                 }
 
                 bitDepthLumaMinus8 = bitstream.ReadUE();
                 bitDepthChromaMinus8 = bitstream.ReadUE();
-                qpprimeYZeroTransformBypassFlag = bitstream.ReadBit();
+                qpprimeYZeroTransformBypassFlag = bitstream.ReadBit() != 0;
                 seqScalingMatrixPresent = bitstream.ReadBit();
                 if (seqScalingMatrixPresent != 0)
                 {
@@ -972,7 +972,7 @@ namespace SharpMp4
             int log2MaxFrameNumMinus4 = bitstream.ReadUE();
             int picOrderCntType = bitstream.ReadUE();
             int log2MaxPicOrderCntLsbMinus4 = 0;
-            int deltaPicOrderAlwaysZeroFlag = 0;
+            bool deltaPicOrderAlwaysZeroFlag = false;
             int offsetForNonRefPic = 0;
             int offsetForTopToBottomField = 0;
             int numRefFramesInPicOrderCntCycle = 0;
@@ -984,7 +984,7 @@ namespace SharpMp4
             }
             else if (picOrderCntType == 1)
             {
-                deltaPicOrderAlwaysZeroFlag = bitstream.ReadBit();
+                deltaPicOrderAlwaysZeroFlag = bitstream.ReadBit() != 0;
                 offsetForNonRefPic = bitstream.ReadSE();
                 offsetForTopToBottomField = bitstream.ReadSE();
                 numRefFramesInPicOrderCntCycle = bitstream.ReadUE();
@@ -996,25 +996,25 @@ namespace SharpMp4
             }
 
             int numRefFrames = bitstream.ReadUE();
-            int gapsInFrameNumValueAllowedFlag = bitstream.ReadBit();
+            bool gapsInFrameNumValueAllowedFlag = bitstream.ReadBit() != 0;
             int picWidthInMbsMinus1 = bitstream.ReadUE();
             int picHeightInMapUnitsMinus1 = bitstream.ReadUE();
-            int frameMbsOnlyFlag = bitstream.ReadBit();
-            int mbAdaptiveFrameFieldFlag = 0;
+            bool frameMbsOnlyFlag = bitstream.ReadBit() != 0;
+            bool mbAdaptiveFrameFieldFlag = false;
 
-            if (frameMbsOnlyFlag == 0)
+            if (!frameMbsOnlyFlag)
             {
-                mbAdaptiveFrameFieldFlag = bitstream.ReadBit();
+                mbAdaptiveFrameFieldFlag = bitstream.ReadBit() != 0;
             }
 
-            int direct8x8InferenceFlag = bitstream.ReadBit();
-            int frameCroppingFlag = bitstream.ReadBit();
+            bool direct8x8InferenceFlag = bitstream.ReadBit() != 0;
+            bool frameCroppingFlag = bitstream.ReadBit() != 0;
             int frameCropLeftOffset = 0;
             int frameCropRightOffset = 0;
             int frameCropTopOffset = 0;
             int frameCropBottomOffset = 0;
 
-            if (frameCroppingFlag != 0)
+            if (frameCroppingFlag)
             {
                 frameCropLeftOffset = bitstream.ReadUE();
                 frameCropRightOffset = bitstream.ReadUE();
@@ -1022,10 +1022,10 @@ namespace SharpMp4
                 frameCropBottomOffset = bitstream.ReadUE();
             }
 
-            int vuiParametersPresentFlag = bitstream.ReadBit();
+            bool vuiParametersPresentFlag = bitstream.ReadBit() != 0;
             H264VuiParameters vuiParams = null;
 
-            if (vuiParametersPresentFlag != 0)
+            if (vuiParametersPresentFlag)
             {
                 vuiParams = H264VuiParameters.Parse(bitstream);
             }
@@ -1153,7 +1153,7 @@ namespace SharpMp4
             bitstream.WriteUE((uint)nal.PicHeightInMapUnitsMinus1);
             bitstream.WriteBit(nal.FrameMbsOnlyFlag);
 
-            if (nal.FrameMbsOnlyFlag == 0)
+            if (!nal.FrameMbsOnlyFlag)
             {
                 bitstream.WriteBit(nal.MbAdaptiveFrameFieldFlag);
             }
@@ -1161,7 +1161,7 @@ namespace SharpMp4
             bitstream.WriteBit(nal.Direct8x8InferenceFlag);
             bitstream.WriteBit(nal.FrameCroppingFlag);
 
-            if (nal.FrameCroppingFlag != 0)
+            if (nal.FrameCroppingFlag)
             {
                 bitstream.WriteUE((uint)nal.FrameCropLeftOffset);
                 bitstream.WriteUE((uint)nal.FrameCropRightOffset);
@@ -1171,7 +1171,7 @@ namespace SharpMp4
 
             bitstream.WriteBit(nal.VuiParametersPresentFlag);
 
-            if (nal.VuiParametersPresentFlag != 0)
+            if (nal.VuiParametersPresentFlag)
             {
                 H264VuiParameters.Build(bitstream, nal.VuiParameters);
             }
@@ -1196,15 +1196,15 @@ namespace SharpMp4
         {
             int width = (this.PicWidthInMbsMinus1 + 1) * 16;
             int mult = 2;
-            if (this.FrameMbsOnlyFlag != 0)
+            if (this.FrameMbsOnlyFlag)
             {
                 mult = 1;
             }
             int height = 16 * (this.PicHeightInMapUnitsMinus1 + 1) * mult;
-            if (this.FrameCroppingFlag != 0)
+            if (this.FrameCroppingFlag)
             {
                 int chromaArrayType = 0;
-                if (this.ResidualColorTransformFlag == 0)
+                if (!this.ResidualColorTransformFlag)
                 {
                     chromaArrayType = this.ChromaFormat.Id;
                 }
@@ -1227,7 +1227,7 @@ namespace SharpMp4
             int timescale = 0;
             int frametick = 0;
             var vui = this.VuiParameters;
-            if (vui != null && vui.TimingInfoPresentFlag != 0)
+            if (vui != null && vui.TimingInfoPresentFlag)
             {
                 // MaxFPS = Ceil( time_scale / ( 2 * num_units_in_tick ) )
                 timescale = vui.TimeScale;
@@ -1252,33 +1252,33 @@ namespace SharpMp4
     public class H264VuiParameters
     {
         public H264VuiParameters(
-            int aspectRatioInfoPresentFlag,
+            bool aspectRatioInfoPresentFlag,
             int aspectRatio,
             int sarWidth,
             int sarHeight,
-            int overscanInfoPresentFlag,
-            int overscanAppropriateFlag,
-            int videoSignalTypePresentFlag,
+            bool overscanInfoPresentFlag,
+            bool overscanAppropriateFlag,
+            bool videoSignalTypePresentFlag,
             int videoFormat,
-            int videoFullRangeFlag,
-            int colorDescriptionPresentFlag,
+            bool videoFullRangeFlag,
+            bool colorDescriptionPresentFlag,
             int colorPrimaries,
             int transferCharacteristics,
             int matrixCoefficients,
-            int chromaLocInfoPresentFlag,
+            bool chromaLocInfoPresentFlag,
             int chromaSampleLocTypeTopField,
             int chromaSampleLocTypeBottomField,
-            int timingInfoPresentFlag,
+            bool timingInfoPresentFlag,
             int numUnitsInTick,
             int timeScale,
-            int fixedFrameRateFlag,
-            int nalHrdParametersPresentFlag,
+            bool fixedFrameRateFlag,
+            bool nalHrdParametersPresentFlag,
             H264HrdParameters nalHrdParams,
-            int vclHrdParametersPresentFlag,
+            bool vclHrdParametersPresentFlag,
             H264HrdParameters vclHrdParams,
-            int lowDelayHrdFlag,
-            int picStructPresentFlag,
-            int bitstreamRestrictionFlag,
+            bool lowDelayHrdFlag,
+            bool picStructPresentFlag,
+            bool bitstreamRestrictionFlag,
             H264BitstreamRestriction bitstreamRestriction)
         {
             AspectRatioInfoPresentFlag = aspectRatioInfoPresentFlag;
@@ -1311,42 +1311,42 @@ namespace SharpMp4
             BitstreamRestriction = bitstreamRestriction;
         }
 
-        public int AspectRatioInfoPresentFlag { get; set; }
+        public bool AspectRatioInfoPresentFlag { get; set; }
         public int AspectRatio { get; set; }
         public int SarWidth { get; set; }
         public int SarHeight { get; set; }
-        public int OverscanInfoPresentFlag { get; set; }
-        public int OverscanAppropriateFlag { get; set; }
-        public int VideoSignalTypePresentFlag { get; set; }
+        public bool OverscanInfoPresentFlag { get; set; }
+        public bool OverscanAppropriateFlag { get; set; }
+        public bool VideoSignalTypePresentFlag { get; set; }
         public int VideoFormat { get; set; }
-        public int VideoFullRangeFlag { get; set; }
-        public int ColorDescriptionPresentFlag { get; set; }
+        public bool VideoFullRangeFlag { get; set; }
+        public bool ColorDescriptionPresentFlag { get; set; }
         public int ColorPrimaries { get; set; }
         public int TransferCharacteristics { get; set; }
         public int MatrixCoefficients { get; set; }
-        public int ChromaLocInfoPresentFlag { get; set; }
+        public bool ChromaLocInfoPresentFlag { get; set; }
         public int ChromaSampleLocTypeTopField { get; set; }
         public int ChromaSampleLocTypeBottomField { get; set; }
-        public int TimingInfoPresentFlag { get; set; }
+        public bool TimingInfoPresentFlag { get; set; }
         public int NumUnitsInTick { get; set; }
         public int TimeScale { get; set; }
-        public int FixedFrameRateFlag { get; set; }
-        public int NalHrdParametersPresentFlag { get; set; }
+        public bool FixedFrameRateFlag { get; set; }
+        public bool NalHrdParametersPresentFlag { get; set; }
         public H264HrdParameters NalHrdParams { get; set; }
-        public int VclHrdParametersPresentFlag { get; set; }
+        public bool VclHrdParametersPresentFlag { get; set; }
         public H264HrdParameters VclHrdParams { get; set; }
-        public int LowDelayHrdFlag { get; set; }
-        public int PicStructPresentFlag { get; set; }
-        public int BitstreamRestrictionFlag { get; set; }
+        public bool LowDelayHrdFlag { get; set; }
+        public bool PicStructPresentFlag { get; set; }
+        public bool BitstreamRestrictionFlag { get; set; }
         public H264BitstreamRestriction BitstreamRestriction { get; set; }
 
         public static H264VuiParameters Parse(NalBitStreamReader bitstream)
         {
-            int aspectRatioInfoPresentFlag = bitstream.ReadBit();
+            bool aspectRatioInfoPresentFlag = bitstream.ReadBit() != 0;
             int aspectRatio = 0;
             int sarWidth = 0;
             int sarHeight = 0;
-            if (aspectRatioInfoPresentFlag != 0)
+            if (aspectRatioInfoPresentFlag)
             {
                 aspectRatio = bitstream.ReadBits(8);
                 if (aspectRatio == 255)
@@ -1356,28 +1356,28 @@ namespace SharpMp4
                 }
             }
 
-            int overscanInfoPresentFlag = bitstream.ReadBit();
-            int overscanAppropriateFlag = 0;
-            if (overscanInfoPresentFlag != 0)
+            bool overscanInfoPresentFlag = bitstream.ReadBit() != 0;
+            bool overscanAppropriateFlag = false;
+            if (overscanInfoPresentFlag)
             {
-                overscanAppropriateFlag = bitstream.ReadBit();
+                overscanAppropriateFlag = bitstream.ReadBit() != 0;
             }
 
-            int videoSignalTypePresentFlag = bitstream.ReadBit();
+            bool videoSignalTypePresentFlag = bitstream.ReadBit() != 0;
             int videoFormat = 0;
-            int videoFullRangeFlag = 0;
-            int colourDescriptionPresentFlag = 0;
+            bool videoFullRangeFlag = false;
+            bool colourDescriptionPresentFlag = false;
             int colourPrimaries = 0;
             int transferCharacteristics = 0;
             int matrixCoefficients = 0;
 
-            if (videoSignalTypePresentFlag != 0)
+            if (videoSignalTypePresentFlag)
             {
                 videoFormat = bitstream.ReadBits(3);
-                videoFullRangeFlag = bitstream.ReadBit();
-                colourDescriptionPresentFlag = bitstream.ReadBit();
+                videoFullRangeFlag = bitstream.ReadBit() != 0;
+                colourDescriptionPresentFlag = bitstream.ReadBit() != 0;
 
-                if (colourDescriptionPresentFlag != 0)
+                if (colourDescriptionPresentFlag)
                 {
                     colourPrimaries = bitstream.ReadBits(8);
                     transferCharacteristics = bitstream.ReadBits(8);
@@ -1385,54 +1385,54 @@ namespace SharpMp4
                 }
             }
 
-            int chromaLocInfoPresentFlag = bitstream.ReadBit();
+            bool chromaLocInfoPresentFlag = bitstream.ReadBit() != 0;
             int chromaSampleLocTypeTopField = 0;
             int chromaSampleLocTypeBottomField = 0;
 
-            if (chromaLocInfoPresentFlag != 0)
+            if (chromaLocInfoPresentFlag)
             {
                 chromaSampleLocTypeTopField = bitstream.ReadUE();
                 chromaSampleLocTypeBottomField = bitstream.ReadUE();
             }
 
-            int timingInfoPresentFlag = bitstream.ReadBit();
+            bool timingInfoPresentFlag = bitstream.ReadBit() != 0;
             int numUnitsInTick = 0;
             int timeScale = 0;
-            int fixedFrameRateFlag = 0;
-            if (timingInfoPresentFlag != 0)
+            bool fixedFrameRateFlag = false;
+            if (timingInfoPresentFlag)
             {
                 numUnitsInTick = bitstream.ReadBits(32);
                 timeScale = bitstream.ReadBits(32);
-                fixedFrameRateFlag = bitstream.ReadBit();
+                fixedFrameRateFlag = bitstream.ReadBit() != 0;
             }
 
-            int nalHrdParametersPresentFlag = bitstream.ReadBit();
+            bool nalHrdParametersPresentFlag = bitstream.ReadBit() != 0;
             H264HrdParameters nalHRDParams = null;
-            if (nalHrdParametersPresentFlag != 0)
+            if (nalHrdParametersPresentFlag)
             {
                 nalHRDParams = H264HrdParameters.Parse(bitstream);
             }
 
-            int vclHrdParametersPresentFlag = bitstream.ReadBit();
+            bool vclHrdParametersPresentFlag = bitstream.ReadBit() != 0;
             H264HrdParameters vclHRDParams = null;
-            if (vclHrdParametersPresentFlag != 0)
+            if (vclHrdParametersPresentFlag)
             {
                 vclHRDParams = H264HrdParameters.Parse(bitstream);
             }
 
-            int lowDelayHrdFlag = 0;
-            if (nalHrdParametersPresentFlag != 0 || vclHrdParametersPresentFlag != 0)
+            bool lowDelayHrdFlag = false;
+            if (nalHrdParametersPresentFlag || vclHrdParametersPresentFlag)
             {
-                lowDelayHrdFlag = bitstream.ReadBit();
+                lowDelayHrdFlag = bitstream.ReadBit() != 0;
             }
 
-            int picStructPresentFlag = bitstream.ReadBit();
-            int bitstreamRestrictionFlag = bitstream.ReadBit();
+            bool picStructPresentFlag = bitstream.ReadBit() != 0;
+            bool bitstreamRestrictionFlag = bitstream.ReadBit() != 0;
             H264BitstreamRestriction bitstreamRestriction = null;
-            if (bitstreamRestrictionFlag != 0)
+            if (bitstreamRestrictionFlag)
             {
                 bitstreamRestriction = new H264BitstreamRestriction();
-                bitstreamRestriction.MotionVectorsOverPicBoundariesFlag = bitstream.ReadBit();
+                bitstreamRestriction.MotionVectorsOverPicBoundariesFlag = bitstream.ReadBit() != 0;
                 bitstreamRestriction.MaxBytesPerPicDenom = bitstream.ReadUE();
                 bitstreamRestriction.MaxBitsPerMbDenom = bitstream.ReadUE();
                 bitstreamRestriction.Log2MaxMvLengthHorizontal = bitstream.ReadUE();
@@ -1476,7 +1476,7 @@ namespace SharpMp4
         public static void Build(NalBitStreamWriter bitstream, H264VuiParameters vui)
         {
             bitstream.WriteBit(vui.AspectRatioInfoPresentFlag);
-            if (vui.AspectRatioInfoPresentFlag != 0)
+            if (vui.AspectRatioInfoPresentFlag)
             {
                 bitstream.WriteBits(8, vui.AspectRatio);
                 if (vui.AspectRatio == 255)
@@ -1487,20 +1487,20 @@ namespace SharpMp4
             }
 
             bitstream.WriteBit(vui.OverscanInfoPresentFlag);
-            if (vui.OverscanInfoPresentFlag != 0)
+            if (vui.OverscanInfoPresentFlag)
             {
                 bitstream.WriteBit(vui.OverscanAppropriateFlag);
             }
 
             bitstream.WriteBit(vui.VideoSignalTypePresentFlag);
 
-            if (vui.VideoSignalTypePresentFlag != 0)
+            if (vui.VideoSignalTypePresentFlag)
             {
                 bitstream.WriteBits(3, vui.VideoFormat);
                 bitstream.WriteBit(vui.VideoFullRangeFlag);
                 bitstream.WriteBit(vui.ColorDescriptionPresentFlag);
 
-                if (vui.ColorDescriptionPresentFlag != 0)
+                if (vui.ColorDescriptionPresentFlag)
                 {
                     bitstream.WriteBits(8, vui.ColorPrimaries);
                     bitstream.WriteBits(8, vui.TransferCharacteristics);
@@ -1510,14 +1510,14 @@ namespace SharpMp4
 
             bitstream.WriteBit(vui.ChromaLocInfoPresentFlag);
 
-            if (vui.ChromaLocInfoPresentFlag != 0)
+            if (vui.ChromaLocInfoPresentFlag)
             {
                 bitstream.WriteUE((uint)vui.ChromaSampleLocTypeTopField);
                 bitstream.WriteUE((uint)vui.ChromaSampleLocTypeBottomField);
             }
 
             bitstream.WriteBit(vui.TimingInfoPresentFlag);
-            if (vui.TimingInfoPresentFlag != 0)
+            if (vui.TimingInfoPresentFlag)
             {
                 bitstream.WriteBits(32, vui.NumUnitsInTick);
                 bitstream.WriteBits(32, vui.TimeScale);
@@ -1525,26 +1525,26 @@ namespace SharpMp4
             }
 
             bitstream.WriteBit(vui.NalHrdParametersPresentFlag);
-            if (vui.NalHrdParametersPresentFlag != 0)
+            if (vui.NalHrdParametersPresentFlag)
             {
                 H264HrdParameters.Build(bitstream, vui.NalHrdParams);
             }
 
             bitstream.WriteBit(vui.VclHrdParametersPresentFlag);
 
-            if (vui.VclHrdParametersPresentFlag != 0)
+            if (vui.VclHrdParametersPresentFlag)
             {
                 H264HrdParameters.Build(bitstream, vui.VclHrdParams);
             }
 
-            if (vui.NalHrdParametersPresentFlag != 0 || vui.VclHrdParametersPresentFlag != 0)
+            if (vui.NalHrdParametersPresentFlag || vui.VclHrdParametersPresentFlag)
             {
                 bitstream.WriteBit(vui.LowDelayHrdFlag);
             }
 
             bitstream.WriteBit(vui.PicStructPresentFlag);
             bitstream.WriteBit(vui.BitstreamRestrictionFlag);
-            if (vui.BitstreamRestrictionFlag != 0)
+            if (vui.BitstreamRestrictionFlag)
             {
                 bitstream.WriteBit(vui.BitstreamRestriction.MotionVectorsOverPicBoundariesFlag);
                 bitstream.WriteUE((uint)vui.BitstreamRestriction.MaxBytesPerPicDenom);
@@ -1559,7 +1559,7 @@ namespace SharpMp4
 
     public sealed class H264BitstreamRestriction
     {
-        public int MotionVectorsOverPicBoundariesFlag { get; set; }
+        public bool MotionVectorsOverPicBoundariesFlag { get; set; }
         public int MaxBytesPerPicDenom { get; set; }
         public int MaxBitsPerMbDenom { get; set; }
         public int Log2MaxMvLengthHorizontal { get; set; }
@@ -1576,7 +1576,7 @@ namespace SharpMp4
             int cpbSizeScale,
             int[] bitRateValueMinus1,
             int[] cpbSizeValueMinus1,
-            int[] cbrFlag,
+            bool[] cbrFlag,
             int initialCpbRemovalDelayLengthMinus1,
             int cpbRemovalDelayLengthMinus1,
             int dpbOutputDelayLengthMinus1,
@@ -1599,7 +1599,7 @@ namespace SharpMp4
         public int CpbSizeScale { get; set; }
         public int[] BitRateValueMinus1 { get; set; }
         public int[] CpbSizeValueMinus1 { get; set; }
-        public int[] CbrFlag { get; set; }
+        public bool[] CbrFlag { get; set; }
         public int InitialCpbRemovalDelayLengthMinus1 { get; set; }
         public int CpbRemovalDelayLengthMinus1 { get; set; }
         public int DpbOutputDelayLengthMinus1 { get; set; }
@@ -1612,13 +1612,13 @@ namespace SharpMp4
             int cpbSizeScale = bitstream.ReadBits(4);
             int[] bitRateValueMinus1 = new int[cpbCntMinus1 + 1];
             int[] cpbSizeValueMinus1 = new int[cpbCntMinus1 + 1];
-            int[] cbrFlag = new int[cpbCntMinus1 + 1];
+            bool[] cbrFlag = new bool[cpbCntMinus1 + 1];
 
             for (int SchedSelIdx = 0; SchedSelIdx <= cpbCntMinus1; SchedSelIdx++)
             {
                 bitRateValueMinus1[SchedSelIdx] = bitstream.ReadUE();
                 cpbSizeValueMinus1[SchedSelIdx] = bitstream.ReadUE();
-                cbrFlag[SchedSelIdx] = bitstream.ReadBit();
+                cbrFlag[SchedSelIdx] = bitstream.ReadBit() != 0;
             }
 
             int initialCpbRemovalDelayLengthMinus1 = bitstream.ReadBits(5);
