@@ -5062,7 +5062,7 @@ namespace SharpMp4
             };
             _samples.Enqueue(s);
 
-            await _sink.NotifySampleAdded(this);
+            await _sink.NotifySampleAdded();
         }
        
         public static string ToHexString(byte[] data)
@@ -5076,7 +5076,7 @@ namespace SharpMp4
 #endif
         }
 
-        internal StreamSample ReadSample()
+        public StreamSample ReadSample()
         {
             if (_samples.TryDequeue(out var a))
             {
@@ -5087,17 +5087,17 @@ namespace SharpMp4
             throw new Exception();
         }
 
-        internal void SetSink(FragmentedMp4Builder fmp4)
+        public void SetSink(FragmentedMp4Builder fmp4)
         {
             this._sink = fmp4;
         }
 
-        internal bool ContainsEnoughSamples(double durationInSeconds)
+        public bool ContainsEnoughSamples(double durationInSeconds)
         {
-            return _queuedSamplesLength > durationInSeconds * Timescale;
+            return _queuedSamplesLength >= durationInSeconds * Timescale;
         }
 
-        internal bool HasSamples()
+        public bool HasSamples()
         {
             return _samples.Count > 0;
         }
@@ -5125,68 +5125,105 @@ namespace SharpMp4
         {
             _tracks.Add(track);
             _trackEndTimes.Add(0);
-            track.TrackID = (uint)_tracks.IndexOf(track);
+            track.TrackID = (uint)_tracks.IndexOf(track) + 1;
             track.SetSink(this);
         }
 
-        internal async Task NotifySampleAdded(TrackBase track)
+        internal async Task NotifySampleAdded()
         {
             // make sure only 1 thread at a time can write
             await _semaphore.WaitAsync();
             try
             {
                 double duration = _maxFragmentLengthInSeconds * _maxFragmentsPerMoof;
-                if (!track.ContainsEnoughSamples(duration))
-                    return;
 
-                for (int i = 1; i < _tracks.Count; i++)
+                for (int i = 0; i < _tracks.Count; i++)
                 {
                     if (!_tracks[i].ContainsEnoughSamples(duration))
                         return;
                 }
 
-                FragmentedMp4 fmp4 = new FragmentedMp4();
-
-                // first check if we need to produce the media initialization segment
-                if (_sequenceNumber == 1)
-                {
-                    await CreateMediaInitialization(fmp4);
-                    await FragmentedMp4.BuildAsync(fmp4, _output);
-
-                    fmp4 = new FragmentedMp4();
-                }
-
-                // all tracks have enough samples to produce a fragment
-                List<StreamFragment> fragments = new List<StreamFragment>();
-                for (int j = 0; j < _maxFragmentsPerMoof; j++)
-                {
-                    var fragment = new StreamFragment(_tracks, _trackEndTimes.ToArray());
-
-                    for (int i = 0; i < _tracks.Count; i++)
-                    {
-                        double targetDuration = _tracks[i].Timescale * _maxFragmentLengthInSeconds;
-                        long currentDuration = 0;
-
-                        while (currentDuration < targetDuration && _tracks[i].HasSamples()) // HasSamples is necessary in case the synchronization of the tracks is not precisely aligned
-                        {
-                            var sample = _tracks[i].ReadSample();
-                            currentDuration += sample.Duration;
-                            fragment.Samples[i].Add(sample);
-                        }
-
-                        _trackEndTimes[i] += currentDuration;
-                    }
-
-                    fragments.Add(fragment);
-                }
-
-                await CreateMediaFragment(fmp4, _tracks, fragments, _sequenceNumber++);
-                await FragmentedMp4.BuildAsync(fmp4, _output);
+                await WriteFragment();
             }
             finally
             {
                 _semaphore.Release();
             }
+        }
+
+        public async Task FlushAsync()
+        {
+            // make sure only 1 thread at a time can write
+            await _semaphore.WaitAsync();
+            try
+            {
+                if (_tracks.FirstOrDefault(x => x.HasSamples()) != null)
+                {
+                    await WriteFragment(true);
+                }
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
+
+        private async Task WriteFragment(bool isFlushing = false)
+        {
+            FragmentedMp4 fmp4 = new FragmentedMp4();
+
+            // first check if we need to produce the media initialization segment
+            if (_sequenceNumber == 1)
+            {
+                await CreateMediaInitialization(fmp4);
+                await FragmentedMp4.BuildAsync(fmp4, _output);
+
+                fmp4 = new FragmentedMp4();
+            }
+
+            // all tracks have enough samples to produce a fragment
+            List<StreamFragment> fragments = new List<StreamFragment>();
+            bool hasMoreSamples = true;
+            for (int j = 0; j < _maxFragmentsPerMoof && hasMoreSamples; j++)
+            {
+                var fragment = new StreamFragment(_tracks, _trackEndTimes.ToArray());
+                hasMoreSamples = false;
+
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    double targetDuration = _tracks[i].Timescale * _maxFragmentLengthInSeconds;
+                    long currentDuration = 0;
+
+                    while (currentDuration < targetDuration && _tracks[i].HasSamples()) // HasSamples is necessary in case the synchronization of the tracks is not precisely aligned
+                    {
+                        var sample = _tracks[i].ReadSample();
+                        currentDuration += sample.Duration;
+                        fragment.Samples[i].Add(sample);
+                    }
+
+                    _trackEndTimes[i] += currentDuration;
+
+                    hasMoreSamples = hasMoreSamples || _tracks[i].HasSamples(); // stop condition
+                }
+
+                fragments.Add(fragment);
+            }
+
+            if (isFlushing)
+            {
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    while (_tracks[i].HasSamples())
+                    {
+                        var sample = _tracks[i].ReadSample();
+                        _trackEndTimes[i] += sample.Duration;
+                        fragments.Last().Samples[i].Add(sample);
+                    }
+                }
+            }
+
+            await CreateMediaFragment(fmp4, _tracks, fragments, _sequenceNumber++);
+            await FragmentedMp4.BuildAsync(fmp4, _output);
         }
 
         private Task CreateMediaInitialization(FragmentedMp4 fmp4)
