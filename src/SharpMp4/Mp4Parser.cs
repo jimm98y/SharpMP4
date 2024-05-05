@@ -5114,7 +5114,7 @@ namespace SharpMp4
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
         private readonly List<long> _trackEndTimes = new List<long>();
 
-        public FragmentedMp4Builder(Stream output, double maxFragmentLengthInSeconds, int maxFragmentsPerMoof)
+        public FragmentedMp4Builder(Stream output, double maxFragmentLengthInSeconds = 0.5, int maxFragmentsPerMoof = 8)
         {
             this._output = output;
             this._maxFragmentLengthInSeconds = maxFragmentLengthInSeconds;
