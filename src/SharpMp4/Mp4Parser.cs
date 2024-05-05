@@ -510,7 +510,18 @@ namespace SharpMp4
 
         public void ReadTrailingBits()
         {
-            // TODO
+            if (ReadBit() == 0)
+            {
+                if (Log.WarnEnabled) Log.Warn("Invalid trailing 1 bit!");
+            }
+
+            while(_bitsPosition % 8 != 0)
+            {
+                if(ReadBit() != 0)
+                {
+                    if (Log.WarnEnabled) Log.Warn("Invalid trailing 0 bit!");
+                }
+            }
         }
     }
 

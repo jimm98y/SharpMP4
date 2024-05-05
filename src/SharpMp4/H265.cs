@@ -1437,6 +1437,8 @@ namespace SharpMp4
                 throw new NotSupportedException("SPS extensions not supported yet!");
             }
 
+            bitstream.ReadTrailingBits();
+
             return new H265SpsNalUnit(
                 header,
                 spsVideoParameterSetId,
@@ -2667,7 +2669,7 @@ namespace SharpMp4
                 }
             }
 
-            // TODO: trailing bits, 1 stop bit and all zeroes
+            bitstream.ReadTrailingBits();
 
             return new H265PpsNalUnit(
                         header,

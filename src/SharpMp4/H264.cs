@@ -561,10 +561,12 @@ namespace SharpMp4
 
             H264PpsExt extended = null;
 
-            if (bitstream.HasMoreRBSPData((uint)size))
+            if (bitstream.HasMoreRBSPData(size))
             {
                 extended = H264PpsExt.Parse(bitstream);
             }
+
+            bitstream.ReadTrailingBits();
 
             H264PpsNalUnit pps = new H264PpsNalUnit(
                 header,
@@ -1027,6 +1029,8 @@ namespace SharpMp4
             {
                 vuiParams = H264VuiParameters.Parse(bitstream);
             }
+
+            bitstream.ReadTrailingBits();
 
             H264SpsNalUnit sps = new H264SpsNalUnit(
                 header,
