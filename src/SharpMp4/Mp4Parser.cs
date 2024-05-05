@@ -5189,7 +5189,7 @@ namespace SharpMp4
             }
         }
 
-        private async Task CreateMediaInitialization(FragmentedMp4 fmp4)
+        private Task CreateMediaInitialization(FragmentedMp4 fmp4)
         {
             var ftyp = CreateFtypBox();
             fmp4.Children.Add(ftyp);
@@ -5204,6 +5204,8 @@ namespace SharpMp4
 
             var moov = CreateMoovBox();
             fmp4.Children.Add(moov);
+
+            return Task.CompletedTask;
         }
 
         private async Task CreateMediaFragment(FragmentedMp4 fmp4, List<TrackBase> tracks, List<StreamFragment> fragments, uint sequenceNumber)
