@@ -159,7 +159,70 @@ namespace SharpMp4
 
         public override Mp4Box CreateSampleEntryBox(Mp4Box parent)
         {
-            return H265BoxBuilder.CreateVisualSampleEntryBox(parent, this);
+            return CreateVisualSampleEntryBox(parent, this);
+        }
+
+        private static VisualSampleEntryBox CreateVisualSampleEntryBox(Mp4Box parent, H265Track track)
+        {
+            var sps = track.Sps.First().Value; // TODO: not sure about multiple SPS values...
+            var vps = track.Vps.First().Value; // TODO: not sure about multiple VPS values...
+            var dim = sps.CalculateDimensions();
+
+            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, parent, VisualSampleEntryBox.TYPE6);
+            visualSampleEntry.DataReferenceIndex = 1;
+            visualSampleEntry.Depth = 24;
+            visualSampleEntry.FrameCount = 1;
+            visualSampleEntry.HorizontalResolution = 72;
+            visualSampleEntry.VerticalResolution = 72;
+            visualSampleEntry.Width = dim.Width;
+            visualSampleEntry.Height = dim.Height;
+            visualSampleEntry.CompressorName = "hevc\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+            visualSampleEntry.CompressorNameDisplayableData = 4;
+
+            HevcConfigurationBox hevcConfigurationBox = new HevcConfigurationBox(0, visualSampleEntry, new HevcDecoderConfigurationRecord());
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.ConfigurationVersion = 1;
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileIdc = sps.ProfileTier.GeneralProfileIdc;
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.ChromaFormat = sps.ChromaFormatIdc;
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralLevelIdc = (byte)sps.ProfileTier.GeneralLevelIdc;
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileCompatibilityFlags = (uint)sps.ProfileTier.GetGeneralProfileCompatibilityFlags();
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralConstraintIndicatorFlags = (ulong)vps.ProfileTier.GetGeneralProfileConstraintIndicatorFlags();
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.BitDepthChromaMinus8 = sps.BitDepthChromaMinus8;
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.BitDepthLumaMinus8 = sps.BitDepthLumaMinus8;
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.TemporalIdNested = sps.SpsTemporalIdNestingFlag ? 1 : 0;
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.LengthSizeMinusOne = 3; // 4 bytes size block inserted in between NAL units
+
+            HevcNalArray spsArray = new HevcNalArray();
+            spsArray.ArrayCompleteness = 1;
+            spsArray.NalUnitType = H265NalUnitTypes.SPS;
+            foreach (var sp in track.Sps.Values)
+            {
+                spsArray.NalUnits.Add(H265SpsNalUnit.Build(sp));
+            }
+
+            HevcNalArray ppsArray = new HevcNalArray();
+            ppsArray.ArrayCompleteness = 1;
+            ppsArray.NalUnitType = H265NalUnitTypes.PPS;
+            foreach (var pp in track.Pps.Values)
+            {
+                ppsArray.NalUnits.Add(H265PpsNalUnit.Build(pp));
+            }
+
+            HevcNalArray vpsArray = new HevcNalArray();
+            vpsArray.ArrayCompleteness = 1;
+            vpsArray.NalUnitType = H265NalUnitTypes.VPS;
+            foreach (var vp in track.Vps.Values)
+            {
+                vpsArray.NalUnits.Add(H265VpsNalUnit.Build(vp));
+            }
+
+            // correct order is VPS, SPS, PPS. Other order produced ffmpeg errors such as "VPS 0 does not exist" and "SPS 0 does not exist."
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.NalArrays.Add(vpsArray);
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.NalArrays.Add(spsArray);
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.NalArrays.Add(ppsArray);
+
+            visualSampleEntry.Children.Add(hevcConfigurationBox);
+
+            return visualSampleEntry;
         }
 
         public override void FillTkhdBox(TkhdBox tkhd)
@@ -3124,71 +3187,5 @@ namespace SharpMp4
         public int Reserved { get; set; }
         public int NalUnitType { get; set; }
         public List<byte[]> NalUnits { get; set; } = new List<byte[]>();
-    }
-
-    public class H265BoxBuilder
-    {
-        public static VisualSampleEntryBox CreateVisualSampleEntryBox(Mp4Box parent, H265Track track)
-        {
-            var sps = track.Sps.First().Value; // TODO: not sure about multiple SPS values...
-            var vps = track.Vps.First().Value; // TODO: not sure about multiple VPS values...
-            var dim = sps.CalculateDimensions();
-
-            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, parent, VisualSampleEntryBox.TYPE6);
-            visualSampleEntry.DataReferenceIndex = 1;
-            visualSampleEntry.Depth = 24;
-            visualSampleEntry.FrameCount = 1;
-            visualSampleEntry.HorizontalResolution = 72;
-            visualSampleEntry.VerticalResolution = 72;
-            visualSampleEntry.Width = dim.Width;
-            visualSampleEntry.Height = dim.Height;
-            visualSampleEntry.CompressorName = "hevc\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-            visualSampleEntry.CompressorNameDisplayableData = 4;
-
-            HevcConfigurationBox hevcConfigurationBox = new HevcConfigurationBox(0, visualSampleEntry, new HevcDecoderConfigurationRecord());
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.ConfigurationVersion = 1;
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileIdc = sps.ProfileTier.GeneralProfileIdc;
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.ChromaFormat = sps.ChromaFormatIdc;
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralLevelIdc = (byte)sps.ProfileTier.GeneralLevelIdc;
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileCompatibilityFlags = (uint)sps.ProfileTier.GetGeneralProfileCompatibilityFlags();
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralConstraintIndicatorFlags = (ulong)vps.ProfileTier.GetGeneralProfileConstraintIndicatorFlags();
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.BitDepthChromaMinus8 = sps.BitDepthChromaMinus8;
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.BitDepthLumaMinus8 = sps.BitDepthLumaMinus8;
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.TemporalIdNested = sps.SpsTemporalIdNestingFlag ? 1 : 0;
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.LengthSizeMinusOne = 3; // 4 bytes size block inserted in between NAL units
-
-            HevcNalArray spsArray = new HevcNalArray();
-            spsArray.ArrayCompleteness = 1;
-            spsArray.NalUnitType = H265NalUnitTypes.SPS;
-            foreach (var sp in track.Sps.Values)
-            {
-                spsArray.NalUnits.Add(H265SpsNalUnit.Build(sp));
-            }
-
-            HevcNalArray ppsArray = new HevcNalArray();
-            ppsArray.ArrayCompleteness = 1;
-            ppsArray.NalUnitType = H265NalUnitTypes.PPS;
-            foreach (var pp in track.Pps.Values)
-            {
-                ppsArray.NalUnits.Add(H265PpsNalUnit.Build(pp));
-            }
-
-            HevcNalArray vpsArray = new HevcNalArray();
-            vpsArray.ArrayCompleteness = 1;
-            vpsArray.NalUnitType = H265NalUnitTypes.VPS;
-            foreach (var vp in track.Vps.Values)
-            {
-                vpsArray.NalUnits.Add(H265VpsNalUnit.Build(vp));
-            }
-
-            // correct order is VPS, SPS, PPS. Other order produced ffmpeg errors such as "VPS 0 does not exist" and "SPS 0 does not exist."
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.NalArrays.Add(vpsArray);
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.NalArrays.Add(spsArray);
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.NalArrays.Add(ppsArray);
-
-            visualSampleEntry.Children.Add(hevcConfigurationBox);
-
-            return visualSampleEntry;
-        }
     }
 }

@@ -142,7 +142,47 @@ namespace SharpMp4
 
         public override Mp4Box CreateSampleEntryBox(Mp4Box parent)
         {
-            return H264BoxBuilder.CreateVisualSampleEntryBox(parent, this);
+            return CreateVisualSampleEntryBox(parent, this);
+        }
+
+        private static VisualSampleEntryBox CreateVisualSampleEntryBox(Mp4Box parent, H264Track track)
+        {
+            var sps = track.Sps.First().Value; // TODO: not sure about multiple SPS values...
+            var dim = sps.CalculateDimensions();
+
+            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, parent, VisualSampleEntryBox.TYPE3);
+            visualSampleEntry.DataReferenceIndex = 1;
+            visualSampleEntry.Depth = 24;
+            visualSampleEntry.FrameCount = 1;
+            visualSampleEntry.HorizontalResolution = 72;
+            visualSampleEntry.VerticalResolution = 72;
+            visualSampleEntry.Width = dim.Width;
+            visualSampleEntry.Height = dim.Height;
+            visualSampleEntry.CompressorName = "h264\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+            visualSampleEntry.CompressorNameDisplayableData = 4;
+
+            AvcConfigurationBox avcConfigurationBox = new AvcConfigurationBox(0, visualSampleEntry, new AvcDecoderConfigurationRecord());
+            avcConfigurationBox.AvcDecoderConfigurationRecord.SequenceParameterSets = track.Sps.Values.ToList();
+            avcConfigurationBox.AvcDecoderConfigurationRecord.NumberOfSeuqenceParameterSets = track.Sps.Count;
+            avcConfigurationBox.AvcDecoderConfigurationRecord.PictureParameterSets = track.Pps.Values.ToList();
+            avcConfigurationBox.AvcDecoderConfigurationRecord.NumberOfPictureParameterSets = (byte)track.Pps.Count;
+            avcConfigurationBox.AvcDecoderConfigurationRecord.AvcLevelIndication = (byte)sps.LevelIdc;
+            avcConfigurationBox.AvcDecoderConfigurationRecord.AvcProfileIndication = (byte)sps.ProfileIdc;
+            //avcConfigurationBox.AvcDecoderConfigurationRecord.BitDepthLumaMinus8 = sps.BitDepthLumaMinus8;
+            //avcConfigurationBox.AvcDecoderConfigurationRecord.BitDepthChromaMinus8 = sps.BitDepthChromaMinus8;
+            //avcConfigurationBox.AvcDecoderConfigurationRecord.ChromaFormat = sps.ChromaFormat.Id;
+            avcConfigurationBox.AvcDecoderConfigurationRecord.ConfigurationVersion = 1;
+            avcConfigurationBox.AvcDecoderConfigurationRecord.LengthSizeMinusOne = 3;
+            avcConfigurationBox.AvcDecoderConfigurationRecord.ProfileCompatibility =
+                (byte)((sps.ConstraintSet0Flag ? 128 : 0) +
+                       (sps.ConstraintSet1Flag ? 64 : 0) +
+                       (sps.ConstraintSet2Flag ? 32 : 0) +
+                       (sps.ConstraintSet3Flag ? 16 : 0) +
+                       (sps.ConstraintSet4Flag ? 8 : 0) +
+                       (sps.ReservedZero2Bits & 0x3));
+            visualSampleEntry.Children.Add(avcConfigurationBox);
+
+            return visualSampleEntry;
         }
 
         public override void FillTkhdBox(TkhdBox tkhd)
@@ -1747,49 +1787,6 @@ namespace SharpMp4
             bitstream.WriteBit(0); // forbidden 0
             bitstream.WriteBits(2, header.NalRefIdc);
             bitstream.WriteBits(5, header.NalUnitType);
-        }
-    }
-
-    public static class H264BoxBuilder
-    {
-        public static VisualSampleEntryBox CreateVisualSampleEntryBox(Mp4Box parent, H264Track track)
-        {
-            var sps = track.Sps.First().Value; // TODO: not sure about multiple SPS values...
-            var dim = sps.CalculateDimensions();
-
-            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, parent, VisualSampleEntryBox.TYPE3);
-            visualSampleEntry.DataReferenceIndex = 1;
-            visualSampleEntry.Depth = 24;
-            visualSampleEntry.FrameCount = 1;
-            visualSampleEntry.HorizontalResolution = 72;
-            visualSampleEntry.VerticalResolution = 72;
-            visualSampleEntry.Width = dim.Width;
-            visualSampleEntry.Height = dim.Height;
-            visualSampleEntry.CompressorName = "h264\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-            visualSampleEntry.CompressorNameDisplayableData = 4;
-
-            AvcConfigurationBox avcConfigurationBox = new AvcConfigurationBox(0, visualSampleEntry, new AvcDecoderConfigurationRecord());
-            avcConfigurationBox.AvcDecoderConfigurationRecord.SequenceParameterSets = track.Sps.Values.ToList();
-            avcConfigurationBox.AvcDecoderConfigurationRecord.NumberOfSeuqenceParameterSets = track.Sps.Count;
-            avcConfigurationBox.AvcDecoderConfigurationRecord.PictureParameterSets = track.Pps.Values.ToList();
-            avcConfigurationBox.AvcDecoderConfigurationRecord.NumberOfPictureParameterSets = (byte)track.Pps.Count;
-            avcConfigurationBox.AvcDecoderConfigurationRecord.AvcLevelIndication = (byte)sps.LevelIdc;
-            avcConfigurationBox.AvcDecoderConfigurationRecord.AvcProfileIndication = (byte)sps.ProfileIdc;
-            //avcConfigurationBox.AvcDecoderConfigurationRecord.BitDepthLumaMinus8 = sps.BitDepthLumaMinus8;
-            //avcConfigurationBox.AvcDecoderConfigurationRecord.BitDepthChromaMinus8 = sps.BitDepthChromaMinus8;
-            //avcConfigurationBox.AvcDecoderConfigurationRecord.ChromaFormat = sps.ChromaFormat.Id;
-            avcConfigurationBox.AvcDecoderConfigurationRecord.ConfigurationVersion = 1;
-            avcConfigurationBox.AvcDecoderConfigurationRecord.LengthSizeMinusOne = 3;
-            avcConfigurationBox.AvcDecoderConfigurationRecord.ProfileCompatibility =
-                (byte)((sps.ConstraintSet0Flag ? 128 : 0) +
-                       (sps.ConstraintSet1Flag ? 64 : 0) +
-                       (sps.ConstraintSet2Flag ? 32 : 0) +
-                       (sps.ConstraintSet3Flag ? 16 : 0) +
-                       (sps.ConstraintSet4Flag ? 8 : 0) +
-                       (sps.ReservedZero2Bits & 0x3));
-            visualSampleEntry.Children.Add(avcConfigurationBox);
-
-            return visualSampleEntry;
         }
     }
 }

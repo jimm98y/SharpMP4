@@ -8,48 +8,7 @@ namespace SharpMp4
     /// </summary>
     public class AACTrack : TrackBase
     {
-        public byte ChannelCount { get; private set; }
-        public int SamplingRate { get; private set; }
-        public ushort SampleSize { get; private set; }
-
-        public override string HdlrName => HdlrNames.Sound;
-
-        /// <summary>
-        /// Ctor.
-        /// </summary>
-        /// <param name="channelCount">Number of audio channels.</param>
-        /// <param name="samplingRateInHz">Audio sampling rate in HZ. Must be one of the supported sampling rates.</param>
-        /// <param name="sampleSizeInBits">Size of 1 sample in bits. </param>
-        public AACTrack(byte channelCount, int samplingRateInHz, ushort sampleSizeInBits)
-        {
-            if (!AACBoxBuilder.SamplingFrequencyMap.ContainsKey(samplingRateInHz))
-                throw new ArgumentOutOfRangeException("Invalid sampling rate!");
-
-            if(sampleSizeInBits % 8 != 0) 
-                throw new ArgumentOutOfRangeException("Invalid sample size!");
-
-            base.Handler = "soun";
-            this.Timescale = (uint)samplingRateInHz;
-            this.ChannelCount = channelCount;   
-            this.SamplingRate = samplingRateInHz;
-            this.SampleSize = sampleSizeInBits;
-            this.SampleDuration = 1024; // hardcoded for AAC-LC
-        }
-
-        public override Mp4Box CreateSampleEntryBox(Mp4Box parent)
-        {
-            return AACBoxBuilder.CreateAudioSampleEntryBox(parent, this);
-        }
-
-        public override void FillTkhdBox(TkhdBox tkhd)
-        {
-            tkhd.Volume = 1;
-        }
-    }
-
-    public static class AACBoxBuilder
-    {
-        public static readonly Dictionary<int, int> SamplingFrequencyMap = new Dictionary<int, int>()
+        private static readonly Dictionary<int, int> SamplingFrequencyMap = new Dictionary<int, int>()
         {
             {  0, 96000 },
             {  1, 88200 },
@@ -77,7 +36,40 @@ namespace SharpMp4
             {  8000, 11 },
         };
 
-        public static AudioSampleEntryBox CreateAudioSampleEntryBox(Mp4Box parent, AACTrack aacTrack)
+        public byte ChannelCount { get; private set; }
+        public int SamplingRate { get; private set; }
+        public ushort SampleSize { get; private set; }
+
+        public override string HdlrName => HdlrNames.Sound;
+
+        /// <summary>
+        /// Ctor.
+        /// </summary>
+        /// <param name="channelCount">Number of audio channels.</param>
+        /// <param name="samplingRateInHz">Audio sampling rate in HZ. Must be one of the supported sampling rates.</param>
+        /// <param name="sampleSizeInBits">Size of 1 sample in bits. </param>
+        public AACTrack(byte channelCount, int samplingRateInHz, ushort sampleSizeInBits)
+        {
+            if (!SamplingFrequencyMap.ContainsKey(samplingRateInHz))
+                throw new ArgumentOutOfRangeException("Invalid sampling rate!");
+
+            if(sampleSizeInBits % 8 != 0) 
+                throw new ArgumentOutOfRangeException("Invalid sample size!");
+
+            base.Handler = "soun";
+            this.Timescale = (uint)samplingRateInHz;
+            this.ChannelCount = channelCount;   
+            this.SamplingRate = samplingRateInHz;
+            this.SampleSize = sampleSizeInBits;
+            this.SampleDuration = 1024; // hardcoded for AAC-LC
+        }
+
+        public override Mp4Box CreateSampleEntryBox(Mp4Box parent)
+        {
+            return CreateAudioSampleEntryBox(parent, this);
+        }
+
+        private static AudioSampleEntryBox CreateAudioSampleEntryBox(Mp4Box parent, AACTrack aacTrack)
         {
             AudioSampleEntryBox audioSampleEntry = new AudioSampleEntryBox(0, parent, "mp4a");
 
@@ -111,6 +103,11 @@ namespace SharpMp4
 
             audioSampleEntry.Children.Add(esds);
             return audioSampleEntry;
+        }
+
+        public override void FillTkhdBox(TkhdBox tkhd)
+        {
+            tkhd.Volume = 1;
         }
     }
 }
