@@ -168,9 +168,9 @@ namespace SharpMp4
             avcConfigurationBox.AvcDecoderConfigurationRecord.NumberOfPictureParameterSets = (byte)track.Pps.Count;
             avcConfigurationBox.AvcDecoderConfigurationRecord.AvcLevelIndication = (byte)sps.LevelIdc;
             avcConfigurationBox.AvcDecoderConfigurationRecord.AvcProfileIndication = (byte)sps.ProfileIdc;
-            //avcConfigurationBox.AvcDecoderConfigurationRecord.BitDepthLumaMinus8 = sps.BitDepthLumaMinus8;
-            //avcConfigurationBox.AvcDecoderConfigurationRecord.BitDepthChromaMinus8 = sps.BitDepthChromaMinus8;
-            //avcConfigurationBox.AvcDecoderConfigurationRecord.ChromaFormat = sps.ChromaFormat.Id;
+            avcConfigurationBox.AvcDecoderConfigurationRecord.BitDepthLumaMinus8 = sps.BitDepthLumaMinus8;
+            avcConfigurationBox.AvcDecoderConfigurationRecord.BitDepthChromaMinus8 = sps.BitDepthChromaMinus8;
+            avcConfigurationBox.AvcDecoderConfigurationRecord.ChromaFormat = sps.ChromaFormat.Id;
             avcConfigurationBox.AvcDecoderConfigurationRecord.ConfigurationVersion = 1;
             avcConfigurationBox.AvcDecoderConfigurationRecord.LengthSizeMinusOne = 3;
             avcConfigurationBox.AvcDecoderConfigurationRecord.ProfileCompatibility =
@@ -757,8 +757,7 @@ namespace SharpMp4
                 H264PpsExt.Build(bitstream, nal.Extended);
             }
 
-            bitstream.WriteTrailingBit();
-            bitstream.Flush();
+            bitstream.WriteTrailingBits();
 
             return bitstream.WrittenBytes;
         }
@@ -1264,8 +1263,7 @@ namespace SharpMp4
                 H264VuiParameters.Build(bitstream, nal.VuiParameters);
             }
 
-            bitstream.WriteTrailingBit();
-            bitstream.Flush();
+            bitstream.WriteTrailingBits();
 
             return bitstream.WrittenBytes;
         }

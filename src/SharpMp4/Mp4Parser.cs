@@ -1271,9 +1271,10 @@ namespace SharpMp4
             }
         }
 
-        public void WriteTrailingBit()
+        public void WriteTrailingBits()
         {
             WriteBit(1);
+            Flush();
         }
 
         public void Flush()

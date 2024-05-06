@@ -525,8 +525,7 @@ namespace SharpMp4
                     bitstream.WriteBit(d);
             }
 
-            bitstream.WriteTrailingBit();
-            bitstream.Flush();
+            bitstream.WriteTrailingBits();
         }
     }
 
@@ -1343,8 +1342,7 @@ namespace SharpMp4
                 throw new NotSupportedException("SPS Extensions not supported yet!");
             }
             
-            bitstream.WriteTrailingBit();
-            bitstream.Flush();
+            bitstream.WriteTrailingBits();
         }
 
         public static H265SpsNalUnit Parse(byte[] sps)
@@ -2640,8 +2638,7 @@ namespace SharpMp4
                     bitstream.WriteBit(bbb);
             }
 
-            bitstream.WriteTrailingBit();
-            bitstream.Flush();
+            bitstream.WriteTrailingBits();
         }
 
         public static H265PpsNalUnit Parse(byte[] pps)
