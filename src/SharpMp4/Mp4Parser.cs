@@ -15,7 +15,7 @@ namespace SharpMp4
     /// </summary>
     public class FragmentedMp4Builder : IDisposable
     {
-        private Stream _output;
+        private IMp4Output _output;
         private uint _moofSequenceNumber = 1;
 
         private readonly double _maxSampleLengthInSeconds;
@@ -28,10 +28,10 @@ namespace SharpMp4
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="output">Output stream. Will be progressively written while recording.</param>
+        /// <param name="output">Output stream. Will be progressively written while recording. <see cref="IMp4Output"/>.</param>
         /// <param name="maxSampleLengthInSeconds">Maximum duration of 1 sample. Default is 0.5 sec.</param>
         /// <param name="maxSamplesPerFragment">Maximum number of samples per fragment (MOOF). Default is 8.</param>
-        public FragmentedMp4Builder(Stream output, double maxSampleLengthInSeconds = 0.5, int maxSamplesPerFragment = 8)
+        public FragmentedMp4Builder(IMp4Output output, double maxSampleLengthInSeconds = 0.5, int maxSamplesPerFragment = 8)
         {
             this._output = output;
             this._maxSampleLengthInSeconds = maxSampleLengthInSeconds;
@@ -101,7 +101,10 @@ namespace SharpMp4
             if (_moofSequenceNumber == 1)
             {
                 await CreateMediaInitialization(fmp4);
-                await FragmentedMp4.BuildAsync(fmp4, _output);
+
+                var initializationStream = await _output.GetStreamAsync(0); // sequence ID 0 is used to indicate "initializaiton"
+                await FragmentedMp4.BuildAsync(fmp4, initializationStream); 
+                await _output.FlushAsync(initializationStream);
 
                 fmp4 = new FragmentedMp4();
             }
@@ -147,8 +150,12 @@ namespace SharpMp4
                 }
             }
 
-            await CreateMediaFragment(fmp4, _tracks, fragments, _moofSequenceNumber++);
-            await FragmentedMp4.BuildAsync(fmp4, _output);
+            uint sequenceNumber = _moofSequenceNumber++;
+            await CreateMediaFragment(fmp4, _tracks, fragments, sequenceNumber);
+            
+            var fragmentStream = await _output.GetStreamAsync(sequenceNumber);
+            await FragmentedMp4.BuildAsync(fmp4, fragmentStream);
+            await _output.FlushAsync(fragmentStream);
         }
 
         private Task CreateMediaInitialization(FragmentedMp4 fmp4)
