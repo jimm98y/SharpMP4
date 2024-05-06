@@ -624,6 +624,27 @@ namespace SharpMp4
         public abstract void FillTkhdBox(TkhdBox tkhd);
     }
 
+    public struct StreamSample
+    {
+        public byte[] Sample { get; set; }
+        public uint Duration { get; set; }
+    }
+
+    public class StreamFragment
+    {
+        public StreamFragment(List<TrackBase> tracks, long[] startTimes)
+        {
+            StartTimes = startTimes;
+            for (int i = 0; i < tracks.Count; i++)
+            {
+                Samples.Add(new List<StreamSample>());
+            }
+        }
+
+        public List<List<StreamSample>> Samples { get; } = new List<List<StreamSample>>();
+        public long[] StartTimes { get; }
+    }
+
     public static class IsoReaderWriter
     {
 #if DEBUG
@@ -5768,28 +5789,6 @@ namespace SharpMp4
 
             return size;
         }
-    }
-
-
-    public struct StreamSample
-    {
-        public byte[] Sample { get; set; }
-        public uint Duration { get; set; }
-    }
-
-    public class StreamFragment
-    {
-        public StreamFragment(List<TrackBase> tracks, long[] startTimes)
-        {
-            StartTimes = startTimes;
-            for (int i = 0; i < tracks.Count; i++)
-            {
-                Samples.Add(new List<StreamSample>());
-            }
-        }
-
-        public List<List<StreamSample>> Samples { get; } = new List<List<StreamSample>>();
-        public long[] StartTimes { get; }
     }
 
 #if !NET7_0_OR_GREATER
