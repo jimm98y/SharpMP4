@@ -95,18 +95,17 @@ namespace SharpMp4
 
         private async Task WriteFragment(bool isFlushing = false)
         {
-            FragmentedMp4 fmp4 = new FragmentedMp4();
-
             // first check if we need to produce the media initialization segment
             if (_moofSequenceNumber == 1)
             {
-                await CreateMediaInitialization(fmp4);
+                using (FragmentedMp4 init = new FragmentedMp4())
+                {
+                    await CreateMediaInitialization(init);
 
-                var initializationStream = await _output.GetStreamAsync(0); // sequence ID 0 is used to indicate "initializaiton"
-                await FragmentedMp4.BuildAsync(fmp4, initializationStream); 
-                await _output.FlushAsync(initializationStream);
-
-                fmp4 = new FragmentedMp4();
+                    var initializationStream = await _output.GetStreamAsync(0); // sequence ID 0 is used to indicate "initializaiton"
+                    await FragmentedMp4.BuildAsync(init, initializationStream);
+                    await _output.FlushAsync(initializationStream);
+                }
             }
 
             // all tracks have enough samples to produce a fragment
@@ -150,12 +149,15 @@ namespace SharpMp4
                 }
             }
 
-            uint sequenceNumber = _moofSequenceNumber++;
-            await CreateMediaFragment(fmp4, _tracks, fragments, sequenceNumber);
-            
-            var fragmentStream = await _output.GetStreamAsync(sequenceNumber);
-            await FragmentedMp4.BuildAsync(fmp4, fragmentStream);
-            await _output.FlushAsync(fragmentStream);
+            using (FragmentedMp4 fmp4 = new FragmentedMp4())
+            {
+                uint sequenceNumber = _moofSequenceNumber++;
+                await CreateMediaFragment(fmp4, _tracks, fragments, sequenceNumber);
+
+                var fragmentStream = await _output.GetStreamAsync(sequenceNumber);
+                await FragmentedMp4.BuildAsync(fmp4, fragmentStream);
+                await _output.FlushAsync(fragmentStream);
+            }
         }
 
         private Task CreateMediaInitialization(FragmentedMp4 fmp4)
@@ -5356,7 +5358,7 @@ namespace SharpMp4
     /// Fragmented MP4.
     /// </summary>
     /// <remarks>https://stackoverflow.com/questions/35177797/what-exactly-is-fragmented-mp4fmp4-how-is-it-different-from-normal-mp4</remarks>
-    public class FragmentedMp4
+    public class FragmentedMp4 : IDisposable
     {
         public FtypBox GetFtyp() { return Children.SingleOrDefault(x => x.Type == FtypBox.TYPE) as FtypBox; } 
         public MoovBox GetMoov() { return Children.SingleOrDefault(x => x.Type == MoovBox.TYPE) as MoovBox; } 
@@ -5383,6 +5385,35 @@ namespace SharpMp4
                 await Mp4Parser.WriteBox(stream, child);
             }
             await stream.FlushAsync();
+        }
+
+        private bool _disposedValue;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    // only mdat is disposable
+                    var mdats = GetMdat();
+                    if(mdats.Any())
+                    {
+                        foreach(var mdat in mdats)
+                        {
+                            mdat.Dispose();
+                        }
+                    }
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 
