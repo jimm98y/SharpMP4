@@ -33,6 +33,26 @@ namespace SharpMp4
         public override string HdlrType => HdlrTypes.Video;
 
         /// <summary>
+        /// Overrides any auto-detected timescale.
+        /// </summary>
+        public uint TimescaleOverride { get; set; } = 0;
+
+        /// <summary>
+        /// Overrides any auto-detected frame tick.
+        /// </summary>
+        public uint FrameTickOverride { get; set; } = 0;
+
+        /// <summary>
+        /// If it is not possible to retrieve timescale from the SPS, use this value as a fallback.
+        /// </summary>
+        public uint TimescaleFallback { get; set; } = 30000;
+
+        /// <summary>
+        /// If it is not possible to retrieve frame tick from the SPS, use this value as a fallback.
+        /// </summary>
+        public uint FrameTickFallback { get; set; } = 1001;
+
+        /// <summary>
         /// Ctor.
         /// </summary>
         public H265Track()
@@ -72,6 +92,20 @@ namespace SharpMp4
                             Timescale = (uint)timescale.Timescale; 
                             SampleDuration = (uint)timescale.FrameTick;
                         }
+                        else
+                        {
+                            Timescale = TimescaleFallback;
+                            SampleDuration = FrameTickFallback;
+                        }
+                    }
+
+                    if (TimescaleOverride != 0)
+                    {
+                        Timescale = TimescaleOverride;
+                    }
+                    if (FrameTickOverride != 0)
+                    {
+                        SampleDuration = FrameTickOverride;
                     }
                 }
                 else if (header.NalUnitType == H265NalUnitTypes.PPS)
@@ -94,6 +128,10 @@ namespace SharpMp4
                     }
                     if (Log.DebugEnabled) Log.Debug($"Rebuilt VPS: {ToHexString(H265VpsNalUnit.Build(vps))}");
                 }
+                //else if (header.NalUnitType == H265NalUnitTypes.PREFIX_SEI_NUT || header.NalUnitType == H265NalUnitTypes.SUFFIX_SEI_NUT)
+                //{
+                //    // ignore SEI
+                //}
                 else
                 {
                     if (Log.DebugEnabled) Log.Debug($"NAL: {header.NalUnitType}, {sample.Length}");
@@ -1639,7 +1677,7 @@ namespace SharpMp4
             }
             else
             {
-                if (Log.ErrorEnabled) Log.Error("Can't determine frame rate because SPS does not contain vuiParams");
+                if (Log.WarnEnabled) Log.Warn("Can't determine frame rate because SPS does not contain vuiParams");
             }
 
             return (timescale, frametick);
@@ -2883,6 +2921,8 @@ namespace SharpMp4
         public const int VPS = 32;
         public const int SPS = 33;
         public const int PPS = 34;
+        public const int PREFIX_SEI_NUT = 39;
+        public const int SUFFIX_SEI_NUT = 40;
     }
 
     public class HevcConfigurationBox : Mp4Box

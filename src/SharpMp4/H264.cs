@@ -32,6 +32,26 @@ namespace SharpMp4
         public override string HdlrType => HdlrTypes.Video;
 
         /// <summary>
+        /// Overrides any auto-detected timescale.
+        /// </summary>
+        public uint TimescaleOverride { get; set; } = 0;
+
+        /// <summary>
+        /// Overrides any auto-detected frame tick.
+        /// </summary>
+        public uint FrameTickOverride { get; set; } = 0;
+
+        /// <summary>
+        /// If it is not possible to retrieve timescale from the SPS, use this value as a fallback.
+        /// </summary>
+        public uint TimescaleFallback { get; set; } = 30000;
+
+        /// <summary>
+        /// If it is not possible to retrieve frame tick from the SPS, use this value as a fallback.
+        /// </summary>
+        public uint FrameTickFallback { get; set; } = 1001;
+
+        /// <summary>
         /// Ctor.
         /// </summary>
         public H264Track()
@@ -68,6 +88,20 @@ namespace SharpMp4
                             Timescale = (uint)timescale.Timescale; // MaxFPS = Ceil( time_scale / ( 2 * num_units_in_tick ) )
                             SampleDuration = (uint)timescale.FrameTick * 2;
                         }
+                        else
+                        {
+                            Timescale = TimescaleFallback;
+                            SampleDuration = FrameTickFallback * 2;
+                        }
+                    }
+
+                    if (TimescaleOverride != 0)
+                    {
+                        Timescale = TimescaleOverride;
+                    }
+                    if (FrameTickOverride != 0)
+                    {
+                        SampleDuration = FrameTickOverride * 2;
                     }
                 }
                 else if (header.NalUnitType == H264NalUnitTypes.PPS)
@@ -80,6 +114,10 @@ namespace SharpMp4
                     }
                     if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H264PpsNalUnit.Build(pps))}");
                 }
+                //else if (header.NalUnitType == H264NalUnitTypes.SEI)
+                //{
+                //    // ignore SEI
+                //}
                 else
                 {
                     if (header.IsVCL())
@@ -195,6 +233,7 @@ namespace SharpMp4
 
     public static class H264NalUnitTypes
     {
+        public const int SEI = 6;
         public const int SPS = 7;
         public const int PPS = 8;
     }
@@ -1328,7 +1367,7 @@ namespace SharpMp4
             }
             else
             {
-                if (Log.ErrorEnabled) Log.Error("Can't determine frame rate because SPS does not contain vuiParams");
+                if (Log.WarnEnabled) Log.Warn("Can't determine frame rate because SPS does not contain vuiParams");
             }
 
             return (timescale, frametick);
