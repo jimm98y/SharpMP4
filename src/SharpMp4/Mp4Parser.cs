@@ -540,6 +540,136 @@ namespace SharpMp4
         }
     }
 
+    public static class FragmentedMp4Extensions
+    {
+        public static async Task<Dictionary<uint, IList<byte[]>>> ParseMdatAsync(this FragmentedMp4 fmp4)
+        {
+            var ret = new Dictionary<uint, IList<byte[]>>();
+            var videoTrak = fmp4.GetMoov().GetTrak().First(x => x.GetMdia().GetMinf().GetVmhd() != null);
+            uint videoTrackId = videoTrak.GetTkhd().TrackId;
+            if (!ret.ContainsKey(videoTrackId))
+                ret.Add(videoTrackId, new List<byte[]>());
+
+            int nalLengthSize = 0;
+            var h264VisualSample = videoTrak.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE3) as VisualSampleEntryBox;
+            if (h264VisualSample != null)
+            {
+                AvcConfigurationBox avcC = h264VisualSample.Children.First(x => x.Type == AvcConfigurationBox.TYPE) as AvcConfigurationBox;
+                nalLengthSize = avcC.AvcDecoderConfigurationRecord.LengthSizeMinusOne + 1; // 4 bytes
+
+                foreach (var sps in avcC.AvcDecoderConfigurationRecord.SequenceParameterSets)
+                {
+                    ret[videoTrackId].Add(H264SpsNalUnit.Build(sps));
+                }
+
+                foreach (var pps in avcC.AvcDecoderConfigurationRecord.PictureParameterSets)
+                {
+                    ret[videoTrackId].Add(H264PpsNalUnit.Build(pps));
+                }
+            }
+            else
+            {
+                var h265VisualSample = videoTrak.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE6) as VisualSampleEntryBox;
+                if (h265VisualSample != null)
+                {
+                    HevcConfigurationBox hvcC = h264VisualSample.Children.First(x => x.Type == HevcConfigurationBox.TYPE) as HevcConfigurationBox;
+                    nalLengthSize = hvcC.HevcDecoderConfigurationRecord.LengthSizeMinusOne + 1; // 4 bytes
+
+                    foreach (var array in hvcC.HevcDecoderConfigurationRecord.NalArrays)
+                    {
+                        foreach (var item in array.NalUnits)
+                        {
+                            ret[videoTrackId].Add(item);
+                        }
+                    }
+                }
+                else
+                {
+                    throw new NotSupportedException("No supported video track found!");
+                }
+            }
+
+            // to parse MDAT, we need trun box - as it turned out, our sample MDAT has audio/video multiplexed together in a single MDAT
+            MoofBox moof = null;
+            for (int i = 0; i < fmp4.Children.Count; i++)
+            {
+                if (fmp4.Children[i].Type == "moof")
+                {
+                    moof = fmp4.Children[i] as MoofBox;
+                    if (Log.DebugEnabled) Log.Debug($"-MOOF");
+                }
+                else if (fmp4.Children[i].Type == "mdat")
+                {
+                    if (Log.DebugEnabled) Log.Debug($"-MDAT");
+                    var mdat = fmp4.Children[i] as MdatBox;
+                    var mdatStorage = mdat.GetStorage();
+
+                    Stream stream = mdatStorage.Stream;
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    // plan how to read the MDAT in the correct order
+                    IEnumerable<TrunBox> plan = moof.GetTraf().SelectMany(x => x.GetTrun()).OrderBy(x => x.DataOffset);
+
+                    foreach (var trun in plan)
+                    {
+                        uint trackId = (trun.GetParent() as TrafBox).GetTfhd().TrackId;
+
+                        if (!ret.ContainsKey(trackId))
+                            ret.Add(trackId, new List<byte[]>());
+
+                        bool isVideo = trackId == videoTrak.GetTkhd().TrackId;
+                        if (Log.DebugEnabled) Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
+                        foreach (var entry in trun.Entries)
+                        {
+                            int sampleSize = (int)entry.SampleSize;
+
+                            if (isVideo)
+                            {
+                                int nalUnitLength = 0;
+
+                                switch (nalLengthSize)
+                                {
+                                    case 1:
+                                        nalUnitLength = (int)IsoReaderWriter.ReadByte(stream);
+                                        break;
+                                    case 2:
+                                        nalUnitLength = (int)IsoReaderWriter.ReadUInt16(stream);
+                                        break;
+                                    case 3:
+                                        nalUnitLength = (int)IsoReaderWriter.ReadUInt24(stream);
+                                        break;
+                                    case 4:
+                                        nalUnitLength = (int)IsoReaderWriter.ReadUInt32(stream);
+                                        break;
+
+                                    default:
+                                        throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+                                }
+
+                                if (nalUnitLength != sampleSize - nalLengthSize)
+                                    throw new Exception("NAL unit size from trun box does not match encoded NALu size!");
+
+                                byte[] fragment = new byte[nalUnitLength];
+                                await stream.ReadExactlyAsync(fragment, 0, nalUnitLength);
+
+                                ret[trackId].Add(fragment);
+                            }
+                            else
+                            {
+                                byte[] fragment = new byte[sampleSize];
+                                await stream.ReadExactlyAsync(fragment, 0, sampleSize);
+                                ret[trackId].Add(fragment);
+                                if (Log.DebugEnabled) Log.Debug($"Audio: {fragment.Length}");
+                            }
+                        }
+                    }
+                }
+            }
+
+            return ret;
+        }
+    } 
+
     public abstract class TrackBase
     {
         public abstract string HdlrName { get; }
