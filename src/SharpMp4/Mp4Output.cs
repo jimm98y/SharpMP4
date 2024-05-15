@@ -30,6 +30,7 @@ namespace SharpMp4
 
         public SingleStreamOutput(Stream output)
         {
+            // var output = File.Open("test.mp4", FileMode.Create, FileAccess.Write, FileShare.Read); // record and allow simultaneous playback
             this._output = output ?? throw new ArgumentNullException(nameof(output));
         }
 
@@ -42,7 +43,7 @@ namespace SharpMp4
         public Task FlushAsync(Stream output)
         {
             // ignore
-            return Task.CompletedTask;
+            return output.FlushAsync();
         }
     }
 
