@@ -93,17 +93,24 @@ namespace SharpMp4
         }
     }
 
+    public class FragmentBlobEventArgs : EventArgs
+    {
+        public FragmentBlobEventArgs(uint sequenceNumber, byte[] data)
+        {
+            this.SequenceNumber = sequenceNumber;
+            this.Data = data;
+        }
+
+        public uint SequenceNumber { get; private set; }
+        public byte[] Data { get; private set; }
+    }
+
     public class FragmentedBlobOutput : IMp4Output, IDisposable
     {
-        private Action<uint, byte[]> _callback;
+        public event EventHandler<FragmentBlobEventArgs> OnFragmentReady;
         private uint _currentSequenceNumber = 0;
         private Stream _currentOutputStream = null;
         private bool _disposedValue;
-
-        public FragmentedBlobOutput(Action<uint, byte[]> callback)
-        {
-            _callback = callback;
-        }
 
         public Task<Stream> GetStreamAsync(uint sequenceNumber)
         {
@@ -129,8 +136,10 @@ namespace SharpMp4
 
             var outputStream = (MemoryStream)output;
             await outputStream.FlushAsync();
-            _callback?.Invoke(sequenceNumber, outputStream.ToArray());
+            var data = outputStream.ToArray();
             outputStream.Dispose();
+
+            OnFragmentReady?.Invoke(this, new FragmentBlobEventArgs(sequenceNumber, data));
         }
 
         protected virtual void Dispose(bool disposing)
@@ -139,8 +148,6 @@ namespace SharpMp4
             {
                 if (disposing)
                 {
-                    _callback = null;
-
                     if (_currentOutputStream != null)
                     {
                         _currentOutputStream.Dispose();
