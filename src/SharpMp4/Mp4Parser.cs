@@ -102,9 +102,10 @@ namespace SharpMp4
                 {
                     await CreateMediaInitialization(init);
 
-                    var initializationStream = await _output.GetStreamAsync(0); // sequence ID 0 is used to indicate "initializaiton"
+                    const uint initializationSegmentNumber = 0; // sequence ID 0 is used to indicate "initialization"
+                    var initializationStream = await _output.GetStreamAsync(initializationSegmentNumber); 
                     await FragmentedMp4.BuildAsync(init, initializationStream);
-                    await _output.FlushAsync(initializationStream);
+                    await _output.FlushAsync(initializationStream, initializationSegmentNumber);
                 }
             }
 
@@ -156,7 +157,7 @@ namespace SharpMp4
 
                 var fragmentStream = await _output.GetStreamAsync(sequenceNumber);
                 await FragmentedMp4.BuildAsync(fmp4, fragmentStream);
-                await _output.FlushAsync(fragmentStream);
+                await _output.FlushAsync(fragmentStream, sequenceNumber);
             }
         }
 

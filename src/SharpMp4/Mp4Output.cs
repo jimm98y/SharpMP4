@@ -17,8 +17,9 @@ namespace SharpMp4
         /// Flush stream.
         /// </summary>
         /// <param name="output">Stream returned by <see cref="GetStreamAsync(uint)"/>.</param>
+        /// <param name="sequenceNumber">Sequence number. 0 = initialization that contains the MOOV. 1 and onwards = MOOF fragment.</param>
         /// <returns><see cref="Task"/></returns>
-        Task FlushAsync(Stream output);
+        Task FlushAsync(Stream output, uint sequenceNumber);
     }
 
     /// <summary>
@@ -40,9 +41,8 @@ namespace SharpMp4
             return Task.FromResult(_output);
         }
 
-        public Task FlushAsync(Stream output)
+        public Task FlushAsync(Stream output, uint sequenceNumber)
         {
-            // ignore
             return output.FlushAsync();
         }
     }
@@ -83,13 +83,79 @@ namespace SharpMp4
             }
         }
 
-        public async Task FlushAsync(Stream output)
+        public async Task FlushAsync(Stream output, uint sequenceNumber)
         {
             if (output == null)
                 throw new ArgumentNullException(nameof(output));
 
             await output.FlushAsync();
             output.Dispose();
+        }
+    }
+
+    public class FragmentedBlobOutput : IMp4Output, IDisposable
+    {
+        private Action<uint, byte[]> _callback;
+        private uint _currentSequenceNumber = 0;
+        private Stream _currentOutputStream = null;
+        private bool _disposedValue;
+
+        public FragmentedBlobOutput(Action<uint, byte[]> callback)
+        {
+            _callback = callback;
+        }
+
+        public Task<Stream> GetStreamAsync(uint sequenceNumber)
+        {
+            _currentSequenceNumber = sequenceNumber;
+            MemoryStream outputStream = new MemoryStream();
+            _currentOutputStream = outputStream;
+            return Task.FromResult((Stream)outputStream);
+        }
+
+        public async Task FlushAsync(Stream output, uint sequenceNumber)
+        {
+            if (_disposedValue)
+                throw new ObjectDisposedException(nameof(FragmentedBlobOutput));
+
+            if (output == null)
+                throw new ArgumentNullException(nameof(output));
+
+            if (_currentOutputStream != output)
+                throw new Exception("Threading error, invalid output stream!");
+
+            if (_currentSequenceNumber != sequenceNumber)
+                throw new Exception("Threading error, invalid sequence number!");
+
+            var outputStream = (MemoryStream)output;
+            await outputStream.FlushAsync();
+            _callback?.Invoke(sequenceNumber, outputStream.ToArray());
+            outputStream.Dispose();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _callback = null;
+
+                    if (_currentOutputStream != null)
+                    {
+                        _currentOutputStream.Dispose();
+                        _currentOutputStream = null;
+                    }
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
