@@ -95,13 +95,13 @@ namespace SharpMp4
 
     public class FragmentBlobEventArgs : EventArgs
     {
-        public FragmentBlobEventArgs(uint sequenceNumber, byte[] data)
+        public FragmentBlobEventArgs(int sequenceNumber, byte[] data)
         {
             this.SequenceNumber = sequenceNumber;
             this.Data = data;
         }
 
-        public uint SequenceNumber { get; private set; }
+        public int SequenceNumber { get; private set; }
         public byte[] Data { get; private set; }
     }
 
@@ -139,7 +139,7 @@ namespace SharpMp4
             var data = outputStream.ToArray();
             outputStream.Dispose();
 
-            OnFragmentReady?.Invoke(this, new FragmentBlobEventArgs(sequenceNumber, data));
+            OnFragmentReady?.Invoke(this, new FragmentBlobEventArgs((int)sequenceNumber, data));
         }
 
         protected virtual void Dispose(bool disposing)
