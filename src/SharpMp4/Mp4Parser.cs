@@ -573,7 +573,7 @@ namespace SharpMp4
                 var h265VisualSample = videoTrak.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE6) as VisualSampleEntryBox;
                 if (h265VisualSample != null)
                 {
-                    HevcConfigurationBox hvcC = h264VisualSample.Children.First(x => x.Type == HevcConfigurationBox.TYPE) as HevcConfigurationBox;
+                    HevcConfigurationBox hvcC = h265VisualSample.Children.First(x => x.Type == HevcConfigurationBox.TYPE) as HevcConfigurationBox;
                     nalLengthSize = hvcC.HevcDecoderConfigurationRecord.LengthSizeMinusOne + 1; // 4 bytes
 
                     foreach (var array in hvcC.HevcDecoderConfigurationRecord.NalArrays)
