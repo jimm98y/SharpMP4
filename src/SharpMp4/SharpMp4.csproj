@@ -4,4 +4,31 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Nullable>disable</Nullable>
+		<Title>$(ProjectName)</Title>
+		<Version>0.0.1</Version>
+		<Authors>Lukas Volf</Authors>
+		<Copyright>MIT</Copyright>
+		<PackageProjectUrl>https://github.com/jimm98y/SharpMP4</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/jimm98y/SharpMP4</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>onvif;camera;netstandard20</PackageTags>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<AssemblyVersion>0.0.1</AssemblyVersion>
+		<FileVersion>0.0.1</FileVersion>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Description>Simple lightweight fragmented mp4 (fmp4) reader/writer. Supports H264/H265 for video and AAC/Opus for audio.</Description>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+
 </Project>
