@@ -622,38 +622,43 @@ namespace SharpMp4
                         if (Log.DebugEnabled) Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
                         foreach (var entry in trun.Entries)
                         {
-                            int sampleSize = (int)entry.SampleSize;
+                            int sampleSize = (int)entry.SampleSize; // in case of video, this is the size of AU which consists of 1 or more NALU
 
                             if (isVideo)
                             {
+                                if (Log.DebugEnabled) Log.Debug($"--- AU Begin");
                                 int nalUnitLength = 0;
-
-                                switch (nalLengthSize)
+                                int auTotalRead = 0;
+                                do
                                 {
-                                    case 1:
-                                        nalUnitLength = (int)IsoReaderWriter.ReadByte(stream);
-                                        break;
-                                    case 2:
-                                        nalUnitLength = (int)IsoReaderWriter.ReadUInt16(stream);
-                                        break;
-                                    case 3:
-                                        nalUnitLength = (int)IsoReaderWriter.ReadUInt24(stream);
-                                        break;
-                                    case 4:
-                                        nalUnitLength = (int)IsoReaderWriter.ReadUInt32(stream);
-                                        break;
+                                    switch (nalLengthSize)
+                                    {
+                                        case 1:
+                                            nalUnitLength = (int)IsoReaderWriter.ReadByte(stream);
+                                            break;
+                                        case 2:
+                                            nalUnitLength = (int)IsoReaderWriter.ReadUInt16(stream);
+                                            break;
+                                        case 3:
+                                            nalUnitLength = (int)IsoReaderWriter.ReadUInt24(stream);
+                                            break;
+                                        case 4:
+                                            nalUnitLength = (int)IsoReaderWriter.ReadUInt32(stream);
+                                            break;
 
-                                    default:
-                                        throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+                                        default:
+                                            throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+                                    }
+
+                                    byte[] fragment = new byte[nalUnitLength];
+                                    await stream.ReadExactlyAsync(fragment, 0, nalUnitLength);
+
+                                    auTotalRead += nalLengthSize + nalUnitLength;
+
+                                    ret[trackId].Add(fragment);
                                 }
-
-                                if (nalUnitLength != sampleSize - nalLengthSize)
-                                    throw new Exception("NAL unit size from trun box does not match encoded NALu size!");
-
-                                byte[] fragment = new byte[nalUnitLength];
-                                await stream.ReadExactlyAsync(fragment, 0, nalUnitLength);
-
-                                ret[trackId].Add(fragment);
+                                while (auTotalRead != sampleSize);
+                                if (Log.DebugEnabled) Log.Debug($"--- AU End");
                             }
                             else
                             {
@@ -669,7 +674,7 @@ namespace SharpMp4
 
             return ret;
         }
-    } 
+    }
 
     public abstract class TrackBase
     {
