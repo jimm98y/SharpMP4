@@ -57,7 +57,7 @@ namespace SharpMp4
             if(sampleSizeInBits % 8 != 0) 
                 throw new ArgumentOutOfRangeException("Invalid sample size!");
 
-            this.Timescale = (uint)samplingRateInHz;
+            this.Timescale = (uint)samplingRateInHz * channelCount;
             this.ChannelCount = channelCount;   
             this.SamplingRate = samplingRateInHz;
             this.SampleSize = sampleSizeInBits;

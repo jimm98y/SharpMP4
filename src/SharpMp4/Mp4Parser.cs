@@ -629,6 +629,7 @@ namespace SharpMp4
                                 if (Log.DebugEnabled) Log.Debug($"--- AU Begin");
                                 int nalUnitLength = 0;
                                 int auTotalRead = 0;
+                                int nalPerAUReadCount = 0;
                                 do
                                 {
                                     switch (nalLengthSize)
@@ -654,10 +655,12 @@ namespace SharpMp4
                                     await stream.ReadExactlyAsync(fragment, 0, nalUnitLength);
 
                                     auTotalRead += nalLengthSize + nalUnitLength;
+                                    nalPerAUReadCount++;
 
                                     ret[trackId].Add(fragment);
                                 }
                                 while (auTotalRead != sampleSize);
+                                if (Log.DebugEnabled) Log.Debug($"--- NALs in AU: {nalPerAUReadCount}");
                                 if (Log.DebugEnabled) Log.Debug($"--- AU End");
                             }
                             else
@@ -674,7 +677,7 @@ namespace SharpMp4
 
             return ret;
         }
-    }
+    } 
 
     public abstract class TrackBase
     {

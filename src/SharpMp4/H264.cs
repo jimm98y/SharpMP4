@@ -17,6 +17,7 @@ namespace SharpMp4
     public class H264Track : TrackBase
     {
         private List<byte[]> _nalBuffer = new List<byte[]>();
+        private bool _nalBufferContainsVCL = false;
 
         /// <summary>
         /// SPS (Sequence Parameter Set) NAL units.
@@ -44,7 +45,7 @@ namespace SharpMp4
         /// <summary>
         /// If it is not possible to retrieve timescale from the SPS, use this value as a fallback.
         /// </summary>
-        public uint TimescaleFallback { get; set; } = 30000;
+        public uint TimescaleFallback { get; set; } = 24000;
 
         /// <summary>
         /// If it is not possible to retrieve frame tick from the SPS, use this value as a fallback.
@@ -91,7 +92,7 @@ namespace SharpMp4
                         else
                         {
                             Timescale = TimescaleFallback;
-                            SampleDuration = FrameTickFallback * 2;
+                            SampleDuration = FrameTickFallback;
                         }
                     }
 
@@ -101,7 +102,7 @@ namespace SharpMp4
                     }
                     if (FrameTickOverride != 0)
                     {
-                        SampleDuration = FrameTickOverride * 2;
+                        SampleDuration = FrameTickOverride;
                     }
                 }
                 else if (header.NalUnitType == H264NalUnitTypes.PPS)
@@ -114,18 +115,28 @@ namespace SharpMp4
                     }
                     if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H264PpsNalUnit.Build(pps))}");
                 }
-                //else if (header.NalUnitType == H264NalUnitTypes.SEI)
-                //{
-                //    // ignore SEI
-                //}
+                else if (header.NalUnitType == H264NalUnitTypes.SEI)
+                {
+                    if (_nalBufferContainsVCL)
+                    {
+                        await CreateSample();
+                    }
+
+                    _nalBuffer.Add(sample);
+                }
                 else
                 {
                     if (header.IsVCL())
                     {
                         if ((sample[1] & 0x80) != 0) // https://stackoverflow.com/questions/69373668/ffmpeg-error-first-slice-in-a-frame-missing-when-decoding-h-265-stream
                         {
-                            await CreateSample();
+                            if (_nalBufferContainsVCL)
+                            {
+                                await CreateSample();
+                            }
                         }
+
+                        _nalBufferContainsVCL = true;
                     }
 
                     _nalBuffer.Add(sample);
@@ -174,8 +185,11 @@ namespace SharpMp4
                 result = result.Concat(size).Concat(nal);
             }
 
+            if (Log.DebugEnabled) Log.Debug($"AU: {_nalBuffer.Count}");
+
             await base.ProcessSampleAsync(result.ToArray());
             _nalBuffer.Clear();
+            _nalBufferContainsVCL = false;
         }
 
         public override Mp4Box CreateSampleEntryBox(Mp4Box parent)
@@ -236,6 +250,7 @@ namespace SharpMp4
         public const int SEI = 6;
         public const int SPS = 7;
         public const int PPS = 8;
+        public const int AUD = 9; // Access Unit Delimiter
     }
 
     public class AvcConfigurationBox : Mp4Box

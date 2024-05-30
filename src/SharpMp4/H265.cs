@@ -13,6 +13,7 @@ namespace SharpMp4
     public class H265Track : TrackBase
     {
         private List<byte[]> _nalBuffer = new List<byte[]>();
+        private bool _nalBufferContainsVCL = false;
 
         /// <summary>
         /// VPS (Video Parameter Set) NAL units.
@@ -128,10 +129,15 @@ namespace SharpMp4
                     }
                     if (Log.DebugEnabled) Log.Debug($"Rebuilt VPS: {ToHexString(H265VpsNalUnit.Build(vps))}");
                 }
-                //else if (header.NalUnitType == H265NalUnitTypes.PREFIX_SEI_NUT || header.NalUnitType == H265NalUnitTypes.SUFFIX_SEI_NUT)
-                //{
-                //    // ignore SEI
-                //}
+                else if (header.NalUnitType == H265NalUnitTypes.PREFIX_SEI_NUT || header.NalUnitType == H265NalUnitTypes.SUFFIX_SEI_NUT)
+                {
+                    if (_nalBufferContainsVCL)
+                    {
+                        await CreateSample();
+                    }
+
+                    _nalBuffer.Add(sample);
+                }
                 else
                 {
                     if (Log.DebugEnabled) Log.Debug($"NAL: {header.NalUnitType}, {sample.Length}");
@@ -140,8 +146,13 @@ namespace SharpMp4
                     {
                         if ((sample[2] & 0x80) != 0) // https://stackoverflow.com/questions/69373668/ffmpeg-error-first-slice-in-a-frame-missing-when-decoding-h-265-stream
                         {
-                            await CreateSample();
+                            if (_nalBufferContainsVCL)
+                            {
+                                await CreateSample();
+                            }
                         }
+
+                        _nalBufferContainsVCL = true;
                     }
 
                     _nalBuffer.Add(sample);
