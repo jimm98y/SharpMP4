@@ -72,13 +72,13 @@ namespace SharpMp4
                 var header = H264NalUnitHeader.ParseNALHeader(bitstream);
                 if (header.NalUnitType == H264NalUnitTypes.SPS)
                 {
-                    if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {ToHexString(sample)}");
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {Utils.ToHexString(sample)}");
                     var sps = H264SpsNalUnit.Parse(sample);
                     if (!Sps.ContainsKey(sps.SeqParameterSetId))
                     {
                         Sps.Add(sps.SeqParameterSetId, sps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H264SpsNalUnit.Build(sps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {Utils.ToHexString(H264SpsNalUnit.Build(sps))}");
 
                     // if SPS contains the timescale, set it
                     if (Timescale == 0 || SampleDuration == 0)
@@ -107,13 +107,13 @@ namespace SharpMp4
                 }
                 else if (header.NalUnitType == H264NalUnitTypes.PPS)
                 {
-                    if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {ToHexString(sample)}");
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {Utils.ToHexString(sample)}");
                     var pps = H264PpsNalUnit.Parse(sample);
                     if (!Pps.ContainsKey(pps.PicParameterSetId))
                     {
                         Pps.Add(pps.PicParameterSetId, pps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H264PpsNalUnit.Build(pps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {Utils.ToHexString(H264PpsNalUnit.Build(pps))}");
                 }
                 else if (header.NalUnitType == H264NalUnitTypes.SEI)
                 {
@@ -150,7 +150,7 @@ namespace SharpMp4
         /// <returns><see cref="Task"/></returns>
         public override async Task FlushAsync()
         {
-            if (_nalBuffer.Count == 0)
+            if (_nalBuffer.Count == 0 || !_nalBufferContainsVCL)
                 return;
 
             if ((_nalBuffer[0][1] & 0x80) != 0)
@@ -222,7 +222,7 @@ namespace SharpMp4
             avcConfigurationBox.AvcDecoderConfigurationRecord.AvcProfileIndication = (byte)sps.ProfileIdc;
             avcConfigurationBox.AvcDecoderConfigurationRecord.BitDepthLumaMinus8 = sps.BitDepthLumaMinus8;
             avcConfigurationBox.AvcDecoderConfigurationRecord.BitDepthChromaMinus8 = sps.BitDepthChromaMinus8;
-            avcConfigurationBox.AvcDecoderConfigurationRecord.ChromaFormat = sps.ChromaFormat.Id;
+            avcConfigurationBox.AvcDecoderConfigurationRecord.ChromaFormat = sps.ChromaFormat == null ? -1 : sps.ChromaFormat.Id;
             avcConfigurationBox.AvcDecoderConfigurationRecord.ConfigurationVersion = 1;
             avcConfigurationBox.AvcDecoderConfigurationRecord.LengthSizeMinusOne = 3;
             avcConfigurationBox.AvcDecoderConfigurationRecord.ProfileCompatibility =
@@ -336,8 +336,8 @@ namespace SharpMp4
         public byte ProfileCompatibility { get; set; }
         public byte AvcLevelIndication { get; set; }
         public int LengthSizeMinusOnePaddingBits { get; set; } = 63;
-        public int LengthSizeMinusOne { get; set; } = 4;
-        public int NumberOfSequenceParameterSetsPaddingBits { get; set; } = 7;
+        public int LengthSizeMinusOne { get; set; } = 3;
+        public int NumberOfSequenceParameterSetsPaddingBits { get; set; } = 0;
         public int NumberOfSeuqenceParameterSets { get; set; }
         public List<H264SpsNalUnit> SequenceParameterSets { get; set; }
         public byte NumberOfPictureParameterSets { get; set; }
@@ -373,6 +373,7 @@ namespace SharpMp4
                 ushort sequenceParameterSetLength = IsoReaderWriter.ReadUInt16(stream);
                 byte[] sequenceParameterSetNALUnitBytes = new byte[sequenceParameterSetLength];
                 await IsoReaderWriter.ReadBytesAsync(stream, sequenceParameterSetNALUnitBytes, 0, sequenceParameterSetLength);
+                if (Log.DebugEnabled) Log.Debug($"Read SPS: {Utils.ToHexString(sequenceParameterSetNALUnitBytes)}");
                 H264SpsNalUnit sequenceParameterSetNALUnit = H264SpsNalUnit.Parse(sequenceParameterSetNALUnitBytes);
                 sequenceParameterSets.Add(sequenceParameterSetNALUnit);
                 consumedLength = consumedLength + 2 + sequenceParameterSetLength;
@@ -383,6 +384,7 @@ namespace SharpMp4
                 ushort pictureParameterSetLength = IsoReaderWriter.ReadUInt16(stream);
                 byte[] pictureParameterSetNALUnitBytes = new byte[pictureParameterSetLength];
                 await IsoReaderWriter.ReadBytesAsync(stream, pictureParameterSetNALUnitBytes, 0, pictureParameterSetLength);
+                if (Log.DebugEnabled) Log.Debug($"Read PPS: {Utils.ToHexString(pictureParameterSetNALUnitBytes)}");
                 H264PpsNalUnit pictureParameterSetNALUnit = H264PpsNalUnit.Parse(pictureParameterSetNALUnitBytes);
                 pictureParameterSets.Add(pictureParameterSetNALUnit);
                 consumedLength = consumedLength + 2 + pictureParameterSetLength;
@@ -1080,7 +1082,7 @@ namespace SharpMp4
 
             int seqParameterSetId = bitstream.ReadUE();
 
-            H264ChromaFormat chromaFormat;
+            H264ChromaFormat chromaFormat = null;
             bool residualColorTransformFlag = false;
             int bitDepthLumaMinus8 = 0;
             int bitDepthChromaMinus8 = 0;
@@ -1104,10 +1106,6 @@ namespace SharpMp4
                 {
                     scalingMatrix = ScalingMatrix.Parse(bitstream);
                 }
-            }
-            else
-            {
-                chromaFormat = H264ChromaFormat.FromId(1);
             }
 
             int log2MaxFrameNumMinus4 = bitstream.ReadUE();
@@ -1253,8 +1251,12 @@ namespace SharpMp4
 
             if (nal.ProfileIdc == 100 || nal.ProfileIdc == 110 || nal.ProfileIdc == 122 || nal.ProfileIdc == 144)
             {
-                bitstream.WriteUE((uint)nal.ChromaFormat.Id);
-                if (nal.ChromaFormat.Id == 3)
+                var chromaFormat = nal.ChromaFormat;
+                if (chromaFormat == null)
+                    chromaFormat = H264ChromaFormat.FromId(1); // default
+
+                bitstream.WriteUE((uint)chromaFormat.Id);
+                if (chromaFormat.Id == 3)
                 {
                     bitstream.WriteBit(nal.ResidualColorTransformFlag);
                 }
@@ -1343,17 +1345,21 @@ namespace SharpMp4
             int height = 16 * (this.PicHeightInMapUnitsMinus1 + 1) * mult;
             if (this.FrameCroppingFlag)
             {
+                var chromaFormat = this.ChromaFormat;
+                if (chromaFormat == null)
+                    chromaFormat = H264ChromaFormat.FromId(1); // default
+
                 int chromaArrayType = 0;
                 if (!this.ResidualColorTransformFlag)
                 {
-                    chromaArrayType = this.ChromaFormat.Id;
+                    chromaArrayType = chromaFormat.Id;
                 }
                 int cropUnitX = 1;
                 int cropUnitY = mult;
                 if (chromaArrayType != 0)
                 {
-                    cropUnitX = this.ChromaFormat.SubWidth;
-                    cropUnitY = this.ChromaFormat.SubHeight * mult;
+                    cropUnitX = chromaFormat.SubWidth;
+                    cropUnitY = chromaFormat.SubHeight * mult;
                 }
 
                 width -= cropUnitX * (this.FrameCropLeftOffset + this.FrameCropRightOffset);

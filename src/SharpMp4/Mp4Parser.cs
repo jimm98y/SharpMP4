@@ -699,7 +699,7 @@ namespace SharpMp4
         public virtual async Task ProcessSampleAsync(byte[] sample)
         {
             if (SampleDuration == 0)
-                return;
+                throw new InvalidOperationException("SampleDuration must not be 0!");
 
             _nextFragmentCreateStartTime = _nextFragmentCreateStartTime + SampleDuration;
             Interlocked.Add(ref _queuedSamplesLength, SampleDuration);
@@ -714,17 +714,6 @@ namespace SharpMp4
             _samples.Enqueue(s);
 
             await _sink.NotifySampleAdded();
-        }
-
-        public static string ToHexString(byte[] data)
-        {
-#if !NETCOREAPP
-            string hexString = BitConverter.ToString(data);
-            hexString = hexString.Replace("-", "");
-            return hexString;
-#else
-            return Convert.ToHexString(data);
-#endif
         }
 
         public StreamSample ReadSample()
@@ -1445,7 +1434,9 @@ namespace SharpMp4
 
         public void WriteSE(int value)
         {
-            WriteUE((uint)((value << 1) * (value < 0 ? -1 : 1) + (value > 0 ? 1 : 0)));
+            // https://en.wikipedia.org/wiki/Exponential-Golomb_coding
+            uint mapped = (uint)((value << 1) * (value < 0 ? -1 : 1) - (value > 0 ? 1 : 0));
+            WriteUE(mapped);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -5957,4 +5948,18 @@ namespace SharpMp4
         }
     }
 #endif
+
+    internal class Utils
+    {
+        public static string ToHexString(byte[] data)
+        {
+#if !NETCOREAPP
+            string hexString = BitConverter.ToString(data);
+            hexString = hexString.Replace("-", "");
+            return hexString;
+#else
+            return Convert.ToHexString(data);
+#endif
+        }
+    }
 }

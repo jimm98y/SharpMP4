@@ -46,7 +46,7 @@ namespace SharpMp4
         /// <summary>
         /// If it is not possible to retrieve timescale from the SPS, use this value as a fallback.
         /// </summary>
-        public uint TimescaleFallback { get; set; } = 30000;
+        public uint TimescaleFallback { get; set; } = 24000;
 
         /// <summary>
         /// If it is not possible to retrieve frame tick from the SPS, use this value as a fallback.
@@ -76,13 +76,13 @@ namespace SharpMp4
                 var header = H265NalUnitHeader.ParseNALHeader(bitstream);
                 if (header.NalUnitType == H265NalUnitTypes.SPS)
                 {
-                    if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {ToHexString(sample)}");
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {Utils.ToHexString(sample)}");
                     var sps = H265SpsNalUnit.Parse(sample);
                     if (!Sps.ContainsKey(sps.SeqParameterSetId))
                     {
                         Sps.Add(sps.SeqParameterSetId, sps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {ToHexString(H265SpsNalUnit.Build(sps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {Utils.ToHexString(H265SpsNalUnit.Build(sps))}");
 
                     // if SPS contains the timescale, set it
                     if (Timescale == 0 || SampleDuration == 0)
@@ -111,23 +111,23 @@ namespace SharpMp4
                 }
                 else if (header.NalUnitType == H265NalUnitTypes.PPS)
                 {
-                    if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {ToHexString(sample)}");
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {Utils.ToHexString(sample)}");
                     var pps = H265PpsNalUnit.Parse(sample);
                     if (!Pps.ContainsKey(pps.PicParameterSetId))
                     {
                         Pps.Add(pps.PicParameterSetId, pps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {ToHexString(H265PpsNalUnit.Build(pps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {Utils.ToHexString(H265PpsNalUnit.Build(pps))}");
                 }
                 else if (header.NalUnitType == H265NalUnitTypes.VPS)
                 {
-                    if (Log.DebugEnabled) Log.Debug($"-Parsed VPS: {ToHexString(sample)}");
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed VPS: {Utils.ToHexString(sample)}");
                     var vps = H265VpsNalUnit.Parse(sample);
                     if (!Vps.ContainsKey(vps.VpsParameterSetId))
                     {
                         Vps.Add(vps.VpsParameterSetId, vps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt VPS: {ToHexString(H265VpsNalUnit.Build(vps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt VPS: {Utils.ToHexString(H265VpsNalUnit.Build(vps))}");
                 }
                 else if (header.NalUnitType == H265NalUnitTypes.PREFIX_SEI_NUT || header.NalUnitType == H265NalUnitTypes.SUFFIX_SEI_NUT)
                 {
@@ -166,7 +166,7 @@ namespace SharpMp4
         /// <returns><see cref="Task"/></returns>
         public override async Task FlushAsync()
         {
-            if (_nalBuffer.Count == 0)
+            if (_nalBuffer.Count == 0 || !_nalBufferContainsVCL)
                 return;
 
             if ((_nalBuffer[0][2] & 0x80) != 0) 
@@ -233,8 +233,8 @@ namespace SharpMp4
             hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileIdc = sps.ProfileTier.GeneralProfileIdc;
             hevcConfigurationBox.HevcDecoderConfigurationRecord.ChromaFormat = sps.ChromaFormatIdc;
             hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralLevelIdc = (byte)sps.ProfileTier.GeneralLevelIdc;
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileCompatibilityFlags = (uint)sps.ProfileTier.GetGeneralProfileCompatibilityFlags();
-            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralConstraintIndicatorFlags = (ulong)vps.ProfileTier.GetGeneralProfileConstraintIndicatorFlags();
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileCompatibilityFlags = sps.ProfileTier.GetGeneralProfileCompatibilityFlags();
+            hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralConstraintIndicatorFlags = vps.ProfileTier.GetGeneralProfileConstraintIndicatorFlags();
             hevcConfigurationBox.HevcDecoderConfigurationRecord.BitDepthChromaMinus8 = sps.BitDepthChromaMinus8;
             hevcConfigurationBox.HevcDecoderConfigurationRecord.BitDepthLumaMinus8 = sps.BitDepthLumaMinus8;
             hevcConfigurationBox.HevcDecoderConfigurationRecord.TemporalIdNested = sps.SpsTemporalIdNestingFlag ? 1 : 0;
