@@ -58,6 +58,7 @@ namespace SharpMp4
         public H264Track()
         {
             this.CompatibleBrand = VisualSampleEntryBox.TYPE3; // avc1
+            this.DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
         }
 
         /// <summary>

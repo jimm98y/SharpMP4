@@ -267,17 +267,13 @@ namespace SharpMp4
         {
             TfhdBox tfhd = new TfhdBox(0, parent);
             tfhd.TrackId = track.TrackID;
-            // TODO: DefaultSampleFlags
-            if (track.TrackID == 1)
+
+            if (track.DefaultSampleFlags != null)
             {
-                tfhd.Flags = 131104;
-                tfhd.DefaultSampleFlags = 16842752;
+                tfhd.SetDefaultSampleFlags(0x01010000);
             }
-            else
-            {
-                tfhd.Flags = 131072;
-            }
-            tfhd.DefaultBaseIsMoof = true;
+
+            tfhd.SetDefaultBaseIsMoof();
             return tfhd;
         }
 
@@ -691,6 +687,7 @@ namespace SharpMp4
         public string Language { get; set; } = "und";
 
         public uint SampleDuration { get; set; }
+        public SampleFlags DefaultSampleFlags { get; set; } = null;
 
         public ConcurrentQueue<StreamSample> _samples = new ConcurrentQueue<StreamSample>();
         private long _queuedSamplesLength = 0;
@@ -1069,26 +1066,22 @@ namespace SharpMp4
 
         public static uint WriteInt32(Stream stream, int value)
         {
-            // TODO!!!
-            return WriteUInt32(stream, (uint)value);
+            return WriteUInt32(stream, unchecked((uint)value));
         }
 
         public static int ReadInt32(Stream stream)
         {
-            // TODO!!!
-            return (int)ReadUInt32(stream);
+            return unchecked((int)ReadUInt32(stream));
         }
 
         public static short ReadInt16(Stream stream)
         {
-            // TODO!!!
-            return (short)ReadUInt16(stream);
+            return unchecked((short)ReadUInt16(stream));
         }
 
         public static uint WriteInt16(Stream stream, short value)
         {
-            // TODO
-            return WriteUInt16(stream, (ushort)value);
+            return WriteUInt16(stream, unchecked((ushort)value));
         }
 
         public static ulong ReadUInt48(Stream stream)
@@ -3094,7 +3087,7 @@ namespace SharpMp4
         public uint DefaultSampleDescriptionIndex { get; set; } = 1;
         public uint DefaultSampleDuration { get; set; }
         public uint DefaultSampleSize { get; set; }
-        public uint A { get; set; }
+        public SampleFlags SampleFlags { get; set; } = new SampleFlags();
 
         public TrexBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
         { }
@@ -3108,7 +3101,7 @@ namespace SharpMp4
             uint defaultSampleDescriptionIndex,
             uint defaultSampleDuration,
             uint defaultSampleSize,
-            uint a) : this(size, parent)
+            SampleFlags sampleFlags) : this(size, parent)
         {
             Version = version;
             Flags = flags;
@@ -3116,7 +3109,7 @@ namespace SharpMp4
             DefaultSampleDescriptionIndex = defaultSampleDescriptionIndex;
             DefaultSampleDuration = defaultSampleDuration;
             DefaultSampleSize = defaultSampleSize;
-            A = a;
+            SampleFlags = sampleFlags;
         }
 
         public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
@@ -3128,19 +3121,8 @@ namespace SharpMp4
             uint defaultSampleDescriptionIndex = IsoReaderWriter.ReadUInt32(stream);
             uint defaultSampleDuration = IsoReaderWriter.ReadUInt32(stream);
             uint defaultSampleSize = IsoReaderWriter.ReadUInt32(stream);
-            uint a = IsoReaderWriter.ReadUInt32(stream);
-            // TODO Flags
-            /*
-            reserved = (byte)((a & 0xF0000000) >> 28);
-            isLeading = (byte)((a & 0x0C000000) >> 26);
-            sampleDependsOn = (byte)((a & 0x03000000) >> 24);
-            sampleIsDependedOn = (byte)((a & 0x00C00000) >> 22);
-            sampleHasRedundancy = (byte)((a & 0x00300000) >> 20);
-            samplePaddingValue = (byte)((a & 0x000e0000) >> 17);
-            sampleIsDifferenceSample = (a & 0x00010000) >> 16 > 0;
-            sampleDegradationPriority = (int)(a & 0x0000ffff);
-             */
-
+            SampleFlags sampleFlags = SampleFlags.Parse(IsoReaderWriter.ReadUInt32(stream));
+            
             TrexBox trex = new TrexBox(
                 size,
                 parent,
@@ -3150,7 +3132,7 @@ namespace SharpMp4
                 defaultSampleDescriptionIndex,
                 defaultSampleDuration,
                 defaultSampleSize,
-                a);
+                sampleFlags);
 
             return Task.FromResult((Mp4Box)trex);
         }
@@ -3165,13 +3147,85 @@ namespace SharpMp4
             size += IsoReaderWriter.WriteUInt32(stream, b.DefaultSampleDescriptionIndex);
             size += IsoReaderWriter.WriteUInt32(stream, b.DefaultSampleDuration);
             size += IsoReaderWriter.WriteUInt32(stream, b.DefaultSampleSize);
-            size += IsoReaderWriter.WriteUInt32(stream, b.A);
+            size += IsoReaderWriter.WriteUInt32(stream, SampleFlags.Build(b.SampleFlags));
             return Task.FromResult(size);
         }
 
         public override uint CalculateSize()
         {
             return base.CalculateSize() + 5 * 4 + 4;
+        }
+    }
+
+    public class SampleFlags
+    {
+        public SampleFlags()
+        { }
+
+        public SampleFlags(
+            byte reserved, 
+            byte isLeading, 
+            byte sampleDependsOn, 
+            byte sampleIsDependedOn, 
+            byte sampleHasRedundancy, 
+            byte samplePaddingValue, 
+            bool sampleIsDifferenceSample, 
+            int sampleDegradationPriority)
+        {
+            Reserved = reserved;
+            IsLeading = isLeading;
+            SampleDependsOn = sampleDependsOn;
+            SampleIsDependedOn = sampleIsDependedOn;
+            SampleHasRedundancy = sampleHasRedundancy;
+            SamplePaddingValue = samplePaddingValue;
+            SampleIsDifferenceSample = sampleIsDifferenceSample;
+            SampleDegradationPriority = sampleDegradationPriority;
+        }
+
+        public byte Reserved { get; set; } = 0;
+        public byte IsLeading { get; set; }
+        public byte SampleDependsOn { get; set; }
+        public byte SampleIsDependedOn { get; set; }
+        public byte SampleHasRedundancy { get; set; }
+        public byte SamplePaddingValue { get; set; }
+        public bool SampleIsDifferenceSample { get; set; }
+        public int SampleDegradationPriority { get; set; }
+
+        public static SampleFlags Parse(uint sampleFlags)
+        {
+            byte reserved = (byte)((sampleFlags & 0xF0000000) >> 28);
+            byte isLeading = (byte)((sampleFlags & 0x0C000000) >> 26);
+            byte sampleDependsOn = (byte)((sampleFlags & 0x03000000) >> 24);
+            byte sampleIsDependedOn = (byte)((sampleFlags & 0x00C00000) >> 22);
+            byte sampleHasRedundancy = (byte)((sampleFlags & 0x00300000) >> 20);
+            byte samplePaddingValue = (byte)((sampleFlags & 0x000e0000) >> 17);
+            bool sampleIsDifferenceSample = (sampleFlags & 0x00010000) >> 16 > 0;
+            int sampleDegradationPriority = (int)(sampleFlags & 0x0000ffff);
+
+            return new SampleFlags(
+                reserved,
+                isLeading,
+                sampleDependsOn,
+                sampleIsDependedOn,
+                sampleHasRedundancy,
+                samplePaddingValue,
+                sampleIsDifferenceSample,
+                sampleDegradationPriority
+                );
+        }
+
+        public static uint Build(SampleFlags sampleFlags)
+        {
+            uint ret = (uint)(
+                   (sampleFlags.Reserved << 28) |
+                   (sampleFlags.IsLeading << 26) |
+                   (sampleFlags.SampleDependsOn << 24) |
+                   (sampleFlags.SampleIsDependedOn << 22) |
+                   (sampleFlags.SampleHasRedundancy << 20) |
+                   (sampleFlags.SamplePaddingValue << 17) |
+                   ((sampleFlags.SampleIsDifferenceSample ? 1 : 0) << 16) |
+                   (sampleFlags.SampleDegradationPriority & 0x0000ffff));
+            return ret;
         }
     }
 
@@ -3307,7 +3361,7 @@ namespace SharpMp4
         public uint SampleDescriptionIndex { get; set; }
         public uint DefaultSampleDuration { get; set; }
         public uint DefaultSampleSize { get; set; }
-        public uint DefaultSampleFlags { get; set; } = 16842752; 
+        public uint DefaultSampleFlags { get; set; } = 0x01010000; 
         public bool DurationIsEmpty { get; set; }
         public bool DefaultBaseIsMoof { get; set; } = true;
 
@@ -3338,6 +3392,85 @@ namespace SharpMp4
             DefaultSampleFlags = defaultSampleFlags;
             DurationIsEmpty = durationIsEmpty;
             DefaultBaseIsMoof = defaultBaseIsMoof;
+        }
+
+        public void SetBaseDataOffset(uint baseDataOffset)
+        {
+            Flags = Flags | 0x1u;
+            BaseDataOffset = baseDataOffset;
+        }
+
+        public void ClearBaseDataOffset()
+        {
+            Flags &= ~0x1u;
+        }
+
+        public void SetSampleDescriptionIndex(uint sampleDescriptionIndex)
+        {
+            Flags = Flags | 0x2u;
+            SampleDescriptionIndex = sampleDescriptionIndex;
+        }
+
+        public void ClearSampleDescriptionIndex()
+        {
+            Flags &= ~0x2u;
+        }
+
+        public void SetDefaultSampleDuration(uint defaultSampleDuration)
+        {
+            Flags = Flags | 0x8u;
+            DefaultSampleDuration = defaultSampleDuration;
+        }
+
+        public void ClearDefaultSampleDuration()
+        {
+            Flags &= ~0x8u;
+        }
+
+        public void SetDefaultSampleSize(uint defaultSampleSize)
+        {
+            Flags = Flags | 0x10u;
+            DefaultSampleSize = defaultSampleSize;
+        }
+
+        public void ClearDefaultSampleSize()
+        {
+            Flags &= ~0x10u;
+        }
+
+        public void SetDefaultSampleFlags(uint defaultSampleFlags)
+        {
+            Flags = Flags | 0x20u;
+            DefaultSampleFlags = defaultSampleFlags;
+        }
+
+        public void ClearDefaultSampleFlags()
+        {
+            Flags &= ~0x20u;
+        }
+
+        public void SetDurationIsEmpty()
+        {
+            Flags = Flags | 0x10000u;
+            DurationIsEmpty = true;
+        }
+
+        public void ClearDurationIsEmpty()
+        {
+            Flags &= ~0x10000u;
+            DurationIsEmpty = false;
+        }
+
+        public void SetDefaultBaseIsMoof()
+        {
+            Flags = Flags | 0x20000u;
+            DefaultBaseIsMoof = true;
+        }
+
+        public void ClearDefaultBaseIsMoof()
+        {
+            Flags &= ~0x20000u;
+            DefaultBaseIsMoof = false;
         }
 
         public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
