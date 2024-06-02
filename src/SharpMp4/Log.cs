@@ -22,13 +22,20 @@ namespace SharpMp4
             SinkTrace(message, ex);
         }
 
-        public static bool DebugEnabled { get; set; } = true;
+        public static bool DebugEnabled { get; set; }
+#if DEBUG
+            = true;
+#endif
+
         public static void Debug(string message, Exception ex = null)
         {
             SinkDebug(message, ex);
         }
 
-        public static bool InfoEnabled { get; set; } = true;
+        public static bool InfoEnabled { get; set; }
+#if DEBUG
+            = true;
+#endif
         public static void Info(string message, Exception ex = null)
         {
             SinkInfo(message, ex);
