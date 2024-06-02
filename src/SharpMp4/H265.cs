@@ -379,7 +379,7 @@ namespace SharpMp4
             }
         }
 
-        private static H265VpsNalUnit Parse(ushort size, Stream stream)
+        private static H265VpsNalUnit Parse(ushort size, MemoryStream stream)
         {
             NalBitStreamReader bitstream = new NalBitStreamReader(stream);
             H265NalUnitHeader header = H265NalUnitHeader.ParseNALHeader(bitstream);
@@ -511,7 +511,7 @@ namespace SharpMp4
             }
         }
 
-        public static void Build(Stream stream, H265VpsNalUnit b)
+        public static void Build(MemoryStream stream, H265VpsNalUnit b)
         {
             NalBitStreamWriter bitstream = new NalBitStreamWriter(stream);
             H265NalUnitHeader.BuildNALHeader(bitstream, b.Header);
@@ -1257,7 +1257,7 @@ namespace SharpMp4
             }
         }
 
-        public static void Build(Stream stream, H265SpsNalUnit b)
+        public static void Build(MemoryStream stream, H265SpsNalUnit b)
         {
             NalBitStreamWriter bitstream = new NalBitStreamWriter(stream);
             H265NalUnitHeader.BuildNALHeader(bitstream, b.Header);
@@ -1403,7 +1403,7 @@ namespace SharpMp4
             }
         }
 
-        private static H265SpsNalUnit Parse(ushort size, Stream stream)
+        private static H265SpsNalUnit Parse(ushort size, MemoryStream stream)
         {
             NalBitStreamReader bitstream = new NalBitStreamReader(stream);
             H265NalUnitHeader header = H265NalUnitHeader.ParseNALHeader(bitstream);
@@ -2578,7 +2578,7 @@ namespace SharpMp4
             }
         }
 
-        public static void Build(Stream stream, H265PpsNalUnit b)
+        public static void Build(MemoryStream stream, H265PpsNalUnit b)
         {
             NalBitStreamWriter bitstream = new NalBitStreamWriter(stream);
             H265NalUnitHeader.BuildNALHeader(bitstream, b.Header);
@@ -2699,7 +2699,7 @@ namespace SharpMp4
             }
         }
 
-        private static H265PpsNalUnit Parse(ushort size, Stream stream)
+        private static H265PpsNalUnit Parse(ushort size, MemoryStream stream)
         {
             NalBitStreamReader bitstream = new NalBitStreamReader(stream);
             H265NalUnitHeader header = H265NalUnitHeader.ParseNALHeader(bitstream);

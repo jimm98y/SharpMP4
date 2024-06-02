@@ -1143,9 +1143,34 @@ namespace SharpMp4
         public NalBitStreamReader(byte[] bytes) : this(new MemoryStream(bytes), true)
         { }
 
-        public NalBitStreamReader(Stream stream, bool disposeUnderlyingStream = false) : base(stream, disposeUnderlyingStream)
+        public NalBitStreamReader(MemoryStream stream, bool disposeUnderlyingStream = false) : base(stream, disposeUnderlyingStream)
         {
             _shouldUnescapeNals = true;
+        }
+
+        public bool HasMoreRBSPData(uint size)
+        {
+            // TODO: optimize
+            uint remaining = RemainingBits(size);
+            if (remaining < 2)
+                return false;
+            var bytes = (_stream as MemoryStream).ToArray().Skip(_bitsPosition / 8).ToArray();
+            NalBitStreamReader rbs = new NalBitStreamReader(bytes);
+            rbs.ReadBits(_bitsPosition % 8);
+
+            int one = rbs.ReadBit();
+            if (one == 0)
+                return true;
+
+            remaining--;
+            while(remaining > 0)
+            {
+                if (rbs.ReadBit() != 0)
+                    return true;
+                remaining--;
+            }
+
+            return false;
         }
     }
 
@@ -1157,10 +1182,10 @@ namespace SharpMp4
         protected bool _shouldUnescapeNals = false;
 
         private readonly bool _disposeStream;
-        private Stream _stream;
-        private int _bitsPosition;
-        private int _currentBytePosition = -1;
-        private byte _currentByte = 0;
+        protected Stream _stream;
+        protected int _bitsPosition;
+        protected int _currentBytePosition = -1;
+        protected byte _currentByte = 0;
         private bool _disposedValue;
 
         private int _prevByte = -1;
@@ -1301,18 +1326,6 @@ namespace SharpMp4
             return totalBitSize - (uint)_bitsPosition;
         }
 
-        public bool HasMoreRBSPData(uint size)
-        {
-            uint remaining = RemainingBits(size);
-            if (remaining <= 8)
-                return false;
-
-            int tail = 1 << (8 - _currentBytePosition - 1);
-            int mask = (tail << 1) - 1;
-            bool hasTail = (_currentByte & mask) == tail;
-            return !hasTail;
-        }
-
         public void ReadTrailingBits()
         {
             if (ReadBit() == 0)
@@ -1332,7 +1345,7 @@ namespace SharpMp4
 
     public class NalBitStreamWriter : RawBitStreamWriter
     {
-        public NalBitStreamWriter(Stream stream, bool disposeUnderlyingStream = false) : base(stream ,disposeUnderlyingStream)
+        public NalBitStreamWriter(MemoryStream stream, bool disposeUnderlyingStream = false) : base(stream ,disposeUnderlyingStream)
         {
             _shouldEscapeNals = true;
         }
