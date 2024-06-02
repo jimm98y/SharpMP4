@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FragmentedMp4Recorder", "Fr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMp4.Tests", "SharpMp4.Tests\SharpMp4.Tests.csproj", "{A78C1918-57E8-4534-9C2F-8D55125B3669}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{C1539E84-ECA0-4612-8203-46372E8A24B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RtspMp4Recorder", "RtspMp4Recorder\RtspMp4Recorder.csproj", "{2EF96003-E083-4599-9948-00C0A4FB73B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +31,17 @@ Global
 		{A78C1918-57E8-4534-9C2F-8D55125B3669}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A78C1918-57E8-4534-9C2F-8D55125B3669}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A78C1918-57E8-4534-9C2F-8D55125B3669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF96003-E083-4599-9948-00C0A4FB73B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF96003-E083-4599-9948-00C0A4FB73B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF96003-E083-4599-9948-00C0A4FB73B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF96003-E083-4599-9948-00C0A4FB73B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0F003378-7375-4034-8CEF-515D54AC8911} = {C1539E84-ECA0-4612-8203-46372E8A24B8}
+		{2EF96003-E083-4599-9948-00C0A4FB73B1} = {C1539E84-ECA0-4612-8203-46372E8A24B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17A22E31-B643-48F2-B905-34B3C3ABAF66}
