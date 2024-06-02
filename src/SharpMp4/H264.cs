@@ -73,13 +73,13 @@ namespace SharpMp4
                 var header = H264NalUnitHeader.ParseNALHeader(bitstream);
                 if (header.NalUnitType == H264NalUnitTypes.SPS)
                 {
-                    if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {Utils.ToHexString(sample)}");
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {Utilities.ToHexString(sample)}");
                     var sps = H264SpsNalUnit.Parse(sample);
                     if (!Sps.ContainsKey(sps.SeqParameterSetId))
                     {
                         Sps.Add(sps.SeqParameterSetId, sps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {Utils.ToHexString(H264SpsNalUnit.Build(sps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {Utilities.ToHexString(H264SpsNalUnit.Build(sps))}");
 
                     // if SPS contains the timescale, set it
                     if (Timescale == 0 || SampleDuration == 0)
@@ -108,13 +108,13 @@ namespace SharpMp4
                 }
                 else if (header.NalUnitType == H264NalUnitTypes.PPS)
                 {
-                    if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {Utils.ToHexString(sample)}");
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {Utilities.ToHexString(sample)}");
                     var pps = H264PpsNalUnit.Parse(sample);
                     if (!Pps.ContainsKey(pps.PicParameterSetId))
                     {
                         Pps.Add(pps.PicParameterSetId, pps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {Utils.ToHexString(H264PpsNalUnit.Build(pps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {Utilities.ToHexString(H264PpsNalUnit.Build(pps))}");
                 }
                 else if (header.NalUnitType == H264NalUnitTypes.SEI)
                 {
@@ -374,7 +374,7 @@ namespace SharpMp4
                 ushort sequenceParameterSetLength = IsoReaderWriter.ReadUInt16(stream);
                 byte[] sequenceParameterSetNALUnitBytes = new byte[sequenceParameterSetLength];
                 await IsoReaderWriter.ReadBytesAsync(stream, sequenceParameterSetNALUnitBytes, 0, sequenceParameterSetLength);
-                if (Log.DebugEnabled) Log.Debug($"Read SPS: {Utils.ToHexString(sequenceParameterSetNALUnitBytes)}");
+                if (Log.DebugEnabled) Log.Debug($"Read SPS: {Utilities.ToHexString(sequenceParameterSetNALUnitBytes)}");
                 H264SpsNalUnit sequenceParameterSetNALUnit = H264SpsNalUnit.Parse(sequenceParameterSetNALUnitBytes);
                 sequenceParameterSets.Add(sequenceParameterSetNALUnit);
                 consumedLength = consumedLength + 2 + sequenceParameterSetLength;
@@ -385,7 +385,7 @@ namespace SharpMp4
                 ushort pictureParameterSetLength = IsoReaderWriter.ReadUInt16(stream);
                 byte[] pictureParameterSetNALUnitBytes = new byte[pictureParameterSetLength];
                 await IsoReaderWriter.ReadBytesAsync(stream, pictureParameterSetNALUnitBytes, 0, pictureParameterSetLength);
-                if (Log.DebugEnabled) Log.Debug($"Read PPS: {Utils.ToHexString(pictureParameterSetNALUnitBytes)}");
+                if (Log.DebugEnabled) Log.Debug($"Read PPS: {Utilities.ToHexString(pictureParameterSetNALUnitBytes)}");
                 H264PpsNalUnit pictureParameterSetNALUnit = H264PpsNalUnit.Parse(pictureParameterSetNALUnitBytes);
                 pictureParameterSets.Add(pictureParameterSetNALUnit);
                 consumedLength = consumedLength + 2 + pictureParameterSetLength;

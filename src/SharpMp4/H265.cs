@@ -77,13 +77,13 @@ namespace SharpMp4
                 var header = H265NalUnitHeader.ParseNALHeader(bitstream);
                 if (header.NalUnitType == H265NalUnitTypes.SPS)
                 {
-                    if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {Utils.ToHexString(sample)}");
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed SPS: {Utilities.ToHexString(sample)}");
                     var sps = H265SpsNalUnit.Parse(sample);
                     if (!Sps.ContainsKey(sps.SeqParameterSetId))
                     {
                         Sps.Add(sps.SeqParameterSetId, sps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {Utils.ToHexString(H265SpsNalUnit.Build(sps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt SPS: {Utilities.ToHexString(H265SpsNalUnit.Build(sps))}");
 
                     // if SPS contains the timescale, set it
                     if (Timescale == 0 || SampleDuration == 0)
@@ -112,23 +112,23 @@ namespace SharpMp4
                 }
                 else if (header.NalUnitType == H265NalUnitTypes.PPS)
                 {
-                    if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {Utils.ToHexString(sample)}");
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed PPS: {Utilities.ToHexString(sample)}");
                     var pps = H265PpsNalUnit.Parse(sample);
                     if (!Pps.ContainsKey(pps.PicParameterSetId))
                     {
                         Pps.Add(pps.PicParameterSetId, pps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {Utils.ToHexString(H265PpsNalUnit.Build(pps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt PPS: {Utilities.ToHexString(H265PpsNalUnit.Build(pps))}");
                 }
                 else if (header.NalUnitType == H265NalUnitTypes.VPS)
                 {
-                    if (Log.DebugEnabled) Log.Debug($"-Parsed VPS: {Utils.ToHexString(sample)}");
+                    if (Log.DebugEnabled) Log.Debug($"-Parsed VPS: {Utilities.ToHexString(sample)}");
                     var vps = H265VpsNalUnit.Parse(sample);
                     if (!Vps.ContainsKey(vps.VpsParameterSetId))
                     {
                         Vps.Add(vps.VpsParameterSetId, vps);
                     }
-                    if (Log.DebugEnabled) Log.Debug($"Rebuilt VPS: {Utils.ToHexString(H265VpsNalUnit.Build(vps))}");
+                    if (Log.DebugEnabled) Log.Debug($"Rebuilt VPS: {Utilities.ToHexString(H265VpsNalUnit.Build(vps))}");
                 }
                 else if (header.NalUnitType == H265NalUnitTypes.PREFIX_SEI_NUT || header.NalUnitType == H265NalUnitTypes.SUFFIX_SEI_NUT)
                 {
