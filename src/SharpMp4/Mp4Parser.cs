@@ -576,7 +576,7 @@ namespace SharpMp4
                 ret.Add(videoTrackId, new List<byte[]>());
 
             int nalLengthSize = 0;
-            var h264VisualSample = videoTrak.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE3) as VisualSampleEntryBox;
+            var h264VisualSample = videoTrak.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE3 || x.Type == VisualSampleEntryBox.TYPE4) as VisualSampleEntryBox;
             if (h264VisualSample != null)
             {
                 AvcConfigurationBox avcC = h264VisualSample.Children.First(x => x.Type == AvcConfigurationBox.TYPE) as AvcConfigurationBox;
@@ -594,7 +594,7 @@ namespace SharpMp4
             }
             else
             {
-                var h265VisualSample = videoTrak.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE6) as VisualSampleEntryBox;
+                var h265VisualSample = videoTrak.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE6 || x.Type == VisualSampleEntryBox.TYPE7) as VisualSampleEntryBox;
                 if (h265VisualSample != null)
                 {
                     HevcConfigurationBox hvcC = h265VisualSample.Children.First(x => x.Type == HevcConfigurationBox.TYPE) as HevcConfigurationBox;
@@ -614,89 +614,98 @@ namespace SharpMp4
                 }
             }
 
-            // to parse MDAT, we need trun box - as it turned out, our sample MDAT has audio/video multiplexed together in a single MDAT
-            MoofBox moof = null;
-            for (int i = 0; i < fmp4.Children.Count; i++)
+            try
             {
-                if (fmp4.Children[i].Type == "moof")
+                // to parse MDAT, we need trun box - as it turned out, our sample MDAT has audio/video multiplexed together in a single MDAT
+                MoofBox moof = null;
+                for (int i = 0; i < fmp4.Children.Count; i++)
                 {
-                    moof = fmp4.Children[i] as MoofBox;
-                    if (Log.DebugEnabled) Log.Debug($"-MOOF");
-                }
-                else if (fmp4.Children[i].Type == "mdat")
-                {
-                    if (Log.DebugEnabled) Log.Debug($"-MDAT");
-                    var mdat = fmp4.Children[i] as MdatBox;
-                    var mdatStorage = mdat.GetStorage();
-
-                    Stream stream = mdatStorage.Stream;
-                    stream.Seek(0, SeekOrigin.Begin);
-
-                    // plan how to read the MDAT in the correct order
-                    IEnumerable<TrunBox> plan = moof.GetTraf().SelectMany(x => x.GetTrun()).OrderBy(x => x.DataOffset);
-
-                    foreach (var trun in plan)
+                    if (fmp4.Children[i].Type == "moof")
                     {
-                        uint trackId = (trun.GetParent() as TrafBox).GetTfhd().TrackId;
+                        moof = fmp4.Children[i] as MoofBox;
+                        if (Log.DebugEnabled) Log.Debug($"-MOOF");
+                    }
+                    else if (fmp4.Children[i].Type == "mdat")
+                    {
+                        if (Log.DebugEnabled) Log.Debug($"-MDAT");
+                        var mdat = fmp4.Children[i] as MdatBox;
+                        var mdatStorage = mdat.GetStorage();
 
-                        if (!ret.ContainsKey(trackId))
-                            ret.Add(trackId, new List<byte[]>());
+                        Stream stream = mdatStorage.Stream;
+                        stream.Seek(0, SeekOrigin.Begin);
 
-                        bool isVideo = trackId == videoTrak.GetTkhd().TrackId;
-                        if (Log.DebugEnabled) Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
-                        foreach (var entry in trun.Entries)
+                        // plan how to read the MDAT in the correct order
+                        IEnumerable<TrunBox> plan = moof.GetTraf().SelectMany(x => x.GetTrun()).OrderBy(x => x.DataOffset);
+
+                        foreach (var trun in plan)
                         {
-                            int sampleSize = (int)entry.SampleSize; // in case of video, this is the size of AU which consists of 1 or more NALU
+                            uint trackId = (trun.GetParent() as TrafBox).GetTfhd().TrackId;
 
-                            if (isVideo)
+                            if (!ret.ContainsKey(trackId))
+                                ret.Add(trackId, new List<byte[]>());
+
+                            bool isVideo = trackId == videoTrak.GetTkhd().TrackId;
+                            if (Log.DebugEnabled) Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
+                            for (int j = 0; j < trun.Entries.Count; j++)
                             {
-                                if (Log.DebugEnabled) Log.Debug($"--- AU Begin");
-                                int nalUnitLength = 0;
-                                int auTotalRead = 0;
-                                int nalPerAUReadCount = 0;
-                                do
+                                var entry = trun.Entries[j];
+                                int sampleSize = (int)entry.SampleSize; // in case of video, this is the size of AU which consists of 1 or more NALU
+
+                                if (isVideo)
                                 {
-                                    switch (nalLengthSize)
+                                    if (Log.DebugEnabled) Log.Debug($"--- AU Begin");
+                                    int nalUnitLength = 0;
+                                    int auTotalRead = 0;
+                                    int nalPerAUReadCount = 0;
+                                    do
                                     {
-                                        case 1:
-                                            nalUnitLength = (int)IsoReaderWriter.ReadByte(stream);
-                                            break;
-                                        case 2:
-                                            nalUnitLength = (int)IsoReaderWriter.ReadUInt16(stream);
-                                            break;
-                                        case 3:
-                                            nalUnitLength = (int)IsoReaderWriter.ReadUInt24(stream);
-                                            break;
-                                        case 4:
-                                            nalUnitLength = (int)IsoReaderWriter.ReadUInt32(stream);
-                                            break;
+                                        switch (nalLengthSize)
+                                        {
+                                            case 1:
+                                                nalUnitLength = (int)IsoReaderWriter.ReadByte(stream);
+                                                break;
+                                            case 2:
+                                                nalUnitLength = (int)IsoReaderWriter.ReadUInt16(stream);
+                                                break;
+                                            case 3:
+                                                nalUnitLength = (int)IsoReaderWriter.ReadUInt24(stream);
+                                                break;
+                                            case 4:
+                                                nalUnitLength = (int)IsoReaderWriter.ReadUInt32(stream);
+                                                break;
 
-                                        default:
-                                            throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+                                            default:
+                                                throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+                                        }
+
+                                        byte[] fragment = new byte[nalUnitLength];
+                                        await stream.ReadExactlyAsync(fragment, 0, nalUnitLength);
+
+                                        auTotalRead += nalLengthSize + nalUnitLength;
+                                        nalPerAUReadCount++;
+
+                                        ret[trackId].Add(fragment);
                                     }
-
-                                    byte[] fragment = new byte[nalUnitLength];
-                                    await stream.ReadExactlyAsync(fragment, 0, nalUnitLength);
-
-                                    auTotalRead += nalLengthSize + nalUnitLength;
-                                    nalPerAUReadCount++;
-
-                                    ret[trackId].Add(fragment);
+                                    while (auTotalRead != sampleSize);
+                                    if (Log.DebugEnabled) Log.Debug($"--- NALs in AU: {nalPerAUReadCount}");
+                                    if (Log.DebugEnabled) Log.Debug($"--- AU End");
                                 }
-                                while (auTotalRead != sampleSize);
-                                if (Log.DebugEnabled) Log.Debug($"--- NALs in AU: {nalPerAUReadCount}");
-                                if (Log.DebugEnabled) Log.Debug($"--- AU End");
-                            }
-                            else
-                            {
-                                byte[] fragment = new byte[sampleSize];
-                                await stream.ReadExactlyAsync(fragment, 0, sampleSize);
-                                ret[trackId].Add(fragment);
-                                if (Log.DebugEnabled) Log.Debug($"Audio: {fragment.Length}");
+                                else
+                                {
+                                    byte[] fragment = new byte[sampleSize];
+                                    await stream.ReadExactlyAsync(fragment, 0, sampleSize);
+                                    ret[trackId].Add(fragment);
+                                    if (Log.DebugEnabled) Log.Debug($"Audio: {fragment.Length}");
+                                }
                             }
                         }
                     }
                 }
+            }
+            catch(EndOfStreamException ex)
+            {
+                // likely corrupted/incomplete file
+                if (Log.ErrorEnabled) Log.Error($"Reading MDAT failed with: {ex.Message}");
             }
 
             return ret;
