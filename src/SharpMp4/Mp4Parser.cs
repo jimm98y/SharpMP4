@@ -2758,9 +2758,9 @@ namespace SharpMp4
             if (b.SampleSize == 0)
             {
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)b.SampleSizes.Length);
-                foreach (long sampleSize1 in b.SampleSizes)
+                foreach (uint sampleSize in b.SampleSizes)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, b.SampleSize);
+                    size += IsoReaderWriter.WriteUInt32(stream, sampleSize);
                 }
             }
             else
