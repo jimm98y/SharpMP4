@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -539,6 +540,33 @@ namespace SharpMp4
 
     public static class FragmentedMp4Extensions
     {
+        public static IEnumerable<uint> FindVideoTrackID(this FragmentedMp4 fmp4)
+        {
+            var videoTracks = fmp4.FindVideoTracks().Select(x => x.GetTkhd().TrackId);
+            return videoTracks;
+        }
+
+        public static IEnumerable<TrakBox> FindVideoTracks(this FragmentedMp4 fmp4)
+        {
+            return fmp4.GetMoov().GetTrak().Where(x => x.GetMdia().GetMinf().GetVmhd() != null);
+        }
+
+        public static IEnumerable<uint> FindAudioTrackID(this FragmentedMp4 fmp4)
+        {
+            var audioTracks = fmp4.FindAudioTracks().Select(x => x.GetTkhd().TrackId);
+            return audioTracks;
+        }
+
+        public static IEnumerable<TrakBox> FindAudioTracks(this FragmentedMp4 fmp4)
+        {
+            return fmp4.GetMoov().GetTrak().Where(x => x.GetMdia().GetMinf().GetSmhd() != null);
+        }
+
+        public static AudioSampleEntryBox GetAudioSampleEntryBox(this TrakBox track)
+        {
+            return track.GetMdia().GetMinf().GetStbl().GetStsd().Children.Single(x => x is AudioSampleEntryBox) as AudioSampleEntryBox;
+        }
+
         public static async Task<Dictionary<uint, IList<byte[]>>> ParseMdatAsync(this FragmentedMp4 fmp4)
         {
             var ret = new Dictionary<uint, IList<byte[]>>();
