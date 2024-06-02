@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpMp4", "SharpMp4\SharpMp4.csproj", "{ABC90AF4-800B-4521-AB27-DC7BD6927B7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FragmentedMp4Recorder", "FragmentedMp4Recorder\FragmentedMp4Recorder.csproj", "{0F003378-7375-4034-8CEF-515D54AC8911}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{ABC90AF4-800B-4521-AB27-DC7BD6927B7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABC90AF4-800B-4521-AB27-DC7BD6927B7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABC90AF4-800B-4521-AB27-DC7BD6927B7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F003378-7375-4034-8CEF-515D54AC8911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F003378-7375-4034-8CEF-515D54AC8911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F003378-7375-4034-8CEF-515D54AC8911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F003378-7375-4034-8CEF-515D54AC8911}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
