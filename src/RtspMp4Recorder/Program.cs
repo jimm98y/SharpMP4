@@ -99,12 +99,14 @@ using (var output = File.Open("output.mp4", FileMode.Create, FileAccess.Write, F
             writer.AddTrack(track);
         }
 
-        client.Connect("rtsp://stream.strba.sk:1935/strba/VYHLAD_JAZERO.stream", RTSPClient.RTP_TRANSPORT.TCP, null, null);
+        client.Connect("rtsp://stream.strba.sk:1935/strba/VYHLAD_JAZERO.stream", RTSPClient.RTP_TRANSPORT.TCP);
         Console.WriteLine("Recording started.");
         Console.WriteLine("Press any key to stop recording");
 
-        while (!(Console.KeyAvailable))
-        { }
+        while (!Console.KeyAvailable)
+        {
+            System.Threading.Thread.Sleep(250);
+        }
 
         client.Stop();
 
