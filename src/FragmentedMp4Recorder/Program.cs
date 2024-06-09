@@ -27,14 +27,17 @@ using (Stream fs = new BufferedStream(new FileStream("frag_bunny.mp4", FileMode.
                     {
                         for (int i = 0; i < parsedTrack.Value.Count; i++)
                         {
-                            await videoTrack.ProcessSampleAsync(parsedTrack.Value[i]);
+                            foreach (var nal in parsedTrack.Value[i])
+                            {
+                                await videoTrack.ProcessSampleAsync(nal);
+                            }
                         }
                     }
                     else if (parsedTrack.Key == audioTrackId)
                     {
-                        for (int i = 0; i < parsedTrack.Value.Count; i++)
+                        for (int i = 0; i < parsedTrack.Value[0].Count; i++)
                         {
-                            await audioTrack.ProcessSampleAsync(parsedTrack.Value[i]);
+                            await audioTrack.ProcessSampleAsync(parsedTrack.Value[0][i]);
                         }
                     }
                     else

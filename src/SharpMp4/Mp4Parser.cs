@@ -567,13 +567,13 @@ namespace SharpMp4
             return track.GetMdia().GetMinf().GetStbl().GetStsd().Children.Single(x => x is AudioSampleEntryBox) as AudioSampleEntryBox;
         }
 
-        public static async Task<Dictionary<uint, IList<byte[]>>> ParseMdatAsync(this FragmentedMp4 fmp4)
+        public static async Task<Dictionary<uint, IList<IList<byte[]>>>> ParseMdatAsync(this FragmentedMp4 fmp4)
         {
-            var ret = new Dictionary<uint, IList<byte[]>>();
+            var ret = new Dictionary<uint, IList<IList<byte[]>>>();
             var videoTrak = fmp4.GetMoov().GetTrak().First(x => x.GetMdia().GetMinf().GetVmhd() != null);
             uint videoTrackId = videoTrak.GetTkhd().TrackId;
             if (!ret.ContainsKey(videoTrackId))
-                ret.Add(videoTrackId, new List<byte[]>());
+                ret.Add(videoTrackId, new List<IList<byte[]>>() { new List<byte[]>() });
 
             int nalLengthSize = 0;
             var h264VisualSample = videoTrak.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE3 || x.Type == VisualSampleEntryBox.TYPE4) as VisualSampleEntryBox;
@@ -584,12 +584,12 @@ namespace SharpMp4
 
                 foreach (var sps in avcC.AvcDecoderConfigurationRecord.SequenceParameterSets)
                 {
-                    ret[videoTrackId].Add(H264SpsNalUnit.Build(sps));
+                    ret[videoTrackId][0].Add(H264SpsNalUnit.Build(sps));
                 }
 
                 foreach (var pps in avcC.AvcDecoderConfigurationRecord.PictureParameterSets)
                 {
-                    ret[videoTrackId].Add(H264PpsNalUnit.Build(pps));
+                    ret[videoTrackId][0].Add(H264PpsNalUnit.Build(pps));
                 }
             }
             else
@@ -604,7 +604,7 @@ namespace SharpMp4
                     {
                         foreach (var item in array.NalUnits)
                         {
-                            ret[videoTrackId].Add(item);
+                            ret[videoTrackId][0].Add(item);
                         }
                     }
                 }
@@ -642,7 +642,7 @@ namespace SharpMp4
                             uint trackId = (trun.GetParent() as TrafBox).GetTfhd().TrackId;
 
                             if (!ret.ContainsKey(trackId))
-                                ret.Add(trackId, new List<byte[]>());
+                                ret.Add(trackId, new List<IList<byte[]>>() { new List<byte[]>() });
 
                             bool isVideo = trackId == videoTrak.GetTkhd().TrackId;
                             if (Log.DebugEnabled) Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
@@ -650,13 +650,16 @@ namespace SharpMp4
                             {
                                 var entry = trun.Entries[j];
                                 int sampleSize = (int)entry.SampleSize; // in case of video, this is the size of AU which consists of 1 or more NALU
-
                                 if (isVideo)
                                 {
                                     if (Log.DebugEnabled) Log.Debug($"--- AU Begin");
                                     int nalUnitLength = 0;
                                     int auTotalRead = 0;
                                     int nalPerAUReadCount = 0;
+                                    int auIndex = ret[trackId].Count;
+
+                                    ret[trackId].Add(new List<byte[]>());
+
                                     do
                                     {
                                         switch (nalLengthSize)
@@ -684,28 +687,28 @@ namespace SharpMp4
                                         auTotalRead += nalLengthSize + nalUnitLength;
                                         nalPerAUReadCount++;
 
-                                        ret[trackId].Add(fragment);
+                                        ret[trackId][auIndex].Add(fragment);
                                     }
                                     while (auTotalRead != sampleSize);
-                                    if (Log.DebugEnabled) Log.Debug($"--- NALs in AU: {nalPerAUReadCount}");
-                                    if (Log.DebugEnabled) Log.Debug($"--- AU End");
+                                    if (Log.DebugEnabled) Log.Debug($"--- AU End - NALs in AU: {nalPerAUReadCount}");
+
+                                    auIndex++;
                                 }
                                 else
                                 {
                                     byte[] fragment = new byte[sampleSize];
                                     await stream.ReadExactlyAsync(fragment, 0, sampleSize);
-                                    ret[trackId].Add(fragment);
-                                    if (Log.DebugEnabled) Log.Debug($"Audio: {fragment.Length}");
+                                    ret[trackId][0].Add(fragment);
                                 }
                             }
                         }
                     }
                 }
             }
-            catch(EndOfStreamException ex)
+            catch (EndOfStreamException ex)
             {
                 // likely corrupted/incomplete file
-                if (Log.ErrorEnabled) Log.Error($"Reading MDAT failed with: {ex.Message}");
+                if (Log.ErrorEnabled) Log.Error($"Error parsing MDAT, most likely corrupted/incomplete file: {ex.Message}");
             }
 
             return ret;
