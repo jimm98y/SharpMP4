@@ -8,6 +8,8 @@ namespace SharpMp4
     /// </summary>
     public class AACTrack : TrackBase
     {
+        public const int AAC_SAMPLE_SIZE = 1024;
+
         private static readonly Dictionary<int, int> SamplingFrequencyMap = new Dictionary<int, int>()
         {
             {  0, 96000 },
@@ -61,7 +63,7 @@ namespace SharpMp4
             this.ChannelCount = channelCount;   
             this.SamplingRate = samplingRateInHz;
             this.SampleSize = sampleSizeInBits;
-            this.SampleDuration = 1024; // hardcoded for AAC-LC
+            this.SampleDuration = AAC_SAMPLE_SIZE; // hardcoded for AAC-LC
         }
 
         public override Mp4Box CreateSampleEntryBox(Mp4Box parent)
