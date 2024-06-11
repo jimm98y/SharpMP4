@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace SharpMp4
 {
@@ -9,34 +8,6 @@ namespace SharpMp4
     public class AACTrack : TrackBase
     {
         public const int AAC_SAMPLE_SIZE = 1024;
-
-        private static readonly Dictionary<int, int> SamplingFrequencyMap = new Dictionary<int, int>()
-        {
-            {  0, 96000 },
-            {  1, 88200 },
-            {  2, 64000 },
-            {  3, 48000 },
-            {  4, 44100 },
-            {  5, 32000 },
-            {  6, 24000 },
-            {  7, 22050 },
-            {  8, 16000 },
-            {  9, 12000 },
-            { 10, 11025 },
-            { 11,  8000 },
-            { 96000,  0 },
-            { 88200,  1 },
-            { 64000,  2 },
-            { 48000,  3 },
-            { 44100,  4 },
-            { 32000,  5 },
-            { 24000,  6 },
-            { 22050,  7 },
-            { 16000,  8 },
-            { 12000,  9 },
-            { 11025, 10 },
-            {  8000, 11 },
-        };
 
         public byte ChannelCount { get; private set; }
         public int SamplingRate { get; private set; }
@@ -53,7 +24,7 @@ namespace SharpMp4
         /// <param name="sampleSizeInBits">Size of 1 sample in bits. </param>
         public AACTrack(byte channelCount, int samplingRateInHz, ushort sampleSizeInBits)
         {
-            if (!SamplingFrequencyMap.ContainsKey(samplingRateInHz))
+            if (!AudioSpecificConfigDescriptor.SamplingFrequencyMap.ContainsKey(samplingRateInHz))
                 throw new ArgumentOutOfRangeException("Invalid sampling rate!");
 
             if(sampleSizeInBits % 8 != 0) 
@@ -92,7 +63,7 @@ namespace SharpMp4
             AudioSpecificConfigDescriptor audioSpecificConfig = new AudioSpecificConfigDescriptor();
             audioSpecificConfig.GaSpecificConfig = true; 
             audioSpecificConfig.OriginalAudioObjectType = 2; // AAC LC
-            audioSpecificConfig.SamplingFrequencyIndex = SamplingFrequencyMap[aacTrack.SamplingRate];
+            audioSpecificConfig.SamplingFrequencyIndex = AudioSpecificConfigDescriptor.SamplingFrequencyMap[aacTrack.SamplingRate];
             audioSpecificConfig.ChannelConfiguration = aacTrack.ChannelCount;
             decoderConfigDescriptor.AudioSpecificConfig = audioSpecificConfig;
             descriptor.Descriptors.Add(decoderConfigDescriptor);
