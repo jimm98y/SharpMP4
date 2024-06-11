@@ -567,6 +567,14 @@ namespace SharpMp4
             return track.GetMdia().GetMinf().GetStbl().GetStsd().Children.Single(x => x is AudioSampleEntryBox) as AudioSampleEntryBox;
         }
 
+        public static AudioSpecificConfigDescriptor GetAudioSpecificConfigDescriptor(this AudioSampleEntryBox audioSampleEntryBox)
+        {
+            var esdsBox = audioSampleEntryBox.Children.Single(x => x is EsdsBox) as EsdsBox;
+            var decoderConfigDescriptor = esdsBox.ESDescriptor.Descriptors.Single(x => x is DecoderConfigDescriptor) as DecoderConfigDescriptor;
+            var audioConfigDescriptor = decoderConfigDescriptor.AudioSpecificConfig;
+            return audioConfigDescriptor;
+        }
+
         public static async Task<Dictionary<uint, IList<IList<byte[]>>>> ParseMdatAsync(this FragmentedMp4 fmp4)
         {
             var ret = new Dictionary<uint, IList<IList<byte[]>>>();
@@ -5044,6 +5052,18 @@ namespace SharpMp4
                 output += 1 + IsoReaderWriter.CalculatePackedNumberLength(descriptorContentSize) + descriptorContentSize;
             }
             return output;
+        }
+    }
+
+    public static class AudioSpecificConfigDescriptorExtensions
+    {
+        public static async Task<byte[]> ToBytes(this AudioSpecificConfigDescriptor configDescriptor)
+        {
+            using (var ms = new MemoryStream())
+            {
+                await AudioSpecificConfigDescriptor.BuildAsync(ms, AudioSpecificConfigDescriptor.OBJECT_TYPE_INDICATION, 0, configDescriptor);
+                return ms.ToArray();
+            }
         }
     }
 
