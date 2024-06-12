@@ -575,7 +575,7 @@ namespace SharpMp4
             return audioConfigDescriptor;
         }
 
-        public static double CalculateFrameRate(FragmentedMp4 fmp4, TrakBox track)
+        public static double CalculateFrameRate(this FragmentedMp4 fmp4, TrakBox track)
         {
             uint timescale = track.GetMdia().GetMdhd().Timescale;
 
