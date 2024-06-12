@@ -575,6 +575,30 @@ namespace SharpMp4
             return audioConfigDescriptor;
         }
 
+        public static double CalculateFrameRate(FragmentedMp4 fmp4, TrakBox track)
+        {
+            uint timescale = track.GetMdia().GetMdhd().Timescale;
+
+            var trafBoxes = fmp4
+                .GetMoof()
+                    .SelectMany(g => g
+                        .GetTraf().Where(y => y.GetTfhd().TrackId == track.GetTkhd().TrackId));
+
+            double avgSampleDuration;
+            if (trafBoxes.First().GetTfhd().DefaultSampleDuration != 0)
+            {
+                avgSampleDuration = trafBoxes.First().GetTfhd().DefaultSampleDuration;
+            }
+            else
+            {
+                avgSampleDuration = trafBoxes.SelectMany(d => d.GetTrun()
+                            .SelectMany(e => e.Entries))
+                            .Average(z => z.SampleDuration);
+            }
+
+            return timescale / avgSampleDuration;
+        }
+
         public static async Task<Dictionary<uint, IList<IList<byte[]>>>> ParseMdatAsync(this FragmentedMp4 fmp4)
         {
             var ret = new Dictionary<uint, IList<IList<byte[]>>>();
