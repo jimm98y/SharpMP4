@@ -50,7 +50,7 @@ Add AAC track for AAC-LC 2 channels (stereo), 22050Hz and 16-bit samples:
 var audioTrack = new AACTrack(2, 22050, 16);
 builder.AddTrack(audioTrack);
 ```
-Start adding individual NALUs to H264/H264 tracks:
+Start adding individual NALUs to H264/H265 tracks:
 ```cs
 await videoTrack.ProcessSampleAsync(sample);
 ```
