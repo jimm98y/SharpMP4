@@ -567,6 +567,11 @@ namespace SharpMp4
             return track.GetMdia().GetMinf().GetStbl().GetStsd().Children.Single(x => x is AudioSampleEntryBox) as AudioSampleEntryBox;
         }
 
+        public static VisualSampleEntryBox GetVisualSampleEntryBox(this TrakBox track)
+        {
+            return track.GetMdia().GetMinf().GetStbl().GetStsd().Children.Single(x => x is VisualSampleEntryBox) as VisualSampleEntryBox;
+        }
+
         public static AudioSpecificConfigDescriptor GetAudioSpecificConfigDescriptor(this AudioSampleEntryBox audioSampleEntryBox)
         {
             var esdsBox = audioSampleEntryBox.Children.Single(x => x is EsdsBox) as EsdsBox;
