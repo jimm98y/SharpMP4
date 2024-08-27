@@ -614,44 +614,64 @@ namespace SharpMp4
             return avgSampleDuration;
         }
 
-        public static async Task<Dictionary<uint, IList<IList<byte[]>>>> ParseMdatAsync(this FragmentedMp4 fmp4)
+        public class MdatParserContext
         {
-            var ret = new Dictionary<uint, IList<IList<byte[]>>>();
-            var videoTrak = fmp4.GetMoov().GetTrak().First(x => x.GetMdia().GetMinf().GetVmhd() != null);
-            uint videoTrackId = videoTrak.GetTkhd().TrackId;
-            if (!ret.ContainsKey(videoTrackId))
-                ret.Add(videoTrackId, new List<IList<byte[]>>() { new List<byte[]>() });
+            public SemaphoreSlim Semaphore { get; } = new SemaphoreSlim(1);
 
-            int nalLengthSize = 0;
-            var h264VisualSample = videoTrak.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE3 || x.Type == VisualSampleEntryBox.TYPE4) as VisualSampleEntryBox;
+            public int NalLengthSize { get; internal set; }
+            public TrakBox VideoTrack { get; internal set; }
+            public uint? VideoTrackId { get; internal set; }
+            public TrakBox AudioTrack { get; internal set; }
+            public uint? AudioTrackId { get; internal set; }
+
+            public List<byte[]> VideoNALUs { get; set; } = new List<byte[]>();
+
+            public int[] MoofIndexes { get; internal set; } = new int[2];
+            public TrunBox[][] Plans { get; internal set; } = new TrunBox[2][];
+            public int[] Fragments { get; internal set; } = new int[2];
+            public int[] Entries { get; internal set; } = new int[2];
+            public long[] Position { get; internal set; } = new long[2];
+        }
+
+        public static Task<MdatParserContext> ParseMdatAsync(this FragmentedMp4 fmp4)
+        {
+            MdatParserContext context = new MdatParserContext();
+
+            context.VideoTrack = fmp4.FindVideoTracks().FirstOrDefault();
+            context.VideoTrackId = context.VideoTrack?.GetTkhd().TrackId;
+
+            context.AudioTrack = fmp4.FindAudioTracks().FirstOrDefault();
+            context.AudioTrackId = context.AudioTrack?.GetTkhd().TrackId;
+
+            var h264VisualSample = context.VideoTrack?.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE3 || x.Type == VisualSampleEntryBox.TYPE4) as VisualSampleEntryBox;
             if (h264VisualSample != null)
             {
                 AvcConfigurationBox avcC = h264VisualSample.Children.First(x => x.Type == AvcConfigurationBox.TYPE) as AvcConfigurationBox;
-                nalLengthSize = avcC.AvcDecoderConfigurationRecord.LengthSizeMinusOne + 1; // 4 bytes
+                context.NalLengthSize = avcC.AvcDecoderConfigurationRecord.LengthSizeMinusOne + 1; // 4 bytes
 
                 foreach (var sps in avcC.AvcDecoderConfigurationRecord.SequenceParameterSets)
                 {
-                    ret[videoTrackId][0].Add(H264SpsNalUnit.Build(sps));
+                    context.VideoNALUs.Add(H264SpsNalUnit.Build(sps));
                 }
 
                 foreach (var pps in avcC.AvcDecoderConfigurationRecord.PictureParameterSets)
                 {
-                    ret[videoTrackId][0].Add(H264PpsNalUnit.Build(pps));
+                    context.VideoNALUs.Add(H264PpsNalUnit.Build(pps));
                 }
             }
             else
             {
-                var h265VisualSample = videoTrak.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE6 || x.Type == VisualSampleEntryBox.TYPE7) as VisualSampleEntryBox;
+                var h265VisualSample = context.VideoTrack?.GetMdia().GetMinf().GetStbl().GetStsd().Children.FirstOrDefault(x => x.Type == VisualSampleEntryBox.TYPE6 || x.Type == VisualSampleEntryBox.TYPE7) as VisualSampleEntryBox;
                 if (h265VisualSample != null)
                 {
                     HevcConfigurationBox hvcC = h265VisualSample.Children.First(x => x.Type == HevcConfigurationBox.TYPE) as HevcConfigurationBox;
-                    nalLengthSize = hvcC.HevcDecoderConfigurationRecord.LengthSizeMinusOne + 1; // 4 bytes
+                    context.NalLengthSize = hvcC.HevcDecoderConfigurationRecord.LengthSizeMinusOne + 1; // 4 bytes
 
                     foreach (var array in hvcC.HevcDecoderConfigurationRecord.NalArrays)
                     {
                         foreach (var item in array.NalUnits)
                         {
-                            ret[videoTrackId][0].Add(item);
+                            context.VideoNALUs.Add(item);
                         }
                     }
                 }
@@ -661,55 +681,83 @@ namespace SharpMp4
                 }
             }
 
+            return Task.FromResult(context);
+        }
+
+        public static async Task<IList<byte[]>> ReadNextTrack(this FragmentedMp4 fmp4, MdatParserContext context, int trackID)
+        {
+            await context.Semaphore.WaitAsync();
+            var ret = new List<byte[]>();
             try
             {
                 // to parse MDAT, we need trun box - as it turned out, our sample MDAT has audio/video multiplexed together in a single MDAT
                 MoofBox moof = null;
-                for (int i = 0; i < fmp4.Children.Count; i++)
+                for (int i = context.MoofIndexes[trackID - 1]; i < fmp4.Children.Count; i++)
                 {
                     if (fmp4.Children[i].Type == "moof")
                     {
-                        moof = fmp4.Children[i] as MoofBox;
+                        var tmpMoof = fmp4.Children[i] as MoofBox;
                         if (Log.DebugEnabled) Log.Debug($"-MOOF");
+
+                        if(context.MoofIndexes[trackID - 1] == i)
+                        {
+                            moof = tmpMoof;
+                        }
+                        else if (tmpMoof.GetTraf().Select(x => x.GetTfhd().TrackId).Contains((uint)trackID))
+                        {
+                            moof = tmpMoof;
+
+                            context.MoofIndexes[trackID - 1] = i;
+                            context.Plans[trackID - 1] = null;
+                            context.Entries[trackID - 1] = 0;
+                            context.Fragments[trackID - 1] = 0;
+                            context.Position[trackID - 1] = 0;
+                        }
                     }
-                    else if (fmp4.Children[i].Type == "mdat")
+                    else if (moof != null && fmp4.Children[i].Type == "mdat")
                     {
                         if (Log.DebugEnabled) Log.Debug($"-MDAT");
                         var mdat = fmp4.Children[i] as MdatBox;
                         var mdatStorage = mdat.GetStorage();
 
-                        Stream stream = mdatStorage.Stream;
-                        stream.Seek(0, SeekOrigin.Begin);
-
                         // plan how to read the MDAT in the correct order
-                        IEnumerable<TrunBox> plan = moof.GetTraf().SelectMany(x => x.GetTrun()).OrderBy(x => x.DataOffset);
-
-                        foreach (var trun in plan)
+                        if (context.Plans[trackID - 1] == null)
                         {
-                            uint trackId = (trun.GetParent() as TrafBox).GetTfhd().TrackId;
+                            context.Plans[trackID - 1] = moof.GetTraf().Where(x => x.GetTfhd().TrackId == trackID).SelectMany(x => x.GetTrun()).OrderBy(x => x.DataOffset).ToArray();
+                        }
 
-                            if (!ret.ContainsKey(trackId))
-                                ret.Add(trackId, new List<IList<byte[]>>() { new List<byte[]>() });
+                        Stream stream = mdatStorage.Stream;
 
-                            bool isVideo = trackId == videoTrak.GetTkhd().TrackId;
-                            if (Log.DebugEnabled) Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
-                            for (int j = 0; j < trun.Entries.Count; j++)
+                        while(context.Fragments[trackID - 1] < context.Plans[trackID - 1].Length)
+                        {
+                            var trun = context.Plans[trackID - 1][context.Fragments[trackID - 1]];
+
+                            if(context.Position[trackID - 1] == 0)
                             {
-                                var entry = trun.Entries[j];
+                                stream.Seek(trun.DataOffset + moof.Offset, SeekOrigin.Begin);
+                                context.Position[trackID - 1] = trun.DataOffset + moof.Offset;
+                            }
+                            else
+                            {
+                                stream.Seek(context.Position[trackID - 1], SeekOrigin.Begin);
+                            }
+
+                            bool isVideo = trackID == context.VideoTrackId;
+                            if (Log.DebugEnabled) Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
+                            while (context.Entries[trackID - 1] < trun.Entries.Count)
+                            {
+                                var entry = trun.Entries[context.Entries[trackID - 1]];
                                 int sampleSize = (int)entry.SampleSize; // in case of video, this is the size of AU which consists of 1 or more NALU
                                 if (isVideo)
                                 {
-                                    if (Log.DebugEnabled) Log.Debug($"--- AU Begin");
+                                    if (Log.DebugEnabled) Log.Debug($"--- AU Begin {sampleSize}");
                                     int nalUnitLength = 0;
                                     int auTotalRead = 0;
                                     int nalPerAUReadCount = 0;
-                                    int auIndex = ret[trackId].Count;
-
-                                    ret[trackId].Add(new List<byte[]>());
 
                                     do
                                     {
-                                        switch (nalLengthSize)
+                                        switch (context.NalLengthSize)
                                         {
                                             case 1:
                                                 nalUnitLength = (int)IsoReaderWriter.ReadByte(stream);
@@ -725,29 +773,38 @@ namespace SharpMp4
                                                 break;
 
                                             default:
-                                                throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+                                                throw new Exception($"NAL unit length {context.NalLengthSize} not supported!");
                                         }
 
                                         byte[] fragment = new byte[nalUnitLength];
                                         await stream.ReadExactlyAsync(fragment, 0, nalUnitLength);
 
-                                        auTotalRead += nalLengthSize + nalUnitLength;
+                                        auTotalRead += context.NalLengthSize + nalUnitLength;
                                         nalPerAUReadCount++;
 
-                                        ret[trackId][auIndex].Add(fragment);
+                                        ret.Add(fragment);
                                     }
                                     while (auTotalRead != sampleSize);
-                                    if (Log.DebugEnabled) Log.Debug($"--- AU End - NALs in AU: {nalPerAUReadCount}");
 
-                                    auIndex++;
+                                    if (Log.DebugEnabled) Log.Debug($"--- AU End - NALs in AU: {nalPerAUReadCount}");
+                                    context.Entries[trackID - 1]++;
+                                    context.Position[trackID - 1] = stream.Position;
+                                    return ret;
                                 }
                                 else
                                 {
                                     byte[] fragment = new byte[sampleSize];
                                     await stream.ReadExactlyAsync(fragment, 0, sampleSize);
-                                    ret[trackId][0].Add(fragment);
+                                    ret.Add(fragment);
+                                    context.Entries[trackID - 1]++;
+                                    context.Position[trackID - 1] = stream.Position;
+                                    return ret;
                                 }
                             }
+
+                            context.Fragments[trackID - 1]++;
+                            context.Entries[trackID - 1] = 0;
+                            context.Position[trackID - 1] = 0;
                         }
                     }
                 }
@@ -757,8 +814,18 @@ namespace SharpMp4
                 // likely corrupted/incomplete file
                 if (Log.ErrorEnabled) Log.Error($"Error parsing MDAT, most likely corrupted/incomplete file: {ex.Message}");
             }
+            finally
+            {
+                context.Semaphore.Release();
+            }
 
-            return ret;
+            context.MoofIndexes[trackID - 1] = 0;
+            context.Plans[trackID - 1] = null;
+            context.Entries[trackID - 1] = 0;
+            context.Fragments[trackID - 1] = 0;
+            context.Position[trackID - 1] = 0;
+
+            return null;
         }
     } 
 
@@ -3332,6 +3399,7 @@ namespace SharpMp4
     public class MoofBox : ContainerMp4Box
     {
         public const string TYPE = "moof";
+        public long Offset { get; set; }
 
         public MfhdBox GetMfhd() { return Children.SingleOrDefault(x => x.Type == MfhdBox.TYPE) as MfhdBox; } 
         public IEnumerable<TrafBox> GetTraf() { return Children.Where(x => x.Type == TrafBox.TYPE).Select(x => x as TrafBox); } 
@@ -3341,7 +3409,9 @@ namespace SharpMp4
 
         public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
         {
-            ContainerMp4Box ret = new MoofBox(size, parent);
+            long offset = stream.Position - 8;
+            MoofBox ret = new MoofBox(size, parent);
+            ret.Offset = offset;
             uint parsedSize = 8;
             while (parsedSize < size)
             {
@@ -4522,18 +4592,35 @@ namespace SharpMp4
         }
     }
 
+    public class WrapperStorage : ITemporaryStorage
+    {
+        public Stream Stream { get; private set; }
+        public WrapperStorage(Stream stream)
+        {
+            this.Stream = stream;
+        }
+
+        public void Dispose()
+        {  }
+    }
+
     public class MdatBox : Mp4Box, IDisposable
     {
         public const string TYPE = "mdat";
 
         private ITemporaryStorage _storage;
+
+        public long Position { get; private set; } = 0;
+
+
         private bool _disposedValue;
 
         public ITemporaryStorage GetStorage() { return _storage; }
 
-        public MdatBox(uint size, Mp4Box parent, ITemporaryStorage storage) : base(size, TYPE, parent)
+        public MdatBox(uint size, Mp4Box parent, ITemporaryStorage storage, long position = -1) : base(size, TYPE, parent)
         {
             _storage = storage;
+            Position = position;
         }
 
         public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
@@ -4541,7 +4628,26 @@ namespace SharpMp4
             byte[] buffer = new byte[1024];
             int remaining = (int)size - 8;
 
-            var storage = TemporaryStorage.Factory.Create();
+            long position = 0;
+            try
+            {
+                position = stream.Position;
+            }
+            catch(Exception)
+            {
+                // the stream does not support getting position
+            }
+
+            ITemporaryStorage storage = null;
+
+            if (position == 0)
+            {
+                storage = TemporaryStorage.Factory.Create();
+            }
+            else
+            {
+                storage = new WrapperStorage(stream); // reuse the input stream
+            }
 
             int read = 0;
             while (remaining > 0)
@@ -4549,7 +4655,10 @@ namespace SharpMp4
                 int count = Math.Min(buffer.Length, remaining);
                 read = stream.Read(buffer, 0, count);
 
-                if (read > 0) await storage.Stream.WriteAsync(buffer, 0, read);
+                if (read > 0 && position == 0)
+                {
+                    await storage.Stream.WriteAsync(buffer, 0, read);
+                }
 
                 if (read == 0)
                 {
@@ -4560,13 +4669,17 @@ namespace SharpMp4
                 remaining -= read;
             }
 
-            await storage.Stream.FlushAsync();
-            storage.Stream.Seek(0, SeekOrigin.Begin);
+            if (position == 0)
+            {
+                await storage.Stream.FlushAsync();
+                storage.Stream.Seek(0, SeekOrigin.Begin);
+            }
 
             MdatBox mdat = new MdatBox(
                 size,
                 parent,
-                storage);
+                storage,
+                position);
 
             return mdat;
         }
