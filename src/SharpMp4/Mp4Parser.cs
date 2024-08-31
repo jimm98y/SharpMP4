@@ -675,7 +675,12 @@ namespace SharpMp4
                 }
             }
 
-            var moof = (MoofBox)await fmp4.ReadNextBoxAsync(-1);
+            var nextBox = await fmp4.ReadNextBoxAsync(-1);
+            while(nextBox.Type != "moof")
+            {
+                nextBox = await fmp4.ReadNextBoxAsync(-1); // TODO add support for SIDX box
+            }
+            var moof = (MoofBox)nextBox;
             var mdat = (MdatBox)await fmp4.ReadNextBoxAsync(-1);
 
             while ((context.VideoTrackId != null && context.Moof[(int)context.VideoTrackId - 1] == null) ||
@@ -696,6 +701,16 @@ namespace SharpMp4
                     {
                         context.Moof[(uint)context.AudioTrackId - 1] = moof;
                         context.Mdat[(uint)context.AudioTrackId - 1] = mdat;
+                    }
+                    else
+                    {
+                        nextBox = await fmp4.ReadNextBoxAsync(-1);
+                        while (nextBox.Type != "moof")
+                        {
+                            nextBox = await fmp4.ReadNextBoxAsync(-1);
+                        }
+                        moof = (MoofBox)nextBox;
+                        mdat = (MdatBox)await fmp4.ReadNextBoxAsync(-1);
                     }
                 }
             }
@@ -804,7 +819,15 @@ namespace SharpMp4
                     }
 
                     long offset = moof.Offset + moof.CalculateSize() + mdat.CalculateSize();
-                    moof = context.Moof[trackID - 1] = await fmp4.ReadNextBoxAsync(offset) as MoofBox;
+                    var nextBox = await fmp4.ReadNextBoxAsync(offset);
+                    while (nextBox != null && nextBox.Type != "moof")
+                    {
+                        offset += nextBox.CalculateSize();
+                        nextBox = await fmp4.ReadNextBoxAsync(offset);
+                    }
+                    moof = (MoofBox)nextBox;
+
+                    context.Moof[trackID - 1] = moof;
                     if (moof != null)
                     {
                         mdat = context.Mdat[trackID - 1] = (MdatBox)await fmp4.ReadNextBoxAsync(offset + moof.CalculateSize());
@@ -6004,12 +6027,13 @@ namespace SharpMp4
 
         public async Task<Mp4Box> ReadNextBoxAsync(long offset)
         {
-            if (offset >= 0)
+            long position = _stream.Position;
+            if (offset >= 0 && position != offset)
             {
                 _stream.Seek(offset, SeekOrigin.Begin);
             }
 
-            if (_stream.Position < _stream.Length)
+            if (position < _stream.Length)
             {
                 var box = await Mp4Parser.ReadBox(null, _stream);
                 return box;
