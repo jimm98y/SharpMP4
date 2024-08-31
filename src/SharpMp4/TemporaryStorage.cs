@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace SharpMp4
 {
@@ -31,7 +32,17 @@ namespace SharpMp4
 
     public interface ITemporaryStorage : IDisposable
     {
-        Stream Stream { get; }
+        Task CopyToAsync(Stream stream);
+        Task FlushAsync();
+        long GetLength();
+        long GetPosition();
+        long Seek(long offset, SeekOrigin origin);
+        Task ReadExactlyAsync(byte[] data, int offset, int length);
+        Task WriteAsync(byte[] buffer, int offset, int length);
+        byte ReadByte();
+        ushort ReadUInt16();
+        uint ReadUInt24();
+        uint ReadUInt32();
     }
 
     public class TemporaryMemory : ITemporaryStorage
@@ -66,6 +77,61 @@ namespace SharpMp4
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        public Task CopyToAsync(Stream stream)
+        {
+            return Stream.CopyToAsync(stream);
+        }
+
+        public Task FlushAsync()
+        {
+            return Stream.FlushAsync();
+        }
+
+        public long GetLength()
+        {
+            return Stream.Length;
+        }
+
+        public long GetPosition()
+        {
+            return Stream.Position;
+        }
+
+        public long Seek(long offset, SeekOrigin origin)
+        {
+            return Stream.Seek(offset, origin);
+        }
+
+        public Task ReadExactlyAsync(byte[] data, int offset, int length)
+        {
+            return Stream.ReadExactlyAsync(data, offset, length);
+        }
+
+        public Task WriteAsync(byte[] buffer, int offset, int length)
+        {
+            return Stream.WriteAsync(buffer, offset, length);
+        }
+
+        public byte ReadByte()
+        {
+            return IsoReaderWriter.ReadByte(Stream);
+        }
+
+        public ushort ReadUInt16()
+        {
+            return IsoReaderWriter.ReadUInt16(Stream);
+        }
+
+        public uint ReadUInt24()
+        {
+            return IsoReaderWriter.ReadUInt24(Stream);
+        }
+
+        public uint ReadUInt32()
+        {
+            return IsoReaderWriter.ReadUInt32(Stream);
+        }
     }
 
     public class TemporaryFile : ITemporaryStorage
@@ -99,6 +165,61 @@ namespace SharpMp4
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public Task CopyToAsync(Stream stream)
+        {
+            return Stream.CopyToAsync(stream);
+        }
+
+        public Task FlushAsync()
+        {
+            return Stream.FlushAsync();
+        }
+
+        public long GetLength()
+        {
+            return Stream.Length;
+        }
+
+        public long GetPosition()
+        {
+            return Stream.Position;
+        }
+
+        public long Seek(long offset, SeekOrigin origin)
+        {
+            return Stream.Seek(offset, origin);
+        }
+
+        public Task ReadExactlyAsync(byte[] data, int offset, int length)
+        {
+            return Stream.ReadExactlyAsync(data, offset, length);
+        }
+
+        public Task WriteAsync(byte[] buffer, int offset, int length)
+        {
+            return Stream.WriteAsync(buffer, offset, length);
+        }
+
+        public byte ReadByte()
+        {
+            return IsoReaderWriter.ReadByte(Stream);
+        }
+
+        public ushort ReadUInt16()
+        {
+            return IsoReaderWriter.ReadUInt16(Stream);
+        }
+
+        public uint ReadUInt24()
+        {
+            return IsoReaderWriter.ReadUInt24(Stream);
+        }
+
+        public uint ReadUInt32()
+        {
+            return IsoReaderWriter.ReadUInt32(Stream);
         }
     }
 }
