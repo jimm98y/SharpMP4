@@ -3115,6 +3115,140 @@ namespace SharpMp4
         }
     }
 
+    public class SidxEntry
+    {
+        public uint SubsegmentDuration { get; set; }
+        public int ReferencedSize { get; set; }
+        public byte ReferenceType { get; set; }
+        public byte StartsWithSap { get; set; }
+        public byte SapType { get; set; }
+        public int SapDeltaTime { get; set; }
+    }
+
+    public class SidxBox : Mp4Box
+    {
+        public const string TYPE = "sidx";
+
+        public byte Version { get; set; }
+        public uint Flags { get; set; }
+        public uint ReferenceId { get; }
+        public uint TimeScale { get; }
+        public ulong EarliestPresentationTime { get; }
+        public ulong FirstOffset { get; }
+        public ushort Reserved { get; }
+        public ushort NumEntries { get; }
+        public List<SidxEntry> Entries { get; }
+
+        public SidxBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        { }
+
+        public SidxBox(uint size, Mp4Box parent, byte version, uint flags, uint referenceId, uint timeScale, ulong earliestPresentationTime, ulong firstOffset, ushort reserved, ushort numEntries, List<SidxEntry> entries) : this(size, parent)
+        {
+            Version = version;
+            Flags = flags;
+            ReferenceId = referenceId;
+            TimeScale = timeScale;
+            EarliestPresentationTime = earliestPresentationTime;
+            FirstOffset = firstOffset;
+            Reserved = reserved;
+            NumEntries = numEntries;
+            Entries = entries;
+        }
+
+        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        {
+            byte version = IsoReaderWriter.ReadByte(stream);
+            uint flags = IsoReaderWriter.ReadUInt24(stream);
+
+            uint referenceId = IsoReaderWriter.ReadUInt32(stream);
+            uint timeScale = IsoReaderWriter.ReadUInt32(stream);
+            ulong earliestPresentationTime;
+            ulong firstOffset;
+            if (version == 0)
+            {
+                earliestPresentationTime = IsoReaderWriter.ReadUInt32(stream);
+                firstOffset = IsoReaderWriter.ReadUInt32(stream);
+            }
+            else
+            {
+                earliestPresentationTime = IsoReaderWriter.ReadUInt64(stream);
+                firstOffset = IsoReaderWriter.ReadUInt64(stream);
+            }
+            ushort reserved = IsoReaderWriter.ReadUInt16(stream);
+            ushort numEntries = IsoReaderWriter.ReadUInt16(stream);
+            List<SidxEntry> entries = new List<SidxEntry>();
+            for (int i = 0; i < numEntries; i++)
+            {
+                RawBitStreamReader b = new RawBitStreamReader(stream);
+                SidxEntry e = new SidxEntry();
+                e.ReferenceType = (byte)b.ReadBits(1);
+                e.ReferencedSize = b.ReadBits(31);
+                e.SubsegmentDuration = (uint)b.ReadBits(32);
+                e.StartsWithSap = (byte)b.ReadBits(1);
+                e.SapType = (byte)b.ReadBits(3);
+                e.SapDeltaTime = b.ReadBits(28);
+                entries.Add(e);
+            }
+
+            SidxBox sidx = new SidxBox(
+                size,
+                parent,      
+                version,
+                flags,
+                referenceId,
+                timeScale,
+                earliestPresentationTime,
+                firstOffset,
+                reserved,
+                numEntries,
+                entries
+                );
+
+            return Task.FromResult((Mp4Box)sidx);
+        }
+
+        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        {
+            SidxBox b = (SidxBox)box;
+            uint size = 0;
+
+            IsoReaderWriter.WriteUInt32(stream, b.ReferenceId);
+            IsoReaderWriter.WriteUInt32(stream, b.TimeScale);
+
+            if (b.Version == 0)
+            {
+                IsoReaderWriter.WriteUInt32(stream, (uint)b.EarliestPresentationTime);
+                IsoReaderWriter.WriteUInt32(stream, (uint)b.FirstOffset);
+            }
+            else
+            {
+                IsoReaderWriter.WriteUInt64(stream, b.EarliestPresentationTime);
+                IsoReaderWriter.WriteUInt64(stream, b.FirstOffset);
+            }
+
+            IsoReaderWriter.WriteUInt16(stream, b.Reserved);
+            IsoReaderWriter.WriteUInt16(stream, (ushort)b.Entries.Count);
+
+            foreach (SidxEntry entry in b.Entries)
+            {
+                RawBitStreamWriter bb = new RawBitStreamWriter(stream);
+                bb.WriteBits(entry.ReferenceType, 1);
+                bb.WriteBits((uint)entry.ReferencedSize, 31);
+                bb.WriteBits(entry.SubsegmentDuration, 32);
+                bb.WriteBits(entry.StartsWithSap, 1);
+                bb.WriteBits(entry.SapType, 3);
+                bb.WriteBits((uint)entry.SapDeltaTime, 28);
+            }
+            
+            return Task.FromResult(size);
+        }
+
+        public override uint CalculateSize()
+        {
+            return (uint)(base.CalculateSize() + 4 + 8 + (Version == 0 ? 8 : 16) + 4 + Entries.Count * 12);
+        }
+    }
+
     public class StcoBox : Mp4Box
     {
         public const string TYPE = "stco";
@@ -6140,6 +6274,7 @@ namespace SharpMp4
             _boxParsers.Add(MoovBox.TYPE, MoovBox.ParseAsync);
             _boxParsers.Add(MvexBox.TYPE, MvexBox.ParseAsync);
             _boxParsers.Add(MvhdBox.TYPE, MvhdBox.ParseAsync);
+            _boxParsers.Add(SidxBox.TYPE, SidxBox.ParseAsync);
             _boxParsers.Add(SmhdBox.TYPE, SmhdBox.ParseAsync);
             _boxParsers.Add(StblBox.TYPE, StblBox.ParseAsync);
             _boxParsers.Add(StcoBox.TYPE, StcoBox.ParseAsync);
@@ -6213,6 +6348,7 @@ namespace SharpMp4
             _boxBuilders.Add(MoovBox.TYPE, MoovBox.BuildAsync);
             _boxBuilders.Add(MvexBox.TYPE, MvexBox.BuildAsync);
             _boxBuilders.Add(MvhdBox.TYPE, MvhdBox.BuildAsync);
+            _boxBuilders.Add(SidxBox.TYPE, SidxBox.BuildAsync);
             _boxBuilders.Add(SmhdBox.TYPE, SmhdBox.BuildAsync);
             _boxBuilders.Add(StblBox.TYPE, StblBox.BuildAsync);
             _boxBuilders.Add(StcoBox.TYPE, StcoBox.BuildAsync);
