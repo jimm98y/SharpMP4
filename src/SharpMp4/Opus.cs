@@ -172,10 +172,10 @@ namespace SharpMp4
                 ));
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             OpusSpecificBox b = (OpusSpecificBox)box;
-            uint size = 0;
+            ulong size = 0;
 
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteByte(stream, b.OutputChannelCount);
@@ -198,9 +198,9 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(base.CalculateSize() + 11 + (ChannelMappingFamily != 0 ? (2 + 8 * OutputChannelCount) : 0));
+            return (ulong)((long)base.CalculateSize() + 11 + (ChannelMappingFamily != 0 ? (2 + 8 * OutputChannelCount) : 0));
         }
     }
 }

@@ -276,13 +276,13 @@ namespace SharpMp4
             return avcc;
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             AvcConfigurationBox b = (AvcConfigurationBox)box;
             return AvcDecoderConfigurationRecord.Build(b.AvcDecoderConfigurationRecord, stream);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return base.CalculateSize() + AvcDecoderConfigurationRecord.CalculateSize();
         }
@@ -451,10 +451,10 @@ namespace SharpMp4
             return record;
         }
 
-        public static async Task<uint> Build(AvcDecoderConfigurationRecord b, Stream stream)
+        public static async Task<ulong> Build(AvcDecoderConfigurationRecord b, Stream stream)
         {
             // TODO fix mixed readers/writers
-            uint size = 0;
+            ulong size = 0;
             RawBitStreamWriter bitstream = new RawBitStreamWriter(stream);
 
             bitstream.WriteBits(8, b.ConfigurationVersion);

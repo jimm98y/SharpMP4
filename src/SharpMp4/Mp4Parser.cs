@@ -221,7 +221,7 @@ namespace SharpMp4
                 trafs.Add(traf);
             }
 
-            long offset = moof.CalculateSize() + 8;
+            ulong offset = moof.CalculateSize() + 8;
 
             for (int j = 0; j < trafs[0].GetTrun().Count(); j++)
             {
@@ -229,7 +229,7 @@ namespace SharpMp4
                 {
                     var trun = trafs[i].GetTrun().ElementAt(j);
                     trun.DataOffset = (int)offset;
-                    offset += (int)trun.Entries.Sum(x => x.SampleSize);
+                    offset += (ulong)trun.Entries.Sum(x => x.SampleSize);
                 }
             }
 
@@ -819,19 +819,19 @@ namespace SharpMp4
                         context.Position[trackID - 1] = 0;
                     }
 
-                    long offset = moof.Offset + moof.CalculateSize() + mdat.CalculateSize();
-                    var nextBox = await fmp4.ReadNextBoxAsync(offset);
+                    ulong offset = (ulong)moof.Offset + moof.CalculateSize() + mdat.CalculateSize();
+                    var nextBox = await fmp4.ReadNextBoxAsync((long)offset);
                     while (nextBox != null && nextBox.Type != "moof")
                     {
                         offset += nextBox.CalculateSize();
-                        nextBox = await fmp4.ReadNextBoxAsync(offset);
+                        nextBox = await fmp4.ReadNextBoxAsync((long)offset);
                     }
                     moof = (MoofBox)nextBox;
 
                     context.Moof[trackID - 1] = moof;
                     if (moof != null)
                     {
-                        mdat = context.Mdat[trackID - 1] = (MdatBox)await fmp4.ReadNextBoxAsync(offset + moof.CalculateSize());
+                        mdat = context.Mdat[trackID - 1] = (MdatBox)await fmp4.ReadNextBoxAsync((long)(offset + moof.CalculateSize()));
                         context.Plans[trackID - 1] = null;
                         context.Entries[trackID - 1] = 0;
                         context.Fragments[trackID - 1] = 0;
@@ -1036,7 +1036,7 @@ namespace SharpMp4
             return (sizeOfInstance, sizeBytes);
         }
 
-        public static uint WritePackedNumber(Stream stream, uint size)
+        public static uint WritePackedNumber(Stream stream, ulong size)
         {
             uint sizeBytesCount = CalculatePackedNumberLength(size);
 
@@ -1064,7 +1064,7 @@ namespace SharpMp4
             return sizeBytesCount;
         }
 
-        public static uint CalculatePackedNumberLength(uint size)
+        public static uint CalculatePackedNumberLength(ulong size)
         {
             uint sizeBytesCount = 0;
             while (size > 0)
@@ -1742,9 +1742,9 @@ namespace SharpMp4
             Type = type;
         }
 
-        public virtual uint CalculateSize()
+        public virtual ulong CalculateSize()
         {
-            return (uint)(_originalSize == 1 ? 16 : 8); // box header
+            return (ulong)(_originalSize == 1 ? 16 : 8); // box header
         }
     }
 
@@ -1755,9 +1755,9 @@ namespace SharpMp4
         public ContainerMp4Box(uint size, ulong largeSize, string type, Mp4Box parent) : base(size, largeSize, type, parent)
         { }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            uint size = 0;
+            ulong size = 0;
             foreach (var child in Children)
             {
                 size += child.CalculateSize();
@@ -1796,9 +1796,9 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)box);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
-            uint size = 0;
+            ulong size = 0;
             var b = (FtypBox)box;
             size += IsoReaderWriter.Write4cc(stream, b.MajorBrand);
             size += IsoReaderWriter.WriteUInt32(stream, b.MinorVersion);
@@ -1809,9 +1809,9 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(base.CalculateSize() + 8 + CompatibleBrands.Count * 4);
+            return (ulong)((long)base.CalculateSize() + 8 + CompatibleBrands.Count * 4);
         }
     }
 
@@ -1839,10 +1839,10 @@ namespace SharpMp4
             return ret;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             MoovBox ret = (MoovBox)box;
-            uint size = 0;
+            ulong size = 0;
             foreach (var child in ret.Children)
             {
                 size += await Mp4Parser.WriteBox(stream, child);
@@ -1994,10 +1994,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)mvhd);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             MvhdBox b = (MvhdBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             if (b.Version == 1)
@@ -2034,7 +2034,7 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             uint contentSize = 4;
             if (Version == 1)
@@ -2072,10 +2072,10 @@ namespace SharpMp4
             return ret;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             TrakBox ret = (TrakBox)box;
-            uint size = 0;
+            ulong size = 0;
             foreach (var child in ret.Children)
             {
                 size += await Mp4Parser.WriteBox(stream, child);
@@ -2210,10 +2210,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)ret);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             TkhdBox b = (TkhdBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
 
@@ -2248,7 +2248,7 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             uint contentSize = 4;
             if (Version == 1)
@@ -2288,10 +2288,10 @@ namespace SharpMp4
             return ret;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             MdiaBox ret = (MdiaBox)box;
-            uint size = 0;
+            ulong size = 0;
             foreach (var child in ret.Children)
             {
                 size += await Mp4Parser.WriteBox(stream, child);
@@ -2383,10 +2383,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)mdhd);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             MdhdBox b = (MdhdBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             if (b.Version == 1)
@@ -2409,7 +2409,7 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             uint contentSize = 4;
             if (Version == 1)
@@ -2501,10 +2501,10 @@ namespace SharpMp4
             return hdlr;
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             HdlrBox b = (HdlrBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteUInt32(stream, b.Dummy1); // might not be 0
@@ -2519,9 +2519,9 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(base.CalculateSize() + 24 + Encoding.UTF8.GetBytes(Name).Length);
+            return (ulong)((long)base.CalculateSize() + 24 + Encoding.UTF8.GetBytes(Name).Length);
         }
     }
 
@@ -2550,10 +2550,10 @@ namespace SharpMp4
             return ret;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             MinfBox ret = (MinfBox)box;
-            uint size = 0;
+            ulong size = 0;
             foreach (var child in ret.Children)
             {
                 size += await Mp4Parser.WriteBox(stream, child);
@@ -2602,10 +2602,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)smhd);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             SmhdBox b = (SmhdBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteFixedPoint88(stream, b.Balance);
@@ -2613,7 +2613,7 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return base.CalculateSize() + 8;
         }
@@ -2640,10 +2640,10 @@ namespace SharpMp4
             return ret;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             DinfBox b = (DinfBox)box;
-            uint size = 0;
+            ulong size = 0;
             foreach (var child in b.Children)
             {
                 size += await Mp4Parser.WriteBox(stream, child);
@@ -2691,10 +2691,10 @@ namespace SharpMp4
             return dref;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             DrefBox b = (DrefBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
 
@@ -2708,7 +2708,7 @@ namespace SharpMp4
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return base.CalculateSize() + 8;
         }
@@ -2762,10 +2762,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)vmhd);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             VmhdBox b = (VmhdBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteUInt16(stream, b.GraphicsMode);
@@ -2775,7 +2775,7 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return base.CalculateSize() + 12;
         }
@@ -2807,10 +2807,10 @@ namespace SharpMp4
             return ret;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             StblBox b = (StblBox)box;
-            uint size = 0;
+            ulong size = 0;
             foreach (var child in b.Children)
             {
                 size += await Mp4Parser.WriteBox(stream, child);
@@ -2858,10 +2858,10 @@ namespace SharpMp4
             return stsd;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             StsdBox b = (StsdBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
 
@@ -2874,7 +2874,7 @@ namespace SharpMp4
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return 8 + base.CalculateSize();
         }
@@ -2933,10 +2933,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)stsz);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             StszBox b = (StszBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteUInt32(stream, b.SampleSize);
@@ -2957,9 +2957,9 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(base.CalculateSize() + 12 + (SampleSize == 0 ? SampleSizes.Length * 4 : 0));
+            return (ulong)((long)base.CalculateSize() + 12 + (SampleSize == 0 ? SampleSizes.Length * 4 : 0));
         }
     }
 
@@ -3026,10 +3026,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)stsc);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             StscBox b = (StscBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)b.Entries.Count);
@@ -3042,9 +3042,9 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(base.CalculateSize() + Entries.Count * 12 + 8);
+            return (ulong)((long)base.CalculateSize() + Entries.Count * 12 + 8);
         }
     }
 
@@ -3111,10 +3111,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)stts);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             SttsBox b = (SttsBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)b.Entries.Count);
@@ -3126,9 +3126,9 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(base.CalculateSize() + 8 + Entries.Count * 8);
+            return (ulong)((long)base.CalculateSize() + 8 + Entries.Count * 8);
         }
     }
 
@@ -3225,10 +3225,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)sidx);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             SidxBox b = (SidxBox)box;
-            uint size = 0;
+            ulong size = 0;
 
             IsoReaderWriter.WriteUInt32(stream, b.ReferenceId);
             IsoReaderWriter.WriteUInt32(stream, b.TimeScale);
@@ -3261,9 +3261,9 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(base.CalculateSize() + 4 + 8 + (Version == 0 ? 8 : 16) + 4 + Entries.Count * 12);
+            return (ulong)((long)base.CalculateSize() + 4 + 8 + (Version == 0 ? 8 : 16) + 4 + Entries.Count * 12);
         }
     }
 
@@ -3308,10 +3308,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)stco);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             StcoBox b = (StcoBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)b.ChunkOffsets.Length);
@@ -3322,9 +3322,9 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(base.CalculateSize() + 8 + ChunkOffsets.Length * 4);
+            return (ulong)((long)base.CalculateSize() + 8 + ChunkOffsets.Length * 4);
         }
     }
 
@@ -3351,10 +3351,10 @@ namespace SharpMp4
             return ret;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             MvexBox b = (MvexBox)box;
-            uint size = 0;
+            ulong size = 0;
             foreach (var child in b.Children)
             {
                 size += await Mp4Parser.WriteBox(stream, child);
@@ -3407,10 +3407,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)mehd);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             MehdBox b = (MehdBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             if (b.Version == 1)
@@ -3424,9 +3424,9 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(base.CalculateSize() + (Version == 1 ? 12 : 8));
+            return (ulong)((long)base.CalculateSize() + (Version == 1 ? 12 : 8));
         }
     }
 
@@ -3492,10 +3492,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)trex);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             TrexBox b = (TrexBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteUInt32(stream, b.TrackId);
@@ -3506,7 +3506,7 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return base.CalculateSize() + 5 * 4 + 4;
         }
@@ -3610,10 +3610,10 @@ namespace SharpMp4
             return ret;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             MoofBox ret = (MoofBox)box;
-            uint size = 0;
+            ulong size = 0;
             foreach (var child in ret.Children)
             {
                 size += await Mp4Parser.WriteBox(stream, child);
@@ -3657,17 +3657,17 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)mfhd);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             MfhdBox b = (MfhdBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteUInt32(stream, b.SequenceNumber);
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return base.CalculateSize() + 8;
         }
@@ -3697,10 +3697,10 @@ namespace SharpMp4
             return ret;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             TrafBox ret = (TrafBox)box;
-            uint size = 0;
+            ulong size = 0;
             foreach (var child in ret.Children)
             {
                 size += await Mp4Parser.WriteBox(stream, child);
@@ -3900,10 +3900,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)tfhd);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             TfhdBox b = (TfhdBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteUInt32(stream, b.TrackId);
@@ -3931,7 +3931,7 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             uint size = 8;
             if ((Flags & 0x1) == 1)
@@ -4002,10 +4002,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)tfdt);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             TfdtBox b = (TfdtBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
 
@@ -4021,9 +4021,9 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(base.CalculateSize() + (Version == 0 ? 8 : 12));
+            return (ulong)((long)base.CalculateSize() + (Version == 0 ? 8 : 12));
         }
     }
 
@@ -4137,10 +4137,10 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)trun);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             TrunBox b = (TrunBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
 
@@ -4185,7 +4185,7 @@ namespace SharpMp4
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             uint size = 8;
 
@@ -4251,16 +4251,16 @@ namespace SharpMp4
             return Task.FromResult((Mp4Box)url);
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             UrlBox b = (UrlBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return base.CalculateSize() + 4;
         }
@@ -4309,9 +4309,9 @@ namespace SharpMp4
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(base.CalculateSize() + Bytes.Length);
+            return (ulong)((long)base.CalculateSize() + Bytes.Length);
         }
     }
 
@@ -4474,10 +4474,10 @@ namespace SharpMp4
             return audio;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             AudioSampleEntryBox b = (AudioSampleEntryBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteUInt32(stream, b.Dummy1);
             size += IsoReaderWriter.WriteUInt16(stream, b.Dummy2);
 
@@ -4524,9 +4524,9 @@ namespace SharpMp4
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)(28 + base.CalculateSize() + (SoundVersion == 1 ? 16 : 0) + (SoundVersion == 2 ? 16 + SoundVersionData.Length : 0));
+            return (ulong)(28 + (long)base.CalculateSize() + (SoundVersion == 1 ? 16 : 0) + (SoundVersion == 2 ? 16 + SoundVersionData.Length : 0));
         }
     }
 
@@ -4569,10 +4569,10 @@ namespace SharpMp4
             return esds;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             EsdsBox b = (EsdsBox)box;
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
 
@@ -4581,9 +4581,9 @@ namespace SharpMp4
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            uint esDescriptorSize = ESDescriptor.CalculateSize();
+            ulong esDescriptorSize = ESDescriptor.CalculateSize();
             return base.CalculateSize() + 4 + 1 + IsoReaderWriter.CalculatePackedNumberLength(esDescriptorSize) + esDescriptorSize;
         }
     }
@@ -4740,10 +4740,10 @@ namespace SharpMp4
             return visual;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             VisualSampleEntryBox b = (VisualSampleEntryBox)box;
-            uint size = 0;
+            ulong size = 0;
 
             size += IsoReaderWriter.WriteUInt32(stream, b.Dummy1);
             size += IsoReaderWriter.WriteUInt16(stream, b.Dummy2);
@@ -4788,7 +4788,7 @@ namespace SharpMp4
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return base.CalculateSize() + 78;
         }
@@ -4947,19 +4947,19 @@ namespace SharpMp4
             return mdat;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             MdatBox mdat = (MdatBox)box;
             var mdatStorage = mdat.GetStorage();
             mdatStorage.Seek(0, SeekOrigin.Begin);
-            uint size = (uint)mdatStorage.GetLength();
+            ulong size = (ulong)mdatStorage.GetLength();
             await mdatStorage.CopyToAsync(stream);
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return base.CalculateSize() + (uint)_storage.GetLength();
+            return base.CalculateSize() + (ulong)_storage.GetLength();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -5123,9 +5123,9 @@ namespace SharpMp4
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)Buffer.Length;
+            return (ulong)Buffer.Length;
         }
     }
 
@@ -5228,9 +5228,9 @@ namespace SharpMp4
             return es;
         }
 
-        public static async Task<uint> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
+        public static async Task<ulong> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
         {
-            uint size = 0;
+            ulong size = 0;
             ESDescriptor esd = (ESDescriptor)descriptor;
             size += IsoReaderWriter.WriteUInt16(stream, esd.EsId);
             int flags = (esd.StreamDependenceFlag ? 1 : 0) << 7 | (esd.UrlFlag ? 1 : 0) << 6 | (esd.OcrStreamFlag ? 1 : 0) << 5 | esd.StreamPriority & 0x1f;
@@ -5258,9 +5258,9 @@ namespace SharpMp4
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            uint output = 3;
+            ulong output = 3;
             if (StreamDependenceFlag)
             {
                 output += 2;
@@ -5276,7 +5276,7 @@ namespace SharpMp4
 
             foreach (var descriptor in Descriptors)
             {
-                uint descriptorContentSize = descriptor.CalculateSize();
+                ulong descriptorContentSize = descriptor.CalculateSize();
                 output += 1 + IsoReaderWriter.CalculatePackedNumberLength(descriptorContentSize) + descriptorContentSize;
             }
 
@@ -5306,15 +5306,15 @@ namespace SharpMp4
             return Task.FromResult((DescriptorBase)slConfig);
         }
 
-        public static Task<uint> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
+        public static Task<ulong> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
         {
-            uint size = 0;
+            ulong size = 0;
             SLConfigDescriptor slc = (SLConfigDescriptor)descriptor;
             size += IsoReaderWriter.WriteByte(stream, slc.Predefined);
             return Task.FromResult(size);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return 1;
         }
@@ -5414,9 +5414,9 @@ namespace SharpMp4
             return decoderConfig;
         }
 
-        public static async Task<uint> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
+        public static async Task<ulong> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
         {
-            uint size = 0;
+            ulong size = 0;
             DecoderConfigDescriptor dcd = (DecoderConfigDescriptor)descriptor;
             size += IsoReaderWriter.WriteByte(stream, (byte)descriptor.ObjectTypeIndication);
             int flags = dcd.StreamType << 2 | dcd.UpStream << 1 | 1;
@@ -5446,24 +5446,24 @@ namespace SharpMp4
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            uint output = 13;
+            ulong output = 13;
             if (AudioSpecificConfig != null)
             {
-                uint descriptorContentSize = AudioSpecificConfig.CalculateSize();
+                ulong descriptorContentSize = AudioSpecificConfig.CalculateSize();
                 output += 1 + IsoReaderWriter.CalculatePackedNumberLength(descriptorContentSize) + descriptorContentSize;
             }
 
             if (DecoderSpecificInfo != null)
             {
-                uint descriptorContentSize = DecoderSpecificInfo.CalculateSize();
+                ulong descriptorContentSize = DecoderSpecificInfo.CalculateSize();
                 output += 1 + IsoReaderWriter.CalculatePackedNumberLength(descriptorContentSize) + descriptorContentSize;
             }
 
             foreach (ProfileLevelIndicationDescriptor profileLevelIndicationDescriptor in ProfileLevelIndicationDescriptors)
             {
-                uint descriptorContentSize = profileLevelIndicationDescriptor.CalculateSize();
+                ulong descriptorContentSize = profileLevelIndicationDescriptor.CalculateSize();
                 output += 1 + IsoReaderWriter.CalculatePackedNumberLength(descriptorContentSize) + descriptorContentSize;
             }
             return output;
@@ -5607,7 +5607,7 @@ namespace SharpMp4
         public int SyncExtensionType { get; set; } = -1;
         public int InnerSyncExtensionType { get; set; } = -1;
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             uint sizeInBits = 5;
             if (OriginalAudioObjectType > 30)
@@ -5913,9 +5913,9 @@ namespace SharpMp4
             return Task.FromResult((DescriptorBase)audioSpecificConfig);
         }
 
-        public static Task<uint> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
+        public static Task<ulong> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
         {
-            uint size = 0;
+            ulong size = 0;
             AudioSpecificConfigDescriptor asc = (AudioSpecificConfigDescriptor)descriptor;
             RawBitStreamWriter bitstream = new RawBitStreamWriter(stream);
             WriteAudioObjectType(bitstream, asc.OriginalAudioObjectType);
@@ -6095,7 +6095,7 @@ namespace SharpMp4
             return decoderSpecificInfo;
         }
 
-        public static async Task<uint> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
+        public static async Task<ulong> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
         {
             DecoderSpecificInfoDescriptor b = (DecoderSpecificInfoDescriptor)descriptor;
             uint size = 0;
@@ -6103,7 +6103,7 @@ namespace SharpMp4
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return (uint)Bytes.Length;
         }
@@ -6130,17 +6130,17 @@ namespace SharpMp4
             return profileLevelIndication;
         }
 
-        public static async Task<uint> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
+        public static async Task<ulong> BuildAsync(Stream stream, int objectIndicationIdentifier, byte tag, DescriptorBase descriptor)
         {
             ProfileLevelIndicationDescriptor b = (ProfileLevelIndicationDescriptor)descriptor;
-            uint size = 0;
+            ulong size = 0;
             size += await IsoReaderWriter.WriteBytesAsync(stream, b.Bytes, 0, b.Bytes.Length);
             return size;
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
-            return (uint)Bytes.Length;
+            return (ulong)Bytes.Length;
         }
     }
 
@@ -6154,7 +6154,7 @@ namespace SharpMp4
         public uint GetSize() { return _originalSize; }
         public void SetSize(uint size) { _originalSize = size; }
 
-        public abstract uint CalculateSize();
+        public abstract ulong CalculateSize();
 
         public DescriptorBase(int objectTypeIndication, byte descriptorType)
         {
@@ -6231,12 +6231,12 @@ namespace SharpMp4
     public static class Mp4Parser
     {
         private static Dictionary<string, Func<uint, ulong, string, Mp4Box, Stream, Task<Mp4Box>>> _boxParsers = new Dictionary<string, Func<uint, ulong, string, Mp4Box, Stream, Task<Mp4Box>>>();
-        private static Dictionary<string, Func<Mp4Box, Stream, Task<uint>>> _boxBuilders = new Dictionary<string, Func<Mp4Box, Stream, Task<uint>>>();
+        private static Dictionary<string, Func<Mp4Box, Stream, Task<ulong>>> _boxBuilders = new Dictionary<string, Func<Mp4Box, Stream, Task<ulong>>>();
 
         private static Dictionary<int, Dictionary<int, Func<uint, Stream, Task<DescriptorBase>>>> _descriptorParsers = new Dictionary<int, Dictionary<int, Func<uint, Stream, Task<DescriptorBase>>>>();
-        private static Dictionary<int, Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>>> _descriptorBuilders = new Dictionary<int, Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>>>();
+        private static Dictionary<int, Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<ulong>>>> _descriptorBuilders = new Dictionary<int, Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<ulong>>>>();
 
-        public static void RegisterBox(string box, Func<uint, ulong, string, Mp4Box, Stream, Task<Mp4Box>> parseFunction, Func<Mp4Box, Stream, Task<uint>> buildFunction)
+        public static void RegisterBox(string box, Func<uint, ulong, string, Mp4Box, Stream, Task<Mp4Box>> parseFunction, Func<Mp4Box, Stream, Task<ulong>> buildFunction)
         {
             if (_boxParsers.ContainsKey(box))
                 throw new InvalidOperationException("Box parser already registered!");
@@ -6260,7 +6260,7 @@ namespace SharpMp4
             _boxBuilders.Remove(box);
         }
 
-        public static void RegisterDescriptor(int objectTypeIndication, int type, Func<uint, Stream, Task<DescriptorBase>> parseFunction, Func<Stream, int, byte, DescriptorBase, Task<uint>> buildFunction)
+        public static void RegisterDescriptor(int objectTypeIndication, int type, Func<uint, Stream, Task<DescriptorBase>> parseFunction, Func<Stream, int, byte, DescriptorBase, Task<ulong>> buildFunction)
         {
             if(_descriptorBuilders.ContainsKey(objectTypeIndication) && _descriptorBuilders[objectTypeIndication].ContainsKey(type))
                 throw new InvalidOperationException("Descriptor builder already registered!");
@@ -6270,7 +6270,7 @@ namespace SharpMp4
 
             if (!_descriptorBuilders.ContainsKey(objectTypeIndication))
             {
-                Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>> descriptorDictionary = new Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>>();
+                Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<ulong>>> descriptorDictionary = new Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<ulong>>>();
                 _descriptorBuilders.Add(objectTypeIndication, descriptorDictionary);
             }
 
@@ -6435,10 +6435,10 @@ namespace SharpMp4
             _boxBuilders.Add(EsdsBox.TYPE, EsdsBox.BuildAsync);
 
             // descriptor builders
-            Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>> audioBuilderDictionary = new Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>>();
+            Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<ulong>>> audioBuilderDictionary = new Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<ulong>>>();
             audioBuilderDictionary.Add(AudioSpecificConfigDescriptor.DESCRIPTOR, AudioSpecificConfigDescriptor.BuildAsync);
             _descriptorBuilders.Add(AudioSpecificConfigDescriptor.OBJECT_TYPE_INDICATION, audioBuilderDictionary);
-            Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>> defaultBuilderDictionary = new Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>>();
+            Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<ulong>>> defaultBuilderDictionary = new Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<ulong>>>();
             defaultBuilderDictionary.Add(ESDescriptor.DESCRIPTOR, ESDescriptor.BuildAsync);
             defaultBuilderDictionary.Add(SLConfigDescriptor.DESCRIPTOR, SLConfigDescriptor.BuildAsync);
             defaultBuilderDictionary.Add(DecoderConfigDescriptor.DESCRIPTOR, DecoderConfigDescriptor.BuildAsync);
@@ -6490,7 +6490,7 @@ namespace SharpMp4
             return box;
         }
 
-        public static async Task<uint> WriteBox(Stream stream, Mp4Box box)
+        public static async Task<ulong> WriteBox(Stream stream, Mp4Box box)
         {
             Mp4Box p = box.GetParent();
 
@@ -6506,10 +6506,15 @@ namespace SharpMp4
                 Log.Info(log.ToString());
             }
 
-            uint size = 0;
+            ulong size = 0;
 
-            size += IsoReaderWriter.WriteUInt32(stream, box.CalculateSize());
+            size += IsoReaderWriter.WriteUInt32(stream, (uint)(box.GetSize() == 1 ? 1 : box.CalculateSize()));
             size += IsoReaderWriter.Write4cc(stream, box.Type);
+
+            if (box.GetSize() == 1)
+            {
+                size += IsoReaderWriter.WriteUInt64(stream, box.CalculateSize());
+            }
 
             if (_boxBuilders.ContainsKey(box.Type))
             {
@@ -6524,7 +6529,7 @@ namespace SharpMp4
                 throw new NotSupportedException($"Writing box {box.Type} is not supported!");
             }
 
-            uint calculatedSize = box.CalculateSize();
+            ulong calculatedSize = box.CalculateSize();
             if (size != calculatedSize)
             {
                 throw new Exception($"Box {box.Type} size mismatch!");
@@ -6558,12 +6563,12 @@ namespace SharpMp4
             return descriptor;
         }
 
-        public static async Task<uint> WriteDescriptor(Stream stream, int objectTypeIndication, byte tag, DescriptorBase descriptor)
+        public static async Task<ulong> WriteDescriptor(Stream stream, int objectTypeIndication, byte tag, DescriptorBase descriptor)
         {
-            uint size = 0;
+            ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, tag);
 
-            uint descriptorSize = descriptor.CalculateSize();
+            ulong descriptorSize = descriptor.CalculateSize();
             size += IsoReaderWriter.WritePackedNumber(stream, descriptorSize);
 
             if (Log.InfoEnabled) Log.Info($"-------- Descriptor - objectTypeIndication: {objectTypeIndication}, tag {tag}");
@@ -6580,7 +6585,7 @@ namespace SharpMp4
                 if (Log.ErrorEnabled) Log.Error($"Descriptor {objectTypeIndication}, {tag} is not supported!");
             }
 
-            uint calculatedSize = descriptor.CalculateSize() + IsoReaderWriter.CalculatePackedNumberLength(descriptorSize) + 1;
+            ulong calculatedSize = descriptor.CalculateSize() + IsoReaderWriter.CalculatePackedNumberLength(descriptorSize) + 1;
             if (size != calculatedSize)
             {
                 if (Log.WarnEnabled) Log.Warn($"Descriptor size mismatch! {objectTypeIndication}, tag {tag}, {(int)size - (int)calculatedSize} bytes");

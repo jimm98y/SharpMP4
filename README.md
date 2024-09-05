@@ -125,7 +125,7 @@ public class CustomBox : Mp4Box
         return 0;
     }
 
-    public override uint CalculateSize()
+    public override ulong CalculateSize()
     {
         return (uint)(base.CalculateSize() + 0);
     }

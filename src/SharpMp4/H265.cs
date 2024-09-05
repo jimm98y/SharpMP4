@@ -2959,13 +2959,13 @@ namespace SharpMp4
             return hvcc;
         }
 
-        public static Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             HevcConfigurationBox b = (HevcConfigurationBox)box;
             return HevcDecoderConfigurationRecord.Build(b.HevcDecoderConfigurationRecord, stream);
         }
 
-        public override uint CalculateSize()
+        public override ulong CalculateSize()
         {
             return base.CalculateSize() + HevcDecoderConfigurationRecord.CalculateSize();
         }
@@ -3179,7 +3179,7 @@ namespace SharpMp4
             return size;
         }
 
-        public static async Task<uint> Build(HevcDecoderConfigurationRecord b, Stream stream)
+        public static async Task<ulong> Build(HevcDecoderConfigurationRecord b, Stream stream)
         {
             uint size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.ConfigurationVersion);
