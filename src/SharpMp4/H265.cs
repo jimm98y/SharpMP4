@@ -218,7 +218,7 @@ namespace SharpMp4
             var vps = track.Vps.First().Value;
             var dim = sps.CalculateDimensions();
 
-            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, parent, VisualSampleEntryBox.TYPE6);
+            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, 0, parent, VisualSampleEntryBox.TYPE6);
             visualSampleEntry.DataReferenceIndex = 1;
             visualSampleEntry.Depth = 24;
             visualSampleEntry.FrameCount = 1;
@@ -229,7 +229,7 @@ namespace SharpMp4
             visualSampleEntry.CompressorName = "hevc\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
             visualSampleEntry.CompressorNameDisplayableData = 4;
 
-            HevcConfigurationBox hevcConfigurationBox = new HevcConfigurationBox(0, visualSampleEntry, new HevcDecoderConfigurationRecord());
+            HevcConfigurationBox hevcConfigurationBox = new HevcConfigurationBox(0, 0, visualSampleEntry, new HevcDecoderConfigurationRecord());
             hevcConfigurationBox.HevcDecoderConfigurationRecord.ConfigurationVersion = 1;
             hevcConfigurationBox.HevcDecoderConfigurationRecord.GeneralProfileIdc = sps.ProfileTier.GeneralProfileIdc;
             hevcConfigurationBox.HevcDecoderConfigurationRecord.ChromaFormat = sps.ChromaFormatIdc;
@@ -2943,17 +2943,18 @@ namespace SharpMp4
 
         public HevcDecoderConfigurationRecord HevcDecoderConfigurationRecord { get; set; }
 
-        public HevcConfigurationBox(uint size, Mp4Box parent, HevcDecoderConfigurationRecord record) : base(size, TYPE, parent)
+        public HevcConfigurationBox(uint size, ulong largeSize, Mp4Box parent, HevcDecoderConfigurationRecord record) : base(size, largeSize, TYPE, parent)
         {
             HevcDecoderConfigurationRecord = record;
         }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             HevcConfigurationBox hvcc = new HevcConfigurationBox(
                 size,
+                largeSize,
                 parent,
-                await HevcDecoderConfigurationRecord.Parse(size - 8, stream));
+                await HevcDecoderConfigurationRecord.Parse((uint)(size == 1 ? (largeSize - 16) : (size - 8)), stream));
 
             return hvcc;
         }

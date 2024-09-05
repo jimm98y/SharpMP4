@@ -44,14 +44,14 @@ namespace SharpMp4
 
         private static AudioSampleEntryBox CreateAudioSampleEntryBox(Mp4Box parent, AACTrack aacTrack)
         {
-            AudioSampleEntryBox audioSampleEntry = new AudioSampleEntryBox(0, parent, "mp4a");
+            AudioSampleEntryBox audioSampleEntry = new AudioSampleEntryBox(0, 0, parent, "mp4a");
 
             audioSampleEntry.ChannelCount = aacTrack.ChannelCount;
             audioSampleEntry.SampleRate = aacTrack.SamplingRate;
             audioSampleEntry.DataReferenceIndex = 1;
             audioSampleEntry.SampleSize = aacTrack.SampleSize;
 
-            EsdsBox esds = new EsdsBox(0, audioSampleEntry);
+            EsdsBox esds = new EsdsBox(0, 0, audioSampleEntry);
             ESDescriptor descriptor = new ESDescriptor();
             descriptor.EsId = 0;
 

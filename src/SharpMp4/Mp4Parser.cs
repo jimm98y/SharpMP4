@@ -189,7 +189,7 @@ namespace SharpMp4
         private async Task<MdatBox> CreateMdatBox(List<StreamFragment> fragments)
         {
             var storage = TemporaryStorage.Factory.Create();
-            var mdat = new MdatBox(0, null, storage);
+            var mdat = new MdatBox(0, 0, null, storage);
 
             for (int i = 0; i < fragments.Count; i++)
             {
@@ -208,7 +208,7 @@ namespace SharpMp4
 
         private static MoofBox CreateMoofBox(List<TrackBase> tracks, uint sequenceNumber, List<StreamFragment> fragments)
         {
-            MoofBox moof = new MoofBox(0, null);
+            MoofBox moof = new MoofBox(0, 0, null);
 
             MfhdBox mfhd = CreateMfhdBox(moof, sequenceNumber);
             moof.Children.Add(mfhd);
@@ -238,14 +238,14 @@ namespace SharpMp4
 
         private static MfhdBox CreateMfhdBox(Mp4Box parent, uint sequenceNumber)
         {
-            MfhdBox mfhd = new MfhdBox(0, parent);
+            MfhdBox mfhd = new MfhdBox(0, 0, parent);
             mfhd.SequenceNumber = sequenceNumber;
             return mfhd;
         }
 
         private static TrafBox CreateTrafBox(Mp4Box parent, List<TrackBase> tracks, int trackIndex, List<StreamFragment> fragments)
         {
-            TrafBox traf = new TrafBox(0, parent);
+            TrafBox traf = new TrafBox(0, 0, parent);
             TfhdBox tfhd = CreateTfhdBox(traf, tracks[trackIndex]);
             traf.Children.Add(tfhd);
             TfdtBox tfdt = CreateTfdtBox(traf, trackIndex, fragments);
@@ -262,7 +262,7 @@ namespace SharpMp4
 
         private static TfhdBox CreateTfhdBox(Mp4Box parent, TrackBase track)
         {
-            TfhdBox tfhd = new TfhdBox(0, parent);
+            TfhdBox tfhd = new TfhdBox(0, 0, parent);
             tfhd.TrackId = track.TrackID;
 
             if (track.DefaultSampleFlags != null)
@@ -276,14 +276,14 @@ namespace SharpMp4
 
         private static TfdtBox CreateTfdtBox(Mp4Box parent, int trackIndex, List<StreamFragment> fragments)
         {
-            TfdtBox tfdt = new TfdtBox(0, parent);
+            TfdtBox tfdt = new TfdtBox(0, 0, parent);
             tfdt.BaseMediaDecodeTime = (ulong)fragments[0].StartTimes[trackIndex]; // BaseMediaDecodeTime must be in the timescale of the track
             return tfdt;
         }
 
         private static TrunBox CreateTrunBox(Mp4Box parent, int trackIndex, StreamFragment fragment, bool isFirst)
         {
-            TrunBox trun = new TrunBox(0, parent);
+            TrunBox trun = new TrunBox(0, 0, parent);
 
             // TODO FirstSampleFlags
             if (isFirst)
@@ -309,13 +309,13 @@ namespace SharpMp4
                 "isom",
                 "mp42"
             };
-            var ftyp = new FtypBox(0, null, "mp42", 1, compatibleBrands);
+            var ftyp = new FtypBox(0, 0, null, "mp42", 1, compatibleBrands);
             return ftyp;
         }
 
         private MoovBox CreateMoovBox()
         {
-            var moov = new MoovBox(0, null);
+            var moov = new MoovBox(0, 0, null);
             var mvhd = CreateMvhdBox(moov);
             moov.Children.Add(mvhd);
 
@@ -333,7 +333,7 @@ namespace SharpMp4
 
         private MvhdBox CreateMvhdBox(Mp4Box parent)
         {
-            var mvhd = new MvhdBox(0, parent);
+            var mvhd = new MvhdBox(0, 0, parent);
             mvhd.Duration = 0;
             mvhd.Timescale = 1000; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
             return mvhd;
@@ -341,7 +341,7 @@ namespace SharpMp4
 
         private TrakBox CreateTrakBox(Mp4Box parent, TrackBase track)
         {
-            var trak = new TrakBox(0, parent);
+            var trak = new TrakBox(0, 0, parent);
             var tkhd = CreateTkhdBox(trak, track);
             var mdia = CreateMdiaBox(trak, track);
             trak.Children.Add(tkhd);
@@ -351,7 +351,7 @@ namespace SharpMp4
 
         private TkhdBox CreateTkhdBox(Mp4Box parent, TrackBase track)
         {
-            var tkhd = new TkhdBox(0, parent);
+            var tkhd = new TkhdBox(0, 0, parent);
             tkhd.TrackId = track.TrackID;
             track.FillTkhdBox(tkhd);
             return tkhd;
@@ -359,7 +359,7 @@ namespace SharpMp4
 
         private MdiaBox CreateMdiaBox(Mp4Box parent, TrackBase track)
         {
-            var mdia = new MdiaBox(0, parent);
+            var mdia = new MdiaBox(0, 0, parent);
             var mdhd = CreateMdhdBox(mdia, track);
             mdia.Children.Add(mdhd);
             var hdlr = CreateHdlrBox(mdia, track);
@@ -371,7 +371,7 @@ namespace SharpMp4
 
         private MdhdBox CreateMdhdBox(Mp4Box parent, TrackBase track)
         {
-            MdhdBox mdhd = new MdhdBox(0, parent);
+            MdhdBox mdhd = new MdhdBox(0, 0, parent);
             mdhd.Duration = 0;
             mdhd.Timescale = track.Timescale;
             mdhd.Language = track.Language;
@@ -380,7 +380,7 @@ namespace SharpMp4
 
         private HdlrBox CreateHdlrBox(Mp4Box parent, TrackBase track)
         {
-            HdlrBox hdlr = new HdlrBox(0, parent);
+            HdlrBox hdlr = new HdlrBox(0, 0, parent);
             hdlr.HandlerType = track.HdlrType;
             hdlr.Name = track.HdlrName;
             return hdlr;
@@ -388,18 +388,18 @@ namespace SharpMp4
 
         private MinfBox CreateMinfBox(Mp4Box parent, TrackBase track)
         {
-            MinfBox minf = new MinfBox(0, parent);
+            MinfBox minf = new MinfBox(0, 0, parent);
             switch (track.HdlrType)
             {
                 case "vide":
                     {
-                        minf.Children.Add(new VmhdBox(0, minf));
+                        minf.Children.Add(new VmhdBox(0, 0, minf));
                     }
                     break;
 
                 case "soun":
                     {
-                        minf.Children.Add(new SmhdBox(0, minf));
+                        minf.Children.Add(new SmhdBox(0, 0, minf));
                     }
                     break;
 
@@ -418,17 +418,17 @@ namespace SharpMp4
 
         private DinfBox CreateDinfBox(Mp4Box parent)
         {
-            DinfBox dinf = new DinfBox(0, parent);
-            var dref = new DrefBox(0, dinf);
+            DinfBox dinf = new DinfBox(0, 0, parent);
+            var dref = new DrefBox(0, 0, dinf);
             dinf.Children.Add(dref);
-            var url = new UrlBox(0, dref);
+            var url = new UrlBox(0, 0, dref);
             dref.Children.Add(url);
             return dinf;
         }
 
         private StblBox CreateStblBox(Mp4Box parent, TrackBase track)
         {
-            StblBox stbl = new StblBox(0, parent);
+            StblBox stbl = new StblBox(0, 0, parent);
 
             var stsd = CreateStsdBox(stbl, track);
             stbl.Children.Add(stsd);
@@ -450,7 +450,7 @@ namespace SharpMp4
 
         private StsdBox CreateStsdBox(Mp4Box parent, TrackBase track)
         {
-            var stsd = new StsdBox(0, parent);
+            var stsd = new StsdBox(0, 0, parent);
 
             var sampleEntryBox = track.CreateSampleEntryBox(parent);
             stsd.Children.Add(sampleEntryBox);
@@ -460,33 +460,33 @@ namespace SharpMp4
 
         private SttsBox CreateSttsBox(Mp4Box parent, TrackBase track)
         {
-            var stts = new SttsBox(0, parent);
+            var stts = new SttsBox(0, 0, parent);
             return stts;
         }
 
         private StscBox CreateStscBox(Mp4Box parent, TrackBase track)
         {
-            var stsc = new StscBox(0, parent);
+            var stsc = new StscBox(0, 0, parent);
             return stsc;
         }
 
         private StszBox CreateStszBox(Mp4Box parent, TrackBase track)
         {
-            var stsz = new StszBox(0, parent);
+            var stsz = new StszBox(0, 0, parent);
             return stsz;
         }
 
         private StcoBox CreateStcoBox(Mp4Box parent, TrackBase track)
         {
-            var stco = new StcoBox(0, parent);
+            var stco = new StcoBox(0, 0, parent);
             return stco;
         }
 
         private MvexBox CreateMvexBox(Mp4Box parent)
         {
-            var mvex = new MvexBox(0, parent);
+            var mvex = new MvexBox(0, 0, parent);
 
-            var mehd = new MehdBox(0, mvex);
+            var mehd = new MehdBox(0, 0, mvex);
             mehd.FragmentDuration = 0;
             mvex.Children.Add(mehd);
 
@@ -501,7 +501,7 @@ namespace SharpMp4
 
         private Mp4Box CreateTrexBox(Mp4Box parent, TrackBase track)
         {
-            TrexBox trex = new TrexBox(0, parent);
+            TrexBox trex = new TrexBox(0, 0, parent);
 
             trex.TrackId = track.TrackID;
             trex.DefaultSampleDescriptionIndex = 1;
@@ -759,6 +759,7 @@ namespace SharpMp4
                         {
                             var entry = trun.Entries[context.Entries[trackID - 1]];
                             int sampleSize = (int)entry.SampleSize; // in case of video, this is the size of AU which consists of 1 or more NALU
+                            
                             if (isVideo)
                             {
                                 if (Log.DebugEnabled) Log.Debug($"--- AU Begin {sampleSize}");
@@ -1726,22 +1727,24 @@ namespace SharpMp4
         public string Type { get; set; }
 
         private uint _originalSize;
-        internal uint GetSize() { return _originalSize; }
+        private ulong _originalLargeSize;
+        internal ulong GetSize() { return _originalSize == 1 ? _originalLargeSize : _originalSize; }
         internal void SetSize(uint size) { _originalSize = size; }
 
         private Mp4Box _parent;
         public Mp4Box GetParent() { return _parent; }
 
-        protected Mp4Box(uint size, string type, Mp4Box parent)
+        protected Mp4Box(uint size, ulong largeSize, string type, Mp4Box parent)
         {
             _originalSize = size;
+            _originalLargeSize = largeSize;
             _parent = parent;
             Type = type;
         }
 
         public virtual uint CalculateSize()
         {
-            return 8; // box header
+            return (uint)(_originalSize == 1 ? 16 : 8); // box header
         }
     }
 
@@ -1749,7 +1752,7 @@ namespace SharpMp4
     {
         public List<Mp4Box> Children { get; set; } = new List<Mp4Box>();
 
-        public ContainerMp4Box(uint size, string type, Mp4Box parent) : base(size, type, parent)
+        public ContainerMp4Box(uint size, ulong largeSize, string type, Mp4Box parent) : base(size, largeSize, type, parent)
         { }
 
         public override uint CalculateSize()
@@ -1771,14 +1774,14 @@ namespace SharpMp4
         public uint MinorVersion { get; set; }
         public List<string> CompatibleBrands { get; set; } = new List<string>();
 
-        public FtypBox(uint size, Mp4Box parent, string majorBrand, uint minorVersion, List<string> compatibleBrands) : base(size, TYPE, parent)
+        public FtypBox(uint size, ulong largeSize, Mp4Box parent, string majorBrand, uint minorVersion, List<string> compatibleBrands) : base(size, largeSize, TYPE, parent)
         {
             MajorBrand = majorBrand;
             MinorVersion = minorVersion;
             CompatibleBrands = compatibleBrands;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             string majorBrand = IsoReaderWriter.Read4cc(stream);
             uint minorVersion = IsoReaderWriter.ReadUInt32(stream);
@@ -1789,7 +1792,7 @@ namespace SharpMp4
                 compatibleBrands.Add(IsoReaderWriter.Read4cc(stream));
             }
 
-            var box = new FtypBox(size, parent, majorBrand, minorVersion, compatibleBrands);
+            var box = new FtypBox(size, largeSize, parent, majorBrand, minorVersion, compatibleBrands);
             return Task.FromResult((Mp4Box)box);
         }
 
@@ -1815,17 +1818,17 @@ namespace SharpMp4
     public class MoovBox : ContainerMp4Box
     {
         public const string TYPE = "moov";
-        public MoovBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public MoovBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
         public MvhdBox GetMvhd() { return Children.SingleOrDefault(x => x.Type == MvhdBox.TYPE) as MvhdBox; } 
         public MvexBox GetMvex() { return Children.SingleOrDefault(x => x.Type == MvexBox.TYPE) as MvexBox; } 
         public IEnumerable<TrakBox> GetTrak() { return Children.Where(x => x.Type == TrakBox.TYPE).Select(x => x as TrakBox); } 
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            ContainerMp4Box ret = new MoovBox(size, parent);
-            uint parsedSize = 8;
+            ContainerMp4Box ret = new MoovBox(size, largeSize, parent);
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -1873,11 +1876,12 @@ namespace SharpMp4
         public uint Dummy2 { get; set; } = 0;
         public uint Dummy3 { get; set; } = 0;
 
-        public MvhdBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public MvhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
         public MvhdBox(
             uint size,
+            ulong largeSize,
             Mp4Box parent,
             byte version,
             uint flags,
@@ -1897,7 +1901,7 @@ namespace SharpMp4
             uint selectionTime,
             uint selectionDuration,
             uint currentTime,
-            uint nextTrackID) : this(size, parent)
+            uint nextTrackID) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -1920,7 +1924,7 @@ namespace SharpMp4
             NextTrackId = nextTrackID;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -1965,6 +1969,7 @@ namespace SharpMp4
 
             MvhdBox mvhd = new MvhdBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -2048,16 +2053,16 @@ namespace SharpMp4
     public class TrakBox : ContainerMp4Box
     {
         public const string TYPE = "trak";
-        public TrakBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public TrakBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
         public TkhdBox GetTkhd() { return Children.SingleOrDefault(x => x.Type == TkhdBox.TYPE) as TkhdBox; } 
         public MdiaBox GetMdia() { return Children.SingleOrDefault(x => x.Type == MdiaBox.TYPE) as MdiaBox; } 
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            ContainerMp4Box ret = new TrakBox(size, parent);
-            uint parsedSize = 8;
+            ContainerMp4Box ret = new TrakBox(size, largeSize, parent);
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -2101,11 +2106,12 @@ namespace SharpMp4
         public uint Dummy3 { get; set; } = 0;
         public ushort Dummy4 { get; set; } = 0;
 
-        public TkhdBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public TkhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
         public TkhdBox(
             uint size,
+            ulong largeSize,
             Mp4Box parent,
             byte version,
             uint flags,
@@ -2122,7 +2128,7 @@ namespace SharpMp4
             ushort dummy4,
             Matrix matrix,
             double width,
-            double height) : this(size, parent)
+            double height) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -2142,7 +2148,7 @@ namespace SharpMp4
             Height = height;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -2182,6 +2188,7 @@ namespace SharpMp4
 
             TkhdBox ret = new TkhdBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -2265,13 +2272,13 @@ namespace SharpMp4
         public HdlrBox GetHdlr() { return Children.SingleOrDefault(x => x.Type == HdlrBox.TYPE) as HdlrBox; } 
         public MinfBox GetMinf() { return Children.SingleOrDefault(x => x.Type == MinfBox.TYPE) as MinfBox; } 
 
-        public MdiaBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public MdiaBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            ContainerMp4Box ret = new MdiaBox(size, parent);
-            uint parsedSize = 8;
+            ContainerMp4Box ret = new MdiaBox(size, largeSize, parent);
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -2306,11 +2313,12 @@ namespace SharpMp4
         public string Language { get; set; } = "und";
         public ushort Dummy1 { get; set; } = 0;
 
-        public MdhdBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public MdhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
         public MdhdBox(
             uint size,
+            ulong largeSize,
             Mp4Box parent,
             byte version,
             uint flags,
@@ -2319,7 +2327,7 @@ namespace SharpMp4
             uint timescale,
             ulong duration,
             string language,
-            ushort dummy1) : this(size, parent)
+            ushort dummy1) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -2331,7 +2339,7 @@ namespace SharpMp4
             Dummy1 = dummy1;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -2361,6 +2369,7 @@ namespace SharpMp4
 
             MdhdBox mdhd = new MdhdBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -2442,10 +2451,10 @@ namespace SharpMp4
         public uint C { get; set; }
         public string Name { get; set; }
 
-        public HdlrBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public HdlrBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public HdlrBox(uint size, Mp4Box parent, byte version, uint flags, uint dummy1, string handlerType, uint a, uint b, uint c, string name) : this(size, parent)
+        public HdlrBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint dummy1, string handlerType, uint a, uint b, uint c, string name) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -2457,7 +2466,7 @@ namespace SharpMp4
             Name = name;
         }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -2478,6 +2487,7 @@ namespace SharpMp4
 
             HdlrBox hdlr = new HdlrBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -2524,13 +2534,13 @@ namespace SharpMp4
         public DinfBox GetDinf() { return Children.SingleOrDefault(x => x.Type == DinfBox.TYPE) as DinfBox; } 
         public StblBox GetStbl() { return Children.SingleOrDefault(x => x.Type == StblBox.TYPE) as StblBox; }
 
-        public MinfBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public MinfBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            ContainerMp4Box ret = new MinfBox(size, parent);
-            uint parsedSize = 8;
+            ContainerMp4Box ret = new MinfBox(size, largeSize, parent);
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -2561,10 +2571,10 @@ namespace SharpMp4
         public float Balance { get; set; }
         public ushort Dummy1 { get; set; } = 0;
 
-        public SmhdBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public SmhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public SmhdBox(uint size, Mp4Box parent, byte version, uint flags, float balance, ushort dummy1) : this(size, parent)
+        public SmhdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, float balance, ushort dummy1) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -2572,7 +2582,7 @@ namespace SharpMp4
             Dummy1 = dummy1;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -2582,6 +2592,7 @@ namespace SharpMp4
 
             SmhdBox smhd = new SmhdBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -2613,13 +2624,13 @@ namespace SharpMp4
         public const string TYPE = "dinf";
         public DrefBox GetDref() { return Children.SingleOrDefault(x => x.Type == DrefBox.TYPE) as DrefBox; } 
 
-        public DinfBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public DinfBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            ContainerMp4Box ret = new DinfBox(size, parent);
-            uint parsedSize = 8;
+            ContainerMp4Box ret = new DinfBox(size, largeSize, parent);
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -2648,16 +2659,16 @@ namespace SharpMp4
         public byte Version { get; set; }
         public uint Flags { get; set; }
 
-        public DrefBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public DrefBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public DrefBox(uint size, Mp4Box parent, byte version, uint flags) : this(size, parent)
+        public DrefBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
         }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -2666,6 +2677,7 @@ namespace SharpMp4
 
             DrefBox dref = new DrefBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags);
@@ -2713,10 +2725,10 @@ namespace SharpMp4
         public ushort OpColor1 { get; set; } = 0;
         public ushort OpColor2 { get; set; } = 0;
 
-        public VmhdBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public VmhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public VmhdBox(uint size, Mp4Box parent, byte version, uint flags, ushort graphicsMode, ushort opColor0, ushort opColor1, ushort opColor2) : this(size, parent)
+        public VmhdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ushort graphicsMode, ushort opColor0, ushort opColor1, ushort opColor2) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -2726,7 +2738,7 @@ namespace SharpMp4
             OpColor2 = opColor2;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -2738,6 +2750,7 @@ namespace SharpMp4
 
             VmhdBox vmhd = new VmhdBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -2778,13 +2791,13 @@ namespace SharpMp4
         public SttsBox GetStts() { return Children.SingleOrDefault(x => x.Type == SttsBox.TYPE) as SttsBox; } 
         public StcoBox GetStco() { return Children.SingleOrDefault(x => x.Type == StcoBox.TYPE) as StcoBox; } 
 
-        public StblBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public StblBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            ContainerMp4Box ret = new StblBox(size, parent);
-            uint parsedSize = 8;
+            ContainerMp4Box ret = new StblBox(size, largeSize, parent);
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -2813,16 +2826,16 @@ namespace SharpMp4
         public byte Version { get; set; }
         public uint Flags { get; set; }
 
-        public StsdBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public StsdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public StsdBox(uint size, Mp4Box parent, byte version, uint flags) : this(size, parent)
+        public StsdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
         }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -2831,6 +2844,7 @@ namespace SharpMp4
 
             StsdBox stsd = new StsdBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags);
@@ -2876,10 +2890,10 @@ namespace SharpMp4
         public uint SampleCount { get; set; }
         public uint[] SampleSizes { get; set; } = new uint[0];
 
-        public StszBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public StszBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public StszBox(uint size, Mp4Box parent, byte version, uint flags, uint sampleSize, uint sampleCount, uint[] sampleSizes) : this(size, parent)
+        public StszBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint sampleSize, uint sampleCount, uint[] sampleSizes) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -2888,7 +2902,7 @@ namespace SharpMp4
             SampleSizes = sampleSizes;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -2908,6 +2922,7 @@ namespace SharpMp4
 
             StszBox stsz = new StszBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -2973,17 +2988,17 @@ namespace SharpMp4
         public uint Flags { get; set; }
         public List<Entry> Entries { get; set; } = new List<Entry>();
 
-        public StscBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public StscBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public StscBox(uint size, Mp4Box parent, byte version, uint flags, List<Entry> entries) : this(size, parent)
+        public StscBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, List<Entry> entries) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
             Entries = entries;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -3002,6 +3017,7 @@ namespace SharpMp4
 
             StscBox stsc = new StscBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -3058,17 +3074,17 @@ namespace SharpMp4
         public uint Flags { get; set; }
         public List<Entry> Entries { get; set; } = new List<Entry>();
 
-        public SttsBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public SttsBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public SttsBox(uint size, Mp4Box parent, byte version, uint flags, List<Entry> entries) : this(size, parent)
+        public SttsBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, List<Entry> entries) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
             Entries = entries;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -3086,6 +3102,7 @@ namespace SharpMp4
 
             SttsBox stts = new SttsBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -3139,10 +3156,10 @@ namespace SharpMp4
         public ushort NumEntries { get; }
         public List<SidxEntry> Entries { get; }
 
-        public SidxBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public SidxBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public SidxBox(uint size, Mp4Box parent, byte version, uint flags, uint referenceId, uint timeScale, ulong earliestPresentationTime, ulong firstOffset, ushort reserved, ushort numEntries, List<SidxEntry> entries) : this(size, parent)
+        public SidxBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint referenceId, uint timeScale, ulong earliestPresentationTime, ulong firstOffset, ushort reserved, ushort numEntries, List<SidxEntry> entries) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -3155,7 +3172,7 @@ namespace SharpMp4
             Entries = entries;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -3192,6 +3209,7 @@ namespace SharpMp4
 
             SidxBox sidx = new SidxBox(
                 size,
+                largeSize,
                 parent,      
                 version,
                 flags,
@@ -3257,17 +3275,17 @@ namespace SharpMp4
         public uint Flags { get; set; }
         public uint[] ChunkOffsets { get; set; } = new uint[0];
 
-        public StcoBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public StcoBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public StcoBox(uint size, Mp4Box parent, byte version, uint flags, uint[] chunkOffsets) : this(size, parent)
+        public StcoBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint[] chunkOffsets) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
             ChunkOffsets = chunkOffsets;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -3281,6 +3299,7 @@ namespace SharpMp4
 
             StcoBox stco = new StcoBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -3316,13 +3335,13 @@ namespace SharpMp4
         public MehdBox GetMehd() { return Children.SingleOrDefault(x => x.Type == MehdBox.TYPE) as MehdBox; } 
         public IEnumerable<TrexBox> GetTrex() { return Children.Where(x => x.Type == TrexBox.TYPE).Select(x => x as TrexBox); } 
 
-        public MvexBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public MvexBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            MvexBox ret = new MvexBox(size, parent);
-            uint parsedSize = 8;
+            MvexBox ret = new MvexBox(size, largeSize, parent);
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -3352,17 +3371,17 @@ namespace SharpMp4
         public uint Flags { get; set; }
         public ulong FragmentDuration { get; set; }
 
-        public MehdBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public MehdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public MehdBox(uint size, Mp4Box parent, byte version, uint flags, ulong fragmentDuration) : this(size, parent)
+        public MehdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ulong fragmentDuration) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
             FragmentDuration = fragmentDuration;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -3379,6 +3398,7 @@ namespace SharpMp4
 
             MehdBox mehd = new MehdBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -3422,11 +3442,12 @@ namespace SharpMp4
         public uint DefaultSampleSize { get; set; }
         public SampleFlags SampleFlags { get; set; } = new SampleFlags();
 
-        public TrexBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public TrexBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
         public TrexBox(
             uint size,
+            ulong largeSize,
             Mp4Box parent,
             byte version,
             uint flags,
@@ -3434,7 +3455,7 @@ namespace SharpMp4
             uint defaultSampleDescriptionIndex,
             uint defaultSampleDuration,
             uint defaultSampleSize,
-            SampleFlags sampleFlags) : this(size, parent)
+            SampleFlags sampleFlags) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -3445,7 +3466,7 @@ namespace SharpMp4
             SampleFlags = sampleFlags;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -3458,6 +3479,7 @@ namespace SharpMp4
             
             TrexBox trex = new TrexBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -3570,15 +3592,15 @@ namespace SharpMp4
         public MfhdBox GetMfhd() { return Children.SingleOrDefault(x => x.Type == MfhdBox.TYPE) as MfhdBox; } 
         public IEnumerable<TrafBox> GetTraf() { return Children.Where(x => x.Type == TrafBox.TYPE).Select(x => x as TrafBox); } 
 
-        public MoofBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public MoofBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            long offset = stream.Position - 8;
-            MoofBox ret = new MoofBox(size, parent);
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            long offset = stream.Position - (long)parsedSize;
+            MoofBox ret = new MoofBox(size, largeSize, parent);
             ret.Offset = offset;
-            uint parsedSize = 8;
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -3608,17 +3630,17 @@ namespace SharpMp4
         public uint Flags { get; set; }
         public uint SequenceNumber { get; set; }
 
-        public MfhdBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public MfhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public MfhdBox(uint size, Mp4Box parent, byte version, uint flags, uint sequenceNumber) : this(size, parent)
+        public MfhdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint sequenceNumber) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
             SequenceNumber = sequenceNumber;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -3626,6 +3648,7 @@ namespace SharpMp4
             uint sequenceNumber = IsoReaderWriter.ReadUInt32(stream);
             MfhdBox mfhd = new MfhdBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -3658,13 +3681,13 @@ namespace SharpMp4
         public TfdtBox GetTfdt() { return Children.SingleOrDefault(x => x.Type == TfdtBox.TYPE) as TfdtBox; } 
         public IEnumerable<TrunBox> GetTrun() { return Children.Where(x => x.Type == TrunBox.TYPE).Select(x => x as TrunBox); } 
 
-        public TrafBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public TrafBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            ContainerMp4Box ret = new TrafBox(size, parent);
-            uint parsedSize = 8;
+            ContainerMp4Box ret = new TrafBox(size, largeSize, parent);
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -3701,11 +3724,12 @@ namespace SharpMp4
         public bool DurationIsEmpty { get; set; }
         public bool DefaultBaseIsMoof { get; set; } = true;
 
-        public TfhdBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public TfhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
         public TfhdBox(
             uint size,
+            ulong largeSize,
             Mp4Box parent,
             byte version,
             uint flags,
@@ -3716,7 +3740,7 @@ namespace SharpMp4
             uint defaultSampleSize,
             uint defaultSampleFlags,
             bool durationIsEmpty,
-            bool defaultBaseIsMoof) : this(size, parent)
+            bool defaultBaseIsMoof) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -3809,7 +3833,7 @@ namespace SharpMp4
             DefaultBaseIsMoof = false;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -3860,6 +3884,7 @@ namespace SharpMp4
 
             TfhdBox tfhd = new TfhdBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -3941,17 +3966,17 @@ namespace SharpMp4
         public uint Flags { get; set; }
         public ulong BaseMediaDecodeTime { get; set; }
 
-        public TfdtBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public TfdtBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public TfdtBox(uint size, Mp4Box parent, byte version, uint flags, ulong baseMediaDecodeTime) : this(size, parent)
+        public TfdtBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ulong baseMediaDecodeTime) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
             BaseMediaDecodeTime = baseMediaDecodeTime;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -3968,6 +3993,7 @@ namespace SharpMp4
 
             TfdtBox tfdt = new TfdtBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -4030,10 +4056,10 @@ namespace SharpMp4
             { }
         }
 
-        public TrunBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public TrunBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public TrunBox(uint size, Mp4Box parent, byte version, uint flags, int dataOffset, uint firstSampleFlags, List<Entry> entries) : this(size, parent)
+        public TrunBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, int dataOffset, uint firstSampleFlags, List<Entry> entries) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -4042,7 +4068,7 @@ namespace SharpMp4
             Entries = entries;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -4100,6 +4126,7 @@ namespace SharpMp4
 
             TrunBox trun = new TrunBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -4200,22 +4227,23 @@ namespace SharpMp4
         public byte Version { get; set; }
         public uint Flags { get; set; } = 1;
 
-        public UrlBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public UrlBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public UrlBox(uint size, Mp4Box parent, byte version, uint flags) : this(size, parent)
+        public UrlBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
 
             UrlBox url = new UrlBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags);
@@ -4242,22 +4270,25 @@ namespace SharpMp4
     {
         public byte[] Bytes { get; set; }
 
-        public UnknownBox(uint size, string type, Mp4Box parent, byte[] bytes) : base(size, type, parent)
+        public UnknownBox(uint size, ulong largeSize, string type, Mp4Box parent, byte[] bytes) : base(size, largeSize, type, parent)
         {
             Bytes = bytes;
         }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            byte[] bytes = new byte[size - 8];
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong bytesLen = (ulong)((size == 1 ? largeSize : size) - parsedSize); // TODO
+            byte[] bytes = new byte[bytesLen];
 
-            if (size - 8 > 0)
+            if (size - parsedSize > 0)
             {
                 await IsoReaderWriter.ReadBytesAsync(stream, bytes, 0, bytes.Length);
             }
 
             UnknownBox b = new UnknownBox(
                 size,
+                largeSize,
                 type,
                 parent,
                 bytes);
@@ -4303,6 +4334,7 @@ namespace SharpMp4
 
         public AudioSampleEntryBox(
             uint size,
+            ulong largeSize,
             Mp4Box parent,
             string type,
             uint dummy1,
@@ -4320,7 +4352,7 @@ namespace SharpMp4
             uint bytesPerPacket,
             uint bytesPerFrame,
             uint bytesPerSample,
-            byte[] soundVersionData) : base(size, type, parent)
+            byte[] soundVersionData) : base(size, largeSize, type, parent)
         {
             Dummy1 = dummy1;
             Dummy2 = dummy2;
@@ -4340,7 +4372,7 @@ namespace SharpMp4
             SoundVersionData = soundVersionData;
         }
 
-        public AudioSampleEntryBox(uint size, Mp4Box parent, string type) : base(size, type, parent)
+        public AudioSampleEntryBox(uint size, ulong largeSize, Mp4Box parent, string type) : base(size, largeSize, type, parent)
         { }
 
         public uint Dummy1 { get; set; } = 0;
@@ -4360,7 +4392,7 @@ namespace SharpMp4
         public uint BytesPerSample { get; set; }
         public byte[] SoundVersionData { get; set; }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             // first 6 bytes are 0
             uint dummy1 = IsoReaderWriter.ReadUInt32(stream);
@@ -4408,6 +4440,7 @@ namespace SharpMp4
 
             AudioSampleEntryBox audio = new AudioSampleEntryBox(
                 size,
+                largeSize,
                 parent,
                 type,
                 dummy1,
@@ -4427,7 +4460,7 @@ namespace SharpMp4
                 bytesPerSample,
                 soundVersionData);
 
-            uint parsedSize = (uint)(8 + 28
+            ulong parsedSize = (uint)((size == 1 ? 16 : 8) + 28
                     + (soundVersion == 1 ? 16 : 0)
                     + (soundVersion == 2 ? 36 : 0));
 
@@ -4506,17 +4539,17 @@ namespace SharpMp4
 
         public ESDescriptor ESDescriptor { get; set; }
 
-        public EsdsBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public EsdsBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
-        public EsdsBox(uint size, Mp4Box parent, byte version, uint flags, ESDescriptor esDescriptor) : this(size, parent)
+        public EsdsBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ESDescriptor esDescriptor) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
             ESDescriptor = esDescriptor;
         }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             uint flags = IsoReaderWriter.ReadUInt24(stream);
@@ -4526,6 +4559,7 @@ namespace SharpMp4
             ESDescriptor descriptor = (ESDescriptor)await Mp4Parser.ReadDescriptor(-1, remaining, stream);
             EsdsBox esds = new EsdsBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 flags,
@@ -4586,6 +4620,7 @@ namespace SharpMp4
 
         public VisualSampleEntryBox(
             uint size,
+            ulong largeSize,
             Mp4Box parent,
             string type,
             uint dummy1,
@@ -4605,7 +4640,7 @@ namespace SharpMp4
             byte compressorNameDisplayableData,
             string compressorName,
             ushort depth,
-            ushort dummyTerminator) : base(size, type, parent)
+            ushort dummyTerminator) : base(size, largeSize, type, parent)
         {
             Dummy1 = dummy1;
             Dummy2 = dummy2;
@@ -4627,10 +4662,10 @@ namespace SharpMp4
             DummyTerminator = dummyTerminator;
         }
 
-        public VisualSampleEntryBox(uint size, Mp4Box parent, string type) : base(size, type, parent)
+        public VisualSampleEntryBox(uint size, ulong largeSize, Mp4Box parent, string type) : base(size, largeSize, type, parent)
         { }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             // first 6 bytes are 0
             uint dummy1 = IsoReaderWriter.ReadUInt32(stream);
@@ -4671,6 +4706,7 @@ namespace SharpMp4
 
             VisualSampleEntryBox visual = new VisualSampleEntryBox(
                 size,
+                largeSize,
                 parent,
                 type,
                 dummy1,
@@ -4692,7 +4728,7 @@ namespace SharpMp4
                 depth,
                 dummyTerminator);
 
-            uint parsedSize = 8 + 78; // 78 bytes up until now
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8) + 78; // 78 bytes up until now
 
             while (parsedSize < size)
             {
@@ -4841,16 +4877,18 @@ namespace SharpMp4
 
         public ITemporaryStorage GetStorage() { return _storage; }
 
-        public MdatBox(uint size, Mp4Box parent, ITemporaryStorage storage, long position = -1) : base(size, TYPE, parent)
+        public MdatBox(uint size, ulong largeSize, Mp4Box parent, ITemporaryStorage storage, long position = -1) : base(size, largeSize, TYPE, parent)
         {
             _storage = storage;
             Position = position;
         }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte[] buffer = new byte[1024];
-            int remaining = (int)size - 8;
+
+            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong remaining = (size == 1 ? largeSize : size) - parsedSize;
 
             long position = 0;
             try
@@ -4876,7 +4914,7 @@ namespace SharpMp4
             int read = 0;
             while (remaining > 0)
             {
-                int count = Math.Min(buffer.Length, remaining);
+                int count = Math.Min(buffer.Length, (int)remaining);
                 read = stream.Read(buffer, 0, count);
 
                 if (read > 0 && position == 0)
@@ -4890,7 +4928,7 @@ namespace SharpMp4
                     break;
                 }
 
-                remaining -= read;
+                remaining -= (ulong)read;
             }
 
             if (position == 0)
@@ -4901,6 +4939,7 @@ namespace SharpMp4
 
             MdatBox mdat = new MdatBox(
                 size,
+                largeSize,
                 parent,
                 storage,
                 position);
@@ -6191,13 +6230,13 @@ namespace SharpMp4
     /// <remarks>https://atomicparsley.sourceforge.net/mpeg-4files.html</remarks>
     public static class Mp4Parser
     {
-        private static Dictionary<string, Func<uint, string, Mp4Box, Stream, Task<Mp4Box>>> _boxParsers = new Dictionary<string, Func<uint, string, Mp4Box, Stream, Task<Mp4Box>>>();
+        private static Dictionary<string, Func<uint, ulong, string, Mp4Box, Stream, Task<Mp4Box>>> _boxParsers = new Dictionary<string, Func<uint, ulong, string, Mp4Box, Stream, Task<Mp4Box>>>();
         private static Dictionary<string, Func<Mp4Box, Stream, Task<uint>>> _boxBuilders = new Dictionary<string, Func<Mp4Box, Stream, Task<uint>>>();
 
         private static Dictionary<int, Dictionary<int, Func<uint, Stream, Task<DescriptorBase>>>> _descriptorParsers = new Dictionary<int, Dictionary<int, Func<uint, Stream, Task<DescriptorBase>>>>();
         private static Dictionary<int, Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>>> _descriptorBuilders = new Dictionary<int, Dictionary<int, Func<Stream, int, byte, DescriptorBase, Task<uint>>>>();
 
-        public static void RegisterBox(string box, Func<uint, string, Mp4Box, Stream, Task<Mp4Box>> parseFunction, Func<Mp4Box, Stream, Task<uint>> buildFunction)
+        public static void RegisterBox(string box, Func<uint, ulong, string, Mp4Box, Stream, Task<Mp4Box>> parseFunction, Func<Mp4Box, Stream, Task<uint>> buildFunction)
         {
             if (_boxParsers.ContainsKey(box))
                 throw new InvalidOperationException("Box parser already registered!");
@@ -6410,8 +6449,19 @@ namespace SharpMp4
 
         public static async Task<Mp4Box> ReadBox(Mp4Box parent, Stream stream)
         {
+            ulong largeSize = 0;
             uint size = IsoReaderWriter.ReadUInt32(stream);
             string type = IsoReaderWriter.Read4cc(stream);
+
+            if(size == 1)
+            {
+                largeSize = IsoReaderWriter.ReadUInt64(stream);
+            }
+            else if(size == 0)
+            {
+                // box extends to the end of the file
+                largeSize = (ulong)(stream.Length - stream.Position);
+            }
 
             if (Log.InfoEnabled)
             {
@@ -6429,12 +6479,12 @@ namespace SharpMp4
             Mp4Box box;
             if (_boxParsers.ContainsKey(type))
             {
-                box = await _boxParsers[type].Invoke(size, type, parent, stream);
+                box = await _boxParsers[type].Invoke(size, largeSize, type, parent, stream);
             }
             else
             {
                 if (Log.WarnEnabled) Log.Warn($"--- {type} is unknown.");
-                box = await UnknownBox.ParseAsync(size, type, parent, stream);
+                box = await UnknownBox.ParseAsync(size, largeSize, type, parent, stream);
             }
 
             return box;

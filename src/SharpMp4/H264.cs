@@ -203,7 +203,7 @@ namespace SharpMp4
             var sps = track.Sps.First().Value; 
             var dim = sps.CalculateDimensions();
 
-            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, parent, VisualSampleEntryBox.TYPE3);
+            VisualSampleEntryBox visualSampleEntry = new VisualSampleEntryBox(0, 0, parent, VisualSampleEntryBox.TYPE3);
             visualSampleEntry.DataReferenceIndex = 1;
             visualSampleEntry.Depth = 24;
             visualSampleEntry.FrameCount = 1;
@@ -214,7 +214,7 @@ namespace SharpMp4
             visualSampleEntry.CompressorName = "h264\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
             visualSampleEntry.CompressorNameDisplayableData = 4;
 
-            AvcConfigurationBox avcConfigurationBox = new AvcConfigurationBox(0, visualSampleEntry, new AvcDecoderConfigurationRecord());
+            AvcConfigurationBox avcConfigurationBox = new AvcConfigurationBox(0, 0, visualSampleEntry, new AvcDecoderConfigurationRecord());
             avcConfigurationBox.AvcDecoderConfigurationRecord.SequenceParameterSets = track.Sps.Values.ToList();
             avcConfigurationBox.AvcDecoderConfigurationRecord.NumberOfSeuqenceParameterSets = track.Sps.Count;
             avcConfigurationBox.AvcDecoderConfigurationRecord.PictureParameterSets = track.Pps.Values.ToList();
@@ -260,15 +260,16 @@ namespace SharpMp4
 
         public AvcDecoderConfigurationRecord AvcDecoderConfigurationRecord { get; }
 
-        public AvcConfigurationBox(uint size, Mp4Box parent, AvcDecoderConfigurationRecord record) : base(size, TYPE, parent)
+        public AvcConfigurationBox(uint size, ulong largeSize, Mp4Box parent, AvcDecoderConfigurationRecord record) : base(size, largeSize, TYPE, parent)
         {
             AvcDecoderConfigurationRecord = record;
         }
 
-        public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             AvcConfigurationBox avcc = new AvcConfigurationBox(
                 size,
+                largeSize,
                 parent,
                 await AvcDecoderConfigurationRecord.Parse(size - 8, stream));
 

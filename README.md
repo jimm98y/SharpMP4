@@ -114,7 +114,7 @@ public class CustomBox : Mp4Box
     public CustomBox(uint size, string type, Mp4Box parent) : base(size, type, parent)
     { }
 
-    public static async Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+    public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
     {
         return new CustomBox(size, type, parent);
     }

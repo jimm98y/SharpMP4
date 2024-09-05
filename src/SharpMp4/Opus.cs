@@ -56,7 +56,7 @@ namespace SharpMp4
         // TODO: Not tested
         private static AudioSampleEntryBox CreateAudioSampleEntryBox(Mp4Box parent, OpusTrack opusTrack)
         {
-            AudioSampleEntryBox audioSampleEntry = new AudioSampleEntryBox(0, parent, "Opus");
+            AudioSampleEntryBox audioSampleEntry = new AudioSampleEntryBox(0, 0, parent, "Opus");
 
             audioSampleEntry.ChannelCount = opusTrack.ChannelCount;
             audioSampleEntry.SampleRate = opusTrack.SamplingRate;
@@ -65,6 +65,7 @@ namespace SharpMp4
 
             // TODO: It should be possible to parse the Opus payload and get these parameters
             OpusSpecificBox opusSpecificBox = new OpusSpecificBox(
+                0,
                 0,
                 audioSampleEntry,
                 0, // default version is 0
@@ -103,11 +104,12 @@ namespace SharpMp4
         public byte CoupledCount { get; set; }
         public byte[] ChannelMapping { get; set; } = null;
 
-        public OpusSpecificBox(uint size, Mp4Box parent) : base(size, TYPE, parent)
+        public OpusSpecificBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
         public OpusSpecificBox(
             uint size, 
+            ulong largeSize,
             Mp4Box parent,
             byte version, 
             byte outputChannelCount,
@@ -117,7 +119,7 @@ namespace SharpMp4
             byte channelMappingFamily,
             byte streamCount, 
             byte coupledCount, 
-            byte[] channelMapping) : this(size, parent)
+            byte[] channelMapping) : this(size, largeSize, parent)
         {
             this.Version = version;
             this.OutputChannelCount = outputChannelCount;
@@ -130,7 +132,7 @@ namespace SharpMp4
             this.ChannelMapping = channelMapping;
         }
 
-        public static Task<Mp4Box> ParseAsync(uint size, string type, Mp4Box parent, Stream stream)
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             byte version = IsoReaderWriter.ReadByte(stream);
             byte outputChannelCount = IsoReaderWriter.ReadByte(stream);
@@ -156,6 +158,7 @@ namespace SharpMp4
 
             return Task.FromResult((Mp4Box)new OpusSpecificBox(
                 size,
+                largeSize,
                 parent,
                 version,
                 outputChannelCount,
