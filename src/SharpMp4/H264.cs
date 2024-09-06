@@ -267,11 +267,12 @@ namespace SharpMp4
 
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
+            ulong recordSize = (size == 1 ? largeSize : size) - (ulong)GetParsedSize(size);
             AvcConfigurationBox avcc = new AvcConfigurationBox(
                 size,
                 largeSize,
                 parent,
-                await AvcDecoderConfigurationRecord.Parse(size - 8, stream));
+                await AvcDecoderConfigurationRecord.Parse(recordSize, stream));
 
             return avcc;
         }
@@ -352,7 +353,7 @@ namespace SharpMp4
         public int BitDepthChromaMinus8PaddingBits { get; set; } = 31;
         public List<byte[]> SequenceParameterSetExts { get; set; } = new List<byte[]>();
 
-        public static async Task<AvcDecoderConfigurationRecord> Parse(uint size, Stream stream)
+        public static async Task<AvcDecoderConfigurationRecord> Parse(ulong size, Stream stream)
         {
             RawBitStreamReader bitstream = new RawBitStreamReader(stream);
 

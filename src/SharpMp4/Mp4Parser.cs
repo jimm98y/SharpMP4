@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -1286,6 +1285,44 @@ namespace SharpMp4
             WriteByte(stream, (byte)(value & 0xFF));
             return 6;
         }
+
+        public static ulong ReadBytesCount(Stream stream, int count)
+        {
+            switch (count)
+            {
+                case 1:
+                    return ReadByte(stream);
+                case 2:
+                    return ReadUInt16(stream);
+                case 3:
+                    return ReadUInt24(stream);
+                case 4:
+                    return ReadUInt32(stream);
+                case 8:
+                    return ReadUInt64(stream);
+                default:
+                    throw new NotSupportedException($"Cannot read {count} of bytes!");
+            }
+        }
+
+        public static ulong WriteBytesCount(Stream stream, int count, ulong number)
+        {
+            switch (count)
+            {
+                case 1:
+                    return WriteByte(stream, (byte)number);
+                case 2:
+                    return WriteUInt16(stream, (ushort)number);
+                case 3:
+                    return WriteUInt24(stream, (uint)number);
+                case 4:
+                    return WriteUInt32(stream, (uint)number);
+                case 8:
+                    return WriteUInt64(stream, number);
+                default:
+                    throw new NotSupportedException($"Cannot write {count} of bytes!");
+            }
+        }
     }
 
     public class NalBitStreamReader : RawBitStreamReader
@@ -1746,6 +1783,16 @@ namespace SharpMp4
         {
             return (ulong)(_originalSize == 1 ? 16 : 8); // box header
         }
+
+        public static long GetParsedSize(uint size)
+        {
+            if (size == 1)
+                return 16;
+            else if (size == 0)
+                return -1;
+            else
+                return 8;
+        }
     }
 
     public abstract class ContainerMp4Box : Mp4Box
@@ -1828,7 +1875,7 @@ namespace SharpMp4
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             ContainerMp4Box ret = new MoovBox(size, largeSize, parent);
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong parsedSize = (ulong)GetParsedSize(size);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -2062,7 +2109,7 @@ namespace SharpMp4
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             ContainerMp4Box ret = new TrakBox(size, largeSize, parent);
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong parsedSize = (ulong)GetParsedSize(size);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -2278,7 +2325,7 @@ namespace SharpMp4
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             ContainerMp4Box ret = new MdiaBox(size, largeSize, parent);
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong parsedSize = (ulong)GetParsedSize(size);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -2426,6 +2473,248 @@ namespace SharpMp4
         }
     }
 
+    public class MetaBox : ContainerMp4Box
+    {
+        public const string TYPE = "meta";
+
+        public byte Version { get; set; }
+        public uint Flags { get; set; }
+
+        public MetaBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        { }
+
+        public MetaBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
+        {
+            Version = version;
+            Flags = flags;
+        }
+
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
+        {
+            byte version = IsoReaderWriter.ReadByte(stream);
+            uint flags = IsoReaderWriter.ReadUInt24(stream);
+
+            ContainerMp4Box ret = new MetaBox(size, largeSize, parent, version, flags);
+            ulong parsedSize = (ulong)GetParsedSize(size) + 4;
+            while (parsedSize < size)
+            {
+                var box = await Mp4Parser.ReadBox(ret, stream);
+                parsedSize += box.GetSize();
+                ret.Children.Add(box);
+            }
+            return ret;
+        }
+
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
+        {
+            MetaBox ret = (MetaBox)box;
+
+            ulong size = 0;
+            size += IsoReaderWriter.WriteByte(stream, ret.Version);
+            size += IsoReaderWriter.WriteUInt24(stream, ret.Flags);
+
+            foreach (var child in ret.Children)
+            {
+                size += await Mp4Parser.WriteBox(stream, child);
+            }
+            return size;
+        }
+    }
+
+    public class IlocItem
+    {
+        public IlocItem(ushort itemId, ushort constructionMethod, ulong baseOffset, ushort dataReferenceIndex, List<IlocExtent> extents)
+        {
+            ItemId = itemId;
+            ConstructionMethod = constructionMethod;
+            BaseOffset = baseOffset;
+            DataReferenceIndex = dataReferenceIndex;
+            Extents = extents;
+        }
+
+        public ushort ItemId { get; set; }
+        public ushort ConstructionMethod { get; set; }
+        public ulong BaseOffset { get; set; }
+        public ushort DataReferenceIndex { get; set; }
+        public List<IlocExtent> Extents { get; set; }
+    }
+
+    public class IlocExtent
+    {
+        public IlocExtent(ulong extentIndex, ulong extentOffset, ulong extentLength)
+        {
+            ExtentIndex = extentIndex;
+            ExtentOffset = extentOffset;
+            ExtentLength = extentLength;
+        }
+
+        public ulong ExtentIndex { get; set; }
+        public ulong ExtentOffset { get; set; }
+        public ulong ExtentLength { get; set; }
+    }
+
+    public class IlocBox : Mp4Box
+    {
+        public const string TYPE = "iloc";
+
+        public byte Version { get; set; }
+        public uint Flags { get; set; }
+        public int OffsetSize { get; set; }
+        public int LengthSize { get; set; }
+        public int BaseOffsetSize { get; set; }
+        public int IndexSize { get; set; }
+        public List<IlocItem> Items { get; set; }
+
+        public IlocBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        { }
+
+        public IlocBox(
+            uint size, 
+            ulong largeSize, 
+            Mp4Box parent, 
+            byte version, 
+            uint flags, 
+            int offsetSize,
+            int lengthSize,
+            int baseOffsetSize,
+            int indexSize,
+            List<IlocItem> items) : this(size, largeSize, parent)
+        {
+            Version = version;
+            Flags = flags;
+            OffsetSize = offsetSize;
+            LengthSize = lengthSize;
+            BaseOffsetSize = baseOffsetSize;
+            IndexSize = indexSize;
+            Items = items;
+        }
+
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
+        {
+            byte version = IsoReaderWriter.ReadByte(stream);
+            uint flags = IsoReaderWriter.ReadUInt24(stream);
+
+            int b = IsoReaderWriter.ReadByte(stream);
+            int offsetSize = (int)((uint)b >> 4);
+            int lengthSize = b & 0xf;
+            b = IsoReaderWriter.ReadByte(stream);
+            int baseOffsetSize = (int)((uint)b >> 4);
+
+            int indexSize = -1;
+            if (version == 1)
+            {
+                indexSize = b & 0xf;
+            }
+
+            int itemCount = IsoReaderWriter.ReadUInt16(stream);
+            List<IlocItem> items = new List<IlocItem>();
+            for (int i = 0; i < itemCount; i++)
+            {
+                ushort itemId = IsoReaderWriter.ReadUInt16(stream);
+
+                ushort constructionMethod = 0;
+                if (version == 1)
+                {
+                    b = IsoReaderWriter.ReadUInt16(stream);
+                    constructionMethod = (ushort)(b & 0xf);
+                }
+
+                ulong baseOffset;
+                ushort dataReferenceIndex = IsoReaderWriter.ReadUInt16(stream);
+                if (baseOffsetSize > 0)
+                {
+                    baseOffset = IsoReaderWriter.ReadBytesCount(stream, baseOffsetSize);
+                }
+                else
+                {
+                    baseOffset = 0;
+                }
+
+                int extentCount = IsoReaderWriter.ReadUInt16(stream);
+                List<IlocExtent> extents = new List<IlocExtent>();
+
+                for (int j = 0; j < extentCount; j++)
+                {
+                    ulong extentIndex = 0;
+                    if (version == 1 && indexSize > 0)
+                    {
+                        extentIndex = IsoReaderWriter.ReadBytesCount(stream, indexSize);
+                    }
+                    ulong extentOffset = IsoReaderWriter.ReadBytesCount(stream, offsetSize);
+                    ulong extentLength = IsoReaderWriter.ReadBytesCount(stream, lengthSize);
+
+                    extents.Add(new IlocExtent(extentIndex, extentOffset, extentLength));
+                }
+
+                items.Add(new IlocItem(itemId, constructionMethod, baseOffset, dataReferenceIndex, extents));
+            }
+
+            var ret = new IlocBox(
+                size,
+                largeSize,
+                parent,
+                version,
+                flags,
+                offsetSize,
+                lengthSize,
+                baseOffsetSize,
+                indexSize,
+                items);
+
+            return Task.FromResult((Mp4Box)ret);
+        }
+
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
+        {
+            IlocBox b = (IlocBox)box;
+
+            ulong size = 0;
+            size += IsoReaderWriter.WriteByte(stream, b.Version);
+            size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
+
+            size += IsoReaderWriter.WriteByte(stream, (byte)(b.OffsetSize << 4 | b.LengthSize));
+            if (b.Version == 1)
+            {
+                size += IsoReaderWriter.WriteByte(stream, (byte)(b.BaseOffsetSize << 4 | b.IndexSize));
+            }
+            else
+            {
+                size += IsoReaderWriter.WriteByte(stream, (byte)(b.BaseOffsetSize << 4));
+            }
+
+            size += IsoReaderWriter.WriteUInt16(stream, (ushort)b.Items.Count);
+            foreach (var item in b.Items)
+            {
+                size += IsoReaderWriter.WriteUInt16(stream, item.ItemId);
+
+                if (b.Version == 1)
+                {
+                    size += IsoReaderWriter.WriteUInt16(stream, item.ConstructionMethod);
+                }
+
+                size += IsoReaderWriter.WriteUInt16(stream, item.DataReferenceIndex);
+                if (b.BaseOffsetSize > 0)
+                {
+                    size += IsoReaderWriter.WriteBytesCount(stream, b.BaseOffsetSize, item.BaseOffset);
+                }
+
+                size += IsoReaderWriter.WriteUInt16(stream, (ushort)item.Extents.Count);
+                foreach (var extent in item.Extents)
+                {
+                    if (b.Version == 1 && b.IndexSize > 0)
+                    {
+                        size += IsoReaderWriter.WriteBytesCount(stream, b.IndexSize, extent.ExtentIndex);
+                    }
+
+                    size += IsoReaderWriter.WriteBytesCount(stream, b.OffsetSize, extent.ExtentOffset);
+                    size += IsoReaderWriter.WriteBytesCount(stream, b.LengthSize, extent.ExtentLength);
+                }
+            }
+
+            return Task.FromResult(size);
+        }
+    }
+
     public static class HdlrNames
     {
         public const string Video = "Video Handler\0";
@@ -2540,7 +2829,7 @@ namespace SharpMp4
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             ContainerMp4Box ret = new MinfBox(size, largeSize, parent);
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong parsedSize = (ulong)GetParsedSize(size);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -2630,7 +2919,7 @@ namespace SharpMp4
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             ContainerMp4Box ret = new DinfBox(size, largeSize, parent);
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong parsedSize = (ulong)GetParsedSize(size);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -2797,7 +3086,7 @@ namespace SharpMp4
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             ContainerMp4Box ret = new StblBox(size, largeSize, parent);
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong parsedSize = (ulong)GetParsedSize(size);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -3341,7 +3630,7 @@ namespace SharpMp4
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             MvexBox ret = new MvexBox(size, largeSize, parent);
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong parsedSize = (ulong)GetParsedSize(size);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -3597,7 +3886,7 @@ namespace SharpMp4
 
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong parsedSize = (ulong)GetParsedSize(size);
             long offset = stream.Position - (long)parsedSize;
             MoofBox ret = new MoofBox(size, largeSize, parent);
             ret.Offset = offset;
@@ -3687,7 +3976,7 @@ namespace SharpMp4
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
             ContainerMp4Box ret = new TrafBox(size, largeSize, parent);
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong parsedSize = (ulong)GetParsedSize(size);
             while (parsedSize < size)
             {
                 var box = await Mp4Parser.ReadBox(ret, stream);
@@ -4277,11 +4566,11 @@ namespace SharpMp4
 
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
-            ulong bytesLen = (ulong)((size == 1 ? largeSize : size) - parsedSize); // TODO
+            long parsedSize = GetParsedSize(size);
+            ulong bytesLen = (size == 1 ? largeSize : size) - (ulong)parsedSize; // TODO
             byte[] bytes = new byte[bytesLen];
 
-            if (size - parsedSize > 0)
+            if (bytesLen > 0)
             {
                 await IsoReaderWriter.ReadBytesAsync(stream, bytes, 0, bytes.Length);
             }
@@ -4460,7 +4749,7 @@ namespace SharpMp4
                 bytesPerSample,
                 soundVersionData);
 
-            ulong parsedSize = (uint)((size == 1 ? 16 : 8) + 28
+            ulong parsedSize = (uint)(GetParsedSize(size) + 28
                     + (soundVersion == 1 ? 16 : 0)
                     + (soundVersion == 2 ? 36 : 0));
 
@@ -4728,7 +5017,7 @@ namespace SharpMp4
                 depth,
                 dummyTerminator);
 
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8) + 78; // 78 bytes up until now
+            ulong parsedSize = (ulong)GetParsedSize(size) + 78; // 78 bytes up until now
 
             while (parsedSize < size)
             {
@@ -4887,7 +5176,7 @@ namespace SharpMp4
         {
             byte[] buffer = new byte[1024];
 
-            ulong parsedSize = (ulong)(size == 1 ? 16 : 8);
+            ulong parsedSize = (ulong)GetParsedSize(size);
             ulong remaining = (size == 1 ? largeSize : size) - parsedSize;
 
             long position = 0;
@@ -6303,10 +6592,12 @@ namespace SharpMp4
             _boxParsers.Add(DrefBox.TYPE, DrefBox.ParseAsync);
             _boxParsers.Add(FtypBox.TYPE, FtypBox.ParseAsync);
             _boxParsers.Add(HdlrBox.TYPE, HdlrBox.ParseAsync);
+            _boxParsers.Add(IlocBox.TYPE, IlocBox.ParseAsync);
             _boxParsers.Add(MdatBox.TYPE, MdatBox.ParseAsync);
             _boxParsers.Add(MdhdBox.TYPE, MdhdBox.ParseAsync);
             _boxParsers.Add(MdiaBox.TYPE, MdiaBox.ParseAsync);
             _boxParsers.Add(MehdBox.TYPE, MehdBox.ParseAsync);
+            _boxParsers.Add(MetaBox.TYPE, MetaBox.ParseAsync);
             _boxParsers.Add(MfhdBox.TYPE, MfhdBox.ParseAsync);
             _boxParsers.Add(MinfBox.TYPE, MinfBox.ParseAsync);
             _boxParsers.Add(MoofBox.TYPE, MoofBox.ParseAsync);
@@ -6377,10 +6668,12 @@ namespace SharpMp4
             _boxBuilders.Add(DrefBox.TYPE, DrefBox.BuildAsync);
             _boxBuilders.Add(FtypBox.TYPE, FtypBox.BuildAsync);
             _boxBuilders.Add(HdlrBox.TYPE, HdlrBox.BuildAsync);
+            _boxBuilders.Add(IlocBox.TYPE, IlocBox.BuildAsync);
             _boxBuilders.Add(MdatBox.TYPE, MdatBox.BuildAsync);
             _boxBuilders.Add(MdhdBox.TYPE, MdhdBox.BuildAsync);
             _boxBuilders.Add(MdiaBox.TYPE, MdiaBox.BuildAsync);
             _boxBuilders.Add(MehdBox.TYPE, MehdBox.BuildAsync);
+            _boxBuilders.Add(MetaBox.TYPE, MetaBox.BuildAsync);
             _boxBuilders.Add(MfhdBox.TYPE, MfhdBox.BuildAsync);
             _boxBuilders.Add(MinfBox.TYPE, MinfBox.BuildAsync);
             _boxBuilders.Add(MoofBox.TYPE, MoofBox.BuildAsync);
@@ -6460,7 +6753,6 @@ namespace SharpMp4
             else if(size == 0)
             {
                 // box extends to the end of the file
-                largeSize = (ulong)(stream.Length - stream.Position);
             }
 
             if (Log.InfoEnabled)

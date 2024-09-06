@@ -2950,11 +2950,12 @@ namespace SharpMp4
 
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
+            ulong recordSize = (size == 1 ? largeSize : size) - (ulong)GetParsedSize(size);
             HevcConfigurationBox hvcc = new HevcConfigurationBox(
                 size,
                 largeSize,
                 parent,
-                await HevcDecoderConfigurationRecord.Parse((uint)(size == 1 ? (largeSize - 16) : (size - 8)), stream));
+                await HevcDecoderConfigurationRecord.Parse(recordSize, stream));
 
             return hvcc;
         }
@@ -3062,7 +3063,7 @@ namespace SharpMp4
             NalArrays = nalArrays;
         }
 
-        public static async Task<HevcDecoderConfigurationRecord> Parse(uint size, Stream stream)
+        public static async Task<HevcDecoderConfigurationRecord> Parse(ulong size, Stream stream)
         {
             byte configurationVersion = IsoReaderWriter.ReadByte(stream);
 
