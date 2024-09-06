@@ -1781,7 +1781,7 @@ namespace SharpMp4
 
         public virtual ulong CalculateSize()
         {
-            return (ulong)(_originalSize == 1 ? 16 : 8); // box header
+            return (ulong)GetParsedSize(_originalSize); // box header
         }
 
         public static long GetParsedSize(uint size)
@@ -2713,6 +2713,32 @@ namespace SharpMp4
 
             return Task.FromResult(size);
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong size = base.CalculateSize() + 4 + 4;
+
+            foreach(var item in this.Items)
+            {
+                size += 2;
+
+                if (Version == 1)
+                {
+                    size += 2;
+                }
+
+                size += 2;
+                size += (ulong)BaseOffsetSize;
+                size += 2;
+
+                foreach (var extent in item.Extents)
+                {
+                    size += (ulong)((IndexSize > 0 ? IndexSize : 0) + OffsetSize + LengthSize);
+                }
+            }
+
+            return size;
+        }
     }
 
     public class IinfBox : ContainerMp4Box
@@ -2778,6 +2804,11 @@ namespace SharpMp4
                 size += await Mp4Parser.WriteBox(stream, child);
             }
             return size;
+        }
+
+        public override ulong CalculateSize()
+        {
+            return base.CalculateSize() + 4 + (ulong)(Version == 0 ? 2 : 4);
         }
     }
 
