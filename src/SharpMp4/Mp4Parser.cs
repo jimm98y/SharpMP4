@@ -2715,6 +2715,72 @@ namespace SharpMp4
         }
     }
 
+    public class IinfBox : ContainerMp4Box
+    {
+        public const string TYPE = "iinf";
+
+        public byte Version { get; set; }
+        public uint Flags { get; set; }
+
+        public IinfBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        { }
+
+        public IinfBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
+        {
+            Version = version;
+            Flags = flags;
+        }
+
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
+        {
+            byte version = IsoReaderWriter.ReadByte(stream);
+            uint flags = IsoReaderWriter.ReadUInt24(stream);
+
+            int entryCount;
+            if(version == 0)
+            {
+                entryCount = IsoReaderWriter.ReadInt16(stream);
+            }
+            else
+            {
+                entryCount = IsoReaderWriter.ReadInt32(stream);
+            }
+
+            var ret = new IinfBox(size, largeSize, parent, version, flags);
+            for (int i = 0; i < entryCount; i++)
+            {
+                var box = await Mp4Parser.ReadBox(ret, stream);
+                ret.Children.Add(box);
+            }
+
+            return ret;
+        }
+
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
+        {
+            IinfBox ret = (IinfBox)box;
+
+            ulong size = 0;
+            size += IsoReaderWriter.WriteByte(stream, ret.Version);
+            size += IsoReaderWriter.WriteUInt24(stream, ret.Flags);
+
+            if (ret.Version == 0)
+            {
+                IsoReaderWriter.WriteInt16(stream, (short)ret.Children.Count);
+            }
+            else
+            {
+                IsoReaderWriter.WriteInt32(stream, ret.Children.Count);
+            }
+
+            foreach (var child in ret.Children)
+            {
+                size += await Mp4Parser.WriteBox(stream, child);
+            }
+            return size;
+        }
+    }
+
     public static class HdlrNames
     {
         public const string Video = "Video Handler\0";
@@ -6593,6 +6659,7 @@ namespace SharpMp4
             _boxParsers.Add(FtypBox.TYPE, FtypBox.ParseAsync);
             _boxParsers.Add(HdlrBox.TYPE, HdlrBox.ParseAsync);
             _boxParsers.Add(IlocBox.TYPE, IlocBox.ParseAsync);
+            _boxParsers.Add(IinfBox.TYPE, IinfBox.ParseAsync);
             _boxParsers.Add(MdatBox.TYPE, MdatBox.ParseAsync);
             _boxParsers.Add(MdhdBox.TYPE, MdhdBox.ParseAsync);
             _boxParsers.Add(MdiaBox.TYPE, MdiaBox.ParseAsync);
@@ -6669,6 +6736,7 @@ namespace SharpMp4
             _boxBuilders.Add(FtypBox.TYPE, FtypBox.BuildAsync);
             _boxBuilders.Add(HdlrBox.TYPE, HdlrBox.BuildAsync);
             _boxBuilders.Add(IlocBox.TYPE, IlocBox.BuildAsync);
+            _boxBuilders.Add(IinfBox.TYPE, IinfBox.BuildAsync);
             _boxBuilders.Add(MdatBox.TYPE, MdatBox.BuildAsync);
             _boxBuilders.Add(MdhdBox.TYPE, MdhdBox.BuildAsync);
             _boxBuilders.Add(MdiaBox.TYPE, MdiaBox.BuildAsync);
