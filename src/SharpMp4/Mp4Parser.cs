@@ -3100,35 +3100,162 @@ namespace SharpMp4
         }
     }
 
+    public class SimpleItemReferenceBox : Mp4Box
+    {
+        public ushort[] Entries { get; set; }
+        public ushort ItemID { get; set; }
+
+        public SimpleItemReferenceBox(uint size, ulong largeSize, string type, Mp4Box parent, ushort itemID, ushort[] entries) : base(size, largeSize, type, parent)
+        {
+            ItemID = itemID;
+            Entries = entries;
+        }
+
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
+        {
+            ushort itemID = IsoReaderWriter.ReadUInt16(stream);
+            ushort entryCount = IsoReaderWriter.ReadUInt16(stream);
+
+            var entries = new ushort[entryCount];
+            for (int i = 0; i < entryCount; i++)
+            {
+                entries[i] = IsoReaderWriter.ReadUInt16(stream);
+            }
+
+            SimpleItemReferenceBox b = new SimpleItemReferenceBox(
+                size,
+                largeSize,
+                type,
+                parent,
+                itemID,
+                entries);
+
+            return b;
+        }
+
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        public override ulong CalculateSize()
+        {
+            return (ulong)((long)base.CalculateSize() + 2 + 2 * Entries.Length);
+        }
+    }
+
+    public class SimpleItemReferenceLargeBox : Mp4Box
+    {
+        public SimpleItemReferenceLargeBox(uint size, ulong largeSize, string type, Mp4Box parent, uint itemID, uint[] entries) : base(size, largeSize, type, parent)
+        {
+            ItemID = itemID;
+            Entries = entries;
+        }
+
+        public uint[] Entries { get; set; }
+        public uint ItemID { get; set; }
+
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
+        {
+            uint itemID = IsoReaderWriter.ReadUInt32(stream);
+            ushort entryCount = IsoReaderWriter.ReadUInt16(stream);
+
+            var entries = new uint[entryCount];
+            for (int i = 0; i < entryCount; i++)
+            {
+                entries[i] = IsoReaderWriter.ReadUInt32(stream);
+            }
+
+            SimpleItemReferenceLargeBox b = new SimpleItemReferenceLargeBox(
+                size,
+                largeSize,
+                type,
+                parent,
+                itemID,
+                entries);
+
+            return b;
+        }
+
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        public override ulong CalculateSize()
+        {
+            return (ulong)((long)base.CalculateSize() + 4 + 4 * Entries.Length);
+        }
+    }
+
     public class IrefBox : ContainerMp4Box
     {
         public const string TYPE = "iref";
 
+        public byte Version { get; set; }
+        public uint Flags { get; set; }
+
         public IrefBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
+        public IrefBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
+        {
+            Version = version;
+            Flags = flags;
+        }
+
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
-            ContainerMp4Box ret = new IrefBox(size, largeSize, parent);
-            ulong parsedSize = (ulong)GetParsedSize(size);
+            byte version = IsoReaderWriter.ReadByte(stream);
+            uint flags = IsoReaderWriter.ReadUInt24(stream);
+            
+            ContainerMp4Box ret = new IrefBox(
+                size,
+                largeSize,
+                parent,
+                version,
+                flags
+                );
+
+            ulong parsedSize = (ulong)GetParsedSize(size) + 4;
             while (parsedSize < size)
             {
-                var box = await Mp4Parser.ReadBox(ret, stream);
-                parsedSize += box.GetSize();
-                ret.Children.Add(box);
+                ulong boxLargeSize = 0;
+                uint boxSize = IsoReaderWriter.ReadUInt32(stream);
+                string boxType = IsoReaderWriter.Read4cc(stream);
+
+                if (boxSize == 1)
+                {
+                    boxLargeSize = IsoReaderWriter.ReadUInt64(stream);
+                }
+                else if (boxSize == 0)
+                {
+                    // box extends to the end of the file
+                }
+
+                if (version == 0)
+                {
+                    var box = await SimpleItemReferenceBox.ParseAsync(boxSize, boxLargeSize, boxType, ret, stream);
+                    parsedSize += box.GetSize();
+                    ret.Children.Add(box);
+                }
+                else if(version >= 1)
+                {
+                    var box = await SimpleItemReferenceLargeBox.ParseAsync(boxSize, boxLargeSize, boxType, ret, stream);
+                    parsedSize += box.GetSize();
+                    ret.Children.Add(box);
+                }
             }
+
             return ret;
         }
 
         public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
-            IrefBox b = (IrefBox)box;
-            ulong size = 0;
-            foreach (var child in b.Children)
-            {
-                size += await Mp4Parser.WriteBox(stream, child);
-            }
-            return size;
+            // TODO
+            throw new NotImplementedException();
         }
     }
 
