@@ -1323,6 +1323,28 @@ namespace SharpMp4
                     throw new NotSupportedException($"Cannot write {count} of bytes!");
             }
         }
+
+        public static string ReadZeroTerminatedString(Stream stream)
+        {
+            List<byte> buffer = new List<byte>();
+            byte c;
+            while((c = ReadByte(stream)) != 0)
+            {
+                buffer.Add(c);
+            }
+            return Encoding.UTF8.GetString(buffer.ToArray());
+        }
+
+        public static ulong WriteZeroTerminatedString(Stream stream, string text)
+        {
+            byte[] buffer = Encoding.UTF8.GetBytes(text);
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                WriteByte(stream, buffer[i]);
+            }
+            WriteByte(stream, 0);
+            return (ulong)buffer.Length + 1;
+        }
     }
 
     public class NalBitStreamReader : RawBitStreamReader
@@ -2809,6 +2831,304 @@ namespace SharpMp4
         public override ulong CalculateSize()
         {
             return base.CalculateSize() + 4 + (ulong)(Version == 0 ? 2 : 4);
+        }
+    }
+
+    public class IdatBox : Mp4Box
+    {
+        public const string TYPE = "idat";
+
+        public byte[] Bytes { get; set; }
+
+        public IdatBox(uint size, ulong largeSize, string type, Mp4Box parent, byte[] bytes) : base(size, largeSize, type, parent)
+        {
+            Bytes = bytes;
+        }
+
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
+        {
+            long parsedSize = GetParsedSize(size);
+            ulong bytesLen = (size == 1 ? largeSize : size) - (ulong)parsedSize; 
+            byte[] bytes = new byte[bytesLen];
+
+            if (bytesLen > 0)
+            {
+                await IsoReaderWriter.ReadBytesAsync(stream, bytes, 0, bytes.Length);
+            }
+
+            IdatBox b = new IdatBox(
+                size,
+                largeSize,
+                type,
+                parent,
+                bytes);
+
+            return b;
+        }
+
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
+        {
+            IdatBox b = (IdatBox)box;
+            ulong size = 0;
+
+            if (b.Bytes.Length > 0)
+            {
+                size += await IsoReaderWriter.WriteBytesAsync(stream, b.Bytes, 0, b.Bytes.Length);
+            }
+
+            return size;
+        }
+
+        public override ulong CalculateSize()
+        {
+            return (ulong)((long)base.CalculateSize() + Bytes.Length);
+        }
+    }
+
+    public class InfeBox : Mp4Box
+    {
+        public const string TYPE = "infe";
+
+        public byte Version { get; set; }
+        public uint Flags { get; set; }
+        public uint ItemID { get; }
+        public ushort ItemProtectionIndex { get; }
+        public string ItemName { get; }
+        public string ContentType { get; }
+        public string ContentEncoding { get; }
+        public string ExtensionType { get; }
+        public string ItemType { get; }
+        public string ItemUriType { get; }
+
+        public InfeBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        { }
+
+        public InfeBox(
+            uint size,
+            ulong largeSize,
+            Mp4Box parent, 
+            byte version, 
+            uint flags, 
+            uint itemID, 
+            ushort itemProtectionIndex, 
+            string itemName, 
+            string contentType, 
+            string contentEncoding, 
+            string extensionType, 
+            string itemType,
+            string itemUriType) : this(size, largeSize, parent)
+        {
+            Version = version;
+            Flags = flags;
+            ItemID = itemID;
+            ItemProtectionIndex = itemProtectionIndex;
+            ItemName = itemName;
+            ContentType = contentType;
+            ContentEncoding = contentEncoding;
+            ExtensionType = extensionType;
+            ItemType = itemType;
+            ItemUriType = itemUriType;
+        }
+
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
+        {
+            byte version = IsoReaderWriter.ReadByte(stream);
+            uint flags = IsoReaderWriter.ReadUInt24(stream);
+
+            uint itemID = 0;
+            ushort itemProtectionIndex = 0;
+            string itemName = "";
+            string contentType = "";
+            string contentEncoding = "";
+            if (version == 0 || version == 1)
+            {
+                itemID = IsoReaderWriter.ReadUInt16(stream);
+                itemProtectionIndex = IsoReaderWriter.ReadUInt16(stream);
+
+                itemName = IsoReaderWriter.ReadZeroTerminatedString(stream);
+                contentType = IsoReaderWriter.ReadZeroTerminatedString(stream);
+                contentEncoding = IsoReaderWriter.ReadZeroTerminatedString(stream);
+            }
+
+            string extensionType = "";
+            if(version == 1)
+            {
+                extensionType = IsoReaderWriter.ReadZeroTerminatedString(stream);
+                // ItemInfoExtension
+                throw new NotSupportedException("ItemInfoExtension");
+            }
+
+            string itemType = "";
+            string itemUriType = "";
+            if (version >= 2)
+            {
+                if(version == 2)
+                {
+                    itemID = IsoReaderWriter.ReadUInt16(stream);
+                }
+                else if(version == 3)
+                {
+                    itemID = IsoReaderWriter.ReadUInt32(stream);
+                }
+
+                itemProtectionIndex = IsoReaderWriter.ReadUInt16(stream);
+                itemType = IsoReaderWriter.Read4cc(stream);
+                itemName = IsoReaderWriter.ReadZeroTerminatedString(stream);
+
+                if(itemType == "mime")
+                {
+                    contentType = IsoReaderWriter.ReadZeroTerminatedString(stream);
+                    contentEncoding = IsoReaderWriter.ReadZeroTerminatedString(stream);
+                }
+                else if(itemType == "uri ")
+                {
+                    itemUriType = IsoReaderWriter.ReadZeroTerminatedString(stream);
+                }
+            }
+
+            var ret = new InfeBox(
+                size,
+                largeSize, 
+                parent, 
+                version,
+                flags,
+                itemID,
+                itemProtectionIndex,
+                itemName,
+                contentType,
+                contentEncoding,
+                extensionType,
+                itemType,
+                itemUriType
+            );            
+
+            return Task.FromResult((Mp4Box)ret);
+        }
+
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
+        {
+            InfeBox b = (InfeBox)box;
+            ulong size = 0;
+            
+            size += IsoReaderWriter.WriteByte(stream, b.Version);
+            size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
+
+            if (b.Version == 0 || b.Version == 1)
+            {
+                size += IsoReaderWriter.WriteUInt16(stream, (ushort)b.ItemID);
+                size += IsoReaderWriter.WriteUInt16(stream, b.ItemProtectionIndex);
+
+                size += IsoReaderWriter.WriteZeroTerminatedString(stream, b.ItemName);
+                size += IsoReaderWriter.WriteZeroTerminatedString(stream, b.ContentType);
+                size += IsoReaderWriter.WriteZeroTerminatedString(stream, b.ContentEncoding);
+            }
+
+            if (b.Version == 1)
+            {
+                size += IsoReaderWriter.WriteZeroTerminatedString(stream, b.ExtensionType);
+                // TODO: ItemInfoExtension
+                throw new NotSupportedException("ItemInfoExtension");
+            }
+
+            if (b.Version >= 2)
+            {
+                if (b.Version == 2)
+                {
+                    size += IsoReaderWriter.WriteUInt16(stream, (ushort)b.ItemID);
+                }
+                else if (b.Version == 3)
+                {
+                    size += IsoReaderWriter.WriteUInt32(stream, b.ItemID);
+                }
+
+                size += IsoReaderWriter.WriteUInt16(stream, b.ItemProtectionIndex);
+                size += IsoReaderWriter.Write4cc(stream, b.ItemType);
+                size += IsoReaderWriter.WriteZeroTerminatedString(stream, b.ItemName);
+
+                if (b.ItemType == "mime")
+                {
+                    size += IsoReaderWriter.WriteZeroTerminatedString(stream, b.ContentType);
+                    size += IsoReaderWriter.WriteZeroTerminatedString(stream, b.ContentEncoding);
+                }
+                else if (b.ItemType == "uri ")
+                {
+                    size += IsoReaderWriter.WriteZeroTerminatedString(stream, b.ItemUriType);
+                }
+            }
+
+            return Task.FromResult(size);
+        }
+
+        public override ulong CalculateSize()
+        {
+            return base.CalculateSize() + 4 + 
+                (ulong)((Version == 0 || Version == 1) ? (ulong)(4 + ItemName.Length + 1 + ContentType.Length + 1 + ContentEncoding.Length + 1) : 0) +
+                (ulong)((Version == 2 || Version == 3) ? (ulong)(2 + 2 + 4 + ItemName.Length + 1 + (ItemType == "mime" ? ContentType.Length + 1 + ContentEncoding.Length + 1 : 0) + (ItemType == "uri " ? ItemUriType.Length + 1 : 0)) : 0) +
+                (ulong)(Version == 3 ? 2 : 0);
+        }
+    }
+
+    public class IprpBox : ContainerMp4Box
+    {
+        public const string TYPE = "iprp";
+
+        public IprpBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        { }
+
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
+        {
+            ContainerMp4Box ret = new IprpBox(size, largeSize, parent);
+            ulong parsedSize = (ulong)GetParsedSize(size);
+            while (parsedSize < size)
+            {
+                var box = await Mp4Parser.ReadBox(ret, stream);
+                parsedSize += box.GetSize();
+                ret.Children.Add(box);
+            }
+            return ret;
+        }
+
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
+        {
+            IprpBox b = (IprpBox)box;
+            ulong size = 0;
+            foreach (var child in b.Children)
+            {
+                size += await Mp4Parser.WriteBox(stream, child);
+            }
+            return size;
+        }
+    }
+
+    public class IrefBox : ContainerMp4Box
+    {
+        public const string TYPE = "iref";
+
+        public IrefBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        { }
+
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
+        {
+            ContainerMp4Box ret = new IrefBox(size, largeSize, parent);
+            ulong parsedSize = (ulong)GetParsedSize(size);
+            while (parsedSize < size)
+            {
+                var box = await Mp4Parser.ReadBox(ret, stream);
+                parsedSize += box.GetSize();
+                ret.Children.Add(box);
+            }
+            return ret;
+        }
+
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
+        {
+            IrefBox b = (IrefBox)box;
+            ulong size = 0;
+            foreach (var child in b.Children)
+            {
+                size += await Mp4Parser.WriteBox(stream, child);
+            }
+            return size;
         }
     }
 
@@ -4682,10 +5002,10 @@ namespace SharpMp4
             return b;
         }
 
-        public static async Task<uint> BuildAsync(Mp4Box box, Stream stream)
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             UnknownBox b = (UnknownBox)box;
-            uint size = 0;
+            ulong size = 0;
 
             if (b.Bytes.Length > 0)
             {
@@ -6691,6 +7011,10 @@ namespace SharpMp4
             _boxParsers.Add(HdlrBox.TYPE, HdlrBox.ParseAsync);
             _boxParsers.Add(IlocBox.TYPE, IlocBox.ParseAsync);
             _boxParsers.Add(IinfBox.TYPE, IinfBox.ParseAsync);
+            _boxParsers.Add(IdatBox.TYPE, IdatBox.ParseAsync);
+            _boxParsers.Add(InfeBox.TYPE, InfeBox.ParseAsync);
+            _boxParsers.Add(IprpBox.TYPE, IprpBox.ParseAsync);
+            _boxParsers.Add(IrefBox.TYPE, IrefBox.ParseAsync);
             _boxParsers.Add(MdatBox.TYPE, MdatBox.ParseAsync);
             _boxParsers.Add(MdhdBox.TYPE, MdhdBox.ParseAsync);
             _boxParsers.Add(MdiaBox.TYPE, MdiaBox.ParseAsync);
@@ -6768,6 +7092,10 @@ namespace SharpMp4
             _boxBuilders.Add(HdlrBox.TYPE, HdlrBox.BuildAsync);
             _boxBuilders.Add(IlocBox.TYPE, IlocBox.BuildAsync);
             _boxBuilders.Add(IinfBox.TYPE, IinfBox.BuildAsync);
+            _boxBuilders.Add(IdatBox.TYPE, IdatBox.BuildAsync);
+            _boxBuilders.Add(InfeBox.TYPE, InfeBox.BuildAsync);
+            _boxBuilders.Add(IprpBox.TYPE, IprpBox.BuildAsync);
+            _boxBuilders.Add(IrefBox.TYPE, IrefBox.BuildAsync);
             _boxBuilders.Add(MdatBox.TYPE, MdatBox.BuildAsync);
             _boxBuilders.Add(MdhdBox.TYPE, MdhdBox.BuildAsync);
             _boxBuilders.Add(MdiaBox.TYPE, MdiaBox.BuildAsync);
