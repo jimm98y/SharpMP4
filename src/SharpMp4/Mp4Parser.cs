@@ -624,6 +624,10 @@ namespace SharpMp4
             public int[] Fragments { get; internal set; } = new int[2];
             public int[] Entries { get; internal set; } = new int[2];
             public long[] Position { get; internal set; } = new long[2];
+
+
+
+            public int ImageIloc { get; set; }
         }
 
         public static async Task<MdatParserContext> ParseMdatAsync(this FragmentedMp4 fmp4)
@@ -717,7 +721,7 @@ namespace SharpMp4
             return context;
         }
 
-        public static async Task<IList<byte[]>> ReadNextTrack(this FragmentedMp4 fmp4, MdatParserContext context, int trackID)
+        public static async Task<IList<byte[]>> ReadNextTrackAsync(this FragmentedMp4 fmp4, MdatParserContext context, int trackID)
         {
             await context.Semaphore.WaitAsync();
             var ret = new List<byte[]>();
@@ -768,24 +772,7 @@ namespace SharpMp4
 
                                 do
                                 {
-                                    switch (context.NalLengthSize)
-                                    {
-                                        case 1:
-                                            nalUnitLength = (int)stream.ReadByte();
-                                            break;
-                                        case 2:
-                                            nalUnitLength = (int)stream.ReadUInt16();
-                                            break;
-                                        case 3:
-                                            nalUnitLength = (int)stream.ReadUInt24();
-                                            break;
-                                        case 4:
-                                            nalUnitLength = (int)stream.ReadUInt32();
-                                            break;
-
-                                        default:
-                                            throw new Exception($"NAL unit length {context.NalLengthSize} not supported!");
-                                    }
+                                    nalUnitLength = ReadNALULength(context.NalLengthSize, stream);
 
                                     byte[] fragment = new byte[nalUnitLength];
                                     await stream.ReadExactlyAsync(fragment, 0, nalUnitLength);
@@ -859,7 +846,45 @@ namespace SharpMp4
 
             return null;
         }
-    } 
+
+        private static int ReadNALULength(int nalLengthSize, ITemporaryStorage stream)
+        {
+            int nalUnitLength;
+            switch (nalLengthSize)
+            {
+                case 1:
+                    nalUnitLength = (int)stream.ReadByte();
+                    break;
+                case 2:
+                    nalUnitLength = (int)stream.ReadUInt16();
+                    break;
+                case 3:
+                    nalUnitLength = (int)stream.ReadUInt24();
+                    break;
+                case 4:
+                    nalUnitLength = (int)stream.ReadUInt32();
+                    break;
+
+                default:
+                    throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+            }
+
+            return nalUnitLength;
+        }
+
+        public static async Task<IList<byte[]>> ReadNextImageAsync(this FragmentedMp4 fmp4, MdatParserContext context)
+        {
+            var locationBox = fmp4.GetMeta().GetIloc().Items[Math.Min(context.ImageIloc, fmp4.GetMeta().GetIloc().Items.Count - 1)];
+            long position = (long)(locationBox.BaseOffset + locationBox.Extents[0].ExtentOffset);
+            var stream = context.Mdat[0].GetStorage();
+            stream.Seek(position, SeekOrigin.Begin);
+
+            int nalUnitLength = ReadNALULength(4, stream);
+            byte[] fragment = new byte[nalUnitLength];
+            await stream.ReadExactlyAsync(fragment, 0, nalUnitLength);
+            return new List<byte[]>() { fragment };
+        }
+    }
 
     public abstract class TrackBase
     {
@@ -2499,6 +2524,9 @@ namespace SharpMp4
     {
         public const string TYPE = "meta";
 
+        public IprpBox GetIprp() { return Children.SingleOrDefault(x => x.Type == IprpBox.TYPE) as IprpBox; }
+        public IlocBox GetIloc() { return Children.SingleOrDefault(x => x.Type == IlocBox.TYPE) as IlocBox; }
+
         public byte Version { get; set; }
         public uint Flags { get; set; }
 
@@ -3072,6 +3100,8 @@ namespace SharpMp4
     {
         public const string TYPE = "iprp";
 
+        public IpcoBox GetIpco() { return Children.SingleOrDefault(x => x.Type == IpcoBox.TYPE) as IpcoBox; }
+
         public IprpBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
         { }
 
@@ -3288,6 +3318,63 @@ namespace SharpMp4
         {
             // TODO
             throw new NotImplementedException();
+        }
+    }
+
+    public class IspeBox : Mp4Box
+    {
+        public const string TYPE = "ispe";
+
+        public byte Version { get; set; }
+        public uint Flags { get; set; } = 0;
+        public int ImageWidth { get; set; }
+        public int ImageHeight { get; set; }
+
+        public IspeBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        { }
+
+        public IspeBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, int imageWidth, int imageHeight) : this(size, largeSize, parent)
+        {
+            Version = version;
+            Flags = flags;
+            ImageWidth = imageWidth;
+            ImageHeight = imageHeight;
+        }
+
+        public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
+        {
+            byte version = IsoReaderWriter.ReadByte(stream);
+            uint flags = IsoReaderWriter.ReadUInt24(stream);
+
+            int imageWidth = IsoReaderWriter.ReadInt32(stream);
+            int imageHeight = IsoReaderWriter.ReadInt32(stream);
+
+            IspeBox url = new IspeBox(
+                size,
+                largeSize,
+                parent,
+                version,
+                flags,
+                imageWidth,
+                imageHeight);
+
+            return Task.FromResult((Mp4Box)url);
+        }
+
+        public static Task<ulong> BuildAsync(Mp4Box box, Stream stream)
+        {
+            IspeBox b = (IspeBox)box;
+            ulong size = 0;
+            size += IsoReaderWriter.WriteByte(stream, b.Version);
+            size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
+            size += IsoReaderWriter.WriteInt32(stream, b.ImageWidth);
+            size += IsoReaderWriter.WriteInt32(stream, b.ImageHeight);
+            return Task.FromResult(size);
+        }
+
+        public override ulong CalculateSize()
+        {
+            return base.CalculateSize() + 4 + 8;
         }
     }
 
@@ -7036,6 +7123,7 @@ namespace SharpMp4
     {
         public FtypBox GetFtyp() { return Children.SingleOrDefault(x => x.Type == FtypBox.TYPE) as FtypBox; }
         public MoovBox GetMoov() { return Children.SingleOrDefault(x => x.Type == MoovBox.TYPE) as MoovBox; }
+        public MetaBox GetMeta() { return Children.SingleOrDefault(x => x.Type == MetaBox.TYPE) as MetaBox; }
 
         public List<Mp4Box> Children { get; set; } = new List<Mp4Box>();
 
@@ -7175,6 +7263,7 @@ namespace SharpMp4
             _boxParsers.Add(IprpBox.TYPE, IprpBox.ParseAsync);
             _boxParsers.Add(IrefBox.TYPE, IrefBox.ParseAsync);
             _boxParsers.Add(IpcoBox.TYPE, IpcoBox.ParseAsync);
+            _boxParsers.Add(IspeBox.TYPE, IspeBox.ParseAsync);
             _boxParsers.Add(MdatBox.TYPE, MdatBox.ParseAsync);
             _boxParsers.Add(MdhdBox.TYPE, MdhdBox.ParseAsync);
             _boxParsers.Add(MdiaBox.TYPE, MdiaBox.ParseAsync);
@@ -7257,6 +7346,7 @@ namespace SharpMp4
             _boxBuilders.Add(IprpBox.TYPE, IprpBox.BuildAsync);
             _boxBuilders.Add(IrefBox.TYPE, IrefBox.BuildAsync);
             _boxBuilders.Add(IpcoBox.TYPE, IpcoBox.BuildAsync);
+            _boxBuilders.Add(IspeBox.TYPE, IspeBox.BuildAsync);
             _boxBuilders.Add(MdatBox.TYPE, MdatBox.BuildAsync);
             _boxBuilders.Add(MdhdBox.TYPE, MdhdBox.BuildAsync);
             _boxBuilders.Add(MdiaBox.TYPE, MdiaBox.BuildAsync);
