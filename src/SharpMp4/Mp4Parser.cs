@@ -295,7 +295,7 @@ namespace SharpMp4
             for (int i = 0; i < fragment.Samples[trackIndex].Count; i++)
             {
                 var sample = fragment.Samples[trackIndex][i];
-                trun.Entries.Add(new TrunBox.Entry(sample.Duration, (uint)sample.Sample.Length, 0, 0));
+                trun.Entries.Add(new TrunEntry(sample.Duration, (uint)sample.Sample.Length, 0, 0));
             }
 
             return trun;
@@ -1810,6 +1810,8 @@ namespace SharpMp4
     {
         public string Type { get; set; }
 
+        public long Position { get; set; } = 0;
+
         private uint _originalSize;
         private ulong _originalLargeSize;
         internal ulong GetSize() { return _originalSize == 1 ? _originalLargeSize : _originalSize; }
@@ -1857,6 +1859,23 @@ namespace SharpMp4
                 size += child.CalculateSize();
             }
             return base.CalculateSize() + size;
+        }
+    }
+
+    public abstract class FullMp4Box : ContainerMp4Box // children are optional
+    {
+        public byte Version { get; set; }
+        public uint Flags { get; set; }
+
+        protected FullMp4Box(uint size, ulong largeSize, string type, Mp4Box parent, byte version, uint flags) : base(size, largeSize, type, parent)
+        {
+            Version = version;
+            Flags = flags;
+        }
+
+        public override ulong CalculateSize()
+        {
+            return base.CalculateSize() + 4;
         }
     }
 
@@ -1945,12 +1964,9 @@ namespace SharpMp4
         }
     }
 
-    public class MvhdBox : Mp4Box
+    public class MvhdBox : FullMp4Box
     {
         public const string TYPE = "mvhd";
-
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
 
         public DateTime CreationTime { get; set; } = IsoReaderWriter.DateTimeBase;
         public DateTime ModificationTime { get; set; } = IsoReaderWriter.DateTimeBase;
@@ -1970,7 +1986,7 @@ namespace SharpMp4
         public uint Dummy2 { get; set; } = 0;
         public uint Dummy3 { get; set; } = 0;
 
-        public MvhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public MvhdBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
         public MvhdBox(
@@ -2130,7 +2146,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            uint contentSize = 4;
+            uint contentSize = 0;
             if (Version == 1)
             {
                 contentSize += 28;
@@ -2178,12 +2194,9 @@ namespace SharpMp4
         }
     }
 
-    public class TkhdBox : Mp4Box
+    public class TkhdBox : FullMp4Box
     {
         public const string TYPE = "tkhd";
-
-        public byte Version { get; set; }
-        public uint Flags { get; set; } = 7; //  The default value of the track header flags for media tracks is 7 (track_enabled, track_in_movie, track_in_preview).
 
         public DateTime CreationTime { get; set; } = IsoReaderWriter.DateTimeBase;
         public DateTime ModificationTime { get; set; } = IsoReaderWriter.DateTimeBase;
@@ -2200,7 +2213,8 @@ namespace SharpMp4
         public uint Dummy3 { get; set; } = 0;
         public ushort Dummy4 { get; set; } = 0;
 
-        public TkhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        //  The default value of the track header flags for media tracks is 7 (track_enabled, track_in_movie, track_in_preview).
+        public TkhdBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 7) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
         public TkhdBox(
@@ -2344,7 +2358,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            uint contentSize = 4;
+            uint contentSize = 0;
             if (Version == 1)
             {
                 contentSize += 32;
@@ -2394,12 +2408,10 @@ namespace SharpMp4
         }
     }
 
-    public class MdhdBox : Mp4Box
+    public class MdhdBox : FullMp4Box
     {
         public const string TYPE = "mdhd";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public DateTime CreationTime { get; set; } = IsoReaderWriter.DateTimeBase;
         public DateTime ModificationTime { get; set; } = IsoReaderWriter.DateTimeBase;
         public uint Timescale { get; set; }
@@ -2407,7 +2419,7 @@ namespace SharpMp4
         public string Language { get; set; } = "und";
         public ushort Dummy1 { get; set; } = 0;
 
-        public MdhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public MdhdBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
         public MdhdBox(
@@ -2505,7 +2517,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            uint contentSize = 4;
+            uint contentSize = 0;
             if (Version == 1)
             {
                 contentSize += 8 + 8 + 4 + 8;
@@ -2520,24 +2532,15 @@ namespace SharpMp4
         }
     }
 
-    public class MetaBox : ContainerMp4Box
+    public class MetaBox : FullMp4Box
     {
         public const string TYPE = "meta";
 
         public IprpBox GetIprp() { return Children.SingleOrDefault(x => x.Type == IprpBox.TYPE) as IprpBox; }
         public IlocBox GetIloc() { return Children.SingleOrDefault(x => x.Type == IlocBox.TYPE) as IlocBox; }
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
-
-        public MetaBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public MetaBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
-
-        public MetaBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
-        {
-            Version = version;
-            Flags = flags;
-        }
 
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
@@ -2603,19 +2606,17 @@ namespace SharpMp4
         public ulong ExtentLength { get; set; }
     }
 
-    public class IlocBox : Mp4Box
+    public class IlocBox : FullMp4Box
     {
         public const string TYPE = "iloc";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public int OffsetSize { get; set; }
         public int LengthSize { get; set; }
         public int BaseOffsetSize { get; set; }
         public int IndexSize { get; set; }
         public List<IlocItem> Items { get; set; }
 
-        public IlocBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public IlocBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
         public IlocBox(
@@ -2766,7 +2767,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            ulong size = base.CalculateSize() + 4 + 4;
+            ulong size = base.CalculateSize() + 4;
 
             foreach(var item in this.Items)
             {
@@ -2791,21 +2792,12 @@ namespace SharpMp4
         }
     }
 
-    public class IinfBox : ContainerMp4Box
+    public class IinfBox : FullMp4Box
     {
         public const string TYPE = "iinf";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
-
-        public IinfBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
-        { }
-
-        public IinfBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
-        {
-            Version = version;
-            Flags = flags;
-        }
+        public IinfBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : base(size, largeSize, TYPE, parent, version, flags)
+        {  }
 
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
@@ -2858,7 +2850,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return base.CalculateSize() + 4 + (ulong)(Version == 0 ? 2 : 4);
+            return base.CalculateSize() + (ulong)(Version == 0 ? 2 : 4);
         }
     }
 
@@ -2913,12 +2905,10 @@ namespace SharpMp4
         }
     }
 
-    public class InfeBox : Mp4Box
+    public class InfeBox : FullMp4Box
     {
         public const string TYPE = "infe";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public uint ItemID { get; }
         public ushort ItemProtectionIndex { get; }
         public string ItemName { get; }
@@ -2928,7 +2918,7 @@ namespace SharpMp4
         public string ItemType { get; }
         public string ItemUriType { get; }
 
-        public InfeBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public InfeBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
         public InfeBox(
@@ -2944,7 +2934,7 @@ namespace SharpMp4
             string contentEncoding, 
             string extensionType, 
             string itemType,
-            string itemUriType) : this(size, largeSize, parent)
+            string itemUriType) : this(size, largeSize, parent, version, flags)
         {
             Version = version;
             Flags = flags;
@@ -3089,7 +3079,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return base.CalculateSize() + 4 + 
+            return base.CalculateSize() + 
                 (ulong)((Version == 0 || Version == 1) ? (ulong)(4 + ItemName.Length + 1 + ContentType.Length + 1 + ContentEncoding.Length + 1) : 0) +
                 (ulong)((Version == 2 || Version == 3) ? (ulong)(2 + 2 + 4 + ItemName.Length + 1 + (ItemType == "mime" ? ContentType.Length + 1 + ContentEncoding.Length + 1 : 0) + (ItemType == "uri " ? ItemUriType.Length + 1 : 0)) : 0) +
                 (ulong)(Version == 3 ? 2 : 0);
@@ -3252,21 +3242,12 @@ namespace SharpMp4
         }
     }
 
-    public class IrefBox : ContainerMp4Box
+    public class IrefBox : FullMp4Box
     {
         public const string TYPE = "iref";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
-
-        public IrefBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public IrefBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
-
-        public IrefBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
-        {
-            Version = version;
-            Flags = flags;
-        }
 
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
@@ -3319,18 +3300,21 @@ namespace SharpMp4
             // TODO
             throw new NotImplementedException();
         }
+
+        public override ulong CalculateSize()
+        {
+            return base.CalculateSize();
+        }
     }
 
-    public class IspeBox : Mp4Box
+    public class IspeBox : FullMp4Box
     {
         public const string TYPE = "ispe";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; } = 0;
         public int ImageWidth { get; set; }
         public int ImageHeight { get; set; }
 
-        public IspeBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public IspeBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
         public IspeBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, int imageWidth, int imageHeight) : this(size, largeSize, parent)
@@ -3374,7 +3358,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return base.CalculateSize() + 4 + 8;
+            return base.CalculateSize() + 8;
         }
     }
 
@@ -3390,12 +3374,10 @@ namespace SharpMp4
         public const string Sound = "soun";
     }
 
-    public class HdlrBox : Mp4Box
+    public class HdlrBox : FullMp4Box
     {
         public const string TYPE = "hdlr";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public uint Dummy1 { get; set; } = 0;
         public string HandlerType { get; set; }
         public uint A { get; set; }
@@ -3403,7 +3385,7 @@ namespace SharpMp4
         public uint C { get; set; }
         public string Name { get; set; }
 
-        public HdlrBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public HdlrBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
         public HdlrBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint dummy1, string handlerType, uint a, uint b, uint c, string name) : this(size, largeSize, parent)
@@ -3473,7 +3455,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return (ulong)((long)base.CalculateSize() + 24 + Encoding.UTF8.GetBytes(Name).Length);
+            return (ulong)((long)base.CalculateSize() + 20 + Encoding.UTF8.GetBytes(Name).Length);
         }
     }
 
@@ -3514,19 +3496,17 @@ namespace SharpMp4
         }
     }
 
-    public class SmhdBox : Mp4Box
+    public class SmhdBox : FullMp4Box
     {
         public const string TYPE = "smhd";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public float Balance { get; set; }
         public ushort Dummy1 { get; set; } = 0;
 
-        public SmhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public SmhdBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
-        public SmhdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, float balance, ushort dummy1) : this(size, largeSize, parent)
+        public SmhdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, float balance, ushort dummy1) : this(size, largeSize, parent, version, flags)
         {
             Version = version;
             Flags = flags;
@@ -3567,7 +3547,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return base.CalculateSize() + 8;
+            return base.CalculateSize() + 4;
         }
     }
 
@@ -3604,21 +3584,12 @@ namespace SharpMp4
         }
     }
 
-    public class DrefBox : ContainerMp4Box
+    public class DrefBox : FullMp4Box
     {
         public const string TYPE = "dref";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
-
-        public DrefBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public DrefBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
-
-        public DrefBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
-        {
-            Version = version;
-            Flags = flags;
-        }
 
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
@@ -3662,28 +3633,24 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return base.CalculateSize() + 8;
+            return base.CalculateSize() + 4;
         }
     }
 
-    public class VmhdBox : Mp4Box
+    public class VmhdBox : FullMp4Box
     {
         public const string TYPE = "vmhd";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; } = 1;
         public ushort GraphicsMode { get; set; } = 0;
         public ushort OpColor0 { get; set; } = 0;
         public ushort OpColor1 { get; set; } = 0;
         public ushort OpColor2 { get; set; } = 0;
 
-        public VmhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public VmhdBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 1) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
-        public VmhdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ushort graphicsMode, ushort opColor0, ushort opColor1, ushort opColor2) : this(size, largeSize, parent)
+        public VmhdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ushort graphicsMode, ushort opColor0, ushort opColor1, ushort opColor2) : this(size, largeSize, parent, version, flags)
         {
-            Version = version;
-            Flags = flags;
             GraphicsMode = graphicsMode;
             OpColor0 = opColor0;
             OpColor1 = opColor1;
@@ -3771,21 +3738,12 @@ namespace SharpMp4
         }
     }
 
-    public class StsdBox : ContainerMp4Box
+    public class StsdBox : FullMp4Box
     {
         public const string TYPE = "stsd";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
-
-        public StsdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public StsdBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
-
-        public StsdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
-        {
-            Version = version;
-            Flags = flags;
-        }
 
         public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
@@ -3828,24 +3786,22 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return 8 + base.CalculateSize();
+            return base.CalculateSize() + 4;
         }
     }
 
-    public class StszBox : Mp4Box
+    public class StszBox : FullMp4Box
     {
         public const string TYPE = "stsz";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public uint SampleSize { get; set; }
         public uint SampleCount { get; set; }
         public uint[] SampleSizes { get; set; } = new uint[0];
 
-        public StszBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public StszBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent,version, flags)
         { }
 
-        public StszBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint sampleSize, uint sampleCount, uint[] sampleSizes) : this(size, largeSize, parent)
+        public StszBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint sampleSize, uint sampleCount, uint[] sampleSizes) : this(size, largeSize, parent, version, flags)
         {
             Version = version;
             Flags = flags;
@@ -3911,39 +3867,37 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return (ulong)((long)base.CalculateSize() + 12 + (SampleSize == 0 ? SampleSizes.Length * 4 : 0));
+            return (ulong)((long)base.CalculateSize() + 8 + (SampleSize == 0 ? SampleSizes.Length * 4 : 0));
         }
     }
 
-    public class StscBox : Mp4Box
+    public class StscEntry
+    {
+        public uint FirstChunk { get; set; }
+        public uint SamplesPerChunk { get; set; }
+        public uint SampleDescriptionIndex { get; set; }
+
+        public StscEntry()
+        { }
+
+        public StscEntry(uint firstChunk, uint samplesPerChunk, uint sampleDescriptionIndex)
+        {
+            FirstChunk = firstChunk;
+            SamplesPerChunk = samplesPerChunk;
+            SampleDescriptionIndex = sampleDescriptionIndex;
+        }
+    }
+
+    public class StscBox : FullMp4Box
     {
         public const string TYPE = "stsc";
 
-        public class Entry
-        {
-            public uint FirstChunk { get; set; }
-            public uint SamplesPerChunk { get; set; }
-            public uint SampleDescriptionIndex { get; set; }
+        public List<StscEntry> Entries { get; set; } = new List<StscEntry>();
 
-            public Entry()
-            { }
-
-            public Entry(uint firstChunk, uint samplesPerChunk, uint sampleDescriptionIndex)
-            {
-                FirstChunk = firstChunk;
-                SamplesPerChunk = samplesPerChunk;
-                SampleDescriptionIndex = sampleDescriptionIndex;
-            }
-        }
-
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
-        public List<Entry> Entries { get; set; } = new List<Entry>();
-
-        public StscBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public StscBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
-        public StscBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, List<Entry> entries) : this(size, largeSize, parent)
+        public StscBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, List<StscEntry> entries) : this(size, largeSize, parent)
         {
             Version = version;
             Flags = flags;
@@ -3956,10 +3910,10 @@ namespace SharpMp4
             uint flags = IsoReaderWriter.ReadUInt24(stream);
 
             uint entryCount = IsoReaderWriter.ReadUInt32(stream);
-            List<Entry> entries = new List<Entry>();
+            List<StscEntry> entries = new List<StscEntry>();
             for (int i = 0; i < entryCount; i++)
             {
-                var entry = new Entry(
+                var entry = new StscEntry(
                     IsoReaderWriter.ReadUInt32(stream),
                     IsoReaderWriter.ReadUInt32(stream),
                     IsoReaderWriter.ReadUInt32(stream)
@@ -3985,7 +3939,7 @@ namespace SharpMp4
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)b.Entries.Count);
-            foreach (Entry entry in b.Entries)
+            foreach (StscEntry entry in b.Entries)
             {
                 size += IsoReaderWriter.WriteUInt32(stream, entry.FirstChunk);
                 size += IsoReaderWriter.WriteUInt32(stream, entry.SamplesPerChunk);
@@ -4000,39 +3954,35 @@ namespace SharpMp4
         }
     }
 
+    public class SttsEntry
+    {
+        public uint Count { get; set; }
+        public uint Delta { get; set; }
+
+        public SttsEntry()
+        { }
+
+        public SttsEntry(uint count, uint delta)
+        {
+            Count = count;
+            Delta = delta;
+        }
+    }
+
     /// <summary>
     /// STTS box allows indexing from decoding time to sample number.
     /// </summary>
-    public class SttsBox : Mp4Box
+    public class SttsBox : FullMp4Box
     {
         public const string TYPE = "stts";
 
-        public class Entry
-        {
-            public uint Count { get; set; }
-            public uint Delta { get; set; }
+        public List<SttsEntry> Entries { get; set; } = new List<SttsEntry>();
 
-            public Entry()
-            { }
-
-            public Entry(uint count, uint delta)
-            {
-                Count = count;
-                Delta = delta;
-            }
-        }
-
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
-        public List<Entry> Entries { get; set; } = new List<Entry>();
-
-        public SttsBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public SttsBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
-        public SttsBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, List<Entry> entries) : this(size, largeSize, parent)
+        public SttsBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, List<SttsEntry> entries) : this(size, largeSize, parent, version, flags)
         {
-            Version = version;
-            Flags = flags;
             Entries = entries;
         }
 
@@ -4042,10 +3992,10 @@ namespace SharpMp4
             uint flags = IsoReaderWriter.ReadUInt24(stream);
 
             uint entryCount = IsoReaderWriter.ReadUInt32(stream);
-            List<Entry> entries = new List<Entry>();
+            List<SttsEntry> entries = new List<SttsEntry>();
             for (int i = 0; i < entryCount; i++)
             {
-                var entry = new Entry(
+                var entry = new SttsEntry(
                     IsoReaderWriter.ReadUInt32(stream),
                     IsoReaderWriter.ReadUInt32(stream)
                 );
@@ -4070,7 +4020,7 @@ namespace SharpMp4
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)b.Entries.Count);
-            foreach (Entry entry in b.Entries)
+            foreach (SttsEntry entry in b.Entries)
             {
                 size += IsoReaderWriter.WriteUInt32(stream, entry.Count);
                 size += IsoReaderWriter.WriteUInt32(stream, entry.Delta);
@@ -4080,7 +4030,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return (ulong)((long)base.CalculateSize() + 8 + Entries.Count * 8);
+            return (ulong)((long)base.CalculateSize() + 4 + Entries.Count * 8);
         }
     }
 
@@ -4094,12 +4044,10 @@ namespace SharpMp4
         public int SapDeltaTime { get; set; }
     }
 
-    public class SidxBox : Mp4Box
+    public class SidxBox : FullMp4Box
     {
         public const string TYPE = "sidx";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public uint ReferenceId { get; }
         public uint TimeScale { get; }
         public ulong EarliestPresentationTime { get; }
@@ -4108,10 +4056,11 @@ namespace SharpMp4
         public ushort NumEntries { get; }
         public List<SidxEntry> Entries { get; }
 
-        public SidxBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public SidxBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
-        public SidxBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint referenceId, uint timeScale, ulong earliestPresentationTime, ulong firstOffset, ushort reserved, ushort numEntries, List<SidxEntry> entries) : this(size, largeSize, parent)
+        public SidxBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint referenceId, uint timeScale, ulong earliestPresentationTime, ulong firstOffset, ushort reserved, ushort numEntries, List<SidxEntry> entries) 
+            : this(size, largeSize, parent, version, flags)
         {
             Version = version;
             Flags = flags;
@@ -4215,25 +4164,20 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return (ulong)((long)base.CalculateSize() + 4 + 8 + (Version == 0 ? 8 : 16) + 4 + Entries.Count * 12);
+            return (ulong)((long)base.CalculateSize() + 8 + (Version == 0 ? 8 : 16) + 4 + Entries.Count * 12);
         }
     }
 
-    public class StcoBox : Mp4Box
+    public class StcoBox : FullMp4Box
     {
         public const string TYPE = "stco";
-
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public uint[] ChunkOffsets { get; set; } = new uint[0];
 
-        public StcoBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public StcoBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
-        public StcoBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint[] chunkOffsets) : this(size, largeSize, parent)
+        public StcoBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint[] chunkOffsets) : this(size, largeSize, parent, version, flags)
         {
-            Version = version;
-            Flags = flags;
             ChunkOffsets = chunkOffsets;
         }
 
@@ -4276,7 +4220,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return (ulong)((long)base.CalculateSize() + 8 + ChunkOffsets.Length * 4);
+            return (ulong)((long)base.CalculateSize() + 4 + ChunkOffsets.Length * 4);
         }
     }
 
@@ -4315,21 +4259,17 @@ namespace SharpMp4
         }
     }
 
-    public class MehdBox : Mp4Box
+    public class MehdBox : FullMp4Box
     {
         public const string TYPE = "mehd";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public ulong FragmentDuration { get; set; }
 
-        public MehdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public MehdBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
-        public MehdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ulong fragmentDuration) : this(size, largeSize, parent)
+        public MehdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ulong fragmentDuration) : this(size, largeSize, parent, version, flags)
         {
-            Version = version;
-            Flags = flags;
             FragmentDuration = fragmentDuration;
         }
 
@@ -4378,23 +4318,21 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return (ulong)((long)base.CalculateSize() + (Version == 1 ? 12 : 8));
+            return (ulong)((long)base.CalculateSize() + (Version == 1 ? 8 : 4));
         }
     }
 
-    public class TrexBox : Mp4Box
+    public class TrexBox : FullMp4Box
     {
         public const string TYPE = "trex";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public uint TrackId { get; set; }
         public uint DefaultSampleDescriptionIndex { get; set; } = 1;
         public uint DefaultSampleDuration { get; set; }
         public uint DefaultSampleSize { get; set; }
         public SampleFlags SampleFlags { get; set; } = new SampleFlags();
 
-        public TrexBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public TrexBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
         public TrexBox(
@@ -4407,7 +4345,7 @@ namespace SharpMp4
             uint defaultSampleDescriptionIndex,
             uint defaultSampleDuration,
             uint defaultSampleSize,
-            SampleFlags sampleFlags) : this(size, largeSize, parent)
+            SampleFlags sampleFlags) : this(size, largeSize, parent, version, flags)
         {
             Version = version;
             Flags = flags;
@@ -4450,6 +4388,7 @@ namespace SharpMp4
             ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
+
             size += IsoReaderWriter.WriteUInt32(stream, b.TrackId);
             size += IsoReaderWriter.WriteUInt32(stream, b.DefaultSampleDescriptionIndex);
             size += IsoReaderWriter.WriteUInt32(stream, b.DefaultSampleDuration);
@@ -4460,7 +4399,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return base.CalculateSize() + 5 * 4 + 4;
+            return base.CalculateSize() + 5 * 4;
         }
     }
 
@@ -4574,21 +4513,17 @@ namespace SharpMp4
         }
     }
 
-    public class MfhdBox : Mp4Box
+    public class MfhdBox : FullMp4Box
     {
         public const string TYPE = "mfhd";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public uint SequenceNumber { get; set; }
 
-        public MfhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public MfhdBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
-        public MfhdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint sequenceNumber) : this(size, largeSize, parent)
+        public MfhdBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, uint sequenceNumber) : this(size, largeSize, parent, version, flags)
         {
-            Version = version;
-            Flags = flags;
             SequenceNumber = sequenceNumber;
         }
 
@@ -4615,13 +4550,14 @@ namespace SharpMp4
             ulong size = 0;
             size += IsoReaderWriter.WriteByte(stream, b.Version);
             size += IsoReaderWriter.WriteUInt24(stream, b.Flags);
+
             size += IsoReaderWriter.WriteUInt32(stream, b.SequenceNumber);
             return Task.FromResult(size);
         }
 
         public override ulong CalculateSize()
         {
-            return base.CalculateSize() + 8;
+            return base.CalculateSize() + 4;
         }
     }
 
@@ -4661,12 +4597,10 @@ namespace SharpMp4
         }
     }
 
-    public class TfhdBox : Mp4Box
+    public class TfhdBox : FullMp4Box
     {
         public const string TYPE = "tfhd";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public uint TrackId { get; set; }
         public ulong BaseDataOffset { get; set; }
         public uint SampleDescriptionIndex { get; set; }
@@ -4676,7 +4610,7 @@ namespace SharpMp4
         public bool DurationIsEmpty { get; set; }
         public bool DefaultBaseIsMoof { get; set; } = true;
 
-        public TfhdBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public TfhdBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
         public TfhdBox(
@@ -4692,7 +4626,7 @@ namespace SharpMp4
             uint defaultSampleSize,
             uint defaultSampleFlags,
             bool durationIsEmpty,
-            bool defaultBaseIsMoof) : this(size, largeSize, parent)
+            bool defaultBaseIsMoof) : this(size, largeSize, parent, version, flags)
         {
             Version = version;
             Flags = flags;
@@ -4885,7 +4819,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            uint size = 8;
+            uint size = 4;
             if ((Flags & 0x1) == 1)
             {
                 size += 8;
@@ -4910,21 +4844,17 @@ namespace SharpMp4
         }
     }
 
-    public class TfdtBox : Mp4Box
+    public class TfdtBox : FullMp4Box
     {
         public const string TYPE = "tfdt";
 
-        public byte Version { get; set; } = 1;
-        public uint Flags { get; set; }
         public ulong BaseMediaDecodeTime { get; set; }
 
-        public TfdtBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public TfdtBox(uint size, ulong largeSize, Mp4Box parent, byte version = 1, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
-        public TfdtBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ulong baseMediaDecodeTime) : this(size, largeSize, parent)
+        public TfdtBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ulong baseMediaDecodeTime) : this(size, largeSize, parent, version, flags)
         {
-            Version = version;
-            Flags = flags;
             BaseMediaDecodeTime = baseMediaDecodeTime;
         }
 
@@ -4975,43 +4905,41 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return (ulong)((long)base.CalculateSize() + (Version == 0 ? 8 : 12));
+            return (ulong)((long)base.CalculateSize() + (Version == 0 ? 4 : 8));
         }
     }
 
-    public class TrunBox : Mp4Box
+    public sealed class TrunEntry
+    {
+        public uint SampleDuration { get; set; }
+        public uint SampleSize { get; set; }
+        public uint SampleFlags { get; set; }
+        public int SampleCompositionTimeOffset { get; set; }
+
+        public TrunEntry(uint sampleDuration, uint sampleSize, uint sampleFlags, int sampleCompositionTimeOffset)
+        {
+            SampleDuration = sampleDuration;
+            SampleSize = sampleSize;
+            SampleFlags = sampleFlags;
+            SampleCompositionTimeOffset = sampleCompositionTimeOffset;
+        }
+
+        public TrunEntry()
+        { }
+    }
+
+    public class TrunBox : FullMp4Box
     {
         public const string TYPE = "trun";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
         public int DataOffset { get; set; }
         public uint FirstSampleFlags { get; set; }
-        public List<Entry> Entries { get; set; } = new List<Entry>();
+        public List<TrunEntry> Entries { get; set; } = new List<TrunEntry>();
 
-        public sealed class Entry
-        {
-            public uint SampleDuration { get; set; }
-            public uint SampleSize { get; set; }
-            public uint SampleFlags { get; set; }
-            public int SampleCompositionTimeOffset { get; set; }
-
-            public Entry(uint sampleDuration, uint sampleSize, uint sampleFlags, int sampleCompositionTimeOffset)
-            {
-                SampleDuration = sampleDuration;
-                SampleSize = sampleSize;
-                SampleFlags = sampleFlags;
-                SampleCompositionTimeOffset = sampleCompositionTimeOffset;
-            }
-
-            public Entry()
-            { }
-        }
-
-        public TrunBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public TrunBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
-        public TrunBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, int dataOffset, uint firstSampleFlags, List<Entry> entries) : this(size, largeSize, parent)
+        public TrunBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, int dataOffset, uint firstSampleFlags, List<TrunEntry> entries) : this(size, largeSize, parent, version, flags)
         {
             Version = version;
             Flags = flags;
@@ -5042,10 +4970,10 @@ namespace SharpMp4
                 firstSampleFlags = IsoReaderWriter.ReadUInt32(stream);
             }
 
-            List<Entry> entries = new List<Entry>();
+            List<TrunEntry> entries = new List<TrunEntry>();
             for (int i = 0; i < sampleCount; i++)
             {
-                Entry entry = new Entry();
+                TrunEntry entry = new TrunEntry();
                 if ((flags & 0x100) == 0x100)
                 {
                     entry.SampleDuration = IsoReaderWriter.ReadUInt32(stream);
@@ -5107,7 +5035,7 @@ namespace SharpMp4
                 size += IsoReaderWriter.WriteUInt32(stream, b.FirstSampleFlags);
             }
 
-            foreach (Entry entry in b.Entries)
+            foreach (TrunEntry entry in b.Entries)
             {
                 if ((b.Flags & 0x100) == 0x100)
                 {
@@ -5139,7 +5067,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            uint size = 8;
+            uint size = 4;
 
             if ((Flags & 0x1) == 0x1)
             {
@@ -5172,21 +5100,12 @@ namespace SharpMp4
         }
     }
 
-    public class UrlBox : Mp4Box
+    public class UrlBox : FullMp4Box
     {
         public const string TYPE = "url ";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; } = 1;
-
-        public UrlBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public UrlBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 1) : base(size, largeSize, TYPE, parent, version, flags)
         { }
-
-        public UrlBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags) : this(size, largeSize, parent)
-        {
-            Version = version;
-            Flags = flags;
-        }
 
         public static Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
         {
@@ -5214,7 +5133,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return base.CalculateSize() + 4;
+            return base.CalculateSize();
         }
     }
 
@@ -5482,22 +5401,17 @@ namespace SharpMp4
         }
     }
 
-    public class EsdsBox : Mp4Box
+    public class EsdsBox : FullMp4Box
     {
         public const string TYPE = "esds";
 
-        public byte Version { get; set; }
-        public uint Flags { get; set; }
-
         public ESDescriptor ESDescriptor { get; set; }
 
-        public EsdsBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        public EsdsBox(uint size, ulong largeSize, Mp4Box parent, byte version = 0, uint flags = 0) : base(size, largeSize, TYPE, parent, version, flags)
         { }
 
-        public EsdsBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ESDescriptor esDescriptor) : this(size, largeSize, parent)
+        public EsdsBox(uint size, ulong largeSize, Mp4Box parent, byte version, uint flags, ESDescriptor esDescriptor) : this(size, largeSize, parent, version, flags)
         {
-            Version = version;
-            Flags = flags;
             ESDescriptor = esDescriptor;
         }
 
@@ -5536,7 +5450,7 @@ namespace SharpMp4
         public override ulong CalculateSize()
         {
             ulong esDescriptorSize = ESDescriptor.CalculateSize();
-            return base.CalculateSize() + 4 + 1 + IsoReaderWriter.CalculatePackedNumberLength(esDescriptorSize) + esDescriptorSize;
+            return base.CalculateSize() + 1 + IsoReaderWriter.CalculatePackedNumberLength(esDescriptorSize) + esDescriptorSize;
         }
     }
 
@@ -5821,9 +5735,6 @@ namespace SharpMp4
         public const string TYPE = "mdat";
 
         private ITemporaryStorage _storage;
-
-        public long Position { get; private set; } = 0;
-
 
         private bool _disposedValue;
 
