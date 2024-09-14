@@ -537,24 +537,24 @@ namespace SharpMp4
     {
         public static IEnumerable<uint> FindVideoTrackID(this FragmentedMp4 fmp4)
         {
-            var videoTracks = fmp4.FindVideoTracks().Select(x => x.GetTkhd().TrackId);
+            var videoTracks = fmp4.FindVideoTracks()?.Select(x => x.GetTkhd().TrackId);
             return videoTracks;
         }
 
         public static IEnumerable<TrakBox> FindVideoTracks(this FragmentedMp4 fmp4)
         {
-            return fmp4.GetMoov().GetTrak().Where(x => x.GetMdia().GetMinf().GetVmhd() != null);
+            return fmp4.GetMoov()?.GetTrak()?.Where(x => x.GetMdia().GetMinf().GetVmhd() != null);
         }
 
         public static IEnumerable<uint> FindAudioTrackID(this FragmentedMp4 fmp4)
         {
-            var audioTracks = fmp4.FindAudioTracks().Select(x => x.GetTkhd().TrackId);
+            var audioTracks = fmp4.FindAudioTracks()?.Select(x => x.GetTkhd().TrackId);
             return audioTracks;
         }
 
         public static IEnumerable<TrakBox> FindAudioTracks(this FragmentedMp4 fmp4)
         {
-            return fmp4.GetMoov().GetTrak().Where(x => x.GetMdia().GetMinf().GetSmhd() != null);
+            return fmp4.GetMoov()?.GetTrak()?.Where(x => x.GetMdia().GetMinf().GetSmhd() != null);
         }
 
         public static AudioSampleEntryBox GetAudioSampleEntryBox(this TrakBox track)
@@ -3091,6 +3091,38 @@ namespace SharpMp4
         public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
         {
             IprpBox b = (IprpBox)box;
+            ulong size = 0;
+            foreach (var child in b.Children)
+            {
+                size += await Mp4Parser.WriteBox(stream, child);
+            }
+            return size;
+        }
+    }
+
+    public class IpcoBox : ContainerMp4Box
+    {
+        public const string TYPE = "ipco";
+
+        public IpcoBox(uint size, ulong largeSize, Mp4Box parent) : base(size, largeSize, TYPE, parent)
+        { }
+
+        public static async Task<Mp4Box> ParseAsync(uint size, ulong largeSize, string type, Mp4Box parent, Stream stream)
+        {
+            ContainerMp4Box ret = new IpcoBox(size, largeSize, parent);
+            ulong parsedSize = (ulong)GetParsedSize(size);
+            while (parsedSize < size)
+            {
+                var box = await Mp4Parser.ReadBox(ret, stream);
+                parsedSize += box.GetSize();
+                ret.Children.Add(box);
+            }
+            return ret;
+        }
+
+        public static async Task<ulong> BuildAsync(Mp4Box box, Stream stream)
+        {
+            IpcoBox b = (IpcoBox)box;
             ulong size = 0;
             foreach (var child in b.Children)
             {
@@ -7142,6 +7174,7 @@ namespace SharpMp4
             _boxParsers.Add(InfeBox.TYPE, InfeBox.ParseAsync);
             _boxParsers.Add(IprpBox.TYPE, IprpBox.ParseAsync);
             _boxParsers.Add(IrefBox.TYPE, IrefBox.ParseAsync);
+            _boxParsers.Add(IpcoBox.TYPE, IpcoBox.ParseAsync);
             _boxParsers.Add(MdatBox.TYPE, MdatBox.ParseAsync);
             _boxParsers.Add(MdhdBox.TYPE, MdhdBox.ParseAsync);
             _boxParsers.Add(MdiaBox.TYPE, MdiaBox.ParseAsync);
@@ -7223,6 +7256,7 @@ namespace SharpMp4
             _boxBuilders.Add(InfeBox.TYPE, InfeBox.BuildAsync);
             _boxBuilders.Add(IprpBox.TYPE, IprpBox.BuildAsync);
             _boxBuilders.Add(IrefBox.TYPE, IrefBox.BuildAsync);
+            _boxBuilders.Add(IpcoBox.TYPE, IpcoBox.BuildAsync);
             _boxBuilders.Add(MdatBox.TYPE, MdatBox.BuildAsync);
             _boxBuilders.Add(MdhdBox.TYPE, MdhdBox.BuildAsync);
             _boxBuilders.Add(MdiaBox.TYPE, MdiaBox.BuildAsync);
