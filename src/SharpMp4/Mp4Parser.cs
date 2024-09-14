@@ -874,7 +874,7 @@ namespace SharpMp4
 
         public static async Task<IList<byte[]>> ReadNextImageAsync(this FragmentedMp4 fmp4, MdatParserContext context)
         {
-            var locationBox = fmp4.GetMeta().GetIloc().Items[Math.Min(context.ImageIloc, fmp4.GetMeta().GetIloc().Items.Count - 1)];
+            var locationBox = fmp4.GetMeta().GetIloc().Items[Math.Min(context.ImageIloc++, fmp4.GetMeta().GetIloc().Items.Count - 1)];
             long position = (long)(locationBox.BaseOffset + locationBox.Extents[0].ExtentOffset);
             var stream = context.Mdat[0].GetStorage();
             stream.Seek(position, SeekOrigin.Begin);
