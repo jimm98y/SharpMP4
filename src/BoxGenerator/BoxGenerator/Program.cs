@@ -137,11 +137,19 @@ partial class Program
             Try(String("const unsigned int(32)[2]")),
             Try(String("template int(32)")),
             Try(String("template int(16)")),
+            Try(String("template unsigned int(30)")),
             Try(String("int(16)")),
+            Try(String("int(32)")),
             Try(String("const bit(16)")),
             Try(String("utf8string")),
             Try(String("bit(32)[6]")),
             Try(String("uint(32)")),
+            Try(String("unsigned int(6)")),
+            Try(String("unsigned int(2)")),
+            Try(String("unsigned int(1)")),
+            Try(String("signed int(32)")),
+            Try(String("unsigned int(8)[length]")),
+            Try(String("Box[]")),
             Try(String("int"))
             )
         .Labelled("field type");
@@ -208,6 +216,7 @@ partial class Program
                 }
                 catch(Exception e)
                 {
+                    Console.WriteLine(e.Message);
                     Console.WriteLine($"Failed to parse: {element.GetProperty("fourcc").GetString()}");
                     fail++;
                 }
