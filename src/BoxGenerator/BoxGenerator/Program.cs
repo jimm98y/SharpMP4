@@ -11,6 +11,23 @@ public abstract class PseudoCode
 {
 }
 
+public class PseudoClass : PseudoCode
+{
+    public string BoxName { get; }
+    public string BoxType { get; }
+    public IEnumerable<PseudoCode> Fields { get; }
+    public Maybe<IEnumerable<string>> Parameters { get; }
+
+    public PseudoClass(string boxName, string boxType, Maybe<IEnumerable<string>> parameters, IEnumerable<PseudoCode> fields)
+    {
+        BoxName = boxName;
+        BoxType = boxType;
+        Parameters = parameters;
+        Fields = fields;
+    }
+
+}
+
 public class PseudoField : PseudoCode
 {
     public PseudoField(string type, string name, string value, Maybe<string> comment)
@@ -147,10 +164,11 @@ partial class Program
     public static Parser<char, PseudoCode> CodeBlock => Try(LineComment(String("//")).Then(SkipWhitespaces)).Optional().Then(Block.Or(Field).Or(Method));
     public static Parser<char, IEnumerable<PseudoCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
-    public static Parser<char, (string BoxName, string BoxType, IEnumerable<PseudoCode> Fields)> Box =>
-        Map((boxName, boxType, fields) => (boxName, boxType, fields),
+    public static Parser<char, PseudoClass> Box =>
+        Map((boxName, boxType, parameters, fields) => new PseudoClass(boxName, boxType, parameters, fields),
             String("aligned(8)").Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier).Before(SkipWhitespaces).Before(String("extends")).Before(SkipWhitespaces),
-            BoxName.Then(SkipWhitespaces).Then(Char('(')).Then(BoxType).Before(Char(',')).Before(Parameters).Before(Char(')')).Before(SkipWhitespaces),
+            BoxName.Then(SkipWhitespaces).Then(Char('(')).Then(BoxType),
+            Try(Char(',').Then(Parameters)).Optional().Before(Char(')')).Before(SkipWhitespaces),
             Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}'))
         );
 
@@ -212,6 +230,8 @@ partial class Program
 		}
 	}
 }";
+        //@"aligned(8) class FileTypeBox extends GeneralTypeBox ('ftyp')
+        //{}";
 
 
         var result = Box.ParseOrThrow(code);
