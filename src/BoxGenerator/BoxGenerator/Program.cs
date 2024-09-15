@@ -1,6 +1,8 @@
 ﻿using Pidgin;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using static Pidgin.Parser<char>;
 using static Pidgin.Parser;
 
@@ -188,8 +190,33 @@ partial class Program
     static void Main(string[] args)
     {
         HelloFrom("Generated Code");
+        using (var json = File.OpenRead("boxes.json"))
+        using (JsonDocument document = JsonDocument.Parse(json, new JsonDocumentOptions()))
+        {
+            int success = 0;
+            int fail = 0;
 
-        string code =
+            foreach (JsonElement element in document.RootElement.GetProperty("entries").EnumerateArray())
+            {
+                string sample = element.GetProperty("syntax").GetString()!;
+
+                try
+                {
+                    var result = Box.ParseOrThrow(sample);
+                    Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()}");
+                    success++;
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine($"Failed to parse: {element.GetProperty("fourcc").GetString()}");
+                    fail++;
+                }
+            }
+
+            Console.WriteLine($"Succeessful: {success}, Failed: {fail}, Total: {success + fail}"); ;
+        }
+
+                string code =
 /*@"aligned(8) class MovieHeaderBox extends FullBox('mvhd', version, 0) {
 	if (version==1) {
 		unsigned int(64)	creation_time;
@@ -242,20 +269,7 @@ partial class Program
 		}
 	}
 }";*/
-"class timescaleentry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass timeoffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass sequenceoffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}";
-
-
-        var result = Box.ParseOrThrow(code);
-
-        Console.WriteLine($"Box Type: {result.BoxType}");
-        //foreach (var field in result.Fields)
-        //{
-        //    Console.WriteLine($"Field: {field.Type} {field.Name}");
-        //}
-
-
-
-
+"class AmbientViewingEnvironmentBox extends Box('amve'){\n\tunsigned int(32) ambient_illuminance; \n\tunsigned int(16) ambient_light_x;\n\tunsigned int(16) ambient_light_y;\n}";
 
     }
 

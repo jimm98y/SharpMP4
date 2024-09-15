@@ -9,6 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="boxes.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="boxes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Pidgin" Version="3.3.0" />
   </ItemGroup>
 
