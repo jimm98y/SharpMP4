@@ -1,8 +1,6 @@
 ﻿using Pidgin;
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using static Pidgin.Parser<char>;
 using static Pidgin.Parser;
 
@@ -222,64 +220,8 @@ partial class Program
                 }
             }
 
-            Console.WriteLine($"Succeessful: {success}, Failed: {fail}, Total: {success + fail}"); ;
+            Console.WriteLine($"Succeessful: {success}, Failed: {fail}, Total: {success + fail}"); 
         }
-
-                string code =
-/*@"aligned(8) class MovieHeaderBox extends FullBox('mvhd', version, 0) {
-	if (version==1) {
-		unsigned int(64)	creation_time;
-		unsigned int(64)	modification_time;
-		unsigned int(32)	timescale;
-		unsigned int(64)	duration;
-	} else { // version==0
-		unsigned int(32)	creation_time;
-		unsigned int(32)	modification_time;
-		unsigned int(32)	timescale;
-		unsigned int(32)	duration;
-	}
-	template int(32)	rate = 0x00010000;	// typically 1.0
-	template int(16)	volume = 0x0100;	// typically, full volume
-	const bit(16)	reserved = 0;
-	const unsigned int(32)[2]	reserved = 0;
-	template int(32)[9]	matrix =
-		{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };
-		// Unity matrix
-	bit(32)[6]	pre_defined = 0;
-	unsigned int(32)	next_track_ID;
-}";*/
-/*@"aligned(8) class ItemInfoEntry
-		extends FullBox('infe', version, flags) {
-	if ((version == 0) || (version == 1)) {
-		unsigned int(16) item_ID;
-		unsigned int(16) item_protection_index;
-		utf8string item_name;
-		utf8string content_type;
-		utf8string content_encoding; //optional
-	}
-	if (version == 1) {
-		unsigned int(32) extension_type; //optional
-		ItemInfoExtension(extension_type); //optional
-	}
-	if (version >= 2) {
-		if (version == 2) {
-			unsigned int(16) item_ID;
-		} else if (version == 3) {
-			unsigned int(32) item_ID;
-		}
-		unsigned int(16) item_protection_index;
-		unsigned int(32) item_type;
-		utf8string item_name;
-		if (item_type=='mime') {
-			utf8string content_type;
-			utf8string content_encoding; //optional
-		} else if (item_type == 'uri ') {
-			utf8string item_uri_type;
-		}
-	}
-}";*/
-"class AmbientViewingEnvironmentBox extends Box('amve'){\n\tunsigned int(32) ambient_illuminance; \n\tunsigned int(16) ambient_light_x;\n\tunsigned int(16) ambient_light_y;\n}";
-
     }
 
     static partial void HelloFrom(string name);
