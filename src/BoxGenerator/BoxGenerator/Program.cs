@@ -139,6 +139,7 @@ partial class Program
             Try(String("const bit(16)")),
             Try(String("utf8string")),
             Try(String("bit(32)[6]")),
+            Try(String("uint(32)")),
             Try(String("int"))
             )
         .Labelled("field type");
@@ -177,7 +178,7 @@ partial class Program
 
     public static Parser<char, PseudoClass> Box =>
         Map((boxName, boxType, parameters, fields) => new PseudoClass(boxName, boxType, parameters, fields),
-            String("aligned(8)").Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier).Before(SkipWhitespaces).Before(String("extends")).Before(SkipWhitespaces),
+            Try(String("aligned(8)")).Optional().Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier).Before(Try(String("()")).Optional()).Before(SkipWhitespaces).Before(String("extends")).Before(SkipWhitespaces),
             BoxName.Then(SkipWhitespaces).Then(Char('(')).Then(BoxType),
             Try(Char(',').Then(Parameters)).Optional().Before(Char(')')).Before(SkipWhitespaces),
             Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}'))
@@ -241,15 +242,7 @@ partial class Program
 		}
 	}
 }";*/
-@"aligned(8) class TimeToSampleBox
-	extends FullBox('stts', version = 0, 0) {
-	unsigned int(32)	entry_count;
-		int i;
-	for (i=0; i < entry_count; i++) {
-		unsigned int(32)	sample_count;
-		unsigned int(32)	sample_delta;
-	}
-}";
+"class timescaleentry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass timeoffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass sequenceoffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}";
 
 
         var result = Box.ParseOrThrow(code);
