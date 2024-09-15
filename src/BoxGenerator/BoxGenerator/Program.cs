@@ -16,9 +16,9 @@ public class PseudoClass : PseudoCode
     public string BoxName { get; }
     public string BoxType { get; }
     public IEnumerable<PseudoCode> Fields { get; }
-    public Maybe<IEnumerable<string>> Parameters { get; }
+    public Maybe<IEnumerable<(string Name, Maybe<string> Value)>> Parameters { get; }
 
-    public PseudoClass(string boxName, string boxType, Maybe<IEnumerable<string>> parameters, IEnumerable<PseudoCode> fields)
+    public PseudoClass(string boxName, string boxType, Maybe<IEnumerable<(string Name, Maybe<string> Value)>> parameters, IEnumerable<PseudoCode> fields)
     {
         BoxName = boxName;
         BoxType = boxType;
@@ -89,11 +89,20 @@ partial class Program
     public static Parser<char, string> Parameter =>
         SkipWhitespaces.Then(LetterOrDigit.ManyString());
 
-    public static Parser<char, IEnumerable<string>> Parameters =>
-        Parameter.SeparatedAndOptionallyTerminated(Char(','));
+    public static Parser<char, string> ParameterValue =>
+        Char('=').Then(SkipWhitespaces).Then(LetterOrDigit.ManyString());
+
+    public static Parser<char, (string Name, Maybe<string> Value)> ParameterFull =>
+        Map((name, value) => (name, value),
+            Parameter.Before(SkipWhitespaces),
+            Try(ParameterValue).Optional()
+        );
+
+    public static Parser<char, IEnumerable<(string Name, Maybe<string> Value)>> Parameters =>
+        ParameterFull.SeparatedAndOptionallyTerminated(Char(','));
 
     private static Parser<char, string> Parentheses =>
-    Char('(').Then(Rec(() => Expr).Until(Char(')'))).Select(x => $"({string.Concat(x)})");
+        Char('(').Then(Rec(() => Expr).Until(Char(')'))).Select(x => $"({string.Concat(x)})");
 
     private static Parser<char, string> Expr =>
         OneOf(
@@ -129,7 +138,9 @@ partial class Program
             Try(String("int(16)")),
             Try(String("const bit(16)")),
             Try(String("utf8string")),
-            Try(String("bit(32)[6]")))
+            Try(String("bit(32)[6]")),
+            Try(String("int"))
+            )
         .Labelled("field type");
 
     public static Parser<char, string> FieldName =>
@@ -155,7 +166,7 @@ partial class Program
 
     public static Parser<char, PseudoCode> Block =>
         Map((type, condition, content) => new PseudoBlock(type, condition, content),
-            OneOf(Try(String("else if")), Try(String("if")), Try(String("else"))).Before(SkipWhitespaces),
+            OneOf(Try(String("else if")), Try(String("if")), Try(String("else")), Try(String("for"))).Before(SkipWhitespaces),
             Try(Parentheses).Optional(),
             SkipWhitespaces.Then(Rec(() => CodeBlocks).Between(Char('{'), Char('}')))
         ).Select(x => (PseudoCode)x);
@@ -200,7 +211,7 @@ partial class Program
 	bit(32)[6]	pre_defined = 0;
 	unsigned int(32)	next_track_ID;
 }";*/
-@"aligned(8) class ItemInfoEntry
+/*@"aligned(8) class ItemInfoEntry
 		extends FullBox('infe', version, flags) {
 	if ((version == 0) || (version == 1)) {
 		unsigned int(16) item_ID;
@@ -229,9 +240,16 @@ partial class Program
 			utf8string item_uri_type;
 		}
 	}
+}";*/
+@"aligned(8) class TimeToSampleBox
+	extends FullBox('stts', version = 0, 0) {
+	unsigned int(32)	entry_count;
+		int i;
+	for (i=0; i < entry_count; i++) {
+		unsigned int(32)	sample_count;
+		unsigned int(32)	sample_delta;
+	}
 }";
-        //@"aligned(8) class FileTypeBox extends GeneralTypeBox ('ftyp')
-        //{}";
 
 
         var result = Box.ParseOrThrow(code);
