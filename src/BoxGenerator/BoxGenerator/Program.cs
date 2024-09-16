@@ -83,6 +83,9 @@ partial class Program
     public static Parser<char, string> BoxType =>
         Char('\'').Then(IdentifierWithSpace).Before(Char('\''));
 
+    public static Parser<char, string> OldBoxType =>
+        Char('\'').Then(Char('!')).Then(IdentifierWithSpace).Before(Char('\'')).Before(Char(',')).Before(SkipWhitespaces);
+
     public static Parser<char, string> BoxName =>
         Identifier.Labelled("box name");
 
@@ -201,7 +204,7 @@ partial class Program
     public static Parser<char, PseudoClass> Box =>
         Map((boxName, boxType, parameters, fields) => new PseudoClass(boxName, boxType, parameters, fields),
             Try(String("aligned(8)")).Optional().Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier).Before(Try(String("()")).Optional()).Before(SkipWhitespaces).Before(String("extends")).Before(SkipWhitespaces),
-            BoxName.Then(SkipWhitespaces).Then(Char('(')).Then(BoxType),
+            BoxName.Then(SkipWhitespaces).Then(Char('(')).Then(Try(OldBoxType).Optional()).Then(BoxType),
             Try(Char(',').Then(Parameters)).Optional().Before(Char(')')).Before(SkipWhitespaces),
             Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}'))
         );
