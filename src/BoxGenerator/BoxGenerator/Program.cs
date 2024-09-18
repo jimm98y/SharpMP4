@@ -154,6 +154,8 @@ partial class Program
             Try(String("utfstring")),
             Try(String("bit(32)[6]")),
             Try(String("uint(32)")),
+            Try(String("uint(64)")),
+            Try(String("uint(8)")),
             Try(String("unsigned int(6)")),
             Try(String("signed int(32)")),
             Try(String("signed int (16)")),
@@ -164,6 +166,9 @@ partial class Program
             Try(String("Box")),
             Try(String("SchemeTypeBox")),
             Try(String("SchemeInformationBox")),
+            Try(String("ItemPropertyContainerBox")),
+            Try(String("ItemPropertyAssociationBox")),
+            Try(String("char")),
             Try(String("int")),
             Try(String("loudness"))
             )
@@ -194,16 +199,22 @@ partial class Program
         Map((type, condition, content) => new PseudoBlock(type, condition, content),
             OneOf(Try(String("else if")), Try(String("if")), Try(String("else")), Try(String("for"))).Before(SkipWhitespaces),
             Try(Parentheses).Optional(),
-            SkipWhitespaces.Then(Rec(() => CodeBlocks).Between(Char('{'), Char('}')))
+            SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Rec(() => SingleBlock)))
         ).Select(x => (PseudoCode)x);
 
 
-    public static Parser<char, PseudoCode> CodeBlock => Try(LineComment(String("//")).Then(SkipWhitespaces)).Optional().Then(Block.Or(Field).Or(Method));
+    public static Parser<char, IEnumerable<PseudoCode>> SingleBlock => Try(Method).Or(Field).Repeat(1);
+
+    public static Parser<char, PseudoCode> CodeBlock => Try(LineComment(String("//")).Then(SkipWhitespaces)).Optional().Then(Try(Block).Or(Try(Method).Or(Field)));
     public static Parser<char, IEnumerable<PseudoCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
     public static Parser<char, PseudoClass> Box =>
         Map((boxName, boxType, parameters, fields) => new PseudoClass(boxName, boxType, parameters, fields),
-            Try(String("aligned(8)")).Optional().Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier).Before(Try(String("()")).Optional()).Before(SkipWhitespaces).Before(String("extends")).Before(SkipWhitespaces),
+            Try(String("aligned(8)")).Optional().Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier)
+                .Before(Try(String("()")).Optional())
+                .Before(SkipWhitespaces)
+                .Before(String("extends"))
+                .Before(SkipWhitespaces),
             BoxName.Then(SkipWhitespaces).Then(Char('(')).Then(Try(OldBoxType).Optional()).Then(BoxType),
             Try(Char(',').Then(Parameters)).Optional().Before(Char(')')).Before(SkipWhitespaces),
             Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}'))
