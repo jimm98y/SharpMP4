@@ -129,6 +129,23 @@ partial class Program
             .Labelled("line comment");
     }
 
+    public static Parser<char, string> SkipBlockComment<T, U>(Parser<char, T> blockCommentStart, Parser<char, U> blockCommentEnd)
+    {
+        if (blockCommentStart == null)
+        {
+            throw new ArgumentNullException(nameof(blockCommentStart));
+        }
+
+        if (blockCommentEnd == null)
+        {
+            throw new ArgumentNullException(nameof(blockCommentEnd));
+        }
+
+        return blockCommentStart
+            .Then(Any.SkipUntil(blockCommentEnd), (first, rest) => string.Concat(rest))
+            .Labelled("block comment");
+    }
+
     public static Parser<char, string> FieldType =>
         OneOf(
             Try(String("unsigned int(64)")),
@@ -150,6 +167,8 @@ partial class Program
             Try(String("int(32)")),
             Try(String("const bit(16)")),
             Try(String("const bit(1)")),
+            Try(String("bit(2)")),
+            Try(String("bit(7)")),
             Try(String("utf8string")),
             Try(String("utfstring")),
             Try(String("bit(32)[6]")),
@@ -192,14 +211,14 @@ partial class Program
         Map((name, value, comment) => new PseudoMethod(name, string.Concat(value), comment),
             MethodName.Before(Char('(')),
             Any.Until(Char(')')).Before(Char(';')).Before(SkipWhitespaces),
-            Try(LineComment(String("//"))).Optional()
+            Try(LineComment(String("//"))).Or(Try(SkipBlockComment(String("/*"), String("*/")))).Optional()
         ).Select(x => (PseudoCode)x);
 
     public static Parser<char, PseudoCode> Block =>
         Map((type, condition, content) => new PseudoBlock(type, condition, content),
-            OneOf(Try(String("else if")), Try(String("if")), Try(String("else")), Try(String("for"))).Before(SkipWhitespaces),
-            Try(Parentheses).Optional(),
-            SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Rec(() => SingleBlock)))
+            OneOf(Try(String("else if")), Try(String("if")), Try(String("else")), Try(String("for"))),
+            Try(SkipWhitespaces.Then(Parentheses)).Optional(),
+            SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
         ).Select(x => (PseudoCode)x);
 
 
@@ -210,8 +229,8 @@ partial class Program
 
     public static Parser<char, PseudoClass> Box =>
         Map((boxName, boxType, parameters, fields) => new PseudoClass(boxName, boxType, parameters, fields),
-            Try(String("aligned(8)")).Optional().Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier)
-                .Before(Try(String("()")).Optional())
+            Try(String("aligned(8)")).Optional().Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier).Before(SkipWhitespaces)
+                .Before(Try(String("()")).Or(Try(String("(bit(24) flags)"))).Optional())
                 .Before(SkipWhitespaces)
                 .Before(String("extends"))
                 .Before(SkipWhitespaces),
