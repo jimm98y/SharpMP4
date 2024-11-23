@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxGenerator", "BoxGenerator\BoxGenerator.csproj", "{B53D03D4-E6A4-423E-9657-4DA7CDFA2FE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoxGenerator", "BoxGenerator\BoxGenerator.csproj", "{B53D03D4-E6A4-423E-9657-4DA7CDFA2FE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp4BoxGenerator", "Mp4BoxGenerator\Mp4BoxGenerator.csproj", "{EDE2FB71-6D04-460B-9CDA-9624E735CB42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mp4BoxGenerator", "Mp4BoxGenerator\Mp4BoxGenerator.csproj", "{EDE2FB71-6D04-460B-9CDA-9624E735CB42}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoxGenerator2", "BoxGenerator2\BoxGenerator2.csproj", "{1DAF2B53-1394-4C8E-B4DE-0DD3FF0D20A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DeadEnds", "DeadEnds", "{5A7C1057-2384-4064-B2E5-BB02EF3BDBE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +25,18 @@ Global
 		{EDE2FB71-6D04-460B-9CDA-9624E735CB42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDE2FB71-6D04-460B-9CDA-9624E735CB42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDE2FB71-6D04-460B-9CDA-9624E735CB42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DAF2B53-1394-4C8E-B4DE-0DD3FF0D20A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DAF2B53-1394-4C8E-B4DE-0DD3FF0D20A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DAF2B53-1394-4C8E-B4DE-0DD3FF0D20A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DAF2B53-1394-4C8E-B4DE-0DD3FF0D20A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B53D03D4-E6A4-423E-9657-4DA7CDFA2FE7} = {5A7C1057-2384-4064-B2E5-BB02EF3BDBE4}
+		{EDE2FB71-6D04-460B-9CDA-9624E735CB42} = {5A7C1057-2384-4064-B2E5-BB02EF3BDBE4}
+		{1DAF2B53-1394-4C8E-B4DE-0DD3FF0D20A9} = {5A7C1057-2384-4064-B2E5-BB02EF3BDBE4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CB1F179-0305-4D17-B734-AFADABC7B9BC}

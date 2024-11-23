@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Pegasus" Version="4.1.0" />
     <PackageReference Include="Pidgin" Version="3.3.0" />
   </ItemGroup>
 
