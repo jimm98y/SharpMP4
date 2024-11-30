@@ -103,8 +103,9 @@ partial class Program
     public static Parser<char, string> BoxName =>
         Identifier.Labelled("box name");
 
+    public static Parser<char, char> LetterOrDigitOrUnderscore { get; } = Token(c => char.IsLetterOrDigit(c) || c == '_').Labelled("letter or digit or underscore");
     public static Parser<char, string> Parameter =>
-        SkipWhitespaces.Then(LetterOrDigit.ManyString());
+        SkipWhitespaces.Then(LetterOrDigitOrUnderscore.ManyString());
 
     public static Parser<char, string> ParameterValue =>
         Char('=').Then(SkipWhitespaces).Then(LetterOrDigit.ManyString());
@@ -165,7 +166,10 @@ partial class Program
             Try(String("unsigned int(64)")),
             Try(String("template int(32)[9]")),
             Try(String("unsigned int(32)")),
+            Try(String("unsigned int(24)")),
             Try(String("unsigned int(16)")),
+            Try(String("unsigned int(12)")),
+            Try(String("unsigned int(15)")),
             Try(String("unsigned int(8)[length]")),
             Try(String("unsigned int(8)")),
             Try(String("unsigned int(7)")),
@@ -174,16 +178,38 @@ partial class Program
             Try(String("unsigned int(3)")),
             Try(String("unsigned int(2)")),
             Try(String("unsigned int(1)")),
+            Try(String("unsigned int(f(pattern_size_code))")),
+            Try(String("unsigned int(f(index_size_code))")),
+            Try(String("unsigned int(f(count_size_code))")),
+            Try(String("unsigned int(base_offset_size*8)")),
+            Try(String("unsigned int(offset_size*8)")),
+            Try(String("unsigned int(length_size*8)")),
+            Try(String("unsigned int(index_size*8)")),
+            Try(String("unsigned int(field_size)")),
+            Try(String("unsigned int((length_size_of_traf_num+1) * 8)")),
+            Try(String("unsigned int((length_size_of_trun_num+1) * 8)")),
+            Try(String("unsigned int((length_size_of_sample_num+1) * 8)")),
             Try(String("const unsigned int(32)[2]")),
+            Try(String("const unsigned int(32)[3]")),
+            Try(String("const unsigned int(32)")),
+            Try(String("const unsigned int(16)")),
+            Try(String("const unsigned int(26)")),
             Try(String("template int(32)")),
             Try(String("template int(16)")),
             Try(String("template unsigned int(30)")),
+            Try(String("template unsigned int(32)")),
             Try(String("int(16)")),
             Try(String("int(32)")),
             Try(String("const bit(16)")),
             Try(String("const bit(1)")),
+            Try(String("bit(1)")),
             Try(String("bit(2)")),
+            Try(String("bit(3)")),
+            Try(String("bit(4)")),
+            Try(String("bit(5)")),
             Try(String("bit(7)")),
+            Try(String("bit(8)")),
+            Try(String("bit(8 ceil(size / 8) \u2013 size)")),
             Try(String("utf8string")),
             Try(String("utfstring")),
             Try(String("bit(32)[6]")),
@@ -195,6 +221,7 @@ partial class Program
             Try(String("signed int (16)")),
             Try(String("signed int (8)")),
             Try(String("signed int(64)")),
+            Try(String("signed   int(32)")),
             Try(String("int(4)")),
             Try(String("Box[]")),
             Try(String("Box")),
@@ -205,7 +232,34 @@ partial class Program
             Try(String("char")),
             Try(String("int")),
             Try(String("loudness")),
-            Try(String("ICC_profile"))
+            Try(String("ICC_profile")),
+            Try(String("OriginalFormatBox(fmt)")),
+            Try(String("DataEntryBaseBox(entry_type, entry_flags)")),
+            Try(String("ItemInfoEntry[ entry_count ]")),
+            Try(String("TypeCombinationBox")),
+            Try(String("FilePartitionBox")),
+            Try(String("FECReservoirBox")),
+            Try(String("FileReservoirBox")),
+            Try(String("PartitionEntry")),
+            Try(String("FDSessionGroupBox")),
+            Try(String("GroupIdToNameBox")),
+            Try(String("base64string")),
+            Try(String("ProtectionSchemeInfoBox")),
+            Try(String("SingleItemTypeReferenceBox")),
+            Try(String("SingleItemTypeReferenceBoxLarge")),
+            Try(String("HandlerBox(handler_type)")),
+            Try(String("PrimaryItemBox")),
+            Try(String("DataInformationBox")),
+            Try(String("ItemLocationBox")),
+            Try(String("ItemProtectionBox")),
+            Try(String("ItemInfoBox")),
+            Try(String("IPMPControlBox")),
+            Try(String("ItemReferenceBox")),
+            Try(String("ItemDataBox")),
+            Try(String("TrackReferenceTypeBox []")),
+            Try(String("SampleGroupDescriptionEntry (grouping_type)")),
+            Try(String("size += 5")), // WORKAROUND
+            Try(String("totalPatternLength = 0")) // WORKAROUND
             )
         .Labelled("field type");
 
@@ -249,10 +303,20 @@ partial class Program
     public static Parser<char, PseudoCode> CodeBlock => Try(Block).Or(Try(Method).Or(Try(Field).Or(Comment)));
     public static Parser<char, IEnumerable<PseudoCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
+
+    public static Parser<char, string> ClassType =>
+        OneOf(
+            Try(String("()")),
+            Try(String("(bit(24) flags)")),
+            Try(String("(fmt)")),
+            Try(String("(codingname)")),
+            Try(String("(handler_type)"))
+            ).Labelled("class type");
+
     public static Parser<char, PseudoClass> Box =>
         Map((boxName, boxType, parameters, fields) => new PseudoClass(boxName, boxType, parameters, fields),
             Try(String("aligned(8)")).Optional().Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier).Before(SkipWhitespaces)
-                .Before(Try(String("()")).Or(Try(String("(bit(24) flags)"))).Optional())
+                .Before(ClassType.Optional())
                 .Before(SkipWhitespaces)
                 .Before(String("extends"))
                 .Before(SkipWhitespaces),
@@ -264,42 +328,27 @@ partial class Program
 
     static void Main(string[] args)
     {
-        Box.ParseOrThrow("aligned(8) class DownMixInstructions extends FullBox('dmix', version, flags=0) {\n" +
-            "\tif (version >= 1) {\n" +
-            "\t\tbit(1) reserved = 0;\n" +
-            "\t\tbit(7) downmix_instructions_count;\n" +
-            "\t} else {\n" +
-            "\t\tint downmix_instructions_count = 1;\n" +
-            "\t}\n" +
-            "\tfor (a=1; a<=downmix_instructions_count; a++) { \n" +
-            "\t\tunsigned int(8) targetLayout;\n" +
-            " \t\tunsigned int(1) reserved = 0;\n" +
-            "\t\tunsigned int(7) targetChannelCount;\n" +
-            "\t\tbit(1) in_stream; \n" +
-            "\t\tunsigned int(7) downmix_ID;\n" +
-            "\t\tif (in_stream==0) \n" +
-            "\t\t{\t// downmix coefficients are out of stream and supplied here\n" +
-            "\t\t\tint i, j;\n\t\t\tif (version >= 1) {\n" +
-            "\t\t\t\tbit(4) bs_downmix_offset;\n" +
-            "\t\t\t\tint size = 4;\n" +
-            "\t\t\t\tfor (i=1; i <= targetChannelCount; i++){\n" +
-            "\t\t\t\t\tfor (j=1; j <= baseChannelCount; j++) {\n" +
-            "\t\t\t\t\t\tbit(5) bs_downmix_coefficient_v1;\n" +
-            "\t\t\t\t\t\tsize += 5;\n" +
-            "\t\t\t\t\t}\n" +
-            "\t\t\t\t}\n" +
-            "\t\t\t\tbit(8 ceil(size / 8) \u2013 size) reserved = 0; // byte align\n" +
-            "\t\t\t} else {\n" +
-            "\t\t\t\tfor (i=1; i <= targetChannelCount; i++){\n" +
-            "\t\t\t\t\tfor (j=1; j <= baseChannelCount; j++) {\n" +
-            "\t\t\t\t\t\tbit(4) bs_downmix_coefficient;\n" +
-            "\t\t\t\t\t}\n" +
-            "\t\t\t\t}\n" +
-            "\t\t\t}\n" +
-            "\t\t}\n" +
-            "\t}\n" +
-            "}");
-
+        Box.ParseOrThrow(
+            "aligned(8) class TrackRunBox\n" +
+            "\t\t\textends FullBox('trun', version, tr_flags) {\n" +
+            "\tunsigned int(32)\tsample_count;\n" +
+            "\t// the following are optional fields\n" +
+            "\tsigned int(32)\tdata_offset;\n" +
+            "\tunsigned int(32)\tfirst_sample_flags;\n" +
+            "\t// all fields in the following array are optional\n" +
+            "\t// as indicated by bits set in the tr_flags\n" +
+            "\t{\n" +
+            "\t\tunsigned int(32)\tsample_duration;\n" +
+            "\t\tunsigned int(32)\tsample_size;\n" +
+            "\t\tunsigned int(32)\tsample_flags\n" +
+            "\t\tif (version == 0)\n" +
+            "\t\t\t{ unsigned int(32)\tsample_composition_time_offset; }\n" +
+            "\t\telse\n" +
+            "\t\t\t{ signed int(32)\t\tsample_composition_time_offset; }\n" +
+            "\t}[ sample_count ]\n" +
+            "}"
+            );
+        
         HelloFrom("Generated Code");
         using (var json = File.OpenRead("boxes.json"))
         using (JsonDocument document = JsonDocument.Parse(json, new JsonDocumentOptions()))
