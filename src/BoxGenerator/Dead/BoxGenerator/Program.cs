@@ -44,6 +44,18 @@ public class PseudoField : PseudoCode
     public Maybe<string> Comment { get; }
 }
 
+
+public class PseudoComment : PseudoCode
+{
+    public PseudoComment(string comment)
+    {
+        Comment = comment;
+    }
+
+    public string Comment { get; }
+}
+
+
 public class PseudoMethod : PseudoCode
 {
     public PseudoMethod(string name, string value, Maybe<string> comment)
@@ -200,6 +212,12 @@ partial class Program
     public static Parser<char, string> FieldName =>
         Identifier.Labelled("field name");
 
+    public static Parser<char, PseudoCode> Comment =>
+    Map((comment) => new PseudoComment(comment),
+        Try(LineComment(String("//"))).Or(SkipBlockComment(String("/*"), String("*/")))
+    ).Select(x => (PseudoCode)x);
+
+
     public static Parser<char, PseudoCode> Field =>
         Map((type, name, value, comment) => new PseudoField(type, name, string.Concat(value), comment),
             FieldType.Before(SkipWhitespaces),
@@ -220,16 +238,15 @@ partial class Program
 
     public static Parser<char, PseudoCode> Block =>
         Map((type, condition, comment, content) => new PseudoBlock(type, condition, comment, content),
-            OneOf(Try(String("else if")), Try(String("if")), Try(String("else")), Try(String("for"))),
-            SkipWhitespaces.Then(Try(Parentheses)).Optional(),
+            OneOf(Try(String("else if")), Try(String("if")), Try(String("else")), Try(String("for"))).Before(SkipWhitespaces),
+            Try(Parentheses).Optional(),
             SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(SkipBlockComment(String("/*"), String("*/")))).Optional()),
             SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
         ).Select(x => (PseudoCode)x);
 
 
     public static Parser<char, IEnumerable<PseudoCode>> SingleBlock => Try(Method).Or(Field).Repeat(1);
-
-    public static Parser<char, PseudoCode> CodeBlock => Try(LineComment(String("//")).Then(SkipWhitespaces)).Optional().Then(Try(Block).Or(Try(Method).Or(Field)));
+    public static Parser<char, PseudoCode> CodeBlock => Try(Block).Or(Try(Method).Or(Try(Field).Or(Comment)));
     public static Parser<char, IEnumerable<PseudoCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
     public static Parser<char, PseudoClass> Box =>
@@ -247,58 +264,41 @@ partial class Program
 
     static void Main(string[] args)
     {
-        Box.ParseOrThrow(
-            "aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {\tif (version==0) {\n" +
-            "\t\tunsigned int(8) stream_structure;\n" +
-            "\t\tif (stream_structure & channelStructured) {\n" +
-            "\t\t\tunsigned int(8) definedLayout;\n" +
-            " \t\t\tif (definedLayout==0) {\n" +
-            "\t\t\t\tfor (i = 1 ; i <= layout_channel_count ; i++) {\n" +
-            "\t\t\t\t\t//  layout_channel_count comes from the sample entry\n" +
-            "\t\t\t\t\tunsigned int(8) speaker_position;\n" +
-            "\t\t\t\t\tif (speaker_position == 126) {\t// explicit position\n" +
-            "\t\t\t\t\t\tsigned int (16) azimuth;\n" +
-            "\t\t\t\t\t\tsigned int (8)  elevation;\n" +
-            "\t\t\t\t\t}\n" +
-            "\t\t\t\t}\n" +
-            "\t\t\t} else {\n" +
-            "\t\t\t\tunsigned int(64)\tomittedChannelsMap; \n" +
-            "\t\t\t\t\t\t// a \u20181\u2019 bit indicates \u2018not in this track\u2019\n" +
-            "\t\t\t}\n" +
-            "\t\t}\n" +
-            "\t\tif (stream_structure & objectStructured) {\n" +
-            "\t\t\tunsigned int(8) object_count;\n" +
-            "\t\t}\n" +
+        Box.ParseOrThrow("aligned(8) class DownMixInstructions extends FullBox('dmix', version, flags=0) {\n" +
+            "\tif (version >= 1) {\n" +
+            "\t\tbit(1) reserved = 0;\n" +
+            "\t\tbit(7) downmix_instructions_count;\n" +
             "\t} else {\n" +
-            "\t\tunsigned int(4) stream_structure;\n" +
-            "\t\tunsigned int(4) format_ordering;\n" +
-            "\t\tunsigned int(8) baseChannelCount;\n" +
-            "\t\tif (stream_structure & channelStructured) {\n" +
-            "\t\t\tunsigned int(8) definedLayout;\n" +
-            "\t\t\tif (definedLayout==0) {\n" +
-            "\t\t\t\tunsigned int(8) layout_channel_count;\n" +
-            "\t\t\t\tfor (i = 1 ; i <= layout_channel_count ; i++) {\n" +
-            "\t\t\t\t\tunsigned int(8) speaker_position;\n" +
-            "\t\t\t\t\tif (speaker_position == 126) {\t// explicit position\n" +
-            "\t\t\t\t\t\tsigned int (16) azimuth;\n" +
-            "\t\t\t\t\t\tsigned int (8)  elevation;\n" +
+            "\t\tint downmix_instructions_count = 1;\n" +
+            "\t}\n" +
+            "\tfor (a=1; a<=downmix_instructions_count; a++) { \n" +
+            "\t\tunsigned int(8) targetLayout;\n" +
+            " \t\tunsigned int(1) reserved = 0;\n" +
+            "\t\tunsigned int(7) targetChannelCount;\n" +
+            "\t\tbit(1) in_stream; \n" +
+            "\t\tunsigned int(7) downmix_ID;\n" +
+            "\t\tif (in_stream==0) \n" +
+            "\t\t{\t// downmix coefficients are out of stream and supplied here\n" +
+            "\t\t\tint i, j;\n\t\t\tif (version >= 1) {\n" +
+            "\t\t\t\tbit(4) bs_downmix_offset;\n" +
+            "\t\t\t\tint size = 4;\n" +
+            "\t\t\t\tfor (i=1; i <= targetChannelCount; i++){\n" +
+            "\t\t\t\t\tfor (j=1; j <= baseChannelCount; j++) {\n" +
+            "\t\t\t\t\t\tbit(5) bs_downmix_coefficient_v1;\n" +
+            "\t\t\t\t\t\tsize += 5;\n" +
             "\t\t\t\t\t}\n" +
             "\t\t\t\t}\n" +
+            "\t\t\t\tbit(8 ceil(size / 8) \u2013 size) reserved = 0; // byte align\n" +
             "\t\t\t} else {\n" +
-            "\t\t\t\tint(4) reserved = 0;\n" +
-            "\t\t\t\tunsigned int(3) channel_order_definition;\n" +
-            "\t\t\t\tunsigned int(1) omitted_channels_present;\n" +
-            "\t\t\t\tif (omitted_channels_present == 1) {\n" +
-            "\t\t\t\t\tunsigned int(64)\tomittedChannelsMap; \n" +
-            "\t\t\t\t\t\t\t// a \u20181\u2019 bit indicates \u2018not in this track\u2019\n" +
+            "\t\t\t\tfor (i=1; i <= targetChannelCount; i++){\n" +
+            "\t\t\t\t\tfor (j=1; j <= baseChannelCount; j++) {\n" +
+            "\t\t\t\t\t\tbit(4) bs_downmix_coefficient;\n" +
+            "\t\t\t\t\t}\n" +
             "\t\t\t\t}\n" +
             "\t\t\t}\n" +
-            "\t\t}\n" +
-            "\t\tif (stream_structure & objectStructured) {\n" +
-            "\t\t\t\t\t\t\t// object_count is derived from baseChannelCount\n" +
             "\t\t}\n" +
             "\t}\n" +
-            "}\n");
+            "}");
 
         HelloFrom("Generated Code");
         using (var json = File.OpenRead("boxes.json"))
