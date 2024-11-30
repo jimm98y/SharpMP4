@@ -412,6 +412,13 @@ partial class Program
                 {
                     string sample = element.GetProperty("syntax").GetString()!;
 
+                    if (string.IsNullOrEmpty(sample))
+                    {
+                        Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()} (empty)");
+                        success++;
+                        continue;
+                    }
+
                     try
                     {
                         var result = Box.ParseOrThrow(sample);

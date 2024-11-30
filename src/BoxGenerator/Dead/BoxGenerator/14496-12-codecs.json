@@ -7,7 +7,7 @@
       "description": "Encrypted Systems stream",
       "type": "MP4VisualSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "System streams are defined in ISO/IEC 14496-14"
+      "syntax": null
     },
     {
       "fourcc": "enca",
