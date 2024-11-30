@@ -1,0 +1,35 @@
+﻿{
+  "name": "Boxes",
+  "description": "Boxes (also called atoms)",
+  "entries": [
+    {
+      "fourcc": "vttC",
+      "description": "WebVTTConfigurationBox",
+      "containers": [
+        {
+          "PlainTextSampleEntry": [ "wvtt" ]
+        }
+      ],
+      "type": "Box",
+      "syntax": "class WebVTTConfigurationBox extends Box('vttC') {\n\tboxstring\tconfig;\n}"
+    },
+    {
+      "fourcc": "vlab",
+      "description": "WebVTT Source Label",
+      "containers": [
+        {
+          "PlainTextSampleEntry": [ "wvtt" ]
+        }
+      ],
+      "type": "Box",
+      "syntax": "class WebVTTSourceLabelBox extends Box('vlab') {\n\tboxstring\tsource_label;\n}"
+    },
+    {
+      "fourcc": "wvtt",
+      "description": "WebVTT data",
+      "containers": [ "stsd" ],
+      "type": "PlainTextSampleEntry",
+      "syntax": "class WVTTSampleEntry() extends PlainTextSampleEntry ('wvtt'){\n\tWebVTTConfigurationBox\tconfig;\n\tWebVTTSourceLabelBox\t\tlabel;\t// recommended\n\tMPEG4BitRateBox (); \t\t\t\t\t// optional\n}"
+    }
+  ]
+}

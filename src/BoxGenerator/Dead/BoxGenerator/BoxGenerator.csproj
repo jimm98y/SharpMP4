@@ -9,13 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="boxes.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="boxes.json">
+    <Content Include="14496-12-boxes.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="14496-15-boxes.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+	  <Content Include="14496-30-boxes.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="23008-12-boxes.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
   </ItemGroup>
 
   <ItemGroup>

@@ -190,6 +190,7 @@ partial class Program
             Try(String("unsigned int(3)")),
             Try(String("unsigned int(2)")),
             Try(String("unsigned int(1)")),
+            Try(String("unsigned int (32)")),
             Try(String("unsigned int(f(pattern_size_code))")),
             Try(String("unsigned int(f(index_size_code))")),
             Try(String("unsigned int(f(count_size_code))")),
@@ -222,6 +223,7 @@ partial class Program
             Try(String("bit(3)")),
             Try(String("bit(4)")),
             Try(String("bit(5)")),
+            Try(String("bit(6)")),
             Try(String("bit(7)")),
             Try(String("bit(8)")),
             Try(String("bit(8 ceil(size / 8) \u2013 size)")),
@@ -350,38 +352,51 @@ partial class Program
     static void Main(string[] args)
     {
         Box.ParseOrThrow(
-            "class MetadataKeyTableBox extends Box('keys') { \n" +
-            "\tMetadataKeyBox[];\n" +
+            "class BufferingBox extends Box('buff'){\n" +
+            "\tunsigned int(16) \t\toperating_point_count;\n" +
+            "\tfor (i = 0; i < operating_point_count; i++){\n" +
+            "\t\tunsigned int (32) \tbyte_rate;\n" +
+            "\t\tunsigned int (32) \tcpb_size;\n" +
+            "\t\tunsigned int (32) \tdpb_size;\n" +
+            "\t\tunsigned int (32)\t\tinit_cpb_delay;\n" +
+            "\t\tunsigned int (32) \tinit_dpb_delay;\n" +
+            "\t}\n" +
             "}"
             );
         
         HelloFrom("Generated Code");
-        using (var json = File.OpenRead("boxes.json"))
-        using (JsonDocument document = JsonDocument.Parse(json, new JsonDocumentOptions()))
+
+        string[] files = { "14496-12-boxes.json", "14496-15-boxes.json", "14496-30-boxes.json", "23008-12-boxes.json" };
+        int success = 0;
+        int fail = 0;
+
+        foreach (var file in files)
         {
-            int success = 0;
-            int fail = 0;
-
-            foreach (JsonElement element in document.RootElement.GetProperty("entries").EnumerateArray())
+            using (var json = File.OpenRead(file))
+            using (JsonDocument document = JsonDocument.Parse(json, new JsonDocumentOptions()))
             {
-                string sample = element.GetProperty("syntax").GetString()!;
 
-                try
+                foreach (JsonElement element in document.RootElement.GetProperty("entries").EnumerateArray())
                 {
-                    var result = Box.ParseOrThrow(sample);
-                    Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()}");
-                    success++;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine($"Failed to parse: {element.GetProperty("fourcc").GetString()}");
-                    fail++;
+                    string sample = element.GetProperty("syntax").GetString()!;
+
+                    try
+                    {
+                        var result = Box.ParseOrThrow(sample);
+                        Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()}");
+                        success++;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine($"Failed to parse: {element.GetProperty("fourcc").GetString()}");
+                        fail++;
+                    }
                 }
             }
-
-            Console.WriteLine($"Succeessful: {success}, Failed: {fail}, Total: {success + fail}");
         }
+
+        Console.WriteLine($"Succeessful: {success}, Failed: {fail}, Total: {success + fail}");
     }
 
     static partial void HelloFrom(string name);
