@@ -30,7 +30,7 @@ public class PseudoClass : PseudoCode
 
 public class PseudoField : PseudoCode
 {
-    public PseudoField(string type, string name, string value, Maybe<string> comment)
+    public PseudoField(string type, Maybe<string> name, string value, Maybe<string> comment)
     {
         Type = type;
         Name = name;
@@ -39,7 +39,7 @@ public class PseudoField : PseudoCode
     }
 
     public string Type { get; }
-    public string Name { get; }
+    public Maybe<string> Name { get; }
     public string Value { get; }
     public Maybe<string> Comment { get; }
 }
@@ -60,15 +60,17 @@ public class PseudoMethod : PseudoCode
 
 public class PseudoBlock : PseudoCode
 {
-    public PseudoBlock(string type, Maybe<string> condition, IEnumerable<PseudoCode> content)
+    public PseudoBlock(string type, Maybe<string> condition, Maybe<string> comment, IEnumerable<PseudoCode> content)
     {
         Type = type;
         Condition = condition;
         Content = content;
+        Comment = comment;
     }
 
     public string Type { get; }
     public Maybe<string> Condition { get; }
+    public Maybe<string> Comment { get; }
     public IEnumerable<PseudoCode> Content { get; }
 }
 
@@ -154,6 +156,7 @@ partial class Program
             Try(String("unsigned int(16)")),
             Try(String("unsigned int(8)[length]")),
             Try(String("unsigned int(8)")),
+            Try(String("unsigned int(7)")),
             Try(String("unsigned int(5)[3]")),
             Try(String("unsigned int(4)")),
             Try(String("unsigned int(3)")),
@@ -189,7 +192,8 @@ partial class Program
             Try(String("ItemPropertyAssociationBox")),
             Try(String("char")),
             Try(String("int")),
-            Try(String("loudness"))
+            Try(String("loudness")),
+            Try(String("ICC_profile"))
             )
         .Labelled("field type");
 
@@ -199,8 +203,8 @@ partial class Program
     public static Parser<char, PseudoCode> Field =>
         Map((type, name, value, comment) => new PseudoField(type, name, string.Concat(value), comment),
             FieldType.Before(SkipWhitespaces),
-            FieldName.Before(SkipWhitespaces),
-            Any.Until(Char(';')).Before(SkipWhitespaces),
+            Try(FieldName.Before(SkipWhitespaces)).Optional(),
+            Try(Any.Until(Char(';')).Before(SkipWhitespaces)).Or(Try(Any.Until(Char('\n')).Before(SkipWhitespaces))).Optional(),
             Try(LineComment(String("//"))).Optional()
         ).Select(x => (PseudoCode)x);
 
@@ -215,9 +219,10 @@ partial class Program
         ).Select(x => (PseudoCode)x);
 
     public static Parser<char, PseudoCode> Block =>
-        Map((type, condition, content) => new PseudoBlock(type, condition, content),
+        Map((type, condition, comment, content) => new PseudoBlock(type, condition, comment, content),
             OneOf(Try(String("else if")), Try(String("if")), Try(String("else")), Try(String("for"))),
-            Try(SkipWhitespaces.Then(Parentheses)).Optional(),
+            SkipWhitespaces.Then(Try(Parentheses)).Optional(),
+            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(SkipBlockComment(String("/*"), String("*/")))).Optional()),
             SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
         ).Select(x => (PseudoCode)x);
 
@@ -242,6 +247,59 @@ partial class Program
 
     static void Main(string[] args)
     {
+        Box.ParseOrThrow(
+            "aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {\tif (version==0) {\n" +
+            "\t\tunsigned int(8) stream_structure;\n" +
+            "\t\tif (stream_structure & channelStructured) {\n" +
+            "\t\t\tunsigned int(8) definedLayout;\n" +
+            " \t\t\tif (definedLayout==0) {\n" +
+            "\t\t\t\tfor (i = 1 ; i <= layout_channel_count ; i++) {\n" +
+            "\t\t\t\t\t//  layout_channel_count comes from the sample entry\n" +
+            "\t\t\t\t\tunsigned int(8) speaker_position;\n" +
+            "\t\t\t\t\tif (speaker_position == 126) {\t// explicit position\n" +
+            "\t\t\t\t\t\tsigned int (16) azimuth;\n" +
+            "\t\t\t\t\t\tsigned int (8)  elevation;\n" +
+            "\t\t\t\t\t}\n" +
+            "\t\t\t\t}\n" +
+            "\t\t\t} else {\n" +
+            "\t\t\t\tunsigned int(64)\tomittedChannelsMap; \n" +
+            "\t\t\t\t\t\t// a \u20181\u2019 bit indicates \u2018not in this track\u2019\n" +
+            "\t\t\t}\n" +
+            "\t\t}\n" +
+            "\t\tif (stream_structure & objectStructured) {\n" +
+            "\t\t\tunsigned int(8) object_count;\n" +
+            "\t\t}\n" +
+            "\t} else {\n" +
+            "\t\tunsigned int(4) stream_structure;\n" +
+            "\t\tunsigned int(4) format_ordering;\n" +
+            "\t\tunsigned int(8) baseChannelCount;\n" +
+            "\t\tif (stream_structure & channelStructured) {\n" +
+            "\t\t\tunsigned int(8) definedLayout;\n" +
+            "\t\t\tif (definedLayout==0) {\n" +
+            "\t\t\t\tunsigned int(8) layout_channel_count;\n" +
+            "\t\t\t\tfor (i = 1 ; i <= layout_channel_count ; i++) {\n" +
+            "\t\t\t\t\tunsigned int(8) speaker_position;\n" +
+            "\t\t\t\t\tif (speaker_position == 126) {\t// explicit position\n" +
+            "\t\t\t\t\t\tsigned int (16) azimuth;\n" +
+            "\t\t\t\t\t\tsigned int (8)  elevation;\n" +
+            "\t\t\t\t\t}\n" +
+            "\t\t\t\t}\n" +
+            "\t\t\t} else {\n" +
+            "\t\t\t\tint(4) reserved = 0;\n" +
+            "\t\t\t\tunsigned int(3) channel_order_definition;\n" +
+            "\t\t\t\tunsigned int(1) omitted_channels_present;\n" +
+            "\t\t\t\tif (omitted_channels_present == 1) {\n" +
+            "\t\t\t\t\tunsigned int(64)\tomittedChannelsMap; \n" +
+            "\t\t\t\t\t\t\t// a \u20181\u2019 bit indicates \u2018not in this track\u2019\n" +
+            "\t\t\t\t}\n" +
+            "\t\t\t}\n" +
+            "\t\t}\n" +
+            "\t\tif (stream_structure & objectStructured) {\n" +
+            "\t\t\t\t\t\t\t// object_count is derived from baseChannelCount\n" +
+            "\t\t}\n" +
+            "\t}\n" +
+            "}\n");
+
         HelloFrom("Generated Code");
         using (var json = File.OpenRead("boxes.json"))
         using (JsonDocument document = JsonDocument.Parse(json, new JsonDocumentOptions()))
@@ -259,7 +317,7 @@ partial class Program
                     Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()}");
                     success++;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
                     Console.WriteLine($"Failed to parse: {element.GetProperty("fourcc").GetString()}");
@@ -267,7 +325,7 @@ partial class Program
                 }
             }
 
-            Console.WriteLine($"Succeessful: {success}, Failed: {fail}, Total: {success + fail}"); 
+            Console.WriteLine($"Succeessful: {success}, Failed: {fail}, Total: {success + fail}");
         }
     }
 
