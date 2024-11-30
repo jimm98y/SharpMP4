@@ -14,11 +14,11 @@ public abstract class PseudoCode
 public class PseudoClass : PseudoCode
 {
     public string BoxName { get; }
-    public string BoxType { get; }
+    public Maybe<string> BoxType { get; }
     public IEnumerable<PseudoCode> Fields { get; }
-    public Maybe<IEnumerable<(string Name, Maybe<string> Value)>> Parameters { get; }
+    public Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> Parameters { get; }
 
-    public PseudoClass(string boxName, string boxType, Maybe<IEnumerable<(string Name, Maybe<string> Value)>> parameters, IEnumerable<PseudoCode> fields)
+    public PseudoClass(string boxName, Maybe<string> boxType, Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> parameters, IEnumerable<PseudoCode> fields)
     {
         BoxName = boxName;
         BoxType = boxType;
@@ -83,6 +83,18 @@ public class PseudoBlock : PseudoCode
     public string Type { get; }
     public Maybe<string> Condition { get; }
     public Maybe<string> Comment { get; }
+    public IEnumerable<PseudoCode> Content { get; }
+}
+
+public class PseudoRepeatingBlock : PseudoCode
+{
+    public PseudoRepeatingBlock(IEnumerable<PseudoCode> content, IEnumerable<char> array)
+    {
+        Content = content;
+        Array = string.Concat(array);
+    }
+
+    public string Array { get; }
     public IEnumerable<PseudoCode> Content { get; }
 }
 
@@ -189,6 +201,7 @@ partial class Program
             Try(String("unsigned int((length_size_of_traf_num+1) * 8)")),
             Try(String("unsigned int((length_size_of_trun_num+1) * 8)")),
             Try(String("unsigned int((length_size_of_sample_num+1) * 8)")),
+            Try(String("unsigned int(8)[16]")),
             Try(String("const unsigned int(32)[2]")),
             Try(String("const unsigned int(32)[3]")),
             Try(String("const unsigned int(32)")),
@@ -198,6 +211,8 @@ partial class Program
             Try(String("template int(16)")),
             Try(String("template unsigned int(30)")),
             Try(String("template unsigned int(32)")),
+            Try(String("template unsigned int(16)[3]")),
+            Try(String("template unsigned int(16)")),
             Try(String("int(16)")),
             Try(String("int(32)")),
             Try(String("const bit(16)")),
@@ -257,6 +272,7 @@ partial class Program
             Try(String("ItemReferenceBox")),
             Try(String("ItemDataBox")),
             Try(String("TrackReferenceTypeBox []")),
+            Try(String("MetadataKeyBox[]")),
             Try(String("SampleGroupDescriptionEntry (grouping_type)")),
             Try(String("size += 5")), // WORKAROUND
             Try(String("totalPatternLength = 0")) // WORKAROUND
@@ -298,9 +314,15 @@ partial class Program
             SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
         ).Select(x => (PseudoCode)x);
 
+    public static Parser<char, PseudoCode> RepeatingBlock =>
+        Map((content, array) => new PseudoRepeatingBlock(content, array),
+            SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock)))),
+            SkipWhitespaces.Then(Char('[')).Then(Any.AtLeastOnceUntil(Char(']')))
+        ).Select(x => (PseudoCode)x);
+
 
     public static Parser<char, IEnumerable<PseudoCode>> SingleBlock => Try(Method).Or(Field).Repeat(1);
-    public static Parser<char, PseudoCode> CodeBlock => Try(Block).Or(Try(Method).Or(Try(Field).Or(Comment)));
+    public static Parser<char, PseudoCode> CodeBlock => Try(Block).Or(Try(RepeatingBlock).Or(Try(Method).Or(Try(Field).Or(Comment))));
     public static Parser<char, IEnumerable<PseudoCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
 
@@ -310,18 +332,17 @@ partial class Program
             Try(String("(bit(24) flags)")),
             Try(String("(fmt)")),
             Try(String("(codingname)")),
-            Try(String("(handler_type)"))
+            Try(String("(handler_type)")),
+            Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)"))
             ).Labelled("class type");
 
     public static Parser<char, PseudoClass> Box =>
         Map((boxName, boxType, parameters, fields) => new PseudoClass(boxName, boxType, parameters, fields),
             Try(String("aligned(8)")).Optional().Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier).Before(SkipWhitespaces)
                 .Before(ClassType.Optional())
-                .Before(SkipWhitespaces)
-                .Before(String("extends"))
                 .Before(SkipWhitespaces),
-            BoxName.Then(SkipWhitespaces).Then(Char('(')).Then(Try(OldBoxType).Optional()).Then(BoxType),
-            Try(Char(',').Then(Parameters)).Optional().Before(Char(')')).Before(SkipWhitespaces),
+            Try(String("extends")).Optional().Then(SkipWhitespaces).Then(Try(BoxName.Then(SkipWhitespaces).Then(Char('(')).Then(Try(OldBoxType).Optional()).Then(BoxType))).Optional(),
+            Try(Try(Char(',').Then(Parameters)).Optional().Before(Char(')')).Before(SkipWhitespaces)).Optional(),
             Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}'))
         );
 
@@ -329,23 +350,8 @@ partial class Program
     static void Main(string[] args)
     {
         Box.ParseOrThrow(
-            "aligned(8) class TrackRunBox\n" +
-            "\t\t\textends FullBox('trun', version, tr_flags) {\n" +
-            "\tunsigned int(32)\tsample_count;\n" +
-            "\t// the following are optional fields\n" +
-            "\tsigned int(32)\tdata_offset;\n" +
-            "\tunsigned int(32)\tfirst_sample_flags;\n" +
-            "\t// all fields in the following array are optional\n" +
-            "\t// as indicated by bits set in the tr_flags\n" +
-            "\t{\n" +
-            "\t\tunsigned int(32)\tsample_duration;\n" +
-            "\t\tunsigned int(32)\tsample_size;\n" +
-            "\t\tunsigned int(32)\tsample_flags\n" +
-            "\t\tif (version == 0)\n" +
-            "\t\t\t{ unsigned int(32)\tsample_composition_time_offset; }\n" +
-            "\t\telse\n" +
-            "\t\t\t{ signed int(32)\t\tsample_composition_time_offset; }\n" +
-            "\t}[ sample_count ]\n" +
+            "class MetadataKeyTableBox extends Box('keys') { \n" +
+            "\tMetadataKeyBox[];\n" +
             "}"
             );
         
