@@ -25,7 +25,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class MD5IntegrityBox()\nextends FullBox('md5i', version = 0, flags) {\n\tunsigned int(8)[16] input_MD5;\n\tunsigned int(32) input_4cc;\n\tif (input_4cc == 'sgpd') {\n\t\tunsigned int(32) grouping_type;\n\t\tif (flags&1)\n\t\t\tunsigned int(32) grouping_type_parameter;\n\t\tunsigned int(32) num_entries;\n\t\tfor(i=0; i<num_entries; i++} {\n\t\t\tunsigned int(32) group_description_index[i];\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class MD5IntegrityBox()\nextends FullBox('md5i', version = 0, flags) {\n\tunsigned int(8)[16] input_MD5;\n\tunsigned int(32) input_4cc;\n\tif (input_4cc == 'sgpd') {\n\t\tunsigned int(32) grouping_type;\n\t\tif (flags&1)\n\t\t\tunsigned int(32) grouping_type_parameter;\n\t\tunsigned int(32) num_entries;\n\t\tfor(i=0; i<num_entries; i++) {\n\t\t\tunsigned int(32) group_description_index[i];\n\t\t}\n\t}\n}"
     }
   ]
 }

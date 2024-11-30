@@ -101,10 +101,10 @@ public class PseudoRepeatingBlock : PseudoCode
 partial class Program
 {
     public static Parser<char, string> Identifier =>
-        Letter.Then(Token(c => char.IsLetterOrDigit(c) || c == '_').Labelled("letter or digit or _").ManyString(), (first, rest) => first + rest);
+        LetterOrDigit.Then(Token(c => char.IsLetterOrDigit(c) || c == '_').Labelled("letter or digit or _").ManyString(), (first, rest) => first + rest);
 
     public static Parser<char, string> IdentifierWithSpace =>
-        Letter.Then(Token(c => char.IsLetterOrDigit(c) || c == '_' || c == ' ').Labelled("letter or digit or _ or space").ManyString(), (first, rest) => first + rest);
+        LetterOrDigit.Then(Token(c => char.IsLetterOrDigit(c) || c == '_' || c == ' ').Labelled("letter or digit or _ or space").ManyString(), (first, rest) => first + rest);
 
     public static Parser<char, string> BoxType =>
         Char('\'').Then(IdentifierWithSpace).Before(Char('\''));
@@ -179,8 +179,10 @@ partial class Program
             Try(String("template int(32)[9]")),
             Try(String("unsigned int(32)")),
             Try(String("unsigned int(24)")),
+            Try(String("unsigned int(26)")),
             Try(String("unsigned int(16)")),
             Try(String("unsigned int(12)")),
+            Try(String("unsigned int(10)")),
             Try(String("unsigned int(15)")),
             Try(String("unsigned int(8)[length]")),
             Try(String("unsigned int(8)")),
@@ -202,6 +204,7 @@ partial class Program
             Try(String("unsigned int((length_size_of_traf_num+1) * 8)")),
             Try(String("unsigned int((length_size_of_trun_num+1) * 8)")),
             Try(String("unsigned int((length_size_of_sample_num+1) * 8)")),
+            Try(String("unsigned int(8*size-64)")),
             Try(String("unsigned int(8)[16]")),
             Try(String("const unsigned int(32)[2]")),
             Try(String("const unsigned int(32)[3]")),
@@ -226,9 +229,12 @@ partial class Program
             Try(String("bit(6)")),
             Try(String("bit(7)")),
             Try(String("bit(8)")),
+            Try(String("bit(16)")),
             Try(String("bit(8 ceil(size / 8) \u2013 size)")),
             Try(String("utf8string")),
             Try(String("utfstring")),
+            Try(String("boxstring")),
+            Try(String("string")),
             Try(String("bit(32)[6]")),
             Try(String("uint(32)")),
             Try(String("uint(64)")),
@@ -236,6 +242,7 @@ partial class Program
             Try(String("unsigned int(6)")),
             Try(String("signed int(32)")),
             Try(String("signed int (16)")),
+            Try(String("signed int(16)")),
             Try(String("signed int (8)")),
             Try(String("signed int(64)")),
             Try(String("signed   int(32)")),
@@ -275,7 +282,26 @@ partial class Program
             Try(String("ItemDataBox")),
             Try(String("TrackReferenceTypeBox []")),
             Try(String("MetadataKeyBox[]")),
+            Try(String("TierInfoBox")),
+            Try(String("MultiviewRelationAttributeBox")),
+            Try(String("TierBitRateBox")),
+            Try(String("BufferingBox")),
+            Try(String("MultiviewSceneInfoBox")),
+            Try(String("MVDDecoderConfigurationRecord")),
+            Try(String("MVDDepthResolutionBox")),
+            Try(String("MVCDecoderConfigurationRecord()")),
+            Try(String("AVCDecoderConfigurationRecord()")),
+            Try(String("HEVCDecoderConfigurationRecord()")),
+            Try(String("LHEVCDecoderConfigurationRecord()")),
+            Try(String("SVCDecoderConfigurationRecord()")),
+            Try(String("HEVCTileTierLevelConfigurationRecord()")),
+            Try(String("EVCDecoderConfigurationRecord()")),
+            Try(String("VvcDecoderConfigurationRecord()")),
+            Try(String("EVCSliceComponentTrackConfigurationRecord()")),
             Try(String("SampleGroupDescriptionEntry (grouping_type)")),
+            Try(String("Descriptor")),
+            Try(String("WebVTTConfigurationBox")),
+            Try(String("WebVTTSourceLabelBox")),
             Try(String("size += 5")), // WORKAROUND
             Try(String("totalPatternLength = 0")) // WORKAROUND
             )
@@ -303,7 +329,7 @@ partial class Program
 
     public static Parser<char, PseudoCode> Method =>
         Map((name, value, comment) => new PseudoMethod(name, string.Concat(value), comment),
-            MethodName.Before(Char('(')),
+            MethodName.Before(SkipWhitespaces).Before(Char('(')),
             Any.Until(Char(')')).Before(Char(';')).Before(SkipWhitespaces),
             Try(LineComment(String("//"))).Or(Try(SkipBlockComment(String("/*"), String("*/")))).Optional()
         ).Select(x => (PseudoCode)x);
@@ -352,14 +378,18 @@ partial class Program
     static void Main(string[] args)
     {
         Box.ParseOrThrow(
-            "class BufferingBox extends Box('buff'){\n" +
-            "\tunsigned int(16) \t\toperating_point_count;\n" +
-            "\tfor (i = 0; i < operating_point_count; i++){\n" +
-            "\t\tunsigned int (32) \tbyte_rate;\n" +
-            "\t\tunsigned int (32) \tcpb_size;\n" +
-            "\t\tunsigned int (32) \tdpb_size;\n" +
-            "\t\tunsigned int (32)\t\tinit_cpb_delay;\n" +
-            "\t\tunsigned int (32) \tinit_dpb_delay;\n" +
+            "aligned(8) class MD5IntegrityBox()\n" +
+            "extends FullBox('md5i', version = 0, flags) {\n" +
+            "\tunsigned int(8)[16] input_MD5;\n" +
+            "\tunsigned int(32) input_4cc;\n" +
+            "\tif (input_4cc == 'sgpd') {\n" +
+            "\t\tunsigned int(32) grouping_type;\n" +
+            "\t\tif (flags&1)\n" +
+            "\t\t\tunsigned int(32) grouping_type_parameter;\n" +
+            "\t\tunsigned int(32) num_entries;\n" +
+            "\t\tfor(i=0; i<num_entries; i++) {\n" +
+            "\t\t\tunsigned int(32) group_description_index[i];\n" +
+            "\t\t}\n" +
             "\t}\n" +
             "}"
             );

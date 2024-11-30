@@ -532,7 +532,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class SVCPriorityLayerInfoBox extends Box('qlif'){\n\tunsigned int(8) pr_layer_num;\n\tfor(j=0; j< pr_layer_num; j++){\n\t\tunsigned int(8) pr_layer;\n\t\tunsigned int(24) profile_level_idc;\n\t\tunsigned int(32) max_bitrate;\n\t\tunsigned int(32) avg_bitrate;\n\t}"
+      "syntax": "class SVCPriorityLayerInfoBox extends Box('qlif'){\n\tunsigned int(8) pr_layer_num;\n\tfor(j=0; j< pr_layer_num; j++){\n\t\tunsigned int(8) pr_layer;\n\t\tunsigned int(24) profile_level_idc;\n\t\tunsigned int(32) max_bitrate;\n\t\tunsigned int(32) avg_bitrate;\n\t}\n}"
     },
     {
       "fourcc": "vvcC",
@@ -580,7 +580,7 @@
         }
       ],
       "type": "FullBox",
-      "syntax": "class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){\n\tunsigned int(32) num_entries;\n\tfor (i=1; i<= num_entries; i++) { \n\t\tunsigned int(8) constructor_type;\n\t\tunsigned int(8) flags; \n\t\tif( constructor_type == 0 ) \n\t\t\tSampleConstructor();\n\t\telse if( constructor_type == 2 ) \n\t\t\tInlineConstructor();\n\t\telse if( constructor_type == 3 ) \n\t\t\tSampleConstructorFromTrackGroup();\n\t\telse if( constructor_type == 6 ) \n\t\t\tNALUStartInlineConstructor ();\n\t}"
+      "syntax": "class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){\n\tunsigned int(32) num_entries;\n\tfor (i=1; i<= num_entries; i++) { \n\t\tunsigned int(8) constructor_type;\n\t\tunsigned int(8) flags; \n\t\tif( constructor_type == 0 ) \n\t\t\tSampleConstructor();\n\t\telse if( constructor_type == 2 ) \n\t\t\tInlineConstructor();\n\t\telse if( constructor_type == 3 ) \n\t\t\tSampleConstructorFromTrackGroup();\n\t\telse if( constructor_type == 6 ) \n\t\t\tNALUStartInlineConstructor ();\n\t}\n}"
     },
     {
       "fourcc": "svmC",
@@ -593,7 +593,7 @@
         }
       ],
       "type": "FullBox",
-      "syntax": "class SVCMetadataSampleConfigBox extends FullBox('svmC')\n{\n\tint i;\t\t// local variable, not a field\n\tunsigned int(8) sample_statement_type;\t/* normally group, or seq */\n\tunsigned int(8) default_statement_type;\n\tunsigned int(8) default_statement_length;\n\tunsigned int(8) entry_count;\n\tfor (i=1; i<=entry_count; i++) {\n\t\tunsigned int(8) statement_type;\t// from the user extension ranges\n\t\tstring statement_namespace;\n\t}"
+      "syntax": "class SVCMetadataSampleConfigBox extends FullBox('svmC')\n{\n\tint i;\t\t// local variable, not a field\n\tunsigned int(8) sample_statement_type;\t/* normally group, or seq */\n\tunsigned int(8) default_statement_type;\n\tunsigned int(8) default_statement_length;\n\tunsigned int(8) entry_count;\n\tfor (i=1; i<=entry_count; i++) {\n\t\tunsigned int(8) statement_type;\t// from the user extension ranges\n\t\tstring statement_namespace;\n\t}\n}"
     },
     {
       "fourcc": "evsC",
