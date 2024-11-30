@@ -1,0 +1,377 @@
+﻿{
+  "name": "Codecs",
+  "description": "Codec Types",
+  "entries": [
+    {
+      "fourcc": "hvc1",
+      "description": "HEVC video with parameter sets only in the Sample Entry",
+      "type": "HEVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hvc1'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "hvc1",
+      "description": "HEVC video with parameter sets only in the Sample Entry",
+      "type": "HEVCLHVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n}"
+    },
+    {
+      "fourcc": "hvc2",
+      "description": "HEVC video with constrained extractors and/or aggregators and parameter sets only in the Sample Entry",
+      "type": "HEVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hvc2'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "hvc2",
+      "description": "HEVC video with constrained extractors and/or aggregators and parameter sets only in the Sample Entry",
+      "type": "HEVCLHVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n}"
+    },
+    {
+      "fourcc": "hvc3",
+      "description": "HEVC video with extractors and/or aggregators and parameter sets in the Sample Entry or samples",
+      "type": "HEVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hvc3'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "hvc3",
+      "description": "HEVC video with extractors and/or aggregators and parameter sets in the Sample Entry or samples",
+      "type": "HEVCLHVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n}"
+    },
+    {
+      "fourcc": "lhv1",
+      "description": "Layered HEVC",
+      "type": "LHEVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class LHEVCSampleEntry() extends VisualSampleEntry ('lhv1') {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "lhe1",
+      "description": "Layered HEVC",
+      "type": "LHEVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class LHEVCSampleEntry() extends VisualSampleEntry ('lhe1') {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "hev1",
+      "description": "HEVC video with parameter sets in the Sample Entry or samples",
+      "type": "HEVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hev1'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "hev1",
+      "description": "HEVC video with parameter sets in the Sample Entry or samples",
+      "type": "HEVCLHVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n}"
+    },
+    {
+      "fourcc": "hev2",
+      "description": "HEVC video with constrained extractors and/or aggregators and parameter sets in the Sample Entry or sampless",
+      "type": "HEVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hev2'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "hev2",
+      "description": "HEVC video with constrained extractors and/or aggregators and parameter sets in the Sample Entry or sampless",
+      "type": "HEVCLHVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n}"
+    },
+    {
+      "fourcc": "hev3",
+      "description": "HEVC video with extractors and/or aggregators and parameter sets in the Sample Entry or samples",
+      "type": "HEVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hev3'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "hev3",
+      "description": "HEVC video with extractors and/or aggregators and parameter sets in the Sample Entry or samples",
+      "type": "HEVCLHVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n}"
+    },
+    {
+      "fourcc": "avcp",
+      "description": "AVC parameter set",
+      "type": "AVCParameterSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class AVCParameterSampleEntry() extends VisualSampleEntry ('avcp'){\r\n\tAVCConfigurationBox\tconfig;\r\n}"
+    },
+    {
+      "fourcc": "avc1",
+      "description": "AVC video with parameter sets only in the Sample Entry",
+      "type": "AVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class AVCSampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "avc3",
+      "description": "AVC video with parameter sets in the Sample Entry or samples",
+      "type": "AVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class AVCSampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "avc1",
+      "description": "AVC video with parameter sets only in the Sample Entry",
+      "type": "AVCMVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class AVCMVCSampleEntry() extends AVCSampleEntry ('avc1') {\r\n\tViewScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tViewIdentifierBox\t\tview_identifiers;\t// optional\r\n\tMVCConfigurationBox\tmvcconfig;\t\t// optional\r\n\tMVCViewPriorityAssignmentBox\tview_priority_method;\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params;\t// optional\r\n\tMVCDConfigurationBox\tmvcdconfig;\t// optional\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
+    },
+    {
+      "fourcc": "avc3",
+      "description": "AVC video with parameter sets in the Sample Entry or samples",
+      "type": "AVCMVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class AVCMVCSampleEntry() extends AVCSampleEntry ('avc3') {\r\n\tViewScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tViewIdentifierBox\t\tview_identifiers;\t// optional\r\n\tMVCConfigurationBox\tmvcconfig;\t\t// optional\r\n\tMVCViewPriorityAssignmentBox\tview_priority_method;\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params;\t// optional\r\n\tMVCDConfigurationBox\tmvcdconfig;\t// optional\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
+    },
+    {
+      "fourcc": "avc2",
+      "description": "AVC video with parameter sets only in the Sample Entry. With additional features",
+      "type": "AVC2SampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class AVC2SampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "avc4",
+      "description": "AVC video with parameter sets only in the Sample Entry or samples. With additional features",
+      "type": "AVC2SampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class AVC2SampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+    },
+    {
+      "fourcc": "avc2",
+      "description": "AVC video with parameter sets only in the Sample Entry. With additional features",
+      "type": "AVC2MVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class AVC2MVCSampleEntry() extends AVC2SampleEntry ('avc2') {\r\n\tViewScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tViewIdentifierBox\t\tview_identifiers;\t// optional\r\n\tMVCConfigurationBox\tmvcconfig;\t\t// optional\tMVCViewPriorityAssignmentBox\tview_priority_method;\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n\tMVCDConfigurationBox\tmvcdconfig;\t// optional\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
+    },
+    {
+      "fourcc": "avc4",
+      "description": "AVC video with parameter sets only in the Sample Entry or samples. With additional features",
+      "type": "AVC2MVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class AVC2MVCSampleEntry() extends AVC2SampleEntry ('avc4') {\r\n\tViewScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tViewIdentifierBox\t\tview_identifiers;\t// optional\r\n\tMVCConfigurationBox\tmvcconfig;\t\t// optional\tMVCViewPriorityAssignmentBox\tview_priority_method;\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n\tMVCDConfigurationBox\tmvcdconfig;\t// optional\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
+    },
+    {
+      "fourcc": "mvc1",
+      "description": "Multiview coding",
+      "type": "MVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class MVCSampleEntry() extends VisualSampleEntry ('mvc1') {\r\n\tMVCConfigurationBox\tmvcconfig; \t\t\t// mandatory\r\n\tViewScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tMVCViewPriorityAssignmentBox\tview_priority_method;\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n\tMVCDConfigurationBox\tmvcdconfig;\t// optional\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
+    },
+    {
+      "fourcc": "mvc2",
+      "description": "Multiview coding",
+      "type": "MVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class MVCSampleEntry() extends VisualSampleEntry ('mvc2') {\r\n\tMVCConfigurationBox\tmvcconfig; \t\t\t// mandatory\r\n\tViewScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tMVCViewPriorityAssignmentBox\tview_priority_method;\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n\tMVCDConfigurationBox\tmvcdconfig;\t// optional\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
+    },
+    {
+      "fourcc": "mvc3",
+      "description": "Multiview coding",
+      "type": "MVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class MVCSampleEntry() extends VisualSampleEntry ('mvc3') {\r\n\tMVCConfigurationBox\tmvcconfig; \t\t\t// mandatory\r\n\tViewScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tMVCViewPriorityAssignmentBox\tview_priority_method;\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n\tMVCDConfigurationBox\tmvcdconfig;\t// optional\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
+    },
+    {
+      "fourcc": "mvc4",
+      "description": "Multiview coding",
+      "type": "MVCSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class MVCSampleEntry() extends VisualSampleEntry ('mvc4') {\r\n\tMVCConfigurationBox\tmvcconfig; \t\t\t// mandatory\r\n\tViewScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tMVCViewPriorityAssignmentBox\tview_priority_method;\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n\tMVCDConfigurationBox\tmvcdconfig;\t// optional\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
+    },
+    {
+      "fourcc": "mvd1",
+      "description": "MVD stream",
+      "type": "MVCDSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd1') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}\r\n"
+    },
+    {
+      "fourcc": "mvd2",
+      "description": "MVD stream",
+      "type": "MVCDSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd2') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}\r\n"
+    },
+    {
+      "fourcc": "mvd3",
+      "description": "MVD stream",
+      "type": "MVCDSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd3') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}\r\n"
+    },
+    {
+      "fourcc": "mvd4",
+      "description": "MVD stream",
+      "type": "MVCDSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd4') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}\r\n"
+    },
+    {
+      "fourcc": "a3d1",
+      "description": "3D-AVC track with 3D-AVC NAL units only",
+      "type": "A3DSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class A3DSampleEntry() extends VisualSampleEntry ('a3d1') {\r\n\tA3DConfigurationBox\ta3dconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n}"
+    },
+    {
+      "fourcc": "a3d2",
+      "description": "3D-AVC track with 3D-AVC NAL units only",
+      "type": "A3DSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class A3DSampleEntry() extends VisualSampleEntry ('a3d2') {\r\n\tA3DConfigurationBox\ta3dconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n}"
+    },
+    {
+      "fourcc": "a3d3",
+      "description": "3D-AVC track with 3D-AVC NAL units only",
+      "type": "A3DSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class A3DSampleEntry() extends VisualSampleEntry ('a3d3') {\r\n\tA3DConfigurationBox\ta3dconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n}"
+    },
+    {
+      "fourcc": "a3d4",
+      "description": "3D-AVC track with 3D-AVC NAL units only",
+      "type": "A3DSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class A3DSampleEntry() extends VisualSampleEntry ('a3d4') {\r\n\tA3DConfigurationBox\ta3dconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params\t// optional\r\n}"
+    },
+    {
+      "fourcc": "avc1",
+      "description": "Advanced Video Coding",
+      "containers": [ "stsd" ],
+      "type": "AVCSVCSampleEntry",
+      "syntax": "class AVCSVCSampleEntry() extends AVCSampleEntry ('avc1' or 'avc3') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+    },
+    {
+      "fourcc": "avc3",
+      "description": "Advanced Video Coding",
+      "containers": [ "stsd" ],
+      "type": "AVCSVCSampleEntry",
+      "syntax": "class AVCSVCSampleEntry() extends AVCSampleEntry ('avc1' or 'avc3') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+    },
+    {
+      "fourcc": "avc2",
+      "description": "Advanced Video Coding",
+      "containers": [ "stsd" ],
+      "type": "AVC2SVCSampleEntry",
+      "syntax": "class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+    },
+    {
+      "fourcc": "avc4",
+      "description": "Advanced Video Coding",
+      "containers": [ "stsd" ],
+      "type": "AVC2SVCSampleEntry",
+      "syntax": "class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+    },
+    {
+      "fourcc": "svc1",
+      "description": "Scalable Video Coding",
+      "containers": [ "stsd" ],
+      "type": "SVCSampleEntry",
+      "syntax": "// Use this if the track is NOT AVC compatible\nclass SVCSampleEntry() extends VisualSampleEntry ('svc1' or 'svc2') {\n\tSVCConfigurationBox\t\tsvcconfig;\n\tMPEG4ExtensionDescriptorsBox descr;\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+    },
+    {
+      "fourcc": "svc2",
+      "description": "Scalable Video Coding",
+      "containers": [ "stsd" ],
+      "type": "SVCSampleEntry",
+      "syntax": "// Use this if the track is NOT AVC compatible\nclass SVCSampleEntry() extends VisualSampleEntry ('svc1' or 'svc2') {\n\tSVCConfigurationBox\t\tsvcconfig;\n\tMPEG4ExtensionDescriptorsBox descr;\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+    },
+    {
+      "fourcc": "hvt1",
+      "description": "HEVC tile tracks",
+      "containers": [ "stsd" ],
+      "type": "HEVCTileSampleEntry",
+      "syntax": "class HEVCTileSampleEntry() extends VisualSampleEntry ('hvt1'){\n\tHEVCTileConfigurationBox\tconfig(); // optional\n}"
+    },
+    {
+      "fourcc": "lht1",
+      "description": "Layered HEVC tile tracks",
+      "containers": [ "stsd" ],
+      "type": "LHEVCTileSampleEntry",
+      "syntax": "class LHEVCTileSampleEntry() extends VisualSampleEntry ('lht1'){\n}"
+    },
+    {
+      "fourcc": "hvt3",
+      "description": "HEVC Tile Track with Slice Segment Header Info",
+      "containers": [ "stsd" ],
+      "type": "HEVCTileSSHInfoSampleEntry",
+      "syntax": "class HEVCTileSSHInfoSampleEntry() extends VisualSampleEntry ('hvt3'){\n\tHEVCTileConfigurationBox config(); // optional \n}"
+    },
+    {
+      "fourcc": "hvt2",
+      "description": "HEVC slice segment data track",
+      "containers": [ "stsd" ],
+      "type": "HEVCSliceSegmentDataSampleEntry",
+      "syntax": "class HEVCSliceSegmentDataSampleEntry() extends VisualSampleEntry ('hvt2'){\n\tHEVCTileConfigurationBox\tconfig(); // optional\n}"
+    },
+    {
+      "fourcc": "vvc1",
+      "description": "Versatile Video Coding with parameter sets only in sample entries",
+      "containers": [ "stsd" ],
+      "type": "VvcSampleEntry",
+      "syntax": "class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {\n\tVvcConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\n}"
+    },
+    {
+      "fourcc": "vvi1",
+      "description": "Versatile Video Coding with parameter sets only in sample entries",
+      "containers": [ "stsd" ],
+      "type": "VvcSampleEntry",
+      "syntax": "class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {\n\tVvcConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\n}"
+    },
+    {
+      "fourcc": "vvs1",
+      "description": "Versatile Video Coding (VVC) subpicture track that does not contain a conforming VVC bitstream",
+      "containers": [ "stsd" ],
+      "type": "VvcSubpicSampleEntry",
+      "syntax": "class VvcSubpicSampleEntry() extends VisualSampleEntry ('vvs1') {\n\tVvcNALUConfigBox config;\n}"
+    },
+    {
+      "fourcc": "vvcN",
+      "description": "Versatile Video Coding with non-VCL (Video Coding Layer) NAL (Network Abstraction Layer) units only",
+      "containers": [ "stsd" ],
+      "type": "VvcNonVCLSampleEntry",
+      "syntax": "class VvcNonVCLSampleEntry() extends VisualSampleEntry ('vvcN') {\n\tVvcNALUConfigBox config;\n}"
+    },
+    {
+      "fourcc": "evc1",
+      "description": "Essential Video Coding",
+      "containers": [ "stsd" ],
+      "type": "EVCSampleEntry",
+      "syntax": "class EVCSampleEntry() extends VisualSampleEntry('evc1'){\n\tEVCConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox();\t// optional\n}"
+    },
+    {
+      "fourcc": "svcM",
+      "description": "SVC metadata",
+      "containers": [ "stsd" ],
+      "type": "SVCMetadataSampleEntry",
+      "syntax": "class SVCMetadataSampleEntry () extends MetadataSampleEntry('svcM')\n{\n\tSVCMetadataSampleConfigBox\tconfig;\n\tSVCPriorityAssignmentBox\tmethods;\t\t// optional\n\tSVCPriorityLayerInfoBox\t\tpriorities;\t// optional\n}"
+    },
+    {
+      "fourcc": "evs1",
+      "description": "Essential Video Coding slice component track without parameter sets",
+      "containers": [ "stsd" ],
+      "type": "EVCSliceComponentTrackSampleEntry",
+      "syntax": "class EVCSliceComponentTrackSampleEntry() \n      extends VisualSampleEntry ('evs1' or 'evs2'){\n\tEVCSliceComponentTrackConfigurationBox\tconfig;\n}"
+    },
+    {
+      "fourcc": "evs2",
+      "description": "Essential Video Coding slice component track without parameter sets",
+      "containers": [ "stsd" ],
+      "type": "EVCSliceComponentTrackSampleEntry",
+      "syntax": "class EVCSliceComponentTrackSampleEntry() \n      extends VisualSampleEntry ('evs1' or 'evs2'){\n\tEVCSliceComponentTrackConfigurationBox\tconfig;\n}"
+    }
+  ]
+}

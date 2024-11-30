@@ -1,0 +1,69 @@
+﻿{
+  "name": "Item References",
+  "description": "Item reference types",
+  "entries": [
+    {
+      "fourcc": "auxl",
+      "description": "Auxiliary image item reference",
+      "containers": [ "iref" ],
+      "type": "SingleItemTypeReferenceBox",
+      "syntax": "aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {\n\tunsigned int(16) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(16) to_item_ID;\n\t}\n}\n\n\naligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {\n\tunsigned int(32) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(32) to_item_ID;\n\t}\n}"
+    },
+    {
+      "fourcc": "base",
+      "description": "Pre-derived image item base reference",
+      "containers": [ "iref" ],
+      "type": "SingleItemTypeReferenceBox",
+      "syntax": "aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {\n\tunsigned int(16) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(16) to_item_ID;\n\t}\n}\n\n\naligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {\n\tunsigned int(32) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(32) to_item_ID;\n\t}\n}"
+    },
+    {
+      "fourcc": "dimg",
+      "description": "Derived image item reference",
+      "containers": [ "iref" ],
+      "type": "SingleItemTypeReferenceBox",
+      "syntax": "aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {\n\tunsigned int(16) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(16) to_item_ID;\n\t}\n}\n\n\naligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {\n\tunsigned int(32) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(32) to_item_ID;\n\t}\n}"
+    },
+    {
+      "fourcc": "dpnd",
+      "description": "Item coding dependency reference",
+      "containers": [ "iref" ],
+      "type": "SingleItemTypeReferenceBox",
+      "syntax": "aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {\n\tunsigned int(16) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(16) to_item_ID;\n\t}\n}\n\n\naligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {\n\tunsigned int(32) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(32) to_item_ID;\n\t}\n}"
+    },
+    {
+      "fourcc": "exbl",
+      "description": "Scalable image item reference",
+      "containers": [ "iref" ],
+      "type": "SingleItemTypeReferenceBox",
+      "syntax": "aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {\n\tunsigned int(16) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(16) to_item_ID;\n\t}\n}\n\n\naligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {\n\tunsigned int(32) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(32) to_item_ID;\n\t}\n}"
+    },
+    {
+      "fourcc": "grid",
+      "description": "Image item grid reference",
+      "containers": [ "iref" ],
+      "type": "SingleItemTypeReferenceBox",
+      "syntax": "aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {\n\tunsigned int(16) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(16) to_item_ID;\n\t}\n}\n\n\naligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {\n\tunsigned int(32) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(32) to_item_ID;\n\t}\n}"
+    },
+    {
+      "fourcc": "thmb",
+      "description": "Thumbnail image item reference",
+      "containers": [ "iref" ],
+      "type": "SingleItemTypeReferenceBox",
+      "syntax": "aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {\n\tunsigned int(16) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(16) to_item_ID;\n\t}\n}\n\n\naligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {\n\tunsigned int(32) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(32) to_item_ID;\n\t}\n}"
+    },
+    {
+      "fourcc": "pred",
+      "description": "Predictively coded item reference",
+      "containers": [ "iref" ],
+      "type": "SingleItemTypeReferenceBox",
+      "syntax": "aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {\n\tunsigned int(16) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(16) to_item_ID;\n\t}\n}\n\n\naligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {\n\tunsigned int(32) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(32) to_item_ID;\n\t}\n}"
+    },
+    {
+      "fourcc": "tbas",
+      "description": "HEVC Tile track base item reference",
+      "containers": [ "iref" ],
+      "type": "SingleItemTypeReferenceBox",
+      "syntax": "aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {\n\tunsigned int(16) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(16) to_item_ID;\n\t}\n}\n\n\naligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {\n\tunsigned int(32) from_item_ID;\n\tunsigned int(16) reference_count;\n\tfor (j=0; j<reference_count; j++) {\n\t\tunsigned int(32) to_item_ID;\n\t}\n}"
+    }
+  ]
+}

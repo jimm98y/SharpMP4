@@ -377,26 +377,28 @@ partial class Program
 
     static void Main(string[] args)
     {
-        Box.ParseOrThrow(
-            "aligned(8) class MD5IntegrityBox()\n" +
-            "extends FullBox('md5i', version = 0, flags) {\n" +
-            "\tunsigned int(8)[16] input_MD5;\n" +
-            "\tunsigned int(32) input_4cc;\n" +
-            "\tif (input_4cc == 'sgpd') {\n" +
-            "\t\tunsigned int(32) grouping_type;\n" +
-            "\t\tif (flags&1)\n" +
-            "\t\t\tunsigned int(32) grouping_type_parameter;\n" +
-            "\t\tunsigned int(32) num_entries;\n" +
-            "\t\tfor(i=0; i<num_entries; i++) {\n" +
-            "\t\t\tunsigned int(32) group_description_index[i];\n" +
-            "\t\t}\n" +
-            "\t}\n" +
-            "}"
-            );
-        
-        HelloFrom("Generated Code");
-
-        string[] files = { "14496-12-boxes.json", "14496-15-boxes.json", "14496-30-boxes.json", "23008-12-boxes.json" };
+        string[] files = {
+            "14496-12-boxes.json",
+            "14496-15-boxes.json",
+            "14496-30-boxes.json",
+            "23008-12-boxes.json",
+            "14496-12-codecs.json",
+            "14496-12-entity-groups.json",
+            "14496-12-item-properties.json",
+            "14496-12-item-references.json",
+            "14496-12-sample-groups.json",
+            "14496-12-track-groups.json",
+            "14496-12-track-references.json",
+            "14496-15-codecs.json",
+            "14496-15-entity-groups.json",
+            "14496-15-sample-groups.json",
+            "14496-15-track-groups.json",
+            "14496-15-track-references.json",
+            "23008-12-entity-groups.json",
+            "23008-12-item-properties.json",
+            "23008-12-item-references.json",
+            "23008-12-sample-groups.json",
+        };
         int success = 0;
         int fail = 0;
 

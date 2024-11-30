@@ -1,0 +1,24 @@
+﻿{
+  "name": "Track Group Types",
+  "description": "Track grouping types",
+  "entries": [
+    {
+      "fourcc": "msrc",
+      "description": "multi-source presentation track grouping",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "trgr" ],
+      "type": "TrackGroupTypeBox",
+      "syntax": "aligned(8) class TrackGroupTypeBox('msrc') extends FullBox('msrc', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}"
+    },
+    {
+      "fourcc": "ster",
+      "description": "stereo pair track grouping",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "trgr" ],
+      "type": "TrackGroupTypeBox",
+      "syntax": "aligned(8) class StereoVideoGroupBox extends TrackGroupTypeBox('ster') \n{\n\tunsigned int(1) left_view_flag;\n\tbit(31) reserved;\n}"
+    }
+  ]
+}
