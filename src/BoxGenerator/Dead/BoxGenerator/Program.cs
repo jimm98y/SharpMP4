@@ -13,12 +13,13 @@ public abstract class PseudoCode
 
 public class PseudoClass : PseudoCode
 {
+    public string FourCC { get; set; }
     public string BoxName { get; }
-    public Maybe<string> ClassType { get; }
-    public Maybe<string> Comment { get; }
-    public IEnumerable<PseudoCode> Fields { get; }
-    public Maybe<string> Alignment { get; }
-    public Maybe<PseudoExtendedClass> Extended { get; }
+    public string ClassType { get; }
+    public string Comment { get; }
+    public IList<PseudoCode> Fields { get; }
+    public string Alignment { get; }
+    public PseudoExtendedClass Extended { get; }
 
     public PseudoClass(
         Maybe<string> comment,
@@ -28,51 +29,57 @@ public class PseudoClass : PseudoCode
         Maybe<PseudoExtendedClass> extended,
         IEnumerable<PseudoCode> fields)
     {
-        Comment = comment;
+        Comment = comment.GetValueOrDefault();
         BoxName = boxName;
-        ClassType = classType;
-        Fields = fields;
-        Alignment = alignment;
-        Extended = extended;
+        ClassType = classType.GetValueOrDefault();
+        Fields = fields.ToList();
+        Alignment = alignment.GetValueOrDefault();
+        Extended = extended.GetValueOrDefault();
     }
 
 }
 
 public class PseudoExtendedClass : PseudoCode
 {
-    public Maybe<string> OldBoxType { get; }
-    public Maybe<string> BoxType { get; }
-    public Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> Parameters { get; }
-    public Maybe<string> ExtendedBoxName { get; }
+    public string OldType { get; }
+    public string BoxType { get; }
+    public IList<(string Name, string Value)> Parameters { get; }
+    public string BoxName { get; }
 
     public PseudoExtendedClass(
-        Maybe<string> oldBoxType,
+        Maybe<string> boxName,
+        Maybe<string> oldType,
         Maybe<string> boxType,
-        Maybe<string> extendedBoxName,
         Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> parameters)
     {
-        OldBoxType = oldBoxType;
-        BoxType = boxType;
-        Parameters = parameters;
-        ExtendedBoxName = extendedBoxName;
+        OldType = oldType.GetValueOrDefault();
+        BoxType = boxType.GetValueOrDefault();
+        var p = parameters.GetValueOrDefault();
+        if (p.HasValue)
+        {
+            var pp = p.GetValueOrDefault();
+            Parameters = pp.Where(x => !(string.IsNullOrEmpty(x.Name) && string.IsNullOrEmpty(x.Value.GetValueOrDefault()))).Select(x => (x.Name, x.Value.GetValueOrDefault())).ToList();
+            if (Parameters.Count == 0)
+                Parameters = null;
+        }
+        BoxName = boxName.GetValueOrDefault();
     }
-
 }
 
 public class PseudoField : PseudoCode
 {
-    public PseudoField(string type, Maybe<string> name, string value, Maybe<string> comment)
+    public PseudoField(string type, Maybe<string> name, Maybe<IEnumerable<char>> value, Maybe<string> comment)
     {
         Type = type;
-        Name = name;
-        Value = value;
-        Comment = comment;
+        Name = name.GetValueOrDefault();
+        Value = value.HasValue ? string.IsNullOrEmpty(string.Concat(value.GetValueOrDefault())) ? null : string.Concat(value.GetValueOrDefault()) : null;
+        Comment = comment.GetValueOrDefault();
     }
 
     public string Type { get; }
-    public Maybe<string> Name { get; }
+    public string Name { get; }
     public string Value { get; }
-    public Maybe<string> Comment { get; }
+    public string Comment { get; }
 }
 
 
@@ -93,12 +100,12 @@ public class PseudoMethod : PseudoCode
     {
         Name = name;
         Value = value;
-        Comment = comment;
+        Comment = comment.GetValueOrDefault();
     }
 
     public string Name { get; }
     public string Value { get; }
-    public Maybe<string> Comment { get; }
+    public string Comment { get; }
 }
 
 public class PseudoBlock : PseudoCode
@@ -106,14 +113,14 @@ public class PseudoBlock : PseudoCode
     public PseudoBlock(string type, Maybe<string> condition, Maybe<string> comment, IEnumerable<PseudoCode> content)
     {
         Type = type;
-        Condition = condition;
+        Condition = condition.GetValueOrDefault();
         Content = content;
-        Comment = comment;
+        Comment = comment.GetValueOrDefault();
     }
 
     public string Type { get; }
-    public Maybe<string> Condition { get; }
-    public Maybe<string> Comment { get; }
+    public string Condition { get; }
+    public string Comment { get; }
     public IEnumerable<PseudoCode> Content { get; }
 }
 
@@ -187,7 +194,7 @@ partial class Program
             .Labelled("line comment");
     }
 
-    public static Parser<char, string> SkipBlockComment<T, U>(Parser<char, T> blockCommentStart, Parser<char, U> blockCommentEnd)
+    public static Parser<char, string> BlockComment<T, U>(Parser<char, T> blockCommentStart, Parser<char, U> blockCommentEnd)
     {
         if (blockCommentStart == null)
         {
@@ -200,7 +207,7 @@ partial class Program
         }
 
         return blockCommentStart
-            .Then(Any.SkipUntil(blockCommentEnd), (first, rest) => string.Concat(rest))
+            .Then(Any.Until(blockCommentEnd), (first, rest) => string.Concat(rest))
             .Labelled("block comment");
     }
 
@@ -403,12 +410,12 @@ partial class Program
 
     public static Parser<char, PseudoCode> Comment =>
     Map((comment) => new PseudoComment(comment),
-        Try(LineComment(String("//"))).Or(SkipBlockComment(String("/*"), String("*/")))
+        Try(LineComment(String("//"))).Or(BlockComment(String("/*"), String("*/")))
     ).Select(x => (PseudoCode)x);
 
 
     public static Parser<char, PseudoCode> Field =>
-        Map((type, name, value, comment) => new PseudoField(type, name, string.Concat(value), comment),
+        Map((type, name, value, comment) => new PseudoField(type, name, value, comment),
             FieldType.Before(SkipWhitespaces),
             Try(FieldName.Before(SkipWhitespaces)).Optional(),
             Try(Any.Until(Char(';')).Before(SkipWhitespaces)).Or(Try(Any.Until(Char('\n')).Before(SkipWhitespaces))).Optional(),
@@ -422,7 +429,7 @@ partial class Program
         Map((name, value, comment) => new PseudoMethod(name, string.Concat(value), comment),
             MethodName.Before(SkipWhitespaces).Before(Char('(')),
             Any.Until(Char(')')).Before(Char(';')).Before(SkipWhitespaces),
-            Try(LineComment(String("//"))).Or(Try(SkipBlockComment(String("/*"), String("*/")))).Optional()
+            Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()
         ).Select(x => (PseudoCode)x);
 
     public static Parser<char, PseudoCode> Block =>
@@ -435,7 +442,7 @@ partial class Program
                 Try(String("for"))
                 ).Before(SkipWhitespaces),
             Try(Parentheses).Optional(),
-            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(SkipBlockComment(String("/*"), String("*/")))).Optional()),
+            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
             SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
         ).Select(x => (PseudoCode)x);
 
@@ -470,7 +477,7 @@ partial class Program
             Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)"))
             ).Labelled("class type");
 
-    public static Parser<char, PseudoExtendedClass> ExtendedClass => Map((oldBoxType, boxType, extendedBoxName, parameters) => new PseudoExtendedClass(oldBoxType, boxType, extendedBoxName, parameters),
+    public static Parser<char, PseudoExtendedClass> ExtendedClass => Map((extendedBoxName, oldBoxType, boxType, parameters) => new PseudoExtendedClass(extendedBoxName, oldBoxType, boxType, parameters),
             SkipWhitespaces.Then(Try(String("extends")).Optional()).Then(SkipWhitespaces).Then(Try(BoxName).Optional()),
             SkipWhitespaces.Then(Char('(')).Then(Try(OldBoxType).Optional()),
             SkipWhitespaces.Then(
@@ -485,7 +492,7 @@ partial class Program
 
     public static Parser<char, PseudoClass> Box =>
         Map((comment, alignment, boxName, classType, extended, fields) => new PseudoClass(comment, alignment, boxName, classType, extended, fields),
-            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(SkipBlockComment(String("/*"), String("*/")))).Optional()),
+            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
             Try(String("aligned(8)")).Optional(),
             SkipWhitespaces.Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
             SkipWhitespaces.Then(Try(ClassType).Optional()),
@@ -496,14 +503,7 @@ partial class Program
 
     static void Main(string[] args)
     {
-        Box.ParseOrThrow(
-            "class SVCMetadataSampleEntry () extends MetadataSampleEntry('svcM')\n" +
-            "{\n" +
-            "\tSVCMetadataSampleConfigBox\tconfig;\n" +
-            "\tSVCPriorityAssignmentBox\tmethods;\t\t// optional\n" +
-            "\tSVCPriorityLayerInfoBox\t\tpriorities;\t// optional\n" +
-            "}"
-            );
+        Box.ParseOrThrow("class ColourInformationBox extends Box('colr'){\n\tunsigned int(32) colour_type;\n\tif (colour_type == 'nclx')\t/* on-screen colours */\n\t{\n\t\tunsigned int(16) colour_primaries;\n\t\tunsigned int(16) transfer_characteristics;\n\t\tunsigned int(16) matrix_coefficients;\n\t\tunsigned int(1)  full_range_flag;\n\t\tunsigned int(7)  reserved = 0;\n\t}\n\telse if (colour_type == 'rICC')\n\t{\n\t\tICC_profile;\t// restricted ICC profile\n\t}\n\telse if (colour_type == 'prof')\n\t{\n\t\tICC_profile;\t// unrestricted ICC profile\n\t}\n}");
 
         string[] files = {
             "14496-12-boxes.json",
@@ -530,6 +530,8 @@ partial class Program
         int success = 0;
         int fail = 0;
 
+        List<PseudoClass> ret = new List<PseudoClass>();
+
         foreach (var file in files)
         {
             using (var json = File.OpenRead(file))
@@ -542,28 +544,32 @@ partial class Program
 
                     if (string.IsNullOrEmpty(sample))
                     {
-                        Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()} (empty)");
+                        //Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()} (empty)");
                         success++;
                         continue;
                     }
 
                     try
                     {
-                        var result = Box.ParseOrThrow(sample);
-                        Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()}");
+                        PseudoClass result = Box.ParseOrThrow(sample);
+                        result.FourCC = element.GetProperty("fourcc").GetString();
+                        ret.Add(result);
+                        //Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()}");
                         success++;
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Message);
-                        Console.WriteLine($"Failed to parse: {element.GetProperty("fourcc").GetString()}");
+                        //Console.WriteLine(e.Message);
+                        //Console.WriteLine($"Failed to parse: {element.GetProperty("fourcc").GetString()}");
                         fail++;
                     }
                 }
             }
         }
 
-        Console.WriteLine($"Succeessful: {success}, Failed: {fail}, Total: {success + fail}");
+        //Console.WriteLine($"Succeessful: {success}, Failed: {fail}, Total: {success + fail}");
+        string js = Newtonsoft.Json.JsonConvert.SerializeObject(ret);
+        File.WriteAllText("result.json", js);
     }
 
     static partial void HelloFrom(string name);
