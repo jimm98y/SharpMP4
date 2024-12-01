@@ -204,12 +204,14 @@ partial class Program
     public static Parser<char, string> FieldType =>
         OneOf(
             Try(String("unsigned int(64)")),
+            Try(String("unsigned int(48)")),
             Try(String("template int(32)[9]")),
             Try(String("unsigned int(32)")),
             Try(String("unsigned int(24)")),
             Try(String("unsigned int(29)")),
             Try(String("unsigned int(26)")),
             Try(String("unsigned int(16)")),
+            Try(String("unsigned int(15)")),
             Try(String("unsigned int(12)")),
             Try(String("unsigned int(10)")),
             Try(String("unsigned int(15)")),
@@ -217,6 +219,7 @@ partial class Program
             Try(String("unsigned int(8)")),
             Try(String("unsigned int(7)")),
             Try(String("unsigned int(5)[3]")),
+            Try(String("unsigned int(5)")),
             Try(String("unsigned int(4)")),
             Try(String("unsigned int(3)")),
             Try(String("unsigned int(2)")),
@@ -262,6 +265,7 @@ partial class Program
             Try(String("bit(16)")),
             Try(String("bit(31)")),
             Try(String("bit(8 ceil(size / 8) \u2013 size)")),
+            Try(String("bit(8* ps_nalu_length)")),
             Try(String("utf8string")),
             Try(String("utfstring")),
             Try(String("utf8list")),
@@ -279,6 +283,7 @@ partial class Program
             Try(String("signed int (8)")),
             Try(String("signed int(64)")),
             Try(String("signed   int(32)")),
+            Try(String("signed   int(8)")),
             Try(String("int(4)")),
             Try(String("Box[]")),
             Try(String("Box")),
@@ -348,6 +353,23 @@ partial class Program
             Try(String("DRCInstructionsBasic()")),
             Try(String("DRCCoefficientsUniDRC()")),
             Try(String("DRCInstructionsUniDRC()")),
+            Try(String("HEVCConfigurationBox")),
+            Try(String("LHEVCConfigurationBox")),
+            Try(String("AVCConfigurationBox")),
+            Try(String("SVCConfigurationBox")),
+            Try(String("ScalabilityInformationSEIBox")),
+            Try(String("SVCPriorityAssignmentBox")),
+            Try(String("ViewScalabilityInformationSEIBox")),
+            Try(String("ViewIdentifierBox")),
+            Try(String("MVCConfigurationBox")),
+            Try(String("MVCViewPriorityAssignmentBox")),
+            Try(String("IntrinsicCameraParametersBox")),
+            Try(String("ExtrinsicCameraParametersBox")),
+            Try(String("MVCDConfigurationBox")),
+            Try(String("MVDScalabilityInformationSEIBox")),
+            Try(String("A3DConfigurationBox")),
+            Try(String("VvcOperatingPointsRecord")),
+            Try(String("VVCSubpicIDRewritingInfomationStruct()")),
             Try(String("size += 5")), // WORKAROUND
             Try(String("j=1")), // WORKAROUND
             Try(String("j++")), // WORKAROUND
@@ -421,13 +443,15 @@ partial class Program
             Try(String("('snut')")),
             Try(String("('resv')")),
             Try(String("('msrc')")),
+            Try(String("('cstg')")),
+            Try(String("('alte')")),
             Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)"))
             ).Labelled("class type");
 
     public static Parser<char, PseudoExtendedClass> ExtendedClass => Map((oldBoxType, boxType, extendedBoxName, parameters) => new PseudoExtendedClass(oldBoxType, boxType, extendedBoxName, parameters),
             SkipWhitespaces.Then(Try(String("extends")).Optional()).Then(SkipWhitespaces).Then(Try(BoxName).Optional()),
             SkipWhitespaces.Then(Char('(')).Then(Try(OldBoxType).Optional()),
-            SkipWhitespaces.Then(Try(BoxType).Optional()),
+            SkipWhitespaces.Then(Try(String("'avc1' or 'avc3'")).Or(Try(BoxType)).Optional()),
             SkipWhitespaces.Then(Try(Char(',')).Optional()).Then(Try(Parameters).Optional()).Before(Char(')')).Before(SkipWhitespaces).Optional()
         );
 
@@ -444,26 +468,11 @@ partial class Program
     static void Main(string[] args)
     {
         Box.ParseOrThrow(
-            "class AudioSampleEntry(codingname) extends SampleEntry (codingname){\r\n" +
-            "\tconst unsigned int(32)[2] reserved = 0;\r\n" +
-            "\tunsigned int(16) channelcount;\r\n" +
-            "\ttemplate unsigned int(16) samplesize = 16;\r\n" +
-            "\tunsigned int(16) pre_defined = 0;\r\n" +
-            "\tconst unsigned int(16) reserved = 0 ;\r\n" +
-            "\ttemplate unsigned int(32) samplerate = { default samplerate of media}<<16;\r\n" +
-            "\t// optional boxes follow\r\n" +
-            "\tBox ();\t\t// further boxes as needed\r\n" +
-            "\tChannelLayout();\r\n" +
-            "\tDownMixInstructions() [];\r\n" +
-            "\tDRCCoefficientsBasic() [];\r\n" +
-            "\tDRCInstructionsBasic() [];\r\n" +
-            "\tDRCCoefficientsUniDRC() [];\r\n" +
-            "\tDRCInstructionsUniDRC() [];\r\n" +
-            "\t// we permit only one DRC Extension box:\r\n" +
-            "\tUniDrcConfigExtension();\r\n" +
-            "\t// optional boxes follow\r\n" +
-            "\tSamplingRateBox();\r\n" +
-            "\tChannelLayout();\r\n" +
+            "aligned(8) class TrackGroupTypeBox('cstg') extends FullBox('cstg', version = 0, flags = 0)\n" +
+            "{\n" +
+            "\tunsigned int(32) track_group_id;\n" +
+            "\t// the remaining data may be specified \n" +
+            "\t//  for a particular track_group_type\n" +
             "}"
             );
 
