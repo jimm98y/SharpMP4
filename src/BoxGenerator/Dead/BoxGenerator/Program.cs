@@ -207,6 +207,7 @@ partial class Program
             Try(String("template int(32)[9]")),
             Try(String("unsigned int(32)")),
             Try(String("unsigned int(24)")),
+            Try(String("unsigned int(29)")),
             Try(String("unsigned int(26)")),
             Try(String("unsigned int(16)")),
             Try(String("unsigned int(12)")),
@@ -245,6 +246,7 @@ partial class Program
             Try(String("template unsigned int(32)")),
             Try(String("template unsigned int(16)[3]")),
             Try(String("template unsigned int(16)")),
+            Try(String("template unsigned int(8)")),
             Try(String("int(16)")),
             Try(String("int(32)")),
             Try(String("const bit(16)")),
@@ -258,6 +260,7 @@ partial class Program
             Try(String("bit(7)")),
             Try(String("bit(8)")),
             Try(String("bit(16)")),
+            Try(String("bit(31)")),
             Try(String("bit(8 ceil(size / 8) \u2013 size)")),
             Try(String("utf8string")),
             Try(String("utfstring")),
@@ -338,6 +341,13 @@ partial class Program
             Try(String("VvcSubpicOrderEntry")),
             Try(String("URIInitBox")),
             Try(String("URIbox")),
+            Try(String("CleanApertureBox")),
+            Try(String("PixelAspectRatioBox")),
+            Try(String("DownMixInstructions()")),
+            Try(String("DRCCoefficientsBasic()")),
+            Try(String("DRCInstructionsBasic()")),
+            Try(String("DRCCoefficientsUniDRC()")),
+            Try(String("DRCInstructionsUniDRC()")),
             Try(String("size += 5")), // WORKAROUND
             Try(String("j=1")), // WORKAROUND
             Try(String("j++")), // WORKAROUND
@@ -407,6 +417,10 @@ partial class Program
             Try(String("(handler_type)")),
             Try(String("(referenceType)")),
             Try(String("(unsigned int(32) reference_type)")),
+            Try(String("(grouping_type, version, flags)")),
+            Try(String("('snut')")),
+            Try(String("('resv')")),
+            Try(String("('msrc')")),
             Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)"))
             ).Labelled("class type");
 
@@ -430,19 +444,26 @@ partial class Program
     static void Main(string[] args)
     {
         Box.ParseOrThrow(
-            "aligned(8) class BoxHeader (\n" +
-            "\t\tunsigned int(32) boxtype,\n" +
-            "\t\toptional unsigned int(8)[16] extended_type) {\n" +
-            "\tunsigned int(32) size;\n" +
-            "\tunsigned int(32) type = boxtype;\n" +
-            "\tif (size==1) {\n" +
-            "\t\tunsigned int(64) largesize;\n" +
-            "\t} else if (size==0) {\n" +
-            "\t\t// box extends to end of file\n" +
-            "\t}\n" +
-            "\tif (boxtype=='uuid') {\n" +
-            "\t\tunsigned int(8)[16] usertype = extended_type;\n" +
-            "\t}\n" +
+            "class AudioSampleEntry(codingname) extends SampleEntry (codingname){\r\n" +
+            "\tconst unsigned int(32)[2] reserved = 0;\r\n" +
+            "\tunsigned int(16) channelcount;\r\n" +
+            "\ttemplate unsigned int(16) samplesize = 16;\r\n" +
+            "\tunsigned int(16) pre_defined = 0;\r\n" +
+            "\tconst unsigned int(16) reserved = 0 ;\r\n" +
+            "\ttemplate unsigned int(32) samplerate = { default samplerate of media}<<16;\r\n" +
+            "\t// optional boxes follow\r\n" +
+            "\tBox ();\t\t// further boxes as needed\r\n" +
+            "\tChannelLayout();\r\n" +
+            "\tDownMixInstructions() [];\r\n" +
+            "\tDRCCoefficientsBasic() [];\r\n" +
+            "\tDRCInstructionsBasic() [];\r\n" +
+            "\tDRCCoefficientsUniDRC() [];\r\n" +
+            "\tDRCInstructionsUniDRC() [];\r\n" +
+            "\t// we permit only one DRC Extension box:\r\n" +
+            "\tUniDrcConfigExtension();\r\n" +
+            "\t// optional boxes follow\r\n" +
+            "\tSamplingRateBox();\r\n" +
+            "\tChannelLayout();\r\n" +
             "}"
             );
 

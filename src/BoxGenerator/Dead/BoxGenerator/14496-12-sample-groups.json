@@ -77,7 +77,7 @@
       "description": "Clean Aperture Sample Grouping",
       "containers": [ "sgpd" ],
       "type": "CleanAperture",
-      "syntax": "class CleanAperture Entry() extends VisualSampleGroupEntry ('casg'){\n\tunsigned int(32) cleanApertureWidthN;\n\tunsigned int(32) cleanApertureWidthD;\n\n\tunsigned int(32) cleanApertureHeightN;\n\tunsigned int(32) cleanApertureHeightD;\n\n\n\tunsigned int(32) horizOffN;\n\tunsigned int(32) horizOffD;\n\n\n\tunsigned int(32) vertOffN;\n\tunsigned int(32) vertOffD;\n\n}"
+      "syntax": "class CleanApertureEntry() extends VisualSampleGroupEntry ('casg'){\n\tunsigned int(32) cleanApertureWidthN;\n\tunsigned int(32) cleanApertureWidthD;\n\n\tunsigned int(32) cleanApertureHeightN;\n\tunsigned int(32) cleanApertureHeightD;\n\n\n\tunsigned int(32) horizOffN;\n\tunsigned int(32) horizOffD;\n\n\n\tunsigned int(32) vertOffN;\n\tunsigned int(32) vertOffD;\n\n}"
     }
   ]
 }

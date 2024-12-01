@@ -105,7 +105,7 @@
       "description": "Protected RTP Reception",
       "type": "ProtectedRtpReceptionHintSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "Class ProtectedRtpReceptionHintSampleEntry\n\textends RtpReceptionHintSampleEntry ('prtp') {\n\tProtectionSchemeInfoBox\t\tSchemeInformation;\n}"
+      "syntax": "class ProtectedRtpReceptionHintSampleEntry\n\textends RtpReceptionHintSampleEntry ('prtp') {\n\tProtectionSchemeInfoBox\t\tSchemeInformation;\n}"
     },
     {
       "fourcc": "rm2t",
@@ -238,21 +238,21 @@
       "description": "Restricted text",
       "type": "SimpleTextSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "TODO: Syntax from ISOBMFF Table 8 seems to refer to wrong SampleEntry class. It should be PlainTextSampleEntry"
+      "syntax": null
     },
     {
       "fourcc": "resu",
       "description": "Restricted subtitle",
       "type": "XMLSubitleSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "TODO: Probably it should be SubtitleSampleEntry"
+      "syntax": null
     },
     {
       "fourcc": "ress",
       "description": "Restricted system",
       "type": "MP4VisualSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "System streams are defined in ISO/IEC 14496-14"
+      "syntax": null
     },
     {
       "fourcc": "resf",
