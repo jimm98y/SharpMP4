@@ -15,17 +15,20 @@ public class PseudoClass : PseudoCode
 {
     public string BoxName { get; }
     public Maybe<string> ClassType { get; }
+    public Maybe<string> Comment { get; }
     public IEnumerable<PseudoCode> Fields { get; }
     public Maybe<string> Alignment { get; }
     public Maybe<PseudoExtendedClass> Extended { get; }
 
     public PseudoClass(
-        Maybe<string> alignment, 
+        Maybe<string> comment,
+        Maybe<string> alignment,
         string boxName, 
         Maybe<string> classType,
         Maybe<PseudoExtendedClass> extended,
         IEnumerable<PseudoCode> fields)
     {
+        Comment = comment;
         BoxName = boxName;
         ClassType = classType;
         Fields = fields;
@@ -207,17 +210,21 @@ partial class Program
             Try(String("unsigned int(48)")),
             Try(String("template int(32)[9]")),
             Try(String("unsigned int(32)")),
+            Try(String("unsigned_int(32)")),
             Try(String("unsigned int(24)")),
             Try(String("unsigned int(29)")),
             Try(String("unsigned int(26)")),
             Try(String("unsigned int(16)")),
+            Try(String("unsigned_int(16)")),
             Try(String("unsigned int(15)")),
             Try(String("unsigned int(12)")),
             Try(String("unsigned int(10)")),
             Try(String("unsigned int(15)")),
             Try(String("unsigned int(8)[length]")),
+            Try(String("unsigned int(9)")),
             Try(String("unsigned int(8)")),
             Try(String("unsigned int(7)")),
+            Try(String("unsigned int(6)")),
             Try(String("unsigned int(5)[3]")),
             Try(String("unsigned int(5)")),
             Try(String("unsigned int(4)")),
@@ -238,6 +245,7 @@ partial class Program
             Try(String("unsigned int((length_size_of_sample_num+1) * 8)")),
             Try(String("unsigned int(8*size-64)")),
             Try(String("unsigned int(8)[16]")),
+            Try(String("unsigned int(subgroupIdLen)")),
             Try(String("const unsigned int(32)[2]")),
             Try(String("const unsigned int(32)[3]")),
             Try(String("const unsigned int(32)")),
@@ -263,6 +271,7 @@ partial class Program
             Try(String("bit(7)")),
             Try(String("bit(8)")),
             Try(String("bit(16)")),
+            Try(String("bit(24)")),
             Try(String("bit(31)")),
             Try(String("bit(8 ceil(size / 8) \u2013 size)")),
             Try(String("bit(8* ps_nalu_length)")),
@@ -370,9 +379,21 @@ partial class Program
             Try(String("A3DConfigurationBox")),
             Try(String("VvcOperatingPointsRecord")),
             Try(String("VVCSubpicIDRewritingInfomationStruct()")),
+            Try(String("MPEG4ExtensionDescriptorsBox")),
+            Try(String("bit(8*dci_nal_unit_length)")),
+            Try(String("DependencyInfo")),
+            Try(String("VvcPTLRecord(0)")),
+            Try(String("EVCSliceComponentTrackConfigurationBox")),
+            Try(String("SVCMetadataSampleConfigBox")),
+            Try(String("SVCPriorityLayerInfoBox")),
+            Try(String("EVCConfigurationBox")),
+            Try(String("VvcNALUConfigBox")),
+            Try(String("VvcConfigurationBox")),
+            Try(String("HEVCTileConfigurationBox")),
             Try(String("size += 5")), // WORKAROUND
             Try(String("j=1")), // WORKAROUND
             Try(String("j++")), // WORKAROUND
+            Try(String("subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")), // WORKAROUND
             Try(String("totalPatternLength = 0")) // WORKAROUND
             )
         .Labelled("field type");
@@ -445,18 +466,26 @@ partial class Program
             Try(String("('msrc')")),
             Try(String("('cstg')")),
             Try(String("('alte')")),
+            Try(String("('vvcb', version, flags)")),
             Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)"))
             ).Labelled("class type");
 
     public static Parser<char, PseudoExtendedClass> ExtendedClass => Map((oldBoxType, boxType, extendedBoxName, parameters) => new PseudoExtendedClass(oldBoxType, boxType, extendedBoxName, parameters),
             SkipWhitespaces.Then(Try(String("extends")).Optional()).Then(SkipWhitespaces).Then(Try(BoxName).Optional()),
             SkipWhitespaces.Then(Char('(')).Then(Try(OldBoxType).Optional()),
-            SkipWhitespaces.Then(Try(String("'avc1' or 'avc3'")).Or(Try(BoxType)).Optional()),
+            SkipWhitespaces.Then(
+                    Try(String("'avc2' or 'avc4'")).Or(
+                    Try(String("'svc1' or 'svc2'"))).Or(
+                    Try(String("'vvc1' or 'vvi1'"))).Or(
+                    Try(String("'evs1' or 'evs2'"))).Or(
+                    Try(String("'avc1' or 'avc3'"))).Or(
+                    Try(BoxType)).Optional()),
             SkipWhitespaces.Then(Try(Char(',')).Optional()).Then(Try(Parameters).Optional()).Before(Char(')')).Before(SkipWhitespaces).Optional()
         );
 
     public static Parser<char, PseudoClass> Box =>
-        Map((alignment, boxName, classType, extended, fields) => new PseudoClass(alignment, boxName, classType, extended, fields),
+        Map((comment, alignment, boxName, classType, extended, fields) => new PseudoClass(comment, alignment, boxName, classType, extended, fields),
+            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(SkipBlockComment(String("/*"), String("*/")))).Optional()),
             Try(String("aligned(8)")).Optional(),
             SkipWhitespaces.Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
             SkipWhitespaces.Then(Try(ClassType).Optional()),
@@ -468,11 +497,11 @@ partial class Program
     static void Main(string[] args)
     {
         Box.ParseOrThrow(
-            "aligned(8) class TrackGroupTypeBox('cstg') extends FullBox('cstg', version = 0, flags = 0)\n" +
+            "class SVCMetadataSampleEntry () extends MetadataSampleEntry('svcM')\n" +
             "{\n" +
-            "\tunsigned int(32) track_group_id;\n" +
-            "\t// the remaining data may be specified \n" +
-            "\t//  for a particular track_group_type\n" +
+            "\tSVCMetadataSampleConfigBox\tconfig;\n" +
+            "\tSVCPriorityAssignmentBox\tmethods;\t\t// optional\n" +
+            "\tSVCPriorityLayerInfoBox\t\tpriorities;\t// optional\n" +
             "}"
             );
 
