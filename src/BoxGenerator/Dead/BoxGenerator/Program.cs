@@ -324,6 +324,8 @@ partial class Program
             Try(String("OperatingPointsRecord")),
             Try(String("VvcSubpicIDEntry")),
             Try(String("VvcSubpicOrderEntry")),
+            Try(String("URIInitBox")),
+            Try(String("URIbox")),
             Try(String("size += 5")), // WORKAROUND
             Try(String("j=1")), // WORKAROUND
             Try(String("j++")), // WORKAROUND
@@ -391,6 +393,8 @@ partial class Program
             Try(String("(fmt)")),
             Try(String("(codingname)")),
             Try(String("(handler_type)")),
+            Try(String("(referenceType)")),
+            Try(String("(unsigned int(32) reference_type)")),
             Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)"))
             ).Labelled("class type");
 
@@ -399,7 +403,7 @@ partial class Program
             Try(String("aligned(8)")).Optional(),
             SkipWhitespaces.Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
             SkipWhitespaces.Then(Try(ClassType).Optional()),
-            SkipWhitespaces.Then(Try(String("extends")).Optional()).Then(SkipWhitespaces).Then(Try(BoxName)).Optional(),
+            SkipWhitespaces.Then(String("extends")).Then(SkipWhitespaces).Then(Try(BoxName)).Optional(),
             SkipWhitespaces.Then(Char('(')).Then(Try(OldBoxType).Optional()),
             SkipWhitespaces.Then(Try(BoxType).Optional()),
             SkipWhitespaces.Then(Try(Char(',')).Optional()).Then(Try(Parameters).Optional()).Before(Char(')')).Before(SkipWhitespaces).Optional(),
@@ -410,30 +414,22 @@ partial class Program
     static void Main(string[] args)
     {
         Box.ParseOrThrow(
-            "class RectangularRegionGroupEntry() extends VisualSampleGroupEntry ('trif')\n" +
-            "{\n" +
-            "\tunsigned int(16) groupID;\n" +
-            "\tunsigned int(1) rect_region_flag;\n" +
-            "\tif (!rect_region_flag)\n" +
-            "\t\tbit(7)  reserved = 0;\n" +
-            "\telse {\n" +
-            "\t\tunsigned int(2) independent_idc;\n" +
-            "\t\tunsigned int(1) full_picture;\n" +
-            "\t\tunsigned int(1) filtering_disabled;\n" +
-            "\t\tunsigned int(1) has_dependency_list;\n" +
-            "\t\tbit(2)  reserved = 0;\n" +
-            "\t\tif (!full_picture) {\n" +
-            "\t\t\tunsigned int(16) horizontal_offset;\n" +
-            "\t\t\tunsigned int(16) vertical_offset;\n" +
-            "\t\t}\n" +
-            "\t\tunsigned int(16) region_width;\n" +
-            "\t\tunsigned int(16) region_height;\n" +
-            "\t\tif (has_dependency_list) {\n" +
-            "\t\t\tunsigned int(16) dependency_rect_region_count;\n" +
-            "\t\t\tfor (i=1; i<= dependency_rect_region_count; i++)\n" +
-            "\t\t\t\tunsigned int(16) dependencyRectRegionGroupID;\n" +
-            "\t}" +
-            "\n}\n}"
+            "aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {\n" +
+            "\tunsigned int(16) from_item_ID;\n" +
+            "\tunsigned int(16) reference_count;\n" +
+            "\tfor (j=0; j<reference_count; j++) {\n" +
+            "\t\tunsigned int(16) to_item_ID;\n" +
+            "\t}\n" +
+            "}\n" +
+            "\n" +
+            "\n" +
+            "aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {\n" +
+            "\tunsigned int(32) from_item_ID;\n" +
+            "\tunsigned int(16) reference_count;\n" +
+            "\tfor (j=0; j<reference_count; j++) {\n" +
+            "\t\tunsigned int(32) to_item_ID;\n" +
+            "\t}\n" +
+            "}"
             );
 
         string[] files = {
