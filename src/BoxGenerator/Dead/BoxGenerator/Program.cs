@@ -216,6 +216,7 @@ partial class Program
 
     public static Parser<char, string> FieldType =>
         OneOf(
+            Try(String("int i, j")), // WORKAROUND
             Try(String("unsigned int(64)")),
             Try(String("unsigned int(48)")),
             Try(String("template int(32)[9]")),
@@ -268,8 +269,11 @@ partial class Program
             Try(String("template unsigned int(16)[3]")),
             Try(String("template unsigned int(16)")),
             Try(String("template unsigned int(8)")),
-            Try(String("int(16)")),
             Try(String("int(32)")),
+            Try(String("int(16)")),
+            Try(String("int(8)")),
+            Try(String("int(4)")),
+            Try(String("int")),
             Try(String("const bit(16)")),
             Try(String("const bit(1)")),
             Try(String("bit(1)")),
@@ -303,7 +307,6 @@ partial class Program
             Try(String("signed int(64)")),
             Try(String("signed   int(32)")),
             Try(String("signed   int(8)")),
-            Try(String("int(4)")),
             Try(String("Box[]")),
             Try(String("Box")),
             Try(String("SchemeTypeBox")),
@@ -311,7 +314,6 @@ partial class Program
             Try(String("ItemPropertyContainerBox")),
             Try(String("ItemPropertyAssociationBox")),
             Try(String("char")),
-            Try(String("int")),
             Try(String("loudness")),
             Try(String("ICC_profile")),
             Try(String("OriginalFormatBox(fmt)")),

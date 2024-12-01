@@ -266,14 +266,14 @@
       "description": "Advanced Video Coding",
       "containers": [ "stsd" ],
       "type": "AVC2SVCSampleEntry",
-      "syntax": "class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+      "syntax": "class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
     },
     {
       "fourcc": "avc4",
       "description": "Advanced Video Coding",
       "containers": [ "stsd" ],
       "type": "AVC2SVCSampleEntry",
-      "syntax": "class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+      "syntax": "class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
     },
     {
       "fourcc": "svc1",
