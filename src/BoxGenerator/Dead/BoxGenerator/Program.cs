@@ -14,16 +14,32 @@ public abstract class PseudoCode
 public class PseudoClass : PseudoCode
 {
     public string BoxName { get; }
+    public Maybe<string> OldBoxType { get; }
     public Maybe<string> BoxType { get; }
+    public Maybe<string> ClassType { get; }
     public IEnumerable<PseudoCode> Fields { get; }
     public Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> Parameters { get; }
+    public Maybe<string> Alignment { get; }
+    public Maybe<string> ExtendedBoxName { get; }
 
-    public PseudoClass(string boxName, Maybe<string> boxType, Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> parameters, IEnumerable<PseudoCode> fields)
+    public PseudoClass(
+        Maybe<string> alignment, 
+        string boxName, 
+        Maybe<string> classType,
+        Maybe<string> oldBoxType, 
+        Maybe<string> boxType, 
+        Maybe<string> extendedBoxName, 
+        Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> parameters, 
+        IEnumerable<PseudoCode> fields)
     {
         BoxName = boxName;
+        ClassType = classType;
+        OldBoxType = oldBoxType;
         BoxType = boxType;
         Parameters = parameters;
         Fields = fields;
+        Alignment = alignment;
+        ExtendedBoxName = extendedBoxName;
     }
 
 }
@@ -379,12 +395,14 @@ partial class Program
             ).Labelled("class type");
 
     public static Parser<char, PseudoClass> Box =>
-        Map((boxName, boxType, parameters, fields) => new PseudoClass(boxName, boxType, parameters, fields),
-            Try(String("aligned(8)")).Optional().Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier).Before(SkipWhitespaces)
-                .Before(ClassType.Optional())
-                .Before(SkipWhitespaces),
-            Try(String("extends")).Optional().Then(SkipWhitespaces).Then(Try(BoxName.Then(SkipWhitespaces).Then(Char('(')).Then(Try(OldBoxType).Optional()).Then(BoxType))).Optional(),
-            Try(Try(Char(',').Then(Parameters)).Optional().Before(Char(')')).Before(SkipWhitespaces)).Optional(),
+        Map((alignment, boxName, classType, oldBoxType, boxType, extendedBoxName, parameters, fields) => new PseudoClass(alignment, boxName, classType, oldBoxType, boxType, extendedBoxName, parameters, fields),
+            Try(String("aligned(8)")).Optional(),
+            SkipWhitespaces.Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
+            SkipWhitespaces.Then(Try(ClassType).Optional()),
+            SkipWhitespaces.Then(Try(String("extends")).Optional()).Then(SkipWhitespaces).Then(Try(BoxName)).Optional(),
+            SkipWhitespaces.Then(Char('(')).Then(Try(OldBoxType).Optional()),
+            SkipWhitespaces.Then(Try(BoxType).Optional()),
+            SkipWhitespaces.Then(Try(Char(',')).Optional()).Then(Try(Parameters).Optional()).Before(Char(')')).Before(SkipWhitespaces).Optional(),
             Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}'))
         );
 
