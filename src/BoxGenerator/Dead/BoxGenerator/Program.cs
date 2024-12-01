@@ -14,31 +14,43 @@ public abstract class PseudoCode
 public class PseudoClass : PseudoCode
 {
     public string BoxName { get; }
-    public Maybe<string> OldBoxType { get; }
-    public Maybe<string> BoxType { get; }
     public Maybe<string> ClassType { get; }
     public IEnumerable<PseudoCode> Fields { get; }
-    public Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> Parameters { get; }
     public Maybe<string> Alignment { get; }
-    public Maybe<string> ExtendedBoxName { get; }
+    public Maybe<PseudoExtendedClass> Extended { get; }
 
     public PseudoClass(
         Maybe<string> alignment, 
         string boxName, 
         Maybe<string> classType,
-        Maybe<string> oldBoxType, 
-        Maybe<string> boxType, 
-        Maybe<string> extendedBoxName, 
-        Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> parameters, 
+        Maybe<PseudoExtendedClass> extended,
         IEnumerable<PseudoCode> fields)
     {
         BoxName = boxName;
         ClassType = classType;
+        Fields = fields;
+        Alignment = alignment;
+        Extended = extended;
+    }
+
+}
+
+public class PseudoExtendedClass : PseudoCode
+{
+    public Maybe<string> OldBoxType { get; }
+    public Maybe<string> BoxType { get; }
+    public Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> Parameters { get; }
+    public Maybe<string> ExtendedBoxName { get; }
+
+    public PseudoExtendedClass(
+        Maybe<string> oldBoxType,
+        Maybe<string> boxType,
+        Maybe<string> extendedBoxName,
+        Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> parameters)
+    {
         OldBoxType = oldBoxType;
         BoxType = boxType;
         Parameters = parameters;
-        Fields = fields;
-        Alignment = alignment;
         ExtendedBoxName = extendedBoxName;
     }
 
@@ -398,15 +410,19 @@ partial class Program
             Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)"))
             ).Labelled("class type");
 
+    public static Parser<char, PseudoExtendedClass> ExtendedClass => Map((oldBoxType, boxType, extendedBoxName, parameters) => new PseudoExtendedClass(oldBoxType, boxType, extendedBoxName, parameters),
+            SkipWhitespaces.Then(Try(String("extends")).Optional()).Then(SkipWhitespaces).Then(Try(BoxName).Optional()),
+            SkipWhitespaces.Then(Char('(')).Then(Try(OldBoxType).Optional()),
+            SkipWhitespaces.Then(Try(BoxType).Optional()),
+            SkipWhitespaces.Then(Try(Char(',')).Optional()).Then(Try(Parameters).Optional()).Before(Char(')')).Before(SkipWhitespaces).Optional()
+        );
+
     public static Parser<char, PseudoClass> Box =>
-        Map((alignment, boxName, classType, oldBoxType, boxType, extendedBoxName, parameters, fields) => new PseudoClass(alignment, boxName, classType, oldBoxType, boxType, extendedBoxName, parameters, fields),
+        Map((alignment, boxName, classType, extended, fields) => new PseudoClass(alignment, boxName, classType, extended, fields),
             Try(String("aligned(8)")).Optional(),
             SkipWhitespaces.Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
             SkipWhitespaces.Then(Try(ClassType).Optional()),
-            SkipWhitespaces.Then(String("extends")).Then(SkipWhitespaces).Then(Try(BoxName)).Optional(),
-            SkipWhitespaces.Then(Char('(')).Then(Try(OldBoxType).Optional()),
-            SkipWhitespaces.Then(Try(BoxType).Optional()),
-            SkipWhitespaces.Then(Try(Char(',')).Optional()).Then(Try(Parameters).Optional()).Before(Char(')')).Before(SkipWhitespaces).Optional(),
+            SkipWhitespaces.Then(Try(ExtendedClass).Optional()),
             Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}'))
         );
 
@@ -414,20 +430,18 @@ partial class Program
     static void Main(string[] args)
     {
         Box.ParseOrThrow(
-            "aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {\n" +
-            "\tunsigned int(16) from_item_ID;\n" +
-            "\tunsigned int(16) reference_count;\n" +
-            "\tfor (j=0; j<reference_count; j++) {\n" +
-            "\t\tunsigned int(16) to_item_ID;\n" +
+            "aligned(8) class BoxHeader (\n" +
+            "\t\tunsigned int(32) boxtype,\n" +
+            "\t\toptional unsigned int(8)[16] extended_type) {\n" +
+            "\tunsigned int(32) size;\n" +
+            "\tunsigned int(32) type = boxtype;\n" +
+            "\tif (size==1) {\n" +
+            "\t\tunsigned int(64) largesize;\n" +
+            "\t} else if (size==0) {\n" +
+            "\t\t// box extends to end of file\n" +
             "\t}\n" +
-            "}\n" +
-            "\n" +
-            "\n" +
-            "aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {\n" +
-            "\tunsigned int(32) from_item_ID;\n" +
-            "\tunsigned int(16) reference_count;\n" +
-            "\tfor (j=0; j<reference_count; j++) {\n" +
-            "\t\tunsigned int(32) to_item_ID;\n" +
+            "\tif (boxtype=='uuid') {\n" +
+            "\t\tunsigned int(8)[16] usertype = extended_type;\n" +
             "\t}\n" +
             "}"
             );
@@ -495,4 +509,3 @@ partial class Program
 
     static partial void HelloFrom(string name);
 }
-
