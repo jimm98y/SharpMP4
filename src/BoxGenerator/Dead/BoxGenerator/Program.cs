@@ -233,10 +233,12 @@ partial class Program
             Try(String("bit(8 ceil(size / 8) \u2013 size)")),
             Try(String("utf8string")),
             Try(String("utfstring")),
+            Try(String("utf8list")),
             Try(String("boxstring")),
             Try(String("string")),
             Try(String("bit(32)[6]")),
             Try(String("uint(32)")),
+            Try(String("uint(16)")),
             Try(String("uint(64)")),
             Try(String("uint(8)")),
             Try(String("unsigned int(6)")),
@@ -302,7 +304,11 @@ partial class Program
             Try(String("Descriptor")),
             Try(String("WebVTTConfigurationBox")),
             Try(String("WebVTTSourceLabelBox")),
+            Try(String("AVCConfigurationBox")),
+            Try(String("OperatingPointsRecord")),
             Try(String("size += 5")), // WORKAROUND
+            Try(String("j=1")), // WORKAROUND
+            Try(String("j++")), // WORKAROUND
             Try(String("totalPatternLength = 0")) // WORKAROUND
             )
         .Labelled("field type");
@@ -336,7 +342,13 @@ partial class Program
 
     public static Parser<char, PseudoCode> Block =>
         Map((type, condition, comment, content) => new PseudoBlock(type, condition, comment, content),
-            OneOf(Try(String("else if")), Try(String("if")), Try(String("else")), Try(String("for"))).Before(SkipWhitespaces),
+            OneOf(
+                Try(String("else if")), 
+                Try(String("if")), 
+                Try(String("else")),
+                Try(String("do")),
+                Try(String("for"))
+                ).Before(SkipWhitespaces),
             Try(Parentheses).Optional(),
             SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(SkipBlockComment(String("/*"), String("*/")))).Optional()),
             SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
@@ -377,6 +389,22 @@ partial class Program
 
     static void Main(string[] args)
     {
+        Box.ParseOrThrow(
+            "class AlternativeStartupEntry() extends VisualSampleGroupEntry ('alst')\n" +
+            "{\n" +
+            "\tunsigned int(16) roll_count;\n" +
+            "\tunsigned int(16) first_output_sample;\n" +
+            "\tfor (i=1; i <= roll_count; i++)\n" +
+            "\t\tunsigned int(32) sample_offset[i];\n" +
+            "\tj=1;\n" +
+            "\tdo { // optional, until the end of the structure\n" +
+            "\t\tunsigned int(16) num_output_samples[j];\n" +
+            "\t\tunsigned int(16) num_total_samples[j];\n" +
+            "\t\tj++;\n" +
+            "\t}\n" +
+            "}"
+            );
+
         string[] files = {
             "14496-12-boxes.json",
             "14496-15-boxes.json",

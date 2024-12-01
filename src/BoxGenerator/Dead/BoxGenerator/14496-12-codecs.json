@@ -49,7 +49,7 @@
       "description": "Encrypted/protected video",
       "type": "VisualSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "SampleEntry('encv') {\n\tProtectionSchemeInfoBox {\n\t\tOriginalFormatBox;\t// data_format is 'resv'\n\t\tSchemeTypeBox;\n\t\tSchemeInformationBox;\n\t}\n\tRestrictedSchemeInfoBox {\n\t\tOriginalFormatBox; // data_format indicates a codec, e.g. 'avc1'\n\t\tSchemeTypeBox;\n\t\tSchemeInformationBox;\n\t}\n\t// Boxes specific to the untransformed sample entry type\n\t// For 'avc1', these would include AVCConfigurationBox\n}"
+      "syntax": "class SampleEntry('encv') {\n\tProtectionSchemeInfoBox {\n\t\tOriginalFormatBox;\t// data_format is 'resv'\n\t\tSchemeTypeBox;\n\t\tSchemeInformationBox;\n\t}\n\tRestrictedSchemeInfoBox {\n\t\tOriginalFormatBox; // data_format indicates a codec, e.g. 'avc1'\n\t\tSchemeTypeBox;\n\t\tSchemeInformationBox;\n\t}\n\t// Boxes specific to the untransformed sample entry type\n\t// For 'avc1', these would include AVCConfigurationBox\n}"
     },
     {
       "fourcc": "metx",
