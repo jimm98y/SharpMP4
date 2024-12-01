@@ -182,7 +182,7 @@
       "description": "HEVC Tile Region",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class RectangularRegionGroupEntry() extends VisualSampleGroupEntry ('trif')\n{\n\tunsigned int(16) groupID;\n\tunsigned int(1) rect_region_flag;\n\tif (!rect_region_flag)\n\t\tbit(7)  reserved = 0;\n\telse {\n\t\tunsigned int(2) independent_idc;\n\t\tunsigned int(1) full_picture;\n\t\tunsigned int(1) filtering_disabled;\n\t\tunsigned int(1) has_dependency_list;\n\t\tbit(2)  reserved = 0;\n\t\tif (!full_picture) {\n\t\t\tunsigned int(16) horizontal_offset;\n\t\t\tunsigned int(16) vertical_offset;\n\t\t}\n\t\tunsigned int(16) region_width;\n\t\tunsigned int(16) region_height;\n\t\tif (has_dependency_list) {\n\t\t\tunsigned int(16) dependency_rect_region_count;\n\t\t\tfor (i=1; i<= dependency_rect_region_count; i++)\n\t\t\t\tunsigned int(16) dependencyRectRegionGroupID;\n\t}\n}"
+      "syntax": "class RectangularRegionGroupEntry() extends VisualSampleGroupEntry ('trif')\n{\n\tunsigned int(16) groupID;\n\tunsigned int(1) rect_region_flag;\n\tif (!rect_region_flag)\n\t\tbit(7)  reserved = 0;\n\telse {\n\t\tunsigned int(2) independent_idc;\n\t\tunsigned int(1) full_picture;\n\t\tunsigned int(1) filtering_disabled;\n\t\tunsigned int(1) has_dependency_list;\n\t\tbit(2)  reserved = 0;\n\t\tif (!full_picture) {\n\t\t\tunsigned int(16) horizontal_offset;\n\t\t\tunsigned int(16) vertical_offset;\n\t\t}\n\t\tunsigned int(16) region_width;\n\t\tunsigned int(16) region_height;\n\t\tif (has_dependency_list) {\n\t\t\tunsigned int(16) dependency_rect_region_count;\n\t\t\tfor (i=1; i<= dependency_rect_region_count; i++)\n\t\t\t\tunsigned int(16) dependencyRectRegionGroupID;\n\t}\n}\n}"
     },
     {
       "fourcc": "tsas",
