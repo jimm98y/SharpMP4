@@ -17,6 +17,7 @@ public class PseudoClass : PseudoCode
     public string BoxName { get; }
     public string ClassType { get; }
     public string Comment { get; }
+    public string EndComment { get; }
     public IList<PseudoCode> Fields { get; }
     public string Alignment { get; }
     public PseudoExtendedClass Extended { get; }
@@ -27,7 +28,8 @@ public class PseudoClass : PseudoCode
         string boxName, 
         Maybe<string> classType,
         Maybe<PseudoExtendedClass> extended,
-        IEnumerable<PseudoCode> fields)
+        IEnumerable<PseudoCode> fields,
+        Maybe<string> endComment)
     {
         Comment = comment.GetValueOrDefault();
         BoxName = boxName;
@@ -35,6 +37,7 @@ public class PseudoClass : PseudoCode
         Fields = fields.ToList();
         Alignment = alignment.GetValueOrDefault();
         Extended = extended.GetValueOrDefault();
+        EndComment = endComment.GetValueOrDefault();
     }
 
 }
@@ -491,20 +494,21 @@ partial class Program
         );
 
     public static Parser<char, PseudoClass> Box =>
-        Map((comment, alignment, boxName, classType, extended, fields) => new PseudoClass(comment, alignment, boxName, classType, extended, fields),
+        Map((comment, alignment, boxName, classType, extended, fields, endComment) => new PseudoClass(comment, alignment, boxName, classType, extended, fields, endComment),
             SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
             Try(String("aligned(8)")).Optional(),
             SkipWhitespaces.Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
             SkipWhitespaces.Then(Try(ClassType).Optional()),
             SkipWhitespaces.Then(Try(ExtendedClass).Optional()),
-            Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}'))
+            Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}')),
+            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional())
         );
+
+    public static Parser<char, IEnumerable<PseudoClass>> Boxes => SkipWhitespaces.Then(Box.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
 
     static void Main(string[] args)
     {
-        Box.ParseOrThrow("class ColourInformationBox extends Box('colr'){\n\tunsigned int(32) colour_type;\n\tif (colour_type == 'nclx')\t/* on-screen colours */\n\t{\n\t\tunsigned int(16) colour_primaries;\n\t\tunsigned int(16) transfer_characteristics;\n\t\tunsigned int(16) matrix_coefficients;\n\t\tunsigned int(1)  full_range_flag;\n\t\tunsigned int(7)  reserved = 0;\n\t}\n\telse if (colour_type == 'rICC')\n\t{\n\t\tICC_profile;\t// restricted ICC profile\n\t}\n\telse if (colour_type == 'prof')\n\t{\n\t\tICC_profile;\t// unrestricted ICC profile\n\t}\n}");
-
         string[] files = {
             "14496-12-boxes.json",
             "14496-15-boxes.json",
@@ -544,30 +548,35 @@ partial class Program
 
                     if (string.IsNullOrEmpty(sample))
                     {
-                        //Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()} (empty)");
+                        Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()} (empty)");
                         success++;
                         continue;
                     }
 
                     try
                     {
-                        PseudoClass result = Box.ParseOrThrow(sample);
-                        result.FourCC = element.GetProperty("fourcc").GetString();
-                        ret.Add(result);
-                        //Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()}");
-                        success++;
+                        var result = Boxes.ParseOrThrow(sample);
+                        foreach (var item in result)
+                        {
+                            item.FourCC = element.GetProperty("fourcc").GetString();
+                            success++;
+                            ret.Add(item);
+                        }
+                        
+                        Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()}");
+                        
                     }
                     catch (Exception e)
                     {
-                        //Console.WriteLine(e.Message);
-                        //Console.WriteLine($"Failed to parse: {element.GetProperty("fourcc").GetString()}");
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine($"Failed to parse: {element.GetProperty("fourcc").GetString()}");
                         fail++;
                     }
                 }
             }
         }
 
-        //Console.WriteLine($"Succeessful: {success}, Failed: {fail}, Total: {success + fail}");
+        Console.WriteLine($"Successful: {success}, Failed: {fail}, Total: {success + fail}");
         string js = Newtonsoft.Json.JsonConvert.SerializeObject(ret);
         File.WriteAllText("result.json", js);
     }

@@ -122,7 +122,7 @@
       "description": "maximum data rate",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintmaxrate extends Box('maxr') {\t// maximum data rate\n\tuint(32)\tperiod;\t\t\t// in milliseconds\n\tuint(32)\tbytes; }\t\t\t// max bytes sent in any period 'period' long\n\t\t\t\t\t\t\t\t\t//  including RTP headers"
+      "syntax": "aligned(8) class hintmaxrate extends Box('maxr') {\t// maximum data rate\n\tuint(32)\tperiod;\t\t\t// in milliseconds\n\tuint(32)\tbytes; }\t\t\t// max bytes sent in any period 'period' long including RTP headers"
     },
     {
       "fourcc": "dmed",
