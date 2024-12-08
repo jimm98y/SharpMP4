@@ -53,7 +53,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static byte ReadInt8(Stream stream)
+    internal static sbyte ReadInt8(Stream stream)
     {
         throw new NotImplementedException();
     }
@@ -153,7 +153,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteInt8(Stream stream, byte value)
+    internal static ulong WriteInt8(Stream stream, sbyte value)
     {
         throw new NotImplementedException();
     }

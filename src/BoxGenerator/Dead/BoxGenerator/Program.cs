@@ -1,9 +1,10 @@
 ﻿using Pidgin;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection.Metadata;
 using System.Text.Json;
-using static Pidgin.Parser;
 using static Pidgin.Parser<char>;
+using static Pidgin.Parser;
 
 namespace ConsoleApp;
 
@@ -642,7 +643,9 @@ namespace BoxGenerator2
         cls += "\r\n{\r\n";
         cls += $"\tpublic override string FourCC {{ get {{ return \"{b.FourCC}\"; }} }}";
 
-        foreach (var field in b.Fields)
+        var fields = FlattenFields(b.Fields);
+
+        foreach (var field in fields)
         {
             cls += "\r\n" + BuildProperty(field);
         }
@@ -666,6 +669,94 @@ namespace BoxGenerator2
         cls += "}\r\n";
 
         return cls;
+    }
+
+    private static List<PseudoField> FlattenFields(IEnumerable<PseudoCode> fields)
+    {
+        Dictionary<string, PseudoField> ret = new Dictionary<string, PseudoField>();
+        foreach(var code in fields)
+        {
+            if (code is PseudoField field)
+            {
+                if (IsWorkaround(field.Type))
+                    continue;
+
+                string name = GetFieldName(field);
+                if (!ret.TryAdd(name, field))
+                {
+                    if (CompareTypeSize(ret[name].Type, field.Type) < 0)
+                    {
+                        ret[name] = field;
+                    }
+                }
+            }
+            else if (code is PseudoBlock block)
+            {
+                var blockFields = FlattenFields(block.Content);
+                foreach (var blockField in blockFields)
+                {
+                    string name = GetFieldName(blockField);
+                    if (!ret.TryAdd(name, blockField))
+                    {
+                        if (CompareTypeSize(ret[name].Type, blockField.Type) < 0)
+                        {
+                            ret[name] = blockField;
+                        }
+                    }
+                }
+            }
+        }
+        return ret.Values.ToList();
+    }
+
+    private static int CompareTypeSize(string type1, string type2)
+    {
+        if (type1 == type2)
+            return 0;
+
+        List<string> map = new List<string>()
+        {
+            "bit(8 ceil(size / 8) – size)",
+            "unsigned int(64)",
+            "signed int(64)",
+            "int(64)",
+            "unsigned int(32)[3]",
+            "const unsigned int(32)[2]",
+            "const unsigned int(32)",
+            "int(32)",
+            "int",
+            "unsigned int(32)",
+            "signed int(32)",
+            "signed   int(32)",
+            "const unsigned int(16)[3]",
+            "const unsigned int(16)",
+            "unsigned int(16)",
+            "const bit(16)",
+            "int(16)",
+            "unsigned int(15)",
+            "unsigned int(12)",
+            "unsigned int(8)",
+            "bit(8)",
+            "bit(7)",
+            "unsigned int(7)",
+            "unsigned int(6)",
+            "bit(6)",
+            "unsigned int(4)",
+            "bit(4)",
+            "bit(3)",
+            "bit(2)",
+            "unsigned int(1)",
+            "bit(1)",
+            "SingleItemTypeReferenceBoxLarge",
+            "SingleItemTypeReferenceBox",
+        };
+
+        if (!map.Contains(type1))
+            throw new Exception(type1);
+        if (!map.Contains(type2))
+            throw new Exception(type2);
+
+        return map.IndexOf(type2) - map.IndexOf(type1); 
     }
 
     private static string BuildProperty(PseudoCode field)
@@ -715,17 +806,17 @@ namespace BoxGenerator2
                     typedef = "";
                     value = "";
                 }
-                if(value == "= {if track_is_audio 0x0100 else 0}") // TODO
+                if (value == "= {if track_is_audio 0x0100 else 0}") // TODO
                 {
                     value = "= 0";
                     comment = "// = { default samplerate of media}<<16;" + comment;
                 }
-                else if(value == "= { default samplerate of media}<<16")
+                else if (value == "= { default samplerate of media}<<16")
                 {
                     value = "= 0";
                     comment = "// = {if track_is_audio 0x0100 else 0};" + comment;
                 }
-                else if(GetType((field as PseudoField)?.Type) == "bool" && !string.IsNullOrEmpty(value))
+                else if (GetType((field as PseudoField)?.Type) == "bool" && !string.IsNullOrEmpty(value))
                 {
                     if (value == "= 0")
                         value = "= false";
@@ -739,18 +830,24 @@ namespace BoxGenerator2
                 {
                     value = " " + value.Replace("'", "\"") + ";";
                 }
-
-                string name = Sanitize((field as PseudoField)?.Name);
-                if(string.IsNullOrEmpty(name))
-                {
-                    name = GetType((field as PseudoField)?.Type)?.Replace("[]", "");
-                }
-
+                
+                string name = GetFieldName(field);
                 return $"\tpublic {GetType((field as PseudoField)?.Type)}{typedef} {name} {{ get; set; }}{value}{comment}";
             }
         }
         else
             return "";
+    }
+
+    private static string GetFieldName(PseudoCode field)
+    {
+        string name = Sanitize((field as PseudoField)?.Name);
+        if (string.IsNullOrEmpty(name))
+        {
+            name = GetType((field as PseudoField)?.Type)?.Replace("[]", "");
+        }
+
+        return name;
     }
 
     private static string BuildReadMethod(PseudoCode field, int level)
@@ -778,12 +875,7 @@ namespace BoxGenerator2
                 return $"{tt};";
         }
 
-        string name = Sanitize((field as PseudoField)?.Name);
-        if (string.IsNullOrEmpty(name))
-        {
-            name = GetType((field as PseudoField)?.Type)?.Replace("[]", "");
-        }
-
+        string name = GetFieldName(field);
         string m = GetReadMethod(tt);
         string typedef = "";
         string value = (field as PseudoField)?.Value;
@@ -842,12 +934,7 @@ namespace BoxGenerator2
                 return $"{tt};";
         }
 
-        string name = Sanitize((field as PseudoField)?.Name);
-        if (string.IsNullOrEmpty(name))
-        {
-            name = GetType((field as PseudoField)?.Type)?.Replace("[]","");
-        }
-
+        string name = GetFieldName(field);
         string m = GetWriteMethod(tt);
 
         string typedef = "";
