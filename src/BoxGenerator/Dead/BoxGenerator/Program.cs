@@ -944,7 +944,7 @@ namespace BoxGenerator2
             typedef = value;
         }
 
-        return $"{spacing}size += {m}, this.{name}{typedef});";
+        return $"{spacing}size += {m}, ({GetType(tt)})this.{name}{typedef});";
     }
 
     private static string BuildWriteBlock(PseudoBlock block, int level)
@@ -1454,7 +1454,7 @@ namespace BoxGenerator2
             { "int(64)", "long" },
             { "int(32)", "int" },
             { "int(16)", "short" },
-            { "int(8)", "byte" },
+            { "int(8)", "sbyte" },
             { "int(4)", "byte" },
             { "int", "int" },
             { "const bit(16)", "ushort" },
