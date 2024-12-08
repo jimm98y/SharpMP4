@@ -399,6 +399,8 @@ partial class Program
             Try(String("A3DConfigurationBox")),
             Try(String("VvcOperatingPointsRecord")),
             Try(String("VVCSubpicIDRewritingInfomationStruct()")),
+            Try(String("MPEG4ExtensionDescriptorsBox ()")),
+            Try(String("MPEG4ExtensionDescriptorsBox()")),
             Try(String("MPEG4ExtensionDescriptorsBox")),
             Try(String("bit(8*dci_nal_unit_length)")),
             Try(String("DependencyInfo")),
@@ -654,7 +656,7 @@ namespace BoxGenerator2
         cls += "\r\n\tpublic async override Task ReadAsync(Stream stream)\r\n\t{\r\n\t\tawait base.ReadAsync(stream);";
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildMethod(field, 2, true);
+            cls += "\r\n" + BuildMethodCode(field, 2, true);
         }
         cls += "\r\n\t}\r\n";
 
@@ -662,7 +664,7 @@ namespace BoxGenerator2
         cls += "\r\n\tpublic async override Task<ulong> WriteAsync(Stream stream)\r\n\t{\r\n\t\tulong size = 0;\r\n\t\tsize += await base.WriteAsync(stream);";
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildMethod(field, 2, false);
+            cls += "\r\n" + BuildMethodCode(field, 2, false);
         }
         cls += "\r\n\t\treturn size;\r\n\t}\r\n";
 
@@ -850,13 +852,25 @@ namespace BoxGenerator2
         return name;
     }
 
-    private static string BuildMethod(PseudoCode field, int level, bool isRead)
+    private static string BuildMethodCode(PseudoCode field, int level, bool isRead)
     {
         string spacing = GetSpacing(level);
         var block = field as PseudoBlock;
         if(block != null)
         {
             return BuildBlock(block, level, isRead);
+        }
+
+        var method = field as PseudoMethod;
+        if (method != null)
+        {
+            return BuildMethod(method, level, isRead);
+        }
+
+        var comment = field as PseudoComment;
+        if (comment != null)
+        {
+            return BuildComment(comment, level, isRead);
         }
 
         string tt = (field as PseudoField)?.Type;
@@ -893,6 +907,24 @@ namespace BoxGenerator2
             return $"{spacing}size += {m}, ({GetType(tt)})this.{name}{typedef});";
     }
 
+    private static string BuildComment(PseudoComment comment, int level, bool isRead)
+    {
+        string spacing = GetSpacing(level);
+        string text = comment.Comment;
+        return $"{spacing}/* {text} */";
+    }
+
+    private static string BuildMethod(PseudoMethod method, int level, bool isRead)
+    {
+        string comment = "";
+        if (!string.IsNullOrEmpty(method.Comment))
+        {
+            comment = " //" + method.Comment;
+        }
+        //Debug.WriteLine($"Method: {method.Name}{method.Value}{comment};\r\n");
+        return $"// TODO: This should likely be a FullBox: {method.Name}{method.Value};{comment}\r\n";
+    }
+
     private static string BuildBlock(PseudoBlock block, int level, bool isRead)
     {
         string spacing = GetSpacing(level);
@@ -914,7 +946,7 @@ namespace BoxGenerator2
 
         foreach (var field in block.Content)
         {
-            ret += "\r\n" + BuildMethod(field, level + 1, isRead);
+            ret += "\r\n" + BuildMethodCode(field, level + 1, isRead);
         }
 
         ret += $"\r\n{spacing}}}";
@@ -1114,6 +1146,8 @@ namespace BoxGenerator2
             { "A3DConfigurationBox", "(A3DConfigurationBox)IsoReaderWriter.ReadBox(stream)" },
             { "VvcOperatingPointsRecord", "(VvcOperatingPointsRecord)IsoReaderWriter.ReadClass(stream)" },
             { "VVCSubpicIDRewritingInfomationStruct()", "(VVCSubpicIDRewritingInfomationStruct)IsoReaderWriter.ReadClass(stream)" },
+            { "MPEG4ExtensionDescriptorsBox ()", "(MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream)" },
+            { "MPEG4ExtensionDescriptorsBox()", "(MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream)" },
             { "MPEG4ExtensionDescriptorsBox", "(MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream)" },
             { "bit(8*dci_nal_unit_length)", "IsoReaderWriter.ReadBytes(stream, dci_nal_unit_length)" },
             { "DependencyInfo", "(DependencyInfo)IsoReaderWriter.ReadClass(stream)" },
@@ -1313,6 +1347,8 @@ namespace BoxGenerator2
             { "A3DConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
             { "VvcOperatingPointsRecord", "IsoReaderWriter.WriteClass(stream" },
             { "VVCSubpicIDRewritingInfomationStruct()", "IsoReaderWriter.WriteClass(stream" },
+            { "MPEG4ExtensionDescriptorsBox ()", "IsoReaderWriter.WriteBox(stream" },
+            { "MPEG4ExtensionDescriptorsBox()", "IsoReaderWriter.WriteBox(stream" },
             { "MPEG4ExtensionDescriptorsBox", "IsoReaderWriter.WriteBox(stream" },
             { "bit(8*dci_nal_unit_length)", "IsoReaderWriter.WriteBytes(stream, dci_nal_unit_length" },
             { "DependencyInfo", "IsoReaderWriter.WriteClass(stream" },
@@ -1324,8 +1360,8 @@ namespace BoxGenerator2
             { "VvcNALUConfigBox", "IsoReaderWriter.WriteBox(stream" },
             { "VvcConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
             { "HEVCTileConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
-            { "MetadataKeyTableBox()", "IsoReaderWriter..WriteBox(stream)" },
-            { "BitRateBox ()", "IsoReaderWriter..WriteBox(stream)" },
+            { "MetadataKeyTableBox()", "IsoReaderWriter.WriteBox(stream" },
+            { "BitRateBox ()", "IsoReaderWriter.WriteBox(stream" },
         };
         return map[type];
     }
@@ -1527,6 +1563,8 @@ namespace BoxGenerator2
             { "A3DConfigurationBox", "A3DConfigurationBox" },
             { "VvcOperatingPointsRecord", "VvcOperatingPointsRecord" },
             { "VVCSubpicIDRewritingInfomationStruct()", "VVCSubpicIDRewritingInfomationStruct" },
+            { "MPEG4ExtensionDescriptorsBox ()", "MPEG4ExtensionDescriptorsBox" },
+            { "MPEG4ExtensionDescriptorsBox()", "MPEG4ExtensionDescriptorsBox" },
             { "MPEG4ExtensionDescriptorsBox", "MPEG4ExtensionDescriptorsBox" },
             { "bit(8*dci_nal_unit_length)", "byte[]" },
             { "DependencyInfo", "DependencyInfo" },

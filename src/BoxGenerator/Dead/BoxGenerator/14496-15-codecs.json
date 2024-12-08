@@ -7,7 +7,7 @@
       "description": "HEVC video with parameter sets only in the Sample Entry",
       "type": "HEVCSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hvc1'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hvc1'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "hvc1",
@@ -21,7 +21,7 @@
       "description": "HEVC video with constrained extractors and/or aggregators and parameter sets only in the Sample Entry",
       "type": "HEVCSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hvc2'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hvc2'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "hvc2",
@@ -35,7 +35,7 @@
       "description": "HEVC video with extractors and/or aggregators and parameter sets in the Sample Entry or samples",
       "type": "HEVCSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hvc3'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hvc3'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "hvc3",
@@ -49,21 +49,21 @@
       "description": "Layered HEVC",
       "type": "LHEVCSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class LHEVCSampleEntry() extends VisualSampleEntry ('lhv1') {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class LHEVCSampleEntry() extends VisualSampleEntry ('lhv1') {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "lhe1",
       "description": "Layered HEVC",
       "type": "LHEVCSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class LHEVCSampleEntry() extends VisualSampleEntry ('lhe1') {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class LHEVCSampleEntry() extends VisualSampleEntry ('lhe1') {\r\n\tLHEVCConfigurationBox\t\tlhvcconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "hev1",
       "description": "HEVC video with parameter sets in the Sample Entry or samples",
       "type": "HEVCSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hev1'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hev1'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "hev1",
@@ -77,7 +77,7 @@
       "description": "HEVC video with constrained extractors and/or aggregators and parameter sets in the Sample Entry or sampless",
       "type": "HEVCSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hev2'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hev2'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "hev2",
@@ -91,7 +91,7 @@
       "description": "HEVC video with extractors and/or aggregators and parameter sets in the Sample Entry or samples",
       "type": "HEVCSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hev3'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class HEVCSampleEntry() extends VisualSampleEntry ('hev3'){\r\n\tHEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "hev3",
@@ -112,14 +112,14 @@
       "description": "AVC video with parameter sets only in the Sample Entry",
       "type": "AVCSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class AVCSampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class AVCSampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "avc3",
       "description": "AVC video with parameter sets in the Sample Entry or samples",
       "type": "AVCSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class AVCSampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class AVCSampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "avc1",
@@ -140,14 +140,14 @@
       "description": "AVC video with parameter sets only in the Sample Entry. With additional features",
       "type": "AVC2SampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class AVC2SampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class AVC2SampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "avc4",
       "description": "AVC video with parameter sets only in the Sample Entry or samples. With additional features",
       "type": "AVC2SampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class AVC2SampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\r\n}"
+      "syntax": "class AVC2SampleEntry() extends VisualSampleEntry (type) {\r\n\tAVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "avc2",
@@ -322,14 +322,14 @@
       "description": "Versatile Video Coding with parameter sets only in sample entries",
       "containers": [ "stsd" ],
       "type": "VvcSampleEntry",
-      "syntax": "class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {\n\tVvcConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\n}"
+      "syntax": "class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {\n\tVvcConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\n}"
     },
     {
       "fourcc": "vvi1",
       "description": "Versatile Video Coding with parameter sets only in sample entries",
       "containers": [ "stsd" ],
       "type": "VvcSampleEntry",
-      "syntax": "class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {\n\tVvcConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox ();\t// optional\n}"
+      "syntax": "class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {\n\tVvcConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\n}"
     },
     {
       "fourcc": "vvs1",
@@ -350,7 +350,7 @@
       "description": "Essential Video Coding",
       "containers": [ "stsd" ],
       "type": "EVCSampleEntry",
-      "syntax": "class EVCSampleEntry() extends VisualSampleEntry('evc1'){\n\tEVCConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox();\t// optional\n}"
+      "syntax": "class EVCSampleEntry() extends VisualSampleEntry('evc1'){\n\tEVCConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox() descr;\t// optional\n}"
     },
     {
       "fourcc": "svcM",

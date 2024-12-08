@@ -717,7 +717,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-
+            /*  maximum data rate */
             this.period = IsoReaderWriter.ReadUInt32(stream);
             this.bytes = IsoReaderWriter.ReadUInt32(stream);
         }
@@ -726,7 +726,7 @@ namespace BoxGenerator2
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
-
+            /*  maximum data rate */
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.period);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.bytes);
             return size;
@@ -1640,12 +1640,12 @@ namespace BoxGenerator2
 
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-
+                            /*   layout_channel_count comes from the sample entry */
                             this.speaker_position = IsoReaderWriter.ReadUInt8(stream);
 
                             if (speaker_position == 126)
                             {
-
+                                /*  explicit position */
                                 this.azimuth = IsoReaderWriter.ReadInt16(stream);
                                 this.elevation = IsoReaderWriter.ReadInt8(stream);
                             }
@@ -1684,7 +1684,7 @@ namespace BoxGenerator2
 
                             if (speaker_position == 126)
                             {
-
+                                /*  explicit position */
                                 this.azimuth = IsoReaderWriter.ReadInt16(stream);
                                 this.elevation = IsoReaderWriter.ReadInt8(stream);
                             }
@@ -1706,7 +1706,7 @@ namespace BoxGenerator2
 
                 if (stream_structure & objectStructured)
                 {
-
+                    /*  object_count is derived from baseChannelCount */
                 }
             }
         }
@@ -1729,12 +1729,12 @@ namespace BoxGenerator2
 
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-
+                            /*   layout_channel_count comes from the sample entry */
                             size += IsoReaderWriter.WriteUInt8(stream, (byte)this.speaker_position);
 
                             if (speaker_position == 126)
                             {
-
+                                /*  explicit position */
                                 size += IsoReaderWriter.WriteInt16(stream, (short)this.azimuth);
                                 size += IsoReaderWriter.WriteInt8(stream, (sbyte)this.elevation);
                             }
@@ -1773,7 +1773,7 @@ namespace BoxGenerator2
 
                             if (speaker_position == 126)
                             {
-
+                                /*  explicit position */
                                 size += IsoReaderWriter.WriteInt16(stream, (short)this.azimuth);
                                 size += IsoReaderWriter.WriteInt8(stream, (sbyte)this.elevation);
                             }
@@ -1795,7 +1795,7 @@ namespace BoxGenerator2
 
                 if (stream_structure & objectStructured)
                 {
-
+                    /*  object_count is derived from baseChannelCount */
                 }
             }
             return size;
@@ -1845,7 +1845,7 @@ namespace BoxGenerator2
 
                 if (in_stream == 0)
                 {
-
+                    /*  downmix coefficients are out of stream and supplied here */
 
 
                     if (version >= 1)
@@ -1907,7 +1907,7 @@ namespace BoxGenerator2
 
                 if (in_stream == 0)
                 {
-
+                    /*  downmix coefficients are out of stream and supplied here */
 
 
                     if (version >= 1)
@@ -2293,7 +2293,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-
+            /*  not more than one TrackLoudnessInfo box with version>=1 is allowed */
             this.TrackLoudnessInfo[] = IsoReaderWriter.ReadInt32(stream);
         }
 
@@ -2301,7 +2301,7 @@ namespace BoxGenerator2
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
-
+            /*  not more than one TrackLoudnessInfo box with version>=1 is allowed */
             size += IsoReaderWriter.WriteInt32(stream, (int)this.TrackLoudnessInfo[]);
             return size;
         }
@@ -2458,8 +2458,8 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.properties[] = IsoReaderWriter.ReadBox(stream);
-
-
+            /*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
+            /*  to fill the box */
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -2467,8 +2467,8 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (Box)this.properties[]);
-
-
+            /*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
+            /*  to fill the box */
             return size;
         }
     }
@@ -3036,7 +3036,7 @@ namespace BoxGenerator2
 
                 else
                 {
-
+                    /*  version==0 */
                     this.edit_duration = IsoReaderWriter.ReadUInt32(stream);
                     this.media_time = IsoReaderWriter.ReadInt32(stream);
                 }
@@ -3062,7 +3062,7 @@ namespace BoxGenerator2
 
                 else
                 {
-
+                    /*  version==0 */
                     size += IsoReaderWriter.WriteUInt32(stream, (uint)this.edit_duration);
                     size += IsoReaderWriter.WriteInt32(stream, (int)this.media_time);
                 }
@@ -3493,8 +3493,8 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.data_format = IsoReaderWriter.ReadUInt32(stream);
-
-
+            /*  or un-transformed sample entry (in case of restriction */
+            /*  and complete track information) */
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -3502,8 +3502,8 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.data_format);
-
-
+            /*  or un-transformed sample entry (in case of restriction */
+            /*  and complete track information) */
             return size;
         }
     }
@@ -3934,6 +3934,7 @@ namespace BoxGenerator2
             if (version == 1)
             {
                 this.extension_type = IsoReaderWriter.ReadUInt32(stream);
+                // TODO: This should likely be a FullBox: ItemInfoExtensionextension_type; //optional
 
             }
 
@@ -3983,6 +3984,7 @@ namespace BoxGenerator2
             if (version == 1)
             {
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.extension_type);
+                // TODO: This should likely be a FullBox: ItemInfoExtensionextension_type; //optional
 
             }
 
@@ -4134,18 +4136,18 @@ namespace BoxGenerator2
                 else if (assignment_type == 2)
                 {
                 }
-
+                /*  no further syntax elements needed */
 
                 else if (assignment_type == 3)
                 {
                 }
-
+                /*  no further syntax elements needed */
 
                 else if (assignment_type == 4)
                 {
                     this.sub_track_ID = IsoReaderWriter.ReadUInt32(stream);
                 }
-
+                /*  other assignment_type values are reserved */
             }
         }
 
@@ -4175,18 +4177,18 @@ namespace BoxGenerator2
                 else if (assignment_type == 2)
                 {
                 }
-
+                /*  no further syntax elements needed */
 
                 else if (assignment_type == 3)
                 {
                 }
-
+                /*  no further syntax elements needed */
 
                 else if (assignment_type == 4)
                 {
                     size += IsoReaderWriter.WriteUInt32(stream, (uint)this.sub_track_ID);
                 }
-
+                /*  other assignment_type values are reserved */
             }
             return size;
         }
@@ -4245,7 +4247,7 @@ namespace BoxGenerator2
 
             else
             {
-
+                /*  version==0 */
                 this.creation_time = IsoReaderWriter.ReadUInt32(stream);
                 this.modification_time = IsoReaderWriter.ReadUInt32(stream);
                 this.timescale = IsoReaderWriter.ReadUInt32(stream);
@@ -4271,7 +4273,7 @@ namespace BoxGenerator2
 
             else
             {
-
+                /*  version==0 */
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.creation_time);
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.modification_time);
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.timescale);
@@ -4325,7 +4327,7 @@ namespace BoxGenerator2
 
             else
             {
-
+                /*  version==0 */
                 this.fragment_duration = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -4342,7 +4344,7 @@ namespace BoxGenerator2
 
             else
             {
-
+                /*  version==0 */
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.fragment_duration);
             }
             return size;
@@ -4586,7 +4588,7 @@ namespace BoxGenerator2
 
             else
             {
-
+                /*  version==0 */
                 this.creation_time = IsoReaderWriter.ReadUInt32(stream);
                 this.modification_time = IsoReaderWriter.ReadUInt32(stream);
                 this.timescale = IsoReaderWriter.ReadUInt32(stream);
@@ -4616,7 +4618,7 @@ namespace BoxGenerator2
 
             else
             {
-
+                /*  version==0 */
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.creation_time);
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.modification_time);
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.timescale);
@@ -4799,7 +4801,7 @@ namespace BoxGenerator2
 
             for (int i = 0; ; i++)
             {
-
+                /*  to end of box */
                 this.rate = IsoReaderWriter.ReadUInt32(stream);
                 this.initial_delay = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -4812,7 +4814,7 @@ namespace BoxGenerator2
 
             for (int i = 0; ; i++)
             {
-
+                /*  to end of box */
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.rate);
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.initial_delay);
             }
@@ -5179,7 +5181,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-
+            /*  identical syntax to SchemeTypeBox */
             this.scheme_type = IsoReaderWriter.ReadUInt32(stream);
             this.scheme_version = IsoReaderWriter.ReadUInt32(stream);
 
@@ -5193,7 +5195,7 @@ namespace BoxGenerator2
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
-
+            /*  identical syntax to SchemeTypeBox */
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.scheme_type);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.scheme_version);
 
@@ -5347,8 +5349,9 @@ namespace BoxGenerator2
                         this.description_length = IsoReaderWriter.ReadUInt32(stream);
                     }
                 }
+                // TODO: This should likely be a FullBox: SampleGroupDescriptionEntrygrouping_type; // an instance of a class derived from SampleGroupDescriptionEntry
 
-
+                /*   that is appropriate and permitted for the media type */
             }
         }
 
@@ -5381,8 +5384,9 @@ namespace BoxGenerator2
                         size += IsoReaderWriter.WriteUInt32(stream, (uint)this.description_length);
                     }
                 }
+                // TODO: This should likely be a FullBox: SampleGroupDescriptionEntrygrouping_type; // an instance of a class derived from SampleGroupDescriptionEntry
 
-
+                /*   that is appropriate and permitted for the media type */
             }
             return size;
         }
@@ -5773,6 +5777,7 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
+                // TODO: This should likely be a FullBox: SampleEntry; // an instance of a class derived from SampleEntry
 
             }
         }
@@ -5786,6 +5791,7 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
+                // TODO: This should likely be a FullBox: SampleEntry; // an instance of a class derived from SampleEntry
 
             }
             return size;
@@ -6161,7 +6167,7 @@ namespace BoxGenerator2
 
             else
             {
-
+                /*  version==0 */
                 this.baseMediaDecodeTime = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -6178,7 +6184,7 @@ namespace BoxGenerator2
 
             else
             {
-
+                /*  version==0 */
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.baseMediaDecodeTime);
             }
             return size;
@@ -6203,7 +6209,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.track_ID = IsoReaderWriter.ReadUInt32(stream);
-
+            /*  their presence is indicated by bits in the tf_flags */
             this.base_data_offset = IsoReaderWriter.ReadUInt64(stream);
             this.sample_description_index = IsoReaderWriter.ReadUInt32(stream);
             this.default_sample_duration = IsoReaderWriter.ReadUInt32(stream);
@@ -6216,7 +6222,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.track_ID);
-
+            /*  their presence is indicated by bits in the tf_flags */
             size += IsoReaderWriter.WriteUInt64(stream, (ulong)this.base_data_offset);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.sample_description_index);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.default_sample_duration);
@@ -6343,7 +6349,7 @@ namespace BoxGenerator2
 
             else
             {
-
+                /*  version==0 */
                 this.creation_time = IsoReaderWriter.ReadUInt32(stream);
                 this.modification_time = IsoReaderWriter.ReadUInt32(stream);
                 this.track_ID = IsoReaderWriter.ReadUInt32(stream);
@@ -6376,7 +6382,7 @@ namespace BoxGenerator2
 
             else
             {
-
+                /*  version==0 */
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.creation_time);
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.modification_time);
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.track_ID);
@@ -6559,7 +6565,7 @@ namespace BoxGenerator2
             this.sample_count = IsoReaderWriter.ReadUInt32(stream);
             this.data_offset = IsoReaderWriter.ReadInt32(stream);
             this.first_sample_flags = IsoReaderWriter.ReadUInt32(stream);
-
+            /*  as indicated by bits set in the tr_flags */
 
         }
 
@@ -6570,7 +6576,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.sample_count);
             size += IsoReaderWriter.WriteInt32(stream, (int)this.data_offset);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.first_sample_flags);
-
+            /*  as indicated by bits set in the tr_flags */
 
             return size;
         }
@@ -6667,7 +6673,7 @@ namespace BoxGenerator2
 
             else if (size == 0)
             {
-
+                /*  box extends to end of file */
             }
 
             if (boxtype == "uuid")
@@ -6690,7 +6696,7 @@ namespace BoxGenerator2
 
             else if (size == 0)
             {
-
+                /*  box extends to end of file */
             }
 
             if (boxtype == "uuid")
@@ -7505,7 +7511,7 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
             this.depth_width = IsoReaderWriter.ReadUInt16(stream);
             this.depth_height = IsoReaderWriter.ReadUInt16(stream);
-
+            /*  The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox).  */
             this.depth_hor_mult_minus1 = IsoReaderWriter.ReadUInt16(stream);
             this.depth_ver_mult_minus1 = IsoReaderWriter.ReadUInt16(stream);
             this.depth_hor_rsh = IsoReaderWriter.ReadBits(stream, 4);
@@ -7527,7 +7533,7 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.depth_width);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.depth_height);
-
+            /*  The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox).  */
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.depth_hor_mult_minus1);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.depth_ver_mult_minus1);
             size += IsoReaderWriter.WriteBits(stream, 4, (byte)this.depth_hor_rsh);
@@ -7919,7 +7925,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-
+            /* Mandatory Box */
             this.tierID = IsoReaderWriter.ReadUInt16(stream);
             this.profileIndication = IsoReaderWriter.ReadUInt8(stream);
             this.profile_compatibility = IsoReaderWriter.ReadUInt8(stream);
@@ -7937,7 +7943,7 @@ namespace BoxGenerator2
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
-
+            /* Mandatory Box */
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.tierID);
             size += IsoReaderWriter.WriteUInt8(stream, (byte)this.profileIndication);
             size += IsoReaderWriter.WriteUInt8(stream, (byte)this.profile_compatibility);
@@ -8590,21 +8596,25 @@ namespace BoxGenerator2
 
                 if (constructor_type == 0)
                 {
+                    // TODO: This should likely be a FullBox: SampleConstructor;
 
                 }
 
                 else if (constructor_type == 2)
                 {
+                    // TODO: This should likely be a FullBox: InlineConstructor;
 
                 }
 
                 else if (constructor_type == 3)
                 {
+                    // TODO: This should likely be a FullBox: SampleConstructorFromTrackGroup;
 
                 }
 
                 else if (constructor_type == 6)
                 {
+                    // TODO: This should likely be a FullBox: NALUStartInlineConstructor;
 
                 }
             }
@@ -8623,21 +8633,25 @@ namespace BoxGenerator2
 
                 if (constructor_type == 0)
                 {
+                    // TODO: This should likely be a FullBox: SampleConstructor;
 
                 }
 
                 else if (constructor_type == 2)
                 {
+                    // TODO: This should likely be a FullBox: InlineConstructor;
 
                 }
 
                 else if (constructor_type == 3)
                 {
+                    // TODO: This should likely be a FullBox: SampleConstructorFromTrackGroup;
 
                 }
 
                 else if (constructor_type == 6)
                 {
+                    // TODO: This should likely be a FullBox: NALUStartInlineConstructor;
 
                 }
             }
@@ -8664,7 +8678,7 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
 
             this.sample_statement_type = IsoReaderWriter.ReadUInt8(stream);
-
+            /*  normally group, or seq  */
             this.default_statement_type = IsoReaderWriter.ReadUInt8(stream);
             this.default_statement_length = IsoReaderWriter.ReadUInt8(stream);
             this.entry_count = IsoReaderWriter.ReadUInt8(stream);
@@ -8682,7 +8696,7 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
 
             size += IsoReaderWriter.WriteUInt8(stream, (byte)this.sample_statement_type);
-
+            /*  normally group, or seq  */
             size += IsoReaderWriter.WriteUInt8(stream, (byte)this.default_statement_type);
             size += IsoReaderWriter.WriteUInt8(stream, (byte)this.default_statement_length);
             size += IsoReaderWriter.WriteUInt8(stream, (byte)this.entry_count);
@@ -8783,6 +8797,7 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
             this.config = (WebVTTConfigurationBox)IsoReaderWriter.ReadBox(stream);
             this.label = (WebVTTSourceLabelBox)IsoReaderWriter.ReadBox(stream);
+            // TODO: This should likely be a FullBox: MPEG4BitRateBox; // optional
 
         }
 
@@ -8792,6 +8807,7 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (WebVTTConfigurationBox)this.config);
             size += IsoReaderWriter.WriteBox(stream, (WebVTTSourceLabelBox)this.label);
+            // TODO: This should likely be a FullBox: MPEG4BitRateBox; // optional
 
             return size;
         }
@@ -8944,15 +8960,20 @@ namespace BoxGenerator2
             this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
             this.reserved = IsoReaderWriter.ReadUInt16(stream);
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
             this.DRCCoefficientsBasic = (DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream);
             this.DRCInstructionsBasic = (DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream);
             this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream);
             this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC[])IsoReaderWriter.ReadClasses(stream);
+            // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
+            // TODO: This should likely be a FullBox: SamplingRateBox;
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
         }
 
@@ -8966,15 +8987,20 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.pre_defined);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.reserved);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.samplerate);
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             size += IsoReaderWriter.WriteClass(stream, (DownMixInstructions)this.DownMixInstructions[]);
             size += IsoReaderWriter.WriteClasses(stream, (DRCCoefficientsBasic[])this.DRCCoefficientsBasic);
             size += IsoReaderWriter.WriteClasses(stream, (DRCInstructionsBasic[])this.DRCInstructionsBasic);
             size += IsoReaderWriter.WriteClasses(stream, (DRCCoefficientsUniDRC[])this.DRCCoefficientsUniDRC);
             size += IsoReaderWriter.WriteClasses(stream, (DRCInstructionsUniDRC[])this.DRCInstructionsUniDRC);
+            // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
+            // TODO: This should likely be a FullBox: SamplingRateBox;
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             return size;
         }
@@ -9003,22 +9029,27 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.entry_version = IsoReaderWriter.ReadUInt16(stream);
-
+            /*  and shall be in an stsd with version ==1 */
             this.reserved = IsoReaderWriter.ReadUInt16Array(stream, 3);
             this.channelcount = IsoReaderWriter.ReadUInt16(stream);
             this.samplesize = IsoReaderWriter.ReadUInt16(stream);
             this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
             this.reserved = IsoReaderWriter.ReadUInt16(stream);
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
+            // TODO: This should likely be a FullBox: SamplingRateBox;
 
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
             this.DRCCoefficientsBasic = (DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream);
             this.DRCInstructionsBasic = (DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream);
             this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream);
             this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC[])IsoReaderWriter.ReadClasses(stream);
+            // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
         }
 
@@ -9027,22 +9058,27 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.entry_version);
-
+            /*  and shall be in an stsd with version ==1 */
             size += IsoReaderWriter.WriteUInt16Array(stream, 3, (ushort[])this.reserved);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.channelcount);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.samplesize);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.pre_defined);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.reserved);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.samplerate);
+            // TODO: This should likely be a FullBox: SamplingRateBox;
 
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             size += IsoReaderWriter.WriteClass(stream, (DownMixInstructions)this.DownMixInstructions[]);
             size += IsoReaderWriter.WriteClasses(stream, (DRCCoefficientsBasic[])this.DRCCoefficientsBasic);
             size += IsoReaderWriter.WriteClasses(stream, (DRCInstructionsBasic[])this.DRCInstructionsBasic);
             size += IsoReaderWriter.WriteClasses(stream, (DRCCoefficientsUniDRC[])this.DRCCoefficientsUniDRC);
             size += IsoReaderWriter.WriteClasses(stream, (DRCInstructionsUniDRC[])this.DRCInstructionsUniDRC);
+            // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             return size;
         }
@@ -9071,22 +9107,27 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.entry_version = IsoReaderWriter.ReadUInt16(stream);
-
+            /*  and shall be in an stsd with version ==1 */
             this.reserved = IsoReaderWriter.ReadUInt16Array(stream, 3);
             this.channelcount = IsoReaderWriter.ReadUInt16(stream);
             this.samplesize = IsoReaderWriter.ReadUInt16(stream);
             this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
             this.reserved = IsoReaderWriter.ReadUInt16(stream);
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
+            // TODO: This should likely be a FullBox: SamplingRateBox;
 
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
             this.DRCCoefficientsBasic = (DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream);
             this.DRCInstructionsBasic = (DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream);
             this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream);
             this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC[])IsoReaderWriter.ReadClasses(stream);
+            // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
         }
 
@@ -9095,22 +9136,27 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.entry_version);
-
+            /*  and shall be in an stsd with version ==1 */
             size += IsoReaderWriter.WriteUInt16Array(stream, 3, (ushort[])this.reserved);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.channelcount);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.samplesize);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.pre_defined);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.reserved);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.samplerate);
+            // TODO: This should likely be a FullBox: SamplingRateBox;
 
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             size += IsoReaderWriter.WriteClass(stream, (DownMixInstructions)this.DownMixInstructions[]);
             size += IsoReaderWriter.WriteClasses(stream, (DRCCoefficientsBasic[])this.DRCCoefficientsBasic);
             size += IsoReaderWriter.WriteClasses(stream, (DRCInstructionsBasic[])this.DRCInstructionsBasic);
             size += IsoReaderWriter.WriteClasses(stream, (DRCCoefficientsUniDRC[])this.DRCCoefficientsUniDRC);
             size += IsoReaderWriter.WriteClasses(stream, (DRCInstructionsUniDRC[])this.DRCInstructionsUniDRC);
+            // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             return size;
         }
@@ -9127,14 +9173,14 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-
+            /* other boxes from derived specifications */
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
-
+            /* other boxes from derived specifications */
             return size;
         }
     }
@@ -9205,6 +9251,7 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
             this.content_encoding = IsoReaderWriter.ReadString(stream);
             this.mime_format = IsoReaderWriter.ReadString(stream);
+            // TODO: This should likely be a FullBox: TextConfigBox; // optional
 
         }
 
@@ -9214,6 +9261,7 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteString(stream, (string)this.content_encoding);
             size += IsoReaderWriter.WriteString(stream, (string)this.mime_format);
+            // TODO: This should likely be a FullBox: TextConfigBox; // optional
 
             return size;
         }
@@ -9257,7 +9305,9 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
+            // TODO: This should likely be a FullBox: MetadataKeyTableBox; // mandatory
 
+            // TODO: This should likely be a FullBox: BitRateBox; // optional
 
         }
 
@@ -9265,7 +9315,9 @@ namespace BoxGenerator2
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
+            // TODO: This should likely be a FullBox: MetadataKeyTableBox; // mandatory
 
+            // TODO: This should likely be a FullBox: BitRateBox; // optional
 
             return size;
         }
@@ -9316,6 +9368,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
+            // TODO: This should likely be a FullBox: CompleteTrackInfoBox;
 
             this.config = (AVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
@@ -9324,6 +9377,7 @@ namespace BoxGenerator2
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
+            // TODO: This should likely be a FullBox: CompleteTrackInfoBox;
 
             size += IsoReaderWriter.WriteBox(stream, (AVCConfigurationBox)this.config);
             return size;
@@ -9543,6 +9597,7 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
             this.content_encoding = IsoReaderWriter.ReadString(stream);
             this.mime_format = IsoReaderWriter.ReadString(stream);
+            // TODO: This should likely be a FullBox: TextConfigBox; // optional
 
         }
 
@@ -9552,6 +9607,7 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteString(stream, (string)this.content_encoding);
             size += IsoReaderWriter.WriteString(stream, (string)this.mime_format);
+            // TODO: This should likely be a FullBox: TextConfigBox; // optional
 
             return size;
         }
@@ -9653,6 +9709,7 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
             this.content_encoding = IsoReaderWriter.ReadString(stream);
             this.mime_format = IsoReaderWriter.ReadString(stream);
+            // TODO: This should likely be a FullBox: TextConfigBox; // optional
 
         }
 
@@ -9662,6 +9719,7 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteString(stream, (string)this.content_encoding);
             size += IsoReaderWriter.WriteString(stream, (string)this.mime_format);
+            // TODO: This should likely be a FullBox: TextConfigBox; // optional
 
             return size;
         }
@@ -9802,15 +9860,20 @@ namespace BoxGenerator2
             this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
             this.reserved = IsoReaderWriter.ReadUInt16(stream);
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
             this.DRCCoefficientsBasic = (DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream);
             this.DRCInstructionsBasic = (DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream);
             this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream);
             this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC[])IsoReaderWriter.ReadClasses(stream);
+            // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
+            // TODO: This should likely be a FullBox: SamplingRateBox;
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
         }
 
@@ -9824,15 +9887,20 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.pre_defined);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.reserved);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.samplerate);
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             size += IsoReaderWriter.WriteClass(stream, (DownMixInstructions)this.DownMixInstructions[]);
             size += IsoReaderWriter.WriteClasses(stream, (DRCCoefficientsBasic[])this.DRCCoefficientsBasic);
             size += IsoReaderWriter.WriteClasses(stream, (DRCInstructionsBasic[])this.DRCInstructionsBasic);
             size += IsoReaderWriter.WriteClasses(stream, (DRCCoefficientsUniDRC[])this.DRCCoefficientsUniDRC);
             size += IsoReaderWriter.WriteClasses(stream, (DRCInstructionsUniDRC[])this.DRCInstructionsUniDRC);
+            // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
+            // TODO: This should likely be a FullBox: SamplingRateBox;
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             return size;
         }
@@ -9861,22 +9929,27 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.entry_version = IsoReaderWriter.ReadUInt16(stream);
-
+            /*  and shall be in an stsd with version ==1 */
             this.reserved = IsoReaderWriter.ReadUInt16Array(stream, 3);
             this.channelcount = IsoReaderWriter.ReadUInt16(stream);
             this.samplesize = IsoReaderWriter.ReadUInt16(stream);
             this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
             this.reserved = IsoReaderWriter.ReadUInt16(stream);
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
+            // TODO: This should likely be a FullBox: SamplingRateBox;
 
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
             this.DRCCoefficientsBasic = (DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream);
             this.DRCInstructionsBasic = (DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream);
             this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream);
             this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC[])IsoReaderWriter.ReadClasses(stream);
+            // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
         }
 
@@ -9885,22 +9958,27 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.entry_version);
-
+            /*  and shall be in an stsd with version ==1 */
             size += IsoReaderWriter.WriteUInt16Array(stream, 3, (ushort[])this.reserved);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.channelcount);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.samplesize);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.pre_defined);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.reserved);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.samplerate);
+            // TODO: This should likely be a FullBox: SamplingRateBox;
 
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             size += IsoReaderWriter.WriteClass(stream, (DownMixInstructions)this.DownMixInstructions[]);
             size += IsoReaderWriter.WriteClasses(stream, (DRCCoefficientsBasic[])this.DRCCoefficientsBasic);
             size += IsoReaderWriter.WriteClasses(stream, (DRCInstructionsBasic[])this.DRCInstructionsBasic);
             size += IsoReaderWriter.WriteClasses(stream, (DRCCoefficientsUniDRC[])this.DRCCoefficientsUniDRC);
             size += IsoReaderWriter.WriteClasses(stream, (DRCInstructionsUniDRC[])this.DRCInstructionsUniDRC);
+            // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
+            // TODO: This should likely be a FullBox: ChannelLayout;
 
             return size;
         }
@@ -9938,14 +10016,14 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-
+            /* other boxes from derived specifications */
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
-
+            /* other boxes from derived specifications */
             return size;
         }
     }
@@ -10266,7 +10344,7 @@ namespace BoxGenerator2
 
             while (true)
             {
-
+                /*  optional, until the end of the structure */
                 this.num_output_samples[j] = IsoReaderWriter.ReadUInt16(stream);
                 this.num_total_samples[j] = IsoReaderWriter.ReadUInt16(stream);
                 j++;
@@ -10288,7 +10366,7 @@ namespace BoxGenerator2
 
             while (true)
             {
-
+                /*  optional, until the end of the structure */
                 size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.num_output_samples[j]);
                 size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.num_total_samples[j]);
                 j++;
@@ -10644,7 +10722,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.track_group_id = IsoReaderWriter.ReadUInt32(stream);
-
+            /*   for a particular track_group_type */
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -10652,7 +10730,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.track_group_id);
-
+            /*   for a particular track_group_type */
             return size;
         }
     }
@@ -10953,6 +11031,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "hvc1"; } }
         public HEVCConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public HEVCSampleEntry()
         { }
@@ -10961,7 +11040,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -10969,7 +11048,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (HEVCConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -11003,6 +11082,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "hvc2"; } }
         public HEVCConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public HEVCSampleEntry1()
         { }
@@ -11011,7 +11091,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11019,7 +11099,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (HEVCConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -11053,6 +11133,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "hvc3"; } }
         public HEVCConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public HEVCSampleEntry2()
         { }
@@ -11061,7 +11142,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11069,7 +11150,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (HEVCConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -11103,6 +11184,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "lhv1"; } }
         public LHEVCConfigurationBox lhvcconfig { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public LHEVCSampleEntry()
         { }
@@ -11111,7 +11193,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.lhvcconfig = (LHEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11119,7 +11201,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (LHEVCConfigurationBox)this.lhvcconfig);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -11129,6 +11211,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "lhe1"; } }
         public LHEVCConfigurationBox lhvcconfig { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public LHEVCSampleEntry1()
         { }
@@ -11137,7 +11220,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.lhvcconfig = (LHEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11145,7 +11228,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (LHEVCConfigurationBox)this.lhvcconfig);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -11155,6 +11238,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "hev1"; } }
         public HEVCConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public HEVCSampleEntry3()
         { }
@@ -11163,7 +11247,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11171,7 +11255,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (HEVCConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -11205,6 +11289,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "hev2"; } }
         public HEVCConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public HEVCSampleEntry4()
         { }
@@ -11213,7 +11298,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11221,7 +11306,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (HEVCConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -11255,6 +11340,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "hev3"; } }
         public HEVCConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public HEVCSampleEntry5()
         { }
@@ -11263,7 +11349,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11271,7 +11357,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (HEVCConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -11329,6 +11415,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "avc1"; } }
         public AVCConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public AVCSampleEntry()
         { }
@@ -11337,7 +11424,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (AVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11345,7 +11432,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (AVCConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -11355,6 +11442,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "avc3"; } }
         public AVCConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public AVCSampleEntry1()
         { }
@@ -11363,7 +11451,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (AVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11371,7 +11459,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (AVCConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -11477,6 +11565,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "avc2"; } }
         public AVCConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public AVC2SampleEntry()
         { }
@@ -11485,7 +11574,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (AVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11493,7 +11582,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (AVCConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -11503,6 +11592,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "avc4"; } }
         public AVCConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public AVC2SampleEntry1()
         { }
@@ -11511,7 +11601,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (AVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11519,7 +11609,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (AVCConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -12432,6 +12522,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "vvc1"; } }
         public VvcConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public VvcSampleEntry()
         { }
@@ -12440,7 +12531,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (VvcConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12448,7 +12539,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (VvcConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -12458,6 +12549,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "vvi1"; } }
         public VvcConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public VvcSampleEntry1()
         { }
@@ -12466,7 +12558,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (VvcConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12474,7 +12566,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (VvcConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -12532,6 +12624,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "evc1"; } }
         public EVCConfigurationBox config { get; set; }
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
 
         public EVCSampleEntry()
         { }
@@ -12540,7 +12633,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.config = (EVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
-
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12548,7 +12641,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteBox(stream, (EVCConfigurationBox)this.config);
-
+            size += IsoReaderWriter.WriteBox(stream, (MPEG4ExtensionDescriptorsBox)this.descr);
             return size;
         }
     }
@@ -13444,15 +13537,24 @@ namespace BoxGenerator2
 
             if (groupID == primary_groupID)
             {
+                // TODO: This should likely be a FullBox: ViewIdentifierBox; // Mandatory
 
+                // TODO: This should likely be a FullBox: TierInfoBox; // Mandatory
 
+                // TODO: This should likely be a FullBox: TierDependencyBox; // Mandatory
 
+                // TODO: This should likely be a FullBox: PriorityRangeBox; // Mandatory
 
+                /* Optional Boxes or fields may follow when defined later */
+                // TODO: This should likely be a FullBox: TierBitRateBox; // optional
 
+                // TODO: This should likely be a FullBox: BufferingBox; // optional
 
+                // TODO: This should likely be a FullBox: InitialParameterSetBox; // optional
 
+                // TODO: This should likely be a FullBox: ProtectionSchemeInfoBox; // optional
 
-
+                // TODO: This should likely be a FullBox: ViewPriorityBox; // optional
 
             }
         }
@@ -13470,15 +13572,24 @@ namespace BoxGenerator2
 
             if (groupID == primary_groupID)
             {
+                // TODO: This should likely be a FullBox: ViewIdentifierBox; // Mandatory
 
+                // TODO: This should likely be a FullBox: TierInfoBox; // Mandatory
 
+                // TODO: This should likely be a FullBox: TierDependencyBox; // Mandatory
 
+                // TODO: This should likely be a FullBox: PriorityRangeBox; // Mandatory
 
+                /* Optional Boxes or fields may follow when defined later */
+                // TODO: This should likely be a FullBox: TierBitRateBox; // optional
 
+                // TODO: This should likely be a FullBox: BufferingBox; // optional
 
+                // TODO: This should likely be a FullBox: InitialParameterSetBox; // optional
 
+                // TODO: This should likely be a FullBox: ProtectionSchemeInfoBox; // optional
 
-
+                // TODO: This should likely be a FullBox: ViewPriorityBox; // optional
 
             }
             return size;
@@ -13796,17 +13907,28 @@ namespace BoxGenerator2
 
             if (groupID == primary_groupID)
             {
+                // TODO: This should likely be a FullBox: TierInfoBox; // Mandatory
 
+                // TODO: This should likely be a FullBox: SVCDependencyRangeBox; // Mandatory
 
+                // TODO: This should likely be a FullBox: PriorityRangeBox; // Mandatory
 
+                /* Optional Boxes or fields may follow when defined later */
+                // TODO: This should likely be a FullBox: TierBitRateBox; // optional
 
+                // TODO: This should likely be a FullBox: RectRegionBox; // optional
 
+                // TODO: This should likely be a FullBox: BufferingBox; // optional
 
+                // TODO: This should likely be a FullBox: TierDependencyBox; // optional
 
+                // TODO: This should likely be a FullBox: InitialParameterSetBox; // optional
 
+                // TODO: This should likely be a FullBox: IroiInfoBox; // optional
 
+                // TODO: This should likely be a FullBox: ProtectionSchemeInfoBox; // optional
 
-
+                // TODO: This should likely be a FullBox: TranscodingInfoBox; // optional
 
             }
         }
@@ -13827,17 +13949,28 @@ namespace BoxGenerator2
 
             if (groupID == primary_groupID)
             {
+                // TODO: This should likely be a FullBox: TierInfoBox; // Mandatory
 
+                // TODO: This should likely be a FullBox: SVCDependencyRangeBox; // Mandatory
 
+                // TODO: This should likely be a FullBox: PriorityRangeBox; // Mandatory
 
+                /* Optional Boxes or fields may follow when defined later */
+                // TODO: This should likely be a FullBox: TierBitRateBox; // optional
 
+                // TODO: This should likely be a FullBox: RectRegionBox; // optional
 
+                // TODO: This should likely be a FullBox: BufferingBox; // optional
 
+                // TODO: This should likely be a FullBox: TierDependencyBox; // optional
 
+                // TODO: This should likely be a FullBox: InitialParameterSetBox; // optional
 
+                // TODO: This should likely be a FullBox: IroiInfoBox; // optional
 
+                // TODO: This should likely be a FullBox: ProtectionSchemeInfoBox; // optional
 
-
+                // TODO: This should likely be a FullBox: TranscodingInfoBox; // optional
 
             }
             return size;
@@ -14292,6 +14425,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
+            // TODO: This should likely be a FullBox: ViewPriorityBox;
 
         }
 
@@ -14299,6 +14433,7 @@ namespace BoxGenerator2
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
+            // TODO: This should likely be a FullBox: ViewPriorityBox;
 
             return size;
         }
@@ -14341,7 +14476,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.track_group_id = IsoReaderWriter.ReadUInt32(stream);
-
+            /*   for a particular track_group_type */
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -14349,7 +14484,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.track_group_id);
-
+            /*   for a particular track_group_type */
             return size;
         }
     }
@@ -14367,7 +14502,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.track_group_id = IsoReaderWriter.ReadUInt32(stream);
-
+            /*   for a particular track_group_type */
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -14375,7 +14510,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.track_group_id);
-
+            /*   for a particular track_group_type */
             return size;
         }
     }
@@ -14393,7 +14528,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.track_group_id = IsoReaderWriter.ReadUInt32(stream);
-
+            /*   for a particular track_group_type */
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -14401,7 +14536,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.track_group_id);
-
+            /*   for a particular track_group_type */
             return size;
         }
     }
