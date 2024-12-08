@@ -1,8 +1,9 @@
 ﻿using Pidgin;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using static Pidgin.Parser<char>;
 using static Pidgin.Parser;
+using static Pidgin.Parser<char>;
 
 namespace ConsoleApp;
 
@@ -705,6 +706,7 @@ namespace BoxGenerator2
                 string typedef = "";
                 if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
                 {
+                    Debug.WriteLine($"Wrong: {value}");
                     typedef = "[]";
                     value = "";
                 }
@@ -774,7 +776,13 @@ namespace BoxGenerator2
         }
 
         string m = GetReadMethod(tt);
-        return $"{spacing}this.{name} = {m};";
+        string typedef = "";
+        string value = (field as PseudoField)?.Value;
+        if (!string.IsNullOrEmpty(value) && value.StartsWith("["))
+        {
+            typedef = value;
+        }
+        return $"{spacing}this.{name}{typedef} = {m};";
     }
 
     private static string BuildReadBlock(PseudoBlock block, int level)
@@ -832,7 +840,15 @@ namespace BoxGenerator2
         }
 
         string m = GetWriteMethod(tt);
-        return $"{spacing}size += {m}, this.{name});";
+
+        string typedef = "";
+        string value = (field as PseudoField)?.Value;
+        if (!string.IsNullOrEmpty(value) && value.StartsWith("["))
+        {
+            typedef = value;
+        }
+
+        return $"{spacing}size += {m}, this.{name}{typedef});";
     }
 
     private static string BuildWriteBlock(PseudoBlock block, int level)
@@ -1385,7 +1401,7 @@ namespace BoxGenerator2
             { "SchemeInformationBox", "SchemeInformationBox" },
             { "ItemPropertyContainerBox", "ItemPropertyContainerBox" },
             { "ItemPropertyAssociationBox", "ItemPropertyAssociationBox" },
-            { "char", "char" },
+            { "char", "byte" },
             { "loudness", "int" },
             { "ICC_profile", "ICC_profile" },
             { "OriginalFormatBox(fmt)", "OriginalFormatBox" },
