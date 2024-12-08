@@ -725,6 +725,15 @@ namespace BoxGenerator2
                     value = "= 0";
                     comment = "// = {if track_is_audio 0x0100 else 0};" + comment;
                 }
+                else if(GetType((field as PseudoField)?.Type) == "bool" && !string.IsNullOrEmpty(value))
+                {
+                    if (value == "= 0")
+                        value = "= false";
+                    else if (value == "= 1")
+                        value = "= true";
+                    else
+                        Debug.WriteLine($"Unsupported bool value: {value}");
+                }
 
                 if (!string.IsNullOrEmpty(value))
                 {
@@ -1362,8 +1371,8 @@ namespace BoxGenerator2
             { "int(4)", "byte" },
             { "int", "int" },
             { "const bit(16)", "ushort" },
-            { "const bit(1)", "byte" },
-            { "bit(1)", "byte" },
+            { "const bit(1)", "bool" },
+            { "bit(1)", "bool" },
             { "bit(2)", "byte" },
             { "bit(3)", "byte" },
             { "bit(4)", "byte" },

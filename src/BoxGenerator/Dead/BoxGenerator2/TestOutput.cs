@@ -1341,8 +1341,8 @@ namespace BoxGenerator2
     public class ContentColourVolumeBox : Box
     {
         public override string FourCC { get { return "cclv"; } }
-        public bool reserved1 { get; set; } = 0; //  ccv_cancel_flag
-        public bool reserved2 { get; set; } = 0; //  ccv_persistence_flag
+        public bool reserved1 { get; set; } = false; //  ccv_cancel_flag
+        public bool reserved2 { get; set; } = false; //  ccv_persistence_flag
         public bool ccv_primaries_present_flag { get; set; }
         public bool ccv_min_luminance_value_present_flag { get; set; }
         public bool ccv_max_luminance_value_present_flag { get; set; }
@@ -1843,15 +1843,15 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "dmix"; } }
 
-        public byte reserved { get; set; } = 0;
+        public bool reserved { get; set; } = false;
         public byte downmix_instructions_count { get; set; }
 
         public int downmix_instructions_count { get; set; } = 1;
 
         public byte targetLayout { get; set; }
-        public bool reserved { get; set; } = 0;
+        public bool reserved { get; set; } = false;
         public byte targetChannelCount { get; set; }
-        public byte in_stream { get; set; }
+        public bool in_stream { get; set; }
         public byte downmix_ID { get; set; }
 
 
@@ -2073,7 +2073,7 @@ namespace BoxGenerator2
     public class CopyrightBox : FullBox
     {
         public override string FourCC { get { return "cprt"; } }
-        public byte pad { get; set; } = 0;
+        public bool pad { get; set; } = false;
         public byte[] language { get; set; } //  ISO-639-2/T language code
         public string notice { get; set; }
 
@@ -2540,7 +2540,7 @@ namespace BoxGenerator2
         public uint item_ID { get; set; }
         public byte association_count { get; set; }
 
-        public byte essential { get; set; }
+        public bool essential { get; set; }
 
         public ushort property_index { get; set; }
 
@@ -4394,7 +4394,7 @@ namespace BoxGenerator2
         public uint modification_time { get; set; }
         public uint timescale { get; set; }
         public uint duration { get; set; }
-        public byte pad { get; set; } = 0;
+        public bool pad { get; set; } = false;
         public byte[] language { get; set; } //  ISO-639-2/T language code
         public ushort pre_defined { get; set; } = 0;
 
@@ -4864,9 +4864,9 @@ namespace BoxGenerator2
         public uint sample_count { get; set; }
 
 
-        public byte reserved { get; set; } = 0;
+        public bool reserved { get; set; } = false;
         public byte pad1 { get; set; }
-        public byte reserved { get; set; } = 0;
+        public bool reserved { get; set; } = false;
         public byte pad2 { get; set; }
 
         public PaddingBitsBox()
@@ -10915,7 +10915,7 @@ namespace BoxGenerator2
     public class TemporalLevelEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "tele"; } }
-        public byte level_independently_decodable { get; set; }
+        public bool level_independently_decodable { get; set; }
         public byte reserved { get; set; } = 0;
 
         public TemporalLevelEntry()
@@ -13181,13 +13181,13 @@ namespace BoxGenerator2
         public byte[] ptl_idx { get; set; }
         public ushort[] ols_idx { get; set; }
         public byte[] layer_count { get; set; }
-        public byte reserved { get; set; } = 0;
+        public bool reserved { get; set; } = false;
         public bool[] layer_info_present_flag { get; set; }
 
 
         public byte[] layer_id { get; set; }
         public bool[] is_output_layer { get; set; }
-        public byte reserved { get; set; } = 0;
+        public bool reserved { get; set; } = false;
         public byte reserved { get; set; } = 0;
         public ushort num_operating_points { get; set; }
 
@@ -13714,7 +13714,7 @@ namespace BoxGenerator2
     public class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "lbli"; } }
-        public byte reserved { get; set; } = 1;
+        public bool reserved { get; set; } = true;
         public bool bl_irap_pic_flag { get; set; }
         public byte bl_irap_nal_unit_type { get; set; }
         public sbyte sample_offset { get; set; }
@@ -13756,7 +13756,7 @@ namespace BoxGenerator2
         public byte layer_id { get; set; }
         public byte min_TemporalId { get; set; }
         public byte max_TemporalId { get; set; }
-        public byte reserved { get; set; } = 0;
+        public bool reserved { get; set; } = false;
         public byte sub_layer_presence_flags { get; set; }
 
         public LayerInfoGroupEntry()
@@ -16696,8 +16696,8 @@ namespace BoxGenerator2
     public class ContentColourVolumeBox1 : Box
     {
         public override string FourCC { get { return "cclv"; } }
-        public bool reserved1 { get; set; } = 0; //  ccv_cancel_flag
-        public bool reserved2 { get; set; } = 0; //  ccv_persistence_flag
+        public bool reserved1 { get; set; } = false; //  ccv_cancel_flag
+        public bool reserved2 { get; set; } = false; //  ccv_persistence_flag
         public bool ccv_primaries_present_flag { get; set; }
         public bool ccv_min_luminance_value_present_flag { get; set; }
         public bool ccv_max_luminance_value_present_flag { get; set; }
