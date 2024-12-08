@@ -654,7 +654,7 @@ namespace BoxGenerator2
         cls += "\r\n\tpublic async override Task ReadAsync(Stream stream)\r\n\t{\r\n\t\tawait base.ReadAsync(stream);";
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildReadMethod(field, 2);
+            cls += "\r\n" + BuildMethod(field, 2, true);
         }
         cls += "\r\n\t}\r\n";
 
@@ -662,7 +662,7 @@ namespace BoxGenerator2
         cls += "\r\n\tpublic async override Task<ulong> WriteAsync(Stream stream)\r\n\t{\r\n\t\tulong size = 0;\r\n\t\tsize += await base.WriteAsync(stream);";
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildWriteMethod(field, 2);
+            cls += "\r\n" + BuildMethod(field, 2, false);
         }
         cls += "\r\n\t\treturn size;\r\n\t}\r\n";
 
@@ -850,13 +850,13 @@ namespace BoxGenerator2
         return name;
     }
 
-    private static string BuildReadMethod(PseudoCode field, int level)
+    private static string BuildMethod(PseudoCode field, int level, bool isRead)
     {
         string spacing = GetSpacing(level);
         var block = field as PseudoBlock;
         if(block != null)
         {
-            return BuildReadBlock(block, level);
+            return BuildBlock(block, level, isRead);
         }
 
         string tt = (field as PseudoField)?.Type;
@@ -880,17 +880,20 @@ namespace BoxGenerator2
         }
 
         string name = GetFieldName(field);
-        string m = GetReadMethod(tt);
+        string m = isRead ? GetReadMethod(tt) : GetWriteMethod(tt);
         string typedef = "";
         string value = (field as PseudoField)?.Value;
         if (!string.IsNullOrEmpty(value) && value.StartsWith("["))
         {
             typedef = value;
         }
-        return $"{spacing}this.{name}{typedef} = {m};";
+        if(isRead)
+            return $"{spacing}this.{name}{typedef} = {m};";
+        else
+            return $"{spacing}size += {m}, ({GetType(tt)})this.{name}{typedef});";
     }
 
-    private static string BuildReadBlock(PseudoBlock block, int level)
+    private static string BuildBlock(PseudoBlock block, int level, bool isRead)
     {
         string spacing = GetSpacing(level);
         string ret;
@@ -911,78 +914,7 @@ namespace BoxGenerator2
 
         foreach (var field in block.Content)
         {
-            ret += "\r\n" + BuildReadMethod(field, level + 1);
-        }
-
-        ret += $"\r\n{spacing}}}";
-
-        return ret;
-    }
-
-    private static string BuildWriteMethod(PseudoCode field, int level)
-    {
-        string spacing = GetSpacing(level);
-        var block = field as PseudoBlock;
-        if (block != null)
-        {
-            return BuildWriteBlock(block, level);
-        }
-
-        string tt = (field as PseudoField)?.Type;
-
-        if (string.IsNullOrEmpty(tt) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
-            tt = (field as PseudoField)?.Name?.Replace("[]", "").Replace("()", "");
-
-        if (string.IsNullOrEmpty(tt))
-            return "";
-
-        if (IsWorkaround(tt))
-        {
-            if (tt == "int i, j" || tt == "int i,j" || tt == "int i") // this one must be ignored
-                return "";
-            else if (tt == "j=1")
-                return "int j = 1;";
-            else if (tt == "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")
-                return "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);";
-            else
-                return $"{tt};";
-        }
-
-        string name = GetFieldName(field);
-        string m = GetWriteMethod(tt);
-
-        string typedef = "";
-        string value = (field as PseudoField)?.Value;
-        if (!string.IsNullOrEmpty(value) && value.StartsWith("["))
-        {
-            typedef = value;
-        }
-
-        return $"{spacing}size += {m}, ({GetType(tt)})this.{name}{typedef});";
-    }
-
-    private static string BuildWriteBlock(PseudoBlock block, int level)
-    {
-        string spacing = GetSpacing(level);
-        string ret;
-
-        string condition = block.Condition?.Replace("'", "\"").Replace("floor(", "("); ;
-        string blockType = block.Type; 
-        if (blockType == "for")
-        {
-            condition = "(int " + condition.TrimStart('(');
-        }
-        else if (blockType == "do")
-        {
-            blockType = "while";
-            condition = "(true)";
-        }
-
-        ret = $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
-
-        foreach (var field in block.Content)
-        {
-            ret += "\r\n" + BuildWriteMethod(field, level + 1);
+            ret += "\r\n" + BuildMethod(field, level + 1, isRead);
         }
 
         ret += $"\r\n{spacing}}}";
