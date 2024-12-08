@@ -14,7 +14,7 @@ public abstract class PseudoCode
 public class PseudoClass : PseudoCode
 {
     public string FourCC { get; set; }
-    public string BoxName { get; }
+    public string BoxName { get; set; }
     public string ClassType { get; }
     public string Comment { get; }
     public string EndComment { get; }
@@ -217,6 +217,7 @@ partial class Program
     public static Parser<char, string> FieldType =>
         OneOf(
             Try(String("int i, j")), // WORKAROUND
+            Try(String("int i,j")), // WORKAROUND
             Try(String("unsigned int(64)")),
             Try(String("unsigned int(48)")),
             Try(String("template int(32)[9]")),
@@ -230,8 +231,9 @@ partial class Program
             Try(String("unsigned int(15)")),
             Try(String("unsigned int(12)")),
             Try(String("unsigned int(10)")),
-            Try(String("unsigned int(15)")),
             Try(String("unsigned int(8)[length]")),
+            Try(String("unsigned int(8)[32]")),
+            Try(String("unsigned int(8)[16]")),
             Try(String("unsigned int(9)")),
             Try(String("unsigned int(8)")),
             Try(String("unsigned int(7)")),
@@ -255,11 +257,11 @@ partial class Program
             Try(String("unsigned int((length_size_of_trun_num+1) * 8)")),
             Try(String("unsigned int((length_size_of_sample_num+1) * 8)")),
             Try(String("unsigned int(8*size-64)")),
-            Try(String("unsigned int(8)[16]")),
             Try(String("unsigned int(subgroupIdLen)")),
             Try(String("const unsigned int(32)[2]")),
             Try(String("const unsigned int(32)[3]")),
             Try(String("const unsigned int(32)")),
+            Try(String("const unsigned int(16)[3]")),
             Try(String("const unsigned int(16)")),
             Try(String("const unsigned int(26)")),
             Try(String("template int(32)")),
@@ -269,6 +271,7 @@ partial class Program
             Try(String("template unsigned int(16)[3]")),
             Try(String("template unsigned int(16)")),
             Try(String("template unsigned int(8)")),
+            Try(String("int(64)")),
             Try(String("int(32)")),
             Try(String("int(16)")),
             Try(String("int(8)")),
@@ -299,7 +302,6 @@ partial class Program
             Try(String("uint(16)")),
             Try(String("uint(64)")),
             Try(String("uint(8)")),
-            Try(String("unsigned int(6)")),
             Try(String("signed int(32)")),
             Try(String("signed int (16)")),
             Try(String("signed int(16)")),
@@ -307,6 +309,7 @@ partial class Program
             Try(String("signed int(64)")),
             Try(String("signed   int(32)")),
             Try(String("signed   int(8)")),
+            Try(String("Box()[]")),
             Try(String("Box[]")),
             Try(String("Box")),
             Try(String("SchemeTypeBox")),
@@ -361,7 +364,6 @@ partial class Program
             Try(String("Descriptor")),
             Try(String("WebVTTConfigurationBox")),
             Try(String("WebVTTSourceLabelBox")),
-            Try(String("AVCConfigurationBox")),
             Try(String("OperatingPointsRecord")),
             Try(String("VvcSubpicIDEntry")),
             Try(String("VvcSubpicOrderEntry")),
@@ -536,14 +538,14 @@ partial class Program
         int success = 0;
         int fail = 0;
 
-        List<PseudoClass> ret = new List<PseudoClass>();
+        Dictionary<string, PseudoClass> ret = new Dictionary<string, PseudoClass>();
+        List<PseudoClass> dupliates = new List<PseudoClass>();
 
         foreach (var file in files)
         {
             using (var json = File.OpenRead(file))
             using (JsonDocument document = JsonDocument.Parse(json, new JsonDocumentOptions()))
             {
-
                 foreach (JsonElement element in document.RootElement.GetProperty("entries").EnumerateArray())
                 {
                     string sample = element.GetProperty("syntax").GetString()!;
@@ -562,11 +564,23 @@ partial class Program
                         {
                             item.FourCC = element.GetProperty("fourcc").GetString();
                             success++;
-                            ret.Add(item);
+                            if (!ret.TryAdd(item.BoxName, item))
+                            {
+                                dupliates.Add(item);
+
+                                int index = 1;
+                                while (!ret.TryAdd($"{item.BoxName}{index}", item))
+                                {
+                                    index++;
+                                }
+
+                                // override the name
+                                item.BoxName = $"{item.BoxName}{index}";
+                            }
                         }
-                        
+
                         Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()}");
-                        
+
                     }
                     catch (Exception e)
                     {
@@ -579,8 +593,839 @@ partial class Program
         }
 
         Console.WriteLine($"Successful: {success}, Failed: {fail}, Total: {success + fail}");
-        string js = Newtonsoft.Json.JsonConvert.SerializeObject(ret);
+        string js = Newtonsoft.Json.JsonConvert.SerializeObject(ret.Values.ToArray());
         File.WriteAllText("result.json", js);
+
+        string resultCode = @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BoxGenerator2
+{
+";
+        foreach (var b in ret.Values.ToArray())
+        {
+            if (b.FourCC == "encv") // skip
+                continue;
+
+            string code = BuildCode(b);
+            resultCode += code + "\r\n\r\n";
+        }
+        resultCode += 
+@"
+}
+";
+    }
+
+    private static string BuildCode(PseudoClass? b)
+    {
+        string cls = @$"public class {b.BoxName}";
+        if(b.Extended != null)
+            cls += $" : {b.Extended.BoxName}";
+
+        cls += "\r\n{\r\n";
+        cls += $"\tpublic override string FourCC {{ get {{ return \"{b.FourCC}\"; }} }}\r\n";
+
+        foreach (var field in b.Fields)
+        {
+            cls += "\r\n" + BuildProperty(field);
+        }
+
+        cls += $"\tpublic {b.BoxName}()\r\n\t{{ }}\r\n";
+        cls += "\r\n\tpublic async override Task ReadAsync(Stream stream)\r\n\t{\r\n\t\tawait base.ReadAsync(stream);";
+        foreach (var field in b.Fields)
+        {
+            cls += "\r\n" + BuildReadMethod(field, 2);
+        }
+        cls += "\r\n\t}\r\n";
+
+
+        cls += "\r\n\tpublic async override Task<ulong> WriteAsync(Stream stream)\r\n\t{\r\n\t\tulong size = 0;\r\n\t\tsize += await base.WriteAsync(stream);";
+        foreach (var field in b.Fields)
+        {
+            cls += "\r\n" + BuildWriteMethod(field, 2);
+        }
+        cls += "\r\n\t\treturn size;\r\n\t}\r\n";
+
+        cls += "}\r\n";
+
+        return cls;
+    }
+
+    private static string BuildProperty(PseudoCode field)
+    {
+        var block = field as PseudoBlock;
+        if (block != null)
+        {
+            string ret = "";
+            foreach(var f in block.Content)
+            {
+                ret += BuildProperty(f);
+            }
+            return ret;
+        }
+
+        string comment = (field as PseudoField)?.Comment;
+        if (!string.IsNullOrEmpty(comment)) 
+        {
+            comment = " // " + comment;
+        }
+        else
+        {
+            comment = "";
+        }
+        string value = (field as PseudoField)?.Value;
+        string tp = (field as PseudoField)?.Type;
+        if (!string.IsNullOrEmpty(tp))
+        {
+            if (IsWorkaround((field as PseudoField)?.Type))
+                return "";
+            else
+            {
+                // TODO: incorrectly parsed type
+                string typedef = "";
+                if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
+                {
+                    typedef = "[]";
+                    value = "";
+                }
+                if (!string.IsNullOrEmpty(value) && value.StartsWith('('))
+                {
+                    typedef = "";
+                    value = "";
+                }
+                if (!string.IsNullOrEmpty(value))
+                {
+                    value = " " + value + ";";
+                }
+
+                string name = (field as PseudoField)?.Name;
+                if(string.IsNullOrEmpty(name))
+                {
+                    name = (field as PseudoField)?.Type.Replace("[]", ""); 
+                }
+
+                return $"\tpublic {GetType((field as PseudoField)?.Type)}{typedef} {name} {{ get; set; }}{value}{comment}\r\n";
+            }
+        }
+        else
+            return "";
+    }
+
+    private static string BuildReadMethod(PseudoCode field, int level)
+    {
+        string spacing = GetSpacing(level);
+        var block = field as PseudoBlock;
+        if(block != null)
+        {
+            return BuildReadBlock(block, level);
+        }
+
+        string tt = (field as PseudoField)?.Type;
+        if (string.IsNullOrEmpty(tt))
+            return "";
+
+        if (IsWorkaround(tt))
+        {
+            if (tt == "int i, j" || tt == "int i,j") // this one must be ignored
+                return "";
+            else
+                return $"{tt};";
+        }
+
+        string name = (field as PseudoField)?.Name;
+        if (string.IsNullOrEmpty(name))
+        {
+            name = (field as PseudoField)?.Type.Replace("[]", "");
+        }
+
+        string m = GetReadMethod(tt);
+        return $"{spacing}this.{name} = {m};";
+    }
+
+    private static string BuildReadBlock(PseudoBlock block, int level)
+    {
+        string spacing = GetSpacing(level);
+        string ret;
+
+        string condition = block.Condition;
+        if (block.Type == "for")
+        {
+            condition = "(int " + block.Condition.TrimStart('(');
+        }
+
+        ret = $"\r\n{spacing}{block.Type} {condition}\r\n{spacing}{{\r\n";
+
+        foreach (var field in block.Content)
+        {
+            ret += "\r\n" + BuildReadMethod(field, level + 1);
+        }
+
+        ret += $"\r\n{spacing}}}";
+
+        return ret;
+    }
+
+    private static string BuildWriteMethod(PseudoCode field, int level)
+    {
+        string spacing = GetSpacing(level);
+        var block = field as PseudoBlock;
+        if (block != null)
+        {
+            return BuildWriteBlock(block, level);
+        }
+
+        string tt = (field as PseudoField)?.Type;
+        if (string.IsNullOrEmpty(tt))
+            return "";
+
+        if (IsWorkaround(tt))
+        {
+            if (tt == "int i, j" || tt == "int i,j") // this one must be ignored
+                return "";
+            else
+                return $"{tt};";
+        }
+
+        string name = (field as PseudoField)?.Name;
+        if (string.IsNullOrEmpty(name))
+        {
+            name = (field as PseudoField)?.Type.Replace("[]","");
+        }
+
+        string m = GetWriteMethod(tt);
+        return $"{spacing}size += {m}, this.{name});";
+    }
+
+    private static string BuildWriteBlock(PseudoBlock block, int level)
+    {
+        string spacing = GetSpacing(level);
+        string ret;
+
+        string condition = block.Condition;
+        if (block.Type == "for")
+        {
+            condition = "(int " + block.Condition.TrimStart('(');
+        }
+
+        ret = $"\r\n{spacing}{block.Type} {condition}\r\n{spacing}{{\r\n";
+
+        foreach (var field in block.Content)
+        {
+            ret += "\r\n" + BuildWriteMethod(field, level + 1);
+        }
+
+        ret += $"\r\n{spacing}}}";
+
+        return ret;
+    }
+
+    public static string GetSpacing(int level)
+    {
+        string ret = "";
+        for (int i = 0; i < level; i++)
+        {
+            ret += "\t";
+        }
+        return ret;
+    }
+
+    private static string GetReadMethod(string type)
+    {
+        Dictionary<string, string> map = new Dictionary<string, string>
+        {
+            { "unsigned int(64)", "IsoReaderWriter.ReadUInt64(stream)" },
+            { "unsigned int(48)", "IsoReaderWriter.ReadUInt48(stream)" },
+            { "template int(32)[9]", "IsoReaderWriter.ReadUInt32Array(stream, 9)" },
+            { "unsigned int(32)", "IsoReaderWriter.ReadUInt32(stream)" },
+            { "unsigned_int(32)", "IsoReaderWriter.ReadUInt32(stream)" },
+            { "unsigned int(24)", "IsoReaderWriter.ReadUInt24(stream)" },
+            { "unsigned int(29)", "IsoReaderWriter.ReadBits(stream, 29)" },
+            { "unsigned int(26)", "IsoReaderWriter.ReadBits(stream, 26)" },
+            { "unsigned int(16)", "IsoReaderWriter.ReadUInt16(stream)" },
+            { "unsigned_int(16)", "IsoReaderWriter.ReadUInt16(stream)" },
+            { "unsigned int(15)", "IsoReaderWriter.ReadBits(stream, 15)" },
+            { "unsigned int(12)", "IsoReaderWriter.ReadBits(stream, 12)" },
+            { "unsigned int(10)", "IsoReaderWriter.ReadBits(stream, 10)" },
+            { "unsigned int(8)[length]", "IsoReaderWriter.ReadBytes(stream, length)" },
+            { "unsigned int(8)[32]", "IsoReaderWriter.ReadBytes(stream, 32)" },
+            { "unsigned int(8)[16]", "IsoReaderWriter.ReadBytes(stream, 16)" },
+            { "unsigned int(9)", "IsoReaderWriter.ReadBits(stream, 9)" },
+            { "unsigned int(8)", "IsoReaderWriter.ReadUInt8(stream)" },
+            { "unsigned int(7)", "IsoReaderWriter.ReadBits(stream, 7)" },
+            { "unsigned int(6)", "IsoReaderWriter.ReadBits(stream, 6)" },
+            { "unsigned int(5)[3]", "IsoReaderWriter.ReadBitsArray(stream, 5, 3)" },
+            { "unsigned int(5)", "IsoReaderWriter.ReadBits(stream, 5)" },
+            { "unsigned int(4)", "IsoReaderWriter.ReadBits(stream, 4)" },
+            { "unsigned int(3)", "IsoReaderWriter.ReadBits(stream, 3)" },
+            { "unsigned int(2)", "IsoReaderWriter.ReadBits(stream, 2)" },
+            { "unsigned int(1)", "IsoReaderWriter.ReadBit(stream)" },
+            { "unsigned int (32)", "IsoReaderWriter.ReadUInt32(stream)" },
+            { "unsigned int(f(pattern_size_code))", "IsoReaderWriter.ReadBytes(stream, f(pattern_size_code))" },
+            { "unsigned int(f(index_size_code))", "IsoReaderWriter.ReadBytes(stream, f(index_size_code))" },
+            { "unsigned int(f(count_size_code))", "IsoReaderWriter.ReadBytes(stream, f(count_size_code))" },
+            { "unsigned int(base_offset_size*8)", "IsoReaderWriter.ReadBytes(stream, base_offset_size)" },
+            { "unsigned int(offset_size*8)", "IsoReaderWriter.ReadBytes(stream, offset_size)" },
+            { "unsigned int(length_size*8)", "IsoReaderWriter.ReadBytes(stream, length_size)" },
+            { "unsigned int(index_size*8)", "IsoReaderWriter.ReadBytes(stream, index_size)" },
+            { "unsigned int(field_size)", "IsoReaderWriter.ReadBytes(stream, field_size)" },
+            { "unsigned int((length_size_of_traf_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (length_size_of_traf_num+1))" },
+            { "unsigned int((length_size_of_trun_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (length_size_of_trun_num+1))" },
+            { "unsigned int((length_size_of_sample_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (length_size_of_sample_num+1))" },
+            { "unsigned int(8*size-64)", "IsoReaderWriter.ReadBytes(stream, size-64)" },
+            { "unsigned int(subgroupIdLen)", "IsoReaderWriter.ReadBytes(stream, subgroupIdLen)" },
+            { "const unsigned int(32)[2]", "IsoReaderWriter.ReadUInt32Array(stream, 2)" },
+            { "const unsigned int(32)[3]", "IsoReaderWriter.ReadUInt32Array(stream, 3)" },
+            { "const unsigned int(32)", "IsoReaderWriter.ReadUInt32(stream)" },
+            { "const unsigned int(16)[3]", "IsoReaderWriter.ReadUInt16Array(stream, 3)" },
+            { "const unsigned int(16)", "IsoReaderWriter.ReadUInt16(stream)" },
+            { "const unsigned int(26)", "IsoReaderWriter.ReadBits(stream, 26)" },
+            { "template int(32)", "IsoReaderWriter.ReadInt32(stream)" },
+            { "template int(16)", "IsoReaderWriter.ReadInt16(stream)" },
+            { "template unsigned int(30)", "IsoReaderWriter.ReadBits(stream, 30)" },
+            { "template unsigned int(32)", "IsoReaderWriter.ReadUInt32(stream)" },
+            { "template unsigned int(16)[3]", "IsoReaderWriter.ReadUInt16Array(stream, 3)" },
+            { "template unsigned int(16)", "IsoReaderWriter.ReadUInt16(stream)" },
+            { "template unsigned int(8)", "IsoReaderWriter.ReadUInt8(stream)" },
+            { "int(64)", "IsoReaderWriter.ReadInt64(stream)" },
+            { "int(32)", "IsoReaderWriter.ReadInt32(stream)" },
+            { "int(16)", "IsoReaderWriter.ReadInt16(stream)" },
+            { "int(8)", "IsoReaderWriter.ReadInt8(stream)" },
+            { "int(4)", "IsoReaderWriter.ReadBits(stream, 4)" },
+            { "int", "IsoReaderWriter.ReadInt32(stream)" },
+            { "const bit(16)", "IsoReaderWriter.ReadUInt16(stream)" },
+            { "const bit(1)", "IsoReaderWriter.ReadBit(stream)" },
+            { "bit(1)", "IsoReaderWriter.ReadBit(stream)" },
+            { "bit(2)", "IsoReaderWriter.ReadBits(stream, 2)" },
+            { "bit(3)", "IsoReaderWriter.ReadBits(stream, 3)" },
+            { "bit(4)", "IsoReaderWriter.ReadBits(stream, 4)" },
+            { "bit(5)", "IsoReaderWriter.ReadBits(stream, 5)" },
+            { "bit(6)", "IsoReaderWriter.ReadBits(stream, 6)" },
+            { "bit(7)", "IsoReaderWriter.ReadBits(stream, 7)" },
+            { "bit(8)", "IsoReaderWriter.ReadUInt8(stream)" },
+            { "bit(16)", "IsoReaderWriter.ReadUInt16(stream)" },
+            { "bit(24)", "IsoReaderWriter.ReadBits(stream, 24)" },
+            { "bit(31)", "IsoReaderWriter.ReadBits(stream, 31)" },
+            { "bit(8 ceil(size / 8) \u2013 size)", "IsoReaderWriter.ReadBytes(stream, (ulong)(Math.Ceiling(size / 8d) - size))" },
+            { "bit(8* ps_nalu_length)", "IsoReaderWriter.ReadBytes(stream, ps_nalu_length)" },
+            { "utf8string", "IsoReaderWriter.ReadString(stream)" },
+            { "utfstring", "IsoReaderWriter.ReadString(stream)" },
+            { "utf8list", "IsoReaderWriter.ReadString(stream)" },
+            { "boxstring", "IsoReaderWriter.ReadString(stream)" },
+            { "string", "IsoReaderWriter.ReadString(stream)" },
+            { "bit(32)[6]", "IsoReaderWriter.ReadUInt32Array(stream, 6)" },
+            { "uint(32)", "IsoReaderWriter.ReadUInt32(stream)" },
+            { "uint(16)", "IsoReaderWriter.ReadUInt16(stream)" },
+            { "uint(64)", "IsoReaderWriter.ReadUInt64(stream)" },
+            { "uint(8)", "IsoReaderWriter.ReadUInt8(stream)" },
+            { "signed int(32)", "IsoReaderWriter.ReadInt32(stream)" },
+            { "signed int (16)", "IsoReaderWriter.ReadInt16(stream)" },
+            { "signed int(16)", "IsoReaderWriter.ReadInt16(stream)" },
+            { "signed int (8)", "IsoReaderWriter.ReadInt8(stream)" },
+            { "signed int(64)", "IsoReaderWriter.ReadInt64(stream)" },
+            { "signed   int(32)", "IsoReaderWriter.ReadInt32(stream)" },
+            { "signed   int(8)", "IsoReaderWriter.ReadInt8(stream)" },
+            { "Box()[]", "IsoReaderWriter.ReadBoxes(stream)" },
+            { "Box[]", "IsoReaderWriter.ReadBoxes(stream)" },
+            { "Box", "IsoReaderWriter.ReadBox(stream)" },
+            { "SchemeTypeBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "SchemeInformationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "ItemPropertyContainerBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "ItemPropertyAssociationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "char", "IsoReaderWriter.ReadInt8(stream)" },
+            { "loudness", "IsoReaderWriter.ReadInt32(stream)" },
+            { "ICC_profile", "IsoReaderWriter.ReadClass(stream)" },
+            { "OriginalFormatBox(fmt)", "IsoReaderWriter.ReadBox(stream)" },
+            { "DataEntryBaseBox(entry_type, entry_flags)", "IsoReaderWriter.ReadBox(stream)" },
+            { "ItemInfoEntry[ entry_count ]", "ItemInfoEntry[])" },
+            { "TypeCombinationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "FilePartitionBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "FECReservoirBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "FileReservoirBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "PartitionEntry", "IsoReaderWriter.ReadClass(stream)" },
+            { "FDSessionGroupBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "GroupIdToNameBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "base64string", "IsoReaderWriter.ReadString(stream)" },
+            { "ProtectionSchemeInfoBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "SingleItemTypeReferenceBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "SingleItemTypeReferenceBoxLarge", "IsoReaderWriter.ReadBox(stream)" },
+            { "HandlerBox(handler_type)", "IsoReaderWriter.ReadBox(stream)" },
+            { "PrimaryItemBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "DataInformationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "ItemLocationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "ItemProtectionBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "ItemInfoBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "IPMPControlBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "ItemReferenceBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "ItemDataBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "TrackReferenceTypeBox []", "IsoReaderWriter.ReadBoxes(stream)" },
+            { "MetadataKeyBox[]", "IsoReaderWriter.ReadBoxes(stream)" },
+            { "TierInfoBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "MultiviewRelationAttributeBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "TierBitRateBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "BufferingBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "MultiviewSceneInfoBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "MVDDecoderConfigurationRecord", "IsoReaderWriter.ReadClass(stream)" },
+            { "MVDDepthResolutionBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "MVCDecoderConfigurationRecord()", "IsoReaderWriter.ReadClass(stream)" },
+            { "AVCDecoderConfigurationRecord()", "IsoReaderWriter.ReadClass(stream)" },
+            { "HEVCDecoderConfigurationRecord()", "IsoReaderWriter.ReadClass(stream)" },
+            { "LHEVCDecoderConfigurationRecord()", "IsoReaderWriter.ReadClass(stream)" },
+            { "SVCDecoderConfigurationRecord()", "IsoReaderWriter.ReadClass(stream)" },
+            { "HEVCTileTierLevelConfigurationRecord()", "IsoReaderWriter.ReadClass(stream)" },
+            { "EVCDecoderConfigurationRecord()", "IsoReaderWriter.ReadClass(stream)" },
+            { "VvcDecoderConfigurationRecord()", "IsoReaderWriter.ReadClass(stream)" },
+            { "EVCSliceComponentTrackConfigurationRecord()", "IsoReaderWriter.ReadClass(stream)" },
+            { "SampleGroupDescriptionEntry (grouping_type)", "IsoReaderWriter.ReadClass(stream)" },
+            { "Descriptor", "IsoReaderWriter.ReadClass(stream)" },
+            { "WebVTTConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "WebVTTSourceLabelBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "OperatingPointsRecord", "IsoReaderWriter.ReadClass(stream)" },
+            { "VvcSubpicIDEntry", "IsoReaderWriter.ReadClass(stream)" },
+            { "VvcSubpicOrderEntry", "IsoReaderWriter.ReadClass(stream)" },
+            { "URIInitBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "URIbox", "IsoReaderWriter.ReadBox(stream)" },
+            { "CleanApertureBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "PixelAspectRatioBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "DownMixInstructions()", "IsoReaderWriter.ReadClass(stream)" },
+            { "DRCCoefficientsBasic()", "IsoReaderWriter.ReadClass(stream)" },
+            { "DRCInstructionsBasic()", "IsoReaderWriter.ReadClass(stream)" },
+            { "DRCCoefficientsUniDRC()", "IsoReaderWriter.ReadClass(stream)" },
+            { "DRCInstructionsUniDRC()", "IsoReaderWriter.ReadClass(stream)" },
+            { "HEVCConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "LHEVCConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "AVCConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "SVCConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "ScalabilityInformationSEIBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "SVCPriorityAssignmentBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "ViewScalabilityInformationSEIBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "ViewIdentifierBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "MVCConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "MVCViewPriorityAssignmentBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "IntrinsicCameraParametersBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "ExtrinsicCameraParametersBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "MVCDConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "MVDScalabilityInformationSEIBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "A3DConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "VvcOperatingPointsRecord", "IsoReaderWriter.ReadClass(stream)" },
+            { "VVCSubpicIDRewritingInfomationStruct()", "IsoReaderWriter.ReadClass(stream)" },
+            { "MPEG4ExtensionDescriptorsBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "bit(8*dci_nal_unit_length)", "IsoReaderWriter.ReadBytes(stream, dci_nal_unit_length)" },
+            { "DependencyInfo", "IsoReaderWriter.ReadClass(stream)" },
+            { "VvcPTLRecord(0)", "IsoReaderWriter.ReadClass(stream)" },
+            { "EVCSliceComponentTrackConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "SVCMetadataSampleConfigBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "SVCPriorityLayerInfoBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "EVCConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "VvcNALUConfigBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "VvcConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "HEVCTileConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+        };
+        return map[type];
+    }
+
+    private static string GetWriteMethod(string type)
+    {
+        Dictionary<string, string> map = new Dictionary<string, string>
+        {
+            { "unsigned int(64)", "IsoReaderWriter.WriteUInt64(stream" },
+            { "unsigned int(48)", "IsoReaderWriter.WriteUInt48(stream" },
+            { "template int(32)[9]", "IsoReaderWriter.WriteUInt32Array(stream, 9" },
+            { "unsigned int(32)", "IsoReaderWriter.WriteUInt32(stream" },
+            { "unsigned_int(32)", "IsoReaderWriter.WriteUInt32(stream" },
+            { "unsigned int(24)", "IsoReaderWriter.WriteUInt24(stream" },
+            { "unsigned int(29)", "IsoReaderWriter.WriteBits(stream, 29" },
+            { "unsigned int(26)", "IsoReaderWriter.WriteBits(stream, 26" },
+            { "unsigned int(16)", "IsoReaderWriter.WriteUInt16(stream" },
+            { "unsigned_int(16)", "IsoReaderWriter.WriteUInt16(stream" },
+            { "unsigned int(15)", "IsoReaderWriter.WriteBits(stream, 15" },
+            { "unsigned int(12)", "IsoReaderWriter.WriteBits(stream, 12" },
+            { "unsigned int(10)", "IsoReaderWriter.WriteBits(stream, 10" },
+            { "unsigned int(8)[length]", "IsoReaderWriter.WriteBytes(stream, length" },
+            { "unsigned int(8)[32]", "IsoReaderWriter.WriteBytes(stream, 32" },
+            { "unsigned int(8)[16]", "IsoReaderWriter.WriteBytes(stream, 16" },
+            { "unsigned int(9)", "IsoReaderWriter.WriteBits(stream, 9" },
+            { "unsigned int(8)", "IsoReaderWriter.WriteUInt8(stream" },
+            { "unsigned int(7)", "IsoReaderWriter.WriteBits(stream, 7" },
+            { "unsigned int(6)", "IsoReaderWriter.WriteBits(stream, 6" },
+            { "unsigned int(5)[3]", "IsoReaderWriter.WriteBitsArray(stream, 5, 3" },
+            { "unsigned int(5)", "IsoReaderWriter.WriteBits(stream, 5" },
+            { "unsigned int(4)", "IsoReaderWriter.WriteBits(stream, 4" },
+            { "unsigned int(3)", "IsoReaderWriter.WriteBits(stream, 3" },
+            { "unsigned int(2)", "IsoReaderWriter.WriteBits(stream, 2" },
+            { "unsigned int(1)", "IsoReaderWriter.WriteBit(stream" },
+            { "unsigned int (32)", "IsoReaderWriter.WriteUInt32(stream" },
+            { "unsigned int(f(pattern_size_code))", "IsoReaderWriter.WriteBytes(stream, f(pattern_size_code)" },
+            { "unsigned int(f(index_size_code))", "IsoReaderWriter.WriteBytes(stream, f(index_size_code)" },
+            { "unsigned int(f(count_size_code))", "IsoReaderWriter.WriteBytes(stream, f(count_size_code)" },
+            { "unsigned int(base_offset_size*8)", "IsoReaderWriter.WriteBytes(stream, base_offset_size" },
+            { "unsigned int(offset_size*8)", "IsoReaderWriter.WriteBytes(stream, offset_size" },
+            { "unsigned int(length_size*8)", "IsoReaderWriter.WriteBytes(stream, length_size" },
+            { "unsigned int(index_size*8)", "IsoReaderWriter.WriteBytes(stream, index_size" },
+            { "unsigned int(field_size)", "IsoReaderWriter.WriteBytes(stream, field_size" },
+            { "unsigned int((length_size_of_traf_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (length_size_of_traf_num+1)" },
+            { "unsigned int((length_size_of_trun_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (length_size_of_trun_num+1)" },
+            { "unsigned int((length_size_of_sample_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (length_size_of_sample_num+1)" },
+            { "unsigned int(8*size-64)", "IsoReaderWriter.WriteBytes(stream, size-64" },
+            { "unsigned int(subgroupIdLen)", "IsoReaderWriter.WriteBytes(stream, subgroupIdLen" },
+            { "const unsigned int(32)[2]", "IsoReaderWriter.WriteUInt32Array(stream, 2" },
+            { "const unsigned int(32)[3]", "IsoReaderWriter.WriteUInt32Array(stream, 3" },
+            { "const unsigned int(32)", "IsoReaderWriter.WriteUInt32(stream" },
+            { "const unsigned int(16)[3]", "IsoReaderWriter.WriteUInt16Array(stream, 3" },
+            { "const unsigned int(16)", "IsoReaderWriter.WriteUInt16(stream" },
+            { "const unsigned int(26)", "IsoReaderWriter.WriteBits(stream, 26" },
+            { "template int(32)", "IsoReaderWriter.WriteInt32(stream" },
+            { "template int(16)", "IsoReaderWriter.WriteInt16(stream" },
+            { "template unsigned int(30)", "IsoReaderWriter.WriteBits(stream, 30" },
+            { "template unsigned int(32)", "IsoReaderWriter.WriteUInt32(stream" },
+            { "template unsigned int(16)[3]", "IsoReaderWriter.WriteUInt16Array(stream, 3" },
+            { "template unsigned int(16)", "IsoReaderWriter.WriteUInt16(stream" },
+            { "template unsigned int(8)", "IsoReaderWriter.WriteUInt8(stream" },
+            { "int(64)", "IsoReaderWriter.WriteInt64(stream" },
+            { "int(32)", "IsoReaderWriter.WriteInt32(stream" },
+            { "int(16)", "IsoReaderWriter.WriteInt16(stream" },
+            { "int(8)", "IsoReaderWriter.WriteInt8(stream" },
+            { "int(4)", "IsoReaderWriter.WriteBits(stream, 4" },
+            { "int", "IsoReaderWriter.WriteInt32(stream" },
+            { "const bit(16)", "IsoReaderWriter.WriteUInt16(stream" },
+            { "const bit(1)", "IsoReaderWriter.WriteBit(stream" },
+            { "bit(1)", "IsoReaderWriter.WriteBit(stream" },
+            { "bit(2)", "IsoReaderWriter.WriteBits(stream, 2" },
+            { "bit(3)", "IsoReaderWriter.WriteBits(stream, 3" },
+            { "bit(4)", "IsoReaderWriter.WriteBits(stream, 4" },
+            { "bit(5)", "IsoReaderWriter.WriteBits(stream, 5" },
+            { "bit(6)", "IsoReaderWriter.WriteBits(stream, 6" },
+            { "bit(7)", "IsoReaderWriter.WriteBits(stream, 7" },
+            { "bit(8)", "IsoReaderWriter.WriteUInt8(stream" },
+            { "bit(16)", "IsoReaderWriter.WriteUInt16(stream" },
+            { "bit(24)", "IsoReaderWriter.WriteBits(stream, 24" },
+            { "bit(31)", "IsoReaderWriter.WriteBits(stream, 31" },
+            { "bit(8 ceil(size / 8) \u2013 size)", "IsoReaderWriter.WriteBytes(stream, (ulong)(Math.Ceiling(size / 8d) - size)" },
+            { "bit(8* ps_nalu_length)", "IsoReaderWriter.WriteBytes(stream, ps_nalu_length" },
+            { "utf8string", "IsoReaderWriter.WriteString(stream" },
+            { "utfstring", "IsoReaderWriter.WriteString(stream" },
+            { "utf8list", "IsoReaderWriter.WriteString(stream" },
+            { "boxstring", "IsoReaderWriter.WriteString(stream" },
+            { "string", "IsoReaderWriter.WriteString(stream" },
+            { "bit(32)[6]", "IsoReaderWriter.WriteUInt32Array(stream, 6" },
+            { "uint(32)", "IsoReaderWriter.WriteUInt32(stream" },
+            { "uint(16)", "IsoReaderWriter.WriteUInt16(stream" },
+            { "uint(64)", "IsoReaderWriter.WriteUInt64(stream" },
+            { "uint(8)", "IsoReaderWriter.WriteUInt8(stream" },
+            { "signed int(32)", "IsoReaderWriter.WriteInt32(stream" },
+            { "signed int (16)", "IsoReaderWriter.WriteInt16(stream" },
+            { "signed int(16)", "IsoReaderWriter.WriteInt16(stream" },
+            { "signed int (8)", "IsoReaderWriter.WriteInt8(stream" },
+            { "signed int(64)", "IsoReaderWriter.WriteInt64(stream" },
+            { "signed   int(32)", "IsoReaderWriter.WriteInt32(stream" },
+            { "signed   int(8)", "IsoReaderWriter.WriteInt8(stream" },
+            { "Box()[]", "IsoReaderWriter.WriteBoxes(stream" },
+            { "Box[]", "IsoReaderWriter.WriteBoxes(stream" },
+            { "Box", "IsoReaderWriter.WriteBox(stream" },
+            { "SchemeTypeBox", "IsoReaderWriter.WriteBox(stream" },
+            { "SchemeInformationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ItemPropertyContainerBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ItemPropertyAssociationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "char", "IsoReaderWriter.WriteInt8(stream" },
+            { "loudness", "IsoReaderWriter.WriteInt32(stream" },
+            { "ICC_profile", "IsoReaderWriter.WriteClass(stream" },
+            { "OriginalFormatBox(fmt)", "IsoReaderWriter.WriteBox(stream" },
+            { "DataEntryBaseBox(entry_type, entry_flags)", "IsoReaderWriter.WriteBox(stream" },
+            { "ItemInfoEntry[ entry_count ]", "ItemInfoEntry[]" },
+            { "TypeCombinationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "FilePartitionBox", "IsoReaderWriter.WriteBox(stream" },
+            { "FECReservoirBox", "IsoReaderWriter.WriteBox(stream" },
+            { "FileReservoirBox", "IsoReaderWriter.WriteBox(stream" },
+            { "PartitionEntry", "IsoReaderWriter.WriteClass(stream" },
+            { "FDSessionGroupBox", "IsoReaderWriter.WriteBox(stream" },
+            { "GroupIdToNameBox", "IsoReaderWriter.WriteBox(stream" },
+            { "base64string", "IsoReaderWriter.WriteString(stream" },
+            { "ProtectionSchemeInfoBox", "IsoReaderWriter.WriteBox(stream" },
+            { "SingleItemTypeReferenceBox", "IsoReaderWriter.WriteBox(stream" },
+            { "SingleItemTypeReferenceBoxLarge", "IsoReaderWriter.WriteBox(stream" },
+            { "HandlerBox(handler_type)", "IsoReaderWriter.WriteBox(stream" },
+            { "PrimaryItemBox", "IsoReaderWriter.WriteBox(stream" },
+            { "DataInformationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ItemLocationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ItemProtectionBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ItemInfoBox", "IsoReaderWriter.WriteBox(stream" },
+            { "IPMPControlBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ItemReferenceBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ItemDataBox", "IsoReaderWriter.WriteBox(stream" },
+            { "TrackReferenceTypeBox []", "IsoReaderWriter.WriteBoxes(stream" },
+            { "MetadataKeyBox[]", "IsoReaderWriter.WriteBoxes(stream" },
+            { "TierInfoBox", "IsoReaderWriter.WriteBox(stream" },
+            { "MultiviewRelationAttributeBox", "IsoReaderWriter.WriteBox(stream" },
+            { "TierBitRateBox", "IsoReaderWriter.WriteBox(stream" },
+            { "BufferingBox", "IsoReaderWriter.WriteBox(stream" },
+            { "MultiviewSceneInfoBox", "IsoReaderWriter.WriteBox(stream" },
+            { "MVDDecoderConfigurationRecord", "IsoReaderWriter.WriteClass(stream" },
+            { "MVDDepthResolutionBox", "IsoReaderWriter.WriteBox(stream" },
+            { "MVCDecoderConfigurationRecord()", "IsoReaderWriter.WriteClass(stream" },
+            { "AVCDecoderConfigurationRecord()", "IsoReaderWriter.WriteClass(stream" },
+            { "HEVCDecoderConfigurationRecord()", "IsoReaderWriter.WriteClass(stream" },
+            { "LHEVCDecoderConfigurationRecord()", "IsoReaderWriter.WriteClass(stream" },
+            { "SVCDecoderConfigurationRecord()", "IsoReaderWriter.WriteClass(stream" },
+            { "HEVCTileTierLevelConfigurationRecord()", "IsoReaderWriter.WriteClass(stream" },
+            { "EVCDecoderConfigurationRecord()", "IsoReaderWriter.WriteClass(stream" },
+            { "VvcDecoderConfigurationRecord()", "IsoReaderWriter.WriteClass(stream" },
+            { "EVCSliceComponentTrackConfigurationRecord()", "IsoReaderWriter.WriteClass(stream" },
+            { "SampleGroupDescriptionEntry (grouping_type)", "IsoReaderWriter.WriteClass(stream" },
+            { "Descriptor", "IsoReaderWriter.WriteClass(stream" },
+            { "WebVTTConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "WebVTTSourceLabelBox", "IsoReaderWriter.WriteBox(stream" },
+            { "OperatingPointsRecord", "IsoReaderWriter.WriteClass(stream" },
+            { "VvcSubpicIDEntry", "IsoReaderWriter.WriteClass(stream" },
+            { "VvcSubpicOrderEntry", "IsoReaderWriter.WriteClass(stream" },
+            { "URIInitBox", "IsoReaderWriter.WriteBox(stream" },
+            { "URIbox", "IsoReaderWriter.WriteBox(stream" },
+            { "CleanApertureBox", "IsoReaderWriter.WriteBox(stream" },
+            { "PixelAspectRatioBox", "IsoReaderWriter.WriteBox(stream" },
+            { "DownMixInstructions()", "IsoReaderWriter.WriteClass(stream" },
+            { "DRCCoefficientsBasic()", "IsoReaderWriter.WriteClass(stream" },
+            { "DRCInstructionsBasic()", "IsoReaderWriter.WriteClass(stream" },
+            { "DRCCoefficientsUniDRC()", "IsoReaderWriter.WriteClass(stream" },
+            { "DRCInstructionsUniDRC()", "IsoReaderWriter.WriteClass(stream" },
+            { "HEVCConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "LHEVCConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "AVCConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "SVCConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ScalabilityInformationSEIBox", "IsoReaderWriter.WriteBox(stream" },
+            { "SVCPriorityAssignmentBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ViewScalabilityInformationSEIBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ViewIdentifierBox", "IsoReaderWriter.WriteBox(stream" },
+            { "MVCConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "MVCViewPriorityAssignmentBox", "IsoReaderWriter.WriteBox(stream" },
+            { "IntrinsicCameraParametersBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ExtrinsicCameraParametersBox", "IsoReaderWriter.WriteBox(stream" },
+            { "MVCDConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "MVDScalabilityInformationSEIBox", "IsoReaderWriter.WriteBox(stream" },
+            { "A3DConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "VvcOperatingPointsRecord", "IsoReaderWriter.WriteClass(stream" },
+            { "VVCSubpicIDRewritingInfomationStruct()", "IsoReaderWriter.WriteClass(stream" },
+            { "MPEG4ExtensionDescriptorsBox", "IsoReaderWriter.WriteBox(stream" },
+            { "bit(8*dci_nal_unit_length)", "IsoReaderWriter.WriteBytes(stream, dci_nal_unit_length)" },
+            { "DependencyInfo", "IsoReaderWriter.WriteClass(stream" },
+            { "VvcPTLRecord(0)", "IsoReaderWriter.WriteClass(stream" },
+            { "EVCSliceComponentTrackConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "SVCMetadataSampleConfigBox", "IsoReaderWriter.WriteBox(stream" },
+            { "SVCPriorityLayerInfoBox", "IsoReaderWriter.WriteBox(stream" },
+            { "EVCConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "VvcNALUConfigBox", "IsoReaderWriter.WriteBox(stream" },
+            { "VvcConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "HEVCTileConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+        };
+        return map[type];
+    }
+
+    private static bool IsWorkaround(string type)
+    {
+        HashSet<string> map = new HashSet<string>
+        {
+            "int i, j",
+            "int i,j",
+            "size += 5",
+            "j=1",
+            "j++",
+            "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8",
+            "totalPatternLength = 0"
+        };
+        return map.Contains(type);
+    }
+
+    private static string GetType(string type)
+    {
+        Dictionary<string, string> map = new Dictionary<string, string> {
+            { "unsigned int(64)", "ulong" },
+            { "unsigned int(48)", "ulong" },
+            { "template int(32)[9]", "uint[]" },
+            { "unsigned int(32)", "uint" },
+            { "unsigned_int(32)", "uint" },
+            { "unsigned int(24)", "uint" },
+            { "unsigned int(29)", "uint" },
+            { "unsigned int(26)", "uint" },
+            { "unsigned int(16)", "ushort" },
+            { "unsigned_int(16)", "ushort" },
+            { "unsigned int(15)", "ushort" },
+            { "unsigned int(12)", "ushort" },
+            { "unsigned int(10)", "ushort" },
+            { "unsigned int(8)[length]", "byte[]" },
+            { "unsigned int(8)[32]", "byte[]" },
+            { "unsigned int(8)[16]", "byte[]" },
+            { "unsigned int(9)", "ushort" },
+            { "unsigned int(8)", "byte" },
+            { "unsigned int(7)", "byte" },
+            { "unsigned int(6)", "byte" },
+            { "unsigned int(5)[3]", "byte[]" },
+            { "unsigned int(5)", "byte" },
+            { "unsigned int(4)", "byte" },
+            { "unsigned int(3)", "byte" },
+            { "unsigned int(2)", "byte" },
+            { "unsigned int(1)", "byte" },
+            { "unsigned int (32)", "uint" },
+            { "unsigned int(f(pattern_size_code))", "byte[]" },
+            { "unsigned int(f(index_size_code))", "byte[]" },
+            { "unsigned int(f(count_size_code))", "byte[]" },
+            { "unsigned int(base_offset_size*8)", "byte[]" },
+            { "unsigned int(offset_size*8)", "byte[]" },
+            { "unsigned int(length_size*8)", "byte[]" },
+            { "unsigned int(index_size*8)", "byte[]" },
+            { "unsigned int(field_size)", "byte[]" },
+            { "unsigned int((length_size_of_traf_num+1) * 8)", "byte[]" },
+            { "unsigned int((length_size_of_trun_num+1) * 8)", "byte[]" },
+            { "unsigned int((length_size_of_sample_num+1) * 8)", "byte[]" },
+            { "unsigned int(8*size-64)", "byte[]" },
+            { "unsigned int(subgroupIdLen)", "uint[]" },
+            { "const unsigned int(32)[2]", "uint[]" },
+            { "const unsigned int(32)[3]", "uint[]" },
+            { "const unsigned int(32)", "uint" },
+            { "const unsigned int(16)[3]", "ushort[]" },
+            { "const unsigned int(16)", "ushort" },
+            { "const unsigned int(26)", "uint" },
+            { "template int(32)", "int" },
+            { "template int(16)", "short" },
+            { "template unsigned int(30)", "uint" },
+            { "template unsigned int(32)", "uint" },
+            { "template unsigned int(16)[3]", "ushort[]" },
+            { "template unsigned int(16)", "ushort" },
+            { "template unsigned int(8)", "byte" },
+            { "int(64)", "long" },
+            { "int(32)", "int" },
+            { "int(16)", "short" },
+            { "int(8)", "byte" },
+            { "int(4)", "byte" },
+            { "int", "int" },
+            { "const bit(16)", "ushort" },
+            { "const bit(1)", "byte" },
+            { "bit(1)", "byte" },
+            { "bit(2)", "byte" },
+            { "bit(3)", "byte" },
+            { "bit(4)", "byte" },
+            { "bit(5)", "byte" },
+            { "bit(6)", "byte" },
+            { "bit(7)", "byte" },
+            { "bit(8)", "byte" },
+            { "bit(16)", "ushort" },
+            { "bit(24)", "uint" },
+            { "bit(31)", "uint" },
+            { "bit(8 ceil(size / 8) \u2013 size)", "byte[]" },
+            { "bit(8* ps_nalu_length)", "byte[]" },
+            { "utf8string", "string" },
+            { "utfstring", "string" },
+            { "utf8list", "string" },
+            { "boxstring", "string" },
+            { "string", "string" },
+            { "bit(32)[6]", "uint[]" },
+            { "uint(32)", "uint" },
+            { "uint(16)", "ushort" },
+            { "uint(64)", "ulong" },
+            { "uint(8)", "byte" },
+            { "signed int(32)", "int" },
+            { "signed int (16)", "short" },
+            { "signed int(16)", "short" },
+            { "signed int (8)", "sbyte" },
+            { "signed int(64)", "long" },
+            { "signed   int(32)", "int" },
+            { "signed   int(8)", "sbyte" },
+            { "Box()[]", "Box[]" },
+            { "Box[]", "Box[]" },
+            { "Box", "Box" },
+            { "SchemeTypeBox", "SchemeTypeBox" },
+            { "SchemeInformationBox", "SchemeInformationBox" },
+            { "ItemPropertyContainerBox", "ItemPropertyContainerBox" },
+            { "ItemPropertyAssociationBox", "ItemPropertyAssociationBox" },
+            { "char", "char" },
+            { "loudness", "int" },
+            { "ICC_profile", "ICC_profile" },
+            { "OriginalFormatBox(fmt)", "OriginalFormatBox" },
+            { "DataEntryBaseBox(entry_type, entry_flags)", "DataEntryBaseBox" },
+            { "ItemInfoEntry[ entry_count ]", "ItemInfoEntry[]" },
+            { "TypeCombinationBox", "TypeCombinationBox" },
+            { "FilePartitionBox", "FilePartitionBox" },
+            { "FECReservoirBox", "FECReservoirBox" },
+            { "FileReservoirBox", "FileReservoirBox" },
+            { "PartitionEntry", "PartitionEntry" },
+            { "FDSessionGroupBox", "FDSessionGroupBox" },
+            { "GroupIdToNameBox", "GroupIdToNameBox" },
+            { "base64string", "string" },
+            { "ProtectionSchemeInfoBox", "ProtectionSchemeInfoBox" },
+            { "SingleItemTypeReferenceBox", "SingleItemTypeReferenceBox" },
+            { "SingleItemTypeReferenceBoxLarge", "SingleItemTypeReferenceBoxLarge" },
+            { "HandlerBox(handler_type)", "HandlerBox" },
+            { "PrimaryItemBox", "PrimaryItemBox" },
+            { "DataInformationBox", "DataInformationBox" },
+            { "ItemLocationBox", "ItemLocationBox" },
+            { "ItemProtectionBox", "ItemProtectionBox" },
+            { "ItemInfoBox", "ItemInfoBox" },
+            { "IPMPControlBox", "IPMPControlBox" },
+            { "ItemReferenceBox", "ItemReferenceBox" },
+            { "ItemDataBox", "ItemDataBox" },
+            { "TrackReferenceTypeBox []", "TrackReferenceTypeBox[]" },
+            { "MetadataKeyBox[]", "MetadataKeyBox[]" },
+            { "TierInfoBox", "TierInfoBox" },
+            { "MultiviewRelationAttributeBox", "MultiviewRelationAttributeBox" },
+            { "TierBitRateBox", "TierBitRateBox" },
+            { "BufferingBox", "BufferingBox" },
+            { "MultiviewSceneInfoBox", "MultiviewSceneInfoBox" },
+            { "MVDDecoderConfigurationRecord", "MVDDecoderConfigurationRecord" },
+            { "MVDDepthResolutionBox", "MVDDepthResolutionBox" },
+            { "MVCDecoderConfigurationRecord()", "MVCDecoderConfigurationRecord" },
+            { "AVCDecoderConfigurationRecord()", "AVCDecoderConfigurationRecord" },
+            { "HEVCDecoderConfigurationRecord()", "HEVCDecoderConfigurationRecord" },
+            { "LHEVCDecoderConfigurationRecord()", "LHEVCDecoderConfigurationRecord" },
+            { "SVCDecoderConfigurationRecord()", "SVCDecoderConfigurationRecord" },
+            { "HEVCTileTierLevelConfigurationRecord()", "HEVCTileTierLevelConfigurationRecord" },
+            { "EVCDecoderConfigurationRecord()", "EVCDecoderConfigurationRecord" },
+            { "VvcDecoderConfigurationRecord()", "VvcDecoderConfigurationRecord" },
+            { "EVCSliceComponentTrackConfigurationRecord()", "EVCSliceComponentTrackConfigurationRecord" },
+            { "SampleGroupDescriptionEntry (grouping_type)", "SampleGroupDescriptionEntry" },
+            { "Descriptor", "Descriptor" },
+            { "WebVTTConfigurationBox", "WebVTTConfigurationBox" },
+            { "WebVTTSourceLabelBox", "WebVTTSourceLabelBox" },
+            { "OperatingPointsRecord", "OperatingPointsRecord" },
+            { "VvcSubpicIDEntry", "VvcSubpicIDEntry" },
+            { "VvcSubpicOrderEntry", "VvcSubpicOrderEntry" },
+            { "URIInitBox", "URIInitBox" },
+            { "URIbox", "URIbox" },
+            { "CleanApertureBox", "CleanApertureBox" },
+            { "PixelAspectRatioBox", "PixelAspectRatioBox" },
+            { "DownMixInstructions()", "DownMixInstructions" },
+            { "DRCCoefficientsBasic()", "DRCCoefficientsBasic" },
+            { "DRCInstructionsBasic()", "DRCInstructionsBasic" },
+            { "DRCCoefficientsUniDRC()", "DRCCoefficientsUniDRC" },
+            { "DRCInstructionsUniDRC()", "DRCInstructionsUniDRC" },
+            { "HEVCConfigurationBox", "HEVCConfigurationBox" },
+            { "LHEVCConfigurationBox", "LHEVCConfigurationBox" },
+            { "AVCConfigurationBox", "AVCConfigurationBox" },
+            { "SVCConfigurationBox", "SVCConfigurationBox" },
+            { "ScalabilityInformationSEIBox", "ScalabilityInformationSEIBox" },
+            { "SVCPriorityAssignmentBox", "SVCPriorityAssignmentBox" },
+            { "ViewScalabilityInformationSEIBox", "ViewScalabilityInformationSEIBox" },
+            { "ViewIdentifierBox", "ViewIdentifierBox" },
+            { "MVCConfigurationBox", "MVCConfigurationBox" },
+            { "MVCViewPriorityAssignmentBox", "MVCViewPriorityAssignmentBox" },
+            { "IntrinsicCameraParametersBox", "IntrinsicCameraParametersBox" },
+            { "ExtrinsicCameraParametersBox", "ExtrinsicCameraParametersBox" },
+            { "MVCDConfigurationBox", "MVCDConfigurationBox" },
+            { "MVDScalabilityInformationSEIBox", "MVDScalabilityInformationSEIBox" },
+            { "A3DConfigurationBox", "A3DConfigurationBox" },
+            { "VvcOperatingPointsRecord", "VvcOperatingPointsRecord" },
+            { "VVCSubpicIDRewritingInfomationStruct()", "VVCSubpicIDRewritingInfomationStruct" },
+            { "MPEG4ExtensionDescriptorsBox", "MPEG4ExtensionDescriptorsBox" },
+            { "bit(8*dci_nal_unit_length)", "byte[]" },
+            { "DependencyInfo", "DependencyInfo" },
+            { "VvcPTLRecord(0)", "VvcPTLRecord" },
+            { "EVCSliceComponentTrackConfigurationBox", "EVCSliceComponentTrackConfigurationBox" },
+            { "SVCMetadataSampleConfigBox", "SVCMetadataSampleConfigBox" },
+            { "SVCPriorityLayerInfoBox", "SVCPriorityLayerInfoBox" },
+            { "EVCConfigurationBox", "EVCConfigurationBox" },
+            { "VvcNALUConfigBox", "VvcNALUConfigBox" },
+            { "VvcConfigurationBox", "VvcConfigurationBox" },
+            { "HEVCTileConfigurationBox", "HEVCTileConfigurationBox" },
+        };
+        return map[type];
     }
 
     static partial void HelloFrom(string name);
