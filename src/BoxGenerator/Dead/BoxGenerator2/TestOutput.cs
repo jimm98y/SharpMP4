@@ -9,8 +9,8 @@ namespace BoxGenerator2
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get { return "rssr"; } }
-
         public uint SSRC { get; set; }
+
         public ReceivedSsrcBox()
         { }
 
@@ -33,10 +33,9 @@ namespace BoxGenerator2
     public class timestampsynchrony : Box
     {
         public override string FourCC { get { return "tssy"; } }
-
         public byte reserved { get; set; }
-
         public byte timestamp_sync { get; set; }
+
         public timestampsynchrony()
         { }
 
@@ -61,8 +60,8 @@ namespace BoxGenerator2
     public class timescaleentry : Box
     {
         public override string FourCC { get { return "tims"; } }
-
         public uint timescale { get; set; }
+
         public timescaleentry()
         { }
 
@@ -85,8 +84,8 @@ namespace BoxGenerator2
     public class timeoffset : Box
     {
         public override string FourCC { get { return "tims"; } }
-
         public int offset { get; set; }
+
         public timeoffset()
         { }
 
@@ -109,8 +108,8 @@ namespace BoxGenerator2
     public class sequenceoffset : Box
     {
         public override string FourCC { get { return "tims"; } }
-
         public int offset { get; set; }
+
         public sequenceoffset()
         { }
 
@@ -133,8 +132,8 @@ namespace BoxGenerator2
     public class timescaleentry1 : Box
     {
         public override string FourCC { get { return "tsro"; } }
-
         public uint timescale { get; set; }
+
         public timescaleentry1()
         { }
 
@@ -157,8 +156,8 @@ namespace BoxGenerator2
     public class timeoffset1 : Box
     {
         public override string FourCC { get { return "tsro"; } }
-
         public int offset { get; set; }
+
         public timeoffset1()
         { }
 
@@ -181,8 +180,8 @@ namespace BoxGenerator2
     public class sequenceoffset1 : Box
     {
         public override string FourCC { get { return "tsro"; } }
-
         public int offset { get; set; }
+
         public sequenceoffset1()
         { }
 
@@ -205,8 +204,8 @@ namespace BoxGenerator2
     public class timescaleentry2 : Box
     {
         public override string FourCC { get { return "snro"; } }
-
         public uint timescale { get; set; }
+
         public timescaleentry2()
         { }
 
@@ -229,8 +228,8 @@ namespace BoxGenerator2
     public class timeoffset2 : Box
     {
         public override string FourCC { get { return "snro"; } }
-
         public int offset { get; set; }
+
         public timeoffset2()
         { }
 
@@ -253,8 +252,8 @@ namespace BoxGenerator2
     public class sequenceoffset2 : Box
     {
         public override string FourCC { get { return "snro"; } }
-
         public int offset { get; set; }
+
         public sequenceoffset2()
         { }
 
@@ -277,8 +276,8 @@ namespace BoxGenerator2
     public class hintBytesSent : Box
     {
         public override string FourCC { get { return "trpy"; } }
-
         public ulong bytessent { get; set; }
+
         public hintBytesSent()
         { }
 
@@ -301,8 +300,8 @@ namespace BoxGenerator2
     public class hintPacketsSent : Box
     {
         public override string FourCC { get { return "trpy"; } }
-
         public ulong packetssent { get; set; }
+
         public hintPacketsSent()
         { }
 
@@ -325,8 +324,8 @@ namespace BoxGenerator2
     public class hintBytesSent1 : Box
     {
         public override string FourCC { get { return "trpy"; } }
-
         public ulong bytessent { get; set; }
+
         public hintBytesSent1()
         { }
 
@@ -349,8 +348,8 @@ namespace BoxGenerator2
     public class hintBytesSent2 : Box
     {
         public override string FourCC { get { return "nump"; } }
-
         public ulong bytessent { get; set; }
+
         public hintBytesSent2()
         { }
 
@@ -373,8 +372,8 @@ namespace BoxGenerator2
     public class hintPacketsSent1 : Box
     {
         public override string FourCC { get { return "nump"; } }
-
         public ulong packetssent { get; set; }
+
         public hintPacketsSent1()
         { }
 
@@ -397,8 +396,8 @@ namespace BoxGenerator2
     public class hintBytesSent3 : Box
     {
         public override string FourCC { get { return "nump"; } }
-
         public ulong bytessent { get; set; }
+
         public hintBytesSent3()
         { }
 
@@ -421,8 +420,8 @@ namespace BoxGenerator2
     public class hintBytesSent4 : Box
     {
         public override string FourCC { get { return "tpyl"; } }
-
         public ulong bytessent { get; set; }
+
         public hintBytesSent4()
         { }
 
@@ -445,8 +444,8 @@ namespace BoxGenerator2
     public class hintPacketsSent2 : Box
     {
         public override string FourCC { get { return "tpyl"; } }
-
         public ulong packetssent { get; set; }
+
         public hintPacketsSent2()
         { }
 
@@ -469,8 +468,8 @@ namespace BoxGenerator2
     public class hintBytesSent5 : Box
     {
         public override string FourCC { get { return "tpyl"; } }
-
         public ulong bytessent { get; set; }
+
         public hintBytesSent5()
         { }
 
@@ -493,8 +492,8 @@ namespace BoxGenerator2
     public class hintBytesSent6 : Box
     {
         public override string FourCC { get { return "totl"; } }
-
         public uint bytessent { get; set; }
+
         public hintBytesSent6()
         { }
 
@@ -517,8 +516,8 @@ namespace BoxGenerator2
     public class hintPacketsSent3 : Box
     {
         public override string FourCC { get { return "totl"; } }
-
         public uint packetssent { get; set; }
+
         public hintPacketsSent3()
         { }
 
@@ -541,8 +540,8 @@ namespace BoxGenerator2
     public class hintBytesSent7 : Box
     {
         public override string FourCC { get { return "totl"; } }
-
         public uint bytessent { get; set; }
+
         public hintBytesSent7()
         { }
 
@@ -565,8 +564,8 @@ namespace BoxGenerator2
     public class hintBytesSent8 : Box
     {
         public override string FourCC { get { return "npck"; } }
-
         public uint bytessent { get; set; }
+
         public hintBytesSent8()
         { }
 
@@ -589,8 +588,8 @@ namespace BoxGenerator2
     public class hintPacketsSent4 : Box
     {
         public override string FourCC { get { return "npck"; } }
-
         public uint packetssent { get; set; }
+
         public hintPacketsSent4()
         { }
 
@@ -613,8 +612,8 @@ namespace BoxGenerator2
     public class hintBytesSent9 : Box
     {
         public override string FourCC { get { return "npck"; } }
-
         public uint bytessent { get; set; }
+
         public hintBytesSent9()
         { }
 
@@ -637,8 +636,8 @@ namespace BoxGenerator2
     public class hintBytesSent10 : Box
     {
         public override string FourCC { get { return "tpay"; } }
-
         public uint bytessent { get; set; }
+
         public hintBytesSent10()
         { }
 
@@ -661,8 +660,8 @@ namespace BoxGenerator2
     public class hintPacketsSent5 : Box
     {
         public override string FourCC { get { return "tpay"; } }
-
         public uint packetssent { get; set; }
+
         public hintPacketsSent5()
         { }
 
@@ -685,8 +684,8 @@ namespace BoxGenerator2
     public class hintBytesSent11 : Box
     {
         public override string FourCC { get { return "tpay"; } }
-
         public uint bytessent { get; set; }
+
         public hintBytesSent11()
         { }
 
@@ -710,10 +709,9 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "maxr"; } }
 
-
         public uint period { get; set; } //  in milliseconds
-
         public uint bytes { get; set; }
+
         public hintmaxrate()
         { }
 
@@ -740,8 +738,8 @@ namespace BoxGenerator2
     public class hintmediaBytesSent : Box
     {
         public override string FourCC { get { return "dmed"; } }
-
         public ulong bytessent { get; set; }
+
         public hintmediaBytesSent()
         { }
 
@@ -764,8 +762,8 @@ namespace BoxGenerator2
     public class hintimmediateBytesSent : Box
     {
         public override string FourCC { get { return "dmed"; } }
-
         public ulong bytessent { get; set; }
+
         public hintimmediateBytesSent()
         { }
 
@@ -788,8 +786,8 @@ namespace BoxGenerator2
     public class hintrepeatedBytesSent : Box
     {
         public override string FourCC { get { return "dmed"; } }
-
         public ulong bytessent { get; set; }
+
         public hintrepeatedBytesSent()
         { }
 
@@ -812,8 +810,8 @@ namespace BoxGenerator2
     public class hintmediaBytesSent1 : Box
     {
         public override string FourCC { get { return "dimm"; } }
-
         public ulong bytessent { get; set; }
+
         public hintmediaBytesSent1()
         { }
 
@@ -836,8 +834,8 @@ namespace BoxGenerator2
     public class hintimmediateBytesSent1 : Box
     {
         public override string FourCC { get { return "dimm"; } }
-
         public ulong bytessent { get; set; }
+
         public hintimmediateBytesSent1()
         { }
 
@@ -860,8 +858,8 @@ namespace BoxGenerator2
     public class hintrepeatedBytesSent1 : Box
     {
         public override string FourCC { get { return "dimm"; } }
-
         public ulong bytessent { get; set; }
+
         public hintrepeatedBytesSent1()
         { }
 
@@ -884,8 +882,8 @@ namespace BoxGenerator2
     public class hintmediaBytesSent2 : Box
     {
         public override string FourCC { get { return "drep"; } }
-
         public ulong bytessent { get; set; }
+
         public hintmediaBytesSent2()
         { }
 
@@ -908,8 +906,8 @@ namespace BoxGenerator2
     public class hintimmediateBytesSent2 : Box
     {
         public override string FourCC { get { return "drep"; } }
-
         public ulong bytessent { get; set; }
+
         public hintimmediateBytesSent2()
         { }
 
@@ -932,8 +930,8 @@ namespace BoxGenerator2
     public class hintrepeatedBytesSent2 : Box
     {
         public override string FourCC { get { return "drep"; } }
-
         public ulong bytessent { get; set; }
+
         public hintrepeatedBytesSent2()
         { }
 
@@ -956,8 +954,8 @@ namespace BoxGenerator2
     public class hintminrelativetime : Box
     {
         public override string FourCC { get { return "tmin"; } }
-
         public int time { get; set; }
+
         public hintminrelativetime()
         { }
 
@@ -980,8 +978,8 @@ namespace BoxGenerator2
     public class hintmaxrelativetime : Box
     {
         public override string FourCC { get { return "tmin"; } }
-
         public int time { get; set; }
+
         public hintmaxrelativetime()
         { }
 
@@ -1004,8 +1002,8 @@ namespace BoxGenerator2
     public class hintminrelativetime1 : Box
     {
         public override string FourCC { get { return "tmax"; } }
-
         public int time { get; set; }
+
         public hintminrelativetime1()
         { }
 
@@ -1028,8 +1026,8 @@ namespace BoxGenerator2
     public class hintmaxrelativetime1 : Box
     {
         public override string FourCC { get { return "tmax"; } }
-
         public int time { get; set; }
+
         public hintmaxrelativetime1()
         { }
 
@@ -1052,8 +1050,8 @@ namespace BoxGenerator2
     public class hintlargestpacket : Box
     {
         public override string FourCC { get { return "pmax"; } }
-
         public uint bytes { get; set; }
+
         public hintlargestpacket()
         { }
 
@@ -1076,8 +1074,8 @@ namespace BoxGenerator2
     public class hintlongestpacket : Box
     {
         public override string FourCC { get { return "pmax"; } }
-
         public uint time { get; set; }
+
         public hintlongestpacket()
         { }
 
@@ -1100,8 +1098,8 @@ namespace BoxGenerator2
     public class hintlargestpacket1 : Box
     {
         public override string FourCC { get { return "dmax"; } }
-
         public uint bytes { get; set; }
+
         public hintlargestpacket1()
         { }
 
@@ -1124,8 +1122,8 @@ namespace BoxGenerator2
     public class hintlongestpacket1 : Box
     {
         public override string FourCC { get { return "dmax"; } }
-
         public uint time { get; set; }
+
         public hintlongestpacket1()
         { }
 
@@ -1148,12 +1146,10 @@ namespace BoxGenerator2
     public class hintpayloadID : Box
     {
         public override string FourCC { get { return "payt"; } }
-
         public uint payloadID { get; set; } //  payload ID used in RTP packets
-
         public byte count { get; set; }
-
         public char[] rtpmap_string { get; set; }
+
         public hintpayloadID()
         { }
 
@@ -1180,18 +1176,13 @@ namespace BoxGenerator2
     public class StereoVideoBox : FullBox
     {
         public override string FourCC { get { return "stvi"; } }
-
         public uint reserved { get; set; } = 0;
-
         public byte single_view_allowed { get; set; }
-
         public uint stereo_scheme { get; set; }
-
         public uint length { get; set; }
-
         public byte[] stereo_indication_type { get; set; }
-
         public Box[] any_box { get; set; } //  optional
+
         public StereoVideoBox()
         { }
 
@@ -1224,8 +1215,8 @@ namespace BoxGenerator2
     public class ExtendedLanguageBox : FullBox
     {
         public override string FourCC { get { return "elng"; } }
-
         public string extended_language { get; set; }
+
         public ExtendedLanguageBox()
         { }
 
@@ -1248,12 +1239,10 @@ namespace BoxGenerator2
     public class BitRateBox : Box
     {
         public override string FourCC { get { return "btrt"; } }
-
         public uint bufferSizeDB { get; set; }
-
         public uint maxBitrate { get; set; }
-
         public uint avgBitrate { get; set; }
+
         public BitRateBox()
         { }
 
@@ -1280,10 +1269,9 @@ namespace BoxGenerator2
     public class PixelAspectRatioBox : Box
     {
         public override string FourCC { get { return "pasp"; } }
-
         public uint hSpacing { get; set; }
-
         public uint vSpacing { get; set; }
+
         public PixelAspectRatioBox()
         { }
 
@@ -1308,22 +1296,15 @@ namespace BoxGenerator2
     public class CleanApertureBox : Box
     {
         public override string FourCC { get { return "clap"; } }
-
         public uint cleanApertureWidthN { get; set; }
-
         public uint cleanApertureWidthD { get; set; }
-
         public uint cleanApertureHeightN { get; set; }
-
         public uint cleanApertureHeightD { get; set; }
-
         public uint horizOffN { get; set; }
-
         public uint horizOffD { get; set; }
-
         public uint vertOffN { get; set; }
-
         public uint vertOffD { get; set; }
+
         public CleanApertureBox()
         { }
 
@@ -1360,20 +1341,14 @@ namespace BoxGenerator2
     public class ContentColourVolumeBox : Box
     {
         public override string FourCC { get { return "cclv"; } }
-
         public byte reserved1 { get; set; } = 0; //  ccv_cancel_flag
-
         public byte reserved2 { get; set; } = 0; //  ccv_persistence_flag
-
         public byte ccv_primaries_present_flag { get; set; }
-
         public byte ccv_min_luminance_value_present_flag { get; set; }
-
         public byte ccv_max_luminance_value_present_flag { get; set; }
-
         public byte ccv_avg_luminance_value_present_flag { get; set; }
-
         public byte ccv_reserved_zero_2bits { get; set; } = 0;
+
 
         public int[] ccv_primaries_x { get; set; }
         public int[] ccv_primaries_y { get; set; }
@@ -1383,6 +1358,7 @@ namespace BoxGenerator2
         public uint ccv_max_luminance_value { get; set; }
 
         public uint ccv_avg_luminance_value { get; set; }
+
         public ContentColourVolumeBox()
         { }
 
@@ -1400,10 +1376,8 @@ namespace BoxGenerator2
             if (ccv_primaries_present_flag)
             {
 
-
                 for (int c = 0; c < 3; c++)
                 {
-
                     this.ccv_primaries_x = IsoReaderWriter.ReadInt32(stream);
                     this.ccv_primaries_y = IsoReaderWriter.ReadInt32(stream);
                 }
@@ -1411,19 +1385,16 @@ namespace BoxGenerator2
 
             if (ccv_min_luminance_value_present_flag)
             {
-
                 this.ccv_min_luminance_value = IsoReaderWriter.ReadUInt32(stream);
             }
 
             if (ccv_max_luminance_value_present_flag)
             {
-
                 this.ccv_max_luminance_value = IsoReaderWriter.ReadUInt32(stream);
             }
 
             if (ccv_avg_luminance_value_present_flag)
             {
-
                 this.ccv_avg_luminance_value = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -1443,10 +1414,8 @@ namespace BoxGenerator2
             if (ccv_primaries_present_flag)
             {
 
-
                 for (int c = 0; c < 3; c++)
                 {
-
                     size += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_x);
                     size += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_y);
                 }
@@ -1454,19 +1423,16 @@ namespace BoxGenerator2
 
             if (ccv_min_luminance_value_present_flag)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.ccv_min_luminance_value);
             }
 
             if (ccv_max_luminance_value_present_flag)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.ccv_max_luminance_value);
             }
 
             if (ccv_avg_luminance_value_present_flag)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.ccv_avg_luminance_value);
             }
             return size;
@@ -1477,7 +1443,6 @@ namespace BoxGenerator2
     public class ColourInformationBox : Box
     {
         public override string FourCC { get { return "colr"; } }
-
         public uint colour_type { get; set; }
 
         public ushort colour_primaries { get; set; }
@@ -1489,6 +1454,7 @@ namespace BoxGenerator2
         public ICC_profile ICC_profile { get; set; } //  restricted ICC profile
 
         public ICC_profile ICC_profile { get; set; } //  unrestricted ICC profile
+
         public ColourInformationBox()
         { }
 
@@ -1497,9 +1463,8 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
             this.colour_type = IsoReaderWriter.ReadUInt32(stream);
 
-            if (colour_type == 'nclx')
+            if (colour_type == "nclx")
             {
-
                 this.colour_primaries = IsoReaderWriter.ReadUInt16(stream);
                 this.transfer_characteristics = IsoReaderWriter.ReadUInt16(stream);
                 this.matrix_coefficients = IsoReaderWriter.ReadUInt16(stream);
@@ -1507,15 +1472,13 @@ namespace BoxGenerator2
                 this.reserved = IsoReaderWriter.ReadBits(stream, 7);
             }
 
-            else if (colour_type == 'rICC')
+            else if (colour_type == "rICC")
             {
-
                 this.ICC_profile = IsoReaderWriter.ReadClass(stream);
             }
 
-            else if (colour_type == 'prof')
+            else if (colour_type == "prof")
             {
-
                 this.ICC_profile = IsoReaderWriter.ReadClass(stream);
             }
         }
@@ -1526,9 +1489,8 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, this.colour_type);
 
-            if (colour_type == 'nclx')
+            if (colour_type == "nclx")
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.colour_primaries);
                 size += IsoReaderWriter.WriteUInt16(stream, this.transfer_characteristics);
                 size += IsoReaderWriter.WriteUInt16(stream, this.matrix_coefficients);
@@ -1536,15 +1498,13 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
             }
 
-            else if (colour_type == 'rICC')
+            else if (colour_type == "rICC")
             {
-
                 size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
             }
 
-            else if (colour_type == 'prof')
+            else if (colour_type == "prof")
             {
-
                 size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
             }
             return size;
@@ -1555,10 +1515,9 @@ namespace BoxGenerator2
     public class ContentLightLevelBox : Box
     {
         public override string FourCC { get { return "clli"; } }
-
         public ushort max_content_light_level { get; set; }
-
         public ushort max_pic_average_light_level { get; set; }
+
         public ContentLightLevelBox()
         { }
 
@@ -1586,14 +1545,11 @@ namespace BoxGenerator2
 
         public ushort display_primaries_x { get; set; }
         public ushort display_primaries_y { get; set; }
-
         public ushort white_point_x { get; set; }
-
         public ushort white_point_y { get; set; }
-
         public uint max_display_mastering_luminance { get; set; }
-
         public uint min_display_mastering_luminance { get; set; }
+
         public MasteringDisplayColourVolumeBox()
         { }
 
@@ -1603,7 +1559,6 @@ namespace BoxGenerator2
 
             for (int c = 0; c < 3; c++)
             {
-
                 this.display_primaries_x = IsoReaderWriter.ReadUInt16(stream);
                 this.display_primaries_y = IsoReaderWriter.ReadUInt16(stream);
             }
@@ -1620,7 +1575,6 @@ namespace BoxGenerator2
 
             for (int c = 0; c < 3; c++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_x);
                 size += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_y);
             }
@@ -1636,10 +1590,9 @@ namespace BoxGenerator2
     public class ScrambleSchemeInfoBox : Box
     {
         public override string FourCC { get { return "scrb"; } }
-
         public SchemeTypeBox scheme_type_box { get; set; }
-
         public SchemeInformationBox info { get; set; } //  optional
+
         public ScrambleSchemeInfoBox()
         { }
 
@@ -1666,25 +1619,43 @@ namespace BoxGenerator2
         public override string FourCC { get { return "chnl"; } }
 
         public byte stream_structure { get; set; }
+
         public byte definedLayout { get; set; }
+
+
+
         public byte speaker_position { get; set; }
+
+
         public short azimuth { get; set; }
         public sbyte elevation { get; set; }
+
         public ulong omittedChannelsMap { get; set; } //  a ‘1’ bit indicates ‘not in this track’
+
         public byte object_count { get; set; }
 
         public byte stream_structure { get; set; }
         public byte format_ordering { get; set; }
         public byte baseChannelCount { get; set; }
+
         public byte definedLayout { get; set; }
+
         public byte layout_channel_count { get; set; }
+
         public byte speaker_position { get; set; }
+
+
         public short azimuth { get; set; }
         public sbyte elevation { get; set; }
+
         public byte reserved { get; set; } = 0;
         public byte channel_order_definition { get; set; }
         public byte omitted_channels_present { get; set; }
+
         public ulong omittedChannelsMap { get; set; } //  a ‘1’ bit indicates ‘not in this track’
+
+
+
         public ChannelLayout()
         { }
 
@@ -1694,27 +1665,22 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.stream_structure = IsoReaderWriter.ReadUInt8(stream);
 
                 if (stream_structure & channelStructured)
                 {
-
                     this.definedLayout = IsoReaderWriter.ReadUInt8(stream);
 
                     if (definedLayout == 0)
                     {
 
-
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-
 
                             this.speaker_position = IsoReaderWriter.ReadUInt8(stream);
 
                             if (speaker_position == 126)
                             {
-
 
                                 this.azimuth = IsoReaderWriter.ReadInt16(stream);
                                 this.elevation = IsoReaderWriter.ReadInt8(stream);
@@ -1724,43 +1690,36 @@ namespace BoxGenerator2
 
                     else
                     {
-
                         this.omittedChannelsMap = IsoReaderWriter.ReadUInt64(stream);
                     }
                 }
 
                 if (stream_structure & objectStructured)
                 {
-
                     this.object_count = IsoReaderWriter.ReadUInt8(stream);
                 }
             }
 
             else
             {
-
                 this.stream_structure = IsoReaderWriter.ReadBits(stream, 4);
                 this.format_ordering = IsoReaderWriter.ReadBits(stream, 4);
                 this.baseChannelCount = IsoReaderWriter.ReadUInt8(stream);
 
                 if (stream_structure & channelStructured)
                 {
-
                     this.definedLayout = IsoReaderWriter.ReadUInt8(stream);
 
                     if (definedLayout == 0)
                     {
-
                         this.layout_channel_count = IsoReaderWriter.ReadUInt8(stream);
 
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-
                             this.speaker_position = IsoReaderWriter.ReadUInt8(stream);
 
                             if (speaker_position == 126)
                             {
-
 
                                 this.azimuth = IsoReaderWriter.ReadInt16(stream);
                                 this.elevation = IsoReaderWriter.ReadInt8(stream);
@@ -1770,14 +1729,12 @@ namespace BoxGenerator2
 
                     else
                     {
-
                         this.reserved = IsoReaderWriter.ReadBits(stream, 4);
                         this.channel_order_definition = IsoReaderWriter.ReadBits(stream, 3);
                         this.omitted_channels_present = IsoReaderWriter.ReadBit(stream);
 
                         if (omitted_channels_present == 1)
                         {
-
                             this.omittedChannelsMap = IsoReaderWriter.ReadUInt64(stream);
                         }
                     }
@@ -1785,7 +1742,6 @@ namespace BoxGenerator2
 
                 if (stream_structure & objectStructured)
                 {
-
 
                 }
             }
@@ -1798,27 +1754,22 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.stream_structure);
 
                 if (stream_structure & channelStructured)
                 {
-
                     size += IsoReaderWriter.WriteUInt8(stream, this.definedLayout);
 
                     if (definedLayout == 0)
                     {
 
-
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-
 
                             size += IsoReaderWriter.WriteUInt8(stream, this.speaker_position);
 
                             if (speaker_position == 126)
                             {
-
 
                                 size += IsoReaderWriter.WriteInt16(stream, this.azimuth);
                                 size += IsoReaderWriter.WriteInt8(stream, this.elevation);
@@ -1828,43 +1779,36 @@ namespace BoxGenerator2
 
                     else
                     {
-
                         size += IsoReaderWriter.WriteUInt64(stream, this.omittedChannelsMap);
                     }
                 }
 
                 if (stream_structure & objectStructured)
                 {
-
                     size += IsoReaderWriter.WriteUInt8(stream, this.object_count);
                 }
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 4, this.stream_structure);
                 size += IsoReaderWriter.WriteBits(stream, 4, this.format_ordering);
                 size += IsoReaderWriter.WriteUInt8(stream, this.baseChannelCount);
 
                 if (stream_structure & channelStructured)
                 {
-
                     size += IsoReaderWriter.WriteUInt8(stream, this.definedLayout);
 
                     if (definedLayout == 0)
                     {
-
                         size += IsoReaderWriter.WriteUInt8(stream, this.layout_channel_count);
 
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-
                             size += IsoReaderWriter.WriteUInt8(stream, this.speaker_position);
 
                             if (speaker_position == 126)
                             {
-
 
                                 size += IsoReaderWriter.WriteInt16(stream, this.azimuth);
                                 size += IsoReaderWriter.WriteInt8(stream, this.elevation);
@@ -1874,14 +1818,12 @@ namespace BoxGenerator2
 
                     else
                     {
-
                         size += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
                         size += IsoReaderWriter.WriteBits(stream, 3, this.channel_order_definition);
                         size += IsoReaderWriter.WriteBit(stream, this.omitted_channels_present);
 
                         if (omitted_channels_present == 1)
                         {
-
                             size += IsoReaderWriter.WriteUInt64(stream, this.omittedChannelsMap);
                         }
                     }
@@ -1889,7 +1831,6 @@ namespace BoxGenerator2
 
                 if (stream_structure & objectStructured)
                 {
-
 
                 }
             }
@@ -1912,11 +1853,22 @@ namespace BoxGenerator2
         public byte targetChannelCount { get; set; }
         public byte in_stream { get; set; }
         public byte downmix_ID { get; set; }
+
+
+
+
         public byte bs_downmix_offset { get; set; }
         public int size { get; set; } = 4;
+
+
         public byte bs_downmix_coefficient_v1 { get; set; }
+
         public byte[] reserved { get; set; } = 0; //  byte align
+
+
+
         public byte bs_downmix_coefficient { get; set; }
+
         public DownMixInstructions()
         { }
 
@@ -1926,20 +1878,17 @@ namespace BoxGenerator2
 
             if (version >= 1)
             {
-
                 this.reserved = IsoReaderWriter.ReadBit(stream);
                 this.downmix_instructions_count = IsoReaderWriter.ReadBits(stream, 7);
             }
 
             else
             {
-
                 this.downmix_instructions_count = IsoReaderWriter.ReadInt32(stream);
             }
 
             for (int a = 1; a <= downmix_instructions_count; a++)
             {
-
                 this.targetLayout = IsoReaderWriter.ReadUInt8(stream);
                 this.reserved = IsoReaderWriter.ReadBit(stream);
                 this.targetChannelCount = IsoReaderWriter.ReadBits(stream, 7);
@@ -1951,20 +1900,16 @@ namespace BoxGenerator2
 
 
 
-
                     if (version >= 1)
                     {
-
                         this.bs_downmix_offset = IsoReaderWriter.ReadBits(stream, 4);
                         this.size = IsoReaderWriter.ReadInt32(stream);
 
                         for (int i = 1; i <= targetChannelCount; i++)
                         {
 
-
                             for (int j = 1; j <= baseChannelCount; j++)
                             {
-
                                 this.bs_downmix_coefficient_v1 = IsoReaderWriter.ReadBits(stream, 5);
                                 size += 5;
                             }
@@ -1975,14 +1920,11 @@ namespace BoxGenerator2
                     else
                     {
 
-
                         for (int i = 1; i <= targetChannelCount; i++)
                         {
 
-
                             for (int j = 1; j <= baseChannelCount; j++)
                             {
-
                                 this.bs_downmix_coefficient = IsoReaderWriter.ReadBits(stream, 4);
                             }
                         }
@@ -1998,20 +1940,17 @@ namespace BoxGenerator2
 
             if (version >= 1)
             {
-
                 size += IsoReaderWriter.WriteBit(stream, this.reserved);
                 size += IsoReaderWriter.WriteBits(stream, 7, this.downmix_instructions_count);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteInt32(stream, this.downmix_instructions_count);
             }
 
             for (int a = 1; a <= downmix_instructions_count; a++)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.targetLayout);
                 size += IsoReaderWriter.WriteBit(stream, this.reserved);
                 size += IsoReaderWriter.WriteBits(stream, 7, this.targetChannelCount);
@@ -2023,20 +1962,16 @@ namespace BoxGenerator2
 
 
 
-
                     if (version >= 1)
                     {
-
                         size += IsoReaderWriter.WriteBits(stream, 4, this.bs_downmix_offset);
                         size += IsoReaderWriter.WriteInt32(stream, this.size);
 
                         for (int i = 1; i <= targetChannelCount; i++)
                         {
 
-
                             for (int j = 1; j <= baseChannelCount; j++)
                             {
-
                                 size += IsoReaderWriter.WriteBits(stream, 5, this.bs_downmix_coefficient_v1);
                                 size += 5;
                             }
@@ -2047,14 +1982,11 @@ namespace BoxGenerator2
                     else
                     {
 
-
                         for (int i = 1; i <= targetChannelCount; i++)
                         {
 
-
                             for (int j = 1; j <= baseChannelCount; j++)
                             {
-
                                 size += IsoReaderWriter.WriteBits(stream, 4, this.bs_downmix_coefficient);
                             }
                         }
@@ -2069,8 +2001,8 @@ namespace BoxGenerator2
     public class SamplingRateBox : FullBox
     {
         public override string FourCC { get { return "srat"; } }
-
         public uint sampling_rate { get; set; }
+
         public SamplingRateBox()
         { }
 
@@ -2093,8 +2025,8 @@ namespace BoxGenerator2
     public class TextConfigBox : FullBox
     {
         public override string FourCC { get { return "txtC"; } }
-
         public string text_config { get; set; }
+
         public TextConfigBox()
         { }
 
@@ -2117,8 +2049,8 @@ namespace BoxGenerator2
     public class URIInitBox : FullBox
     {
         public override string FourCC { get { return "uriI"; } }
-
         public byte[] uri_initialization_data { get; set; }
+
         public URIInitBox()
         { }
 
@@ -2141,12 +2073,10 @@ namespace BoxGenerator2
     public class CopyrightBox : FullBox
     {
         public override string FourCC { get { return "cprt"; } }
-
         public byte pad { get; set; } = 0;
-
         public byte[] language { get; set; } //  ISO-639-2/T language code
-
         public string notice { get; set; }
+
         public CopyrightBox()
         { }
 
@@ -2173,10 +2103,9 @@ namespace BoxGenerator2
     public class KindBox : FullBox
     {
         public override string FourCC { get { return "kind"; } }
-
         public string schemeURI { get; set; }
-
         public string value { get; set; }
+
         public KindBox()
         { }
 
@@ -2201,10 +2130,9 @@ namespace BoxGenerator2
     public class TrackSelectionBox : FullBox
     {
         public override string FourCC { get { return "tsel"; } }
-
         public int switch_group { get; set; } = 0;
-
         public uint[] attribute_list { get; set; } //  to end of the box
+
         public TrackSelectionBox()
         { }
 
@@ -2229,6 +2157,7 @@ namespace BoxGenerator2
     public class SubTrackBox : Box
     {
         public override string FourCC { get { return "strk"; } }
+
         public SubTrackBox()
         { }
 
@@ -2249,6 +2178,7 @@ namespace BoxGenerator2
     public class trackhintinformation : Box
     {
         public override string FourCC { get { return "hnti"; } }
+
         public trackhintinformation()
         { }
 
@@ -2269,8 +2199,8 @@ namespace BoxGenerator2
     public class rtptracksdphintinformation : Box
     {
         public override string FourCC { get { return "hnti"; } }
-
         public char[] sdptext { get; set; }
+
         public rtptracksdphintinformation()
         { }
 
@@ -2293,6 +2223,7 @@ namespace BoxGenerator2
     public class trackhintinformation1 : Box
     {
         public override string FourCC { get { return "sdp "; } }
+
         public trackhintinformation1()
         { }
 
@@ -2313,8 +2244,8 @@ namespace BoxGenerator2
     public class rtptracksdphintinformation1 : Box
     {
         public override string FourCC { get { return "sdp "; } }
-
         public char[] sdptext { get; set; }
+
         public rtptracksdphintinformation1()
         { }
 
@@ -2337,6 +2268,7 @@ namespace BoxGenerator2
     public class moviehintinformation : Box
     {
         public override string FourCC { get { return "rtp "; } }
+
         public moviehintinformation()
         { }
 
@@ -2357,10 +2289,9 @@ namespace BoxGenerator2
     public class rtpmoviehintinformation : Box
     {
         public override string FourCC { get { return "rtp "; } }
-
-        public uint descriptionformat { get; set; } = 'sdp ';
-
+        public uint descriptionformat { get; set; } = "sdp ";
         public char[] sdptext { get; set; }
+
         public rtpmoviehintinformation()
         { }
 
@@ -2385,6 +2316,7 @@ namespace BoxGenerator2
     public class hintstatisticsbox : Box
     {
         public override string FourCC { get { return "hinf"; } }
+
         public hintstatisticsbox()
         { }
 
@@ -2406,8 +2338,8 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "ludt"; } }
 
-
         public int[] TrackLoudnessInfo { get; set; } //  not more than one AlbumLoudnessInfo box with version>=1 is allowed	albumLoudness	AlbumLoudnessInfo[];
+
         public LoudnessBox()
         { }
 
@@ -2432,6 +2364,7 @@ namespace BoxGenerator2
     public class TrackLoudnessInfo : LoudnessBaseBox
     {
         public override string FourCC { get { return "tlou"; } }
+
         public TrackLoudnessInfo()
         { }
 
@@ -2452,6 +2385,7 @@ namespace BoxGenerator2
     public class AlbumLoudnessInfo : LoudnessBaseBox
     {
         public override string FourCC { get { return "alou"; } }
+
         public AlbumLoudnessInfo()
         { }
 
@@ -2472,8 +2406,8 @@ namespace BoxGenerator2
     public class DataEntryUrlBox : DataEntryBaseBox
     {
         public override string FourCC { get { return "url "; } }
-
         public string location { get; set; }
+
         public DataEntryUrlBox()
         { }
 
@@ -2496,10 +2430,9 @@ namespace BoxGenerator2
     public class DataEntryUrnBox : DataEntryBaseBox
     {
         public override string FourCC { get { return "urn "; } }
-
         public string name { get; set; }
-
         public string location { get; set; }
+
         public DataEntryUrnBox()
         { }
 
@@ -2524,8 +2457,8 @@ namespace BoxGenerator2
     public class DataEntryImdaBox : DataEntryBaseBox
     {
         public override string FourCC { get { return "imdt"; } }
-
         public uint imda_ref_identifier { get; set; }
+
         public DataEntryImdaBox()
         { }
 
@@ -2548,6 +2481,7 @@ namespace BoxGenerator2
     public class DataEntrySeqNumImdaBox : DataEntryBaseBox
     {
         public override string FourCC { get { return "snim"; } }
+
         public DataEntrySeqNumImdaBox()
         { }
 
@@ -2568,8 +2502,8 @@ namespace BoxGenerator2
     public class ItemPropertyContainerBox : Box
     {
         public override string FourCC { get { return "ipco"; } }
-
         public Box[] properties { get; set; } //  boxes derived from
+
 
 
         public ItemPropertyContainerBox()
@@ -2598,15 +2532,20 @@ namespace BoxGenerator2
     public class ItemPropertyAssociationBox : FullBox
     {
         public override string FourCC { get { return "ipma"; } }
-
         public uint entry_count { get; set; }
 
+
         public ushort item_ID { get; set; }
+
         public uint item_ID { get; set; }
         public byte association_count { get; set; }
+
         public byte essential { get; set; }
+
         public ushort property_index { get; set; }
+
         public byte property_index { get; set; }
+
         public ItemPropertyAssociationBox()
         { }
 
@@ -2618,34 +2557,28 @@ namespace BoxGenerator2
             for (int i = 0; i < entry_count; i++)
             {
 
-
                 if (version < 1)
                 {
-
                     this.item_ID = IsoReaderWriter.ReadUInt16(stream);
                 }
 
                 else
                 {
-
                     this.item_ID = IsoReaderWriter.ReadUInt32(stream);
                 }
                 this.association_count = IsoReaderWriter.ReadUInt8(stream);
 
-                for (int i = 0; i < association_count; i++)
+                for (int j = 0; j < association_count; j++)
                 {
-
                     this.essential = IsoReaderWriter.ReadBit(stream);
 
                     if (flags & 1)
                     {
-
                         this.property_index = IsoReaderWriter.ReadBits(stream, 15);
                     }
 
                     else
                     {
-
                         this.property_index = IsoReaderWriter.ReadBits(stream, 7);
                     }
                 }
@@ -2661,34 +2594,28 @@ namespace BoxGenerator2
             for (int i = 0; i < entry_count; i++)
             {
 
-
                 if (version < 1)
                 {
-
                     size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
                 }
 
                 else
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
                 }
                 size += IsoReaderWriter.WriteUInt8(stream, this.association_count);
 
-                for (int i = 0; i < association_count; i++)
+                for (int j = 0; j < association_count; j++)
                 {
-
                     size += IsoReaderWriter.WriteBit(stream, this.essential);
 
                     if (flags & 1)
                     {
-
                         size += IsoReaderWriter.WriteBits(stream, 15, this.property_index);
                     }
 
                     else
                     {
-
                         size += IsoReaderWriter.WriteBits(stream, 7, this.property_index);
                     }
                 }
@@ -2701,10 +2628,9 @@ namespace BoxGenerator2
     public class ItemPropertiesBox : Box
     {
         public override string FourCC { get { return "iprp"; } }
-
         public ItemPropertyContainerBox property_container { get; set; }
-
         public ItemPropertyAssociationBox[] association { get; set; }
+
         public ItemPropertiesBox()
         { }
 
@@ -2733,8 +2659,10 @@ namespace BoxGenerator2
         public int min_initial_alt_startup_offset { get; set; }
 
         public uint num_entries { get; set; }
+
         public uint grouping_type_parameter { get; set; }
         public int min_initial_alt_startup_offset { get; set; }
+
         public AlternativeStartupSequencePropertiesBox()
         { }
 
@@ -2744,18 +2672,15 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.min_initial_alt_startup_offset = IsoReaderWriter.ReadInt32(stream);
             }
 
             else if (version == 1)
             {
-
                 this.num_entries = IsoReaderWriter.ReadUInt32(stream);
 
                 for (int j = 1; j <= num_entries; j++)
                 {
-
                     this.grouping_type_parameter = IsoReaderWriter.ReadUInt32(stream);
                     this.min_initial_alt_startup_offset = IsoReaderWriter.ReadInt32(stream);
                 }
@@ -2769,18 +2694,15 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteInt32(stream, this.min_initial_alt_startup_offset);
             }
 
             else if (version == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.num_entries);
 
                 for (int j = 1; j <= num_entries; j++)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
                     size += IsoReaderWriter.WriteInt32(stream, this.min_initial_alt_startup_offset);
                 }
@@ -2793,8 +2715,8 @@ namespace BoxGenerator2
     public class BinaryXMLBox : FullBox
     {
         public override string FourCC { get { return "bxml"; } }
-
         public byte[] data { get; set; } //  to end of box
+
         public BinaryXMLBox()
         { }
 
@@ -2817,8 +2739,8 @@ namespace BoxGenerator2
     public class CompleteTrackInfoBox : Box
     {
         public override string FourCC { get { return "cinf"; } }
-
         public OriginalFormatBox original_format { get; set; }
+
         public CompleteTrackInfoBox()
         { }
 
@@ -2841,10 +2763,10 @@ namespace BoxGenerator2
     public class ChunkLargeOffsetBox : FullBox
     {
         public override string FourCC { get { return "co64"; } }
-
         public uint entry_count { get; set; }
 
         public ulong chunk_offset { get; set; }
+
         public ChunkLargeOffsetBox()
         { }
 
@@ -2855,7 +2777,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 this.chunk_offset = IsoReaderWriter.ReadUInt64(stream);
             }
         }
@@ -2868,7 +2789,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt64(stream, this.chunk_offset);
             }
             return size;
@@ -2879,18 +2799,18 @@ namespace BoxGenerator2
     public class CompactSampleToGroupBox : FullBox
     {
         public override string FourCC { get { return "csgp"; } }
-
         public uint grouping_type { get; set; }
 
         public uint grouping_type_parameter { get; set; }
-
         public uint pattern_count { get; set; }
 
 
         public byte[][] pattern_length { get; set; }
         public byte[][] sample_count { get; set; }
 
+
         public byte[][] sample_group_description_index { get; set; } //  whose msb might indicate fragment_local or global
+
         public CompactSampleToGroupBox()
         { }
 
@@ -2901,7 +2821,6 @@ namespace BoxGenerator2
 
             if (grouping_type_parameter_present == 1)
             {
-
                 this.grouping_type_parameter = IsoReaderWriter.ReadUInt32(stream);
             }
             this.pattern_count = IsoReaderWriter.ReadUInt32(stream);
@@ -2909,7 +2828,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= pattern_count; i++)
             {
-
                 this.pattern_length = IsoReaderWriter.ReadBytes(stream, f(pattern_size_code));
                 this.sample_count = IsoReaderWriter.ReadBytes(stream, f(count_size_code));
             }
@@ -2917,10 +2835,8 @@ namespace BoxGenerator2
             for (int j = 1; j <= pattern_count; j++)
             {
 
-
                 for (int k = 1; k <= pattern_length[j]; k++)
                 {
-
                     this.sample_group_description_index = IsoReaderWriter.ReadBytes(stream, f(index_size_code));
                 }
             }
@@ -2934,7 +2850,6 @@ namespace BoxGenerator2
 
             if (grouping_type_parameter_present == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
             }
             size += IsoReaderWriter.WriteUInt32(stream, this.pattern_count);
@@ -2942,7 +2857,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= pattern_count; i++)
             {
-
                 size += IsoReaderWriter.WriteBytes(stream, f(pattern_size_code), this.pattern_length);
                 size += IsoReaderWriter.WriteBytes(stream, f(count_size_code), this.sample_count);
             }
@@ -2950,10 +2864,8 @@ namespace BoxGenerator2
             for (int j = 1; j <= pattern_count; j++)
             {
 
-
                 for (int k = 1; k <= pattern_length[j]; k++)
                 {
-
                     size += IsoReaderWriter.WriteBytes(stream, f(index_size_code), this.sample_group_description_index);
                 }
             }
@@ -2977,6 +2889,7 @@ namespace BoxGenerator2
         public long greatestDecodeToDisplayDelta { get; set; }
         public long compositionStartTime { get; set; }
         public long compositionEndTime { get; set; }
+
         public CompositionToDecodeBox()
         { }
 
@@ -2986,7 +2899,6 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.compositionToDTSShift = IsoReaderWriter.ReadInt32(stream);
                 this.leastDecodeToDisplayDelta = IsoReaderWriter.ReadInt32(stream);
                 this.greatestDecodeToDisplayDelta = IsoReaderWriter.ReadInt32(stream);
@@ -2996,7 +2908,6 @@ namespace BoxGenerator2
 
             else
             {
-
                 this.compositionToDTSShift = IsoReaderWriter.ReadInt64(stream);
                 this.leastDecodeToDisplayDelta = IsoReaderWriter.ReadInt64(stream);
                 this.greatestDecodeToDisplayDelta = IsoReaderWriter.ReadInt64(stream);
@@ -3012,7 +2923,6 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteInt32(stream, this.compositionToDTSShift);
                 size += IsoReaderWriter.WriteInt32(stream, this.leastDecodeToDisplayDelta);
                 size += IsoReaderWriter.WriteInt32(stream, this.greatestDecodeToDisplayDelta);
@@ -3022,7 +2932,6 @@ namespace BoxGenerator2
 
             else
             {
-
                 size += IsoReaderWriter.WriteInt64(stream, this.compositionToDTSShift);
                 size += IsoReaderWriter.WriteInt64(stream, this.leastDecodeToDisplayDelta);
                 size += IsoReaderWriter.WriteInt64(stream, this.greatestDecodeToDisplayDelta);
@@ -3037,16 +2946,17 @@ namespace BoxGenerator2
     public class CompositionOffsetBox : FullBox
     {
         public override string FourCC { get { return "ctts"; } }
-
         public uint entry_count { get; set; }
 
-        public int i { get; set; }
+
 
         public uint sample_count { get; set; }
         public uint sample_offset { get; set; }
 
+
         public uint sample_count { get; set; }
         public int sample_offset { get; set; }
+
         public CompositionOffsetBox()
         { }
 
@@ -3054,15 +2964,13 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.entry_count = IsoReaderWriter.ReadUInt32(stream);
-            this.i = IsoReaderWriter.ReadInt32(stream);
+
 
             if (version == 0)
             {
 
-
                 for (int i = 0; i < entry_count; i++)
                 {
-
                     this.sample_count = IsoReaderWriter.ReadUInt32(stream);
                     this.sample_offset = IsoReaderWriter.ReadUInt32(stream);
                 }
@@ -3071,10 +2979,8 @@ namespace BoxGenerator2
             else if (version == 1)
             {
 
-
                 for (int i = 0; i < entry_count; i++)
                 {
-
                     this.sample_count = IsoReaderWriter.ReadUInt32(stream);
                     this.sample_offset = IsoReaderWriter.ReadInt32(stream);
                 }
@@ -3086,15 +2992,13 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
-            size += IsoReaderWriter.WriteInt32(stream, this.i);
+
 
             if (version == 0)
             {
 
-
                 for (int i = 0; i < entry_count; i++)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
                     size += IsoReaderWriter.WriteUInt32(stream, this.sample_offset);
                 }
@@ -3103,10 +3007,8 @@ namespace BoxGenerator2
             else if (version == 1)
             {
 
-
                 for (int i = 0; i < entry_count; i++)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
                     size += IsoReaderWriter.WriteInt32(stream, this.sample_offset);
                 }
@@ -3119,6 +3021,7 @@ namespace BoxGenerator2
     public class DataInformationBox : Box
     {
         public override string FourCC { get { return "dinf"; } }
+
         public DataInformationBox()
         { }
 
@@ -3139,10 +3042,10 @@ namespace BoxGenerator2
     public class DataReferenceBox : FullBox
     {
         public override string FourCC { get { return "dref"; } }
-
         public uint entry_count { get; set; }
 
         public DataEntryBaseBox data_entry { get; set; }
+
         public DataReferenceBox()
         { }
 
@@ -3153,7 +3056,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 this.data_entry = IsoReaderWriter.ReadBox(stream);
             }
         }
@@ -3166,7 +3068,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteBox(stream, this.data_entry);
             }
             return size;
@@ -3177,6 +3078,7 @@ namespace BoxGenerator2
     public class EditBox : Box
     {
         public override string FourCC { get { return "edts"; } }
+
         public EditBox()
         { }
 
@@ -3197,15 +3099,18 @@ namespace BoxGenerator2
     public class EditListBox : FullBox
     {
         public override string FourCC { get { return "elst"; } }
-
         public uint entry_count { get; set; }
+
 
         public ulong edit_duration { get; set; }
         public long media_time { get; set; }
+
+
         public uint edit_duration { get; set; }
         public int media_time { get; set; }
         public short media_rate_integer { get; set; }
         public short media_rate_fraction { get; set; }
+
         public EditListBox()
         { }
 
@@ -3217,17 +3122,14 @@ namespace BoxGenerator2
             for (int i = 1; i <= entry_count; i++)
             {
 
-
                 if (version == 1)
                 {
-
                     this.edit_duration = IsoReaderWriter.ReadUInt64(stream);
                     this.media_time = IsoReaderWriter.ReadInt64(stream);
                 }
 
                 else
                 {
-
 
                     this.edit_duration = IsoReaderWriter.ReadUInt32(stream);
                     this.media_time = IsoReaderWriter.ReadInt32(stream);
@@ -3246,17 +3148,14 @@ namespace BoxGenerator2
             for (int i = 1; i <= entry_count; i++)
             {
 
-
                 if (version == 1)
                 {
-
                     size += IsoReaderWriter.WriteUInt64(stream, this.edit_duration);
                     size += IsoReaderWriter.WriteInt64(stream, this.media_time);
                 }
 
                 else
                 {
-
 
                     size += IsoReaderWriter.WriteUInt32(stream, this.edit_duration);
                     size += IsoReaderWriter.WriteInt32(stream, this.media_time);
@@ -3272,8 +3171,8 @@ namespace BoxGenerator2
     public class ExtendedTypeBox : Box
     {
         public override string FourCC { get { return "etyp"; } }
-
         public TypeCombinationBox[] compatible_combinations { get; set; } //  to end of the box
+
         public ExtendedTypeBox()
         { }
 
@@ -3296,18 +3195,14 @@ namespace BoxGenerator2
     public class FDItemInfoExtension : ItemInfoExtension
     {
         public override string FourCC { get { return "fdel"; } }
-
         public string content_location { get; set; }
-
         public string content_MD5 { get; set; }
-
         public ulong content_length { get; set; }
-
         public ulong transfer_length { get; set; }
-
         public byte entry_count { get; set; }
 
         public uint group_id { get; set; }
+
         public FDItemInfoExtension()
         { }
 
@@ -3322,7 +3217,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 this.group_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -3339,7 +3233,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
             }
             return size;
@@ -3355,9 +3248,12 @@ namespace BoxGenerator2
 
         public uint entry_count { get; set; }
 
+
         public ushort item_ID { get; set; }
+
         public uint item_ID { get; set; }
         public uint symbol_count { get; set; }
+
         public FECReservoirBox()
         { }
 
@@ -3367,29 +3263,24 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.entry_count = IsoReaderWriter.ReadUInt16(stream);
             }
 
             else
             {
-
                 this.entry_count = IsoReaderWriter.ReadUInt32(stream);
             }
 
             for (int i = 1; i <= entry_count; i++)
             {
 
-
                 if (version == 0)
                 {
-
                     this.item_ID = IsoReaderWriter.ReadUInt16(stream);
                 }
 
                 else
                 {
-
                     this.item_ID = IsoReaderWriter.ReadUInt32(stream);
                 }
                 this.symbol_count = IsoReaderWriter.ReadUInt32(stream);
@@ -3403,29 +3294,24 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
             {
 
-
                 if (version == 0)
                 {
-
                     size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
                 }
 
                 else
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
                 }
                 size += IsoReaderWriter.WriteUInt32(stream, this.symbol_count);
@@ -3438,12 +3324,10 @@ namespace BoxGenerator2
     public class PartitionEntry : Box
     {
         public override string FourCC { get { return "fiin"; } }
-
         public FilePartitionBox blocks_and_symbols { get; set; }
-
         public FECReservoirBox FEC_symbol_locations { get; set; } // optional
-
         public FileReservoirBox File_symbol_locations { get; set; } // optional
+
         public PartitionEntry()
         { }
 
@@ -3470,14 +3354,11 @@ namespace BoxGenerator2
     public class FDItemInformationBox : FullBox
     {
         public override string FourCC { get { return "fiin"; } }
-
         public ushort entry_count { get; set; }
-
         public PartitionEntry[] partition_entries { get; set; }
-
         public FDSessionGroupBox session_info { get; set; } // optional
-
         public GroupIdToNameBox group_id_to_name { get; set; } // optional
+
         public FDItemInformationBox()
         { }
 
@@ -3511,9 +3392,12 @@ namespace BoxGenerator2
 
         public uint entry_count { get; set; }
 
+
         public ushort item_ID { get; set; }
+
         public uint item_ID { get; set; }
         public uint symbol_count { get; set; }
+
         public FileReservoirBox()
         { }
 
@@ -3523,29 +3407,24 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.entry_count = IsoReaderWriter.ReadUInt16(stream);
             }
 
             else
             {
-
                 this.entry_count = IsoReaderWriter.ReadUInt32(stream);
             }
 
             for (int i = 1; i <= entry_count; i++)
             {
 
-
                 if (version == 0)
                 {
-
                     this.item_ID = IsoReaderWriter.ReadUInt16(stream);
                 }
 
                 else
                 {
-
                     this.item_ID = IsoReaderWriter.ReadUInt32(stream);
                 }
                 this.symbol_count = IsoReaderWriter.ReadUInt32(stream);
@@ -3559,29 +3438,24 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
             {
 
-
                 if (version == 0)
                 {
-
                     size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
                 }
 
                 else
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
                 }
                 size += IsoReaderWriter.WriteUInt32(stream, this.symbol_count);
@@ -3598,21 +3472,13 @@ namespace BoxGenerator2
         public ushort item_ID { get; set; }
 
         public uint item_ID { get; set; }
-
         public ushort packet_payload_size { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public byte FEC_encoding_ID { get; set; }
-
         public ushort FEC_instance_ID { get; set; }
-
         public ushort max_source_block_length { get; set; }
-
         public ushort encoding_symbol_length { get; set; }
-
         public ushort max_number_of_encoding_symbols { get; set; }
-
         public string scheme_specific_info { get; set; }
 
         public ushort entry_count { get; set; }
@@ -3621,6 +3487,7 @@ namespace BoxGenerator2
 
         public ushort block_count { get; set; }
         public uint block_size { get; set; }
+
         public FilePartitionBox()
         { }
 
@@ -3630,13 +3497,11 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
 
             else
             {
-
                 this.item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
             this.packet_payload_size = IsoReaderWriter.ReadUInt16(stream);
@@ -3650,19 +3515,16 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.entry_count = IsoReaderWriter.ReadUInt16(stream);
             }
 
             else
             {
-
                 this.entry_count = IsoReaderWriter.ReadUInt32(stream);
             }
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 this.block_count = IsoReaderWriter.ReadUInt16(stream);
                 this.block_size = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -3675,13 +3537,11 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
             }
             size += IsoReaderWriter.WriteUInt16(stream, this.packet_payload_size);
@@ -3695,19 +3555,16 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.block_count);
                 size += IsoReaderWriter.WriteUInt32(stream, this.block_size);
             }
@@ -3719,8 +3576,8 @@ namespace BoxGenerator2
     public class FreeSpaceBox : Box
     {
         public override string FourCC { get { return "free"; } }
-
         public byte[] data { get; set; }
+
         public FreeSpaceBox()
         { }
 
@@ -3743,8 +3600,8 @@ namespace BoxGenerator2
     public class OriginalFormatBox : Box
     {
         public override string FourCC { get { return "frma"; } }
-
         public uint data_format { get; set; } = codingname; //  format of decrypted, encoded data (in case of protection)
+
 
 
         public OriginalFormatBox()
@@ -3773,6 +3630,7 @@ namespace BoxGenerator2
     public class FileTypeBox : GeneralTypeBox
     {
         public override string FourCC { get { return "ftyp"; } }
+
         public FileTypeBox()
         { }
 
@@ -3793,11 +3651,11 @@ namespace BoxGenerator2
     public class GroupIdToNameBox : FullBox
     {
         public override string FourCC { get { return "gitn"; } }
-
         public ushort entry_count { get; set; }
 
         public uint group_ID { get; set; }
         public string group_name { get; set; }
+
         public GroupIdToNameBox()
         { }
 
@@ -3808,7 +3666,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 this.group_ID = IsoReaderWriter.ReadUInt32(stream);
                 this.group_name = IsoReaderWriter.ReadString(stream);
             }
@@ -3822,7 +3679,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.group_ID);
                 size += IsoReaderWriter.WriteString(stream, this.group_name);
             }
@@ -3834,6 +3690,7 @@ namespace BoxGenerator2
     public class GroupsListBox : Box
     {
         public override string FourCC { get { return "grpl"; } }
+
         public GroupsListBox()
         { }
 
@@ -3854,14 +3711,11 @@ namespace BoxGenerator2
     public class HandlerBox : FullBox
     {
         public override string FourCC { get { return "hdlr"; } }
-
         public uint pre_defined { get; set; } = 0;
-
         public uint handler_type { get; set; }
-
         public uint[] reserved { get; set; } = 0;
-
         public string name { get; set; }
+
         public HandlerBox()
         { }
 
@@ -3890,16 +3744,12 @@ namespace BoxGenerator2
     public class HintMediaHeaderBox : FullBox
     {
         public override string FourCC { get { return "hmhd"; } }
-
         public ushort maxPDUsize { get; set; }
-
         public ushort avgPDUsize { get; set; }
-
         public uint maxbitrate { get; set; }
-
         public uint avgbitrate { get; set; }
-
         public uint reserved { get; set; } = 0;
+
         public HintMediaHeaderBox()
         { }
 
@@ -3930,8 +3780,8 @@ namespace BoxGenerator2
     public class ItemDataBox : Box
     {
         public override string FourCC { get { return "idat"; } }
-
         public byte[] data { get; set; }
+
         public ItemDataBox()
         { }
 
@@ -3958,8 +3808,8 @@ namespace BoxGenerator2
         public ushort entry_count { get; set; }
 
         public uint entry_count { get; set; }
-
         public ItemInfoEntry[] item_infos { get; set; }
+
         public ItemInfoBox()
         { }
 
@@ -3969,16 +3819,14 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.entry_count = IsoReaderWriter.ReadUInt16(stream);
             }
 
             else
             {
-
                 this.entry_count = IsoReaderWriter.ReadUInt32(stream);
             }
-            this.item_infos = ItemInfoEntry[]);
+            this.item_infos = IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -3988,16 +3836,14 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
             }
-            size += ItemInfoEntry[], this.item_infos);
+            size += IsoReaderWriter.WriteClass(stream, this.item_infos);
             return size;
         }
     }
@@ -4006,11 +3852,8 @@ namespace BoxGenerator2
     public class ItemLocationBox : FullBox
     {
         public override string FourCC { get { return "iloc"; } }
-
         public byte offset_size { get; set; }
-
         public byte length_size { get; set; }
-
         public byte base_offset_size { get; set; }
 
         public byte index_size { get; set; }
@@ -4021,16 +3864,22 @@ namespace BoxGenerator2
 
         public uint item_count { get; set; }
 
+
         public ushort item_ID { get; set; }
+
         public uint item_ID { get; set; }
+
         public ushort reserved { get; set; } = 0;
         public byte construction_method { get; set; }
         public ushort data_reference_index { get; set; }
         public byte[] base_offset { get; set; }
         public ushort extent_count { get; set; }
+
+
         public byte[] item_reference_index { get; set; }
         public byte[] extent_offset { get; set; }
         public byte[] extent_length { get; set; }
+
         public ItemLocationBox()
         { }
 
@@ -4043,47 +3892,39 @@ namespace BoxGenerator2
 
             if ((version == 1) || (version == 2))
             {
-
                 this.index_size = IsoReaderWriter.ReadBits(stream, 4);
             }
 
             else
             {
-
                 this.reserved = IsoReaderWriter.ReadBits(stream, 4);
             }
 
             if (version < 2)
             {
-
                 this.item_count = IsoReaderWriter.ReadUInt16(stream);
             }
 
             else if (version == 2)
             {
-
                 this.item_count = IsoReaderWriter.ReadUInt32(stream);
             }
 
             for (int i = 0; i < item_count; i++)
             {
 
-
                 if (version < 2)
                 {
-
                     this.item_ID = IsoReaderWriter.ReadUInt16(stream);
                 }
 
                 else if (version == 2)
                 {
-
                     this.item_ID = IsoReaderWriter.ReadUInt32(stream);
                 }
 
                 if ((version == 1) || (version == 2))
                 {
-
                     this.reserved = IsoReaderWriter.ReadBits(stream, 12);
                     this.construction_method = IsoReaderWriter.ReadBits(stream, 4);
                 }
@@ -4094,10 +3935,8 @@ namespace BoxGenerator2
                 for (int j = 0; j < extent_count; j++)
                 {
 
-
                     if (((version == 1) || (version == 2)) && (index_size > 0))
                     {
-
                         this.item_reference_index = IsoReaderWriter.ReadBytes(stream, index_size);
                     }
                     this.extent_offset = IsoReaderWriter.ReadBytes(stream, offset_size);
@@ -4116,47 +3955,39 @@ namespace BoxGenerator2
 
             if ((version == 1) || (version == 2))
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 4, this.index_size);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
             }
 
             if (version < 2)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.item_count);
             }
 
             else if (version == 2)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.item_count);
             }
 
             for (int i = 0; i < item_count; i++)
             {
 
-
                 if (version < 2)
                 {
-
                     size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
                 }
 
                 else if (version == 2)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
                 }
 
                 if ((version == 1) || (version == 2))
                 {
-
                     size += IsoReaderWriter.WriteBits(stream, 12, this.reserved);
                     size += IsoReaderWriter.WriteBits(stream, 4, this.construction_method);
                 }
@@ -4167,10 +3998,8 @@ namespace BoxGenerator2
                 for (int j = 0; j < extent_count; j++)
                 {
 
-
                     if (((version == 1) || (version == 2)) && (index_size > 0))
                     {
-
                         size += IsoReaderWriter.WriteBytes(stream, index_size, this.item_reference_index);
                     }
                     size += IsoReaderWriter.WriteBytes(stream, offset_size, this.extent_offset);
@@ -4185,10 +4014,9 @@ namespace BoxGenerator2
     public class IdentifiedMediaDataBox : Box
     {
         public override string FourCC { get { return "imda"; } }
-
         public uint imda_identifier { get; set; }
-
         public byte[] data { get; set; } //  until the end of the box
+
         public IdentifiedMediaDataBox()
         { }
 
@@ -4222,14 +4050,20 @@ namespace BoxGenerator2
 
         public uint extension_type { get; set; } // optional
 
+
+
         public ushort item_ID { get; set; }
+
         public uint item_ID { get; set; }
         public ushort item_protection_index { get; set; }
         public uint item_type { get; set; }
         public string item_name { get; set; }
+
         public string content_type { get; set; }
         public string content_encoding { get; set; } // optional
+
         public string item_uri_type { get; set; }
+
         public ItemInfoEntry()
         { }
 
@@ -4239,7 +4073,6 @@ namespace BoxGenerator2
 
             if ((version == 0) || (version == 1))
             {
-
                 this.item_ID = IsoReaderWriter.ReadUInt16(stream);
                 this.item_protection_index = IsoReaderWriter.ReadUInt16(stream);
                 this.item_name = IsoReaderWriter.ReadString(stream);
@@ -4249,7 +4082,6 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 this.extension_type = IsoReaderWriter.ReadUInt32(stream);
 
             }
@@ -4257,32 +4089,27 @@ namespace BoxGenerator2
             if (version >= 2)
             {
 
-
                 if (version == 2)
                 {
-
                     this.item_ID = IsoReaderWriter.ReadUInt16(stream);
                 }
 
                 else if (version == 3)
                 {
-
                     this.item_ID = IsoReaderWriter.ReadUInt32(stream);
                 }
                 this.item_protection_index = IsoReaderWriter.ReadUInt16(stream);
                 this.item_type = IsoReaderWriter.ReadUInt32(stream);
                 this.item_name = IsoReaderWriter.ReadString(stream);
 
-                if (item_type == 'mime')
+                if (item_type == "mime")
                 {
-
                     this.content_type = IsoReaderWriter.ReadString(stream);
                     this.content_encoding = IsoReaderWriter.ReadString(stream);
                 }
 
-                else if (item_type == 'uri ')
+                else if (item_type == "uri ")
                 {
-
                     this.item_uri_type = IsoReaderWriter.ReadString(stream);
                 }
             }
@@ -4295,7 +4122,6 @@ namespace BoxGenerator2
 
             if ((version == 0) || (version == 1))
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
                 size += IsoReaderWriter.WriteUInt16(stream, this.item_protection_index);
                 size += IsoReaderWriter.WriteString(stream, this.item_name);
@@ -4305,7 +4131,6 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.extension_type);
 
             }
@@ -4313,32 +4138,27 @@ namespace BoxGenerator2
             if (version >= 2)
             {
 
-
                 if (version == 2)
                 {
-
                     size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
                 }
 
                 else if (version == 3)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
                 }
                 size += IsoReaderWriter.WriteUInt16(stream, this.item_protection_index);
                 size += IsoReaderWriter.WriteUInt32(stream, this.item_type);
                 size += IsoReaderWriter.WriteString(stream, this.item_name);
 
-                if (item_type == 'mime')
+                if (item_type == "mime")
                 {
-
                     size += IsoReaderWriter.WriteString(stream, this.content_type);
                     size += IsoReaderWriter.WriteString(stream, this.content_encoding);
                 }
 
-                else if (item_type == 'uri ')
+                else if (item_type == "uri ")
                 {
-
                     size += IsoReaderWriter.WriteString(stream, this.item_uri_type);
                 }
             }
@@ -4350,10 +4170,10 @@ namespace BoxGenerator2
     public class ItemProtectionBox : FullBox
     {
         public override string FourCC { get { return "ipro"; } }
-
         public ushort protection_count { get; set; }
 
         public ProtectionSchemeInfoBox protection_information { get; set; }
+
         public ItemProtectionBox()
         { }
 
@@ -4364,7 +4184,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= protection_count; i++)
             {
-
                 this.protection_information = IsoReaderWriter.ReadBox(stream);
             }
         }
@@ -4377,7 +4196,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= protection_count; i++)
             {
-
                 size += IsoReaderWriter.WriteBox(stream, this.protection_information);
             }
             return size;
@@ -4391,9 +4209,9 @@ namespace BoxGenerator2
 
         public SingleItemTypeReferenceBox[] references { get; set; }
 
-        public SingleItemTypeReferenceBox Large { get; set; }
-        references[];
-	public ItemReferenceBox()
+        public SingleItemTypeReferenceBoxLarge[] references { get; set; }
+
+        public ItemReferenceBox()
         { }
 
         public async override Task ReadAsync(Stream stream)
@@ -4402,14 +4220,12 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.references = IsoReaderWriter.ReadBox(stream);
             }
 
             else if (version == 1)
             {
-
-                this.Large = IsoReaderWriter.ReadBox(stream);
+                this.references = IsoReaderWriter.ReadBox(stream);
             }
         }
 
@@ -4420,14 +4236,12 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteBox(stream, this.references);
             }
 
             else if (version == 1)
             {
-
-                size += IsoReaderWriter.WriteBox(stream, this.Large);
+                size += IsoReaderWriter.WriteBox(stream, this.references);
             }
             return size;
         }
@@ -4437,16 +4251,24 @@ namespace BoxGenerator2
     public class LevelAssignmentBox : FullBox
     {
         public override string FourCC { get { return "leva"; } }
-
         public byte level_count { get; set; }
 
         public uint track_ID { get; set; }
         public byte padding_flag { get; set; }
         public byte assignment_type { get; set; }
+
         public uint grouping_type { get; set; }
+
         public uint grouping_type { get; set; }
         public uint grouping_type_parameter { get; set; }
+
+
+
+
+
         public uint sub_track_ID { get; set; }
+
+
         public LevelAssignmentBox()
         { }
 
@@ -4457,39 +4279,33 @@ namespace BoxGenerator2
 
             for (int j = 1; j <= level_count; j++)
             {
-
                 this.track_ID = IsoReaderWriter.ReadUInt32(stream);
                 this.padding_flag = IsoReaderWriter.ReadBit(stream);
                 this.assignment_type = IsoReaderWriter.ReadBits(stream, 7);
 
                 if (assignment_type == 0)
                 {
-
                     this.grouping_type = IsoReaderWriter.ReadUInt32(stream);
                 }
 
                 else if (assignment_type == 1)
                 {
-
                     this.grouping_type = IsoReaderWriter.ReadUInt32(stream);
                     this.grouping_type_parameter = IsoReaderWriter.ReadUInt32(stream);
                 }
 
                 else if (assignment_type == 2)
                 {
-
                 }
 
 
                 else if (assignment_type == 3)
                 {
-
                 }
 
 
                 else if (assignment_type == 4)
                 {
-
                     this.sub_track_ID = IsoReaderWriter.ReadUInt32(stream);
                 }
 
@@ -4504,39 +4320,33 @@ namespace BoxGenerator2
 
             for (int j = 1; j <= level_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
                 size += IsoReaderWriter.WriteBit(stream, this.padding_flag);
                 size += IsoReaderWriter.WriteBits(stream, 7, this.assignment_type);
 
                 if (assignment_type == 0)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
                 }
 
                 else if (assignment_type == 1)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
                     size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
                 }
 
                 else if (assignment_type == 2)
                 {
-
                 }
 
 
                 else if (assignment_type == 3)
                 {
-
                 }
 
 
                 else if (assignment_type == 4)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.sub_track_ID);
                 }
 
@@ -4549,8 +4359,8 @@ namespace BoxGenerator2
     public class MediaDataBox : Box
     {
         public override string FourCC { get { return "mdat"; } }
-
         public byte[] data { get; set; }
+
         public MediaDataBox()
         { }
 
@@ -4579,16 +4389,15 @@ namespace BoxGenerator2
         public uint timescale { get; set; }
         public ulong duration { get; set; }
 
+
         public uint creation_time { get; set; }
         public uint modification_time { get; set; }
         public uint timescale { get; set; }
         public uint duration { get; set; }
-
         public byte pad { get; set; } = 0;
-
         public byte[] language { get; set; } //  ISO-639-2/T language code
-
         public ushort pre_defined { get; set; } = 0;
+
         public MediaHeaderBox()
         { }
 
@@ -4598,7 +4407,6 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 this.creation_time = IsoReaderWriter.ReadUInt64(stream);
                 this.modification_time = IsoReaderWriter.ReadUInt64(stream);
                 this.timescale = IsoReaderWriter.ReadUInt32(stream);
@@ -4607,7 +4415,6 @@ namespace BoxGenerator2
 
             else
             {
-
 
                 this.creation_time = IsoReaderWriter.ReadUInt32(stream);
                 this.modification_time = IsoReaderWriter.ReadUInt32(stream);
@@ -4626,7 +4433,6 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
                 size += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
                 size += IsoReaderWriter.WriteUInt32(stream, this.timescale);
@@ -4635,7 +4441,6 @@ namespace BoxGenerator2
 
             else
             {
-
 
                 size += IsoReaderWriter.WriteUInt32(stream, this.creation_time);
                 size += IsoReaderWriter.WriteUInt32(stream, this.modification_time);
@@ -4653,6 +4458,7 @@ namespace BoxGenerator2
     public class MediaBox : Box
     {
         public override string FourCC { get { return "mdia"; } }
+
         public MediaBox()
         { }
 
@@ -4676,7 +4482,9 @@ namespace BoxGenerator2
 
         public ulong fragment_duration { get; set; }
 
+
         public uint fragment_duration { get; set; }
+
         public MovieExtendsHeaderBox()
         { }
 
@@ -4686,13 +4494,11 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 this.fragment_duration = IsoReaderWriter.ReadUInt64(stream);
             }
 
             else
             {
-
 
                 this.fragment_duration = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -4705,13 +4511,11 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt64(stream, this.fragment_duration);
             }
 
             else
             {
-
 
                 size += IsoReaderWriter.WriteUInt32(stream, this.fragment_duration);
             }
@@ -4723,26 +4527,17 @@ namespace BoxGenerator2
     public class MetaBox : FullBox
     {
         public override string FourCC { get { return "meta"; } }
-
         public HandlerBox theHandler { get; set; }
-
         public PrimaryItemBox primary_resource { get; set; } //  optional
-
         public DataInformationBox file_locations { get; set; } //  optional
-
         public ItemLocationBox item_locations { get; set; } //  optional
-
         public ItemProtectionBox protections { get; set; } //  optional
-
         public ItemInfoBox item_infos { get; set; } //  optional
-
         public IPMPControlBox IPMP_control { get; set; } //  optional
-
         public ItemReferenceBox item_refs { get; set; } //  optional
-
         public ItemDataBox item_data { get; set; } //  optional
-
         public Box[] other_boxes { get; set; } //  optional
+
         public MetaBox()
         { }
 
@@ -4783,8 +4578,8 @@ namespace BoxGenerator2
     public class MovieFragmentHeaderBox : FullBox
     {
         public override string FourCC { get { return "mfhd"; } }
-
         public uint sequence_number { get; set; }
+
         public MovieFragmentHeaderBox()
         { }
 
@@ -4807,6 +4602,7 @@ namespace BoxGenerator2
     public class MovieFragmentRandomAccessBox : Box
     {
         public override string FourCC { get { return "mfra"; } }
+
         public MovieFragmentRandomAccessBox()
         { }
 
@@ -4827,8 +4623,8 @@ namespace BoxGenerator2
     public class MovieFragmentRandomAccessOffsetBox : FullBox
     {
         public override string FourCC { get { return "mfro"; } }
-
         public uint parent_size { get; set; }
+
         public MovieFragmentRandomAccessOffsetBox()
         { }
 
@@ -4851,6 +4647,7 @@ namespace BoxGenerator2
     public class MediaInformationBox : Box
     {
         public override string FourCC { get { return "minf"; } }
+
         public MediaInformationBox()
         { }
 
@@ -4871,6 +4668,7 @@ namespace BoxGenerator2
     public class CompressedMovieFragmentBox : CompressedBox
     {
         public override string FourCC { get { return "moof"; } }
+
         public CompressedMovieFragmentBox()
         { }
 
@@ -4891,6 +4689,7 @@ namespace BoxGenerator2
     public class CompressedMovieBox : CompressedBox
     {
         public override string FourCC { get { return "moov"; } }
+
         public CompressedMovieBox()
         { }
 
@@ -4911,6 +4710,7 @@ namespace BoxGenerator2
     public class MovieExtendsBox : Box
     {
         public override string FourCC { get { return "mvex"; } }
+
         public MovieExtendsBox()
         { }
 
@@ -4937,25 +4737,20 @@ namespace BoxGenerator2
         public uint timescale { get; set; }
         public ulong duration { get; set; }
 
+
         public uint creation_time { get; set; }
         public uint modification_time { get; set; }
         public uint timescale { get; set; }
         public uint duration { get; set; }
-
         public int rate { get; set; } = 0x00010000; //  typically 1.0
-
         public short volume { get; set; } = 0x0100; //  typically, full volume
-
         public ushort reserved { get; set; } = 0;
-
         public uint[] reserved { get; set; } = 0;
-
         public uint[] matrix { get; set; } =
             { 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 }; //  Unity matrix
-
         public uint[] pre_defined { get; set; } = 0;
-
         public uint next_track_ID { get; set; }
+
         public MovieHeaderBox()
         { }
 
@@ -4965,7 +4760,6 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 this.creation_time = IsoReaderWriter.ReadUInt64(stream);
                 this.modification_time = IsoReaderWriter.ReadUInt64(stream);
                 this.timescale = IsoReaderWriter.ReadUInt32(stream);
@@ -4974,7 +4768,6 @@ namespace BoxGenerator2
 
             else
             {
-
 
                 this.creation_time = IsoReaderWriter.ReadUInt32(stream);
                 this.modification_time = IsoReaderWriter.ReadUInt32(stream);
@@ -4997,7 +4790,6 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
                 size += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
                 size += IsoReaderWriter.WriteUInt32(stream, this.timescale);
@@ -5006,7 +4798,6 @@ namespace BoxGenerator2
 
             else
             {
-
 
                 size += IsoReaderWriter.WriteUInt32(stream, this.creation_time);
                 size += IsoReaderWriter.WriteUInt32(stream, this.modification_time);
@@ -5028,6 +4819,7 @@ namespace BoxGenerator2
     public class NullMediaHeaderBox : FullBox
     {
         public override string FourCC { get { return "nmhd"; } }
+
         public NullMediaHeaderBox()
         { }
 
@@ -5048,6 +4840,7 @@ namespace BoxGenerator2
     public class OriginalFileTypeBox : Box
     {
         public override string FourCC { get { return "otyp"; } }
+
         public OriginalFileTypeBox()
         { }
 
@@ -5068,15 +4861,14 @@ namespace BoxGenerator2
     public class PaddingBitsBox : FullBox
     {
         public override string FourCC { get { return "padb"; } }
-
         public uint sample_count { get; set; }
 
-        public int i { get; set; }
 
         public byte reserved { get; set; } = 0;
         public byte pad1 { get; set; }
         public byte reserved { get; set; } = 0;
         public byte pad2 { get; set; }
+
         public PaddingBitsBox()
         { }
 
@@ -5084,11 +4876,10 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.sample_count = IsoReaderWriter.ReadUInt32(stream);
-            this.i = IsoReaderWriter.ReadInt32(stream);
+
 
             for (int i = 0; i < floor((sample_count + 1) / 2); i++)
             {
-
                 this.reserved = IsoReaderWriter.ReadBit(stream);
                 this.pad1 = IsoReaderWriter.ReadBits(stream, 3);
                 this.reserved = IsoReaderWriter.ReadBit(stream);
@@ -5101,11 +4892,10 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
-            size += IsoReaderWriter.WriteInt32(stream, this.i);
+
 
             for (int i = 0; i < floor((sample_count + 1) / 2); i++)
             {
-
                 size += IsoReaderWriter.WriteBit(stream, this.reserved);
                 size += IsoReaderWriter.WriteBits(stream, 3, this.pad1);
                 size += IsoReaderWriter.WriteBit(stream, this.reserved);
@@ -5119,12 +4909,10 @@ namespace BoxGenerator2
     public class PartitionEntry1 : Box
     {
         public override string FourCC { get { return "paen"; } }
-
         public FilePartitionBox blocks_and_symbols { get; set; }
-
         public FECReservoirBox FEC_symbol_locations { get; set; } // optional
-
         public FileReservoirBox File_symbol_locations { get; set; } // optional
+
         public PartitionEntry1()
         { }
 
@@ -5151,14 +4939,11 @@ namespace BoxGenerator2
     public class FDItemInformationBox1 : FullBox
     {
         public override string FourCC { get { return "paen"; } }
-
         public ushort entry_count { get; set; }
-
         public PartitionEntry[] partition_entries { get; set; }
-
         public FDSessionGroupBox session_info { get; set; } // optional
-
         public GroupIdToNameBox group_id_to_name { get; set; } // optional
+
         public FDItemInformationBox1()
         { }
 
@@ -5188,8 +4973,10 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "pdin"; } }
 
+
         public uint rate { get; set; }
         public uint initial_delay { get; set; }
+
         public ProgressiveDownloadInfoBox()
         { }
 
@@ -5199,7 +4986,6 @@ namespace BoxGenerator2
 
             for (int i = 0; ; i++)
             {
-
 
                 this.rate = IsoReaderWriter.ReadUInt32(stream);
                 this.initial_delay = IsoReaderWriter.ReadUInt32(stream);
@@ -5213,7 +4999,6 @@ namespace BoxGenerator2
 
             for (int i = 0; ; i++)
             {
-
 
                 size += IsoReaderWriter.WriteUInt32(stream, this.rate);
                 size += IsoReaderWriter.WriteUInt32(stream, this.initial_delay);
@@ -5230,6 +5015,7 @@ namespace BoxGenerator2
         public ushort item_ID { get; set; }
 
         public uint item_ID { get; set; }
+
         public PrimaryItemBox()
         { }
 
@@ -5239,13 +5025,11 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
 
             else
             {
-
                 this.item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -5257,13 +5041,11 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
             }
             return size;
@@ -5274,14 +5056,13 @@ namespace BoxGenerator2
     public class ProducerReferenceTimeBox : FullBox
     {
         public override string FourCC { get { return "prft"; } }
-
         public uint reference_track_ID { get; set; }
-
         public ulong ntp_timestamp { get; set; }
 
         public uint media_time { get; set; }
 
         public ulong media_time { get; set; }
+
         public ProducerReferenceTimeBox()
         { }
 
@@ -5293,13 +5074,11 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.media_time = IsoReaderWriter.ReadUInt32(stream);
             }
 
             else
             {
-
                 this.media_time = IsoReaderWriter.ReadUInt64(stream);
             }
         }
@@ -5313,13 +5092,11 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.media_time);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteUInt64(stream, this.media_time);
             }
             return size;
@@ -5330,12 +5107,10 @@ namespace BoxGenerator2
     public class RestrictedSchemeInfoBox : Box
     {
         public override string FourCC { get { return "rinf"; } }
-
         public OriginalFormatBox original_format { get; set; }
-
         public SchemeTypeBox scheme_type_box { get; set; }
-
         public SchemeInformationBox info { get; set; } //  optional
+
         public RestrictedSchemeInfoBox()
         { }
 
@@ -5365,12 +5140,12 @@ namespace BoxGenerator2
 
         public uint aux_info_type { get; set; }
         public uint aux_info_type_parameter { get; set; }
-
         public uint entry_count { get; set; }
 
         public uint[] offset { get; set; }
 
         public ulong[] offset { get; set; }
+
         public SampleAuxiliaryInformationOffsetsBox()
         { }
 
@@ -5380,7 +5155,6 @@ namespace BoxGenerator2
 
             if (flags & 1)
             {
-
                 this.aux_info_type = IsoReaderWriter.ReadUInt32(stream);
                 this.aux_info_type_parameter = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -5388,13 +5162,11 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 this.offset = IsoReaderWriter.ReadUInt32(stream);
             }
 
             else
             {
-
                 this.offset = IsoReaderWriter.ReadUInt64(stream);
             }
         }
@@ -5406,7 +5178,6 @@ namespace BoxGenerator2
 
             if (flags & 1)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type);
                 size += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type_parameter);
             }
@@ -5414,13 +5185,11 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.offset);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteUInt64(stream, this.offset);
             }
             return size;
@@ -5434,12 +5203,11 @@ namespace BoxGenerator2
 
         public uint aux_info_type { get; set; }
         public uint aux_info_type_parameter { get; set; }
-
         public byte default_sample_info_size { get; set; }
-
         public uint sample_count { get; set; }
 
         public byte[] sample_info_size { get; set; }
+
         public SampleAuxiliaryInformationSizesBox()
         { }
 
@@ -5449,7 +5217,6 @@ namespace BoxGenerator2
 
             if (flags & 1)
             {
-
                 this.aux_info_type = IsoReaderWriter.ReadUInt32(stream);
                 this.aux_info_type_parameter = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -5458,7 +5225,6 @@ namespace BoxGenerator2
 
             if (default_sample_info_size == 0)
             {
-
                 this.sample_info_size = IsoReaderWriter.ReadUInt8(stream);
             }
         }
@@ -5470,7 +5236,6 @@ namespace BoxGenerator2
 
             if (flags & 1)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type);
                 size += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type_parameter);
             }
@@ -5479,7 +5244,6 @@ namespace BoxGenerator2
 
             if (default_sample_info_size == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.sample_info_size);
             }
             return size;
@@ -5490,15 +5254,14 @@ namespace BoxGenerator2
     public class SampleToGroupBox : FullBox
     {
         public override string FourCC { get { return "sbgp"; } }
-
         public uint grouping_type { get; set; }
 
         public uint grouping_type_parameter { get; set; }
-
         public uint entry_count { get; set; }
 
         public uint sample_count { get; set; }
         public uint group_description_index { get; set; }
+
         public SampleToGroupBox()
         { }
 
@@ -5509,14 +5272,12 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 this.grouping_type_parameter = IsoReaderWriter.ReadUInt32(stream);
             }
             this.entry_count = IsoReaderWriter.ReadUInt32(stream);
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 this.sample_count = IsoReaderWriter.ReadUInt32(stream);
                 this.group_description_index = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -5530,14 +5291,12 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
             }
             size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
                 size += IsoReaderWriter.WriteUInt32(stream, this.group_description_index);
             }
@@ -5549,8 +5308,8 @@ namespace BoxGenerator2
     public class SchemeInformationBox : Box
     {
         public override string FourCC { get { return "schi"; } }
-
         public Box[] scheme_specific_data { get; set; }
+
         public SchemeInformationBox()
         { }
 
@@ -5573,12 +5332,11 @@ namespace BoxGenerator2
     public class SchemeTypeBox : FullBox
     {
         public override string FourCC { get { return "schm"; } }
-
         public uint scheme_type { get; set; } //  4CC identifying the scheme
-
         public uint scheme_version { get; set; } //  scheme version
 
         public string scheme_uri { get; set; } //  browser uri
+
         public SchemeTypeBox()
         { }
 
@@ -5590,7 +5348,6 @@ namespace BoxGenerator2
 
             if (flags & 0x000001)
             {
-
                 this.scheme_uri = IsoReaderWriter.ReadString(stream);
             }
         }
@@ -5604,7 +5361,6 @@ namespace BoxGenerator2
 
             if (flags & 0x000001)
             {
-
                 size += IsoReaderWriter.WriteString(stream, this.scheme_uri);
             }
             return size;
@@ -5616,12 +5372,11 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "csch"; } }
 
-
         public uint scheme_type { get; set; } //  4CC identifying the scheme
-
         public uint scheme_version { get; set; } //  scheme version 
 
         public string scheme_uri { get; set; } //  browser uri
+
         public CompatibleSchemeTypeBox()
         { }
 
@@ -5634,7 +5389,6 @@ namespace BoxGenerator2
 
             if (flags & 0x000001)
             {
-
                 this.scheme_uri = IsoReaderWriter.ReadString(stream);
             }
         }
@@ -5649,7 +5403,6 @@ namespace BoxGenerator2
 
             if (flags & 0x000001)
             {
-
                 size += IsoReaderWriter.WriteString(stream, this.scheme_uri);
             }
             return size;
@@ -5665,6 +5418,7 @@ namespace BoxGenerator2
         public byte sample_depends_on { get; set; }
         public byte sample_is_depended_on { get; set; }
         public byte sample_has_redundancy { get; set; }
+
         public SampleDependencyTypeBox()
         { }
 
@@ -5674,7 +5428,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < sample_count; i++)
             {
-
                 this.is_leading = IsoReaderWriter.ReadBits(stream, 2);
                 this.sample_depends_on = IsoReaderWriter.ReadBits(stream, 2);
                 this.sample_is_depended_on = IsoReaderWriter.ReadBits(stream, 2);
@@ -5689,7 +5442,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < sample_count; i++)
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 2, this.is_leading);
                 size += IsoReaderWriter.WriteBits(stream, 2, this.sample_depends_on);
                 size += IsoReaderWriter.WriteBits(stream, 2, this.sample_is_depended_on);
@@ -5703,13 +5455,15 @@ namespace BoxGenerator2
     public class FDSessionGroupBox : Box
     {
         public override string FourCC { get { return "segr"; } }
-
         public ushort num_session_groups { get; set; }
 
         public byte entry_count { get; set; }
+
         public uint group_ID { get; set; }
         public ushort num_channels_in_session_group { get; set; }
+
         public uint hint_track_ID { get; set; }
+
         public FDSessionGroupBox()
         { }
 
@@ -5720,19 +5474,16 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_session_groups; i++)
             {
-
                 this.entry_count = IsoReaderWriter.ReadUInt8(stream);
 
                 for (int j = 0; j < entry_count; j++)
                 {
-
                     this.group_ID = IsoReaderWriter.ReadUInt32(stream);
                 }
                 this.num_channels_in_session_group = IsoReaderWriter.ReadUInt16(stream);
 
                 for (int k = 0; k < num_channels_in_session_group; k++)
                 {
-
                     this.hint_track_ID = IsoReaderWriter.ReadUInt32(stream);
                 }
             }
@@ -5746,19 +5497,16 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_session_groups; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.entry_count);
 
                 for (int j = 0; j < entry_count; j++)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.group_ID);
                 }
                 size += IsoReaderWriter.WriteUInt16(stream, this.num_channels_in_session_group);
 
                 for (int k = 0; k < num_channels_in_session_group; k++)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.hint_track_ID);
                 }
             }
@@ -5770,18 +5518,20 @@ namespace BoxGenerator2
     public class SampleGroupDescriptionBox : FullBox
     {
         public override string FourCC { get { return "sgpd"; } }
-
         public uint grouping_type { get; set; }
 
         public uint default_length { get; set; }
 
         public uint default_group_description_index { get; set; }
-
         public uint entry_count { get; set; }
 
-        public int i { get; set; }
+
+
 
         public uint description_length { get; set; }
+
+
+
         public SampleGroupDescriptionBox()
         { }
 
@@ -5792,29 +5542,24 @@ namespace BoxGenerator2
 
             if (version >= 1)
             {
-
                 this.default_length = IsoReaderWriter.ReadUInt32(stream);
             }
 
             if (version >= 2)
             {
-
                 this.default_group_description_index = IsoReaderWriter.ReadUInt32(stream);
             }
             this.entry_count = IsoReaderWriter.ReadUInt32(stream);
-            this.i = IsoReaderWriter.ReadInt32(stream);
+
 
             for (int i = 1; i <= entry_count; i++)
             {
 
-
                 if (version >= 1)
                 {
 
-
                     if (default_length == 0)
                     {
-
                         this.description_length = IsoReaderWriter.ReadUInt32(stream);
                     }
                 }
@@ -5831,29 +5576,24 @@ namespace BoxGenerator2
 
             if (version >= 1)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.default_length);
             }
 
             if (version >= 2)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.default_group_description_index);
             }
             size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
-            size += IsoReaderWriter.WriteInt32(stream, this.i);
+
 
             for (int i = 1; i <= entry_count; i++)
             {
 
-
                 if (version >= 1)
                 {
 
-
                     if (default_length == 0)
                     {
-
                         size += IsoReaderWriter.WriteUInt32(stream, this.description_length);
                     }
                 }
@@ -5868,6 +5608,7 @@ namespace BoxGenerator2
     public class CompressedSegmentIndexBox : CompressedBox
     {
         public override string FourCC { get { return "sidx"; } }
+
         public CompressedSegmentIndexBox()
         { }
 
@@ -5888,12 +5629,10 @@ namespace BoxGenerator2
     public class ProtectionSchemeInfoBox : Box
     {
         public override string FourCC { get { return "sinf"; } }
-
         public OriginalFormatBox original_format { get; set; }
-
         public SchemeTypeBox scheme_type_box { get; set; } //  optional
-
         public SchemeInformationBox info { get; set; } //  optional
+
         public ProtectionSchemeInfoBox()
         { }
 
@@ -5920,8 +5659,8 @@ namespace BoxGenerator2
     public class FreeSpaceBox1 : Box
     {
         public override string FourCC { get { return "skip"; } }
-
         public byte[] data { get; set; }
+
         public FreeSpaceBox1()
         { }
 
@@ -5944,10 +5683,9 @@ namespace BoxGenerator2
     public class SoundMediaHeaderBox : FullBox
     {
         public override string FourCC { get { return "smhd"; } }
-
         public short balance { get; set; } = 0;
-
         public ushort reserved { get; set; } = 0;
+
         public SoundMediaHeaderBox()
         { }
 
@@ -5972,18 +5710,13 @@ namespace BoxGenerator2
     public class SRTPProcessBox : FullBox
     {
         public override string FourCC { get { return "srpp"; } }
-
         public uint encryption_algorithm_rtp { get; set; }
-
         public uint encryption_algorithm_rtcp { get; set; }
-
         public uint integrity_algorithm_rtp { get; set; }
-
         public uint integrity_algorithm_rtcp { get; set; }
-
         public SchemeTypeBox scheme_type_box { get; set; }
-
         public SchemeInformationBox info { get; set; }
+
         public SRTPProcessBox()
         { }
 
@@ -6016,6 +5749,7 @@ namespace BoxGenerator2
     public class CompressedSubsegmentIndexBox : CompressedBox
     {
         public override string FourCC { get { return "ssix"; } }
+
         public CompressedSubsegmentIndexBox()
         { }
 
@@ -6036,6 +5770,7 @@ namespace BoxGenerator2
     public class SampleTableBox : Box
     {
         public override string FourCC { get { return "stbl"; } }
+
         public SampleTableBox()
         { }
 
@@ -6056,10 +5791,10 @@ namespace BoxGenerator2
     public class ChunkOffsetBox : FullBox
     {
         public override string FourCC { get { return "stco"; } }
-
         public uint entry_count { get; set; }
 
         public uint chunk_offset { get; set; }
+
         public ChunkOffsetBox()
         { }
 
@@ -6070,7 +5805,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 this.chunk_offset = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -6083,7 +5817,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.chunk_offset);
             }
             return size;
@@ -6095,20 +5828,19 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "stdp"; } }
 
-        public int i { get; set; }
 
         public ushort priority { get; set; }
+
         public DegradationPriorityBox()
         { }
 
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.i = IsoReaderWriter.ReadInt32(stream);
+
 
             for (int i = 0; i < sample_count; i++)
             {
-
                 this.priority = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -6117,11 +5849,10 @@ namespace BoxGenerator2
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.i);
+
 
             for (int i = 0; i < sample_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.priority);
             }
             return size;
@@ -6132,6 +5863,7 @@ namespace BoxGenerator2
     public class SubtitleMediaHeaderBox : FullBox
     {
         public override string FourCC { get { return "sthd"; } }
+
         public SubtitleMediaHeaderBox()
         { }
 
@@ -6152,6 +5884,7 @@ namespace BoxGenerator2
     public class SubTrackDefinitionBox : Box
     {
         public override string FourCC { get { return "strd"; } }
+
         public SubTrackDefinitionBox()
         { }
 
@@ -6172,14 +5905,11 @@ namespace BoxGenerator2
     public class SubTrackInformationBox : FullBox
     {
         public override string FourCC { get { return "stri"; } }
-
         public short switch_group { get; set; } = 0;
-
         public short alternate_group { get; set; } = 0;
-
         public uint sub_track_ID { get; set; } = 0;
-
         public uint[] attribute_list { get; set; } //  to the end of the box
+
         public SubTrackInformationBox()
         { }
 
@@ -6208,12 +5938,12 @@ namespace BoxGenerator2
     public class SampleToChunkBox : FullBox
     {
         public override string FourCC { get { return "stsc"; } }
-
         public uint entry_count { get; set; }
 
         public uint first_chunk { get; set; }
         public uint samples_per_chunk { get; set; }
         public uint sample_description_index { get; set; }
+
         public SampleToChunkBox()
         { }
 
@@ -6224,7 +5954,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 this.first_chunk = IsoReaderWriter.ReadUInt32(stream);
                 this.samples_per_chunk = IsoReaderWriter.ReadUInt32(stream);
                 this.sample_description_index = IsoReaderWriter.ReadUInt32(stream);
@@ -6239,7 +5968,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.first_chunk);
                 size += IsoReaderWriter.WriteUInt32(stream, this.samples_per_chunk);
                 size += IsoReaderWriter.WriteUInt32(stream, this.sample_description_index);
@@ -6253,9 +5981,9 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "stsd"; } }
 
-        public int i { get; set; }
-
         public uint entry_count { get; set; }
+
+
 
         public SampleDescriptionBox()
         { }
@@ -6263,12 +5991,11 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.i = IsoReaderWriter.ReadInt32(stream);
+
             this.entry_count = IsoReaderWriter.ReadUInt32(stream);
 
             for (int i = 1; i <= entry_count; i++)
             {
-
 
             }
         }
@@ -6277,12 +6004,11 @@ namespace BoxGenerator2
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.i);
+
             size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
-
 
             }
             return size;
@@ -6293,12 +6019,11 @@ namespace BoxGenerator2
     public class SubTrackSampleGroupBox : FullBox
     {
         public override string FourCC { get { return "stsg"; } }
-
         public uint grouping_type { get; set; }
-
         public ushort item_count { get; set; }
 
         public uint group_description_index { get; set; }
+
         public SubTrackSampleGroupBox()
         { }
 
@@ -6310,7 +6035,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 this.group_description_index = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -6324,7 +6048,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.group_description_index);
             }
             return size;
@@ -6335,13 +6058,12 @@ namespace BoxGenerator2
     public class ShadowSyncSampleBox : FullBox
     {
         public override string FourCC { get { return "stsh"; } }
-
         public uint entry_count { get; set; }
 
-        public int i { get; set; }
 
         public uint shadowed_sample_number { get; set; }
         public uint sync_sample_number { get; set; }
+
         public ShadowSyncSampleBox()
         { }
 
@@ -6349,11 +6071,10 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.entry_count = IsoReaderWriter.ReadUInt32(stream);
-            this.i = IsoReaderWriter.ReadInt32(stream);
+
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 this.shadowed_sample_number = IsoReaderWriter.ReadUInt32(stream);
                 this.sync_sample_number = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -6364,11 +6085,10 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
-            size += IsoReaderWriter.WriteInt32(stream, this.i);
+
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.shadowed_sample_number);
                 size += IsoReaderWriter.WriteUInt32(stream, this.sync_sample_number);
             }
@@ -6380,12 +6100,11 @@ namespace BoxGenerator2
     public class SyncSampleBox : FullBox
     {
         public override string FourCC { get { return "stss"; } }
-
         public uint entry_count { get; set; }
 
-        public int i { get; set; }
 
         public uint sample_number { get; set; }
+
         public SyncSampleBox()
         { }
 
@@ -6393,11 +6112,10 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.entry_count = IsoReaderWriter.ReadUInt32(stream);
-            this.i = IsoReaderWriter.ReadInt32(stream);
+
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 this.sample_number = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -6407,11 +6125,10 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
-            size += IsoReaderWriter.WriteInt32(stream, this.i);
+
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.sample_number);
             }
             return size;
@@ -6422,12 +6139,12 @@ namespace BoxGenerator2
     public class SampleSizeBox : FullBox
     {
         public override string FourCC { get { return "stsz"; } }
-
         public uint sample_size { get; set; }
-
         public uint sample_count { get; set; }
 
+
         public uint entry_size { get; set; }
+
         public SampleSizeBox()
         { }
 
@@ -6440,10 +6157,8 @@ namespace BoxGenerator2
             if (sample_size == 0)
             {
 
-
                 for (int i = 1; i <= sample_count; i++)
                 {
-
                     this.entry_size = IsoReaderWriter.ReadUInt32(stream);
                 }
             }
@@ -6459,10 +6174,8 @@ namespace BoxGenerator2
             if (sample_size == 0)
             {
 
-
                 for (int i = 1; i <= sample_count; i++)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.entry_size);
                 }
             }
@@ -6474,13 +6187,12 @@ namespace BoxGenerator2
     public class TimeToSampleBox : FullBox
     {
         public override string FourCC { get { return "stts"; } }
-
         public uint entry_count { get; set; }
 
-        public int i { get; set; }
 
         public uint sample_count { get; set; }
         public uint sample_delta { get; set; }
+
         public TimeToSampleBox()
         { }
 
@@ -6488,11 +6200,10 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.entry_count = IsoReaderWriter.ReadUInt32(stream);
-            this.i = IsoReaderWriter.ReadInt32(stream);
+
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 this.sample_count = IsoReaderWriter.ReadUInt32(stream);
                 this.sample_delta = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -6503,11 +6214,10 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
-            size += IsoReaderWriter.WriteInt32(stream, this.i);
+
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
                 size += IsoReaderWriter.WriteUInt32(stream, this.sample_delta);
             }
@@ -6519,6 +6229,7 @@ namespace BoxGenerator2
     public class SegmentTypeBox : GeneralTypeBox
     {
         public override string FourCC { get { return "styp"; } }
+
         public SegmentTypeBox()
         { }
 
@@ -6539,14 +6250,12 @@ namespace BoxGenerator2
     public class CompactSampleSizeBox : FullBox
     {
         public override string FourCC { get { return "stz2"; } }
-
         public uint reserved { get; set; } = 0;
-
         public byte field_size { get; set; }
-
         public uint sample_count { get; set; }
 
         public byte[] entry_size { get; set; }
+
         public CompactSampleSizeBox()
         { }
 
@@ -6559,7 +6268,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= sample_count; i++)
             {
-
                 this.entry_size = IsoReaderWriter.ReadBytes(stream, field_size);
             }
         }
@@ -6574,7 +6282,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= sample_count; i++)
             {
-
                 size += IsoReaderWriter.WriteBytes(stream, field_size, this.entry_size);
             }
             return size;
@@ -6585,17 +6292,21 @@ namespace BoxGenerator2
     public class SubSampleInformationBox : FullBox
     {
         public override string FourCC { get { return "subs"; } }
-
         public uint entry_count { get; set; }
 
 
         public uint sample_delta { get; set; }
         public ushort subsample_count { get; set; }
+
+
+
         public uint subsample_size { get; set; }
+
         public ushort subsample_size { get; set; }
         public byte subsample_priority { get; set; }
         public byte discardable { get; set; }
         public uint codec_specific_parameters { get; set; }
+
         public SubSampleInformationBox()
         { }
 
@@ -6607,27 +6318,22 @@ namespace BoxGenerator2
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 this.sample_delta = IsoReaderWriter.ReadUInt32(stream);
                 this.subsample_count = IsoReaderWriter.ReadUInt16(stream);
 
                 if (subsample_count > 0)
                 {
 
-
                     for (int j = 0; j < subsample_count; j++)
                     {
 
-
                         if (version == 1)
                         {
-
                             this.subsample_size = IsoReaderWriter.ReadUInt32(stream);
                         }
 
                         else
                         {
-
                             this.subsample_size = IsoReaderWriter.ReadUInt16(stream);
                         }
                         this.subsample_priority = IsoReaderWriter.ReadUInt8(stream);
@@ -6647,27 +6353,22 @@ namespace BoxGenerator2
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.sample_delta);
                 size += IsoReaderWriter.WriteUInt16(stream, this.subsample_count);
 
                 if (subsample_count > 0)
                 {
 
-
                     for (int j = 0; j < subsample_count; j++)
                     {
 
-
                         if (version == 1)
                         {
-
                             size += IsoReaderWriter.WriteUInt32(stream, this.subsample_size);
                         }
 
                         else
                         {
-
                             size += IsoReaderWriter.WriteUInt16(stream, this.subsample_size);
                         }
                         size += IsoReaderWriter.WriteUInt8(stream, this.subsample_priority);
@@ -6687,7 +6388,9 @@ namespace BoxGenerator2
 
         public ulong baseMediaDecodeTime { get; set; }
 
+
         public uint baseMediaDecodeTime { get; set; }
+
         public TrackFragmentBaseMediaDecodeTimeBox()
         { }
 
@@ -6697,13 +6400,11 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 this.baseMediaDecodeTime = IsoReaderWriter.ReadUInt64(stream);
             }
 
             else
             {
-
 
                 this.baseMediaDecodeTime = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -6716,13 +6417,11 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt64(stream, this.baseMediaDecodeTime);
             }
 
             else
             {
-
 
                 size += IsoReaderWriter.WriteUInt32(stream, this.baseMediaDecodeTime);
             }
@@ -6734,19 +6433,14 @@ namespace BoxGenerator2
     public class TrackFragmentHeaderBox : FullBox
     {
         public override string FourCC { get { return "tfhd"; } }
-
         public uint track_ID { get; set; } //  all the following are optional fields
 
-
         public ulong base_data_offset { get; set; }
-
         public uint sample_description_index { get; set; }
-
         public uint default_sample_duration { get; set; }
-
         public uint default_sample_size { get; set; }
-
         public uint default_sample_flags { get; set; }
+
         public TrackFragmentHeaderBox()
         { }
 
@@ -6781,26 +6475,23 @@ namespace BoxGenerator2
     public class TrackFragmentRandomAccessBox : FullBox
     {
         public override string FourCC { get { return "tfra"; } }
-
         public uint track_ID { get; set; }
-
         public uint reserved { get; set; } = 0;
-
         public byte length_size_of_traf_num { get; set; }
-
         public byte length_size_of_trun_num { get; set; }
-
         public byte length_size_of_sample_num { get; set; }
-
         public uint number_of_entry { get; set; }
+
 
         public ulong time { get; set; }
         public ulong moof_offset { get; set; }
+
         public uint time { get; set; }
         public uint moof_offset { get; set; }
         public byte[] traf_number { get; set; }
         public byte[] trun_number { get; set; }
         public byte[] sample_delta { get; set; }
+
         public TrackFragmentRandomAccessBox()
         { }
 
@@ -6817,17 +6508,14 @@ namespace BoxGenerator2
             for (int i = 1; i <= number_of_entry; i++)
             {
 
-
                 if (version == 1)
                 {
-
                     this.time = IsoReaderWriter.ReadUInt64(stream);
                     this.moof_offset = IsoReaderWriter.ReadUInt64(stream);
                 }
 
                 else
                 {
-
                     this.time = IsoReaderWriter.ReadUInt32(stream);
                     this.moof_offset = IsoReaderWriter.ReadUInt32(stream);
                 }
@@ -6851,17 +6539,14 @@ namespace BoxGenerator2
             for (int i = 1; i <= number_of_entry; i++)
             {
 
-
                 if (version == 1)
                 {
-
                     size += IsoReaderWriter.WriteUInt64(stream, this.time);
                     size += IsoReaderWriter.WriteUInt64(stream, this.moof_offset);
                 }
 
                 else
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.time);
                     size += IsoReaderWriter.WriteUInt32(stream, this.moof_offset);
                 }
@@ -6884,28 +6569,22 @@ namespace BoxGenerator2
         public uint reserved { get; set; } = 0;
         public ulong duration { get; set; }
 
+
         public uint creation_time { get; set; }
         public uint modification_time { get; set; }
         public uint track_ID { get; set; }
         public uint reserved { get; set; } = 0;
         public uint duration { get; set; }
-
         public uint[] reserved { get; set; } = 0;
-
         public short layer { get; set; } = 0;
-
         public short alternate_group { get; set; } = 0;
-
-        public short volume { get; set; } = {if track_is_audio 0x0100 else 0 };
-
+        public short volume { get; set; } = 0;// = { default samplerate of media}<<16;
         public ushort reserved { get; set; } = 0;
-
         public uint[] matrix { get; set; } =
             { 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 }; //  unity matrix
-
         public uint width { get; set; }
-
         public uint height { get; set; }
+
         public TrackHeaderBox()
         { }
 
@@ -6915,7 +6594,6 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 this.creation_time = IsoReaderWriter.ReadUInt64(stream);
                 this.modification_time = IsoReaderWriter.ReadUInt64(stream);
                 this.track_ID = IsoReaderWriter.ReadUInt32(stream);
@@ -6925,7 +6603,6 @@ namespace BoxGenerator2
 
             else
             {
-
 
                 this.creation_time = IsoReaderWriter.ReadUInt32(stream);
                 this.modification_time = IsoReaderWriter.ReadUInt32(stream);
@@ -6950,7 +6627,6 @@ namespace BoxGenerator2
 
             if (version == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
                 size += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
                 size += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
@@ -6960,7 +6636,6 @@ namespace BoxGenerator2
 
             else
             {
-
 
                 size += IsoReaderWriter.WriteUInt32(stream, this.creation_time);
                 size += IsoReaderWriter.WriteUInt32(stream, this.modification_time);
@@ -6984,6 +6659,7 @@ namespace BoxGenerator2
     public class TrackFragmentBox : Box
     {
         public override string FourCC { get { return "traf"; } }
+
         public TrackFragmentBox()
         { }
 
@@ -7004,6 +6680,7 @@ namespace BoxGenerator2
     public class TrackBox : Box
     {
         public override string FourCC { get { return "trak"; } }
+
         public TrackBox()
         { }
 
@@ -7024,8 +6701,8 @@ namespace BoxGenerator2
     public class TrackReferenceBox : Box
     {
         public override string FourCC { get { return "tref"; } }
-
         public TrackReferenceTypeBox[] TrackReferenceTypeBox { get; set; }
+
         public TrackReferenceBox()
         { }
 
@@ -7048,8 +6725,8 @@ namespace BoxGenerator2
     public class TrackExtensionPropertiesBox : FullBox
     {
         public override string FourCC { get { return "trep"; } }
-
         public uint track_ID { get; set; } //  Any number of boxes may follow
+
         public TrackExtensionPropertiesBox()
         { }
 
@@ -7072,16 +6749,12 @@ namespace BoxGenerator2
     public class TrackExtendsBox : FullBox
     {
         public override string FourCC { get { return "trex"; } }
-
         public uint track_ID { get; set; }
-
         public uint default_sample_description_index { get; set; }
-
         public uint default_sample_duration { get; set; }
-
         public uint default_sample_size { get; set; }
-
         public uint default_sample_flags { get; set; }
+
         public TrackExtendsBox()
         { }
 
@@ -7112,6 +6785,7 @@ namespace BoxGenerator2
     public class TrackGroupBox : Box
     {
         public override string FourCC { get { return "trgr"; } }
+
         public TrackGroupBox()
         { }
 
@@ -7132,12 +6806,10 @@ namespace BoxGenerator2
     public class TrackRunBox : FullBox
     {
         public override string FourCC { get { return "trun"; } }
-
         public uint sample_count { get; set; } //  the following are optional fields
-
         public int data_offset { get; set; }
-
         public uint first_sample_flags { get; set; } //  all fields in the following array are optional
+
 
 
         public TrackRunBox()
@@ -7170,6 +6842,7 @@ namespace BoxGenerator2
     public class TrackTypeBox : GeneralTypeBox
     {
         public override string FourCC { get { return "ttyp"; } }
+
         public TrackTypeBox()
         { }
 
@@ -7190,8 +6863,8 @@ namespace BoxGenerator2
     public class TypeCombinationBox : Box
     {
         public override string FourCC { get { return "tyco"; } }
-
         public uint[] compatible_brands { get; set; } //  to end of the box
+
         public TypeCombinationBox()
         { }
 
@@ -7214,6 +6887,7 @@ namespace BoxGenerator2
     public class UserDataBox : Box
     {
         public override string FourCC { get { return "udta"; } }
+
         public UserDataBox()
         { }
 
@@ -7234,15 +6908,15 @@ namespace BoxGenerator2
     public class BoxHeader
     {
         public override string FourCC { get { return "uuid"; } }
-
         public uint size { get; set; }
-
         public uint type { get; set; } = boxtype;
 
         public ulong largesize { get; set; }
 
 
+
         public byte[] usertype { get; set; } = extended_type;
+
         public BoxHeader()
         { }
 
@@ -7254,19 +6928,16 @@ namespace BoxGenerator2
 
             if (size == 1)
             {
-
                 this.largesize = IsoReaderWriter.ReadUInt64(stream);
             }
 
             else if (size == 0)
             {
 
-
             }
 
-            if (boxtype == 'uuid')
+            if (boxtype == "uuid")
             {
-
                 this.usertype = IsoReaderWriter.ReadBytes(stream, 16);
             }
         }
@@ -7280,19 +6951,16 @@ namespace BoxGenerator2
 
             if (size == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt64(stream, this.largesize);
             }
 
             else if (size == 0)
             {
 
-
             }
 
-            if (boxtype == 'uuid')
+            if (boxtype == "uuid")
             {
-
                 size += IsoReaderWriter.WriteBytes(stream, 16, this.usertype);
             }
             return size;
@@ -7303,10 +6971,9 @@ namespace BoxGenerator2
     public class VideoMediaHeaderBox : FullBox
     {
         public override string FourCC { get { return "vmhd"; } }
-
         public ushort graphicsmode { get; set; } = 0; //  copy, see below
-
         public ushort[] opcolor { get; set; } = { 0, 0, 0 };
+
         public VideoMediaHeaderBox()
         { }
 
@@ -7331,8 +6998,8 @@ namespace BoxGenerator2
     public class XMLBox : FullBox
     {
         public override string FourCC { get { return "xml "; } }
-
         public string xml { get; set; }
+
         public XMLBox()
         { }
 
@@ -7355,6 +7022,7 @@ namespace BoxGenerator2
     public class CompressedMovieFragmentBox1 : CompressedBox
     {
         public override string FourCC { get { return "!mof"; } }
+
         public CompressedMovieFragmentBox1()
         { }
 
@@ -7375,6 +7043,7 @@ namespace BoxGenerator2
     public class CompressedMovieBox1 : CompressedBox
     {
         public override string FourCC { get { return "!mov"; } }
+
         public CompressedMovieBox1()
         { }
 
@@ -7395,6 +7064,7 @@ namespace BoxGenerator2
     public class CompressedSegmentIndexBox1 : CompressedBox
     {
         public override string FourCC { get { return "!six"; } }
+
         public CompressedSegmentIndexBox1()
         { }
 
@@ -7415,6 +7085,7 @@ namespace BoxGenerator2
     public class CompressedSubsegmentIndexBox1 : CompressedBox
     {
         public override string FourCC { get { return "!ssx"; } }
+
         public CompressedSubsegmentIndexBox1()
         { }
 
@@ -7435,12 +7106,10 @@ namespace BoxGenerator2
     public class AmbientViewingEnvironmentBox : Box
     {
         public override string FourCC { get { return "amve"; } }
-
         public uint ambient_illuminance { get; set; }
-
         public ushort ambient_light_x { get; set; }
-
         public ushort ambient_light_y { get; set; }
+
         public AmbientViewingEnvironmentBox()
         { }
 
@@ -7467,8 +7136,8 @@ namespace BoxGenerator2
     public class MetadataKeyTableBox : Box
     {
         public override string FourCC { get { return "keys"; } }
-
         public MetadataKeyBox[] MetadataKeyBox { get; set; }
+
         public MetadataKeyTableBox()
         { }
 
@@ -7491,8 +7160,8 @@ namespace BoxGenerator2
     public class URIBox : FullBox
     {
         public override string FourCC { get { return "uri "; } }
-
         public string theURI { get; set; }
+
         public URIBox()
         { }
 
@@ -7515,18 +7184,18 @@ namespace BoxGenerator2
     public class IroiInfoBox : Box
     {
         public override string FourCC { get { return "iroi"; } }
-
         public byte iroi_type { get; set; }
-
         public byte reserved { get; set; } = 0;
 
         public byte grid_roi_mb_width { get; set; }
         public byte grid_roi_mb_height { get; set; }
 
         public uint num_roi { get; set; }
+
         public uint top_left_mb { get; set; }
         public byte roi_mb_width { get; set; }
         public byte roi_mb_height { get; set; }
+
         public IroiInfoBox()
         { }
 
@@ -7538,19 +7207,16 @@ namespace BoxGenerator2
 
             if (iroi_type == 0)
             {
-
                 this.grid_roi_mb_width = IsoReaderWriter.ReadUInt8(stream);
                 this.grid_roi_mb_height = IsoReaderWriter.ReadUInt8(stream);
             }
 
             else if (iroi_type == 1)
             {
-
                 this.num_roi = IsoReaderWriter.ReadUInt24(stream);
 
-                for (int int i = 1; i <= num_roi; i++)
+                for (int i = 1; i <= num_roi; i++)
                 {
-
                     this.top_left_mb = IsoReaderWriter.ReadUInt32(stream);
                     this.roi_mb_width = IsoReaderWriter.ReadUInt8(stream);
                     this.roi_mb_height = IsoReaderWriter.ReadUInt8(stream);
@@ -7567,19 +7233,16 @@ namespace BoxGenerator2
 
             if (iroi_type == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.grid_roi_mb_width);
                 size += IsoReaderWriter.WriteUInt8(stream, this.grid_roi_mb_height);
             }
 
             else if (iroi_type == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt24(stream, this.num_roi);
 
-                for (int int i = 1; i <= num_roi; i++)
+                for (int i = 1; i <= num_roi; i++)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.top_left_mb);
                     size += IsoReaderWriter.WriteUInt8(stream, this.roi_mb_width);
                     size += IsoReaderWriter.WriteUInt8(stream, this.roi_mb_height);
@@ -7593,10 +7256,10 @@ namespace BoxGenerator2
     public class TierDependencyBox : Box
     {
         public override string FourCC { get { return "ldep"; } }
-
         public ushort entry_count { get; set; }
 
         public ushort dependencyTierId { get; set; }
+
         public TierDependencyBox()
         { }
 
@@ -7607,7 +7270,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 this.dependencyTierId = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -7620,7 +7282,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.dependencyTierId);
             }
             return size;
@@ -7631,22 +7292,15 @@ namespace BoxGenerator2
     public class SVCDependencyRangeBox : Box
     {
         public override string FourCC { get { return "svdr"; } }
-
         public byte min_dependency_id { get; set; }
-
         public byte min_temporal_id { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public byte min_quality_id { get; set; }
-
         public byte max_dependency_id { get; set; }
-
         public byte max_temporal_id { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public byte max_quality_id { get; set; }
+
         public SVCDependencyRangeBox()
         { }
 
@@ -7683,14 +7337,13 @@ namespace BoxGenerator2
     public class InitialParameterSetBox : Box
     {
         public override string FourCC { get { return "svip"; } }
-
         public byte sps_id_count { get; set; }
 
         public byte SPS_index { get; set; }
-
         public byte pps_id_count { get; set; }
 
         public byte PPS_index { get; set; }
+
         public InitialParameterSetBox()
         { }
 
@@ -7701,14 +7354,12 @@ namespace BoxGenerator2
 
             for (int i = 0; i < sps_id_count; i++)
             {
-
                 this.SPS_index = IsoReaderWriter.ReadUInt8(stream);
             }
             this.pps_id_count = IsoReaderWriter.ReadUInt8(stream);
 
             for (int i = 0; i < pps_id_count; i++)
             {
-
                 this.PPS_index = IsoReaderWriter.ReadUInt8(stream);
             }
         }
@@ -7721,14 +7372,12 @@ namespace BoxGenerator2
 
             for (int i = 0; i < sps_id_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.SPS_index);
             }
             size += IsoReaderWriter.WriteUInt8(stream, this.pps_id_count);
 
             for (int i = 0; i < pps_id_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.PPS_index);
             }
             return size;
@@ -7739,14 +7388,11 @@ namespace BoxGenerator2
     public class PriorityRangeBox : Box
     {
         public override string FourCC { get { return "svpr"; } }
-
         public byte reserved1 { get; set; } = 0;
-
         public byte min_priorityId { get; set; }
-
         public byte reserved2 { get; set; } = 0;
-
         public byte max_priorityId { get; set; }
+
         public PriorityRangeBox()
         { }
 
@@ -7775,13 +7421,9 @@ namespace BoxGenerator2
     public class TranscodingInfoBox : Box
     {
         public override string FourCC { get { return "tran"; } }
-
         public byte reserved { get; set; } = 0;
-
         public byte conversion_idc { get; set; }
-
         public byte cavlc_info_present_flag { get; set; }
-
         public byte cabac_info_present_flag { get; set; }
 
         public uint cavlc_profile_level_idc { get; set; }
@@ -7791,6 +7433,7 @@ namespace BoxGenerator2
         public uint cabac_profile_level_idc { get; set; }
         public uint cabac_max_bitrate { get; set; }
         public uint cabac_avg_bitrate { get; set; }
+
         public TranscodingInfoBox()
         { }
 
@@ -7804,7 +7447,6 @@ namespace BoxGenerator2
 
             if (cavlc_info_present_flag)
             {
-
                 this.cavlc_profile_level_idc = IsoReaderWriter.ReadUInt24(stream);
                 this.cavlc_max_bitrate = IsoReaderWriter.ReadUInt32(stream);
                 this.cavlc_avg_bitrate = IsoReaderWriter.ReadUInt32(stream);
@@ -7812,7 +7454,6 @@ namespace BoxGenerator2
 
             if (cabac_info_present_flag)
             {
-
                 this.cabac_profile_level_idc = IsoReaderWriter.ReadUInt24(stream);
                 this.cabac_max_bitrate = IsoReaderWriter.ReadUInt32(stream);
                 this.cabac_avg_bitrate = IsoReaderWriter.ReadUInt32(stream);
@@ -7830,7 +7471,6 @@ namespace BoxGenerator2
 
             if (cavlc_info_present_flag)
             {
-
                 size += IsoReaderWriter.WriteUInt24(stream, this.cavlc_profile_level_idc);
                 size += IsoReaderWriter.WriteUInt32(stream, this.cavlc_max_bitrate);
                 size += IsoReaderWriter.WriteUInt32(stream, this.cavlc_avg_bitrate);
@@ -7838,7 +7478,6 @@ namespace BoxGenerator2
 
             if (cabac_info_present_flag)
             {
-
                 size += IsoReaderWriter.WriteUInt24(stream, this.cabac_profile_level_idc);
                 size += IsoReaderWriter.WriteUInt32(stream, this.cabac_max_bitrate);
                 size += IsoReaderWriter.WriteUInt32(stream, this.cabac_avg_bitrate);
@@ -7851,17 +7490,15 @@ namespace BoxGenerator2
     public class RectRegionBox : Box
     {
         public override string FourCC { get { return "rrgn"; } }
-
         public ushort base_region_tierID { get; set; }
-
         public byte dynamic_rect { get; set; }
-
         public byte reserved { get; set; } = 0;
 
         public ushort horizontal_offset { get; set; }
         public ushort vertical_offset { get; set; }
         public ushort region_width { get; set; }
         public ushort region_height { get; set; }
+
         public RectRegionBox()
         { }
 
@@ -7874,7 +7511,6 @@ namespace BoxGenerator2
 
             if (dynamic_rect == 0)
             {
-
                 this.horizontal_offset = IsoReaderWriter.ReadUInt16(stream);
                 this.vertical_offset = IsoReaderWriter.ReadUInt16(stream);
                 this.region_width = IsoReaderWriter.ReadUInt16(stream);
@@ -7892,7 +7528,6 @@ namespace BoxGenerator2
 
             if (dynamic_rect == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.horizontal_offset);
                 size += IsoReaderWriter.WriteUInt16(stream, this.vertical_offset);
                 size += IsoReaderWriter.WriteUInt16(stream, this.region_width);
@@ -7906,7 +7541,6 @@ namespace BoxGenerator2
     public class BufferingBox : Box
     {
         public override string FourCC { get { return "buff"; } }
-
         public ushort operating_point_count { get; set; }
 
         public uint byte_rate { get; set; }
@@ -7914,6 +7548,7 @@ namespace BoxGenerator2
         public uint dpb_size { get; set; }
         public uint init_cpb_delay { get; set; }
         public uint init_dpb_delay { get; set; }
+
         public BufferingBox()
         { }
 
@@ -7924,7 +7559,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < operating_point_count; i++)
             {
-
                 this.byte_rate = IsoReaderWriter.ReadUInt32(stream);
                 this.cpb_size = IsoReaderWriter.ReadUInt32(stream);
                 this.dpb_size = IsoReaderWriter.ReadUInt32(stream);
@@ -7941,7 +7575,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < operating_point_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.byte_rate);
                 size += IsoReaderWriter.WriteUInt32(stream, this.cpb_size);
                 size += IsoReaderWriter.WriteUInt32(stream, this.dpb_size);
@@ -7956,12 +7589,12 @@ namespace BoxGenerator2
     public class MVCSubTrackViewBox : FullBox
     {
         public override string FourCC { get { return "mstv"; } }
-
         public ushort item_count { get; set; }
 
         public ushort view_id { get; set; }
         public byte temporal_id { get; set; }
         public byte reserved { get; set; }
+
         public MVCSubTrackViewBox()
         { }
 
@@ -7972,7 +7605,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 this.view_id = IsoReaderWriter.ReadBits(stream, 10);
                 this.temporal_id = IsoReaderWriter.ReadBits(stream, 4);
                 this.reserved = IsoReaderWriter.ReadBits(stream, 2);
@@ -7987,7 +7619,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 10, this.view_id);
                 size += IsoReaderWriter.WriteBits(stream, 4, this.temporal_id);
                 size += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
@@ -8000,32 +7631,29 @@ namespace BoxGenerator2
     public class MultiviewGroupBox : FullBox
     {
         public override string FourCC { get { return "mvcg"; } }
-
         public uint multiview_group_id { get; set; }
-
         public ushort num_entries { get; set; }
-
         public byte reserved { get; set; } = 0;
 
         public byte entry_type { get; set; }
+
         public uint track_id { get; set; }
+
         public uint track_id { get; set; }
         public ushort tier_id { get; set; }
+
         public byte reserved1 { get; set; } = 0;
         public ushort output_view_id { get; set; }
+
         public byte reserved2 { get; set; } = 0;
         public ushort start_view_id { get; set; }
         public ushort view_count { get; set; }
-
         public TierInfoBox subset_stream_info { get; set; } //  optional
-
         public MultiviewRelationAttributeBox relation_attributes { get; set; } //  optional
-
         public TierBitRateBox subset_stream_bit_rate { get; set; } //  optional
-
         public BufferingBox subset_stream_buffering { get; set; } //  optional
-
         public MultiviewSceneInfoBox multiview_scene_info { get; set; } //  optional
+
         public MultiviewGroupBox()
         { }
 
@@ -8038,32 +7666,27 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entries; i++)
             {
-
                 this.entry_type = IsoReaderWriter.ReadUInt8(stream);
 
                 if (entry_type == 0)
                 {
-
                     this.track_id = IsoReaderWriter.ReadUInt32(stream);
                 }
 
                 else if (entry_type == 1)
                 {
-
                     this.track_id = IsoReaderWriter.ReadUInt32(stream);
                     this.tier_id = IsoReaderWriter.ReadUInt16(stream);
                 }
 
                 else if (entry_type == 2)
                 {
-
                     this.reserved1 = IsoReaderWriter.ReadBits(stream, 6);
                     this.output_view_id = IsoReaderWriter.ReadBits(stream, 10);
                 }
 
                 else if (entry_type == 3)
                 {
-
                     this.reserved2 = IsoReaderWriter.ReadBits(stream, 6);
                     this.start_view_id = IsoReaderWriter.ReadBits(stream, 10);
                     this.view_count = IsoReaderWriter.ReadUInt16(stream);
@@ -8086,32 +7709,27 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entries; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.entry_type);
 
                 if (entry_type == 0)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.track_id);
                 }
 
                 else if (entry_type == 1)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.track_id);
                     size += IsoReaderWriter.WriteUInt16(stream, this.tier_id);
                 }
 
                 else if (entry_type == 2)
                 {
-
                     size += IsoReaderWriter.WriteBits(stream, 6, this.reserved1);
                     size += IsoReaderWriter.WriteBits(stream, 10, this.output_view_id);
                 }
 
                 else if (entry_type == 3)
                 {
-
                     size += IsoReaderWriter.WriteBits(stream, 6, this.reserved2);
                     size += IsoReaderWriter.WriteBits(stream, 10, this.start_view_id);
                     size += IsoReaderWriter.WriteUInt16(stream, this.view_count);
@@ -8130,6 +7748,7 @@ namespace BoxGenerator2
     public class MultiviewInformationBox : FullBox
     {
         public override string FourCC { get { return "mvci"; } }
+
         public MultiviewInformationBox()
         { }
 
@@ -8150,26 +7769,20 @@ namespace BoxGenerator2
     public class MVDDepthResolutionBox : Box
     {
         public override string FourCC { get { return "3dpr"; } }
-
         public ushort depth_width { get; set; }
-
         public ushort depth_height { get; set; }
 
-
         public ushort depth_hor_mult_minus1 { get; set; } //  optional
-
         public ushort depth_ver_mult_minus1 { get; set; } //  optional
-
         public byte depth_hor_rsh { get; set; } //  optional
-
         public byte depth_ver_rsh { get; set; } //  optional
-
         public ushort grid_pos_num_views { get; set; } //  optional
 
         public byte reserved { get; set; } = 0;
         public ushort[] grid_pos_view_id { get; set; }
         public short[] grid_pos_x { get; set; }
         public short[] grid_pos_y { get; set; }
+
         public MVDDepthResolutionBox()
         { }
 
@@ -8187,7 +7800,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < grid_pos_num_vies; i++)
             {
-
                 this.reserved = IsoReaderWriter.ReadBits(stream, 6);
                 this.grid_pos_view_id = IsoReaderWriter.ReadBits(stream, 10);
                 this.grid_pos_x = IsoReaderWriter.ReadInt16(stream);
@@ -8210,7 +7822,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < grid_pos_num_vies; i++)
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
                 size += IsoReaderWriter.WriteBits(stream, 10, this.grid_pos_view_id);
                 size += IsoReaderWriter.WriteInt16(stream, this.grid_pos_x);
@@ -8224,19 +7835,16 @@ namespace BoxGenerator2
     public class MultiviewRelationAttributeBox : FullBox
     {
         public override string FourCC { get { return "mvra"; } }
-
         public ushort reserved1 { get; set; } = 0;
-
         public ushort num_common_attributes { get; set; }
 
         public uint common_attribute { get; set; }
         public uint common_value { get; set; }
-
         public ushort reserved2 { get; set; } = 0;
-
         public ushort num_differentiating_attributes { get; set; }
 
         public uint differentiating_attribute { get; set; }
+
         public MultiviewRelationAttributeBox()
         { }
 
@@ -8248,7 +7856,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_common_attributes; i++)
             {
-
                 this.common_attribute = IsoReaderWriter.ReadUInt32(stream);
                 this.common_value = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -8257,7 +7864,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_differentiating_attributes; i++)
             {
-
                 this.differentiating_attribute = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -8271,7 +7877,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_common_attributes; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.common_attribute);
                 size += IsoReaderWriter.WriteUInt32(stream, this.common_value);
             }
@@ -8280,7 +7885,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_differentiating_attributes; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.differentiating_attribute);
             }
             return size;
@@ -8293,7 +7897,9 @@ namespace BoxGenerator2
         public override string FourCC { get { return "sdep"; } }
 
         public ushort dependency_count { get; set; }
+
         public short relative_sample_number { get; set; }
+
         public SampleDependencyBox()
         { }
 
@@ -8303,12 +7909,10 @@ namespace BoxGenerator2
 
             for (int i = 0; i < sample_count; i++)
             {
-
                 this.dependency_count = IsoReaderWriter.ReadUInt16(stream);
 
                 for (int k = 0; k < dependency_count; k++)
                 {
-
                     this.relative_sample_number = IsoReaderWriter.ReadInt16(stream);
                 }
             }
@@ -8321,12 +7925,10 @@ namespace BoxGenerator2
 
             for (int i = 0; i < sample_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.dependency_count);
 
                 for (int k = 0; k < dependency_count; k++)
                 {
-
                     size += IsoReaderWriter.WriteInt16(stream, this.relative_sample_number);
                 }
             }
@@ -8338,14 +7940,13 @@ namespace BoxGenerator2
     public class SeiInformationBox : Box
     {
         public override string FourCC { get { return "seii"; } }
-
         public ushort numRequiredSEIs { get; set; }
 
         public ushort requiredSEI_ID { get; set; }
-
         public ushort numNotRequiredSEIs { get; set; }
 
         public ushort notrequiredSEI_ID { get; set; }
+
         public SeiInformationBox()
         { }
 
@@ -8356,14 +7957,12 @@ namespace BoxGenerator2
 
             for (int i = 0; i < numRequiredSEIs; i++)
             {
-
                 this.requiredSEI_ID = IsoReaderWriter.ReadUInt16(stream);
             }
             this.numNotRequiredSEIs = IsoReaderWriter.ReadUInt16(stream);
 
             for (int i = 0; i < numNotRequiredSEIs; i++)
             {
-
                 this.notrequiredSEI_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -8376,14 +7975,12 @@ namespace BoxGenerator2
 
             for (int i = 0; i < numRequiredSEIs; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.requiredSEI_ID);
             }
             size += IsoReaderWriter.WriteUInt16(stream, this.numNotRequiredSEIs);
 
             for (int i = 0; i < numNotRequiredSEIs; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.notrequiredSEI_ID);
             }
             return size;
@@ -8394,7 +7991,6 @@ namespace BoxGenerator2
     public class SVCSubTrackLayerBox : FullBox
     {
         public override string FourCC { get { return "sstl"; } }
-
         public ushort item_count { get; set; }
 
         public byte dependency_id { get; set; }
@@ -8405,6 +8001,7 @@ namespace BoxGenerator2
         public byte quality_id_range { get; set; }
         public byte temporal_id_range { get; set; }
         public byte priority_id_range { get; set; }
+
         public SVCSubTrackLayerBox()
         { }
 
@@ -8415,7 +8012,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 this.dependency_id = IsoReaderWriter.ReadBits(stream, 3);
                 this.quality_id = IsoReaderWriter.ReadBits(stream, 4);
                 this.temporal_id = IsoReaderWriter.ReadBits(stream, 3);
@@ -8435,7 +8031,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 3, this.dependency_id);
                 size += IsoReaderWriter.WriteBits(stream, 4, this.quality_id);
                 size += IsoReaderWriter.WriteBits(stream, 3, this.temporal_id);
@@ -8453,10 +8048,10 @@ namespace BoxGenerator2
     public class MVCSubTrackMultiviewGroupBox : FullBox
     {
         public override string FourCC { get { return "stmg"; } }
-
         public ushort item_count { get; set; }
 
         public uint MultiviewGroupId { get; set; }
+
         public MVCSubTrackMultiviewGroupBox()
         { }
 
@@ -8467,7 +8062,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 this.MultiviewGroupId = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -8480,7 +8074,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.MultiviewGroupId);
             }
             return size;
@@ -8491,10 +8084,10 @@ namespace BoxGenerator2
     public class SubTrackTierBox : FullBox
     {
         public override string FourCC { get { return "stti"; } }
-
         public ushort item_count { get; set; }
 
         public ushort tierID { get; set; }
+
         public SubTrackTierBox()
         { }
 
@@ -8505,7 +8098,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 this.tierID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -8518,7 +8110,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.tierID);
             }
             return size;
@@ -8529,12 +8120,11 @@ namespace BoxGenerator2
     public class MultiviewGroupRelationBox : FullBox
     {
         public override string FourCC { get { return "swtc"; } }
-
         public uint num_entries { get; set; }
 
         public uint multiview_group_id { get; set; }
-
         public MultiviewRelationAttributeBox relation_attributes { get; set; }
+
         public MultiviewGroupRelationBox()
         { }
 
@@ -8545,7 +8135,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entries; i++)
             {
-
                 this.multiview_group_id = IsoReaderWriter.ReadUInt32(stream);
             }
             this.relation_attributes = IsoReaderWriter.ReadBox(stream);
@@ -8559,7 +8148,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entries; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.multiview_group_id);
             }
             size += IsoReaderWriter.WriteBox(stream, this.relation_attributes);
@@ -8571,18 +8159,13 @@ namespace BoxGenerator2
     public class TierBitRateBox : Box
     {
         public override string FourCC { get { return "tibr"; } }
-
         public uint baseBitRate { get; set; }
-
         public uint maxBitRate { get; set; }
-
         public uint avgBitRate { get; set; }
-
         public uint tierBaseBitRate { get; set; }
-
         public uint tierMaxBitRate { get; set; }
-
         public uint tierAvgBitRate { get; set; }
+
         public TierBitRateBox()
         { }
 
@@ -8616,28 +8199,18 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "tiri"; } }
 
-
         public ushort tierID { get; set; }
-
         public byte profileIndication { get; set; }
-
         public byte profile_compatibility { get; set; }
-
         public byte levelIndication { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public ushort visualWidth { get; set; }
-
         public ushort visualHeight { get; set; }
-
         public byte discardable { get; set; }
-
         public byte constantFrameRate { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public ushort frameRate { get; set; }
+
         public TierInfoBox()
         { }
 
@@ -8682,10 +8255,10 @@ namespace BoxGenerator2
     public class TileSubTrackGroupBox : FullBox
     {
         public override string FourCC { get { return "tstb"; } }
-
         public ushort item_count { get; set; }
 
         public ushort tileGroupID { get; set; }
+
         public TileSubTrackGroupBox()
         { }
 
@@ -8696,7 +8269,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 this.tileGroupID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -8709,7 +8281,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < item_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.tileGroupID);
             }
             return size;
@@ -8720,8 +8291,8 @@ namespace BoxGenerator2
     public class MultiviewSceneInfoBox : Box
     {
         public override string FourCC { get { return "vwdi"; } }
-
         public byte max_disparity { get; set; }
+
         public MultiviewSceneInfoBox()
         { }
 
@@ -8744,10 +8315,9 @@ namespace BoxGenerator2
     public class MVCDConfigurationBox : Box
     {
         public override string FourCC { get { return "mvdC"; } }
-
         public MVDDecoderConfigurationRecord MVDConfig { get; set; }
-
         public MVDDepthResolutionBox mvdDepthRes { get; set; } // Optional
+
         public MVCDConfigurationBox()
         { }
 
@@ -8772,10 +8342,9 @@ namespace BoxGenerator2
     public class A3DConfigurationBox : Box
     {
         public override string FourCC { get { return "a3dC"; } }
-
         public MVDDecoderConfigurationRecord MVDConfig { get; set; }
-
         public MVDDepthResolutionBox mvdDepthRes { get; set; } // Optional
+
         public A3DConfigurationBox()
         { }
 
@@ -8800,13 +8369,9 @@ namespace BoxGenerator2
     public class ViewIdentifierBox : FullBox
     {
         public override string FourCC { get { return "vwid"; } }
-
         public byte reserved6 { get; set; } = 0;
-
         public byte min_temporal_id { get; set; }
-
         public byte max_temporal_id { get; set; }
-
         public ushort num_views { get; set; }
 
         public byte reserved1 { get; set; } = 0;
@@ -8819,9 +8384,11 @@ namespace BoxGenerator2
         public byte[] depth_in_track { get; set; }
         public byte base_view_type { get; set; }
         public ushort num_ref_views { get; set; }
+
         public byte reserved5 { get; set; } = 0;
         public byte[] dependent_component_idc { get; set; }
         public ushort[] ref_view_id { get; set; }
+
         public ViewIdentifierBox()
         { }
 
@@ -8835,7 +8402,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_views; i++)
             {
-
                 this.reserved1 = IsoReaderWriter.ReadBits(stream, 6);
                 this.view_id = IsoReaderWriter.ReadBits(stream, 10);
                 this.reserved2 = IsoReaderWriter.ReadBits(stream, 6);
@@ -8849,7 +8415,6 @@ namespace BoxGenerator2
 
                 for (int j = 0; j < num_ref_views; j++)
                 {
-
                     this.reserved5 = IsoReaderWriter.ReadBits(stream, 4);
                     this.dependent_component_idc = IsoReaderWriter.ReadBits(stream, 2);
                     this.ref_view_id = IsoReaderWriter.ReadBits(stream, 10);
@@ -8868,7 +8433,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_views; i++)
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 6, this.reserved1);
                 size += IsoReaderWriter.WriteBits(stream, 10, this.view_id);
                 size += IsoReaderWriter.WriteBits(stream, 6, this.reserved2);
@@ -8882,7 +8446,6 @@ namespace BoxGenerator2
 
                 for (int j = 0; j < num_ref_views; j++)
                 {
-
                     size += IsoReaderWriter.WriteBits(stream, 4, this.reserved5);
                     size += IsoReaderWriter.WriteBits(stream, 2, this.dependent_component_idc);
                     size += IsoReaderWriter.WriteBits(stream, 10, this.ref_view_id);
@@ -8896,8 +8459,8 @@ namespace BoxGenerator2
     public class MVCConfigurationBox : Box
     {
         public override string FourCC { get { return "mvcC"; } }
-
         public MVCDecoderConfigurationRecord MVCConfig { get; set; }
+
         public MVCConfigurationBox()
         { }
 
@@ -8920,8 +8483,8 @@ namespace BoxGenerator2
     public class AVCConfigurationBox : Box
     {
         public override string FourCC { get { return "avcC"; } }
-
         public AVCDecoderConfigurationRecord AVCConfig { get; set; }
+
         public AVCConfigurationBox()
         { }
 
@@ -8944,8 +8507,8 @@ namespace BoxGenerator2
     public class HEVCConfigurationBox : Box
     {
         public override string FourCC { get { return "hvcC"; } }
-
         public HEVCDecoderConfigurationRecord HEVCConfig { get; set; }
+
         public HEVCConfigurationBox()
         { }
 
@@ -8968,8 +8531,8 @@ namespace BoxGenerator2
     public class LHEVCConfigurationBox : Box
     {
         public override string FourCC { get { return "lhvC"; } }
-
         public LHEVCDecoderConfigurationRecord LHEVCConfig { get; set; }
+
         public LHEVCConfigurationBox()
         { }
 
@@ -8992,8 +8555,8 @@ namespace BoxGenerator2
     public class MPEG4ExtensionDescriptorsBox : Box
     {
         public override string FourCC { get { return "m4ds"; } }
-
         public Descriptor[] Descr { get; set; }
+
         public MPEG4ExtensionDescriptorsBox()
         { }
 
@@ -9016,8 +8579,8 @@ namespace BoxGenerator2
     public class SVCConfigurationBox : Box
     {
         public override string FourCC { get { return "svcC"; } }
-
         public SVCDecoderConfigurationRecord SVCConfig { get; set; }
+
         public SVCConfigurationBox()
         { }
 
@@ -9040,8 +8603,8 @@ namespace BoxGenerator2
     public class ScalabilityInformationSEIBox : Box
     {
         public override string FourCC { get { return "seib"; } }
-
         public byte[] scalinfosei { get; set; }
+
         public ScalabilityInformationSEIBox()
         { }
 
@@ -9064,10 +8627,9 @@ namespace BoxGenerator2
     public class SVCPriorityAssignmentBox : Box
     {
         public override string FourCC { get { return "svcP"; } }
-
         public byte method_count { get; set; }
-
         public string[] PriorityAssignmentURI { get; set; }
+
         public SVCPriorityAssignmentBox()
         { }
 
@@ -9092,8 +8654,8 @@ namespace BoxGenerator2
     public class ViewScalabilityInformationSEIBox : Box
     {
         public override string FourCC { get { return "vsib"; } }
-
         public byte[] mvcscalinfosei { get; set; }
+
         public ViewScalabilityInformationSEIBox()
         { }
 
@@ -9116,8 +8678,8 @@ namespace BoxGenerator2
     public class MVDScalabilityInformationSEIBox : Box
     {
         public override string FourCC { get { return "3sib"; } }
-
         public byte[] mvdscalinfosei { get; set; }
+
         public MVDScalabilityInformationSEIBox()
         { }
 
@@ -9140,10 +8702,9 @@ namespace BoxGenerator2
     public class MVCViewPriorityAssignmentBox : Box
     {
         public override string FourCC { get { return "mvcP"; } }
-
         public byte method_count { get; set; }
-
         public string[] PriorityAssignmentURI { get; set; }
+
         public MVCViewPriorityAssignmentBox()
         { }
 
@@ -9168,8 +8729,8 @@ namespace BoxGenerator2
     public class HEVCTileConfigurationBox : Box
     {
         public override string FourCC { get { return "hvtC"; } }
-
         public HEVCTileTierLevelConfigurationRecord HEVCTileTierLevelConfig { get; set; }
+
         public HEVCTileConfigurationBox()
         { }
 
@@ -9192,8 +8753,8 @@ namespace BoxGenerator2
     public class EVCConfigurationBox : Box
     {
         public override string FourCC { get { return "evcC"; } }
-
         public EVCDecoderConfigurationRecord EVCConfig { get; set; }
+
         public EVCConfigurationBox()
         { }
 
@@ -9216,13 +8777,13 @@ namespace BoxGenerator2
     public class SVCPriorityLayerInfoBox : Box
     {
         public override string FourCC { get { return "qlif"; } }
-
         public byte pr_layer_num { get; set; }
 
         public byte pr_layer { get; set; }
         public uint profile_level_idc { get; set; }
         public uint max_bitrate { get; set; }
         public uint avg_bitrate { get; set; }
+
         public SVCPriorityLayerInfoBox()
         { }
 
@@ -9233,7 +8794,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < pr_layer_num; j++)
             {
-
                 this.pr_layer = IsoReaderWriter.ReadUInt8(stream);
                 this.profile_level_idc = IsoReaderWriter.ReadUInt24(stream);
                 this.max_bitrate = IsoReaderWriter.ReadUInt32(stream);
@@ -9249,7 +8809,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < pr_layer_num; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.pr_layer);
                 size += IsoReaderWriter.WriteUInt24(stream, this.profile_level_idc);
                 size += IsoReaderWriter.WriteUInt32(stream, this.max_bitrate);
@@ -9263,8 +8822,8 @@ namespace BoxGenerator2
     public class VvcConfigurationBox : FullBox
     {
         public override string FourCC { get { return "vvcC"; } }
-
         public VvcDecoderConfigurationRecord VvcConfig { get; set; }
+
         public VvcConfigurationBox()
         { }
 
@@ -9287,10 +8846,9 @@ namespace BoxGenerator2
     public class VvcNALUConfigBox : FullBox
     {
         public override string FourCC { get { return "vvnC"; } }
-
         public byte reserved { get; set; } = 0;
-
         public byte LengthSizeMinusOne { get; set; }
+
         public VvcNALUConfigBox()
         { }
 
@@ -9315,11 +8873,19 @@ namespace BoxGenerator2
     public class DefaultHevcExtractorConstructorBox : FullBox
     {
         public override string FourCC { get { return "dhec"; } }
-
         public uint num_entries { get; set; }
 
         public byte constructor_type { get; set; }
         public byte flags { get; set; }
+
+
+
+
+
+
+
+
+
         public DefaultHevcExtractorConstructorBox()
         { }
 
@@ -9330,31 +8896,26 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= num_entries; i++)
             {
-
                 this.constructor_type = IsoReaderWriter.ReadUInt8(stream);
                 this.flags = IsoReaderWriter.ReadUInt8(stream);
 
                 if (constructor_type == 0)
                 {
 
-
                 }
 
                 else if (constructor_type == 2)
                 {
-
 
                 }
 
                 else if (constructor_type == 3)
                 {
 
-
                 }
 
                 else if (constructor_type == 6)
                 {
-
 
                 }
             }
@@ -9368,31 +8929,26 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= num_entries; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.constructor_type);
                 size += IsoReaderWriter.WriteUInt8(stream, this.flags);
 
                 if (constructor_type == 0)
                 {
 
-
                 }
 
                 else if (constructor_type == 2)
                 {
-
 
                 }
 
                 else if (constructor_type == 3)
                 {
 
-
                 }
 
                 else if (constructor_type == 6)
                 {
-
 
                 }
             }
@@ -9405,26 +8961,22 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "svmC"; } }
 
-        public int i { get; set; } //  local variable, not a field
-
         public byte sample_statement_type { get; set; }
 
-
         public byte default_statement_type { get; set; }
-
         public byte default_statement_length { get; set; }
-
         public byte entry_count { get; set; }
 
         public byte statement_type { get; set; } //  from the user extension ranges
         public string statement_namespace { get; set; }
+
         public SVCMetadataSampleConfigBox()
         { }
 
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.i = IsoReaderWriter.ReadInt32(stream);
+
             this.sample_statement_type = IsoReaderWriter.ReadUInt8(stream);
 
             this.default_statement_type = IsoReaderWriter.ReadUInt8(stream);
@@ -9433,7 +8985,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 this.statement_type = IsoReaderWriter.ReadUInt8(stream);
                 this.statement_namespace = IsoReaderWriter.ReadString(stream);
             }
@@ -9443,7 +8994,7 @@ namespace BoxGenerator2
         {
             ulong size = 0;
             size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.i);
+
             size += IsoReaderWriter.WriteUInt8(stream, this.sample_statement_type);
 
             size += IsoReaderWriter.WriteUInt8(stream, this.default_statement_type);
@@ -9452,7 +9003,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.statement_type);
                 size += IsoReaderWriter.WriteString(stream, this.statement_namespace);
             }
@@ -9464,8 +9014,8 @@ namespace BoxGenerator2
     public class EVCSliceComponentTrackConfigurationBox : Box
     {
         public override string FourCC { get { return "evsC"; } }
-
         public EVCSliceComponentTrackConfigurationRecord config { get; set; }
+
         public EVCSliceComponentTrackConfigurationBox()
         { }
 
@@ -9488,8 +9038,8 @@ namespace BoxGenerator2
     public class WebVTTConfigurationBox : Box
     {
         public override string FourCC { get { return "vttC"; } }
-
         public string config { get; set; }
+
         public WebVTTConfigurationBox()
         { }
 
@@ -9512,8 +9062,8 @@ namespace BoxGenerator2
     public class WebVTTSourceLabelBox : Box
     {
         public override string FourCC { get { return "vlab"; } }
-
         public string source_label { get; set; }
+
         public WebVTTSourceLabelBox()
         { }
 
@@ -9536,10 +9086,9 @@ namespace BoxGenerator2
     public class WVTTSampleEntry : PlainTextSampleEntry
     {
         public override string FourCC { get { return "wvtt"; } }
-
         public WebVTTConfigurationBox config { get; set; }
-
         public WebVTTSourceLabelBox label { get; set; } //  recommended
+
 
         public WVTTSampleEntry()
         { }
@@ -9567,8 +9116,8 @@ namespace BoxGenerator2
     public class AuxiliaryTypeInfoBox : FullBox
     {
         public override string FourCC { get { return "auxi"; } }
-
         public string aux_track_type { get; set; }
+
         public AuxiliaryTypeInfoBox()
         { }
 
@@ -9591,14 +9140,11 @@ namespace BoxGenerator2
     public class CodingConstraintsBox : FullBox
     {
         public override string FourCC { get { return "ccst"; } }
-
         public byte all_ref_pics_intra { get; set; }
-
         public byte intra_pred_used { get; set; }
-
         public byte max_ref_per_pic { get; set; }
-
         public uint reserved { get; set; }
+
         public CodingConstraintsBox()
         { }
 
@@ -9627,15 +9173,16 @@ namespace BoxGenerator2
     public class MD5IntegrityBox : FullBox
     {
         public override string FourCC { get { return "md5i"; } }
-
         public byte[] input_MD5 { get; set; }
-
         public uint input_4cc { get; set; }
 
         public uint grouping_type { get; set; }
+
         public uint grouping_type_parameter { get; set; }
         public uint num_entries { get; set; }
+
         public uint[] group_description_index { get; set; }
+
         public MD5IntegrityBox()
         { }
 
@@ -9645,21 +9192,18 @@ namespace BoxGenerator2
             this.input_MD5 = IsoReaderWriter.ReadBytes(stream, 16);
             this.input_4cc = IsoReaderWriter.ReadUInt32(stream);
 
-            if (input_4cc == 'sgpd')
+            if (input_4cc == "sgpd")
             {
-
                 this.grouping_type = IsoReaderWriter.ReadUInt32(stream);
 
                 if (flags & 1)
                 {
-
                     this.grouping_type_parameter = IsoReaderWriter.ReadUInt32(stream);
                 }
                 this.num_entries = IsoReaderWriter.ReadUInt32(stream);
 
                 for (int i = 0; i < num_entries; i++)
                 {
-
                     this.group_description_index = IsoReaderWriter.ReadUInt32(stream);
                 }
             }
@@ -9672,21 +9216,18 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBytes(stream, 16, this.input_MD5);
             size += IsoReaderWriter.WriteUInt32(stream, this.input_4cc);
 
-            if (input_4cc == 'sgpd')
+            if (input_4cc == "sgpd")
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
 
                 if (flags & 1)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
                 }
                 size += IsoReaderWriter.WriteUInt32(stream, this.num_entries);
 
                 for (int i = 0; i < num_entries; i++)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.group_description_index);
                 }
             }
@@ -9698,30 +9239,20 @@ namespace BoxGenerator2
     public class AudioSampleEntry : SampleEntry
     {
         public override string FourCC { get { return "enca"; } }
-
         public uint[] reserved { get; set; } = 0;
-
         public ushort channelcount { get; set; }
-
         public ushort samplesize { get; set; } = 16;
-
         public ushort pre_defined { get; set; } = 0;
-
         public ushort reserved { get; set; } = 0;
-
-        public uint samplerate { get; set; } = { default samplerate of media }<<16; //  optional boxes follow
-
+        public uint samplerate { get; set; } = 0;// = {if track_is_audio 0x0100 else 0}; //  optional boxes follow
 
 
-	public DownMixInstructions[] DownMixInstructions() { get; set; }
+        public DownMixInstructions[] DownMixInstructions { get; set; }
+        public DRCCoefficientsBasic[] DRCCoefficientsBasic { get; set; }
+        public DRCInstructionsBasic[] DRCInstructionsBasic { get; set; }
+        public DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC { get; set; }
+        public DRCInstructionsUniDRC[] DRCInstructionsUniDRC { get; set; } //  we permit only one DRC Extension box:
 
-        public DRCCoefficientsBasic[] DRCCoefficientsBasic() { get; set; }
-
-        public DRCInstructionsBasic[] DRCInstructionsBasic() { get; set; }
-
-        public DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC() { get; set; }
-
-        public DRCInstructionsUniDRC[] DRCInstructionsUniDRC() { get; set; } //  we permit only one DRC Extension box:
 
 
 
@@ -9739,11 +9270,11 @@ namespace BoxGenerator2
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
 
 
-            this.DownMixInstructions() = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic() = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsBasic() = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsUniDRC() = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsUniDRC() = IsoReaderWriter.ReadClass(stream);
+            this.DownMixInstructions = IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsBasic = IsoReaderWriter.ReadClass(stream);
+            this.DRCInstructionsBasic = IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsUniDRC = IsoReaderWriter.ReadClass(stream);
+            this.DRCInstructionsUniDRC = IsoReaderWriter.ReadClass(stream);
 
 
 
@@ -9761,11 +9292,11 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
 
 
-            size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC());
+            size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC);
 
 
 
@@ -9777,34 +9308,23 @@ namespace BoxGenerator2
     public class AudioSampleEntryV1 : SampleEntry
     {
         public override string FourCC { get { return "enca"; } }
-
         public ushort entry_version { get; set; } //  shall be 1, 
 
-
         public ushort[] reserved { get; set; } = 0;
-
         public ushort channelcount { get; set; } //  shall be correct
-
         public ushort samplesize { get; set; } = 16;
-
         public ushort pre_defined { get; set; } = 0;
-
         public ushort reserved { get; set; } = 0;
-
         public uint samplerate { get; set; } = 1 << 16; //  optional boxes follow
 
 
 
+        public DownMixInstructions[] DownMixInstructions { get; set; }
+        public DRCCoefficientsBasic[] DRCCoefficientsBasic { get; set; }
+        public DRCInstructionsBasic[] DRCInstructionsBasic { get; set; }
+        public DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC { get; set; }
+        public DRCInstructionsUniDRC[] DRCInstructionsUniDRC { get; set; } //  we permit only one DRC Extension box:
 
-        public DownMixInstructions[] DownMixInstructions() { get; set; }
-
-        public DRCCoefficientsBasic[] DRCCoefficientsBasic() { get; set; }
-
-        public DRCInstructionsBasic[] DRCInstructionsBasic() { get; set; }
-
-        public DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC() { get; set; }
-
-        public DRCInstructionsUniDRC[] DRCInstructionsUniDRC() { get; set; } //  we permit only one DRC Extension box:
 
 
         public AudioSampleEntryV1()
@@ -9824,11 +9344,11 @@ namespace BoxGenerator2
 
 
 
-            this.DownMixInstructions() = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic() = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsBasic() = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsUniDRC() = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsUniDRC() = IsoReaderWriter.ReadClass(stream);
+            this.DownMixInstructions = IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsBasic = IsoReaderWriter.ReadClass(stream);
+            this.DRCInstructionsBasic = IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsUniDRC = IsoReaderWriter.ReadClass(stream);
+            this.DRCInstructionsUniDRC = IsoReaderWriter.ReadClass(stream);
 
 
         }
@@ -9848,11 +9368,11 @@ namespace BoxGenerator2
 
 
 
-            size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC());
+            size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC);
 
 
             return size;
@@ -9863,34 +9383,23 @@ namespace BoxGenerator2
     public class AudioSampleEntryV11 : SampleEntry
     {
         public override string FourCC { get { return "enca"; } }
-
         public ushort entry_version { get; set; } //  shall be 1, 
 
-
         public ushort[] reserved { get; set; } = 0;
-
         public ushort channelcount { get; set; } //  shall be correct
-
         public ushort samplesize { get; set; } = 16;
-
         public ushort pre_defined { get; set; } = 0;
-
         public ushort reserved { get; set; } = 0;
-
         public uint samplerate { get; set; } = 1 << 16; //  optional boxes follow
 
 
 
+        public DownMixInstructions[] DownMixInstructions { get; set; }
+        public DRCCoefficientsBasic[] DRCCoefficientsBasic { get; set; }
+        public DRCInstructionsBasic[] DRCInstructionsBasic { get; set; }
+        public DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC { get; set; }
+        public DRCInstructionsUniDRC[] DRCInstructionsUniDRC { get; set; } //  we permit only one DRC Extension box:
 
-        public DownMixInstructions[] DownMixInstructions() { get; set; }
-
-        public DRCCoefficientsBasic[] DRCCoefficientsBasic() { get; set; }
-
-        public DRCInstructionsBasic[] DRCInstructionsBasic() { get; set; }
-
-        public DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC() { get; set; }
-
-        public DRCInstructionsUniDRC[] DRCInstructionsUniDRC() { get; set; } //  we permit only one DRC Extension box:
 
 
         public AudioSampleEntryV11()
@@ -9910,11 +9419,11 @@ namespace BoxGenerator2
 
 
 
-            this.DownMixInstructions() = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic() = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsBasic() = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsUniDRC() = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsUniDRC() = IsoReaderWriter.ReadClass(stream);
+            this.DownMixInstructions = IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsBasic = IsoReaderWriter.ReadClass(stream);
+            this.DRCInstructionsBasic = IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsUniDRC = IsoReaderWriter.ReadClass(stream);
+            this.DRCInstructionsUniDRC = IsoReaderWriter.ReadClass(stream);
 
 
         }
@@ -9934,11 +9443,11 @@ namespace BoxGenerator2
 
 
 
-            size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC());
+            size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC);
 
 
             return size;
@@ -9949,6 +9458,7 @@ namespace BoxGenerator2
     public class FontSampleEntry : SampleEntry
     {
         public override string FourCC { get { return "encf"; } }
+
 
         public FontSampleEntry()
         { }
@@ -9972,6 +9482,7 @@ namespace BoxGenerator2
     public class MetaDataSampleEntry : SampleEntry
     {
         public override string FourCC { get { return "encm"; } }
+
         public MetaDataSampleEntry()
         { }
 
@@ -9992,43 +9503,39 @@ namespace BoxGenerator2
     public class XMLMetaDataSampleEntry : MetaDataSampleEntry
     {
         public override string FourCC { get { return "metx"; } }
-
         public string content_encoding { get; set; } //  optional
+        public string ns { get; set; }
+        public string schema_location { get; set; } //  optional
 
-        public string namespace { get; set; }
+        public XMLMetaDataSampleEntry()
+        { }
 
-    public string schema_location { get; set; } //  optional
-    public XMLMetaDataSampleEntry()
-    { }
+        public async override Task ReadAsync(Stream stream)
+        {
+            await base.ReadAsync(stream);
+            this.content_encoding = IsoReaderWriter.ReadString(stream);
+            this.ns = IsoReaderWriter.ReadString(stream);
+            this.schema_location = IsoReaderWriter.ReadString(stream);
+        }
 
-    public async override Task ReadAsync(Stream stream)
-    {
-        await base.ReadAsync(stream);
-        this.content_encoding = IsoReaderWriter.ReadString(stream);
-        this.namespace = IsoReaderWriter.ReadString(stream);
-
-        this.schema_location = IsoReaderWriter.ReadString(stream);
-    }
-
-    public async override Task<ulong> WriteAsync(Stream stream)
-    {
-        ulong size = 0;
-        size += await base.WriteAsync(stream);
-        size += IsoReaderWriter.WriteString(stream, this.content_encoding);
-        size += IsoReaderWriter.WriteString(stream, this.namespace);
-		size += IsoReaderWriter.WriteString(stream, this.schema_location);
-		return size;
-    }
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong size = 0;
+            size += await base.WriteAsync(stream);
+            size += IsoReaderWriter.WriteString(stream, this.content_encoding);
+            size += IsoReaderWriter.WriteString(stream, this.ns);
+            size += IsoReaderWriter.WriteString(stream, this.schema_location);
+            return size;
+        }
     }
 
 
     public class TextMetaDataSampleEntry : MetaDataSampleEntry
     {
         public override string FourCC { get { return "mett"; } }
-
         public string content_encoding { get; set; } //  optional
-
         public string mime_format { get; set; }
+
 
         public TextMetaDataSampleEntry()
         { }
@@ -10056,10 +9563,9 @@ namespace BoxGenerator2
     public class URIMetaSampleEntry : MetaDataSampleEntry
     {
         public override string FourCC { get { return "urim"; } }
-
-        public URIbox the_label { get; set; }
-
+        public URIBox the_label { get; set; }
         public URIInitBox init { get; set; } //  optional
+
         public URIMetaSampleEntry()
         { }
 
@@ -10086,6 +9592,7 @@ namespace BoxGenerator2
         public override string FourCC { get { return "mebx"; } }
 
 
+
         public BoxedMetadataSampleEntry()
         { }
 
@@ -10110,14 +9617,11 @@ namespace BoxGenerator2
     public class FDHintSampleEntry : HintSampleEntry
     {
         public override string FourCC { get { return "fdp "; } }
-
         public ushort hinttrackversion { get; set; } = 1;
-
         public ushort highestcompatibleversion { get; set; } = 1;
-
         public ushort partition_entry_ID { get; set; }
-
         public ushort FEC_overhead { get; set; }
+
         public FDHintSampleEntry()
         { }
 
@@ -10147,8 +9651,8 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "icpv"; } }
 
-
         public AVCConfigurationBox config { get; set; }
+
         public IncompleteAVCSampleEntry()
         { }
 
@@ -10173,8 +9677,8 @@ namespace BoxGenerator2
     public class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEntry
     {
         public override string FourCC { get { return "pm2t"; } }
-
         public ProtectionSchemeInfoBox SchemeInformation { get; set; }
+
         public ProtectedMPEG2TransportStreamSampleEntry()
         { }
 
@@ -10197,8 +9701,8 @@ namespace BoxGenerator2
     public class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
     {
         public override string FourCC { get { return "prtp"; } }
-
         public ProtectionSchemeInfoBox SchemeInformation { get; set; }
+
         public ProtectedRtpReceptionHintSampleEntry()
         { }
 
@@ -10221,6 +9725,7 @@ namespace BoxGenerator2
     public class MPEG2TSReceptionSampleEntry : MPEG2TSSampleEntry
     {
         public override string FourCC { get { return "rm2t"; } }
+
         public MPEG2TSReceptionSampleEntry()
         { }
 
@@ -10241,12 +9746,10 @@ namespace BoxGenerator2
     public class ReceivedRtpHintSampleEntry : HintSampleEntry
     {
         public override string FourCC { get { return "rrtp"; } }
-
         public ushort hinttrackversion { get; set; } = 1;
-
         public ushort highestcompatibleversion { get; set; } = 1;
-
         public uint maxpacketsize { get; set; }
+
         public ReceivedRtpHintSampleEntry()
         { }
 
@@ -10273,12 +9776,10 @@ namespace BoxGenerator2
     public class ReceivedSrtpHintSampleEntry : HintSampleEntry
     {
         public override string FourCC { get { return "rsrp"; } }
-
         public ushort hinttrackversion { get; set; } = 1;
-
         public ushort highestcompatibleversion { get; set; } = 1;
-
         public uint maxpacketsize { get; set; }
+
         public ReceivedSrtpHintSampleEntry()
         { }
 
@@ -10305,6 +9806,7 @@ namespace BoxGenerator2
     public class HintSampleEntry : SampleEntry
     {
         public override string FourCC { get { return "rtcp"; } }
+
         public HintSampleEntry()
         { }
 
@@ -10325,6 +9827,7 @@ namespace BoxGenerator2
     public class moviehintinformation1 : Box
     {
         public override string FourCC { get { return "rtp "; } }
+
         public moviehintinformation1()
         { }
 
@@ -10345,10 +9848,9 @@ namespace BoxGenerator2
     public class rtpmoviehintinformation1 : Box
     {
         public override string FourCC { get { return "rtp "; } }
-
-        public uint descriptionformat { get; set; } = 'sdp ';
-
+        public uint descriptionformat { get; set; } = "sdp ";
         public char[] sdptext { get; set; }
+
         public rtpmoviehintinformation1()
         { }
 
@@ -10373,10 +9875,9 @@ namespace BoxGenerator2
     public class TextSubtitleSampleEntry : SubtitleSampleEntry
     {
         public override string FourCC { get { return "sbtt"; } }
-
         public string content_encoding { get; set; } //  optional
-
         public string mime_format { get; set; }
+
 
         public TextSubtitleSampleEntry()
         { }
@@ -10404,6 +9905,7 @@ namespace BoxGenerator2
     public class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
     {
         public override string FourCC { get { return "sm2t"; } }
+
         public MPEG2TSServerSampleEntry()
         { }
 
@@ -10424,12 +9926,10 @@ namespace BoxGenerator2
     public class SrtpHintSampleEntry : HintSampleEntry
     {
         public override string FourCC { get { return "srtp"; } }
-
         public ushort hinttrackversion { get; set; } = 1;
-
         public ushort highestcompatibleversion { get; set; } = 1;
-
         public uint maxpacketsize { get; set; }
+
         public SrtpHintSampleEntry()
         { }
 
@@ -10456,43 +9956,39 @@ namespace BoxGenerator2
     public class XMLSubtitleSampleEntry : SubtitleSampleEntry
     {
         public override string FourCC { get { return "stpp"; } }
+        public string ns { get; set; }
+        public string schema_location { get; set; } //  optional
+        public string auxiliary_mime_types { get; set; } //  optional, required if auxiliary resources are present
 
-        public string namespace { get; set; }
+        public XMLSubtitleSampleEntry()
+        { }
 
-    public string schema_location { get; set; } //  optional
+        public async override Task ReadAsync(Stream stream)
+        {
+            await base.ReadAsync(stream);
+            this.ns = IsoReaderWriter.ReadString(stream);
+            this.schema_location = IsoReaderWriter.ReadString(stream);
+            this.auxiliary_mime_types = IsoReaderWriter.ReadString(stream);
+        }
 
-    public string auxiliary_mime_types { get; set; } //  optional, required if auxiliary resources are present
-    public XMLSubtitleSampleEntry()
-    { }
-
-    public async override Task ReadAsync(Stream stream)
-    {
-        await base.ReadAsync(stream);
-        this.namespace = IsoReaderWriter.ReadString(stream);
-
-        this.schema_location = IsoReaderWriter.ReadString(stream);
-		this.auxiliary_mime_types = IsoReaderWriter.ReadString(stream);
-    }
-
-    public async override Task<ulong> WriteAsync(Stream stream)
-    {
-        ulong size = 0;
-        size += await base.WriteAsync(stream);
-        size += IsoReaderWriter.WriteString(stream, this.namespace);
-		size += IsoReaderWriter.WriteString(stream, this.schema_location);
-    size += IsoReaderWriter.WriteString(stream, this.auxiliary_mime_types);
-		return size;
-    }
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong size = 0;
+            size += await base.WriteAsync(stream);
+            size += IsoReaderWriter.WriteString(stream, this.ns);
+            size += IsoReaderWriter.WriteString(stream, this.schema_location);
+            size += IsoReaderWriter.WriteString(stream, this.auxiliary_mime_types);
+            return size;
+        }
     }
 
 
     public class SimpleTextSampleEntry : PlainTextSampleEntry
     {
         public override string FourCC { get { return "stxt"; } }
-
         public string content_encoding { get; set; } //  optional
-
         public string mime_format { get; set; }
+
 
         public SimpleTextSampleEntry()
         { }
@@ -10520,8 +10016,8 @@ namespace BoxGenerator2
     public class HapticSampleEntry : SampleEntry
     {
         public override string FourCC { get { return "encp"; } }
-
         public Box[] otherboxes { get; set; }
+
         public HapticSampleEntry()
         { }
 
@@ -10544,8 +10040,8 @@ namespace BoxGenerator2
     public class VolumetricVisualSampleEntry : SampleEntry
     {
         public override string FourCC { get { return "enc3"; } }
-
         public byte[] compressorname { get; set; } //  other boxes from derived specifications
+
         public VolumetricVisualSampleEntry()
         { }
 
@@ -10568,107 +10064,83 @@ namespace BoxGenerator2
     public class VisualSampleEntry : SampleEntry
     {
         public override string FourCC { get { return "resv"; } }
-
         public ushort pre_defined { get; set; } = 0;
-
         public ushort reserved { get; set; } = 0;
-
-        public uint[] unsigned int (32) { get; set; }
-
-	public ushort width { get; set; }
-
+        public uint[] pre_defined { get; set; } = 0;
+        public ushort width { get; set; }
         public ushort height { get; set; }
-
         public uint horizresolution { get; set; } = 0x00480000; //  72 dpi
-
         public uint vertresolution { get; set; } = 0x00480000; //  72 dpi
-
         public uint reserved { get; set; } = 0;
-
         public ushort frame_count { get; set; } = 1;
+        public byte[] compressorname { get; set; }
+        public ushort depth { get; set; } = 0x0018;
+        public short pre_defined { get; set; } = -1; //  other boxes from derived specifications
+        public CleanApertureBox clap { get; set; } //  optional
+        public PixelAspectRatioBox pasp { get; set; } //  optional
 
+        public VisualSampleEntry()
+        { }
 
-    public byte[] uint (8) { get; set; }
+        public async override Task ReadAsync(Stream stream)
+        {
+            await base.ReadAsync(stream);
+            this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
+            this.reserved = IsoReaderWriter.ReadUInt16(stream);
+            this.pre_defined = IsoReaderWriter.ReadUInt32Array(stream, 3);
+            this.width = IsoReaderWriter.ReadUInt16(stream);
+            this.height = IsoReaderWriter.ReadUInt16(stream);
+            this.horizresolution = IsoReaderWriter.ReadUInt32(stream);
+            this.vertresolution = IsoReaderWriter.ReadUInt32(stream);
+            this.reserved = IsoReaderWriter.ReadUInt32(stream);
+            this.frame_count = IsoReaderWriter.ReadUInt16(stream);
+            this.compressorname = IsoReaderWriter.ReadBytes(stream, 32);
+            this.depth = IsoReaderWriter.ReadUInt16(stream);
+            this.pre_defined = IsoReaderWriter.ReadInt16(stream);
+            this.clap = IsoReaderWriter.ReadBox(stream);
+            this.pasp = IsoReaderWriter.ReadBox(stream);
+        }
 
-    public ushort depth { get; set; } = 0x0018;
-
-    public short pre_defined { get; set; } = -1; //  other boxes from derived specifications
-
-    public CleanApertureBox clap { get; set; } //  optional
-
-    public PixelAspectRatioBox pasp { get; set; } //  optional
-    public VisualSampleEntry()
-    { }
-
-    public async override Task ReadAsync(Stream stream)
-    {
-        await base.ReadAsync(stream);
-        this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
-        this.reserved = IsoReaderWriter.ReadUInt16(stream);
-        this.unsigned int(32) = IsoReaderWriter.ReadUInt32(stream);
-        this.width = IsoReaderWriter.ReadUInt16(stream);
-        this.height = IsoReaderWriter.ReadUInt16(stream);
-        this.horizresolution = IsoReaderWriter.ReadUInt32(stream);
-        this.vertresolution = IsoReaderWriter.ReadUInt32(stream);
-        this.reserved = IsoReaderWriter.ReadUInt32(stream);
-        this.frame_count = IsoReaderWriter.ReadUInt16(stream);
-        this.uint(8) = IsoReaderWriter.ReadUInt8(stream);
-        this.depth = IsoReaderWriter.ReadUInt16(stream);
-        this.pre_defined = IsoReaderWriter.ReadInt16(stream);
-        this.clap = IsoReaderWriter.ReadBox(stream);
-        this.pasp = IsoReaderWriter.ReadBox(stream);
-    }
-
-    public async override Task<ulong> WriteAsync(Stream stream)
-    {
-        ulong size = 0;
-        size += await base.WriteAsync(stream);
-        size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-        size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
-        size += IsoReaderWriter.WriteUInt32(stream, this.unsigned int(32));
-        size += IsoReaderWriter.WriteUInt16(stream, this.width);
-        size += IsoReaderWriter.WriteUInt16(stream, this.height);
-        size += IsoReaderWriter.WriteUInt32(stream, this.horizresolution);
-        size += IsoReaderWriter.WriteUInt32(stream, this.vertresolution);
-        size += IsoReaderWriter.WriteUInt32(stream, this.reserved);
-        size += IsoReaderWriter.WriteUInt16(stream, this.frame_count);
-        size += IsoReaderWriter.WriteUInt8(stream, this.uint(8));
-        size += IsoReaderWriter.WriteUInt16(stream, this.depth);
-        size += IsoReaderWriter.WriteInt16(stream, this.pre_defined);
-        size += IsoReaderWriter.WriteBox(stream, this.clap);
-        size += IsoReaderWriter.WriteBox(stream, this.pasp);
-        return size;
-    }
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong size = 0;
+            size += await base.WriteAsync(stream);
+            size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
+            size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
+            size += IsoReaderWriter.WriteUInt32Array(stream, 3, this.pre_defined);
+            size += IsoReaderWriter.WriteUInt16(stream, this.width);
+            size += IsoReaderWriter.WriteUInt16(stream, this.height);
+            size += IsoReaderWriter.WriteUInt32(stream, this.horizresolution);
+            size += IsoReaderWriter.WriteUInt32(stream, this.vertresolution);
+            size += IsoReaderWriter.WriteUInt32(stream, this.reserved);
+            size += IsoReaderWriter.WriteUInt16(stream, this.frame_count);
+            size += IsoReaderWriter.WriteBytes(stream, 32, this.compressorname);
+            size += IsoReaderWriter.WriteUInt16(stream, this.depth);
+            size += IsoReaderWriter.WriteInt16(stream, this.pre_defined);
+            size += IsoReaderWriter.WriteBox(stream, this.clap);
+            size += IsoReaderWriter.WriteBox(stream, this.pasp);
+            return size;
+        }
     }
 
 
     public class AudioSampleEntry1 : SampleEntry
     {
         public override string FourCC { get { return "resa"; } }
-
         public uint[] reserved { get; set; } = 0;
-
         public ushort channelcount { get; set; }
-
         public ushort samplesize { get; set; } = 16;
-
         public ushort pre_defined { get; set; } = 0;
-
         public ushort reserved { get; set; } = 0;
-
-        public uint samplerate { get; set; } = { default samplerate of media }<<16; //  optional boxes follow
-
+        public uint samplerate { get; set; } = 0;// = {if track_is_audio 0x0100 else 0}; //  optional boxes follow
 
 
-	public DownMixInstructions[] DownMixInstructions() { get; set; }
+        public DownMixInstructions[] DownMixInstructions { get; set; }
+        public DRCCoefficientsBasic[] DRCCoefficientsBasic { get; set; }
+        public DRCInstructionsBasic[] DRCInstructionsBasic { get; set; }
+        public DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC { get; set; }
+        public DRCInstructionsUniDRC[] DRCInstructionsUniDRC { get; set; } //  we permit only one DRC Extension box:
 
-        public DRCCoefficientsBasic[] DRCCoefficientsBasic() { get; set; }
-
-        public DRCInstructionsBasic[] DRCInstructionsBasic() { get; set; }
-
-        public DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC() { get; set; }
-
-        public DRCInstructionsUniDRC[] DRCInstructionsUniDRC() { get; set; } //  we permit only one DRC Extension box:
 
 
 
@@ -10686,11 +10158,11 @@ namespace BoxGenerator2
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
 
 
-            this.DownMixInstructions() = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic() = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsBasic() = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsUniDRC() = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsUniDRC() = IsoReaderWriter.ReadClass(stream);
+            this.DownMixInstructions = IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsBasic = IsoReaderWriter.ReadClass(stream);
+            this.DRCInstructionsBasic = IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsUniDRC = IsoReaderWriter.ReadClass(stream);
+            this.DRCInstructionsUniDRC = IsoReaderWriter.ReadClass(stream);
 
 
 
@@ -10708,11 +10180,11 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
 
 
-            size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC());
+            size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC);
 
 
 
@@ -10724,34 +10196,23 @@ namespace BoxGenerator2
     public class AudioSampleEntryV12 : SampleEntry
     {
         public override string FourCC { get { return "resa"; } }
-
         public ushort entry_version { get; set; } //  shall be 1, 
 
-
         public ushort[] reserved { get; set; } = 0;
-
         public ushort channelcount { get; set; } //  shall be correct
-
         public ushort samplesize { get; set; } = 16;
-
         public ushort pre_defined { get; set; } = 0;
-
         public ushort reserved { get; set; } = 0;
-
         public uint samplerate { get; set; } = 1 << 16; //  optional boxes follow
 
 
 
+        public DownMixInstructions[] DownMixInstructions { get; set; }
+        public DRCCoefficientsBasic[] DRCCoefficientsBasic { get; set; }
+        public DRCInstructionsBasic[] DRCInstructionsBasic { get; set; }
+        public DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC { get; set; }
+        public DRCInstructionsUniDRC[] DRCInstructionsUniDRC { get; set; } //  we permit only one DRC Extension box:
 
-        public DownMixInstructions[] DownMixInstructions() { get; set; }
-
-        public DRCCoefficientsBasic[] DRCCoefficientsBasic() { get; set; }
-
-        public DRCInstructionsBasic[] DRCInstructionsBasic() { get; set; }
-
-        public DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC() { get; set; }
-
-        public DRCInstructionsUniDRC[] DRCInstructionsUniDRC() { get; set; } //  we permit only one DRC Extension box:
 
 
         public AudioSampleEntryV12()
@@ -10771,11 +10232,11 @@ namespace BoxGenerator2
 
 
 
-            this.DownMixInstructions() = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic() = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsBasic() = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsUniDRC() = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsUniDRC() = IsoReaderWriter.ReadClass(stream);
+            this.DownMixInstructions = IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsBasic = IsoReaderWriter.ReadClass(stream);
+            this.DRCInstructionsBasic = IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsUniDRC = IsoReaderWriter.ReadClass(stream);
+            this.DRCInstructionsUniDRC = IsoReaderWriter.ReadClass(stream);
 
 
         }
@@ -10795,11 +10256,11 @@ namespace BoxGenerator2
 
 
 
-            size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC());
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC());
+            size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC);
+            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC);
 
 
             return size;
@@ -10810,6 +10271,7 @@ namespace BoxGenerator2
     public class MetaDataSampleEntry1 : SampleEntry
     {
         public override string FourCC { get { return "resm"; } }
+
         public MetaDataSampleEntry1()
         { }
 
@@ -10830,6 +10292,7 @@ namespace BoxGenerator2
     public class FontSampleEntry1 : SampleEntry
     {
         public override string FourCC { get { return "resf"; } }
+
 
         public FontSampleEntry1()
         { }
@@ -10853,8 +10316,8 @@ namespace BoxGenerator2
     public class HapticSampleEntry1 : SampleEntry
     {
         public override string FourCC { get { return "resp"; } }
-
         public Box[] otherboxes { get; set; }
+
         public HapticSampleEntry1()
         { }
 
@@ -10877,8 +10340,8 @@ namespace BoxGenerator2
     public class VolumetricVisualSampleEntry1 : SampleEntry
     {
         public override string FourCC { get { return "res3"; } }
-
         public byte[] compressorname { get; set; } //  other boxes from derived specifications
+
         public VolumetricVisualSampleEntry1()
         { }
 
@@ -10901,12 +10364,10 @@ namespace BoxGenerator2
     public class RtpHintSampleEntry : HintSampleEntry
     {
         public override string FourCC { get { return "rtp "; } }
-
         public ushort hinttrackversion { get; set; } = 1;
-
         public ushort highestcompatibleversion { get; set; } = 1;
-
         public uint maxpacketsize { get; set; }
+
         public RtpHintSampleEntry()
         { }
 
@@ -10933,12 +10394,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox : FullBox
     {
         public override string FourCC { get { return "altr"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox()
         { }
 
@@ -10950,7 +10410,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -10964,7 +10423,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -10975,6 +10433,7 @@ namespace BoxGenerator2
     public class BrandProperty : GeneralTypeBox
     {
         public override string FourCC { get { return "brnd"; } }
+
         public BrandProperty()
         { }
 
@@ -10995,12 +10454,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBox : Box
     {
         public override string FourCC { get { return "fdel"; } }
-
         public ushort from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public ushort to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBox()
         { }
 
@@ -11012,7 +10470,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -11026,7 +10483,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
             return size;
@@ -11037,12 +10493,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBoxLarge : Box
     {
         public override string FourCC { get { return "fdel"; } }
-
         public uint from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public uint to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBoxLarge()
         { }
 
@@ -11054,7 +10509,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -11068,7 +10522,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
             return size;
@@ -11079,12 +10532,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBox1 : Box
     {
         public override string FourCC { get { return "iloc"; } }
-
         public ushort from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public ushort to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBox1()
         { }
 
@@ -11096,7 +10548,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -11110,7 +10561,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
             return size;
@@ -11121,12 +10571,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBoxLarge1 : Box
     {
         public override string FourCC { get { return "iloc"; } }
-
         public uint from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public uint to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBoxLarge1()
         { }
 
@@ -11138,7 +10587,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -11152,7 +10600,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
             return size;
@@ -11163,16 +10610,17 @@ namespace BoxGenerator2
     public class AlternativeStartupEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "alst"; } }
-
         public ushort roll_count { get; set; }
-
         public ushort first_output_sample { get; set; }
 
         public uint[] sample_offset { get; set; }
 
 
+
         public ushort[] num_output_samples { get; set; }
         public ushort[] num_total_samples { get; set; }
+
+
         public AlternativeStartupEntry()
         { }
 
@@ -11184,14 +10632,12 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= roll_count; i++)
             {
-
                 this.sample_offset = IsoReaderWriter.ReadUInt32(stream);
             }
             j = 1;
 
             do
             {
-
 
                 this.num_output_samples = IsoReaderWriter.ReadUInt16(stream);
                 this.num_total_samples = IsoReaderWriter.ReadUInt16(stream);
@@ -11209,14 +10655,12 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= roll_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.sample_offset);
             }
             j = 1;
 
             do
             {
-
 
                 size += IsoReaderWriter.WriteUInt16(stream, this.num_output_samples);
                 size += IsoReaderWriter.WriteUInt16(stream, this.num_total_samples);
@@ -11231,10 +10675,9 @@ namespace BoxGenerator2
     public class VisualDRAPEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "drap"; } }
-
         public byte DRAP_type { get; set; }
-
         public uint reserved { get; set; } = 0;
+
         public VisualDRAPEntry()
         { }
 
@@ -11259,8 +10702,8 @@ namespace BoxGenerator2
     public class AudioPreRollEntry : AudioSampleGroupEntry
     {
         public override string FourCC { get { return "prol"; } }
-
         public short roll_distance { get; set; }
+
         public AudioPreRollEntry()
         { }
 
@@ -11283,10 +10726,9 @@ namespace BoxGenerator2
     public class VisualRandomAccessEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "rap "; } }
-
         public byte num_leading_samples_known { get; set; }
-
         public byte num_leading_samples { get; set; }
+
         public VisualRandomAccessEntry()
         { }
 
@@ -11311,19 +10753,17 @@ namespace BoxGenerator2
     public class RateShareEntry : SampleGroupDescriptionEntry
     {
         public override string FourCC { get { return "rash"; } }
-
         public ushort operation_point_count { get; set; }
 
         public ushort target_rate_share { get; set; }
 
+
         public uint available_bitrate { get; set; }
         public ushort target_rate_share { get; set; }
-
         public uint maximum_bitrate { get; set; }
-
         public uint minimum_bitrate { get; set; }
-
         public byte discard_priority { get; set; }
+
         public RateShareEntry()
         { }
 
@@ -11334,17 +10774,14 @@ namespace BoxGenerator2
 
             if (operation_point_count == 1)
             {
-
                 this.target_rate_share = IsoReaderWriter.ReadUInt16(stream);
             }
 
             else
             {
 
-
                 for (int i = 0; i < operation_point_count; i++)
                 {
-
                     this.available_bitrate = IsoReaderWriter.ReadUInt32(stream);
                     this.target_rate_share = IsoReaderWriter.ReadUInt16(stream);
                 }
@@ -11362,17 +10799,14 @@ namespace BoxGenerator2
 
             if (operation_point_count == 1)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.target_rate_share);
             }
 
             else
             {
 
-
                 for (int i = 0; i < operation_point_count; i++)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.available_bitrate);
                     size += IsoReaderWriter.WriteUInt16(stream, this.target_rate_share);
                 }
@@ -11388,8 +10822,8 @@ namespace BoxGenerator2
     public class AudioRollRecoveryEntry : AudioSampleGroupEntry
     {
         public override string FourCC { get { return "roll"; } }
-
         public short roll_distance { get; set; }
+
         public AudioRollRecoveryEntry()
         { }
 
@@ -11412,12 +10846,10 @@ namespace BoxGenerator2
     public class SAPEntry : SampleGroupDescriptionEntry
     {
         public override string FourCC { get { return "sap "; } }
-
         public byte dependent_flag { get; set; }
-
         public byte reserved { get; set; }
-
         public byte SAP_type { get; set; }
+
         public SAPEntry()
         { }
 
@@ -11444,12 +10876,11 @@ namespace BoxGenerator2
     public class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
     {
         public override string FourCC { get { return "stmi"; } }
-
         public uint meta_box_handler_type { get; set; }
-
         public uint num_items { get; set; }
 
         public uint[] item_id { get; set; }
+
         public SampleToMetadataItemEntry()
         { }
 
@@ -11461,7 +10892,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_items; i++)
             {
-
                 this.item_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -11475,7 +10905,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_items; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.item_id);
             }
             return size;
@@ -11486,10 +10915,9 @@ namespace BoxGenerator2
     public class TemporalLevelEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "tele"; } }
-
         public byte level_independently_decodable { get; set; }
-
         public byte reserved { get; set; } = 0;
+
         public TemporalLevelEntry()
         { }
 
@@ -11514,10 +10942,9 @@ namespace BoxGenerator2
     public class PixelAspectRatioEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "pasr"; } }
-
         public uint hSpacing { get; set; }
-
         public uint vSpacing { get; set; }
+
         public PixelAspectRatioEntry()
         { }
 
@@ -11542,22 +10969,15 @@ namespace BoxGenerator2
     public class CleanApertureEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "casg"; } }
-
         public uint cleanApertureWidthN { get; set; }
-
         public uint cleanApertureWidthD { get; set; }
-
         public uint cleanApertureHeightN { get; set; }
-
         public uint cleanApertureHeightD { get; set; }
-
         public uint horizOffN { get; set; }
-
         public uint horizOffD { get; set; }
-
         public uint vertOffN { get; set; }
-
         public uint vertOffD { get; set; }
+
         public CleanApertureEntry()
         { }
 
@@ -11594,8 +11014,8 @@ namespace BoxGenerator2
     public class TrackGroupTypeBox : FullBox
     {
         public override string FourCC { get { return "msrc"; } }
-
         public uint track_group_id { get; set; } //  the remaining data may be specified 
+
 
         public TrackGroupTypeBox()
         { }
@@ -11621,10 +11041,9 @@ namespace BoxGenerator2
     public class StereoVideoGroupBox : TrackGroupTypeBox
     {
         public override string FourCC { get { return "ster"; } }
-
         public byte left_view_flag { get; set; }
-
         public uint reserved { get; set; }
+
         public StereoVideoGroupBox()
         { }
 
@@ -11649,8 +11068,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox : Box
     {
         public override string FourCC { get { return "auxl"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox()
         { }
 
@@ -11673,8 +11092,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox1 : Box
     {
         public override string FourCC { get { return "font"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox1()
         { }
 
@@ -11697,8 +11116,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox2 : Box
     {
         public override string FourCC { get { return "hind"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox2()
         { }
 
@@ -11721,8 +11140,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox3 : Box
     {
         public override string FourCC { get { return "hint"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox3()
         { }
 
@@ -11745,8 +11164,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox4 : Box
     {
         public override string FourCC { get { return "subt"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox4()
         { }
 
@@ -11769,8 +11188,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox5 : Box
     {
         public override string FourCC { get { return "thmb"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox5()
         { }
 
@@ -11793,8 +11212,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox6 : Box
     {
         public override string FourCC { get { return "vdep"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox6()
         { }
 
@@ -11817,8 +11236,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox7 : Box
     {
         public override string FourCC { get { return "vplx"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox7()
         { }
 
@@ -11841,8 +11260,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox8 : Box
     {
         public override string FourCC { get { return "cdsc"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox8()
         { }
 
@@ -11865,8 +11284,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox9 : Box
     {
         public override string FourCC { get { return "adda"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox9()
         { }
 
@@ -11889,8 +11308,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox10 : Box
     {
         public override string FourCC { get { return "adrc"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox10()
         { }
 
@@ -11913,8 +11332,8 @@ namespace BoxGenerator2
     public class HEVCSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "hvc1"; } }
-
         public HEVCConfigurationBox config { get; set; }
+
 
         public HEVCSampleEntry()
         { }
@@ -11940,8 +11359,8 @@ namespace BoxGenerator2
     public class HEVCLHVCSampleEntry : HEVCSampleEntry
     {
         public override string FourCC { get { return "hvc1"; } }
-
         public LHEVCConfigurationBox lhvcconfig { get; set; }
+
         public HEVCLHVCSampleEntry()
         { }
 
@@ -11964,8 +11383,8 @@ namespace BoxGenerator2
     public class HEVCSampleEntry1 : VisualSampleEntry
     {
         public override string FourCC { get { return "hvc2"; } }
-
         public HEVCConfigurationBox config { get; set; }
+
 
         public HEVCSampleEntry1()
         { }
@@ -11991,8 +11410,8 @@ namespace BoxGenerator2
     public class HEVCLHVCSampleEntry1 : HEVCSampleEntry
     {
         public override string FourCC { get { return "hvc2"; } }
-
         public LHEVCConfigurationBox lhvcconfig { get; set; }
+
         public HEVCLHVCSampleEntry1()
         { }
 
@@ -12015,8 +11434,8 @@ namespace BoxGenerator2
     public class HEVCSampleEntry2 : VisualSampleEntry
     {
         public override string FourCC { get { return "hvc3"; } }
-
         public HEVCConfigurationBox config { get; set; }
+
 
         public HEVCSampleEntry2()
         { }
@@ -12042,8 +11461,8 @@ namespace BoxGenerator2
     public class HEVCLHVCSampleEntry2 : HEVCSampleEntry
     {
         public override string FourCC { get { return "hvc3"; } }
-
         public LHEVCConfigurationBox lhvcconfig { get; set; }
+
         public HEVCLHVCSampleEntry2()
         { }
 
@@ -12066,8 +11485,8 @@ namespace BoxGenerator2
     public class LHEVCSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "lhv1"; } }
-
         public LHEVCConfigurationBox lhvcconfig { get; set; }
+
 
         public LHEVCSampleEntry()
         { }
@@ -12093,8 +11512,8 @@ namespace BoxGenerator2
     public class LHEVCSampleEntry1 : VisualSampleEntry
     {
         public override string FourCC { get { return "lhe1"; } }
-
         public LHEVCConfigurationBox lhvcconfig { get; set; }
+
 
         public LHEVCSampleEntry1()
         { }
@@ -12120,8 +11539,8 @@ namespace BoxGenerator2
     public class HEVCSampleEntry3 : VisualSampleEntry
     {
         public override string FourCC { get { return "hev1"; } }
-
         public HEVCConfigurationBox config { get; set; }
+
 
         public HEVCSampleEntry3()
         { }
@@ -12147,8 +11566,8 @@ namespace BoxGenerator2
     public class HEVCLHVCSampleEntry3 : HEVCSampleEntry
     {
         public override string FourCC { get { return "hev1"; } }
-
         public LHEVCConfigurationBox lhvcconfig { get; set; }
+
         public HEVCLHVCSampleEntry3()
         { }
 
@@ -12171,8 +11590,8 @@ namespace BoxGenerator2
     public class HEVCSampleEntry4 : VisualSampleEntry
     {
         public override string FourCC { get { return "hev2"; } }
-
         public HEVCConfigurationBox config { get; set; }
+
 
         public HEVCSampleEntry4()
         { }
@@ -12198,8 +11617,8 @@ namespace BoxGenerator2
     public class HEVCLHVCSampleEntry4 : HEVCSampleEntry
     {
         public override string FourCC { get { return "hev2"; } }
-
         public LHEVCConfigurationBox lhvcconfig { get; set; }
+
         public HEVCLHVCSampleEntry4()
         { }
 
@@ -12222,8 +11641,8 @@ namespace BoxGenerator2
     public class HEVCSampleEntry5 : VisualSampleEntry
     {
         public override string FourCC { get { return "hev3"; } }
-
         public HEVCConfigurationBox config { get; set; }
+
 
         public HEVCSampleEntry5()
         { }
@@ -12249,8 +11668,8 @@ namespace BoxGenerator2
     public class HEVCLHVCSampleEntry5 : HEVCSampleEntry
     {
         public override string FourCC { get { return "hev3"; } }
-
         public LHEVCConfigurationBox lhvcconfig { get; set; }
+
         public HEVCLHVCSampleEntry5()
         { }
 
@@ -12273,8 +11692,8 @@ namespace BoxGenerator2
     public class AVCParameterSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "avcp"; } }
-
         public AVCConfigurationBox config { get; set; }
+
         public AVCParameterSampleEntry()
         { }
 
@@ -12297,8 +11716,8 @@ namespace BoxGenerator2
     public class AVCSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "avc1"; } }
-
         public AVCConfigurationBox config { get; set; }
+
 
         public AVCSampleEntry()
         { }
@@ -12324,8 +11743,8 @@ namespace BoxGenerator2
     public class AVCSampleEntry1 : VisualSampleEntry
     {
         public override string FourCC { get { return "avc3"; } }
-
         public AVCConfigurationBox config { get; set; }
+
 
         public AVCSampleEntry1()
         { }
@@ -12351,24 +11770,16 @@ namespace BoxGenerator2
     public class AVCMVCSampleEntry : AVCSampleEntry
     {
         public override string FourCC { get { return "avc1"; } }
-
         public ViewScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  optional
-
         public MVCConfigurationBox mvcconfig { get; set; } //  optional
-
         public MVCViewPriorityAssignmentBox view_priority_method { get; set; } //  optional
-
         public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
-
         public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
-
         public MVCDConfigurationBox mvcdconfig { get; set; } //  optional
-
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public A3DConfigurationBox a3dconfig { get; set; } //  optional
+
         public AVCMVCSampleEntry()
         { }
 
@@ -12407,24 +11818,16 @@ namespace BoxGenerator2
     public class AVCMVCSampleEntry1 : AVCSampleEntry
     {
         public override string FourCC { get { return "avc3"; } }
-
         public ViewScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  optional
-
         public MVCConfigurationBox mvcconfig { get; set; } //  optional
-
         public MVCViewPriorityAssignmentBox view_priority_method { get; set; } //  optional
-
         public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
-
         public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
-
         public MVCDConfigurationBox mvcdconfig { get; set; } //  optional
-
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public A3DConfigurationBox a3dconfig { get; set; } //  optional
+
         public AVCMVCSampleEntry1()
         { }
 
@@ -12463,8 +11866,8 @@ namespace BoxGenerator2
     public class AVC2SampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "avc2"; } }
-
         public AVCConfigurationBox config { get; set; }
+
 
         public AVC2SampleEntry()
         { }
@@ -12490,8 +11893,8 @@ namespace BoxGenerator2
     public class AVC2SampleEntry1 : VisualSampleEntry
     {
         public override string FourCC { get { return "avc4"; } }
-
         public AVCConfigurationBox config { get; set; }
+
 
         public AVC2SampleEntry1()
         { }
@@ -12517,21 +11920,16 @@ namespace BoxGenerator2
     public class AVC2MVCSampleEntry : AVC2SampleEntry
     {
         public override string FourCC { get { return "avc2"; } }
-
         public ViewScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  optional
-
-        public MVCConfigurationBox mvcconfig { get; set; } //  optional	MVCViewPriorityAssignmentBox	view_priority_method;	// optional
-
+        public MVCConfigurationBox mvcconfig { get; set; } //  optional
+        public MVCViewPriorityAssignmentBox view_priority_method { get; set; } //  optional
         public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } // optional
-        MVCDConfigurationBox mvcdconfig; //  optional
-
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
+        public MVCDConfigurationBox mvcdconfig { get; set; } //  optional
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public A3DConfigurationBox a3dconfig { get; set; } //  optional
+
         public AVC2MVCSampleEntry()
         { }
 
@@ -12541,8 +11939,10 @@ namespace BoxGenerator2
             this.scalability = IsoReaderWriter.ReadBox(stream);
             this.view_identifiers = IsoReaderWriter.ReadBox(stream);
             this.mvcconfig = IsoReaderWriter.ReadBox(stream);
+            this.view_priority_method = IsoReaderWriter.ReadBox(stream);
             this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.a3dconfig = IsoReaderWriter.ReadBox(stream);
         }
@@ -12554,8 +11954,10 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.scalability);
             size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
             size += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
+            size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
             size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
             return size;
@@ -12566,21 +11968,16 @@ namespace BoxGenerator2
     public class AVC2MVCSampleEntry1 : AVC2SampleEntry
     {
         public override string FourCC { get { return "avc4"; } }
-
         public ViewScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  optional
-
-        public MVCConfigurationBox mvcconfig { get; set; } //  optional	MVCViewPriorityAssignmentBox	view_priority_method;	// optional
-
+        public MVCConfigurationBox mvcconfig { get; set; } //  optional
+        public MVCViewPriorityAssignmentBox view_priority_method { get; set; } //  optional
         public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } // optional
-        MVCDConfigurationBox mvcdconfig; //  optional
-
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
+        public MVCDConfigurationBox mvcdconfig { get; set; } //  optional
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public A3DConfigurationBox a3dconfig { get; set; } //  optional
+
         public AVC2MVCSampleEntry1()
         { }
 
@@ -12590,8 +11987,10 @@ namespace BoxGenerator2
             this.scalability = IsoReaderWriter.ReadBox(stream);
             this.view_identifiers = IsoReaderWriter.ReadBox(stream);
             this.mvcconfig = IsoReaderWriter.ReadBox(stream);
+            this.view_priority_method = IsoReaderWriter.ReadBox(stream);
             this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.a3dconfig = IsoReaderWriter.ReadBox(stream);
         }
@@ -12603,8 +12002,10 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.scalability);
             size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
             size += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
+            size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
             size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
             return size;
@@ -12615,25 +12016,17 @@ namespace BoxGenerator2
     public class MVCSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "mvc1"; } }
-
         public MVCConfigurationBox mvcconfig { get; set; } //  mandatory
-
         public ViewScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
-
         public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
-
         public MVCViewPriorityAssignmentBox view_priority_method { get; set; } //  optional
-
         public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } // optional
-        MVCDConfigurationBox mvcdconfig; //  optional
-
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
+        public MVCDConfigurationBox mvcdconfig { get; set; } //  optional
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public A3DConfigurationBox a3dconfig { get; set; } //  optional
+
         public MVCSampleEntry()
         { }
 
@@ -12647,6 +12040,7 @@ namespace BoxGenerator2
             this.view_priority_method = IsoReaderWriter.ReadBox(stream);
             this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.a3dconfig = IsoReaderWriter.ReadBox(stream);
         }
@@ -12662,6 +12056,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
             size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
             return size;
@@ -12672,25 +12067,17 @@ namespace BoxGenerator2
     public class MVCSampleEntry1 : VisualSampleEntry
     {
         public override string FourCC { get { return "mvc2"; } }
-
         public MVCConfigurationBox mvcconfig { get; set; } //  mandatory
-
         public ViewScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
-
         public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
-
         public MVCViewPriorityAssignmentBox view_priority_method { get; set; } //  optional
-
         public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } // optional
-        MVCDConfigurationBox mvcdconfig; //  optional
-
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
+        public MVCDConfigurationBox mvcdconfig { get; set; } //  optional
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public A3DConfigurationBox a3dconfig { get; set; } //  optional
+
         public MVCSampleEntry1()
         { }
 
@@ -12704,6 +12091,7 @@ namespace BoxGenerator2
             this.view_priority_method = IsoReaderWriter.ReadBox(stream);
             this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.a3dconfig = IsoReaderWriter.ReadBox(stream);
         }
@@ -12719,6 +12107,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
             size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
             return size;
@@ -12729,25 +12118,17 @@ namespace BoxGenerator2
     public class MVCSampleEntry2 : VisualSampleEntry
     {
         public override string FourCC { get { return "mvc3"; } }
-
         public MVCConfigurationBox mvcconfig { get; set; } //  mandatory
-
         public ViewScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
-
         public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
-
         public MVCViewPriorityAssignmentBox view_priority_method { get; set; } //  optional
-
         public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } // optional
-        MVCDConfigurationBox mvcdconfig; //  optional
-
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
+        public MVCDConfigurationBox mvcdconfig { get; set; } //  optional
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public A3DConfigurationBox a3dconfig { get; set; } //  optional
+
         public MVCSampleEntry2()
         { }
 
@@ -12761,6 +12142,7 @@ namespace BoxGenerator2
             this.view_priority_method = IsoReaderWriter.ReadBox(stream);
             this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.a3dconfig = IsoReaderWriter.ReadBox(stream);
         }
@@ -12776,6 +12158,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
             size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
             return size;
@@ -12786,25 +12169,17 @@ namespace BoxGenerator2
     public class MVCSampleEntry3 : VisualSampleEntry
     {
         public override string FourCC { get { return "mvc4"; } }
-
         public MVCConfigurationBox mvcconfig { get; set; } //  mandatory
-
         public ViewScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
-
         public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
-
         public MVCViewPriorityAssignmentBox view_priority_method { get; set; } //  optional
-
         public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } // optional
-        MVCDConfigurationBox mvcdconfig; //  optional
-
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
+        public MVCDConfigurationBox mvcdconfig { get; set; } //  optional
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public A3DConfigurationBox a3dconfig { get; set; } //  optional
+
         public MVCSampleEntry3()
         { }
 
@@ -12818,6 +12193,7 @@ namespace BoxGenerator2
             this.view_priority_method = IsoReaderWriter.ReadBox(stream);
             this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.a3dconfig = IsoReaderWriter.ReadBox(stream);
         }
@@ -12833,6 +12209,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
             size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
             return size;
@@ -12843,17 +12220,14 @@ namespace BoxGenerator2
     public class MVCDSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "mvd1"; } }
-
         public MVCDConfigurationBox mvcdconfig { get; set; } //  mandatory
-
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
+        public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
+        public A3DConfigurationBox a3dconfig { get; set; } //  optional
 
-        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional	IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } // optional
-        A3DConfigurationBox a3dconfig; //  optional
         public MVCDSampleEntry()
         { }
 
@@ -12864,7 +12238,9 @@ namespace BoxGenerator2
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.view_identifiers = IsoReaderWriter.ReadBox(stream);
             this.descr = IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12875,7 +12251,9 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
             size += IsoReaderWriter.WriteBox(stream, this.descr);
+            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
             return size;
         }
     }
@@ -12884,17 +12262,14 @@ namespace BoxGenerator2
     public class MVCDSampleEntry1 : VisualSampleEntry
     {
         public override string FourCC { get { return "mvd2"; } }
-
         public MVCDConfigurationBox mvcdconfig { get; set; } //  mandatory
-
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
+        public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
+        public A3DConfigurationBox a3dconfig { get; set; } //  optional
 
-        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional	IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } // optional
-        A3DConfigurationBox a3dconfig; //  optional
         public MVCDSampleEntry1()
         { }
 
@@ -12905,7 +12280,9 @@ namespace BoxGenerator2
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.view_identifiers = IsoReaderWriter.ReadBox(stream);
             this.descr = IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12916,7 +12293,9 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
             size += IsoReaderWriter.WriteBox(stream, this.descr);
+            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
             return size;
         }
     }
@@ -12925,17 +12304,14 @@ namespace BoxGenerator2
     public class MVCDSampleEntry2 : VisualSampleEntry
     {
         public override string FourCC { get { return "mvd3"; } }
-
         public MVCDConfigurationBox mvcdconfig { get; set; } //  mandatory
-
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
+        public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
+        public A3DConfigurationBox a3dconfig { get; set; } //  optional
 
-        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional	IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } // optional
-        A3DConfigurationBox a3dconfig; //  optional
         public MVCDSampleEntry2()
         { }
 
@@ -12946,7 +12322,9 @@ namespace BoxGenerator2
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.view_identifiers = IsoReaderWriter.ReadBox(stream);
             this.descr = IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12957,7 +12335,9 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
             size += IsoReaderWriter.WriteBox(stream, this.descr);
+            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
             return size;
         }
     }
@@ -12966,17 +12346,14 @@ namespace BoxGenerator2
     public class MVCDSampleEntry3 : VisualSampleEntry
     {
         public override string FourCC { get { return "mvd4"; } }
-
         public MVCDConfigurationBox mvcdconfig { get; set; } //  mandatory
-
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
+        public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
+        public A3DConfigurationBox a3dconfig { get; set; } //  optional
 
-        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional	IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } // optional
-        A3DConfigurationBox a3dconfig; //  optional
         public MVCDSampleEntry3()
         { }
 
@@ -12987,7 +12364,9 @@ namespace BoxGenerator2
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.view_identifiers = IsoReaderWriter.ReadBox(stream);
             this.descr = IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12998,7 +12377,9 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
             size += IsoReaderWriter.WriteBox(stream, this.descr);
+            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
             return size;
         }
     }
@@ -13007,18 +12388,13 @@ namespace BoxGenerator2
     public class A3DSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "a3d1"; } }
-
         public A3DConfigurationBox a3dconfig { get; set; } //  mandatory
-
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
+        public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
 
-        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional	IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params
-        { get; set; } // optional
-    ;
         public A3DSampleEntry()
         { }
 
@@ -13029,6 +12405,7 @@ namespace BoxGenerator2
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.view_identifiers = IsoReaderWriter.ReadBox(stream);
             this.descr = IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
         }
 
@@ -13040,6 +12417,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
             size += IsoReaderWriter.WriteBox(stream, this.descr);
+            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
             return size;
         }
@@ -13049,18 +12427,13 @@ namespace BoxGenerator2
     public class A3DSampleEntry1 : VisualSampleEntry
     {
         public override string FourCC { get { return "a3d2"; } }
-
         public A3DConfigurationBox a3dconfig { get; set; } //  mandatory
-
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
+        public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
 
-        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional	IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params
-        { get; set; } // optional
-    ;
         public A3DSampleEntry1()
         { }
 
@@ -13071,6 +12444,7 @@ namespace BoxGenerator2
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.view_identifiers = IsoReaderWriter.ReadBox(stream);
             this.descr = IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
         }
 
@@ -13082,6 +12456,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
             size += IsoReaderWriter.WriteBox(stream, this.descr);
+            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
             return size;
         }
@@ -13091,18 +12466,13 @@ namespace BoxGenerator2
     public class A3DSampleEntry2 : VisualSampleEntry
     {
         public override string FourCC { get { return "a3d3"; } }
-
         public A3DConfigurationBox a3dconfig { get; set; } //  mandatory
-
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
+        public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
 
-        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional	IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params
-        { get; set; } // optional
-    ;
         public A3DSampleEntry2()
         { }
 
@@ -13113,6 +12483,7 @@ namespace BoxGenerator2
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.view_identifiers = IsoReaderWriter.ReadBox(stream);
             this.descr = IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
         }
 
@@ -13124,6 +12495,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
             size += IsoReaderWriter.WriteBox(stream, this.descr);
+            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
             return size;
         }
@@ -13133,18 +12505,13 @@ namespace BoxGenerator2
     public class A3DSampleEntry3 : VisualSampleEntry
     {
         public override string FourCC { get { return "a3d4"; } }
-
         public A3DConfigurationBox a3dconfig { get; set; } //  mandatory
-
         public MVDScalabilityInformationSEIBox mvdscalinfosei { get; set; } //  optional
-
         public ViewIdentifierBox view_identifiers { get; set; } //  mandatory
+        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
+        public IntrinsicCameraParametersBox intrinsic_camera_params { get; set; } //  optional
+        public ExtrinsicCameraParametersBox extrinsic_camera_params { get; set; } //  optional
 
-        public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional	IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
-
-        public ExtrinsicCameraParametersBox extrinsic_camera_params
-        { get; set; } // optional
-    ;
         public A3DSampleEntry3()
         { }
 
@@ -13155,6 +12522,7 @@ namespace BoxGenerator2
             this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
             this.view_identifiers = IsoReaderWriter.ReadBox(stream);
             this.descr = IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
             this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
         }
 
@@ -13166,6 +12534,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
             size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
             size += IsoReaderWriter.WriteBox(stream, this.descr);
+            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
             size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
             return size;
         }
@@ -13175,12 +12544,10 @@ namespace BoxGenerator2
     public class AVCSVCSampleEntry : AVCSampleEntry
     {
         public override string FourCC { get { return "avc1"; } }
-
         public SVCConfigurationBox svcconfig { get; set; } //  optional
-
         public ScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public SVCPriorityAssignmentBox method { get; set; } //  optional
+
         public AVCSVCSampleEntry()
         { }
 
@@ -13207,12 +12574,10 @@ namespace BoxGenerator2
     public class AVCSVCSampleEntry1 : AVCSampleEntry
     {
         public override string FourCC { get { return "avc3"; } }
-
         public SVCConfigurationBox svcconfig { get; set; } //  optional
-
         public ScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public SVCPriorityAssignmentBox method { get; set; } //  optional
+
         public AVCSVCSampleEntry1()
         { }
 
@@ -13239,12 +12604,10 @@ namespace BoxGenerator2
     public class AVC2SVCSampleEntry : AVC2SampleEntry
     {
         public override string FourCC { get { return "avc2"; } }
-
         public SVCConfigurationBox svcconfig { get; set; } //  optional
-
         public ScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public SVCPriorityAssignmentBox method { get; set; } //  optional
+
         public AVC2SVCSampleEntry()
         { }
 
@@ -13271,12 +12634,10 @@ namespace BoxGenerator2
     public class AVC2SVCSampleEntry1 : AVC2SampleEntry
     {
         public override string FourCC { get { return "avc4"; } }
-
         public SVCConfigurationBox svcconfig { get; set; } //  optional
-
         public ScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public SVCPriorityAssignmentBox method { get; set; } //  optional
+
         public AVC2SVCSampleEntry1()
         { }
 
@@ -13303,14 +12664,11 @@ namespace BoxGenerator2
     public class SVCSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "svc1"; } }
-
         public SVCConfigurationBox svcconfig { get; set; }
-
         public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
-
         public ScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public SVCPriorityAssignmentBox method { get; set; } //  optional
+
         public SVCSampleEntry()
         { }
 
@@ -13339,14 +12697,11 @@ namespace BoxGenerator2
     public class SVCSampleEntry1 : VisualSampleEntry
     {
         public override string FourCC { get { return "svc2"; } }
-
         public SVCConfigurationBox svcconfig { get; set; }
-
         public MPEG4ExtensionDescriptorsBox descr { get; set; } //  optional
-
         public ScalabilityInformationSEIBox scalability { get; set; } //  optional
-
         public SVCPriorityAssignmentBox method { get; set; } //  optional
+
         public SVCSampleEntry1()
         { }
 
@@ -13375,8 +12730,8 @@ namespace BoxGenerator2
     public class HEVCTileSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "hvt1"; } }
-
         public HEVCTileConfigurationBox config { get; set; } //  optional
+
         public HEVCTileSampleEntry()
         { }
 
@@ -13399,6 +12754,7 @@ namespace BoxGenerator2
     public class LHEVCTileSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "lht1"; } }
+
         public LHEVCTileSampleEntry()
         { }
 
@@ -13419,8 +12775,8 @@ namespace BoxGenerator2
     public class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "hvt3"; } }
-
         public HEVCTileConfigurationBox config { get; set; } //  optional 
+
         public HEVCTileSSHInfoSampleEntry()
         { }
 
@@ -13443,8 +12799,8 @@ namespace BoxGenerator2
     public class HEVCSliceSegmentDataSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "hvt2"; } }
-
         public HEVCTileConfigurationBox config { get; set; } //  optional
+
         public HEVCSliceSegmentDataSampleEntry()
         { }
 
@@ -13467,8 +12823,8 @@ namespace BoxGenerator2
     public class VvcSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "vvc1"; } }
-
         public VvcConfigurationBox config { get; set; }
+
 
         public VvcSampleEntry()
         { }
@@ -13494,8 +12850,8 @@ namespace BoxGenerator2
     public class VvcSampleEntry1 : VisualSampleEntry
     {
         public override string FourCC { get { return "vvi1"; } }
-
         public VvcConfigurationBox config { get; set; }
+
 
         public VvcSampleEntry1()
         { }
@@ -13521,8 +12877,8 @@ namespace BoxGenerator2
     public class VvcSubpicSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "vvs1"; } }
-
         public VvcNALUConfigBox config { get; set; }
+
         public VvcSubpicSampleEntry()
         { }
 
@@ -13545,8 +12901,8 @@ namespace BoxGenerator2
     public class VvcNonVCLSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "vvcN"; } }
-
         public VvcNALUConfigBox config { get; set; }
+
         public VvcNonVCLSampleEntry()
         { }
 
@@ -13569,8 +12925,8 @@ namespace BoxGenerator2
     public class EVCSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "evc1"; } }
-
         public EVCConfigurationBox config { get; set; }
+
 
         public EVCSampleEntry()
         { }
@@ -13596,12 +12952,10 @@ namespace BoxGenerator2
     public class SVCMetadataSampleEntry : MetadataSampleEntry
     {
         public override string FourCC { get { return "svcM"; } }
-
         public SVCMetadataSampleConfigBox config { get; set; }
-
         public SVCPriorityAssignmentBox methods { get; set; } //  optional
-
         public SVCPriorityLayerInfoBox priorities { get; set; } //  optional
+
         public SVCMetadataSampleEntry()
         { }
 
@@ -13628,8 +12982,8 @@ namespace BoxGenerator2
     public class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
     {
         public override string FourCC { get { return "evs1"; } }
-
         public EVCSliceComponentTrackConfigurationBox config { get; set; }
+
         public EVCSliceComponentTrackSampleEntry()
         { }
 
@@ -13652,8 +13006,8 @@ namespace BoxGenerator2
     public class EVCSliceComponentTrackSampleEntry1 : VisualSampleEntry
     {
         public override string FourCC { get { return "evs2"; } }
-
         public EVCSliceComponentTrackConfigurationBox config { get; set; }
+
         public EVCSliceComponentTrackSampleEntry1()
         { }
 
@@ -13676,18 +13030,15 @@ namespace BoxGenerator2
     public class SubpicCommonGroupBox : EntityToGroupBox
     {
         public override string FourCC { get { return "acgl"; } }
-
         public byte level_is_present_flag { get; set; }
-
         public byte level_is_static_flag { get; set; }
-
         public byte reserved { get; set; } = 0;
 
         public byte level_idc { get; set; }
 
         public uint level_info_entity_idx { get; set; }
-
         public ushort num_active_tracks { get; set; }
+
         public SubpicCommonGroupBox()
         { }
 
@@ -13700,13 +13051,11 @@ namespace BoxGenerator2
 
             if (level_is_present_flag)
             {
-
                 this.level_idc = IsoReaderWriter.ReadUInt8(stream);
             }
 
             if (level_is_static_flag == 0)
             {
-
                 this.level_info_entity_idx = IsoReaderWriter.ReadUInt32(stream);
             }
             this.num_active_tracks = IsoReaderWriter.ReadUInt16(stream);
@@ -13722,13 +13071,11 @@ namespace BoxGenerator2
 
             if (level_is_present_flag)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
             }
 
             if (level_is_static_flag == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.level_info_entity_idx);
             }
             size += IsoReaderWriter.WriteUInt16(stream, this.num_active_tracks);
@@ -13740,23 +13087,20 @@ namespace BoxGenerator2
     public class SubpicMultipleGroupsBox : EntityToGroupBox
     {
         public override string FourCC { get { return "amgl"; } }
-
         public byte level_is_present_flag { get; set; }
-
         public byte level_is_static_flag { get; set; }
-
         public byte reserved { get; set; } = 0;
 
         public byte level_idc { get; set; }
 
         public uint level_info_entity_idx { get; set; }
-
         public ushort num_subgroup_ids { get; set; }
 
 
         public uint[][] track_subgroup_id { get; set; }
 
         public ushort[] num_active_tracks { get; set; }
+
         public SubpicMultipleGroupsBox()
         { }
 
@@ -13769,13 +13113,11 @@ namespace BoxGenerator2
 
             if (level_is_present_flag)
             {
-
                 this.level_idc = IsoReaderWriter.ReadUInt8(stream);
             }
 
             if (level_is_static_flag == 0)
             {
-
                 this.level_info_entity_idx = IsoReaderWriter.ReadUInt32(stream);
             }
             this.num_subgroup_ids = IsoReaderWriter.ReadUInt16(stream);
@@ -13783,13 +13125,11 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.track_subgroup_id = IsoReaderWriter.ReadBytes(stream, subgroupIdLen);
             }
 
             for (int i = 0; i < num_subgroup_ids; i++)
             {
-
                 this.num_active_tracks = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -13804,13 +13144,11 @@ namespace BoxGenerator2
 
             if (level_is_present_flag)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
             }
 
             if (level_is_static_flag == 0)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.level_info_entity_idx);
             }
             size += IsoReaderWriter.WriteUInt16(stream, this.num_subgroup_ids);
@@ -13818,13 +13156,11 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteBytes(stream, subgroupIdLen, this.track_subgroup_id);
             }
 
             for (int i = 0; i < num_subgroup_ids; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.num_active_tracks);
             }
             return size;
@@ -13835,15 +13171,11 @@ namespace BoxGenerator2
     public class OperatingPointGroupBox : EntityToGroupBox
     {
         public override string FourCC { get { return "opeg"; } }
-
         public byte num_profile_tier_level_minus1 { get; set; }
 
         public VvcPTLRecord[] opeg_ptl { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public byte incomplete_operating_points_flag { get; set; }
-
         public ushort num_olss { get; set; }
 
         public byte[] ptl_idx { get; set; }
@@ -13851,32 +13183,38 @@ namespace BoxGenerator2
         public byte[] layer_count { get; set; }
         public byte reserved { get; set; } = 0;
         public byte[] layer_info_present_flag { get; set; }
+
+
         public byte[] layer_id { get; set; }
         public byte[] is_output_layer { get; set; }
         public byte reserved { get; set; } = 0;
-
         public byte reserved { get; set; } = 0;
-
         public ushort num_operating_points { get; set; }
 
         public ushort ols_loop_entry_idx { get; set; }
         public byte max_temporal_id { get; set; }
         public byte frame_rate_info_flag { get; set; }
         public byte bit_rate_info_flag { get; set; }
+
         public byte op_availability_idc { get; set; }
+
         public byte reserved { get; set; } = 0;
         public byte reserved { get; set; } = 0;
         public byte chroma_format_idc { get; set; }
         public byte bit_depth_minus8 { get; set; }
         public ushort max_picture_width { get; set; }
         public ushort max_picture_height { get; set; }
+
         public ushort avg_frame_rate { get; set; }
         public byte reserved { get; set; } = 0;
         public byte constant_frame_rate { get; set; }
+
         public uint max_bit_rate { get; set; }
         public uint avg_bit_rate { get; set; }
         public byte entity_count { get; set; }
+
         public byte entity_idx { get; set; }
+
         public OperatingPointGroupBox()
         { }
 
@@ -13887,7 +13225,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
-
                 this.opeg_ptl = IsoReaderWriter.ReadClass(stream);
             }
             this.reserved = IsoReaderWriter.ReadBits(stream, 6);
@@ -13896,7 +13233,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_olss; i++)
             {
-
                 this.ptl_idx = IsoReaderWriter.ReadUInt8(stream);
                 this.ols_idx = IsoReaderWriter.ReadBits(stream, 9);
                 this.layer_count = IsoReaderWriter.ReadBits(stream, 6);
@@ -13906,10 +13242,8 @@ namespace BoxGenerator2
                 if (layer_info_present_flag)
                 {
 
-
                     for (int j = 0; j < layer_count; j++)
                     {
-
                         this.layer_id = IsoReaderWriter.ReadBits(stream, 6);
                         this.is_output_layer = IsoReaderWriter.ReadBit(stream);
                         this.reserved = IsoReaderWriter.ReadBit(stream);
@@ -13921,7 +13255,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_operating_points; i++)
             {
-
                 this.ols_loop_entry_idx = IsoReaderWriter.ReadBits(stream, 9);
                 this.max_temporal_id = IsoReaderWriter.ReadBits(stream, 3);
                 this.frame_rate_info_flag = IsoReaderWriter.ReadBit(stream);
@@ -13929,13 +13262,11 @@ namespace BoxGenerator2
 
                 if (incomplete_operating_points_flag)
                 {
-
                     this.op_availability_idc = IsoReaderWriter.ReadBits(stream, 2);
                 }
 
                 else
                 {
-
                     this.reserved = IsoReaderWriter.ReadBits(stream, 2);
                 }
                 this.reserved = IsoReaderWriter.ReadBits(stream, 3);
@@ -13946,7 +13277,6 @@ namespace BoxGenerator2
 
                 if (frame_rate_info_flag)
                 {
-
                     this.avg_frame_rate = IsoReaderWriter.ReadUInt16(stream);
                     this.reserved = IsoReaderWriter.ReadBits(stream, 6);
                     this.constant_frame_rate = IsoReaderWriter.ReadBits(stream, 2);
@@ -13954,7 +13284,6 @@ namespace BoxGenerator2
 
                 if (bit_rate_info_flag)
                 {
-
                     this.max_bit_rate = IsoReaderWriter.ReadUInt32(stream);
                     this.avg_bit_rate = IsoReaderWriter.ReadUInt32(stream);
                 }
@@ -13962,7 +13291,6 @@ namespace BoxGenerator2
 
                 for (int j = 0; j < entity_count; j++)
                 {
-
                     this.entity_idx = IsoReaderWriter.ReadUInt8(stream);
                 }
             }
@@ -13976,7 +13304,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
-
                 size += IsoReaderWriter.WriteClass(stream, this.opeg_ptl);
             }
             size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
@@ -13985,7 +13312,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_olss; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.ptl_idx);
                 size += IsoReaderWriter.WriteBits(stream, 9, this.ols_idx);
                 size += IsoReaderWriter.WriteBits(stream, 6, this.layer_count);
@@ -13995,10 +13321,8 @@ namespace BoxGenerator2
                 if (layer_info_present_flag)
                 {
 
-
                     for (int j = 0; j < layer_count; j++)
                     {
-
                         size += IsoReaderWriter.WriteBits(stream, 6, this.layer_id);
                         size += IsoReaderWriter.WriteBit(stream, this.is_output_layer);
                         size += IsoReaderWriter.WriteBit(stream, this.reserved);
@@ -14010,7 +13334,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_operating_points; i++)
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 9, this.ols_loop_entry_idx);
                 size += IsoReaderWriter.WriteBits(stream, 3, this.max_temporal_id);
                 size += IsoReaderWriter.WriteBit(stream, this.frame_rate_info_flag);
@@ -14018,13 +13341,11 @@ namespace BoxGenerator2
 
                 if (incomplete_operating_points_flag)
                 {
-
                     size += IsoReaderWriter.WriteBits(stream, 2, this.op_availability_idc);
                 }
 
                 else
                 {
-
                     size += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
                 }
                 size += IsoReaderWriter.WriteBits(stream, 3, this.reserved);
@@ -14035,7 +13356,6 @@ namespace BoxGenerator2
 
                 if (frame_rate_info_flag)
                 {
-
                     size += IsoReaderWriter.WriteUInt16(stream, this.avg_frame_rate);
                     size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
                     size += IsoReaderWriter.WriteBits(stream, 2, this.constant_frame_rate);
@@ -14043,7 +13363,6 @@ namespace BoxGenerator2
 
                 if (bit_rate_info_flag)
                 {
-
                     size += IsoReaderWriter.WriteUInt32(stream, this.max_bit_rate);
                     size += IsoReaderWriter.WriteUInt32(stream, this.avg_bit_rate);
                 }
@@ -14051,7 +13370,6 @@ namespace BoxGenerator2
 
                 for (int j = 0; j < entity_count; j++)
                 {
-
                     size += IsoReaderWriter.WriteUInt8(stream, this.entity_idx);
                 }
             }
@@ -14065,6 +13383,7 @@ namespace BoxGenerator2
         public override string FourCC { get { return "swtk"; } }
 
         public ushort[] track_switch_hierarchy_id { get; set; }
+
         public SwitchableTracks()
         { }
 
@@ -14074,7 +13393,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.track_switch_hierarchy_id = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -14086,7 +13404,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.track_switch_hierarchy_id);
             }
             return size;
@@ -14097,12 +13414,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox1 : FullBox
     {
         public override string FourCC { get { return "vvcb"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox1()
         { }
 
@@ -14114,7 +13430,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -14128,7 +13443,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -14139,8 +13453,8 @@ namespace BoxGenerator2
     public class AUDSampleEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "aud "; } }
-
         public uint audNalUnit { get; set; }
+
         public AUDSampleEntry()
         { }
 
@@ -14163,16 +13477,12 @@ namespace BoxGenerator2
     public class AVCLayerEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "avll"; } }
-
         public byte layerNumber { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public byte accurateStatisticsFlag { get; set; }
-
         public ushort avgBitRate { get; set; }
-
         public ushort avgFrameRate { get; set; }
+
         public AVCLayerEntry()
         { }
 
@@ -14203,15 +13513,10 @@ namespace BoxGenerator2
     public class AVCSubSequenceEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "avss"; } }
-
         public ushort subSequenceIdentifer { get; set; }
-
         public byte layerNumber { get; set; }
-
         public byte durationFlag { get; set; }
-
         public byte avgRateFlag { get; set; }
-
         public byte reserved { get; set; } = 0;
 
         public uint duration { get; set; }
@@ -14220,10 +13525,9 @@ namespace BoxGenerator2
         public byte accurateStatisticsFlag { get; set; }
         public ushort avgBitRate { get; set; }
         public ushort avgFrameRate { get; set; }
-
         public byte numReferences { get; set; }
-
         public DependencyInfo[] dependency { get; set; }
+
         public AVCSubSequenceEntry()
         { }
 
@@ -14238,13 +13542,11 @@ namespace BoxGenerator2
 
             if (durationFlag)
             {
-
                 this.duration = IsoReaderWriter.ReadUInt32(stream);
             }
 
             if (avgRateFlag)
             {
-
                 this.reserved = IsoReaderWriter.ReadBits(stream, 7);
                 this.accurateStatisticsFlag = IsoReaderWriter.ReadBit(stream);
                 this.avgBitRate = IsoReaderWriter.ReadUInt16(stream);
@@ -14266,13 +13568,11 @@ namespace BoxGenerator2
 
             if (durationFlag)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.duration);
             }
 
             if (avgRateFlag)
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
                 size += IsoReaderWriter.WriteBit(stream, this.accurateStatisticsFlag);
                 size += IsoReaderWriter.WriteUInt16(stream, this.avgBitRate);
@@ -14288,10 +13588,9 @@ namespace BoxGenerator2
     public class DecodingCapabilityInformation : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "dcfi"; } }
-
         public ushort dci_nal_unit_length { get; set; }
-
         public byte[] dci_nal_unit { get; set; }
+
         public DecodingCapabilityInformation()
         { }
 
@@ -14316,11 +13615,11 @@ namespace BoxGenerator2
     public class DecodeRetimingEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "dtrt"; } }
-
         public byte tierCount { get; set; }
 
         public ushort tierID { get; set; }
         public short delta { get; set; }
+
         public DecodeRetimingEntry()
         { }
 
@@ -14331,7 +13630,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= tierCount; i++)
             {
-
                 this.tierID = IsoReaderWriter.ReadUInt16(stream);
                 this.delta = IsoReaderWriter.ReadInt16(stream);
             }
@@ -14345,7 +13643,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= tierCount; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.tierID);
                 size += IsoReaderWriter.WriteInt16(stream, this.delta);
             }
@@ -14357,8 +13654,8 @@ namespace BoxGenerator2
     public class EndOfBitstreamSampleEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "eob "; } }
-
         public ushort eobNalUnit { get; set; }
+
         public EndOfBitstreamSampleEntry()
         { }
 
@@ -14381,10 +13678,10 @@ namespace BoxGenerator2
     public class EndOfSequenceSampleEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "eos "; } }
-
         public byte num_eos_nal_unit_minus1 { get; set; }
 
         public ushort[] eosNalUnit { get; set; }
+
         public EndOfSequenceSampleEntry()
         { }
 
@@ -14395,7 +13692,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i <= num_eos_nal_unit_minus1; i++)
             {
-
                 this.eosNalUnit = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -14408,7 +13704,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i <= num_eos_nal_unit_minus1; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.eosNalUnit);
             }
             return size;
@@ -14419,14 +13714,11 @@ namespace BoxGenerator2
     public class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "lbli"; } }
-
-        public byte reserved { get; set; } = '1'b;
-
-	public byte bl_irap_pic_flag { get; set; }
-
+        public byte reserved { get; set; } = 1;
+	    public byte bl_irap_pic_flag { get; set; }
         public byte bl_irap_nal_unit_type { get; set; }
-
         public sbyte sample_offset { get; set; }
+
         public LhvcExternalBaseLayerInfo()
         { }
 
@@ -14455,9 +13747,7 @@ namespace BoxGenerator2
     public class LayerInfoGroupEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "linf"; } }
-
         public byte reserved { get; set; } = 0;
-
         public byte num_layers_in_track { get; set; }
 
         public byte reserved { get; set; } = 0;
@@ -14468,6 +13758,7 @@ namespace BoxGenerator2
         public byte max_TemporalId { get; set; }
         public byte reserved { get; set; } = 0;
         public byte sub_layer_presence_flags { get; set; }
+
         public LayerInfoGroupEntry()
         { }
 
@@ -14479,7 +13770,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_layers_in_track; i++)
             {
-
                 this.reserved = IsoReaderWriter.ReadBits(stream, 2);
                 this.irap_gdr_pics_in_layer_only_flag = IsoReaderWriter.ReadBit(stream);
                 this.completeness_flag = IsoReaderWriter.ReadBit(stream);
@@ -14500,7 +13790,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_layers_in_track; i++)
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
                 size += IsoReaderWriter.WriteBit(stream, this.irap_gdr_pics_in_layer_only_flag);
                 size += IsoReaderWriter.WriteBit(stream, this.completeness_flag);
@@ -14518,15 +13807,13 @@ namespace BoxGenerator2
     public class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "minp"; } }
-
         public ushort num_mix_nalu_pic_idx { get; set; }
 
         public ushort[] mix_subp_track_idx1 { get; set; }
         public ushort[] mix_subp_track_idx2 { get; set; }
-
         public ushort pps_mix_nalu_types_in_pic_bit_pos { get; set; }
-
         public byte pps_id { get; set; }
+
         public VvcMixedNALUnitTypePicEntry()
         { }
 
@@ -14537,7 +13824,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_mix_nalu_pic_idx; i++)
             {
-
                 this.mix_subp_track_idx1 = IsoReaderWriter.ReadUInt16(stream);
                 this.mix_subp_track_idx2 = IsoReaderWriter.ReadUInt16(stream);
             }
@@ -14553,7 +13839,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_mix_nalu_pic_idx; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.mix_subp_track_idx1);
                 size += IsoReaderWriter.WriteUInt16(stream, this.mix_subp_track_idx2);
             }
@@ -14567,18 +13852,23 @@ namespace BoxGenerator2
     public class MultiviewGroupEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "mvif"; } }
-
         public byte groupID { get; set; }
-
         public byte primary_groupID { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public byte is_tl_switching_point { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public byte tl_switching_distance { get; set; }
+
+
+
+
+
+
+
+
+
+
+
 
         public MultiviewGroupEntry()
         { }
@@ -14595,7 +13885,6 @@ namespace BoxGenerator2
 
             if (groupID == primary_groupID)
             {
-
 
 
 
@@ -14632,7 +13921,6 @@ namespace BoxGenerator2
 
 
 
-
             }
             return size;
         }
@@ -14642,20 +13930,21 @@ namespace BoxGenerator2
     public class NALUMapEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "nalm"; } }
-
         public byte reserved { get; set; } = 0;
-
         public byte large_size { get; set; }
-
         public byte rle { get; set; }
 
         public ushort entry_count { get; set; }
 
         public byte entry_count { get; set; }
 
+
+
         public ushort NALU_start_number { get; set; }
+
         public byte NALU_start_number { get; set; }
         public ushort groupID { get; set; }
+
         public NALUMapEntry()
         { }
 
@@ -14668,33 +13957,27 @@ namespace BoxGenerator2
 
             if (large_size)
             {
-
                 this.entry_count = IsoReaderWriter.ReadUInt16(stream);
             }
 
             else
             {
-
                 this.entry_count = IsoReaderWriter.ReadUInt8(stream);
             }
 
             for (int i = 1; i <= entry_count; i++)
             {
 
-
                 if (rle)
                 {
 
-
                     if (large_size)
                     {
-
                         this.NALU_start_number = IsoReaderWriter.ReadUInt16(stream);
                     }
 
                     else
                     {
-
                         this.NALU_start_number = IsoReaderWriter.ReadUInt8(stream);
                     }
                 }
@@ -14712,33 +13995,27 @@ namespace BoxGenerator2
 
             if (large_size)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
             {
 
-
                 if (rle)
                 {
 
-
                     if (large_size)
                     {
-
                         size += IsoReaderWriter.WriteUInt16(stream, this.NALU_start_number);
                     }
 
                     else
                     {
-
                         size += IsoReaderWriter.WriteUInt8(stream, this.NALU_start_number);
                     }
                 }
@@ -14752,8 +14029,8 @@ namespace BoxGenerator2
     public class OperatingPointsInformation : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "oinf"; } }
-
         public OperatingPointsRecord oinf { get; set; }
+
         public OperatingPointsInformation()
         { }
 
@@ -14776,8 +14053,8 @@ namespace BoxGenerator2
     public class OperatingPointDecodeTimeHint : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "opth"; } }
-
         public int delta_time { get; set; }
+
         public OperatingPointDecodeTimeHint()
         { }
 
@@ -14800,10 +14077,9 @@ namespace BoxGenerator2
     public class ParameterSetNALUEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "pase"; } }
-
         public ushort ps_nalu_length { get; set; }
-
         public byte[] ps_nal_unit { get; set; }
+
         public ParameterSetNALUEntry()
         { }
 
@@ -14828,14 +14104,11 @@ namespace BoxGenerator2
     public class PSSampleGroupEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "pss1"; } }
-
         public byte sps_present { get; set; }
-
         public byte pps_present { get; set; }
-
         public byte aps_present { get; set; }
-
         public byte reserved { get; set; } = 0;
+
         public PSSampleGroupEntry()
         { }
 
@@ -14864,22 +14137,20 @@ namespace BoxGenerator2
     public class VvcRectRegionOrderEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "rror"; } }
-
         public byte subpic_id_info_flag { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public ushort num_alternate_region_set { get; set; }
 
         public ushort[] num_regions_in_set { get; set; }
         public ushort[] alternate_region_set_id { get; set; }
-        public ushort[] groupID { get; set; }
 
+        public ushort[] groupID { get; set; }
         public ushort num_regions_minus1 { get; set; }
 
         public ushort[] region_id { get; set; }
 
         public VVCSubpicIDRewritingInfomationStruct subpic_id_rewriting_info { get; set; }
+
         public VvcRectRegionOrderEntry()
         { }
 
@@ -14892,13 +14163,11 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_alternate_region_set; i++)
             {
-
                 this.num_regions_in_set = IsoReaderWriter.ReadUInt16(stream);
                 this.alternate_region_set_id = IsoReaderWriter.ReadUInt16(stream);
 
                 for (int j = 0; j < num_regions_in_set[i]; j++)
                 {
-
                     this.groupID = IsoReaderWriter.ReadUInt16(stream);
                 }
             }
@@ -14906,13 +14175,11 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_regions_minus1; i++)
             {
-
                 this.region_id = IsoReaderWriter.ReadUInt16(stream);
             }
 
             if (subpic_id_info_flag)
             {
-
                 this.subpic_id_rewriting_info = IsoReaderWriter.ReadClass(stream);
             }
         }
@@ -14927,13 +14194,11 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_alternate_region_set; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.num_regions_in_set);
                 size += IsoReaderWriter.WriteUInt16(stream, this.alternate_region_set_id);
 
                 for (int j = 0; j < num_regions_in_set[i]; j++)
                 {
-
                     size += IsoReaderWriter.WriteUInt16(stream, this.groupID);
                 }
             }
@@ -14941,13 +14206,11 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_regions_minus1; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.region_id);
             }
 
             if (subpic_id_info_flag)
             {
-
                 size += IsoReaderWriter.WriteClass(stream, this.subpic_id_rewriting_info);
             }
             return size;
@@ -14958,24 +14221,28 @@ namespace BoxGenerator2
     public class ScalableGroupEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "scif"; } }
-
         public byte groupID { get; set; }
-
         public byte primary_groupID { get; set; }
-
         public byte is_tier_IDR { get; set; }
-
         public byte noInterLayerPredFlag { get; set; }
-
         public byte useRefBasePicFlag { get; set; }
-
         public byte storeBaseRepFlag { get; set; }
-
         public byte is_tl_switching_point { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public byte tl_switching_distance { get; set; }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public ScalableGroupEntry()
         { }
@@ -14995,7 +14262,6 @@ namespace BoxGenerator2
 
             if (groupID == primary_groupID)
             {
-
 
 
 
@@ -15039,7 +14305,6 @@ namespace BoxGenerator2
 
 
 
-
             }
             return size;
         }
@@ -15049,12 +14314,11 @@ namespace BoxGenerator2
     public class ScalableNALUMapEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "scnm"; } }
-
         public byte reserved { get; set; } = 0;
-
         public byte NALU_count { get; set; }
 
         public byte groupID { get; set; }
+
         public ScalableNALUMapEntry()
         { }
 
@@ -15066,7 +14330,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= NALU_count; i++)
             {
-
                 this.groupID = IsoReaderWriter.ReadUInt8(stream);
             }
         }
@@ -15080,7 +14343,6 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= NALU_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.groupID);
             }
             return size;
@@ -15091,17 +14353,16 @@ namespace BoxGenerator2
     public class VvcSubpicIDEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "spid"; } }
-
         public byte rect_region_flag { get; set; }
-
         public byte reserved { get; set; } = 0;
-
         public byte continuous_id_flag { get; set; }
-
         public ushort num_subpics_minus1 { get; set; }
 
+
         public ushort[] subpic_id { get; set; }
+
         public ushort[] groupID { get; set; }
+
         public VvcSubpicIDEntry()
         { }
 
@@ -15116,16 +14377,13 @@ namespace BoxGenerator2
             for (int i = 0; i <= num_subpics_minus1; i++)
             {
 
-
                 if ((continuous_id_flag && i == 0) || !continuous_id_flag)
                 {
-
                     this.subpic_id = IsoReaderWriter.ReadUInt16(stream);
                 }
 
                 if (rect_region_flag)
                 {
-
                     this.groupID = IsoReaderWriter.ReadUInt16(stream);
                 }
             }
@@ -15143,16 +14401,13 @@ namespace BoxGenerator2
             for (int i = 0; i <= num_subpics_minus1; i++)
             {
 
-
                 if ((continuous_id_flag && i == 0) || !continuous_id_flag)
                 {
-
                     size += IsoReaderWriter.WriteUInt16(stream, this.subpic_id);
                 }
 
                 if (rect_region_flag)
                 {
-
                     size += IsoReaderWriter.WriteUInt16(stream, this.groupID);
                 }
             }
@@ -15164,8 +14419,8 @@ namespace BoxGenerator2
     public class SubpicLevelInfoEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "spli"; } }
-
         public byte level_idc { get; set; }
+
         public SubpicLevelInfoEntry()
         { }
 
@@ -15188,14 +14443,13 @@ namespace BoxGenerator2
     public class VvcSubpicOrderEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "spor"; } }
-
         public byte subpic_id_info_flag { get; set; }
-
         public ushort num_subpic_ref_idx { get; set; }
 
         public ushort[] subp_track_ref_idx { get; set; }
 
         public VVCSubpicIDRewritingInfomationStruct subpic_id_rewriting_info { get; set; }
+
         public VvcSubpicOrderEntry()
         { }
 
@@ -15207,13 +14461,11 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_subpic_ref_idx; i++)
             {
-
                 this.subp_track_ref_idx = IsoReaderWriter.ReadUInt16(stream);
             }
 
             if (subpic_id_info_flag)
             {
-
                 this.subpic_id_rewriting_info = IsoReaderWriter.ReadClass(stream);
             }
         }
@@ -15227,13 +14479,11 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_subpic_ref_idx; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.subp_track_ref_idx);
             }
 
             if (subpic_id_info_flag)
             {
-
                 size += IsoReaderWriter.WriteClass(stream, this.subpic_id_rewriting_info);
             }
             return size;
@@ -15244,6 +14494,7 @@ namespace BoxGenerator2
     public class StepwiseTemporalLayerEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "stsa"; } }
+
         public StepwiseTemporalLayerEntry()
         { }
 
@@ -15264,12 +14515,11 @@ namespace BoxGenerator2
     public class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "sulm"; } }
-
         public uint groupID_info_4cc { get; set; }
-
         public ushort entry_count_minus1 { get; set; }
 
         public ushort groupID { get; set; }
+
         public VvcSubpicLayoutMapEntry()
         { }
 
@@ -15281,7 +14531,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i <= entry_count_minus1; i++)
             {
-
                 this.groupID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -15295,7 +14544,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i <= entry_count_minus1; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.groupID);
             }
             return size;
@@ -15306,10 +14554,9 @@ namespace BoxGenerator2
     public class SyncSampleEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "sync"; } }
-
         public byte reserved { get; set; } = 0;
-
         public byte NAL_unit_type { get; set; }
+
         public SyncSampleEntry()
         { }
 
@@ -15334,9 +14581,7 @@ namespace BoxGenerator2
     public class RectangularRegionGroupEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "trif"; } }
-
         public ushort groupID { get; set; }
-
         public byte rect_region_flag { get; set; }
 
         public byte reserved { get; set; } = 0;
@@ -15346,12 +14591,16 @@ namespace BoxGenerator2
         public byte filtering_disabled { get; set; }
         public byte has_dependency_list { get; set; }
         public byte reserved { get; set; } = 0;
+
         public ushort horizontal_offset { get; set; }
         public ushort vertical_offset { get; set; }
         public ushort region_width { get; set; }
         public ushort region_height { get; set; }
+
         public ushort dependency_rect_region_count { get; set; }
+
         public ushort dependencyRectRegionGroupID { get; set; }
+
         public RectangularRegionGroupEntry()
         { }
 
@@ -15363,13 +14612,11 @@ namespace BoxGenerator2
 
             if (!rect_region_flag)
             {
-
                 this.reserved = IsoReaderWriter.ReadBits(stream, 7);
             }
 
             else
             {
-
                 this.independent_idc = IsoReaderWriter.ReadBits(stream, 2);
                 this.full_picture = IsoReaderWriter.ReadBit(stream);
                 this.filtering_disabled = IsoReaderWriter.ReadBit(stream);
@@ -15378,7 +14625,6 @@ namespace BoxGenerator2
 
                 if (!full_picture)
                 {
-
                     this.horizontal_offset = IsoReaderWriter.ReadUInt16(stream);
                     this.vertical_offset = IsoReaderWriter.ReadUInt16(stream);
                 }
@@ -15387,12 +14633,10 @@ namespace BoxGenerator2
 
                 if (has_dependency_list)
                 {
-
                     this.dependency_rect_region_count = IsoReaderWriter.ReadUInt16(stream);
 
                     for (int i = 1; i <= dependency_rect_region_count; i++)
                     {
-
                         this.dependencyRectRegionGroupID = IsoReaderWriter.ReadUInt16(stream);
                     }
                 }
@@ -15408,13 +14652,11 @@ namespace BoxGenerator2
 
             if (!rect_region_flag)
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
             }
 
             else
             {
-
                 size += IsoReaderWriter.WriteBits(stream, 2, this.independent_idc);
                 size += IsoReaderWriter.WriteBit(stream, this.full_picture);
                 size += IsoReaderWriter.WriteBit(stream, this.filtering_disabled);
@@ -15423,7 +14665,6 @@ namespace BoxGenerator2
 
                 if (!full_picture)
                 {
-
                     size += IsoReaderWriter.WriteUInt16(stream, this.horizontal_offset);
                     size += IsoReaderWriter.WriteUInt16(stream, this.vertical_offset);
                 }
@@ -15432,12 +14673,10 @@ namespace BoxGenerator2
 
                 if (has_dependency_list)
                 {
-
                     size += IsoReaderWriter.WriteUInt16(stream, this.dependency_rect_region_count);
 
                     for (int i = 1; i <= dependency_rect_region_count; i++)
                     {
-
                         size += IsoReaderWriter.WriteUInt16(stream, this.dependencyRectRegionGroupID);
                     }
                 }
@@ -15450,6 +14689,7 @@ namespace BoxGenerator2
     public class TemporalSubLayerEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "tsas"; } }
+
         public TemporalSubLayerEntry()
         { }
 
@@ -15470,28 +14710,18 @@ namespace BoxGenerator2
     public class TemporalLayerEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "tscl"; } }
-
         public byte temporalLayerId { get; set; }
-
         public byte tlprofile_space { get; set; }
-
         public byte tltier_flag { get; set; }
-
         public byte tlprofile_idc { get; set; }
-
         public uint tlprofile_compatibility_flags { get; set; }
-
         public ulong tlconstraint_indicator_flags { get; set; }
-
         public byte tllevel_idc { get; set; }
-
         public ushort tlMaxBitRate { get; set; }
-
         public ushort tlAvgBitRate { get; set; }
-
         public byte tlConstantFrameRate { get; set; }
-
         public ushort tlAvgFrameRate { get; set; }
+
         public TemporalLayerEntry()
         { }
 
@@ -15535,6 +14765,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "vipr"; } }
 
+
         public ViewPriorityEntry()
         { }
 
@@ -15557,8 +14788,8 @@ namespace BoxGenerator2
     public class VvcOperatingPointsInformation : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "vopi"; } }
-
         public VvcOperatingPointsRecord oinf { get; set; }
+
         public VvcOperatingPointsInformation()
         { }
 
@@ -15581,8 +14812,8 @@ namespace BoxGenerator2
     public class TrackGroupTypeBox1 : FullBox
     {
         public override string FourCC { get { return "alte"; } }
-
         public uint track_group_id { get; set; } //  the remaining data may be specified 
+
 
         public TrackGroupTypeBox1()
         { }
@@ -15608,8 +14839,8 @@ namespace BoxGenerator2
     public class TrackGroupTypeBox2 : FullBox
     {
         public override string FourCC { get { return "cstg"; } }
-
         public uint track_group_id { get; set; } //  the remaining data may be specified 
+
 
         public TrackGroupTypeBox2()
         { }
@@ -15635,8 +14866,8 @@ namespace BoxGenerator2
     public class TrackGroupTypeBox3 : FullBox
     {
         public override string FourCC { get { return "snut"; } }
-
         public uint track_group_id { get; set; } //  the remaining data may be specified 
+
 
         public TrackGroupTypeBox3()
         { }
@@ -15662,8 +14893,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox11 : Box
     {
         public override string FourCC { get { return "avcp"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox11()
         { }
 
@@ -15686,8 +14917,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox12 : Box
     {
         public override string FourCC { get { return "deps"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox12()
         { }
 
@@ -15710,8 +14941,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox13 : Box
     {
         public override string FourCC { get { return "evcr"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox13()
         { }
 
@@ -15734,8 +14965,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox14 : Box
     {
         public override string FourCC { get { return "mixn"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox14()
         { }
 
@@ -15758,8 +14989,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox15 : Box
     {
         public override string FourCC { get { return "oref"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox15()
         { }
 
@@ -15782,8 +15013,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox16 : Box
     {
         public override string FourCC { get { return "recr"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox16()
         { }
 
@@ -15806,8 +15037,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox17 : Box
     {
         public override string FourCC { get { return "sabt"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox17()
         { }
 
@@ -15830,8 +15061,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox18 : Box
     {
         public override string FourCC { get { return "sbas"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox18()
         { }
 
@@ -15854,8 +15085,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox19 : Box
     {
         public override string FourCC { get { return "scal"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox19()
         { }
 
@@ -15878,8 +15109,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox20 : Box
     {
         public override string FourCC { get { return "subp"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox20()
         { }
 
@@ -15902,8 +15133,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox21 : Box
     {
         public override string FourCC { get { return "swfr"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox21()
         { }
 
@@ -15926,8 +15157,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox22 : Box
     {
         public override string FourCC { get { return "swto"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox22()
         { }
 
@@ -15950,8 +15181,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox23 : Box
     {
         public override string FourCC { get { return "tbas"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox23()
         { }
 
@@ -15974,8 +15205,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox24 : Box
     {
         public override string FourCC { get { return "vref"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox24()
         { }
 
@@ -15998,8 +15229,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox25 : Box
     {
         public override string FourCC { get { return "vreg"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox25()
         { }
 
@@ -16022,8 +15253,8 @@ namespace BoxGenerator2
     public class TrackReferenceTypeBox26 : Box
     {
         public override string FourCC { get { return "vvcN"; } }
-
         public uint[] track_IDs { get; set; }
+
         public TrackReferenceTypeBox26()
         { }
 
@@ -16046,12 +15277,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox2 : FullBox
     {
         public override string FourCC { get { return "eqiv"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox2()
         { }
 
@@ -16063,7 +15293,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16077,7 +15306,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16088,12 +15316,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox3 : FullBox
     {
         public override string FourCC { get { return "ster"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox3()
         { }
 
@@ -16105,7 +15332,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16119,7 +15345,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16130,12 +15355,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox4 : FullBox
     {
         public override string FourCC { get { return "aebr"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox4()
         { }
 
@@ -16147,7 +15371,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16161,7 +15384,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16172,12 +15394,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox5 : FullBox
     {
         public override string FourCC { get { return "afbr"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox5()
         { }
 
@@ -16189,7 +15410,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16203,7 +15423,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16214,12 +15433,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox6 : FullBox
     {
         public override string FourCC { get { return "albc"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox6()
         { }
 
@@ -16231,7 +15449,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16245,7 +15462,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16256,12 +15472,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox7 : FullBox
     {
         public override string FourCC { get { return "brst"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox7()
         { }
 
@@ -16273,7 +15488,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16287,7 +15501,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16298,12 +15511,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox8 : FullBox
     {
         public override string FourCC { get { return "iaug"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox8()
         { }
 
@@ -16315,7 +15527,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16329,7 +15540,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16340,12 +15550,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox9 : FullBox
     {
         public override string FourCC { get { return "tsyn"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox9()
         { }
 
@@ -16357,7 +15566,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16371,7 +15579,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16382,12 +15589,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox10 : FullBox
     {
         public override string FourCC { get { return "dobr"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox10()
         { }
 
@@ -16399,7 +15605,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16413,7 +15618,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16424,12 +15628,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox11 : FullBox
     {
         public override string FourCC { get { return "favc"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox11()
         { }
 
@@ -16441,7 +15644,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16455,7 +15657,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16466,12 +15667,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox12 : FullBox
     {
         public override string FourCC { get { return "fobr"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox12()
         { }
 
@@ -16483,7 +15683,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16497,7 +15696,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16508,12 +15706,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox13 : FullBox
     {
         public override string FourCC { get { return "pano"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox13()
         { }
 
@@ -16525,7 +15722,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16539,7 +15735,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16550,12 +15745,11 @@ namespace BoxGenerator2
     public class EntityToGroupBox14 : FullBox
     {
         public override string FourCC { get { return "wbbr"; } }
-
         public uint group_id { get; set; }
-
         public uint num_entities_in_group { get; set; }
 
         public uint entity_id { get; set; } //  the remaining data may be specified for a particular grouping_type
+
         public EntityToGroupBox14()
         { }
 
@@ -16567,7 +15761,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 this.entity_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -16581,7 +15774,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
             return size;
@@ -16592,10 +15784,9 @@ namespace BoxGenerator2
     public class AuxiliaryTypeProperty : ItemFullProperty
     {
         public override string FourCC { get { return "auxC"; } }
-
         public string aux_type { get; set; }
-
         public byte[] aux_subtype { get; set; } //  until the end of the box, the semantics depend on the aux_type value
+
         public AuxiliaryTypeProperty()
         { }
 
@@ -16620,8 +15811,8 @@ namespace BoxGenerator2
     public class AVCConfigurationBox1 : Box
     {
         public override string FourCC { get { return "avcC"; } }
-
         public AVCDecoderConfigurationRecord AVCConfig { get; set; }
+
         public AVCConfigurationBox1()
         { }
 
@@ -16644,22 +15835,15 @@ namespace BoxGenerator2
     public class CleanApertureBox1 : Box
     {
         public override string FourCC { get { return "clap"; } }
-
         public uint cleanApertureWidthN { get; set; }
-
         public uint cleanApertureWidthD { get; set; }
-
         public uint cleanApertureHeightN { get; set; }
-
         public uint cleanApertureHeightD { get; set; }
-
         public uint horizOffN { get; set; }
-
         public uint horizOffD { get; set; }
-
         public uint vertOffN { get; set; }
-
         public uint vertOffD { get; set; }
+
         public CleanApertureBox1()
         { }
 
@@ -16696,7 +15880,6 @@ namespace BoxGenerator2
     public class ColourInformationBox1 : Box
     {
         public override string FourCC { get { return "colr"; } }
-
         public uint colour_type { get; set; }
 
         public ushort colour_primaries { get; set; }
@@ -16708,6 +15891,7 @@ namespace BoxGenerator2
         public ICC_profile ICC_profile { get; set; } //  restricted ICC profile
 
         public ICC_profile ICC_profile { get; set; } //  unrestricted ICC profile
+
         public ColourInformationBox1()
         { }
 
@@ -16716,9 +15900,8 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
             this.colour_type = IsoReaderWriter.ReadUInt32(stream);
 
-            if (colour_type == 'nclx')
+            if (colour_type == "nclx")
             {
-
                 this.colour_primaries = IsoReaderWriter.ReadUInt16(stream);
                 this.transfer_characteristics = IsoReaderWriter.ReadUInt16(stream);
                 this.matrix_coefficients = IsoReaderWriter.ReadUInt16(stream);
@@ -16726,15 +15909,13 @@ namespace BoxGenerator2
                 this.reserved = IsoReaderWriter.ReadBits(stream, 7);
             }
 
-            else if (colour_type == 'rICC')
+            else if (colour_type == "rICC")
             {
-
                 this.ICC_profile = IsoReaderWriter.ReadClass(stream);
             }
 
-            else if (colour_type == 'prof')
+            else if (colour_type == "prof")
             {
-
                 this.ICC_profile = IsoReaderWriter.ReadClass(stream);
             }
         }
@@ -16745,9 +15926,8 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, this.colour_type);
 
-            if (colour_type == 'nclx')
+            if (colour_type == "nclx")
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.colour_primaries);
                 size += IsoReaderWriter.WriteUInt16(stream, this.transfer_characteristics);
                 size += IsoReaderWriter.WriteUInt16(stream, this.matrix_coefficients);
@@ -16755,15 +15935,13 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
             }
 
-            else if (colour_type == 'rICC')
+            else if (colour_type == "rICC")
             {
-
                 size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
             }
 
-            else if (colour_type == 'prof')
+            else if (colour_type == "prof")
             {
-
                 size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
             }
             return size;
@@ -16774,8 +15952,8 @@ namespace BoxGenerator2
     public class HEVCConfigurationBox1 : Box
     {
         public override string FourCC { get { return "hvcC"; } }
-
         public HEVCDecoderConfigurationRecord HEVCConfig { get; set; }
+
         public HEVCConfigurationBox1()
         { }
 
@@ -16798,10 +15976,9 @@ namespace BoxGenerator2
     public class ImageMirror : ItemProperty
     {
         public override string FourCC { get { return "imir"; } }
-
         public byte reserved { get; set; } = 0;
-
         public byte axis { get; set; }
+
         public ImageMirror()
         { }
 
@@ -16826,10 +16003,9 @@ namespace BoxGenerator2
     public class ImageRotation : ItemProperty
     {
         public override string FourCC { get { return "irot"; } }
-
         public byte reserved { get; set; } = 0;
-
         public byte angle { get; set; }
+
         public ImageRotation()
         { }
 
@@ -16854,10 +16030,9 @@ namespace BoxGenerator2
     public class ImageSpatialExtentsProperty : ItemFullProperty
     {
         public override string FourCC { get { return "ispe"; } }
-
         public uint image_width { get; set; }
-
         public uint image_height { get; set; }
+
         public ImageSpatialExtentsProperty()
         { }
 
@@ -16882,8 +16057,8 @@ namespace BoxGenerator2
     public class JPEGConfigurationBox : Box
     {
         public override string FourCC { get { return "jpgC"; } }
-
         public byte[] JPEGprefix { get; set; }
+
         public JPEGConfigurationBox()
         { }
 
@@ -16906,8 +16081,8 @@ namespace BoxGenerator2
     public class LHEVCConfigurationBox1 : Box
     {
         public override string FourCC { get { return "lhvC"; } }
-
         public LHEVCDecoderConfigurationRecord LHEVCConfig { get; set; }
+
         public LHEVCConfigurationBox1()
         { }
 
@@ -16930,8 +16105,8 @@ namespace BoxGenerator2
     public class LayerSelectorProperty : ItemProperty
     {
         public override string FourCC { get { return "lsel"; } }
-
         public ushort layer_id { get; set; }
+
         public LayerSelectorProperty()
         { }
 
@@ -16954,8 +16129,8 @@ namespace BoxGenerator2
     public class OperatingPointsInformationProperty : ItemFullProperty
     {
         public override string FourCC { get { return "oinf"; } }
-
         public OperatingPointsRecord op_info { get; set; } //  specified in ISO/IEC 14496-15
+
         public OperatingPointsInformationProperty()
         { }
 
@@ -16978,10 +16153,9 @@ namespace BoxGenerator2
     public class PixelAspectRatioBox1 : Box
     {
         public override string FourCC { get { return "pasp"; } }
-
         public uint hSpacing { get; set; }
-
         public uint vSpacing { get; set; }
+
         public PixelAspectRatioBox1()
         { }
 
@@ -17006,10 +16180,10 @@ namespace BoxGenerator2
     public class PixelInformationProperty : ItemFullProperty
     {
         public override string FourCC { get { return "pixi"; } }
-
         public byte num_channels { get; set; }
 
         public byte bits_per_channel { get; set; }
+
         public PixelInformationProperty()
         { }
 
@@ -17020,7 +16194,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_channels; i++)
             {
-
                 this.bits_per_channel = IsoReaderWriter.ReadUInt8(stream);
             }
         }
@@ -17033,7 +16206,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_channels; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt8(stream, this.bits_per_channel);
             }
             return size;
@@ -17044,10 +16216,9 @@ namespace BoxGenerator2
     public class RelativeLocationProperty : ItemFullProperty
     {
         public override string FourCC { get { return "rloc"; } }
-
         public uint horizontal_offset { get; set; }
-
         public uint vertical_offset { get; set; }
+
         public RelativeLocationProperty()
         { }
 
@@ -17072,17 +16243,21 @@ namespace BoxGenerator2
     public class SubSampleInformationBox1 : FullBox
     {
         public override string FourCC { get { return "subs"; } }
-
         public uint entry_count { get; set; }
 
 
         public uint sample_delta { get; set; }
         public ushort subsample_count { get; set; }
+
+
+
         public uint subsample_size { get; set; }
+
         public ushort subsample_size { get; set; }
         public byte subsample_priority { get; set; }
         public byte discardable { get; set; }
         public uint codec_specific_parameters { get; set; }
+
         public SubSampleInformationBox1()
         { }
 
@@ -17094,27 +16269,22 @@ namespace BoxGenerator2
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 this.sample_delta = IsoReaderWriter.ReadUInt32(stream);
                 this.subsample_count = IsoReaderWriter.ReadUInt16(stream);
 
                 if (subsample_count > 0)
                 {
 
-
                     for (int j = 0; j < subsample_count; j++)
                     {
 
-
                         if (version == 1)
                         {
-
                             this.subsample_size = IsoReaderWriter.ReadUInt32(stream);
                         }
 
                         else
                         {
-
                             this.subsample_size = IsoReaderWriter.ReadUInt16(stream);
                         }
                         this.subsample_priority = IsoReaderWriter.ReadUInt8(stream);
@@ -17134,27 +16304,22 @@ namespace BoxGenerator2
 
             for (int i = 0; i < entry_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.sample_delta);
                 size += IsoReaderWriter.WriteUInt16(stream, this.subsample_count);
 
                 if (subsample_count > 0)
                 {
 
-
                     for (int j = 0; j < subsample_count; j++)
                     {
 
-
                         if (version == 1)
                         {
-
                             size += IsoReaderWriter.WriteUInt32(stream, this.subsample_size);
                         }
 
                         else
                         {
-
                             size += IsoReaderWriter.WriteUInt16(stream, this.subsample_size);
                         }
                         size += IsoReaderWriter.WriteUInt8(stream, this.subsample_priority);
@@ -17171,8 +16336,8 @@ namespace BoxGenerator2
     public class TargetOlsProperty : ItemFullProperty
     {
         public override string FourCC { get { return "tols"; } }
-
         public ushort target_ols_idx { get; set; }
+
         public TargetOlsProperty()
         { }
 
@@ -17195,10 +16360,9 @@ namespace BoxGenerator2
     public class AutoExposureBracketingEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "aebr"; } }
-
         public byte exposure_step { get; set; }
-
         public byte exposure_numerator { get; set; }
+
         public AutoExposureBracketingEntry()
         { }
 
@@ -17223,10 +16387,9 @@ namespace BoxGenerator2
     public class FlashExposureBracketingEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "afbr"; } }
-
         public byte flash_exposure_numerator { get; set; }
-
         public byte flash_exposure_denominator { get; set; }
+
         public FlashExposureBracketingEntry()
         { }
 
@@ -17251,10 +16414,9 @@ namespace BoxGenerator2
     public class AccessibilityTextProperty : ItemFullProperty
     {
         public override string FourCC { get { return "altt"; } }
-
         public string alt_text { get; set; }
-
         public string alt_lang { get; set; }
+
         public AccessibilityTextProperty()
         { }
 
@@ -17279,8 +16441,8 @@ namespace BoxGenerator2
     public class CreationTimeProperty : ItemFullProperty
     {
         public override string FourCC { get { return "crtt"; } }
-
         public ulong creation_time { get; set; }
+
         public CreationTimeProperty()
         { }
 
@@ -17303,10 +16465,9 @@ namespace BoxGenerator2
     public class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "dobr"; } }
-
         public byte f_stop_numerator { get; set; }
-
         public byte f_stop_denominator { get; set; }
+
         public DepthOfFieldBracketingEntry()
         { }
 
@@ -17331,10 +16492,9 @@ namespace BoxGenerator2
     public class FocusBracketingEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "fobr"; } }
-
         public ushort focus_distance_numerator { get; set; }
-
         public ushort focus_distance_denominator { get; set; }
+
         public FocusBracketingEntry()
         { }
 
@@ -17359,14 +16519,11 @@ namespace BoxGenerator2
     public class ImageScaling : ItemFullProperty
     {
         public override string FourCC { get { return "iscl"; } }
-
         public ushort target_width_numerator { get; set; }
-
         public ushort target_width_denominator { get; set; }
-
         public ushort target_height_numerator { get; set; }
-
         public ushort target_height_denominator { get; set; }
+
         public ImageScaling()
         { }
 
@@ -17395,8 +16552,8 @@ namespace BoxGenerator2
     public class ModificationTimeProperty : ItemFullProperty
     {
         public override string FourCC { get { return "mdft"; } }
-
         public ulong modification_time { get; set; }
+
         public ModificationTimeProperty()
         { }
 
@@ -17419,8 +16576,8 @@ namespace BoxGenerator2
     public class PanoramaEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "pano"; } }
-
         public ushort frame_number { get; set; }
+
         public PanoramaEntry()
         { }
 
@@ -17443,10 +16600,10 @@ namespace BoxGenerator2
     public class RequiredReferenceTypesProperty : ItemFullProperty
     {
         public override string FourCC { get { return "rref"; } }
-
         public byte reference_type_count { get; set; }
 
         public uint[] reference_type { get; set; }
+
         public RequiredReferenceTypesProperty()
         { }
 
@@ -17457,7 +16614,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < reference_type_count; i++)
             {
-
                 this.reference_type = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -17470,7 +16626,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < reference_type_count; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.reference_type);
             }
             return size;
@@ -17481,14 +16636,11 @@ namespace BoxGenerator2
     public class UserDescriptionProperty : ItemFullProperty
     {
         public override string FourCC { get { return "udes"; } }
-
         public string lang { get; set; }
-
         public string name { get; set; }
-
         public string description { get; set; }
-
         public string tags { get; set; }
+
         public UserDescriptionProperty()
         { }
 
@@ -17517,10 +16669,9 @@ namespace BoxGenerator2
     public class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "wbbr"; } }
-
         public ushort blue_amber { get; set; }
-
         public byte green_magenta { get; set; }
+
         public WhiteBalanceBracketingEntry()
         { }
 
@@ -17545,20 +16696,14 @@ namespace BoxGenerator2
     public class ContentColourVolumeBox1 : Box
     {
         public override string FourCC { get { return "cclv"; } }
-
         public byte reserved1 { get; set; } = 0; //  ccv_cancel_flag
-
         public byte reserved2 { get; set; } = 0; //  ccv_persistence_flag
-
         public byte ccv_primaries_present_flag { get; set; }
-
         public byte ccv_min_luminance_value_present_flag { get; set; }
-
         public byte ccv_max_luminance_value_present_flag { get; set; }
-
         public byte ccv_avg_luminance_value_present_flag { get; set; }
-
         public byte ccv_reserved_zero_2bits { get; set; } = 0;
+
 
         public int[] ccv_primaries_x { get; set; }
         public int[] ccv_primaries_y { get; set; }
@@ -17568,6 +16713,7 @@ namespace BoxGenerator2
         public uint ccv_max_luminance_value { get; set; }
 
         public uint ccv_avg_luminance_value { get; set; }
+
         public ContentColourVolumeBox1()
         { }
 
@@ -17585,10 +16731,8 @@ namespace BoxGenerator2
             if (ccv_primaries_present_flag)
             {
 
-
                 for (int c = 0; c < 3; c++)
                 {
-
                     this.ccv_primaries_x = IsoReaderWriter.ReadInt32(stream);
                     this.ccv_primaries_y = IsoReaderWriter.ReadInt32(stream);
                 }
@@ -17596,19 +16740,16 @@ namespace BoxGenerator2
 
             if (ccv_min_luminance_value_present_flag)
             {
-
                 this.ccv_min_luminance_value = IsoReaderWriter.ReadUInt32(stream);
             }
 
             if (ccv_max_luminance_value_present_flag)
             {
-
                 this.ccv_max_luminance_value = IsoReaderWriter.ReadUInt32(stream);
             }
 
             if (ccv_avg_luminance_value_present_flag)
             {
-
                 this.ccv_avg_luminance_value = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -17628,10 +16769,8 @@ namespace BoxGenerator2
             if (ccv_primaries_present_flag)
             {
 
-
                 for (int c = 0; c < 3; c++)
                 {
-
                     size += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_x);
                     size += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_y);
                 }
@@ -17639,19 +16778,16 @@ namespace BoxGenerator2
 
             if (ccv_min_luminance_value_present_flag)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.ccv_min_luminance_value);
             }
 
             if (ccv_max_luminance_value_present_flag)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.ccv_max_luminance_value);
             }
 
             if (ccv_avg_luminance_value_present_flag)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.ccv_avg_luminance_value);
             }
             return size;
@@ -17665,14 +16801,11 @@ namespace BoxGenerator2
 
         public ushort display_primaries_x { get; set; }
         public ushort display_primaries_y { get; set; }
-
         public ushort white_point_x { get; set; }
-
         public ushort white_point_y { get; set; }
-
         public uint max_display_mastering_luminance { get; set; }
-
         public uint min_display_mastering_luminance { get; set; }
+
         public MasteringDisplayColourVolumeBox1()
         { }
 
@@ -17682,7 +16815,6 @@ namespace BoxGenerator2
 
             for (int c = 0; c < 3; c++)
             {
-
                 this.display_primaries_x = IsoReaderWriter.ReadUInt16(stream);
                 this.display_primaries_y = IsoReaderWriter.ReadUInt16(stream);
             }
@@ -17699,7 +16831,6 @@ namespace BoxGenerator2
 
             for (int c = 0; c < 3; c++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_x);
                 size += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_y);
             }
@@ -17715,10 +16846,9 @@ namespace BoxGenerator2
     public class ContentLightLevelBox1 : Box
     {
         public override string FourCC { get { return "clli"; } }
-
         public ushort max_content_light_level { get; set; }
-
         public ushort max_pic_average_light_level { get; set; }
+
         public ContentLightLevelBox1()
         { }
 
@@ -17743,8 +16873,8 @@ namespace BoxGenerator2
     public class WipeTransitionEffectProperty : ItemFullProperty
     {
         public override string FourCC { get { return "wipe"; } }
-
         public byte transition_direction { get; set; }
+
         public WipeTransitionEffectProperty()
         { }
 
@@ -17767,10 +16897,9 @@ namespace BoxGenerator2
     public class ZoomTransitionEffectProperty : ItemFullProperty
     {
         public override string FourCC { get { return "zoom"; } }
-
         public byte transition_direction { get; set; }
-
         public byte transition_shape { get; set; }
+
         public ZoomTransitionEffectProperty()
         { }
 
@@ -17795,8 +16924,8 @@ namespace BoxGenerator2
     public class FadeTransitionEffectProperty : ItemFullProperty
     {
         public override string FourCC { get { return "fade"; } }
-
         public byte transition_direction { get; set; }
+
         public FadeTransitionEffectProperty()
         { }
 
@@ -17819,8 +16948,8 @@ namespace BoxGenerator2
     public class SplitTransitionEffectProperty : ItemFullProperty
     {
         public override string FourCC { get { return "splt"; } }
-
         public byte transition_direction { get; set; }
+
         public SplitTransitionEffectProperty()
         { }
 
@@ -17843,8 +16972,8 @@ namespace BoxGenerator2
     public class SuggestedTransitionPeriodProperty : ItemFullProperty
     {
         public override string FourCC { get { return "stpe"; } }
-
         public byte transition_period { get; set; }
+
         public SuggestedTransitionPeriodProperty()
         { }
 
@@ -17867,8 +16996,8 @@ namespace BoxGenerator2
     public class SuggestedTimeDisplayDurationProperty : ItemFullProperty
     {
         public override string FourCC { get { return "ssld"; } }
-
         public ushort duration { get; set; }
+
         public SuggestedTimeDisplayDurationProperty()
         { }
 
@@ -17891,8 +17020,8 @@ namespace BoxGenerator2
     public class MaskConfigurationProperty : ItemFullProperty
     {
         public override string FourCC { get { return "mskC"; } }
-
         public byte bits_per_pixel { get; set; }
+
         public MaskConfigurationProperty()
         { }
 
@@ -17915,8 +17044,8 @@ namespace BoxGenerator2
     public class VvcSubpicIDProperty : ItemFullProperty
     {
         public override string FourCC { get { return "spid"; } }
-
         public VvcSubpicIDEntry sid_info { get; set; } //  specified in ISO/IEC 14496-15
+
         public VvcSubpicIDProperty()
         { }
 
@@ -17939,8 +17068,8 @@ namespace BoxGenerator2
     public class VvcSubpicOrderProperty : ItemFullProperty
     {
         public override string FourCC { get { return "spor"; } }
-
         public VvcSubpicOrderEntry sor_info { get; set; } //  specified in ISO/IEC 14496-15
+
         public VvcSubpicOrderProperty()
         { }
 
@@ -17963,12 +17092,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBox2 : Box
     {
         public override string FourCC { get { return "auxl"; } }
-
         public ushort from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public ushort to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBox2()
         { }
 
@@ -17980,7 +17108,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -17994,7 +17121,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
             return size;
@@ -18005,12 +17131,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBoxLarge2 : Box
     {
         public override string FourCC { get { return "auxl"; } }
-
         public uint from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public uint to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBoxLarge2()
         { }
 
@@ -18022,7 +17147,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -18036,7 +17160,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
             return size;
@@ -18047,12 +17170,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBox3 : Box
     {
         public override string FourCC { get { return "base"; } }
-
         public ushort from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public ushort to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBox3()
         { }
 
@@ -18064,7 +17186,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -18078,7 +17199,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
             return size;
@@ -18089,12 +17209,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBoxLarge3 : Box
     {
         public override string FourCC { get { return "base"; } }
-
         public uint from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public uint to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBoxLarge3()
         { }
 
@@ -18106,7 +17225,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -18120,7 +17238,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
             return size;
@@ -18131,12 +17248,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBox4 : Box
     {
         public override string FourCC { get { return "dimg"; } }
-
         public ushort from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public ushort to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBox4()
         { }
 
@@ -18148,7 +17264,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -18162,7 +17277,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
             return size;
@@ -18173,12 +17287,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBoxLarge4 : Box
     {
         public override string FourCC { get { return "dimg"; } }
-
         public uint from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public uint to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBoxLarge4()
         { }
 
@@ -18190,7 +17303,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -18204,7 +17316,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
             return size;
@@ -18215,12 +17326,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBox5 : Box
     {
         public override string FourCC { get { return "dpnd"; } }
-
         public ushort from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public ushort to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBox5()
         { }
 
@@ -18232,7 +17342,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -18246,7 +17355,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
             return size;
@@ -18257,12 +17365,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBoxLarge5 : Box
     {
         public override string FourCC { get { return "dpnd"; } }
-
         public uint from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public uint to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBoxLarge5()
         { }
 
@@ -18274,7 +17381,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -18288,7 +17394,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
             return size;
@@ -18299,12 +17404,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBox6 : Box
     {
         public override string FourCC { get { return "exbl"; } }
-
         public ushort from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public ushort to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBox6()
         { }
 
@@ -18316,7 +17420,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -18330,7 +17433,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
             return size;
@@ -18341,12 +17443,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBoxLarge6 : Box
     {
         public override string FourCC { get { return "exbl"; } }
-
         public uint from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public uint to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBoxLarge6()
         { }
 
@@ -18358,7 +17459,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -18372,7 +17472,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
             return size;
@@ -18383,12 +17482,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBox7 : Box
     {
         public override string FourCC { get { return "grid"; } }
-
         public ushort from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public ushort to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBox7()
         { }
 
@@ -18400,7 +17498,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -18414,7 +17511,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
             return size;
@@ -18425,12 +17521,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBoxLarge7 : Box
     {
         public override string FourCC { get { return "grid"; } }
-
         public uint from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public uint to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBoxLarge7()
         { }
 
@@ -18442,7 +17537,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -18456,7 +17550,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
             return size;
@@ -18467,12 +17560,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBox8 : Box
     {
         public override string FourCC { get { return "thmb"; } }
-
         public ushort from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public ushort to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBox8()
         { }
 
@@ -18484,7 +17576,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -18498,7 +17589,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
             return size;
@@ -18509,12 +17599,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBoxLarge8 : Box
     {
         public override string FourCC { get { return "thmb"; } }
-
         public uint from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public uint to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBoxLarge8()
         { }
 
@@ -18526,7 +17615,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -18540,7 +17628,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
             return size;
@@ -18551,12 +17638,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBox9 : Box
     {
         public override string FourCC { get { return "pred"; } }
-
         public ushort from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public ushort to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBox9()
         { }
 
@@ -18568,7 +17654,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -18582,7 +17667,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
             return size;
@@ -18593,12 +17677,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBoxLarge9 : Box
     {
         public override string FourCC { get { return "pred"; } }
-
         public uint from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public uint to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBoxLarge9()
         { }
 
@@ -18610,7 +17693,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -18624,7 +17706,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
             return size;
@@ -18635,12 +17716,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBox10 : Box
     {
         public override string FourCC { get { return "tbas"; } }
-
         public ushort from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public ushort to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBox10()
         { }
 
@@ -18652,7 +17732,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt16(stream);
             }
         }
@@ -18666,7 +17745,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
             return size;
@@ -18677,12 +17755,11 @@ namespace BoxGenerator2
     public class SingleItemTypeReferenceBoxLarge10 : Box
     {
         public override string FourCC { get { return "tbas"; } }
-
         public uint from_item_ID { get; set; }
-
         public ushort reference_count { get; set; }
 
         public uint to_item_ID { get; set; }
+
         public SingleItemTypeReferenceBoxLarge10()
         { }
 
@@ -18694,7 +17771,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 this.to_item_ID = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -18708,7 +17784,6 @@ namespace BoxGenerator2
 
             for (int j = 0; j < reference_count; j++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
             return size;
@@ -18719,10 +17794,9 @@ namespace BoxGenerator2
     public class VisualEquivalenceEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "eqiv"; } }
-
         public short time_offset { get; set; }
-
         public ushort timescale_multiplier { get; set; }
+
         public VisualEquivalenceEntry()
         { }
 
@@ -18747,12 +17821,11 @@ namespace BoxGenerator2
     public class DirectReferenceSamplesList : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "refs"; } }
-
         public uint sample_id { get; set; }
-
         public byte num_direct_reference_samples { get; set; }
 
         public uint direct_reference_sample_id { get; set; }
+
         public DirectReferenceSamplesList()
         { }
 
@@ -18764,7 +17837,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_direct_reference_samples; i++)
             {
-
                 this.direct_reference_sample_id = IsoReaderWriter.ReadUInt32(stream);
             }
         }
@@ -18778,7 +17850,6 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_direct_reference_samples; i++)
             {
-
                 size += IsoReaderWriter.WriteUInt32(stream, this.direct_reference_sample_id);
             }
             return size;
@@ -18789,10 +17860,9 @@ namespace BoxGenerator2
     public class AutoExposureBracketingEntry1 : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "aebr"; } }
-
         public byte exposure_step { get; set; }
-
         public byte exposure_numerator { get; set; }
+
         public AutoExposureBracketingEntry1()
         { }
 
@@ -18817,10 +17887,9 @@ namespace BoxGenerator2
     public class FlashExposureBracketingEntry1 : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "afbr"; } }
-
         public byte flash_exposure_numerator { get; set; }
-
         public byte flash_exposure_denominator { get; set; }
+
         public FlashExposureBracketingEntry1()
         { }
 
@@ -18845,10 +17914,9 @@ namespace BoxGenerator2
     public class DepthOfFieldBracketingEntry1 : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "dobr"; } }
-
         public byte f_stop_numerator { get; set; }
-
         public byte f_stop_denominator { get; set; }
+
         public DepthOfFieldBracketingEntry1()
         { }
 
@@ -18873,10 +17941,9 @@ namespace BoxGenerator2
     public class FocusBracketingEntry1 : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "fobr"; } }
-
         public ushort focus_distance_numerator { get; set; }
-
         public ushort focus_distance_denominator { get; set; }
+
         public FocusBracketingEntry1()
         { }
 
@@ -18901,8 +17968,8 @@ namespace BoxGenerator2
     public class PanoramaEntry1 : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "pano"; } }
-
         public ushort frame_number { get; set; }
+
         public PanoramaEntry1()
         { }
 
@@ -18925,10 +17992,9 @@ namespace BoxGenerator2
     public class WhiteBalanceBracketingEntry1 : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "wbbr"; } }
-
         public ushort blue_amber { get; set; }
-
         public byte green_magenta { get; set; }
+
         public WhiteBalanceBracketingEntry1()
         { }
 

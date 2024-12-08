@@ -10,6 +10,8 @@ namespace BoxGenerator2
     {
         public abstract string FourCC { get; }
 
+        public ulong size { get; set; }
+
         public async virtual Task ReadAsync(Stream stream)
         {
             throw new NotImplementedException();
@@ -27,7 +29,102 @@ namespace BoxGenerator2
         public int flags { get; set; }
     }
 
-    public class VisualSampleEntry
+    public abstract class VisualSampleGroupEntry : Box
+    {
+
+    }
+    
+    public abstract class SampleEntry : Box
+    {
+
+    }
+    
+    public abstract class ItemFullProperty : Box
+    {
+
+    } 
+    
+    public abstract class ItemProperty : Box
+    {
+
+    }
+    
+    public abstract class LoudnessBaseBox : Box
+    {
+
+    }
+    
+    public abstract class DataEntryBaseBox : Box
+    {
+
+    }
+    
+    public abstract class GeneralTypeBox : Box
+    {
+
+    }
+    
+    public abstract class ItemInfoExtension : Box
+    {
+
+    }
+    
+    public abstract class CompressedBox : Box
+    {
+
+    }
+    
+    public abstract class PlainTextSampleEntry : Box
+    {
+
+    }
+    
+    public abstract class MetadataSampleEntry : Box
+    {
+
+    }
+    
+    public abstract class MPEG2TSSampleEntry : Box
+    {
+
+    }
+    
+    public abstract class RtpReceptionHintSampleEntry : Box
+    {
+
+    }
+    
+    public abstract class SubtitleSampleEntry : Box
+    {
+
+    }
+    
+    public abstract class AudioSampleGroupEntry : Box
+    {
+
+    }
+    
+    public abstract class SampleGroupDescriptionEntry : Box
+    {
+
+    }
+    
+    public abstract class ExtrinsicCameraParametersBox : Box
+    {
+        // TODO
+    }
+    
+    public abstract class IntrinsicCameraParametersBox : Box
+    {
+        // TODO
+    }
+
+    public class Descriptor
+    {
+
+    }
+    
+    public class ICC_profile
     {
 
     }

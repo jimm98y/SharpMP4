@@ -68,6 +68,11 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
+    internal static ushort[] ReadUInt16Array(Stream stream, int v)
+    {
+        throw new NotImplementedException();
+    }
+
     internal static uint ReadUInt24(Stream stream)
     {
         throw new NotImplementedException();
@@ -159,6 +164,11 @@ internal class IsoReaderWriter
     }
 
     internal static ulong WriteUInt16(Stream stream, ushort value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong WriteUInt16Array(Stream stream, int v, ushort[] opcolor)
     {
         throw new NotImplementedException();
     }

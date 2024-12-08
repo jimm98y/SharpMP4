@@ -218,9 +218,11 @@ partial class Program
         OneOf(
             Try(String("int i, j")), // WORKAROUND
             Try(String("int i,j")), // WORKAROUND
+            Try(String("int i")), // WORKAROUND
             Try(String("unsigned int(64)")),
             Try(String("unsigned int(48)")),
             Try(String("template int(32)[9]")),
+            Try(String("unsigned int(32)[3]")),
             Try(String("unsigned int(32)")),
             Try(String("unsigned_int(32)")),
             Try(String("unsigned int(24)")),
@@ -301,6 +303,7 @@ partial class Program
             Try(String("uint(32)")),
             Try(String("uint(16)")),
             Try(String("uint(64)")),
+            Try(String("uint(8)[32]")),
             Try(String("uint(8)")),
             Try(String("signed int(32)")),
             Try(String("signed int (16)")),
@@ -331,8 +334,8 @@ partial class Program
             Try(String("GroupIdToNameBox")),
             Try(String("base64string")),
             Try(String("ProtectionSchemeInfoBox")),
-            Try(String("SingleItemTypeReferenceBox")),
             Try(String("SingleItemTypeReferenceBoxLarge")),
+            Try(String("SingleItemTypeReferenceBox")),
             Try(String("HandlerBox(handler_type)")),
             Try(String("PrimaryItemBox")),
             Try(String("DataInformationBox")),
@@ -368,6 +371,7 @@ partial class Program
             Try(String("VvcSubpicIDEntry")),
             Try(String("VvcSubpicOrderEntry")),
             Try(String("URIInitBox")),
+            Try(String("URIBox")),
             Try(String("URIbox")),
             Try(String("CleanApertureBox")),
             Try(String("PixelAspectRatioBox")),
@@ -404,6 +408,8 @@ partial class Program
             Try(String("VvcNALUConfigBox")),
             Try(String("VvcConfigurationBox")),
             Try(String("HEVCTileConfigurationBox")),
+            Try(String("MetadataKeyTableBox()")),
+            Try(String("BitRateBox ()")),
             Try(String("size += 5")), // WORKAROUND
             Try(String("j=1")), // WORKAROUND
             Try(String("j++")), // WORKAROUND
@@ -619,6 +625,13 @@ namespace BoxGenerator2
 ";
     }
 
+    private static string Sanitize(string name)
+    {
+        if (name == "namespace")
+            return "ns";
+        return name;
+    }
+
     private static string BuildCode(PseudoClass? b)
     {
         string cls = @$"public class {b.BoxName}";
@@ -626,14 +639,14 @@ namespace BoxGenerator2
             cls += $" : {b.Extended.BoxName}";
 
         cls += "\r\n{\r\n";
-        cls += $"\tpublic override string FourCC {{ get {{ return \"{b.FourCC}\"; }} }}\r\n";
+        cls += $"\tpublic override string FourCC {{ get {{ return \"{b.FourCC}\"; }} }}";
 
         foreach (var field in b.Fields)
         {
             cls += "\r\n" + BuildProperty(field);
         }
 
-        cls += $"\tpublic {b.BoxName}()\r\n\t{{ }}\r\n";
+        cls += $"\r\n\r\n\tpublic {b.BoxName}()\r\n\t{{ }}\r\n";
         cls += "\r\n\tpublic async override Task ReadAsync(Stream stream)\r\n\t{\r\n\t\tawait base.ReadAsync(stream);";
         foreach (var field in b.Fields)
         {
@@ -662,7 +675,7 @@ namespace BoxGenerator2
             string ret = "";
             foreach(var f in block.Content)
             {
-                ret += BuildProperty(f);
+                ret += "\r\n" + BuildProperty(f);
             }
             return ret;
         }
@@ -678,6 +691,10 @@ namespace BoxGenerator2
         }
         string value = (field as PseudoField)?.Value;
         string tp = (field as PseudoField)?.Type;
+
+        if (string.IsNullOrEmpty(tp) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
+            tp = (field as PseudoField)?.Name?.Replace("[]", "").Replace("()", "");
+
         if (!string.IsNullOrEmpty(tp))
         {
             if (IsWorkaround((field as PseudoField)?.Type))
@@ -696,18 +713,29 @@ namespace BoxGenerator2
                     typedef = "";
                     value = "";
                 }
+                if(value == "= {if track_is_audio 0x0100 else 0}") // TODO
+                {
+                    value = "= 0";
+                    comment = "// = { default samplerate of media}<<16;" + comment;
+                }
+                else if(value == "= { default samplerate of media}<<16")
+                {
+                    value = "= 0";
+                    comment = "// = {if track_is_audio 0x0100 else 0};" + comment;
+                }
+
                 if (!string.IsNullOrEmpty(value))
                 {
-                    value = " " + value + ";";
+                    value = " " + value.Replace("'", "\"") + ";";
                 }
 
-                string name = (field as PseudoField)?.Name;
+                string name = Sanitize((field as PseudoField)?.Name);
                 if(string.IsNullOrEmpty(name))
                 {
-                    name = (field as PseudoField)?.Type.Replace("[]", ""); 
+                    name = GetType((field as PseudoField)?.Type)?.Replace("[]", "");
                 }
 
-                return $"\tpublic {GetType((field as PseudoField)?.Type)}{typedef} {name} {{ get; set; }}{value}{comment}\r\n";
+                return $"\tpublic {GetType((field as PseudoField)?.Type)}{typedef} {name} {{ get; set; }}{value}{comment}";
             }
         }
         else
@@ -724,21 +752,25 @@ namespace BoxGenerator2
         }
 
         string tt = (field as PseudoField)?.Type;
+
+        if (string.IsNullOrEmpty(tt) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
+            tt = (field as PseudoField)?.Name?.Replace("[]", "").Replace("()", "");
+
         if (string.IsNullOrEmpty(tt))
             return "";
 
         if (IsWorkaround(tt))
         {
-            if (tt == "int i, j" || tt == "int i,j") // this one must be ignored
+            if (tt == "int i, j" || tt == "int i,j" || tt == "int i") // this one must be ignored
                 return "";
             else
                 return $"{tt};";
         }
 
-        string name = (field as PseudoField)?.Name;
+        string name = Sanitize((field as PseudoField)?.Name);
         if (string.IsNullOrEmpty(name))
         {
-            name = (field as PseudoField)?.Type.Replace("[]", "");
+            name = GetType((field as PseudoField)?.Type)?.Replace("[]", "");
         }
 
         string m = GetReadMethod(tt);
@@ -750,13 +782,13 @@ namespace BoxGenerator2
         string spacing = GetSpacing(level);
         string ret;
 
-        string condition = block.Condition;
+        string condition = block.Condition?.Replace("'", "\"");
         if (block.Type == "for")
         {
             condition = "(int " + block.Condition.TrimStart('(');
         }
 
-        ret = $"\r\n{spacing}{block.Type} {condition}\r\n{spacing}{{\r\n";
+        ret = $"\r\n{spacing}{block.Type} {condition}\r\n{spacing}{{";
 
         foreach (var field in block.Content)
         {
@@ -778,21 +810,25 @@ namespace BoxGenerator2
         }
 
         string tt = (field as PseudoField)?.Type;
+
+        if (string.IsNullOrEmpty(tt) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
+            tt = (field as PseudoField)?.Name?.Replace("[]", "").Replace("()", "");
+
         if (string.IsNullOrEmpty(tt))
             return "";
 
         if (IsWorkaround(tt))
         {
-            if (tt == "int i, j" || tt == "int i,j") // this one must be ignored
+            if (tt == "int i, j" || tt == "int i,j" || tt == "int i") // this one must be ignored
                 return "";
             else
                 return $"{tt};";
         }
 
-        string name = (field as PseudoField)?.Name;
+        string name = Sanitize((field as PseudoField)?.Name);
         if (string.IsNullOrEmpty(name))
         {
-            name = (field as PseudoField)?.Type.Replace("[]","");
+            name = GetType((field as PseudoField)?.Type)?.Replace("[]","");
         }
 
         string m = GetWriteMethod(tt);
@@ -804,13 +840,13 @@ namespace BoxGenerator2
         string spacing = GetSpacing(level);
         string ret;
 
-        string condition = block.Condition;
+        string condition = block.Condition?.Replace("'", "\"");
         if (block.Type == "for")
         {
             condition = "(int " + block.Condition.TrimStart('(');
         }
 
-        ret = $"\r\n{spacing}{block.Type} {condition}\r\n{spacing}{{\r\n";
+        ret = $"\r\n{spacing}{block.Type} {condition}\r\n{spacing}{{";
 
         foreach (var field in block.Content)
         {
@@ -839,6 +875,7 @@ namespace BoxGenerator2
             { "unsigned int(64)", "IsoReaderWriter.ReadUInt64(stream)" },
             { "unsigned int(48)", "IsoReaderWriter.ReadUInt48(stream)" },
             { "template int(32)[9]", "IsoReaderWriter.ReadUInt32Array(stream, 9)" },
+            { "unsigned int(32)[3]", "IsoReaderWriter.ReadUInt32Array(stream, 3)" },
             { "unsigned int(32)", "IsoReaderWriter.ReadUInt32(stream)" },
             { "unsigned_int(32)", "IsoReaderWriter.ReadUInt32(stream)" },
             { "unsigned int(24)", "IsoReaderWriter.ReadUInt24(stream)" },
@@ -919,6 +956,7 @@ namespace BoxGenerator2
             { "uint(32)", "IsoReaderWriter.ReadUInt32(stream)" },
             { "uint(16)", "IsoReaderWriter.ReadUInt16(stream)" },
             { "uint(64)", "IsoReaderWriter.ReadUInt64(stream)" },
+            { "uint(8)[32]", "IsoReaderWriter.ReadBytes(stream, 32)" },
             { "uint(8)", "IsoReaderWriter.ReadUInt8(stream)" },
             { "signed int(32)", "IsoReaderWriter.ReadInt32(stream)" },
             { "signed int (16)", "IsoReaderWriter.ReadInt16(stream)" },
@@ -939,7 +977,7 @@ namespace BoxGenerator2
             { "ICC_profile", "IsoReaderWriter.ReadClass(stream)" },
             { "OriginalFormatBox(fmt)", "IsoReaderWriter.ReadBox(stream)" },
             { "DataEntryBaseBox(entry_type, entry_flags)", "IsoReaderWriter.ReadBox(stream)" },
-            { "ItemInfoEntry[ entry_count ]", "ItemInfoEntry[])" },
+            { "ItemInfoEntry[ entry_count ]", "IsoReaderWriter.ReadClass(stream)" },
             { "TypeCombinationBox", "IsoReaderWriter.ReadBox(stream)" },
             { "FilePartitionBox", "IsoReaderWriter.ReadBox(stream)" },
             { "FECReservoirBox", "IsoReaderWriter.ReadBox(stream)" },
@@ -986,6 +1024,7 @@ namespace BoxGenerator2
             { "VvcSubpicIDEntry", "IsoReaderWriter.ReadClass(stream)" },
             { "VvcSubpicOrderEntry", "IsoReaderWriter.ReadClass(stream)" },
             { "URIInitBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "URIBox", "IsoReaderWriter.ReadBox(stream)" },
             { "URIbox", "IsoReaderWriter.ReadBox(stream)" },
             { "CleanApertureBox", "IsoReaderWriter.ReadBox(stream)" },
             { "PixelAspectRatioBox", "IsoReaderWriter.ReadBox(stream)" },
@@ -1022,6 +1061,8 @@ namespace BoxGenerator2
             { "VvcNALUConfigBox", "IsoReaderWriter.ReadBox(stream)" },
             { "VvcConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
             { "HEVCTileConfigurationBox", "IsoReaderWriter.ReadBox(stream)" },
+            { "MetadataKeyTableBox()", "IsoReaderWriter.ReadBox(stream)" },
+            { "BitRateBox ()", "IsoReaderWriter.ReadBox(stream)" },
         };
         return map[type];
     }
@@ -1033,6 +1074,7 @@ namespace BoxGenerator2
             { "unsigned int(64)", "IsoReaderWriter.WriteUInt64(stream" },
             { "unsigned int(48)", "IsoReaderWriter.WriteUInt48(stream" },
             { "template int(32)[9]", "IsoReaderWriter.WriteUInt32Array(stream, 9" },
+            { "unsigned int(32)[3]", "IsoReaderWriter.WriteUInt32Array(stream, 3" },
             { "unsigned int(32)", "IsoReaderWriter.WriteUInt32(stream" },
             { "unsigned_int(32)", "IsoReaderWriter.WriteUInt32(stream" },
             { "unsigned int(24)", "IsoReaderWriter.WriteUInt24(stream" },
@@ -1113,6 +1155,7 @@ namespace BoxGenerator2
             { "uint(32)", "IsoReaderWriter.WriteUInt32(stream" },
             { "uint(16)", "IsoReaderWriter.WriteUInt16(stream" },
             { "uint(64)", "IsoReaderWriter.WriteUInt64(stream" },
+            { "uint(8)[32]", "IsoReaderWriter.WriteBytes(stream, 32" },
             { "uint(8)", "IsoReaderWriter.WriteUInt8(stream" },
             { "signed int(32)", "IsoReaderWriter.WriteInt32(stream" },
             { "signed int (16)", "IsoReaderWriter.WriteInt16(stream" },
@@ -1133,7 +1176,7 @@ namespace BoxGenerator2
             { "ICC_profile", "IsoReaderWriter.WriteClass(stream" },
             { "OriginalFormatBox(fmt)", "IsoReaderWriter.WriteBox(stream" },
             { "DataEntryBaseBox(entry_type, entry_flags)", "IsoReaderWriter.WriteBox(stream" },
-            { "ItemInfoEntry[ entry_count ]", "ItemInfoEntry[]" },
+            { "ItemInfoEntry[ entry_count ]", "IsoReaderWriter.WriteClass(stream" },
             { "TypeCombinationBox", "IsoReaderWriter.WriteBox(stream" },
             { "FilePartitionBox", "IsoReaderWriter.WriteBox(stream" },
             { "FECReservoirBox", "IsoReaderWriter.WriteBox(stream" },
@@ -1180,6 +1223,7 @@ namespace BoxGenerator2
             { "VvcSubpicIDEntry", "IsoReaderWriter.WriteClass(stream" },
             { "VvcSubpicOrderEntry", "IsoReaderWriter.WriteClass(stream" },
             { "URIInitBox", "IsoReaderWriter.WriteBox(stream" },
+            { "URIBox", "IsoReaderWriter.WriteBox(stream" },
             { "URIbox", "IsoReaderWriter.WriteBox(stream" },
             { "CleanApertureBox", "IsoReaderWriter.WriteBox(stream" },
             { "PixelAspectRatioBox", "IsoReaderWriter.WriteBox(stream" },
@@ -1216,6 +1260,8 @@ namespace BoxGenerator2
             { "VvcNALUConfigBox", "IsoReaderWriter.WriteBox(stream" },
             { "VvcConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
             { "HEVCTileConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "MetadataKeyTableBox()", "IsoReaderWriter..WriteBox(stream)" },
+            { "BitRateBox ()", "IsoReaderWriter..WriteBox(stream)" },
         };
         return map[type];
     }
@@ -1226,6 +1272,7 @@ namespace BoxGenerator2
         {
             "int i, j",
             "int i,j",
+            "int i",
             "size += 5",
             "j=1",
             "j++",
@@ -1241,6 +1288,7 @@ namespace BoxGenerator2
             { "unsigned int(64)", "ulong" },
             { "unsigned int(48)", "ulong" },
             { "template int(32)[9]", "uint[]" },
+            { "unsigned int(32)[3]", "uint[]" },
             { "unsigned int(32)", "uint" },
             { "unsigned_int(32)", "uint" },
             { "unsigned int(24)", "uint" },
@@ -1321,6 +1369,7 @@ namespace BoxGenerator2
             { "uint(32)", "uint" },
             { "uint(16)", "ushort" },
             { "uint(64)", "ulong" },
+            { "uint(8)[32]", "byte[]" },
             { "uint(8)", "byte" },
             { "signed int(32)", "int" },
             { "signed int (16)", "short" },
@@ -1388,7 +1437,8 @@ namespace BoxGenerator2
             { "VvcSubpicIDEntry", "VvcSubpicIDEntry" },
             { "VvcSubpicOrderEntry", "VvcSubpicOrderEntry" },
             { "URIInitBox", "URIInitBox" },
-            { "URIbox", "URIbox" },
+            { "URIBox", "URIBox" },
+            { "URIbox", "URIBox" },
             { "CleanApertureBox", "CleanApertureBox" },
             { "PixelAspectRatioBox", "PixelAspectRatioBox" },
             { "DownMixInstructions()", "DownMixInstructions" },
@@ -1424,6 +1474,8 @@ namespace BoxGenerator2
             { "VvcNALUConfigBox", "VvcNALUConfigBox" },
             { "VvcConfigurationBox", "VvcConfigurationBox" },
             { "HEVCTileConfigurationBox", "HEVCTileConfigurationBox" },
+            { "MetadataKeyTableBox()", "MetadataKeyTableBox" },
+            { "BitRateBox ()", "BitRateBox" },
         };
         return map[type];
     }

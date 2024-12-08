@@ -70,7 +70,7 @@
       "description": "Binary timed metadata identified by URI",
       "type": "URIMetaSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class URIMetaSampleEntry() extends MetaDataSampleEntry ('urim') {\n\tURIbox\t\t\tthe_label;\n\tURIInitBox\t\tinit;\t\t// optional\n}"
+      "syntax": "class URIMetaSampleEntry() extends MetaDataSampleEntry ('urim') {\n\tURIBox\t\t\tthe_label;\n\tURIInitBox\t\tinit;\t\t// optional\n}"
     },
     {
       "fourcc": "mebx",

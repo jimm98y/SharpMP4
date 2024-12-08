@@ -7,7 +7,7 @@
       "description": "SVC region of interest box",
       "containers": ["scif"],
       "type": "Box",
-      "syntax": "class IroiInfoBox extends Box('iroi'){\n\tunsigned int(2) iroi_type;\n\tbit(6) reserved = 0;\n\tif(iroi_type == 0) { \n\t\tunsigned int(8) grid_roi_mb_width;\n\t\tunsigned int(8) grid_roi_mb_height;\n\t}\n\telse if(iroi_type == 1){\n\t\tunsigned int(24) num_roi;\n\t\tfor(int i=1; i<= num_roi; i++) {\n\t\t\tunsigned int(32) top_left_mb;\n\t\t\tunsigned int(8) roi_mb_width;\n\t\t\tunsigned int(8) roi_mb_height;\n\t\t}\n\t}\n}"
+      "syntax": "class IroiInfoBox extends Box('iroi'){\n\tunsigned int(2) iroi_type;\n\tbit(6) reserved = 0;\n\tif(iroi_type == 0) { \n\t\tunsigned int(8) grid_roi_mb_width;\n\t\tunsigned int(8) grid_roi_mb_height;\n\t}\n\telse if(iroi_type == 1){\n\t\tunsigned int(24) num_roi;\n\t\tfor(i=1; i<= num_roi; i++) {\n\t\t\tunsigned int(32) top_left_mb;\n\t\t\tunsigned int(8) roi_mb_width;\n\t\t\tunsigned int(8) roi_mb_height;\n\t\t}\n\t}\n}"
     },
     {
       "fourcc": "ldep",

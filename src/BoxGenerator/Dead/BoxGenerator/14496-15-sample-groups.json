@@ -55,7 +55,7 @@
       "fourcc": "lbli",
       "description": "HEVC External base layer",
       "containers": [ "sgpd" ],
-      "syntax": "aligned(8) class LhvcExternalBaseLayerInfo() extends VisualSampleGroupEntry('lbli')\n{\n\tbit(1) reserved = '1'b;\n\tunsigned int(1) bl_irap_pic_flag;\n\tunsigned int(6) bl_irap_nal_unit_type;\n\tsigned   int(8) sample_offset;\n}",
+      "syntax": "aligned(8) class LhvcExternalBaseLayerInfo() extends VisualSampleGroupEntry('lbli')\n{\n\tbit(1) reserved = 1;\n\tunsigned int(1) bl_irap_pic_flag;\n\tunsigned int(6) bl_irap_nal_unit_type;\n\tsigned   int(8) sample_offset;\n}",
       "type": "VisualSampleGroupEntry"
     },
     {

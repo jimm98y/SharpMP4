@@ -452,7 +452,7 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class ItemPropertyAssociationBox\n\textends FullBox('ipma', version, flags)\n{\n\tunsigned int(32) entry_count;\n\tfor(i = 0; i < entry_count; i++) {\n\t\tif (version < 1)\n\t\t\tunsigned int(16)\titem_ID;\n\t\telse\n\t\t\tunsigned int(32)\titem_ID;\n\t\tunsigned int(8) association_count;\n\t\tfor (i=0; i<association_count; i++) {\n\t\t\tbit(1) essential;\n\t\t\tif (flags & 1)\n\t\t\t\tunsigned int(15) property_index;\n\t\t\telse\n\t\t\t\tunsigned int(7) property_index;\n\t\t}\n\t}\n}\n"
+      "syntax": "aligned(8) class ItemPropertyAssociationBox\n\textends FullBox('ipma', version, flags)\n{\n\tunsigned int(32) entry_count;\n\tfor(i = 0; i < entry_count; i++) {\n\t\tif (version < 1)\n\t\t\tunsigned int(16)\titem_ID;\n\t\telse\n\t\t\tunsigned int(32)\titem_ID;\n\t\tunsigned int(8) association_count;\n\t\tfor (j=0; j<association_count; j++) {\n\t\t\tbit(1) essential;\n\t\t\tif (flags & 1)\n\t\t\t\tunsigned int(15) property_index;\n\t\t\telse\n\t\t\t\tunsigned int(7) property_index;\n\t\t}\n\t}\n}\n"
     },
     {
       "fourcc": "iprp",
