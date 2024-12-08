@@ -209,6 +209,11 @@ namespace BoxGenerator2
     public class DRCInstructionsUniDRC
     {
 
+    } 
+    
+    public class VVCSubpicIDRewritingInfomationStruct
+    {
+
     }
     
     public abstract class IPMPControlBox : Box

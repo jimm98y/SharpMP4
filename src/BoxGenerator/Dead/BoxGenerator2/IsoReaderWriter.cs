@@ -38,6 +38,11 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
+    internal static object ReadClasses(Stream stream)
+    {
+        throw new NotImplementedException();
+    }
+
     internal static short ReadInt16(Stream stream)
     {
         throw new NotImplementedException();
@@ -134,6 +139,11 @@ internal class IsoReaderWriter
     }
 
     internal static ulong WriteClass(Stream stream, object value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong WriteClasses(Stream stream, object[] dRCInstructionsUniDRC)
     {
         throw new NotImplementedException();
     }

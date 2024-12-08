@@ -871,6 +871,10 @@ namespace BoxGenerator2
         {
             if (tt == "int i, j" || tt == "int i,j" || tt == "int i") // this one must be ignored
                 return "";
+            else if (tt == "j=1")
+                return "int j = 1;";
+            else if (tt == "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")
+                return "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8)";
             else
                 return $"{tt};";
         }
@@ -892,12 +896,18 @@ namespace BoxGenerator2
         string ret;
 
         string condition = block.Condition?.Replace("'", "\"").Replace("floor(", "(");
-        if (block.Type == "for")
+        string blockType = block.Type;
+        if (blockType == "for")
         {
-            condition = "(int " + block.Condition.TrimStart('(');
+            condition = "(int " + condition.TrimStart('(');
+        }
+        else if(blockType == "do")
+        {
+            blockType = "while";
+            condition = "(true)";
         }
 
-        ret = $"\r\n{spacing}{block.Type} {condition}\r\n{spacing}{{";
+        ret = $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
 
         foreach (var field in block.Content)
         {
@@ -930,6 +940,10 @@ namespace BoxGenerator2
         {
             if (tt == "int i, j" || tt == "int i,j" || tt == "int i") // this one must be ignored
                 return "";
+            else if (tt == "j=1")
+                return "int j = 1;";
+            else if (tt == "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")
+                return "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8)";
             else
                 return $"{tt};";
         }
@@ -953,12 +967,18 @@ namespace BoxGenerator2
         string ret;
 
         string condition = block.Condition?.Replace("'", "\"").Replace("floor(", "("); ;
-        if (block.Type == "for")
+        string blockType = block.Type; 
+        if (blockType == "for")
         {
-            condition = "(int " + block.Condition.TrimStart('(');
+            condition = "(int " + condition.TrimStart('(');
+        }
+        else if (blockType == "do")
+        {
+            blockType = "while";
+            condition = "(true)";
         }
 
-        ret = $"\r\n{spacing}{block.Type} {condition}\r\n{spacing}{{";
+        ret = $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
 
         foreach (var field in block.Content)
         {
@@ -1020,9 +1040,9 @@ namespace BoxGenerator2
             { "unsigned int(length_size*8)", "IsoReaderWriter.ReadBytes(stream, length_size)" },
             { "unsigned int(index_size*8)", "IsoReaderWriter.ReadBytes(stream, index_size)" },
             { "unsigned int(field_size)", "IsoReaderWriter.ReadBytes(stream, field_size)" },
-            { "unsigned int((length_size_of_traf_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (length_size_of_traf_num+1))" },
-            { "unsigned int((length_size_of_trun_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (length_size_of_trun_num+1))" },
-            { "unsigned int((length_size_of_sample_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (length_size_of_sample_num+1))" },
+            { "unsigned int((length_size_of_traf_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_traf_num+1))" },
+            { "unsigned int((length_size_of_trun_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_trun_num+1))" },
+            { "unsigned int((length_size_of_sample_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_sample_num+1))" },
             { "unsigned int(8*size-64)", "IsoReaderWriter.ReadBytes(stream, size-64)" },
             { "unsigned int(subgroupIdLen)", "IsoReaderWriter.ReadBytes(stream, subgroupIdLen)" },
             { "const unsigned int(32)[2]", "IsoReaderWriter.ReadUInt32Array(stream, 2)" },
@@ -1111,7 +1131,7 @@ namespace BoxGenerator2
             { "ItemReferenceBox", "(ItemReferenceBox)IsoReaderWriter.ReadBox(stream)" },
             { "ItemDataBox", "(ItemDataBox)IsoReaderWriter.ReadBox(stream)" },
             { "TrackReferenceTypeBox []", "(TrackReferenceTypeBox[])IsoReaderWriter.ReadBoxes(stream)" },
-            { "MetadataKeyBox[]", "(MetadataKeyBox)IsoReaderWriter.ReadBoxes(stream)" },
+            { "MetadataKeyBox[]", "(MetadataKeyBox[])IsoReaderWriter.ReadBoxes(stream)" },
             { "TierInfoBox", "(TierInfoBox)IsoReaderWriter.ReadBox(stream)" },
             { "MultiviewRelationAttributeBox", "(MultiviewRelationAttributeBox)IsoReaderWriter.ReadBox(stream)" },
             { "TierBitRateBox", "(TierBitRateBox)IsoReaderWriter.ReadBox(stream)" },
@@ -1141,10 +1161,10 @@ namespace BoxGenerator2
             { "CleanApertureBox", "(CleanApertureBox)IsoReaderWriter.ReadBox(stream)" },
             { "PixelAspectRatioBox", "(PixelAspectRatioBox)IsoReaderWriter.ReadBox(stream)" },
             { "DownMixInstructions()", "(DownMixInstructions)IsoReaderWriter.ReadClass(stream)" },
-            { "DRCCoefficientsBasic() []", "(DRCCoefficientsBasic)IsoReaderWriter.ReadClasses(stream)" },
-            { "DRCInstructionsBasic() []", "(DRCInstructionsBasic)IsoReaderWriter.ReadClasses(stream)" },
-            { "DRCCoefficientsUniDRC() []", "(DRCCoefficientsUniDRC)IsoReaderWriter.ReadClasses(stream)" },
-            { "DRCInstructionsUniDRC() []", "(DRCInstructionsUniDRC)IsoReaderWriter.ReadClasses(stream)" },
+            { "DRCCoefficientsBasic() []", "(DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream)" },
+            { "DRCInstructionsBasic() []", "(DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream)" },
+            { "DRCCoefficientsUniDRC() []", "(DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream)" },
+            { "DRCInstructionsUniDRC() []", "(DRCInstructionsUniDRC[])IsoReaderWriter.ReadClasses(stream)" },
             { "HEVCConfigurationBox", "(HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream)" },
             { "LHEVCConfigurationBox", "(LHEVCConfigurationBox)IsoReaderWriter.ReadBox(stream)" },
             { "AVCConfigurationBox", "(AVCConfigurationBox)IsoReaderWriter.ReadBox(stream)" },
@@ -1219,9 +1239,9 @@ namespace BoxGenerator2
             { "unsigned int(length_size*8)", "IsoReaderWriter.WriteBytes(stream, length_size" },
             { "unsigned int(index_size*8)", "IsoReaderWriter.WriteBytes(stream, index_size" },
             { "unsigned int(field_size)", "IsoReaderWriter.WriteBytes(stream, field_size" },
-            { "unsigned int((length_size_of_traf_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (length_size_of_traf_num+1)" },
-            { "unsigned int((length_size_of_trun_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (length_size_of_trun_num+1)" },
-            { "unsigned int((length_size_of_sample_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (length_size_of_sample_num+1)" },
+            { "unsigned int((length_size_of_traf_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_traf_num+1)" },
+            { "unsigned int((length_size_of_trun_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_trun_num+1)" },
+            { "unsigned int((length_size_of_sample_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_sample_num+1)" },
             { "unsigned int(8*size-64)", "IsoReaderWriter.WriteBytes(stream, size-64" },
             { "unsigned int(subgroupIdLen)", "IsoReaderWriter.WriteBytes(stream, subgroupIdLen" },
             { "const unsigned int(32)[2]", "IsoReaderWriter.WriteUInt32Array(stream, 2" },

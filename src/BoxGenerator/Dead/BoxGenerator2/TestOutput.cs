@@ -4693,7 +4693,7 @@ namespace BoxGenerator2
             this.sample_count = IsoReaderWriter.ReadUInt32(stream);
 
 
-            for (int i = 0; i < floor((sample_count + 1) / 2); i++)
+            for (int i = 0; i < ((sample_count + 1) / 2); i++)
             {
                 this.reserved = IsoReaderWriter.ReadBit(stream);
                 this.pad1 = IsoReaderWriter.ReadBits(stream, 3);
@@ -4709,7 +4709,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt32(stream, (uint)this.sample_count);
 
 
-            for (int i = 0; i < floor((sample_count + 1) / 2); i++)
+            for (int i = 0; i < ((sample_count + 1) / 2); i++)
             {
                 size += IsoReaderWriter.WriteBit(stream, (bool)this.reserved);
                 size += IsoReaderWriter.WriteBits(stream, 3, (byte)this.pad1);
@@ -6269,9 +6269,9 @@ namespace BoxGenerator2
                     this.time = IsoReaderWriter.ReadUInt32(stream);
                     this.moof_offset = IsoReaderWriter.ReadUInt32(stream);
                 }
-                this.traf_number = IsoReaderWriter.ReadBytes(stream, (length_size_of_traf_num + 1));
-                this.trun_number = IsoReaderWriter.ReadBytes(stream, (length_size_of_trun_num + 1));
-                this.sample_delta = IsoReaderWriter.ReadBytes(stream, (length_size_of_sample_num + 1));
+                this.traf_number = IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_traf_num + 1));
+                this.trun_number = IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_trun_num + 1));
+                this.sample_delta = IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_sample_num + 1));
             }
         }
 
@@ -6300,9 +6300,9 @@ namespace BoxGenerator2
                     size += IsoReaderWriter.WriteUInt32(stream, (uint)this.time);
                     size += IsoReaderWriter.WriteUInt32(stream, (uint)this.moof_offset);
                 }
-                size += IsoReaderWriter.WriteBytes(stream, (length_size_of_traf_num + 1), (byte[])this.traf_number);
-                size += IsoReaderWriter.WriteBytes(stream, (length_size_of_trun_num + 1), (byte[])this.trun_number);
-                size += IsoReaderWriter.WriteBytes(stream, (length_size_of_sample_num + 1), (byte[])this.sample_delta);
+                size += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_traf_num + 1), (byte[])this.traf_number);
+                size += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_trun_num + 1), (byte[])this.trun_number);
+                size += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_sample_num + 1), (byte[])this.sample_delta);
             }
             return size;
         }
@@ -6878,7 +6878,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.MetadataKeyBox = (MetadataKeyBox)IsoReaderWriter.ReadBoxes(stream);
+            this.MetadataKeyBox = (MetadataKeyBox[])IsoReaderWriter.ReadBoxes(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -7512,7 +7512,7 @@ namespace BoxGenerator2
             this.depth_ver_rsh = IsoReaderWriter.ReadBits(stream, 4);
             this.grid_pos_num_views = IsoReaderWriter.ReadUInt16(stream);
 
-            for (int i = 0; i < grid_pos_num_vies; i++)
+            for (int i = 0; i < grid_pos_num_views; i++)
             {
                 this.reserved = IsoReaderWriter.ReadBits(stream, 6);
                 this.grid_pos_view_id[i] = IsoReaderWriter.ReadBits(stream, 10);
@@ -7534,7 +7534,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBits(stream, 4, (byte)this.depth_ver_rsh);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.grid_pos_num_views);
 
-            for (int i = 0; i < grid_pos_num_vies; i++)
+            for (int i = 0; i < grid_pos_num_views; i++)
             {
                 size += IsoReaderWriter.WriteBits(stream, 6, (byte)this.reserved);
                 size += IsoReaderWriter.WriteBits(stream, 10, (ushort)this.grid_pos_view_id[i]);
@@ -8947,10 +8947,10 @@ namespace BoxGenerator2
 
 
             this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic = (DRCCoefficientsBasic)IsoReaderWriter.ReadClasses(stream);
-            this.DRCInstructionsBasic = (DRCInstructionsBasic)IsoReaderWriter.ReadClasses(stream);
-            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC)IsoReaderWriter.ReadClasses(stream);
-            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC)IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsBasic = (DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsBasic = (DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC[])IsoReaderWriter.ReadClasses(stream);
 
 
 
@@ -9014,10 +9014,10 @@ namespace BoxGenerator2
 
 
             this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic = (DRCCoefficientsBasic)IsoReaderWriter.ReadClasses(stream);
-            this.DRCInstructionsBasic = (DRCInstructionsBasic)IsoReaderWriter.ReadClasses(stream);
-            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC)IsoReaderWriter.ReadClasses(stream);
-            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC)IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsBasic = (DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsBasic = (DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC[])IsoReaderWriter.ReadClasses(stream);
 
 
         }
@@ -9082,10 +9082,10 @@ namespace BoxGenerator2
 
 
             this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic = (DRCCoefficientsBasic)IsoReaderWriter.ReadClasses(stream);
-            this.DRCInstructionsBasic = (DRCInstructionsBasic)IsoReaderWriter.ReadClasses(stream);
-            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC)IsoReaderWriter.ReadClasses(stream);
-            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC)IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsBasic = (DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsBasic = (DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC[])IsoReaderWriter.ReadClasses(stream);
 
 
         }
@@ -9805,10 +9805,10 @@ namespace BoxGenerator2
 
 
             this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic = (DRCCoefficientsBasic)IsoReaderWriter.ReadClasses(stream);
-            this.DRCInstructionsBasic = (DRCInstructionsBasic)IsoReaderWriter.ReadClasses(stream);
-            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC)IsoReaderWriter.ReadClasses(stream);
-            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC)IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsBasic = (DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsBasic = (DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC[])IsoReaderWriter.ReadClasses(stream);
 
 
 
@@ -9872,10 +9872,10 @@ namespace BoxGenerator2
 
 
             this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic = (DRCCoefficientsBasic)IsoReaderWriter.ReadClasses(stream);
-            this.DRCInstructionsBasic = (DRCInstructionsBasic)IsoReaderWriter.ReadClasses(stream);
-            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC)IsoReaderWriter.ReadClasses(stream);
-            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC)IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsBasic = (DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsBasic = (DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC[])IsoReaderWriter.ReadClasses(stream);
 
 
         }
@@ -10262,17 +10262,16 @@ namespace BoxGenerator2
             {
                 this.sample_offset[i] = IsoReaderWriter.ReadUInt32(stream);
             }
-            j = 1;
+            int j = 1;
 
-            do
+            while (true)
             {
 
                 this.num_output_samples[j] = IsoReaderWriter.ReadUInt16(stream);
                 this.num_total_samples[j] = IsoReaderWriter.ReadUInt16(stream);
                 j++;
             }
-
-    }
+        }
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
@@ -10285,17 +10284,16 @@ namespace BoxGenerator2
             {
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.sample_offset[i]);
             }
-            j = 1;
+            int j = 1;
 
-            do
+            while (true)
             {
 
                 size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.num_output_samples[j]);
                 size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.num_total_samples[j]);
                 j++;
             }
-
-        return size;
+            return size;
         }
     }
 
@@ -12721,9 +12719,10 @@ namespace BoxGenerator2
                 this.level_info_entity_idx = IsoReaderWriter.ReadUInt32(stream);
             }
             this.num_subgroup_ids = IsoReaderWriter.ReadUInt16(stream);
-            subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8;
+            ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8)
+    
 
-            for (int i = 0; i < num_entities_in_group; i++)
+        for (int i = 0; i < num_entities_in_group; i++)
             {
                 this.track_subgroup_id[i] = IsoReaderWriter.ReadBytes(stream, subgroupIdLen);
             }
@@ -12752,9 +12751,10 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.level_info_entity_idx);
             }
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.num_subgroup_ids);
-            subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8;
+            ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8)
+    
 
-            for (int i = 0; i < num_entities_in_group; i++)
+        for (int i = 0; i < num_entities_in_group; i++)
             {
                 size += IsoReaderWriter.WriteBytes(stream, subgroupIdLen, (uint[])this.track_subgroup_id[i]);
             }
