@@ -12719,10 +12719,9 @@ namespace BoxGenerator2
                 this.level_info_entity_idx = IsoReaderWriter.ReadUInt32(stream);
             }
             this.num_subgroup_ids = IsoReaderWriter.ReadUInt16(stream);
-            ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8)
-    
+            ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);
 
-        for (int i = 0; i < num_entities_in_group; i++)
+            for (int i = 0; i < num_entities_in_group; i++)
             {
                 this.track_subgroup_id[i] = IsoReaderWriter.ReadBytes(stream, subgroupIdLen);
             }
@@ -12751,10 +12750,9 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteUInt32(stream, (uint)this.level_info_entity_idx);
             }
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.num_subgroup_ids);
-            ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8)
-    
+            ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);
 
-        for (int i = 0; i < num_entities_in_group; i++)
+            for (int i = 0; i < num_entities_in_group; i++)
             {
                 size += IsoReaderWriter.WriteBytes(stream, subgroupIdLen, (uint[])this.track_subgroup_id[i]);
             }
@@ -13185,7 +13183,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt16(stream, (ushort)this.dci_nal_unit_length);
-            size += IsoReaderWriter.WriteBytes(stream, dci_nal_unit_length), (byte[])this.dci_nal_unit);
+            size += IsoReaderWriter.WriteBytes(stream, dci_nal_unit_length, (byte[])this.dci_nal_unit);
             return size;
         }
     }

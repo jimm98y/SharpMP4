@@ -874,7 +874,7 @@ namespace BoxGenerator2
             else if (tt == "j=1")
                 return "int j = 1;";
             else if (tt == "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")
-                return "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8)";
+                return "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);";
             else
                 return $"{tt};";
         }
@@ -943,7 +943,7 @@ namespace BoxGenerator2
             else if (tt == "j=1")
                 return "int j = 1;";
             else if (tt == "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")
-                return "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8)";
+                return "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);";
             else
                 return $"{tt};";
         }
@@ -1382,7 +1382,7 @@ namespace BoxGenerator2
             { "VvcOperatingPointsRecord", "IsoReaderWriter.WriteClass(stream" },
             { "VVCSubpicIDRewritingInfomationStruct()", "IsoReaderWriter.WriteClass(stream" },
             { "MPEG4ExtensionDescriptorsBox", "IsoReaderWriter.WriteBox(stream" },
-            { "bit(8*dci_nal_unit_length)", "IsoReaderWriter.WriteBytes(stream, dci_nal_unit_length)" },
+            { "bit(8*dci_nal_unit_length)", "IsoReaderWriter.WriteBytes(stream, dci_nal_unit_length" },
             { "DependencyInfo", "IsoReaderWriter.WriteClass(stream" },
             { "VvcPTLRecord(0)", "IsoReaderWriter.WriteClass(stream" },
             { "EVCSliceComponentTrackConfigurationBox", "IsoReaderWriter.WriteBox(stream" },

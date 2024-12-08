@@ -216,6 +216,16 @@ namespace BoxGenerator2
 
     }
     
+    public class VvcOperatingPointsRecord
+    {
+
+    }
+    
+    public class DependencyInfo
+    {
+
+    }
+    
     public abstract class IPMPControlBox : Box
     {
 
