@@ -27,6 +27,8 @@ namespace BoxGenerator2
     {
         public int version { get; set; }
         public int flags { get; set; }
+
+        public int sample_count { get; set; }
     }
 
     public abstract class VisualSampleGroupEntry : Box
@@ -124,7 +126,97 @@ namespace BoxGenerator2
 
     }
     
+    public class OperatingPointsRecord
+    {
+
+    }
+    
     public class ICC_profile
+    {
+
+    }
+    
+    public class LHEVCDecoderConfigurationRecord
+    {
+
+    }
+    
+    public class HEVCDecoderConfigurationRecord
+    {
+
+    }
+    
+    public class AVCDecoderConfigurationRecord
+    {
+
+    }
+    
+    public class VvcPTLRecord
+    {
+
+    }
+    
+    public class MVDDecoderConfigurationRecord
+    {
+
+    }
+    
+    public class MVCDecoderConfigurationRecord
+    {
+
+    }
+    
+    public class SVCDecoderConfigurationRecord
+    {
+
+    }
+    
+    public class HEVCTileTierLevelConfigurationRecord
+    {
+
+    }
+    
+    public class EVCDecoderConfigurationRecord
+    {
+
+    }
+    
+    public class VvcDecoderConfigurationRecord
+    {
+
+    }
+    
+    public class EVCSliceComponentTrackConfigurationRecord
+    {
+
+    }
+    
+    public class DRCCoefficientsBasic
+    {
+
+    }
+    
+    public class DRCInstructionsBasic
+    {
+
+    }
+    
+    public class DRCCoefficientsUniDRC
+    {
+
+    } 
+    
+    public class DRCInstructionsUniDRC
+    {
+
+    }
+    
+    public abstract class IPMPControlBox : Box
+    {
+
+    }
+    
+    public abstract class MetadataKeyBox : Box
     {
 
     }

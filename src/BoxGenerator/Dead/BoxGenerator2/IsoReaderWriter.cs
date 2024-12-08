@@ -3,7 +3,7 @@ using BoxGenerator2;
 
 internal class IsoReaderWriter
 {
-    internal static byte ReadBit(Stream stream)
+    internal static bool ReadBit(Stream stream)
     {
         throw new NotImplementedException();
     }
@@ -13,7 +13,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static byte[] ReadBitsArray(Stream stream, int v1, int v2)
+    internal static byte[] ReadBitsArray(Stream stream, int bitCount, int count)
     {
         throw new NotImplementedException();
     }
@@ -48,7 +48,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static CompositionToDecodeBox.compositionStartTime ReadInt64(Stream stream)
+    internal static long ReadInt64(Stream stream)
     {
         throw new NotImplementedException();
     }
@@ -68,7 +68,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ushort[] ReadUInt16Array(Stream stream, int v)
+    internal static ushort[] ReadUInt16Array(Stream stream, int value)
     {
         throw new NotImplementedException();
     }
@@ -83,7 +83,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static TrackHeaderBox.reserved ReadUInt32Array(Stream stream, int v)
+    internal static uint[] ReadUInt32Array(Stream stream, int value)
     {
         throw new NotImplementedException();
     }
@@ -103,7 +103,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteBit(Stream stream, byte value)
+    internal static ulong WriteBit(Stream stream, bool value)
     {
         throw new NotImplementedException();
     }
@@ -113,7 +113,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteBitsArray(Stream stream, int v1, int v2, byte[] language)
+    internal static ulong WriteBitsArray(Stream stream, int bitCount, int count, byte[] value)
     {
         throw new NotImplementedException();
     }
@@ -128,27 +128,27 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteBytes(Stream stream, ulong length, byte[] stereo_indication_type)
+    internal static ulong WriteBytes(Stream stream, ulong count, byte[] value)
     {
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteClass(Stream stream, object o)
+    internal static ulong WriteClass(Stream stream, object value)
     {
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteInt16(Stream stream, short time_offset)
+    internal static ulong WriteInt16(Stream stream, short value)
     {
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteInt32(Stream stream, int offset)
+    internal static ulong WriteInt32(Stream stream, int value)
     {
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteInt64(Stream stream, CompositionToDecodeBox.compositionEndTime compositionEndTime)
+    internal static ulong WriteInt64(Stream stream, long value)
     {
         throw new NotImplementedException();
     }
@@ -168,7 +168,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteUInt16Array(Stream stream, int v, ushort[] opcolor)
+    internal static ulong WriteUInt16Array(Stream stream, int count, ushort[] value)
     {
         throw new NotImplementedException();
     }
@@ -183,7 +183,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteUInt32Array(Stream stream, int v, uint[] matrix)
+    internal static ulong WriteUInt32Array(Stream stream, int count, uint[] value)
     {
         throw new NotImplementedException();
     }

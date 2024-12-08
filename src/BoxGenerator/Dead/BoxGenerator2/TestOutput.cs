@@ -1341,12 +1341,12 @@ namespace BoxGenerator2
     public class ContentColourVolumeBox : Box
     {
         public override string FourCC { get { return "cclv"; } }
-        public byte reserved1 { get; set; } = 0; //  ccv_cancel_flag
-        public byte reserved2 { get; set; } = 0; //  ccv_persistence_flag
-        public byte ccv_primaries_present_flag { get; set; }
-        public byte ccv_min_luminance_value_present_flag { get; set; }
-        public byte ccv_max_luminance_value_present_flag { get; set; }
-        public byte ccv_avg_luminance_value_present_flag { get; set; }
+        public bool reserved1 { get; set; } = 0; //  ccv_cancel_flag
+        public bool reserved2 { get; set; } = 0; //  ccv_persistence_flag
+        public bool ccv_primaries_present_flag { get; set; }
+        public bool ccv_min_luminance_value_present_flag { get; set; }
+        public bool ccv_max_luminance_value_present_flag { get; set; }
+        public bool ccv_avg_luminance_value_present_flag { get; set; }
         public byte ccv_reserved_zero_2bits { get; set; } = 0;
 
 
@@ -1448,7 +1448,7 @@ namespace BoxGenerator2
         public ushort colour_primaries { get; set; }
         public ushort transfer_characteristics { get; set; }
         public ushort matrix_coefficients { get; set; }
-        public byte full_range_flag { get; set; }
+        public bool full_range_flag { get; set; }
         public byte reserved { get; set; } = 0;
 
         public ICC_profile ICC_profile { get; set; } //  restricted ICC profile
@@ -1474,12 +1474,12 @@ namespace BoxGenerator2
 
             else if (colour_type == "rICC")
             {
-                this.ICC_profile = IsoReaderWriter.ReadClass(stream);
+                this.ICC_profile = (ICC_profile)IsoReaderWriter.ReadClass(stream);
             }
 
             else if (colour_type == "prof")
             {
-                this.ICC_profile = IsoReaderWriter.ReadClass(stream);
+                this.ICC_profile = (ICC_profile)IsoReaderWriter.ReadClass(stream);
             }
         }
 
@@ -1599,8 +1599,8 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.scheme_type_box = IsoReaderWriter.ReadBox(stream);
-            this.info = IsoReaderWriter.ReadBox(stream);
+            this.scheme_type_box = (SchemeTypeBox)IsoReaderWriter.ReadBox(stream);
+            this.info = (SchemeInformationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -1650,7 +1650,7 @@ namespace BoxGenerator2
 
         public byte reserved { get; set; } = 0;
         public byte channel_order_definition { get; set; }
-        public byte omitted_channels_present { get; set; }
+        public bool omitted_channels_present { get; set; }
 
         public ulong omittedChannelsMap { get; set; } //  a ‘1’ bit indicates ‘not in this track’
 
@@ -1849,7 +1849,7 @@ namespace BoxGenerator2
         public int downmix_instructions_count { get; set; } = 1;
 
         public byte targetLayout { get; set; }
-        public byte reserved { get; set; } = 0;
+        public bool reserved { get; set; } = 0;
         public byte targetChannelCount { get; set; }
         public byte in_stream { get; set; }
         public byte downmix_ID { get; set; }
@@ -2637,8 +2637,8 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.property_container = IsoReaderWriter.ReadBox(stream);
-            this.association[] = IsoReaderWriter.ReadBox(stream);
+            this.property_container = (ItemPropertyContainerBox)IsoReaderWriter.ReadBox(stream);
+            this.association[] = (ItemPropertyAssociationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -2747,7 +2747,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.original_format = IsoReaderWriter.ReadBox(stream);
+            this.original_format = (OriginalFormatBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -3056,7 +3056,7 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-                this.data_entry = IsoReaderWriter.ReadBox(stream);
+                this.data_entry = (DataEntryBaseBox)IsoReaderWriter.ReadBox(stream);
             }
         }
 
@@ -3179,7 +3179,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.compatible_combinations[] = IsoReaderWriter.ReadBox(stream);
+            this.compatible_combinations[] = (TypeCombinationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -3334,9 +3334,9 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.blocks_and_symbols = IsoReaderWriter.ReadBox(stream);
-            this.FEC_symbol_locations = IsoReaderWriter.ReadBox(stream);
-            this.File_symbol_locations = IsoReaderWriter.ReadBox(stream);
+            this.blocks_and_symbols = (FilePartitionBox)IsoReaderWriter.ReadBox(stream);
+            this.FEC_symbol_locations = (FECReservoirBox)IsoReaderWriter.ReadBox(stream);
+            this.File_symbol_locations = (FileReservoirBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -3366,9 +3366,9 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.entry_count = IsoReaderWriter.ReadUInt16(stream);
-            this.partition_entries[entry_count] = IsoReaderWriter.ReadClass(stream);
-            this.session_info = IsoReaderWriter.ReadBox(stream);
-            this.group_id_to_name = IsoReaderWriter.ReadBox(stream);
+            this.partition_entries[entry_count] = (PartitionEntry)IsoReaderWriter.ReadClass(stream);
+            this.session_info = (FDSessionGroupBox)IsoReaderWriter.ReadBox(stream);
+            this.group_id_to_name = (GroupIdToNameBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -3826,7 +3826,7 @@ namespace BoxGenerator2
             {
                 this.entry_count = IsoReaderWriter.ReadUInt32(stream);
             }
-            this.item_infos = IsoReaderWriter.ReadClass(stream);
+            this.item_infos = (ItemInfoEntry)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -4184,7 +4184,7 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= protection_count; i++)
             {
-                this.protection_information = IsoReaderWriter.ReadBox(stream);
+                this.protection_information = (ProtectionSchemeInfoBox)IsoReaderWriter.ReadBox(stream);
             }
         }
 
@@ -4220,12 +4220,12 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-                this.references[] = IsoReaderWriter.ReadBox(stream);
+                this.references[] = (SingleItemTypeReferenceBox)IsoReaderWriter.ReadBox(stream);
             }
 
             else if (version == 1)
             {
-                this.references[] = IsoReaderWriter.ReadBox(stream);
+                this.references[] = (SingleItemTypeReferenceBoxLarge)IsoReaderWriter.ReadBox(stream);
             }
         }
 
@@ -4254,7 +4254,7 @@ namespace BoxGenerator2
         public byte level_count { get; set; }
 
         public uint track_ID { get; set; }
-        public byte padding_flag { get; set; }
+        public bool padding_flag { get; set; }
         public byte assignment_type { get; set; }
 
         public uint grouping_type { get; set; }
@@ -4544,15 +4544,15 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.theHandler = IsoReaderWriter.ReadBox(stream);
-            this.primary_resource = IsoReaderWriter.ReadBox(stream);
-            this.file_locations = IsoReaderWriter.ReadBox(stream);
-            this.item_locations = IsoReaderWriter.ReadBox(stream);
-            this.protections = IsoReaderWriter.ReadBox(stream);
-            this.item_infos = IsoReaderWriter.ReadBox(stream);
-            this.IPMP_control = IsoReaderWriter.ReadBox(stream);
-            this.item_refs = IsoReaderWriter.ReadBox(stream);
-            this.item_data = IsoReaderWriter.ReadBox(stream);
+            this.theHandler = (HandlerBox)IsoReaderWriter.ReadBox(stream);
+            this.primary_resource = (PrimaryItemBox)IsoReaderWriter.ReadBox(stream);
+            this.file_locations = (DataInformationBox)IsoReaderWriter.ReadBox(stream);
+            this.item_locations = (ItemLocationBox)IsoReaderWriter.ReadBox(stream);
+            this.protections = (ItemProtectionBox)IsoReaderWriter.ReadBox(stream);
+            this.item_infos = (ItemInfoBox)IsoReaderWriter.ReadBox(stream);
+            this.IPMP_control = (IPMPControlBox)IsoReaderWriter.ReadBox(stream);
+            this.item_refs = (ItemReferenceBox)IsoReaderWriter.ReadBox(stream);
+            this.item_data = (ItemDataBox)IsoReaderWriter.ReadBox(stream);
             this.other_boxes[] = IsoReaderWriter.ReadBox(stream);
         }
 
@@ -4919,9 +4919,9 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.blocks_and_symbols = IsoReaderWriter.ReadBox(stream);
-            this.FEC_symbol_locations = IsoReaderWriter.ReadBox(stream);
-            this.File_symbol_locations = IsoReaderWriter.ReadBox(stream);
+            this.blocks_and_symbols = (FilePartitionBox)IsoReaderWriter.ReadBox(stream);
+            this.FEC_symbol_locations = (FECReservoirBox)IsoReaderWriter.ReadBox(stream);
+            this.File_symbol_locations = (FileReservoirBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -4951,9 +4951,9 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.entry_count = IsoReaderWriter.ReadUInt16(stream);
-            this.partition_entries[entry_count] = IsoReaderWriter.ReadClass(stream);
-            this.session_info = IsoReaderWriter.ReadBox(stream);
-            this.group_id_to_name = IsoReaderWriter.ReadBox(stream);
+            this.partition_entries[entry_count] = (PartitionEntry)IsoReaderWriter.ReadClass(stream);
+            this.session_info = (FDSessionGroupBox)IsoReaderWriter.ReadBox(stream);
+            this.group_id_to_name = (GroupIdToNameBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -5117,9 +5117,9 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.original_format = IsoReaderWriter.ReadBox(stream);
-            this.scheme_type_box = IsoReaderWriter.ReadBox(stream);
-            this.info = IsoReaderWriter.ReadBox(stream);
+            this.original_format = (OriginalFormatBox)IsoReaderWriter.ReadBox(stream);
+            this.scheme_type_box = (SchemeTypeBox)IsoReaderWriter.ReadBox(stream);
+            this.info = (SchemeInformationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -5639,9 +5639,9 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.original_format = IsoReaderWriter.ReadBox(stream);
-            this.scheme_type_box = IsoReaderWriter.ReadBox(stream);
-            this.info = IsoReaderWriter.ReadBox(stream);
+            this.original_format = (OriginalFormatBox)IsoReaderWriter.ReadBox(stream);
+            this.scheme_type_box = (SchemeTypeBox)IsoReaderWriter.ReadBox(stream);
+            this.info = (SchemeInformationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -5727,8 +5727,8 @@ namespace BoxGenerator2
             this.encryption_algorithm_rtcp = IsoReaderWriter.ReadUInt32(stream);
             this.integrity_algorithm_rtp = IsoReaderWriter.ReadUInt32(stream);
             this.integrity_algorithm_rtcp = IsoReaderWriter.ReadUInt32(stream);
-            this.scheme_type_box = IsoReaderWriter.ReadBox(stream);
-            this.info = IsoReaderWriter.ReadBox(stream);
+            this.scheme_type_box = (SchemeTypeBox)IsoReaderWriter.ReadBox(stream);
+            this.info = (SchemeInformationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -6709,7 +6709,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.TrackReferenceTypeBox = IsoReaderWriter.ReadBoxes(stream);
+            this.TrackReferenceTypeBox = (TrackReferenceTypeBox[])IsoReaderWriter.ReadBoxes(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -7144,7 +7144,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.MetadataKeyBox = IsoReaderWriter.ReadBoxes(stream);
+            this.MetadataKeyBox = (MetadataKeyBox)IsoReaderWriter.ReadBoxes(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -7423,8 +7423,8 @@ namespace BoxGenerator2
         public override string FourCC { get { return "tran"; } }
         public byte reserved { get; set; } = 0;
         public byte conversion_idc { get; set; }
-        public byte cavlc_info_present_flag { get; set; }
-        public byte cabac_info_present_flag { get; set; }
+        public bool cavlc_info_present_flag { get; set; }
+        public bool cabac_info_present_flag { get; set; }
 
         public uint cavlc_profile_level_idc { get; set; }
         public uint cavlc_max_bitrate { get; set; }
@@ -7491,7 +7491,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "rrgn"; } }
         public ushort base_region_tierID { get; set; }
-        public byte dynamic_rect { get; set; }
+        public bool dynamic_rect { get; set; }
         public byte reserved { get; set; } = 0;
 
         public ushort horizontal_offset { get; set; }
@@ -7692,11 +7692,11 @@ namespace BoxGenerator2
                     this.view_count = IsoReaderWriter.ReadUInt16(stream);
                 }
             }
-            this.subset_stream_info = IsoReaderWriter.ReadBox(stream);
-            this.relation_attributes = IsoReaderWriter.ReadBox(stream);
-            this.subset_stream_bit_rate = IsoReaderWriter.ReadBox(stream);
-            this.subset_stream_buffering = IsoReaderWriter.ReadBox(stream);
-            this.multiview_scene_info = IsoReaderWriter.ReadBox(stream);
+            this.subset_stream_info = (TierInfoBox)IsoReaderWriter.ReadBox(stream);
+            this.relation_attributes = (MultiviewRelationAttributeBox)IsoReaderWriter.ReadBox(stream);
+            this.subset_stream_bit_rate = (TierBitRateBox)IsoReaderWriter.ReadBox(stream);
+            this.subset_stream_buffering = (BufferingBox)IsoReaderWriter.ReadBox(stream);
+            this.multiview_scene_info = (MultiviewSceneInfoBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8137,7 +8137,7 @@ namespace BoxGenerator2
             {
                 this.multiview_group_id = IsoReaderWriter.ReadUInt32(stream);
             }
-            this.relation_attributes = IsoReaderWriter.ReadBox(stream);
+            this.relation_attributes = (MultiviewRelationAttributeBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8324,8 +8324,8 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.MVDConfig = IsoReaderWriter.ReadClass(stream);
-            this.mvdDepthRes = IsoReaderWriter.ReadBox(stream);
+            this.MVDConfig = (MVDDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
+            this.mvdDepthRes = (MVDDepthResolutionBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8351,8 +8351,8 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.MVDConfig = IsoReaderWriter.ReadClass(stream);
-            this.mvdDepthRes = IsoReaderWriter.ReadBox(stream);
+            this.MVDConfig = (MVDDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
+            this.mvdDepthRes = (MVDDepthResolutionBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8378,10 +8378,10 @@ namespace BoxGenerator2
         public ushort[] view_id { get; set; }
         public byte reserved2 { get; set; } = 0;
         public ushort view_order_index { get; set; }
-        public byte[] texture_in_stream { get; set; }
-        public byte[] texture_in_track { get; set; }
-        public byte[] depth_in_stream { get; set; }
-        public byte[] depth_in_track { get; set; }
+        public bool[] texture_in_stream { get; set; }
+        public bool[] texture_in_track { get; set; }
+        public bool[] depth_in_stream { get; set; }
+        public bool[] depth_in_track { get; set; }
         public byte base_view_type { get; set; }
         public ushort num_ref_views { get; set; }
 
@@ -8467,7 +8467,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.MVCConfig = IsoReaderWriter.ReadClass(stream);
+            this.MVCConfig = (MVCDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8491,7 +8491,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.AVCConfig = IsoReaderWriter.ReadClass(stream);
+            this.AVCConfig = (AVCDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8515,7 +8515,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.HEVCConfig = IsoReaderWriter.ReadClass(stream);
+            this.HEVCConfig = (HEVCDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8539,7 +8539,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.LHEVCConfig = IsoReaderWriter.ReadClass(stream);
+            this.LHEVCConfig = (LHEVCDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8563,7 +8563,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.Descr[0..255] = IsoReaderWriter.ReadClass(stream);
+            this.Descr[0..255] = (Descriptor)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8587,7 +8587,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.SVCConfig = IsoReaderWriter.ReadClass(stream);
+            this.SVCConfig = (SVCDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8737,7 +8737,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.HEVCTileTierLevelConfig = IsoReaderWriter.ReadClass(stream);
+            this.HEVCTileTierLevelConfig = (HEVCTileTierLevelConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8761,7 +8761,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.EVCConfig = IsoReaderWriter.ReadClass(stream);
+            this.EVCConfig = (EVCDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8830,7 +8830,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.VvcConfig = IsoReaderWriter.ReadClass(stream);
+            this.VvcConfig = (VvcDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -9022,7 +9022,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadClass(stream);
+            this.config = (EVCSliceComponentTrackConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -9096,8 +9096,8 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
-            this.label = IsoReaderWriter.ReadBox(stream);
+            this.config = (WebVTTConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.label = (WebVTTSourceLabelBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -9140,8 +9140,8 @@ namespace BoxGenerator2
     public class CodingConstraintsBox : FullBox
     {
         public override string FourCC { get { return "ccst"; } }
-        public byte all_ref_pics_intra { get; set; }
-        public byte intra_pred_used { get; set; }
+        public bool all_ref_pics_intra { get; set; }
+        public bool intra_pred_used { get; set; }
         public byte max_ref_per_pic { get; set; }
         public uint reserved { get; set; }
 
@@ -9270,11 +9270,11 @@ namespace BoxGenerator2
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
 
 
-            this.DownMixInstructions[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsBasic[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsUniDRC[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsUniDRC[] = IsoReaderWriter.ReadClass(stream);
+            this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsBasic = (DRCCoefficientsBasic)IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsBasic = (DRCInstructionsBasic)IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC)IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC)IsoReaderWriter.ReadClasses(stream);
 
 
 
@@ -9293,10 +9293,10 @@ namespace BoxGenerator2
 
 
             size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC[]);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
 
 
 
@@ -9344,11 +9344,11 @@ namespace BoxGenerator2
 
 
 
-            this.DownMixInstructions[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsBasic[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsUniDRC[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsUniDRC[] = IsoReaderWriter.ReadClass(stream);
+            this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsBasic = (DRCCoefficientsBasic)IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsBasic = (DRCInstructionsBasic)IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC)IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC)IsoReaderWriter.ReadClasses(stream);
 
 
         }
@@ -9369,10 +9369,10 @@ namespace BoxGenerator2
 
 
             size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC[]);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
 
 
             return size;
@@ -9419,11 +9419,11 @@ namespace BoxGenerator2
 
 
 
-            this.DownMixInstructions[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsBasic[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsUniDRC[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsUniDRC[] = IsoReaderWriter.ReadClass(stream);
+            this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsBasic = (DRCCoefficientsBasic)IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsBasic = (DRCInstructionsBasic)IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC)IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC)IsoReaderWriter.ReadClasses(stream);
 
 
         }
@@ -9444,10 +9444,10 @@ namespace BoxGenerator2
 
 
             size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC[]);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
 
 
             return size;
@@ -9572,8 +9572,8 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.the_label = IsoReaderWriter.ReadBox(stream);
-            this.init = IsoReaderWriter.ReadBox(stream);
+            this.the_label = (URIBox)IsoReaderWriter.ReadBox(stream);
+            this.init = (URIInitBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -9660,7 +9660,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
 
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (AVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -9685,7 +9685,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.SchemeInformation = IsoReaderWriter.ReadBox(stream);
+            this.SchemeInformation = (ProtectionSchemeInfoBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -9709,7 +9709,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.SchemeInformation = IsoReaderWriter.ReadBox(stream);
+            this.SchemeInformation = (ProtectionSchemeInfoBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -10097,8 +10097,8 @@ namespace BoxGenerator2
             this.compressorname = IsoReaderWriter.ReadBytes(stream, 32);
             this.depth = IsoReaderWriter.ReadUInt16(stream);
             this.pre_defined = IsoReaderWriter.ReadInt16(stream);
-            this.clap = IsoReaderWriter.ReadBox(stream);
-            this.pasp = IsoReaderWriter.ReadBox(stream);
+            this.clap = (CleanApertureBox)IsoReaderWriter.ReadBox(stream);
+            this.pasp = (PixelAspectRatioBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -10158,11 +10158,11 @@ namespace BoxGenerator2
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
 
 
-            this.DownMixInstructions[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsBasic[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsUniDRC[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsUniDRC[] = IsoReaderWriter.ReadClass(stream);
+            this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsBasic = (DRCCoefficientsBasic)IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsBasic = (DRCInstructionsBasic)IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC)IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC)IsoReaderWriter.ReadClasses(stream);
 
 
 
@@ -10181,10 +10181,10 @@ namespace BoxGenerator2
 
 
             size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC[]);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
 
 
 
@@ -10232,11 +10232,11 @@ namespace BoxGenerator2
 
 
 
-            this.DownMixInstructions[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsBasic[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsBasic[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCCoefficientsUniDRC[] = IsoReaderWriter.ReadClass(stream);
-            this.DRCInstructionsUniDRC[] = IsoReaderWriter.ReadClass(stream);
+            this.DownMixInstructions[] = (DownMixInstructions)IsoReaderWriter.ReadClass(stream);
+            this.DRCCoefficientsBasic = (DRCCoefficientsBasic)IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsBasic = (DRCInstructionsBasic)IsoReaderWriter.ReadClasses(stream);
+            this.DRCCoefficientsUniDRC = (DRCCoefficientsUniDRC)IsoReaderWriter.ReadClasses(stream);
+            this.DRCInstructionsUniDRC = (DRCInstructionsUniDRC)IsoReaderWriter.ReadClasses(stream);
 
 
         }
@@ -10257,10 +10257,10 @@ namespace BoxGenerator2
 
 
             size += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC[]);
-            size += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC[]);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
+            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
 
 
             return size;
@@ -10726,7 +10726,7 @@ namespace BoxGenerator2
     public class VisualRandomAccessEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "rap "; } }
-        public byte num_leading_samples_known { get; set; }
+        public bool num_leading_samples_known { get; set; }
         public byte num_leading_samples { get; set; }
 
         public VisualRandomAccessEntry()
@@ -10846,7 +10846,7 @@ namespace BoxGenerator2
     public class SAPEntry : SampleGroupDescriptionEntry
     {
         public override string FourCC { get { return "sap "; } }
-        public byte dependent_flag { get; set; }
+        public bool dependent_flag { get; set; }
         public byte reserved { get; set; }
         public byte SAP_type { get; set; }
 
@@ -11041,7 +11041,7 @@ namespace BoxGenerator2
     public class StereoVideoGroupBox : TrackGroupTypeBox
     {
         public override string FourCC { get { return "ster"; } }
-        public byte left_view_flag { get; set; }
+        public bool left_view_flag { get; set; }
         public uint reserved { get; set; }
 
         public StereoVideoGroupBox()
@@ -11341,7 +11341,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11367,7 +11367,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.lhvcconfig = IsoReaderWriter.ReadBox(stream);
+            this.lhvcconfig = (LHEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11392,7 +11392,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11418,7 +11418,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.lhvcconfig = IsoReaderWriter.ReadBox(stream);
+            this.lhvcconfig = (LHEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11443,7 +11443,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11469,7 +11469,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.lhvcconfig = IsoReaderWriter.ReadBox(stream);
+            this.lhvcconfig = (LHEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11494,7 +11494,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.lhvcconfig = IsoReaderWriter.ReadBox(stream);
+            this.lhvcconfig = (LHEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11521,7 +11521,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.lhvcconfig = IsoReaderWriter.ReadBox(stream);
+            this.lhvcconfig = (LHEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11548,7 +11548,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11574,7 +11574,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.lhvcconfig = IsoReaderWriter.ReadBox(stream);
+            this.lhvcconfig = (LHEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11599,7 +11599,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11625,7 +11625,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.lhvcconfig = IsoReaderWriter.ReadBox(stream);
+            this.lhvcconfig = (LHEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11650,7 +11650,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (HEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11676,7 +11676,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.lhvcconfig = IsoReaderWriter.ReadBox(stream);
+            this.lhvcconfig = (LHEVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11700,7 +11700,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (AVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11725,7 +11725,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (AVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11752,7 +11752,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (AVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11786,15 +11786,15 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.mvcconfig = IsoReaderWriter.ReadBox(stream);
-            this.view_priority_method = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ViewScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcconfig = (MVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.view_priority_method = (MVCViewPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11834,15 +11834,15 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.mvcconfig = IsoReaderWriter.ReadBox(stream);
-            this.view_priority_method = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ViewScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcconfig = (MVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.view_priority_method = (MVCViewPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11875,7 +11875,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (AVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11902,7 +11902,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (AVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -11936,15 +11936,15 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.mvcconfig = IsoReaderWriter.ReadBox(stream);
-            this.view_priority_method = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ViewScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcconfig = (MVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.view_priority_method = (MVCViewPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -11984,15 +11984,15 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.mvcconfig = IsoReaderWriter.ReadBox(stream);
-            this.view_priority_method = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ViewScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcconfig = (MVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.view_priority_method = (MVCViewPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12033,16 +12033,16 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.mvcconfig = IsoReaderWriter.ReadBox(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.view_priority_method = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.mvcconfig = (MVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ViewScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.view_priority_method = (MVCViewPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12084,16 +12084,16 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.mvcconfig = IsoReaderWriter.ReadBox(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.view_priority_method = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.mvcconfig = (MVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ViewScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.view_priority_method = (MVCViewPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12135,16 +12135,16 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.mvcconfig = IsoReaderWriter.ReadBox(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.view_priority_method = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.mvcconfig = (MVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ViewScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.view_priority_method = (MVCViewPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12186,16 +12186,16 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.mvcconfig = IsoReaderWriter.ReadBox(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.view_priority_method = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.mvcconfig = (MVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ViewScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.view_priority_method = (MVCViewPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12234,13 +12234,13 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12276,13 +12276,13 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12318,13 +12318,13 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12360,13 +12360,13 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.mvcdconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
+            this.mvcdconfig = (MVCDConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12401,12 +12401,12 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12440,12 +12440,12 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12479,12 +12479,12 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12518,12 +12518,12 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.a3dconfig = IsoReaderWriter.ReadBox(stream);
-            this.mvdscalinfosei = IsoReaderWriter.ReadBox(stream);
-            this.view_identifiers = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.intrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
-            this.extrinsic_camera_params = IsoReaderWriter.ReadBox(stream);
+            this.a3dconfig = (A3DConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.mvdscalinfosei = (MVDScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.view_identifiers = (ViewIdentifierBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.intrinsic_camera_params = (IntrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
+            this.extrinsic_camera_params = (ExtrinsicCameraParametersBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12554,9 +12554,9 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.svcconfig = IsoReaderWriter.ReadBox(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.method = IsoReaderWriter.ReadBox(stream);
+            this.svcconfig = (SVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.method = (SVCPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12584,9 +12584,9 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.svcconfig = IsoReaderWriter.ReadBox(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.method = IsoReaderWriter.ReadBox(stream);
+            this.svcconfig = (SVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.method = (SVCPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12614,9 +12614,9 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.svcconfig = IsoReaderWriter.ReadBox(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.method = IsoReaderWriter.ReadBox(stream);
+            this.svcconfig = (SVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.method = (SVCPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12644,9 +12644,9 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.svcconfig = IsoReaderWriter.ReadBox(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.method = IsoReaderWriter.ReadBox(stream);
+            this.svcconfig = (SVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.method = (SVCPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12675,10 +12675,10 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.svcconfig = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.method = IsoReaderWriter.ReadBox(stream);
+            this.svcconfig = (SVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.method = (SVCPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12708,10 +12708,10 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.svcconfig = IsoReaderWriter.ReadBox(stream);
-            this.descr = IsoReaderWriter.ReadBox(stream);
-            this.scalability = IsoReaderWriter.ReadBox(stream);
-            this.method = IsoReaderWriter.ReadBox(stream);
+            this.svcconfig = (SVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
+            this.descr = (MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream);
+            this.scalability = (ScalabilityInformationSEIBox)IsoReaderWriter.ReadBox(stream);
+            this.method = (SVCPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12738,7 +12738,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (HEVCTileConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12783,7 +12783,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (HEVCTileConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12807,7 +12807,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (HEVCTileConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12832,7 +12832,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (VvcConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -12859,7 +12859,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (VvcConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -12885,7 +12885,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (VvcNALUConfigBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12909,7 +12909,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (VvcNALUConfigBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12934,7 +12934,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (EVCConfigurationBox)IsoReaderWriter.ReadBox(stream);
 
         }
 
@@ -12962,9 +12962,9 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
-            this.methods = IsoReaderWriter.ReadBox(stream);
-            this.priorities = IsoReaderWriter.ReadBox(stream);
+            this.config = (SVCMetadataSampleConfigBox)IsoReaderWriter.ReadBox(stream);
+            this.methods = (SVCPriorityAssignmentBox)IsoReaderWriter.ReadBox(stream);
+            this.priorities = (SVCPriorityLayerInfoBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -12990,7 +12990,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (EVCSliceComponentTrackConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -13014,7 +13014,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.config = IsoReaderWriter.ReadBox(stream);
+            this.config = (EVCSliceComponentTrackConfigurationBox)IsoReaderWriter.ReadBox(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -13030,8 +13030,8 @@ namespace BoxGenerator2
     public class SubpicCommonGroupBox : EntityToGroupBox
     {
         public override string FourCC { get { return "acgl"; } }
-        public byte level_is_present_flag { get; set; }
-        public byte level_is_static_flag { get; set; }
+        public bool level_is_present_flag { get; set; }
+        public bool level_is_static_flag { get; set; }
         public byte reserved { get; set; } = 0;
 
         public byte level_idc { get; set; }
@@ -13087,8 +13087,8 @@ namespace BoxGenerator2
     public class SubpicMultipleGroupsBox : EntityToGroupBox
     {
         public override string FourCC { get { return "amgl"; } }
-        public byte level_is_present_flag { get; set; }
-        public byte level_is_static_flag { get; set; }
+        public bool level_is_present_flag { get; set; }
+        public bool level_is_static_flag { get; set; }
         public byte reserved { get; set; } = 0;
 
         public byte level_idc { get; set; }
@@ -13175,26 +13175,26 @@ namespace BoxGenerator2
 
         public VvcPTLRecord[] opeg_ptl { get; set; }
         public byte reserved { get; set; } = 0;
-        public byte incomplete_operating_points_flag { get; set; }
+        public bool incomplete_operating_points_flag { get; set; }
         public ushort num_olss { get; set; }
 
         public byte[] ptl_idx { get; set; }
         public ushort[] ols_idx { get; set; }
         public byte[] layer_count { get; set; }
         public byte reserved { get; set; } = 0;
-        public byte[] layer_info_present_flag { get; set; }
+        public bool[] layer_info_present_flag { get; set; }
 
 
         public byte[] layer_id { get; set; }
-        public byte[] is_output_layer { get; set; }
+        public bool[] is_output_layer { get; set; }
         public byte reserved { get; set; } = 0;
         public byte reserved { get; set; } = 0;
         public ushort num_operating_points { get; set; }
 
         public ushort ols_loop_entry_idx { get; set; }
         public byte max_temporal_id { get; set; }
-        public byte frame_rate_info_flag { get; set; }
-        public byte bit_rate_info_flag { get; set; }
+        public bool frame_rate_info_flag { get; set; }
+        public bool bit_rate_info_flag { get; set; }
 
         public byte op_availability_idc { get; set; }
 
@@ -13225,7 +13225,7 @@ namespace BoxGenerator2
 
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
-                this.opeg_ptl[i] = IsoReaderWriter.ReadClass(stream);
+                this.opeg_ptl[i] = (VvcPTLRecord)IsoReaderWriter.ReadClass(stream);
             }
             this.reserved = IsoReaderWriter.ReadBits(stream, 6);
             this.incomplete_operating_points_flag = IsoReaderWriter.ReadBit(stream);
@@ -13479,7 +13479,7 @@ namespace BoxGenerator2
         public override string FourCC { get { return "avll"; } }
         public byte layerNumber { get; set; }
         public byte reserved { get; set; } = 0;
-        public byte accurateStatisticsFlag { get; set; }
+        public bool accurateStatisticsFlag { get; set; }
         public ushort avgBitRate { get; set; }
         public ushort avgFrameRate { get; set; }
 
@@ -13515,14 +13515,14 @@ namespace BoxGenerator2
         public override string FourCC { get { return "avss"; } }
         public ushort subSequenceIdentifer { get; set; }
         public byte layerNumber { get; set; }
-        public byte durationFlag { get; set; }
-        public byte avgRateFlag { get; set; }
+        public bool durationFlag { get; set; }
+        public bool avgRateFlag { get; set; }
         public byte reserved { get; set; } = 0;
 
         public uint duration { get; set; }
 
         public byte reserved { get; set; } = 0;
-        public byte accurateStatisticsFlag { get; set; }
+        public bool accurateStatisticsFlag { get; set; }
         public ushort avgBitRate { get; set; }
         public ushort avgFrameRate { get; set; }
         public byte numReferences { get; set; }
@@ -13553,7 +13553,7 @@ namespace BoxGenerator2
                 this.avgFrameRate = IsoReaderWriter.ReadUInt16(stream);
             }
             this.numReferences = IsoReaderWriter.ReadUInt8(stream);
-            this.dependency[numReferences] = IsoReaderWriter.ReadClass(stream);
+            this.dependency[numReferences] = (DependencyInfo)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -13715,7 +13715,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "lbli"; } }
         public byte reserved { get; set; } = 1;
-        public byte bl_irap_pic_flag { get; set; }
+        public bool bl_irap_pic_flag { get; set; }
         public byte bl_irap_nal_unit_type { get; set; }
         public sbyte sample_offset { get; set; }
 
@@ -13751,8 +13751,8 @@ namespace BoxGenerator2
         public byte num_layers_in_track { get; set; }
 
         public byte reserved { get; set; } = 0;
-        public byte irap_gdr_pics_in_layer_only_flag { get; set; }
-        public byte completeness_flag { get; set; }
+        public bool irap_gdr_pics_in_layer_only_flag { get; set; }
+        public bool completeness_flag { get; set; }
         public byte layer_id { get; set; }
         public byte min_TemporalId { get; set; }
         public byte max_TemporalId { get; set; }
@@ -13855,7 +13855,7 @@ namespace BoxGenerator2
         public byte groupID { get; set; }
         public byte primary_groupID { get; set; }
         public byte reserved { get; set; } = 0;
-        public byte is_tl_switching_point { get; set; }
+        public bool is_tl_switching_point { get; set; }
         public byte reserved { get; set; } = 0;
         public byte tl_switching_distance { get; set; }
 
@@ -13931,8 +13931,8 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "nalm"; } }
         public byte reserved { get; set; } = 0;
-        public byte large_size { get; set; }
-        public byte rle { get; set; }
+        public bool large_size { get; set; }
+        public bool rle { get; set; }
 
         public ushort entry_count { get; set; }
 
@@ -14037,7 +14037,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.oinf = IsoReaderWriter.ReadClass(stream);
+            this.oinf = (OperatingPointsRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -14104,9 +14104,9 @@ namespace BoxGenerator2
     public class PSSampleGroupEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "pss1"; } }
-        public byte sps_present { get; set; }
-        public byte pps_present { get; set; }
-        public byte aps_present { get; set; }
+        public bool sps_present { get; set; }
+        public bool pps_present { get; set; }
+        public bool aps_present { get; set; }
         public byte reserved { get; set; } = 0;
 
         public PSSampleGroupEntry()
@@ -14137,7 +14137,7 @@ namespace BoxGenerator2
     public class VvcRectRegionOrderEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "rror"; } }
-        public byte subpic_id_info_flag { get; set; }
+        public bool subpic_id_info_flag { get; set; }
         public byte reserved { get; set; } = 0;
         public ushort num_alternate_region_set { get; set; }
 
@@ -14180,7 +14180,7 @@ namespace BoxGenerator2
 
             if (subpic_id_info_flag)
             {
-                this.subpic_id_rewriting_info = IsoReaderWriter.ReadClass(stream);
+                this.subpic_id_rewriting_info = (VVCSubpicIDRewritingInfomationStruct)IsoReaderWriter.ReadClass(stream);
             }
         }
 
@@ -14223,11 +14223,11 @@ namespace BoxGenerator2
         public override string FourCC { get { return "scif"; } }
         public byte groupID { get; set; }
         public byte primary_groupID { get; set; }
-        public byte is_tier_IDR { get; set; }
-        public byte noInterLayerPredFlag { get; set; }
-        public byte useRefBasePicFlag { get; set; }
-        public byte storeBaseRepFlag { get; set; }
-        public byte is_tl_switching_point { get; set; }
+        public bool is_tier_IDR { get; set; }
+        public bool noInterLayerPredFlag { get; set; }
+        public bool useRefBasePicFlag { get; set; }
+        public bool storeBaseRepFlag { get; set; }
+        public bool is_tl_switching_point { get; set; }
         public byte reserved { get; set; } = 0;
         public byte tl_switching_distance { get; set; }
 
@@ -14353,9 +14353,9 @@ namespace BoxGenerator2
     public class VvcSubpicIDEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "spid"; } }
-        public byte rect_region_flag { get; set; }
+        public bool rect_region_flag { get; set; }
         public byte reserved { get; set; } = 0;
-        public byte continuous_id_flag { get; set; }
+        public bool continuous_id_flag { get; set; }
         public ushort num_subpics_minus1 { get; set; }
 
 
@@ -14443,7 +14443,7 @@ namespace BoxGenerator2
     public class VvcSubpicOrderEntry : VisualSampleGroupEntry
     {
         public override string FourCC { get { return "spor"; } }
-        public byte subpic_id_info_flag { get; set; }
+        public bool subpic_id_info_flag { get; set; }
         public ushort num_subpic_ref_idx { get; set; }
 
         public ushort[] subp_track_ref_idx { get; set; }
@@ -14466,7 +14466,7 @@ namespace BoxGenerator2
 
             if (subpic_id_info_flag)
             {
-                this.subpic_id_rewriting_info = IsoReaderWriter.ReadClass(stream);
+                this.subpic_id_rewriting_info = (VVCSubpicIDRewritingInfomationStruct)IsoReaderWriter.ReadClass(stream);
             }
         }
 
@@ -14582,14 +14582,14 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "trif"; } }
         public ushort groupID { get; set; }
-        public byte rect_region_flag { get; set; }
+        public bool rect_region_flag { get; set; }
 
         public byte reserved { get; set; } = 0;
 
         public byte independent_idc { get; set; }
-        public byte full_picture { get; set; }
-        public byte filtering_disabled { get; set; }
-        public byte has_dependency_list { get; set; }
+        public bool full_picture { get; set; }
+        public bool filtering_disabled { get; set; }
+        public bool has_dependency_list { get; set; }
         public byte reserved { get; set; } = 0;
 
         public ushort horizontal_offset { get; set; }
@@ -14712,7 +14712,7 @@ namespace BoxGenerator2
         public override string FourCC { get { return "tscl"; } }
         public byte temporalLayerId { get; set; }
         public byte tlprofile_space { get; set; }
-        public byte tltier_flag { get; set; }
+        public bool tltier_flag { get; set; }
         public byte tlprofile_idc { get; set; }
         public uint tlprofile_compatibility_flags { get; set; }
         public ulong tlconstraint_indicator_flags { get; set; }
@@ -14796,7 +14796,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.oinf = IsoReaderWriter.ReadClass(stream);
+            this.oinf = (VvcOperatingPointsRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -15819,7 +15819,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.AVCConfig = IsoReaderWriter.ReadClass(stream);
+            this.AVCConfig = (AVCDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -15885,7 +15885,7 @@ namespace BoxGenerator2
         public ushort colour_primaries { get; set; }
         public ushort transfer_characteristics { get; set; }
         public ushort matrix_coefficients { get; set; }
-        public byte full_range_flag { get; set; }
+        public bool full_range_flag { get; set; }
         public byte reserved { get; set; } = 0;
 
         public ICC_profile ICC_profile { get; set; } //  restricted ICC profile
@@ -15911,12 +15911,12 @@ namespace BoxGenerator2
 
             else if (colour_type == "rICC")
             {
-                this.ICC_profile = IsoReaderWriter.ReadClass(stream);
+                this.ICC_profile = (ICC_profile)IsoReaderWriter.ReadClass(stream);
             }
 
             else if (colour_type == "prof")
             {
-                this.ICC_profile = IsoReaderWriter.ReadClass(stream);
+                this.ICC_profile = (ICC_profile)IsoReaderWriter.ReadClass(stream);
             }
         }
 
@@ -15960,7 +15960,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.HEVCConfig = IsoReaderWriter.ReadClass(stream);
+            this.HEVCConfig = (HEVCDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -15977,7 +15977,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "imir"; } }
         public byte reserved { get; set; } = 0;
-        public byte axis { get; set; }
+        public bool axis { get; set; }
 
         public ImageMirror()
         { }
@@ -16089,7 +16089,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.LHEVCConfig = IsoReaderWriter.ReadClass(stream);
+            this.LHEVCConfig = (LHEVCDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -16137,7 +16137,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.op_info = IsoReaderWriter.ReadClass(stream);
+            this.op_info = (OperatingPointsRecord)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -16696,12 +16696,12 @@ namespace BoxGenerator2
     public class ContentColourVolumeBox1 : Box
     {
         public override string FourCC { get { return "cclv"; } }
-        public byte reserved1 { get; set; } = 0; //  ccv_cancel_flag
-        public byte reserved2 { get; set; } = 0; //  ccv_persistence_flag
-        public byte ccv_primaries_present_flag { get; set; }
-        public byte ccv_min_luminance_value_present_flag { get; set; }
-        public byte ccv_max_luminance_value_present_flag { get; set; }
-        public byte ccv_avg_luminance_value_present_flag { get; set; }
+        public bool reserved1 { get; set; } = 0; //  ccv_cancel_flag
+        public bool reserved2 { get; set; } = 0; //  ccv_persistence_flag
+        public bool ccv_primaries_present_flag { get; set; }
+        public bool ccv_min_luminance_value_present_flag { get; set; }
+        public bool ccv_max_luminance_value_present_flag { get; set; }
+        public bool ccv_avg_luminance_value_present_flag { get; set; }
         public byte ccv_reserved_zero_2bits { get; set; } = 0;
 
 
@@ -16897,7 +16897,7 @@ namespace BoxGenerator2
     public class ZoomTransitionEffectProperty : ItemFullProperty
     {
         public override string FourCC { get { return "zoom"; } }
-        public byte transition_direction { get; set; }
+        public bool transition_direction { get; set; }
         public byte transition_shape { get; set; }
 
         public ZoomTransitionEffectProperty()
@@ -17052,7 +17052,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.sid_info = IsoReaderWriter.ReadClass(stream);
+            this.sid_info = (VvcSubpicIDEntry)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -17076,7 +17076,7 @@ namespace BoxGenerator2
         public async override Task ReadAsync(Stream stream)
         {
             await base.ReadAsync(stream);
-            this.sor_info = IsoReaderWriter.ReadClass(stream);
+            this.sor_info = (VvcSubpicOrderEntry)IsoReaderWriter.ReadClass(stream);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
