@@ -945,7 +945,7 @@ namespace BoxGenerator2
         }
 
         string optional = "";
-        if(fieldComment.Contains("optional"))
+        if(fieldComment.Contains("optional") && !fieldComment.Contains("optional boxes follow"))
         {
             if (methodType == MethodType.Write || methodType == MethodType.Size)
             {
