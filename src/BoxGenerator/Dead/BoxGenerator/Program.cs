@@ -81,7 +81,7 @@ public class PseudoField : PseudoCode
         Comment = comment.GetValueOrDefault();
     }
 
-    public string Type { get; }
+    public string Type { get; set; }
     public string Name { get; }
     public string Value { get; }
     public string Comment { get; }
@@ -377,7 +377,7 @@ partial class Program
             Try(String("URIbox")),
             Try(String("CleanApertureBox")),
             Try(String("PixelAspectRatioBox")),
-            Try(String("DownMixInstructions()")),
+            Try(String("DownMixInstructions() []")),
             Try(String("DRCCoefficientsBasic() []")),
             Try(String("DRCInstructionsBasic() []")),
             Try(String("DRCCoefficientsUniDRC() []")),
@@ -643,7 +643,11 @@ namespace BoxGenerator2
             cls += $" : {b.Extended.BoxName}";
 
         cls += "\r\n{\r\n";
-        cls += $"\tpublic override string FourCC {{ get {{ return \"{b.FourCC}\"; }} }}";
+
+        if (b.Extended != null)
+        {
+            cls += $"\tpublic override string FourCC {{ get {{ return \"{b.FourCC}\"; }} }}";
+        }
 
         var fields = FlattenFields(b.Fields);
 
@@ -653,7 +657,8 @@ namespace BoxGenerator2
         }
 
         cls += $"\r\n\r\n\tpublic {b.BoxName}()\r\n\t{{ }}\r\n";
-        cls += "\r\n\tpublic async override Task ReadAsync(Stream stream)\r\n\t{\r\n\t\tawait base.ReadAsync(stream);";
+        cls += "\r\n\tpublic async " + (b.Extended != null ? "override " : "") + "Task ReadAsync(Stream stream)\r\n\t{" +
+            (b.Extended != null ? "\r\n\t\tawait base.ReadAsync(stream);" : "");
         foreach (var field in b.Fields)
         {
             cls += "\r\n" + BuildMethodCode(field, 2, true);
@@ -661,7 +666,8 @@ namespace BoxGenerator2
         cls += "\r\n\t}\r\n";
 
 
-        cls += "\r\n\tpublic async override Task<ulong> WriteAsync(Stream stream)\r\n\t{\r\n\t\tulong size = 0;\r\n\t\tsize += await base.WriteAsync(stream);";
+        cls += "\r\n\tpublic async " + (b.Extended != null ? "override " : "") + "Task<ulong> WriteAsync(Stream stream)\r\n\t{\r\n\t\tulong size = 0;" +
+            (b.Extended != null ? "\r\n\t\tsize += await base.WriteAsync(stream);" : "");
         foreach (var field in b.Fields)
         {
             cls += "\r\n" + BuildMethodCode(field, 2, false);
@@ -715,6 +721,9 @@ namespace BoxGenerator2
     {
         if (type1 == type2)
             return 0;
+
+        //if (type1.Contains('[') != type2.Contains("]"))
+        //    throw new Exception("Type mismatch!");
 
         List<string> map = new List<string>()
         {
@@ -796,16 +805,15 @@ namespace BoxGenerator2
             else
             {
                 // TODO: incorrectly parsed type
-                string typedef = "";
                 if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
                 {
                     Debug.WriteLine($"Wrong: {value}");
-                    typedef = "[]";
+                    (field as PseudoField).Type = tp + value;
+                    tp = (field as PseudoField)?.Type;
                     value = "";
                 }
                 if (!string.IsNullOrEmpty(value) && value.StartsWith('('))
                 {
-                    typedef = "";
                     value = "";
                 }
                 if (value == "= {if track_is_audio 0x0100 else 0}") // TODO
@@ -834,7 +842,7 @@ namespace BoxGenerator2
                 }
                 
                 string name = GetFieldName(field);
-                return $"\tpublic {GetType((field as PseudoField)?.Type)}{typedef} {name} {{ get; set; }}{value}{comment}";
+                return $"\tpublic {GetType((field as PseudoField)?.Type)} {name} {{ get; set; }}{value}{comment}";
             }
         }
         else
@@ -897,7 +905,7 @@ namespace BoxGenerator2
         string m = isRead ? GetReadMethod(tt) : GetWriteMethod(tt);
         string typedef = "";
         string value = (field as PseudoField)?.Value;
-        if (!string.IsNullOrEmpty(value) && value.StartsWith("["))
+        if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]")
         {
             typedef = value;
         }
@@ -968,6 +976,7 @@ namespace BoxGenerator2
     {
         Dictionary<string, string> map = new Dictionary<string, string>
         {
+            { "unsigned int(64)[ entry_count ]", "IsoReaderWriter.ReadUInt64Array(stream, entry_count)" },
             { "unsigned int(64)", "IsoReaderWriter.ReadUInt64(stream)" },
             { "unsigned int(48)", "IsoReaderWriter.ReadUInt48(stream)" },
             { "template int(32)[9]", "IsoReaderWriter.ReadUInt32Array(stream, 9)" },
@@ -977,11 +986,17 @@ namespace BoxGenerator2
             { "unsigned int(24)", "IsoReaderWriter.ReadUInt24(stream)" },
             { "unsigned int(29)", "IsoReaderWriter.ReadBits(stream, 29)" },
             { "unsigned int(26)", "IsoReaderWriter.ReadBits(stream, 26)" },
+            { "unsigned int(16)[i]", "IsoReaderWriter.ReadUInt16(stream)" },
+            { "unsigned int(16)[j]", "IsoReaderWriter.ReadUInt16(stream)" },
+            { "unsigned int(16)[i][j]", "IsoReaderWriter.ReadUInt16(stream)" },
             { "unsigned int(16)", "IsoReaderWriter.ReadUInt16(stream)" },
             { "unsigned_int(16)", "IsoReaderWriter.ReadUInt16(stream)" },
             { "unsigned int(15)", "IsoReaderWriter.ReadBits(stream, 15)" },
             { "unsigned int(12)", "IsoReaderWriter.ReadBits(stream, 12)" },
+            { "unsigned int(10)[i][j]", "IsoReaderWriter.ReadBits(stream, 10)" },
+            { "unsigned int(10)[i]", "IsoReaderWriter.ReadBits(stream, 10)" },
             { "unsigned int(10)", "IsoReaderWriter.ReadBits(stream, 10)" },
+            { "unsigned int(8)[ sample_count ]", "IsoReaderWriter.ReadBytes(stream, sample_count)" },
             { "unsigned int(8)[length]", "IsoReaderWriter.ReadBytes(stream, length)" },
             { "unsigned int(8)[32]", "IsoReaderWriter.ReadBytes(stream, 32)" },
             { "unsigned int(8)[16]", "IsoReaderWriter.ReadBytes(stream, 16)" },
@@ -993,12 +1008,15 @@ namespace BoxGenerator2
             { "unsigned int(5)", "IsoReaderWriter.ReadBits(stream, 5)" },
             { "unsigned int(4)", "IsoReaderWriter.ReadBits(stream, 4)" },
             { "unsigned int(3)", "IsoReaderWriter.ReadBits(stream, 3)" },
+            { "unsigned int(2)[i][j]", "IsoReaderWriter.ReadBits(stream, 2)" },
             { "unsigned int(2)", "IsoReaderWriter.ReadBits(stream, 2)" },
+            { "unsigned int(1)[i]", "IsoReaderWriter.ReadBit(stream)" },
             { "unsigned int(1)", "IsoReaderWriter.ReadBit(stream)" },
             { "unsigned int (32)", "IsoReaderWriter.ReadUInt32(stream)" },
-            { "unsigned int(f(pattern_size_code))", "IsoReaderWriter.ReadBytes(stream, f(pattern_size_code))" },
-            { "unsigned int(f(index_size_code))", "IsoReaderWriter.ReadBytes(stream, f(index_size_code))" },
-            { "unsigned int(f(count_size_code))", "IsoReaderWriter.ReadBytes(stream, f(count_size_code))" },
+            { "unsigned int(f(pattern_size_code))[i]", "IsoReaderWriter.ReadBits(stream, pattern_size_code)" },
+            { "unsigned int(f(index_size_code))[i]", "IsoReaderWriter.ReadBits(stream, index_size_code)" },
+            { "unsigned int(f(index_size_code))[j][k]", "IsoReaderWriter.ReadBits(stream, index_size_code)" },
+            { "unsigned int(f(count_size_code))[i]", "IsoReaderWriter.ReadBits(stream, count_size_code)" },
             { "unsigned int(base_offset_size*8)", "IsoReaderWriter.ReadBytes(stream, base_offset_size)" },
             { "unsigned int(offset_size*8)", "IsoReaderWriter.ReadBytes(stream, offset_size)" },
             { "unsigned int(length_size*8)", "IsoReaderWriter.ReadBytes(stream, length_size)" },
@@ -1008,7 +1026,7 @@ namespace BoxGenerator2
             { "unsigned int((length_size_of_trun_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_trun_num+1))" },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_sample_num+1))" },
             { "unsigned int(8*size-64)", "IsoReaderWriter.ReadBytes(stream, size-64)" },
-            { "unsigned int(subgroupIdLen)", "IsoReaderWriter.ReadBytes(stream, subgroupIdLen)" },
+            { "unsigned int(subgroupIdLen)[i]", "IsoReaderWriter.ReadBytes(stream, subgroupIdLen)" },
             { "const unsigned int(32)[2]", "IsoReaderWriter.ReadUInt32Array(stream, 2)" },
             { "const unsigned int(32)[3]", "IsoReaderWriter.ReadUInt32Array(stream, 3)" },
             { "const unsigned int(32)", "IsoReaderWriter.ReadUInt32(stream)" },
@@ -1021,6 +1039,7 @@ namespace BoxGenerator2
             { "template unsigned int(32)", "IsoReaderWriter.ReadUInt32(stream)" },
             { "template unsigned int(16)[3]", "IsoReaderWriter.ReadUInt16Array(stream, 3)" },
             { "template unsigned int(16)", "IsoReaderWriter.ReadUInt16(stream)" },
+            { "template unsigned int(8)[]", "IsoReaderWriter.ReadUInt8Array(stream)" },
             { "template unsigned int(8)", "IsoReaderWriter.ReadUInt8(stream)" },
             { "int(64)", "IsoReaderWriter.ReadInt64(stream)" },
             { "int(32)", "IsoReaderWriter.ReadInt32(stream)" },
@@ -1037,7 +1056,9 @@ namespace BoxGenerator2
             { "bit(5)", "IsoReaderWriter.ReadBits(stream, 5)" },
             { "bit(6)", "IsoReaderWriter.ReadBits(stream, 6)" },
             { "bit(7)", "IsoReaderWriter.ReadBits(stream, 7)" },
+            { "bit(8)[]", "IsoReaderWriter.ReadUInt8Array(stream)" },
             { "bit(8)", "IsoReaderWriter.ReadUInt8(stream)" },
+            { "bit(16)[i]", "IsoReaderWriter.ReadUInt16(stream)" },
             { "bit(16)", "IsoReaderWriter.ReadUInt16(stream)" },
             { "bit(24)", "IsoReaderWriter.ReadBits(stream, 24)" },
             { "bit(31)", "IsoReaderWriter.ReadBits(stream, 31)" },
@@ -1056,6 +1077,7 @@ namespace BoxGenerator2
             { "uint(8)", "IsoReaderWriter.ReadUInt8(stream)" },
             { "signed int(32)", "IsoReaderWriter.ReadInt32(stream)" },
             { "signed int (16)", "IsoReaderWriter.ReadInt16(stream)" },
+            { "signed int(16)[grid_pos_view_id[i]]", "IsoReaderWriter.ReadInt16(stream)" },
             { "signed int(16)", "IsoReaderWriter.ReadInt16(stream)" },
             { "signed int (8)", "IsoReaderWriter.ReadInt8(stream)" },
             { "signed int(64)", "IsoReaderWriter.ReadInt64(stream)" },
@@ -1068,23 +1090,26 @@ namespace BoxGenerator2
             { "SchemeInformationBox", "(SchemeInformationBox)IsoReaderWriter.ReadBox(stream)" },
             { "ItemPropertyContainerBox", "(ItemPropertyContainerBox)IsoReaderWriter.ReadBox(stream)" },
             { "ItemPropertyAssociationBox", "(ItemPropertyAssociationBox)IsoReaderWriter.ReadBox(stream)" },
+            { "ItemPropertyAssociationBox[]", "(ItemPropertyAssociationBox[])IsoReaderWriter.ReadBoxes(stream)" },
             { "char", "IsoReaderWriter.ReadInt8(stream)" },
             { "loudness", "IsoReaderWriter.ReadInt32(stream)" },
             { "ICC_profile", "(ICC_profile)IsoReaderWriter.ReadClass(stream)" },
             { "OriginalFormatBox(fmt)", "(OriginalFormatBox)IsoReaderWriter.ReadBox(stream)" },
             { "DataEntryBaseBox(entry_type, entry_flags)", "(DataEntryBaseBox)IsoReaderWriter.ReadBox(stream)" },
-            { "ItemInfoEntry[ entry_count ]", "(ItemInfoEntry)IsoReaderWriter.ReadClass(stream)" },
-            { "TypeCombinationBox", "(TypeCombinationBox)IsoReaderWriter.ReadBox(stream)" },
+            { "ItemInfoEntry[ entry_count ]", "(ItemInfoEntry[])IsoReaderWriter.ReadClasses(stream)" },
+            { "TypeCombinationBox[]", "(TypeCombinationBox[])IsoReaderWriter.ReadBoxes(stream)" },
             { "FilePartitionBox", "(FilePartitionBox)IsoReaderWriter.ReadBox(stream)" },
             { "FECReservoirBox", "(FECReservoirBox)IsoReaderWriter.ReadBox(stream)" },
             { "FileReservoirBox", "(FileReservoirBox)IsoReaderWriter.ReadBox(stream)" },
-            { "PartitionEntry", "(PartitionEntry)IsoReaderWriter.ReadClass(stream)" },
+            { "PartitionEntry[ entry_count ]", "(PartitionEntry[])IsoReaderWriter.ReadClasses(stream, entry_count)" },
             { "FDSessionGroupBox", "(FDSessionGroupBox)IsoReaderWriter.ReadBox(stream)" },
             { "GroupIdToNameBox", "(GroupIdToNameBox)IsoReaderWriter.ReadBox(stream)" },
             { "base64string", "IsoReaderWriter.ReadString(stream)" },
             { "ProtectionSchemeInfoBox", "(ProtectionSchemeInfoBox)IsoReaderWriter.ReadBox(stream)" },
             { "SingleItemTypeReferenceBox", "(SingleItemTypeReferenceBox)IsoReaderWriter.ReadBox(stream)" },
+            { "SingleItemTypeReferenceBox[]", "(SingleItemTypeReferenceBox[])IsoReaderWriter.ReadBoxes(stream)" },
             { "SingleItemTypeReferenceBoxLarge", "(SingleItemTypeReferenceBoxLarge)IsoReaderWriter.ReadBox(stream)" },
+            { "SingleItemTypeReferenceBoxLarge[]", "(SingleItemTypeReferenceBoxLarge[])IsoReaderWriter.ReadBoxes(stream)" },
             { "HandlerBox(handler_type)", "(HandlerBox)IsoReaderWriter.ReadBox(stream)" },
             { "PrimaryItemBox", "(PrimaryItemBox)IsoReaderWriter.ReadBox(stream)" },
             { "DataInformationBox", "(DataInformationBox)IsoReaderWriter.ReadBox(stream)" },
@@ -1113,6 +1138,7 @@ namespace BoxGenerator2
             { "VvcDecoderConfigurationRecord()", "(VvcDecoderConfigurationRecord)IsoReaderWriter.ReadClass(stream)" },
             { "EVCSliceComponentTrackConfigurationRecord()", "(EVCSliceComponentTrackConfigurationRecord)IsoReaderWriter.ReadClass(stream)" },
             { "SampleGroupDescriptionEntry (grouping_type)", "(SampleGroupDescriptionEntry)IsoReaderWriter.ReadClass(stream)" },
+            { "Descriptor[0 .. 255]", "(Descriptor[])IsoReaderWriter.ReadClasses(stream)" },
             { "Descriptor", "(Descriptor)IsoReaderWriter.ReadClass(stream)" },
             { "WebVTTConfigurationBox", "(WebVTTConfigurationBox)IsoReaderWriter.ReadBox(stream)" },
             { "WebVTTSourceLabelBox", "(WebVTTSourceLabelBox)IsoReaderWriter.ReadBox(stream)" },
@@ -1124,7 +1150,7 @@ namespace BoxGenerator2
             { "URIbox", "(URIBox)IsoReaderWriter.ReadBox(stream)" },
             { "CleanApertureBox", "(CleanApertureBox)IsoReaderWriter.ReadBox(stream)" },
             { "PixelAspectRatioBox", "(PixelAspectRatioBox)IsoReaderWriter.ReadBox(stream)" },
-            { "DownMixInstructions()", "(DownMixInstructions)IsoReaderWriter.ReadClass(stream)" },
+            { "DownMixInstructions() []", "(DownMixInstructions[])IsoReaderWriter.ReadClasses(stream)" },
             { "DRCCoefficientsBasic() []", "(DRCCoefficientsBasic[])IsoReaderWriter.ReadClasses(stream)" },
             { "DRCInstructionsBasic() []", "(DRCInstructionsBasic[])IsoReaderWriter.ReadClasses(stream)" },
             { "DRCCoefficientsUniDRC() []", "(DRCCoefficientsUniDRC[])IsoReaderWriter.ReadClasses(stream)" },
@@ -1150,8 +1176,8 @@ namespace BoxGenerator2
             { "MPEG4ExtensionDescriptorsBox()", "(MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream)" },
             { "MPEG4ExtensionDescriptorsBox", "(MPEG4ExtensionDescriptorsBox)IsoReaderWriter.ReadBox(stream)" },
             { "bit(8*dci_nal_unit_length)", "IsoReaderWriter.ReadBytes(stream, dci_nal_unit_length)" },
-            { "DependencyInfo", "(DependencyInfo)IsoReaderWriter.ReadClass(stream)" },
-            { "VvcPTLRecord(0)", "(VvcPTLRecord)IsoReaderWriter.ReadClass(stream)" },
+            { "DependencyInfo[numReferences]", "(DependencyInfo[])IsoReaderWriter.ReadClasses(stream, numReferences)" },
+            { "VvcPTLRecord(0)[i]", "(VvcPTLRecord)IsoReaderWriter.ReadClass(stream)" },
             { "EVCSliceComponentTrackConfigurationBox", "(EVCSliceComponentTrackConfigurationBox)IsoReaderWriter.ReadBox(stream)" },
             { "SVCMetadataSampleConfigBox", "(SVCMetadataSampleConfigBox)IsoReaderWriter.ReadBox(stream)" },
             { "SVCPriorityLayerInfoBox", "(SVCPriorityLayerInfoBox)IsoReaderWriter.ReadBox(stream)" },
@@ -1161,6 +1187,19 @@ namespace BoxGenerator2
             { "HEVCTileConfigurationBox", "(HEVCTileConfigurationBox)IsoReaderWriter.ReadBox(stream)" },
             { "MetadataKeyTableBox()", "(MetadataKeyTableBox)IsoReaderWriter.ReadBox(stream)" },
             { "BitRateBox ()", "(BitRateBox)IsoReaderWriter.ReadBox(stream)" },
+            { "char[count]", "IsoReaderWriter.ReadInt8Array(stream, count)" },
+            { "signed int(32)[ c ]", "IsoReaderWriter.ReadInt32(stream)" },
+            { "unsigned int(8)[]", "IsoReaderWriter.ReadUInt8Array(stream)" },
+            { "unsigned int(8)[i]", "IsoReaderWriter.ReadUInt8(stream)" },
+            { "unsigned int(6)[i]", "IsoReaderWriter.ReadBits(stream, 6)" },
+            { "unsigned int(6)[i][j]", "IsoReaderWriter.ReadBits(stream, 6)" },
+            { "unsigned int(1)[i][j]", "IsoReaderWriter.ReadBits(stream, 1)" },
+            { "unsigned int(9)[i]", "IsoReaderWriter.ReadBits(stream, 9)" },
+            { "unsigned int(32)[]", "IsoReaderWriter.ReadUInt32Array(stream)" },
+            { "unsigned int(32)[i]", "IsoReaderWriter.ReadUInt32(stream)" },
+            { "char[]", "IsoReaderWriter.ReadInt8Array(stream)" },
+            { "loudness[]", "IsoReaderWriter.ReadInt32Array(stream)" },
+            { "string[method_count]", "IsoReaderWriter.ReadStringArray(stream, method_count)" },
         };
         return map[type];
     }
@@ -1169,6 +1208,7 @@ namespace BoxGenerator2
     {
         Dictionary<string, string> map = new Dictionary<string, string>
         {
+            { "unsigned int(64)[ entry_count ]", "IsoReaderWriter.WriteUInt64Array(stream, entry_count" },
             { "unsigned int(64)", "IsoReaderWriter.WriteUInt64(stream" },
             { "unsigned int(48)", "IsoReaderWriter.WriteUInt48(stream" },
             { "template int(32)[9]", "IsoReaderWriter.WriteUInt32Array(stream, 9" },
@@ -1178,11 +1218,17 @@ namespace BoxGenerator2
             { "unsigned int(24)", "IsoReaderWriter.WriteUInt24(stream" },
             { "unsigned int(29)", "IsoReaderWriter.WriteBits(stream, 29" },
             { "unsigned int(26)", "IsoReaderWriter.WriteBits(stream, 26" },
+            { "unsigned int(16)[i]", "IsoReaderWriter.WriteUInt16(stream" },
+            { "unsigned int(16)[j]", "IsoReaderWriter.WriteUInt16(stream" },
+            { "unsigned int(16)[i][j]", "IsoReaderWriter.WriteUInt16(stream" },
             { "unsigned int(16)", "IsoReaderWriter.WriteUInt16(stream" },
             { "unsigned_int(16)", "IsoReaderWriter.WriteUInt16(stream" },
             { "unsigned int(15)", "IsoReaderWriter.WriteBits(stream, 15" },
             { "unsigned int(12)", "IsoReaderWriter.WriteBits(stream, 12" },
+            { "unsigned int(10)[i][j]", "IsoReaderWriter.WriteBits(stream, 10" },
+            { "unsigned int(10)[i]", "IsoReaderWriter.WriteBits(stream, 10" },
             { "unsigned int(10)", "IsoReaderWriter.WriteBits(stream, 10" },
+            { "unsigned int(8)[ sample_count ]", "IsoReaderWriter.WriteBytes(stream, sample_count" },
             { "unsigned int(8)[length]", "IsoReaderWriter.WriteBytes(stream, length" },
             { "unsigned int(8)[32]", "IsoReaderWriter.WriteBytes(stream, 32" },
             { "unsigned int(8)[16]", "IsoReaderWriter.WriteBytes(stream, 16" },
@@ -1194,12 +1240,15 @@ namespace BoxGenerator2
             { "unsigned int(5)", "IsoReaderWriter.WriteBits(stream, 5" },
             { "unsigned int(4)", "IsoReaderWriter.WriteBits(stream, 4" },
             { "unsigned int(3)", "IsoReaderWriter.WriteBits(stream, 3" },
+            { "unsigned int(2)[i][j]", "IsoReaderWriter.WriteBits(stream, 2" },
             { "unsigned int(2)", "IsoReaderWriter.WriteBits(stream, 2" },
+            { "unsigned int(1)[i]", "IsoReaderWriter.WriteBit(stream" },
             { "unsigned int(1)", "IsoReaderWriter.WriteBit(stream" },
             { "unsigned int (32)", "IsoReaderWriter.WriteUInt32(stream" },
-            { "unsigned int(f(pattern_size_code))", "IsoReaderWriter.WriteBytes(stream, f(pattern_size_code)" },
-            { "unsigned int(f(index_size_code))", "IsoReaderWriter.WriteBytes(stream, f(index_size_code)" },
-            { "unsigned int(f(count_size_code))", "IsoReaderWriter.WriteBytes(stream, f(count_size_code)" },
+            { "unsigned int(f(pattern_size_code))[i]", "IsoReaderWriter.WriteBits(stream, pattern_size_code" },
+            { "unsigned int(f(index_size_code))[i]", "IsoReaderWriter.WriteBits(stream, index_size_code" },
+            { "unsigned int(f(index_size_code))[j][k]", "IsoReaderWriter.WriteBits(stream, index_size_code" },
+            { "unsigned int(f(count_size_code))[i]", "IsoReaderWriter.WriteBits(stream, count_size_code" },
             { "unsigned int(base_offset_size*8)", "IsoReaderWriter.WriteBytes(stream, base_offset_size" },
             { "unsigned int(offset_size*8)", "IsoReaderWriter.WriteBytes(stream, offset_size" },
             { "unsigned int(length_size*8)", "IsoReaderWriter.WriteBytes(stream, length_size" },
@@ -1209,7 +1258,7 @@ namespace BoxGenerator2
             { "unsigned int((length_size_of_trun_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_trun_num+1)" },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_sample_num+1)" },
             { "unsigned int(8*size-64)", "IsoReaderWriter.WriteBytes(stream, size-64" },
-            { "unsigned int(subgroupIdLen)", "IsoReaderWriter.WriteBytes(stream, subgroupIdLen" },
+            { "unsigned int(subgroupIdLen)[i]", "IsoReaderWriter.WriteBytes(stream, subgroupIdLen" },
             { "const unsigned int(32)[2]", "IsoReaderWriter.WriteUInt32Array(stream, 2" },
             { "const unsigned int(32)[3]", "IsoReaderWriter.WriteUInt32Array(stream, 3" },
             { "const unsigned int(32)", "IsoReaderWriter.WriteUInt32(stream" },
@@ -1222,6 +1271,7 @@ namespace BoxGenerator2
             { "template unsigned int(32)", "IsoReaderWriter.WriteUInt32(stream" },
             { "template unsigned int(16)[3]", "IsoReaderWriter.WriteUInt16Array(stream, 3" },
             { "template unsigned int(16)", "IsoReaderWriter.WriteUInt16(stream" },
+            { "template unsigned int(8)[]", "IsoReaderWriter.WriteUInt8Array(stream" },
             { "template unsigned int(8)", "IsoReaderWriter.WriteUInt8(stream" },
             { "int(64)", "IsoReaderWriter.WriteInt64(stream" },
             { "int(32)", "IsoReaderWriter.WriteInt32(stream" },
@@ -1238,7 +1288,9 @@ namespace BoxGenerator2
             { "bit(5)", "IsoReaderWriter.WriteBits(stream, 5" },
             { "bit(6)", "IsoReaderWriter.WriteBits(stream, 6" },
             { "bit(7)", "IsoReaderWriter.WriteBits(stream, 7" },
+            { "bit(8)[]", "IsoReaderWriter.WriteUInt8Array(stream" },
             { "bit(8)", "IsoReaderWriter.WriteUInt8(stream" },
+            { "bit(16)[i]", "IsoReaderWriter.WriteUInt16(stream" },
             { "bit(16)", "IsoReaderWriter.WriteUInt16(stream" },
             { "bit(24)", "IsoReaderWriter.WriteBits(stream, 24" },
             { "bit(31)", "IsoReaderWriter.WriteBits(stream, 31" },
@@ -1257,6 +1309,7 @@ namespace BoxGenerator2
             { "uint(8)", "IsoReaderWriter.WriteUInt8(stream" },
             { "signed int(32)", "IsoReaderWriter.WriteInt32(stream" },
             { "signed int (16)", "IsoReaderWriter.WriteInt16(stream" },
+            { "signed int(16)[grid_pos_view_id[i]]", "IsoReaderWriter.WriteInt16Array(stream, grid_pos_view_id[i]" },
             { "signed int(16)", "IsoReaderWriter.WriteInt16(stream" },
             { "signed int (8)", "IsoReaderWriter.WriteInt8(stream" },
             { "signed int(64)", "IsoReaderWriter.WriteInt64(stream" },
@@ -1269,23 +1322,26 @@ namespace BoxGenerator2
             { "SchemeInformationBox", "IsoReaderWriter.WriteBox(stream" },
             { "ItemPropertyContainerBox", "IsoReaderWriter.WriteBox(stream" },
             { "ItemPropertyAssociationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ItemPropertyAssociationBox[]", "IsoReaderWriter.WriteBoxes(stream" },
             { "char", "IsoReaderWriter.WriteInt8(stream" },
             { "loudness", "IsoReaderWriter.WriteInt32(stream" },
             { "ICC_profile", "IsoReaderWriter.WriteClass(stream" },
             { "OriginalFormatBox(fmt)", "IsoReaderWriter.WriteBox(stream" },
             { "DataEntryBaseBox(entry_type, entry_flags)", "IsoReaderWriter.WriteBox(stream" },
-            { "ItemInfoEntry[ entry_count ]", "IsoReaderWriter.WriteClass(stream" },
-            { "TypeCombinationBox", "IsoReaderWriter.WriteBox(stream" },
+            { "ItemInfoEntry[ entry_count ]", "IsoReaderWriter.WriteClasses(stream, entry_count" },
+            { "TypeCombinationBox[]", "IsoReaderWriter.WriteBoxes(stream" },
             { "FilePartitionBox", "IsoReaderWriter.WriteBox(stream" },
             { "FECReservoirBox", "IsoReaderWriter.WriteBox(stream" },
             { "FileReservoirBox", "IsoReaderWriter.WriteBox(stream" },
-            { "PartitionEntry", "IsoReaderWriter.WriteClass(stream" },
+            { "PartitionEntry[ entry_count ]", "IsoReaderWriter.WriteClasses(stream, entry_count" },
             { "FDSessionGroupBox", "IsoReaderWriter.WriteBox(stream" },
             { "GroupIdToNameBox", "IsoReaderWriter.WriteBox(stream" },
             { "base64string", "IsoReaderWriter.WriteString(stream" },
             { "ProtectionSchemeInfoBox", "IsoReaderWriter.WriteBox(stream" },
             { "SingleItemTypeReferenceBox", "IsoReaderWriter.WriteBox(stream" },
+            { "SingleItemTypeReferenceBox[]", "IsoReaderWriter.WriteBoxes(stream" },
             { "SingleItemTypeReferenceBoxLarge", "IsoReaderWriter.WriteBox(stream" },
+            { "SingleItemTypeReferenceBoxLarge[]", "IsoReaderWriter.WriteBoxes(stream" },
             { "HandlerBox(handler_type)", "IsoReaderWriter.WriteBox(stream" },
             { "PrimaryItemBox", "IsoReaderWriter.WriteBox(stream" },
             { "DataInformationBox", "IsoReaderWriter.WriteBox(stream" },
@@ -1314,6 +1370,7 @@ namespace BoxGenerator2
             { "VvcDecoderConfigurationRecord()", "IsoReaderWriter.WriteClass(stream" },
             { "EVCSliceComponentTrackConfigurationRecord()", "IsoReaderWriter.WriteClass(stream" },
             { "SampleGroupDescriptionEntry (grouping_type)", "IsoReaderWriter.WriteClass(stream" },
+            { "Descriptor[0 .. 255]", "IsoReaderWriter.WriteClasses(stream" },
             { "Descriptor", "IsoReaderWriter.WriteClass(stream" },
             { "WebVTTConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
             { "WebVTTSourceLabelBox", "IsoReaderWriter.WriteBox(stream" },
@@ -1325,7 +1382,7 @@ namespace BoxGenerator2
             { "URIbox", "IsoReaderWriter.WriteBox(stream" },
             { "CleanApertureBox", "IsoReaderWriter.WriteBox(stream" },
             { "PixelAspectRatioBox", "IsoReaderWriter.WriteBox(stream" },
-            { "DownMixInstructions()", "IsoReaderWriter.WriteClass(stream" },
+            { "DownMixInstructions() []", "IsoReaderWriter.WriteClasses(stream" },
             { "DRCCoefficientsBasic() []", "IsoReaderWriter.WriteClasses(stream" },
             { "DRCInstructionsBasic() []", "IsoReaderWriter.WriteClasses(stream" },
             { "DRCCoefficientsUniDRC() []", "IsoReaderWriter.WriteClasses(stream" },
@@ -1351,8 +1408,8 @@ namespace BoxGenerator2
             { "MPEG4ExtensionDescriptorsBox()", "IsoReaderWriter.WriteBox(stream" },
             { "MPEG4ExtensionDescriptorsBox", "IsoReaderWriter.WriteBox(stream" },
             { "bit(8*dci_nal_unit_length)", "IsoReaderWriter.WriteBytes(stream, dci_nal_unit_length" },
-            { "DependencyInfo", "IsoReaderWriter.WriteClass(stream" },
-            { "VvcPTLRecord(0)", "IsoReaderWriter.WriteClass(stream" },
+            { "DependencyInfo[numReferences]", "IsoReaderWriter.WriteClasses(stream, numReferences" },
+            { "VvcPTLRecord(0)[i]", "IsoReaderWriter.WriteClass(stream" },
             { "EVCSliceComponentTrackConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
             { "SVCMetadataSampleConfigBox", "IsoReaderWriter.WriteBox(stream" },
             { "SVCPriorityLayerInfoBox", "IsoReaderWriter.WriteBox(stream" },
@@ -1362,6 +1419,19 @@ namespace BoxGenerator2
             { "HEVCTileConfigurationBox", "IsoReaderWriter.WriteBox(stream" },
             { "MetadataKeyTableBox()", "IsoReaderWriter.WriteBox(stream" },
             { "BitRateBox ()", "IsoReaderWriter.WriteBox(stream" },
+            { "char[count]", "IsoReaderWriter.WriteInt8Array(stream, count" },
+            { "signed int(32)[ c ]", "IsoReaderWriter.WriteInt32(stream" },
+            { "unsigned int(8)[]", "IsoReaderWriter.WriteUInt8Array(stream" },
+            { "unsigned int(8)[i]", "IsoReaderWriter.WriteUInt8(stream" },
+            { "unsigned int(6)[i]", "IsoReaderWriter.WriteBits(stream, 6" },
+            { "unsigned int(6)[i][j]", "IsoReaderWriter.WriteBits(stream, 6" },
+            { "unsigned int(1)[i][j]", "IsoReaderWriter.WriteBits(stream, 1" },
+            { "unsigned int(9)[i]", "IsoReaderWriter.WriteBits(stream, 9" },
+            { "unsigned int(32)[]", "IsoReaderWriter.WriteUInt32Array(stream" },
+            { "unsigned int(32)[i]", "IsoReaderWriter.WriteUInt32(stream" },
+            { "char[]", "IsoReaderWriter.WriteInt8Array(stream" },
+            { "loudness[]", "IsoReaderWriter.WriteInt32Array(stream" },
+            { "string[method_count]", "IsoReaderWriter.WriteStringArray(stream, method_count" },
         };
         return map[type];
     }
@@ -1385,6 +1455,7 @@ namespace BoxGenerator2
     private static string GetType(string type)
     {
         Dictionary<string, string> map = new Dictionary<string, string> {
+            { "unsigned int(64)[ entry_count ]", "ulong[]" },
             { "unsigned int(64)", "ulong" },
             { "unsigned int(48)", "ulong" },
             { "template int(32)[9]", "uint[]" },
@@ -1394,11 +1465,17 @@ namespace BoxGenerator2
             { "unsigned int(24)", "uint" },
             { "unsigned int(29)", "uint" },
             { "unsigned int(26)", "uint" },
+            { "unsigned int(16)[i]", "ushort[]" },
+            { "unsigned int(16)[j]", "ushort[]" },
+            { "unsigned int(16)[i][j]", "ushort[][]" },
             { "unsigned int(16)", "ushort" },
             { "unsigned_int(16)", "ushort" },
             { "unsigned int(15)", "ushort" },
             { "unsigned int(12)", "ushort" },
+            { "unsigned int(10)[i][j]", "ushort[][]" },
+            { "unsigned int(10)[i]", "ushort[]" },
             { "unsigned int(10)", "ushort" },
+            { "unsigned int(8)[ sample_count ]", "byte[]" },
             { "unsigned int(8)[length]", "byte[]" },
             { "unsigned int(8)[32]", "byte[]" },
             { "unsigned int(8)[16]", "byte[]" },
@@ -1410,12 +1487,14 @@ namespace BoxGenerator2
             { "unsigned int(5)", "byte" },
             { "unsigned int(4)", "byte" },
             { "unsigned int(3)", "byte" },
+            { "unsigned int(2)[i][j]", "byte[][]" },
             { "unsigned int(2)", "byte" },
+            { "unsigned int(1)[i]", "bool[]" },
             { "unsigned int(1)", "bool" },
             { "unsigned int (32)", "uint" },
-            { "unsigned int(f(pattern_size_code))", "byte[]" },
-            { "unsigned int(f(index_size_code))", "byte[]" },
-            { "unsigned int(f(count_size_code))", "byte[]" },
+            { "unsigned int(f(pattern_size_code))[i]", "byte[]" },
+            { "unsigned int(f(index_size_code))[j][k]", "byte[]" },
+            { "unsigned int(f(count_size_code))[i]", "byte[]" },
             { "unsigned int(base_offset_size*8)", "byte[]" },
             { "unsigned int(offset_size*8)", "byte[]" },
             { "unsigned int(length_size*8)", "byte[]" },
@@ -1425,7 +1504,7 @@ namespace BoxGenerator2
             { "unsigned int((length_size_of_trun_num+1) * 8)", "byte[]" },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "byte[]" },
             { "unsigned int(8*size-64)", "byte[]" },
-            { "unsigned int(subgroupIdLen)", "uint[]" },
+            { "unsigned int(subgroupIdLen)[i]", "uint[]" },
             { "const unsigned int(32)[2]", "uint[]" },
             { "const unsigned int(32)[3]", "uint[]" },
             { "const unsigned int(32)", "uint" },
@@ -1438,6 +1517,7 @@ namespace BoxGenerator2
             { "template unsigned int(32)", "uint" },
             { "template unsigned int(16)[3]", "ushort[]" },
             { "template unsigned int(16)", "ushort" },
+            { "template unsigned int(8)[]", "byte[]" },
             { "template unsigned int(8)", "byte" },
             { "int(64)", "long" },
             { "int(32)", "int" },
@@ -1454,7 +1534,9 @@ namespace BoxGenerator2
             { "bit(5)", "byte" },
             { "bit(6)", "byte" },
             { "bit(7)", "byte" },
+            { "bit(8)[]", "byte[]" },
             { "bit(8)", "byte" },
+            { "bit(16)[i]", "ushort[]" },
             { "bit(16)", "ushort" },
             { "bit(24)", "uint" },
             { "bit(31)", "uint" },
@@ -1473,6 +1555,7 @@ namespace BoxGenerator2
             { "uint(8)", "byte" },
             { "signed int(32)", "int" },
             { "signed int (16)", "short" },
+            { "signed int(16)[grid_pos_view_id[i]]", "short[]" },
             { "signed int(16)", "short" },
             { "signed int (8)", "sbyte" },
             { "signed int(64)", "long" },
@@ -1485,23 +1568,25 @@ namespace BoxGenerator2
             { "SchemeInformationBox", "SchemeInformationBox" },
             { "ItemPropertyContainerBox", "ItemPropertyContainerBox" },
             { "ItemPropertyAssociationBox", "ItemPropertyAssociationBox" },
-            { "char", "byte" },
+            { "char", "sbyte" },
             { "loudness", "int" },
             { "ICC_profile", "ICC_profile" },
             { "OriginalFormatBox(fmt)", "OriginalFormatBox" },
             { "DataEntryBaseBox(entry_type, entry_flags)", "DataEntryBaseBox" },
             { "ItemInfoEntry[ entry_count ]", "ItemInfoEntry[]" },
-            { "TypeCombinationBox", "TypeCombinationBox" },
+            { "TypeCombinationBox[]", "TypeCombinationBox[]" },
             { "FilePartitionBox", "FilePartitionBox" },
             { "FECReservoirBox", "FECReservoirBox" },
             { "FileReservoirBox", "FileReservoirBox" },
-            { "PartitionEntry", "PartitionEntry" },
+            { "PartitionEntry[ entry_count ]", "PartitionEntry[]" },
             { "FDSessionGroupBox", "FDSessionGroupBox" },
             { "GroupIdToNameBox", "GroupIdToNameBox" },
             { "base64string", "string" },
             { "ProtectionSchemeInfoBox", "ProtectionSchemeInfoBox" },
             { "SingleItemTypeReferenceBox", "SingleItemTypeReferenceBox" },
+            { "SingleItemTypeReferenceBox[]", "SingleItemTypeReferenceBox[]" },
             { "SingleItemTypeReferenceBoxLarge", "SingleItemTypeReferenceBoxLarge" },
+            { "SingleItemTypeReferenceBoxLarge[]", "SingleItemTypeReferenceBoxLarge[]" },
             { "HandlerBox(handler_type)", "HandlerBox" },
             { "PrimaryItemBox", "PrimaryItemBox" },
             { "DataInformationBox", "DataInformationBox" },
@@ -1530,6 +1615,7 @@ namespace BoxGenerator2
             { "VvcDecoderConfigurationRecord()", "VvcDecoderConfigurationRecord" },
             { "EVCSliceComponentTrackConfigurationRecord()", "EVCSliceComponentTrackConfigurationRecord" },
             { "SampleGroupDescriptionEntry (grouping_type)", "SampleGroupDescriptionEntry" },
+            { "Descriptor[0 .. 255]", "Descriptor[]" },
             { "Descriptor", "Descriptor" },
             { "WebVTTConfigurationBox", "WebVTTConfigurationBox" },
             { "WebVTTSourceLabelBox", "WebVTTSourceLabelBox" },
@@ -1541,7 +1627,7 @@ namespace BoxGenerator2
             { "URIbox", "URIBox" },
             { "CleanApertureBox", "CleanApertureBox" },
             { "PixelAspectRatioBox", "PixelAspectRatioBox" },
-            { "DownMixInstructions()", "DownMixInstructions" },
+            { "DownMixInstructions() []", "DownMixInstructions[]" },
             { "DRCCoefficientsBasic() []", "DRCCoefficientsBasic[]" },
             { "DRCInstructionsBasic() []", "DRCInstructionsBasic[]" },
             { "DRCCoefficientsUniDRC() []", "DRCCoefficientsUniDRC[]" },
@@ -1567,8 +1653,8 @@ namespace BoxGenerator2
             { "MPEG4ExtensionDescriptorsBox()", "MPEG4ExtensionDescriptorsBox" },
             { "MPEG4ExtensionDescriptorsBox", "MPEG4ExtensionDescriptorsBox" },
             { "bit(8*dci_nal_unit_length)", "byte[]" },
-            { "DependencyInfo", "DependencyInfo" },
-            { "VvcPTLRecord(0)", "VvcPTLRecord" },
+            { "DependencyInfo[numReferences]", "DependencyInfo[]" },
+            { "VvcPTLRecord(0)[i]", "VvcPTLRecord[]" },
             { "EVCSliceComponentTrackConfigurationBox", "EVCSliceComponentTrackConfigurationBox" },
             { "SVCMetadataSampleConfigBox", "SVCMetadataSampleConfigBox" },
             { "SVCPriorityLayerInfoBox", "SVCPriorityLayerInfoBox" },
@@ -1578,6 +1664,20 @@ namespace BoxGenerator2
             { "HEVCTileConfigurationBox", "HEVCTileConfigurationBox" },
             { "MetadataKeyTableBox()", "MetadataKeyTableBox" },
             { "BitRateBox ()", "BitRateBox" },
+            { "char[count]", "sbyte[]" },
+            { "signed int(32)[ c ]", "int[]" },
+            { "unsigned int(8)[]", "byte[]" },
+            { "unsigned int(8)[i]", "byte[]" },
+            { "unsigned int(6)[i]", "byte[]" },
+            { "unsigned int(6)[i][j]", "byte[][]" },
+            { "unsigned int(1)[i][j]", "byte[][]" },
+            { "unsigned int(9)[i]", "ushort[]" },
+            { "unsigned int(32)[]", "uint[]" },
+            { "unsigned int(32)[i]", "uint[]" },
+            { "char[]", "sbyte[]" },
+            { "loudness[]", "int[]" },
+            { "ItemPropertyAssociationBox[]", "ItemPropertyAssociationBox[]" },
+            { "string[method_count]", "string[]" },
         };
         return map[type];
     }
