@@ -653,7 +653,7 @@ namespace BoxGenerator2
 
         foreach (var field in fields)
         {
-            cls += "\r\n" + BuildProperty(field);
+            cls += "\r\n" + BuildField(field);
         }
 
         cls += $"\r\n\r\n\tpublic {b.BoxName}()\r\n\t{{ }}\r\n";
@@ -760,7 +760,7 @@ namespace BoxGenerator2
         }
     }
 
-    private static string BuildProperty(PseudoCode field)
+    private static string BuildField(PseudoCode field)
     {
         var block = field as PseudoBlock;
         if (block != null)
@@ -768,7 +768,7 @@ namespace BoxGenerator2
             string ret = "";
             foreach(var f in block.Content)
             {
-                ret += "\r\n" + BuildProperty(f);
+                ret += "\r\n" + BuildField(f);
             }
             return ret;
         }
@@ -839,13 +839,13 @@ namespace BoxGenerator2
 
                 if (!string.IsNullOrEmpty(value))
                 {
-                    value = " " + value.Replace("'", "\"") + ";";
+                    value = " " + value.Replace("'", "\"");
                 }
 
                 value = FixFourCC(value);
 
                 string name = GetFieldName(field);
-                return $"\tpublic {tt} {name} {{ get; set; }}{value} {comment}";
+                return $"\tpublic {tt} {name}{value}; {comment}";
             }
         }
         else
