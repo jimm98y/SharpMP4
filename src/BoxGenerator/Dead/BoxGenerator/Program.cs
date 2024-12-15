@@ -830,7 +830,13 @@ namespace BoxGenerator2
                 value = FixFourCC(value);
 
                 string name = GetFieldName(field);
-                return $"\tpublic {tt} {name}{value}; {comment}";
+                string propertyName = name.ToPropertyCase();
+
+                if (name == propertyName)
+                    propertyName = "_" + name;
+
+                return $"\tprivate {tt} {name}{value}; {comment}\r\n" +
+                 $"\tpublic {tt} {propertyName} {{ get {{ return {name}; }} set {{ {name} = value; }} }}";
             }
         }
         else
@@ -2066,4 +2072,27 @@ namespace BoxGenerator2
     }
 
     static partial void HelloFrom(string name);
+}
+
+public static class StringExtensions
+{
+    public static string ToPropertyCase(this string source)
+    {
+        if (source.Contains('_'))
+        {
+            var parts = source
+                .Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
+
+            return string.Join("", parts.Select(ToCapital));
+        }
+        else
+        {
+            return ToCapital(source);
+        }
+    }
+
+    public static string ToCapital(this string source)
+    {
+        return string.Format("{0}{1}", char.ToUpper(source[0]), source.Substring(1));
+    }
 }
