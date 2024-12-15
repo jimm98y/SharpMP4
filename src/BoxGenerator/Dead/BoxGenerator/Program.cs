@@ -98,21 +98,6 @@ public class PseudoComment : PseudoCode
     public string Comment { get; }
 }
 
-
-public class PseudoMethod : PseudoCode
-{
-    public PseudoMethod(string name, string value, Maybe<string> comment)
-    {
-        Name = name;
-        Value = value;
-        Comment = comment.GetValueOrDefault();
-    }
-
-    public string Name { get; }
-    public string Value { get; }
-    public string Comment { get; }
-}
-
 public class PseudoBlock : PseudoCode
 {
     public PseudoBlock(string type, Maybe<string> condition, Maybe<string> comment, IEnumerable<PseudoCode> content)
@@ -444,7 +429,7 @@ partial class Program
         Identifier.Labelled("field name");
 
     public static Parser<char, PseudoCode> Method =>
-        Map((name, value, comment) => new PseudoMethod(name, string.Concat(value), comment),
+        Map((name, value, comment) => new PseudoField(name, new Maybe<string>(name), new Maybe<IEnumerable<char>>(), comment),
             MethodName.Before(SkipWhitespaces).Before(Char('(')),
             Any.Until(Char(')')).Before(Char(';')).Before(SkipWhitespaces),
             Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()
@@ -702,14 +687,15 @@ namespace BoxGenerator2
     {
         if (box.BoxName == "DegradationPriorityBox" || box.BoxName == "SampleDependencyTypeBox" || box.BoxName == "SampleDependencyBox")
         {
-            cls += "\t\tint sample_count = 0; // TODO: taken from the stsz sample_count\r\n";
+            cls += "\r\n\t\tint sample_count = 0; // TODO: taken from the stsz sample_count\r\n";
         }
         else if (box.BoxName == "DownMixInstructions")
         {
-            cls += "\t\tint baseChannelCount = 0; // TODO: get somewhere";
+            cls += "\r\n\t\tint baseChannelCount = 0; // TODO: get somewhere";
         }
         else if(box.BoxName == "CompactSampleToGroupBox")
         {
+            cls += "\r\n";
             cls += "\t\tbool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);\r\n";
             cls += "\t\tint count_size_code = (flags >> 2) & 0x3;\r\n";
             cls += "\t\tint pattern_size_code = (flags >> 4) & 0x3;\r\n";
@@ -872,12 +858,6 @@ namespace BoxGenerator2
             return BuildBlock(block, level, methodType);
         }
 
-        var method = field as PseudoMethod;
-        if (method != null)
-        {
-            return BuildMethod(method, level, methodType);
-        }
-
         var comment = field as PseudoComment;
         if (comment != null)
         {
@@ -950,17 +930,6 @@ namespace BoxGenerator2
         string spacing = GetSpacing(level);
         string text = comment.Comment;
         return $"{spacing}/* {text} */";
-    }
-
-    private static string BuildMethod(PseudoMethod method, int level, MethodType methodType)
-    {
-        string comment = "";
-        if (!string.IsNullOrEmpty(method.Comment))
-        {
-            comment = " //" + method.Comment;
-        }
-        //Debug.WriteLine($"Method: {method.Name}{method.Value}{comment};\r\n");
-        return $"// TODO: This should likely be a FullBox: {method.Name}{method.Value};{comment}\r\n";
     }
 
     public enum MethodType
@@ -1287,6 +1256,29 @@ namespace BoxGenerator2
             { "char[]", "IsoReaderWriter.ReadInt8Array(stream, " },
             { "loudness[]", "IsoReaderWriter.ReadInt32Array(stream, " },
             { "string[method_count]", "IsoReaderWriter.ReadStringArray(stream, method_count, " },
+            { "ItemInfoExtension", "IsoReaderWriter.ReadBox(stream, " },
+            { "SampleGroupDescriptionEntry", "IsoReaderWriter.ReadBox(stream, " },
+            { "SampleEntry", "IsoReaderWriter.ReadBox(stream, " },
+            { "SampleConstructor", "IsoReaderWriter.ReadBox(stream, " },
+            { "InlineConstructor", "IsoReaderWriter.ReadBox(stream, " },
+            { "SampleConstructorFromTrackGroup", "IsoReaderWriter.ReadBox(stream, " },
+            { "NALUStartInlineConstructor", "IsoReaderWriter.ReadBox(stream, " },
+            { "MPEG4BitRateBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "ChannelLayout", "IsoReaderWriter.ReadBox(stream, " },
+            { "UniDrcConfigExtension", "IsoReaderWriter.ReadBox(stream, " },
+            { "SamplingRateBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "TextConfigBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "MetadataKeyTableBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "BitRateBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "CompleteTrackInfoBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "TierDependencyBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "InitialParameterSetBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "PriorityRangeBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "ViewPriorityBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "SVCDependencyRangeBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "RectRegionBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "IroiInfoBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "TranscodingInfoBox", "IsoReaderWriter.ReadBox(stream, " },
         };
         return map[type];
     }
@@ -1520,6 +1512,29 @@ namespace BoxGenerator2
             { "char[]", "(ulong)value.Length * 8" },
             { "loudness[]", "(ulong)value.Length * 32" },
             { "string[method_count]", "IsoReaderWriter.CalculateSize(value)" },
+            { "ItemInfoExtension", "IsoReaderWriter.CalculateSize(value)" },
+            { "SampleGroupDescriptionEntry", "IsoReaderWriter.CalculateSize(value)" },
+            { "SampleEntry", "IsoReaderWriter.CalculateSize(value)" },
+            { "SampleConstructor", "IsoReaderWriter.CalculateSize(value)" },
+            { "InlineConstructor", "IsoReaderWriter.CalculateSize(value)" },
+            { "SampleConstructorFromTrackGroup", "IsoReaderWriter.CalculateSize(value)" },
+            { "NALUStartInlineConstructor", "IsoReaderWriter.CalculateSize(value)" },
+            { "MPEG4BitRateBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ChannelLayout", "IsoReaderWriter.CalculateSize(value)" },
+            { "UniDrcConfigExtension", "IsoReaderWriter.CalculateSize(value)" },
+            { "SamplingRateBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "TextConfigBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "MetadataKeyTableBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "BitRateBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "CompleteTrackInfoBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "TierDependencyBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "InitialParameterSetBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "PriorityRangeBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ViewPriorityBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "SVCDependencyRangeBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "RectRegionBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "IroiInfoBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "TranscodingInfoBox", "IsoReaderWriter.CalculateSize(value)" },
         };
         return map[type];
     }
@@ -1753,6 +1768,29 @@ namespace BoxGenerator2
             { "char[]", "IsoReaderWriter.WriteInt8Array(stream, " },
             { "loudness[]", "IsoReaderWriter.WriteInt32Array(stream, " },
             { "string[method_count]", "IsoReaderWriter.WriteStringArray(stream, method_count, " },
+             { "ItemInfoExtension", "IsoReaderWriter.WriteBox(stream, " },
+            { "SampleGroupDescriptionEntry", "IsoReaderWriter.WriteBox(stream, " },
+            { "SampleEntry", "IsoReaderWriter.WriteBox(stream, " },
+            { "SampleConstructor", "IsoReaderWriter.WriteBox(stream, " },
+            { "InlineConstructor", "IsoReaderWriter.WriteBox(stream, " },
+            { "SampleConstructorFromTrackGroup", "IsoReaderWriter.WriteBox(stream, " },
+            { "NALUStartInlineConstructor", "IsoReaderWriter.WriteBox(stream, " },
+            { "MPEG4BitRateBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "ChannelLayout", "IsoReaderWriter.WriteBox(stream, " },
+            { "UniDrcConfigExtension", "IsoReaderWriter.WriteBox(stream, " },
+            { "SamplingRateBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "TextConfigBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "MetadataKeyTableBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "BitRateBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "CompleteTrackInfoBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "TierDependencyBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "InitialParameterSetBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "PriorityRangeBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "ViewPriorityBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "SVCDependencyRangeBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "RectRegionBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "IroiInfoBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "TranscodingInfoBox", "IsoReaderWriter.WriteBox(stream, " },
         };
         return map[type];
     }
@@ -2001,6 +2039,29 @@ namespace BoxGenerator2
             { "loudness[]", "int[]" },
             { "ItemPropertyAssociationBox[]", "ItemPropertyAssociationBox[]" },
             { "string[method_count]", "string[]" },
+            { "ItemInfoExtension", "ItemInfoExtension" },
+            { "SampleGroupDescriptionEntry", "SampleGroupDescriptionEntry" },
+            { "SampleEntry", "SampleEntry" },
+            { "SampleConstructor", "SampleConstructor" },
+            { "InlineConstructor", "InlineConstructor" },
+            { "SampleConstructorFromTrackGroup", "SampleConstructorFromTrackGroup" },
+            { "NALUStartInlineConstructor", "NALUStartInlineConstructor" },
+            { "MPEG4BitRateBox", "MPEG4BitRateBox" },
+            { "ChannelLayout", "ChannelLayout" },
+            { "UniDrcConfigExtension", "UniDrcConfigExtension" },
+            { "SamplingRateBox", "SamplingRateBox" },
+            { "TextConfigBox", "TextConfigBox" },
+            { "MetadataKeyTableBox", "MetadataKeyTableBox" },
+            { "BitRateBox", "BitRateBox" },
+            { "CompleteTrackInfoBox", "CompleteTrackInfoBox" },
+            { "TierDependencyBox", "TierDependencyBox" },
+            { "InitialParameterSetBox", "InitialParameterSetBox" },
+            { "PriorityRangeBox", "PriorityRangeBox" },
+            { "ViewPriorityBox", "ViewPriorityBox" },
+            { "SVCDependencyRangeBox", "SVCDependencyRangeBox" },
+            { "RectRegionBox", "RectRegionBox" },
+            { "IroiInfoBox", "IroiInfoBox" },
+            { "TranscodingInfoBox", "TranscodingInfoBox" },
         };
         return map[type];
     }

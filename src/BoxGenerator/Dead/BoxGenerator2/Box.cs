@@ -233,4 +233,39 @@ namespace BoxGenerator2
     {
 
     }
+    
+    public abstract class UniDrcConfigExtension : Box
+    {
+
+    }
+    
+    public abstract class ViewPriorityBox : Box
+    {
+
+    }
+
+    public abstract class MPEG4BitRateBox : Box
+    {
+
+    }
+
+    public abstract class SampleConstructor : Box
+    {
+
+    }
+
+    public abstract class InlineConstructor : Box
+    {
+
+    }
+
+    public abstract class NALUStartInlineConstructor : Box
+    {
+
+    }
+    
+    public abstract class SampleConstructorFromTrackGroup : Box
+    {
+
+    }
 }
