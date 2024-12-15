@@ -1806,7 +1806,7 @@ namespace BoxGenerator2
     public class DownMixInstructions : FullBox
     {
         public override string FourCC { get { return "dmix"; } }
-        public byte[] reserved { get; set; } = 0;  //  byte align
+        public byte[] reserved { get; set; } = [];  //  byte align
         public int downmix_instructions_count { get; set; } = 1;
         public byte targetLayout { get; set; }
         public byte targetChannelCount { get; set; }
@@ -3484,7 +3484,7 @@ namespace BoxGenerator2
     public class OriginalFormatBox : Box
     {
         public override string FourCC { get { return "frma"; } }
-        public uint data_format { get; set; } = codingname;  //  format of decrypted, encoded data (in case of protection)
+        public uint data_format { get; set; } // = codingname
 
         public OriginalFormatBox()
         { }
@@ -3594,7 +3594,7 @@ namespace BoxGenerator2
         public override string FourCC { get { return "hdlr"; } }
         public uint pre_defined { get; set; } = 0;
         public uint handler_type { get; set; }
-        public uint[] reserved { get; set; } = 0;
+        public uint[] reserved { get; set; } = [];
         public string name { get; set; }
 
         public HandlerBox()
@@ -4565,10 +4565,10 @@ namespace BoxGenerator2
         public ulong duration { get; set; }
         public int rate { get; set; } = 0x00010000;  //  typically 1.0
         public short volume { get; set; } = 0x0100;  //  typically, full volume
-        public uint[] reserved { get; set; } = 0;
+        public uint[] reserved { get; set; } = [];
         public uint[] matrix { get; set; } =
             { 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };  //  Unity matrix
-        public uint[] pre_defined { get; set; } = 0;
+        public uint[] pre_defined { get; set; } = [];
         public uint next_track_ID { get; set; }
 
         public MovieHeaderBox()
@@ -6321,7 +6321,7 @@ namespace BoxGenerator2
         public ulong creation_time { get; set; }
         public ulong modification_time { get; set; }
         public uint track_ID { get; set; }
-        public uint[] reserved { get; set; } = 0;
+        public uint[] reserved { get; set; } = [];
         public ulong duration { get; set; }
         public short layer { get; set; } = 0;
         public short alternate_group { get; set; } = 0;
@@ -8935,7 +8935,7 @@ namespace BoxGenerator2
     public class AudioSampleEntry : SampleEntry
     {
         public override string FourCC { get { return "enca"; } }
-        public uint[] reserved { get; set; } = 0;
+        public uint[] reserved { get; set; } = [];
         public ushort channelcount { get; set; }
         public ushort samplesize { get; set; } = 16;
         public ushort pre_defined { get; set; } = 0;
@@ -9009,7 +9009,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "enca"; } }
         public ushort entry_version { get; set; }  //  shall be 1, 
-        public ushort[] reserved { get; set; } = 0;
+        public ushort[] reserved { get; set; } = [];
         public ushort channelcount { get; set; }  //  shall be correct
         public ushort samplesize { get; set; } = 16;
         public ushort pre_defined { get; set; } = 0;
@@ -9087,7 +9087,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "enca"; } }
         public ushort entry_version { get; set; }  //  shall be 1, 
-        public ushort[] reserved { get; set; } = 0;
+        public ushort[] reserved { get; set; } = [];
         public ushort channelcount { get; set; }  //  shall be correct
         public ushort samplesize { get; set; } = 16;
         public ushort pre_defined { get; set; } = 0;
@@ -9775,7 +9775,7 @@ namespace BoxGenerator2
     public class VisualSampleEntry : SampleEntry
     {
         public override string FourCC { get { return "resv"; } }
-        public uint[] pre_defined { get; set; } = 0;
+        public uint[] pre_defined { get; set; } = [];
         public uint reserved { get; set; } = 0;
         public ushort width { get; set; }
         public ushort height { get; set; }
@@ -9835,7 +9835,7 @@ namespace BoxGenerator2
     public class AudioSampleEntry1 : SampleEntry
     {
         public override string FourCC { get { return "resa"; } }
-        public uint[] reserved { get; set; } = 0;
+        public uint[] reserved { get; set; } = [];
         public ushort channelcount { get; set; }
         public ushort samplesize { get; set; } = 16;
         public ushort pre_defined { get; set; } = 0;
@@ -9909,7 +9909,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "resa"; } }
         public ushort entry_version { get; set; }  //  shall be 1, 
-        public ushort[] reserved { get; set; } = 0;
+        public ushort[] reserved { get; set; } = [];
         public ushort channelcount { get; set; }  //  shall be correct
         public ushort samplesize { get; set; } = 16;
         public ushort pre_defined { get; set; } = 0;

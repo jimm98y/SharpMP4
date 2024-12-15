@@ -828,7 +828,7 @@ namespace BoxGenerator2
                     value = "= 0";
                     comment = "// = {if track_is_audio 0x0100 else 0};" + comment;
                 }
-                else if(value == "= boxtype" || value == "= extended_type")
+                else if(value == "= boxtype" || value == "= extended_type" || value == "= codingname")
                 {
                     comment = "// " + value;
                     value = "";
@@ -842,7 +842,7 @@ namespace BoxGenerator2
                     else
                         Debug.WriteLine($"Unsupported bool value: {value}");
                 }
-                else if(tt.StartsWith('[') && value == "= 0")
+                else if(tt.Contains('[') && value == "= 0")
                 {
                     value = "= []";
                 }
