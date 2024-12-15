@@ -1,5 +1,7 @@
 ﻿
 using BoxGenerator2;
+using System;
+using System.IO;
 
 internal class IsoReaderWriter
 {
