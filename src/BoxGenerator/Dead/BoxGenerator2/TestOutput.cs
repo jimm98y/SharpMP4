@@ -1453,7 +1453,7 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
             this.colour_type = IsoReaderWriter.ReadUInt32(stream);
 
-            if (colour_type == "nclx")
+            if (colour_type == IsoReaderWriter.FromFourCC("nclx"))
             {
                 this.colour_primaries = IsoReaderWriter.ReadUInt16(stream);
                 this.transfer_characteristics = IsoReaderWriter.ReadUInt16(stream);
@@ -1462,12 +1462,12 @@ namespace BoxGenerator2
                 this.reserved = IsoReaderWriter.ReadBits(stream, 7);
             }
 
-            else if (colour_type == "rICC")
+            else if (colour_type == IsoReaderWriter.FromFourCC("rICC"))
             {
                 this.ICC_profile = (ICC_profile)IsoReaderWriter.ReadClass(stream);
             }
 
-            else if (colour_type == "prof")
+            else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
             {
                 this.ICC_profile = (ICC_profile)IsoReaderWriter.ReadClass(stream);
             }
@@ -1479,7 +1479,7 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, this.colour_type);
 
-            if (colour_type == "nclx")
+            if (colour_type == IsoReaderWriter.FromFourCC("nclx"))
             {
                 size += IsoReaderWriter.WriteUInt16(stream, this.colour_primaries);
                 size += IsoReaderWriter.WriteUInt16(stream, this.transfer_characteristics);
@@ -1488,12 +1488,12 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
             }
 
-            else if (colour_type == "rICC")
+            else if (colour_type == IsoReaderWriter.FromFourCC("rICC"))
             {
                 size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
             }
 
-            else if (colour_type == "prof")
+            else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
             {
                 size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
             }
@@ -3954,13 +3954,13 @@ namespace BoxGenerator2
                 this.item_type = IsoReaderWriter.ReadUInt32(stream);
                 this.item_name = IsoReaderWriter.ReadString(stream);
 
-                if (item_type == "mime")
+                if (item_type == IsoReaderWriter.FromFourCC("mime"))
                 {
                     this.content_type = IsoReaderWriter.ReadString(stream);
                     this.content_encoding = IsoReaderWriter.ReadString(stream);
                 }
 
-                else if (item_type == "uri ")
+                else if (item_type == IsoReaderWriter.FromFourCC("uri "))
                 {
                     this.item_uri_type = IsoReaderWriter.ReadString(stream);
                 }
@@ -4004,13 +4004,13 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteUInt32(stream, this.item_type);
                 size += IsoReaderWriter.WriteString(stream, this.item_name);
 
-                if (item_type == "mime")
+                if (item_type == IsoReaderWriter.FromFourCC("mime"))
                 {
                     size += IsoReaderWriter.WriteString(stream, this.content_type);
                     size += IsoReaderWriter.WriteString(stream, this.content_encoding);
                 }
 
-                else if (item_type == "uri ")
+                else if (item_type == IsoReaderWriter.FromFourCC("uri "))
                 {
                     size += IsoReaderWriter.WriteString(stream, this.item_uri_type);
                 }
@@ -6675,7 +6675,7 @@ namespace BoxGenerator2
                 /*  box extends to end of file */
             }
 
-            if (type == "uuid")
+            if (type == IsoReaderWriter.FromFourCC("uuid"))
             {
                 this.usertype = IsoReaderWriter.ReadBytes(stream, 16);
             }
@@ -6697,7 +6697,7 @@ namespace BoxGenerator2
                 /*  box extends to end of file */
             }
 
-            if (type == "uuid")
+            if (type == IsoReaderWriter.FromFourCC("uuid"))
             {
                 size += IsoReaderWriter.WriteBytes(stream, 16, this.usertype);
             }
@@ -8888,7 +8888,7 @@ namespace BoxGenerator2
             this.input_MD5 = IsoReaderWriter.ReadBytes(stream, 16);
             this.input_4cc = IsoReaderWriter.ReadUInt32(stream);
 
-            if (input_4cc == "sgpd")
+            if (input_4cc == IsoReaderWriter.FromFourCC("sgpd"))
             {
                 this.grouping_type = IsoReaderWriter.ReadUInt32(stream);
 
@@ -8912,7 +8912,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBytes(stream, 16, this.input_MD5);
             size += IsoReaderWriter.WriteUInt32(stream, this.input_4cc);
 
-            if (input_4cc == "sgpd")
+            if (input_4cc == IsoReaderWriter.FromFourCC("sgpd"))
             {
                 size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
 
@@ -15533,7 +15533,7 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
             this.colour_type = IsoReaderWriter.ReadUInt32(stream);
 
-            if (colour_type == "nclx")
+            if (colour_type == IsoReaderWriter.FromFourCC("nclx"))
             {
                 this.colour_primaries = IsoReaderWriter.ReadUInt16(stream);
                 this.transfer_characteristics = IsoReaderWriter.ReadUInt16(stream);
@@ -15542,12 +15542,12 @@ namespace BoxGenerator2
                 this.reserved = IsoReaderWriter.ReadBits(stream, 7);
             }
 
-            else if (colour_type == "rICC")
+            else if (colour_type == IsoReaderWriter.FromFourCC("rICC"))
             {
                 this.ICC_profile = (ICC_profile)IsoReaderWriter.ReadClass(stream);
             }
 
-            else if (colour_type == "prof")
+            else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
             {
                 this.ICC_profile = (ICC_profile)IsoReaderWriter.ReadClass(stream);
             }
@@ -15559,7 +15559,7 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, this.colour_type);
 
-            if (colour_type == "nclx")
+            if (colour_type == IsoReaderWriter.FromFourCC("nclx"))
             {
                 size += IsoReaderWriter.WriteUInt16(stream, this.colour_primaries);
                 size += IsoReaderWriter.WriteUInt16(stream, this.transfer_characteristics);
@@ -15568,12 +15568,12 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
             }
 
-            else if (colour_type == "rICC")
+            else if (colour_type == IsoReaderWriter.FromFourCC("rICC"))
             {
                 size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
             }
 
-            else if (colour_type == "prof")
+            else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
             {
                 size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
             }

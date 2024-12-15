@@ -297,4 +297,9 @@ internal class IsoReaderWriter
     {
         throw new NotImplementedException();
     }
+
+    internal static uint FromFourCC(string input)
+    {
+        throw new NotImplementedException();
+    }
 }

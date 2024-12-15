@@ -2,8 +2,9 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using static Pidgin.Parser<char>;
+using System.Text.RegularExpressions;
 using static Pidgin.Parser;
+using static Pidgin.Parser<char>;
 
 namespace ConsoleApp;
 
@@ -964,6 +965,19 @@ namespace BoxGenerator2
                 {
                     condition = $"(({conditionParts[0]} & {conditionParts[1]}) == {conditionParts[1]})"; // fix the "flags" syntax
                 }
+            }
+        }
+
+        if (!string.IsNullOrEmpty(condition))
+        {
+            // fix 4cc
+            const string regex = "\\\"[\\w\\s\\!]{4}\\\"";
+            var match = Regex.Match(condition, regex);
+            if (match.Success)
+            {
+                string inputValue = match.Value;
+                string replaceValue = "IsoReaderWriter.FromFourCC(" + inputValue + ")";
+                condition = condition.Replace(inputValue, replaceValue);
             }
         }
 
