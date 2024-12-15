@@ -258,11 +258,6 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteInt16Array(Stream stream, uint count, short[] value)
-    {
-        throw new NotImplementedException();
-    }
-
     internal static ulong WriteClasses(Stream stream, uint count, object[] values)
     {
         throw new NotImplementedException();
