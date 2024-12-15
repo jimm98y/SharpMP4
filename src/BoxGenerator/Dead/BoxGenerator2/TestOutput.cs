@@ -2751,7 +2751,7 @@ namespace BoxGenerator2
                 this.grouping_type_parameter = IsoReaderWriter.ReadUInt32(stream);
             }
             this.pattern_count = IsoReaderWriter.ReadUInt32(stream);
-            totalPatternLength = 0;
+            uint totalPatternLength = 0;
 
             for (int i = 1; i <= pattern_count; i++)
             {
@@ -2780,7 +2780,7 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
             }
             size += IsoReaderWriter.WriteUInt32(stream, this.pattern_count);
-            totalPatternLength = 0;
+            uint totalPatternLength = 0;
 
             for (int i = 1; i <= pattern_count; i++)
             {

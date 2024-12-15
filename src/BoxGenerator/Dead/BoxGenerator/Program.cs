@@ -908,6 +908,8 @@ namespace BoxGenerator2
                 return "int j = 1;";
             else if (tt == "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")
                 return "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);";
+            else if (tt == "totalPatternLength = 0")
+                return "uint totalPatternLength = 0;";
             else
                 return $"{tt};";
         }
