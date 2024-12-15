@@ -317,4 +317,9 @@ internal class IsoReaderWriter
     {
         throw new NotImplementedException();
     }
+
+    internal static ulong CalculateClassSize(object[] value)
+    {
+        throw new NotImplementedException();
+    }
 }
