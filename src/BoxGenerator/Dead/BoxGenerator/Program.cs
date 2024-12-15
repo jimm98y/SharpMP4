@@ -1,10 +1,11 @@
-﻿using Pidgin;
+﻿using Newtonsoft.Json;
+using Pidgin;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using static Pidgin.Parser;
 using static Pidgin.Parser<char>;
+using static Pidgin.Parser;
 
 namespace ConsoleApp;
 
@@ -536,6 +537,7 @@ partial class Program
 
         Dictionary<string, PseudoClass> ret = new Dictionary<string, PseudoClass>();
         List<PseudoClass> dupliates = new List<PseudoClass>();
+        List<string> containers = new List<string>();
 
         foreach (var file in files)
         {
@@ -545,6 +547,21 @@ partial class Program
                 foreach (JsonElement element in document.RootElement.GetProperty("entries").EnumerateArray())
                 {
                     string sample = element.GetProperty("syntax").GetString()!;
+                    string[] cont = element.GetProperty("containers").EnumerateArray().Select(x => x.ToString()).ToArray();
+                    foreach (var con in cont)
+                    {
+                        if(con.StartsWith("{"))
+                        {
+                            var des = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(con);
+                            foreach(var dc in des.Values)
+                            {
+                                foreach(var ddd in dc)
+                                    containers.Add(ddd); 
+                            }
+                            continue;
+                        }
+                        containers.Add(con);
+                    }
 
                     if (string.IsNullOrEmpty(sample))
                     {
@@ -588,6 +605,8 @@ partial class Program
             }
         }
 
+        containers = containers.Distinct().ToList();
+
         Console.WriteLine($"Successful: {success}, Failed: {fail}, Total: {success + fail}");
         string js = Newtonsoft.Json.JsonConvert.SerializeObject(ret.Values.ToArray());
         File.WriteAllText("result.json", js);
@@ -602,7 +621,7 @@ namespace BoxGenerator2
 ";
         foreach (var b in ret.Values.ToArray())
         {
-            string code = BuildCode(b);
+            string code = BuildCode(b, containers);
             resultCode += code + "\r\n\r\n";
         }
         resultCode += 
@@ -618,7 +637,7 @@ namespace BoxGenerator2
         return name;
     }
 
-    private static string BuildCode(PseudoClass? b)
+    private static string BuildCode(PseudoClass? b, List<string> containers)
     {
         string cls = "";
 
@@ -650,6 +669,12 @@ namespace BoxGenerator2
         {
             cls += "\r\n" + BuildMethodCode(field, 2, MethodType.Read);
         }
+
+        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName))
+        {
+            cls += "\r\n" + "boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);";
+        }
+
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
 
@@ -662,6 +687,12 @@ namespace BoxGenerator2
         {
             cls += "\r\n" + BuildMethodCode(field, 2, MethodType.Write);
         }
+
+        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName))
+        {
+            cls += "\r\n" + "boxSize += IsoReaderWriter.WriteBoxChildren(stream, this);";
+        }
+
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
         cls += "\r\n\tpublic " + (b.Extended != null ? "override " : "") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
@@ -672,6 +703,11 @@ namespace BoxGenerator2
         foreach (var field in b.Fields)
         {
             cls += "\r\n" + BuildMethodCode(field, 2, MethodType.Size);
+        }
+
+        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName))
+        {
+            cls += "\r\n" + "boxSize += IsoReaderWriter.CalculateSize(children);";
         }
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";

@@ -1,6 +1,7 @@
 ﻿
 using BoxGenerator2;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 internal class IsoReaderWriter
@@ -311,7 +312,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong CalculateSize(Box[] boxes)
+    internal static ulong CalculateSize(IEnumerable<Box> boxes)
     {
         throw new NotImplementedException();
     }
@@ -334,5 +335,30 @@ internal class IsoReaderWriter
     internal static ulong CalculateClassSize(object[] value)
     {
         throw new NotImplementedException();
+    }
+
+    internal static ulong ReadBoxChildren(Stream stream, ulong readSize, Box box)
+    {
+        ulong boxSize = 0;
+        box.Children = new List<Box>();
+        while ((boxSize + readSize) < box.Size)
+        {
+            boxSize += ReadBox(stream, out Box b);
+            box.Children.Add(b);
+        }
+        return boxSize;
+    }
+
+    internal static ulong WriteBoxChildren(Stream stream, Box box)
+    {
+        ulong boxSize = 0;
+        if (box.Children != null)
+        {
+            foreach (var b in box.Children)
+            {
+                boxSize += WriteBox(stream, b);
+            }
+        }
+        return boxSize;
     }
 }
