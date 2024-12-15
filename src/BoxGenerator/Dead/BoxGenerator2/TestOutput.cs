@@ -22,10 +22,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.SSRC);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.SSRC);
+            return boxSize;
         }
     }
 
@@ -48,11 +48,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.timestamp_sync);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.timestamp_sync);
+            return boxSize;
         }
     }
 
@@ -73,10 +73,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.timescale);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.timescale);
+            return boxSize;
         }
     }
 
@@ -97,10 +97,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.offset);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
+            return boxSize;
         }
     }
 
@@ -121,10 +121,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.offset);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
+            return boxSize;
         }
     }
 
@@ -145,10 +145,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.timescale);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.timescale);
+            return boxSize;
         }
     }
 
@@ -169,10 +169,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.offset);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
+            return boxSize;
         }
     }
 
@@ -193,10 +193,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.offset);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
+            return boxSize;
         }
     }
 
@@ -217,10 +217,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.timescale);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.timescale);
+            return boxSize;
         }
     }
 
@@ -241,10 +241,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.offset);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
+            return boxSize;
         }
     }
 
@@ -265,10 +265,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.offset);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
+            return boxSize;
         }
     }
 
@@ -289,10 +289,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -313,10 +313,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.packetssent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.packetssent);
+            return boxSize;
         }
     }
 
@@ -337,10 +337,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -361,10 +361,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -385,10 +385,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.packetssent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.packetssent);
+            return boxSize;
         }
     }
 
@@ -409,10 +409,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -433,10 +433,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -457,10 +457,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.packetssent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.packetssent);
+            return boxSize;
         }
     }
 
@@ -481,10 +481,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -505,10 +505,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -529,10 +529,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.packetssent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.packetssent);
+            return boxSize;
         }
     }
 
@@ -553,10 +553,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -577,10 +577,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -601,10 +601,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.packetssent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.packetssent);
+            return boxSize;
         }
     }
 
@@ -625,10 +625,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -649,10 +649,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -673,10 +673,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.packetssent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.packetssent);
+            return boxSize;
         }
     }
 
@@ -697,10 +697,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -724,12 +724,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
             /*  maximum data rate */
-            size += IsoReaderWriter.WriteUInt32(stream, this.period);
-            size += IsoReaderWriter.WriteUInt32(stream, this.bytes);
-            return size;
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.period);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytes);
+            return boxSize;
         }
     }
 
@@ -750,10 +750,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -774,10 +774,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -798,10 +798,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -822,10 +822,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -846,10 +846,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -870,10 +870,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -894,10 +894,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -918,10 +918,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -942,10 +942,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
         }
     }
 
@@ -966,10 +966,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.time);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.time);
+            return boxSize;
         }
     }
 
@@ -990,10 +990,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.time);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.time);
+            return boxSize;
         }
     }
 
@@ -1014,10 +1014,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.time);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.time);
+            return boxSize;
         }
     }
 
@@ -1038,10 +1038,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.time);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.time);
+            return boxSize;
         }
     }
 
@@ -1062,10 +1062,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.bytes);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytes);
+            return boxSize;
         }
     }
 
@@ -1086,10 +1086,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.time);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.time);
+            return boxSize;
         }
     }
 
@@ -1110,10 +1110,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.bytes);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytes);
+            return boxSize;
         }
     }
 
@@ -1134,10 +1134,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.time);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.time);
+            return boxSize;
         }
     }
 
@@ -1162,12 +1162,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.payloadID);
-            size += IsoReaderWriter.WriteUInt8(stream, this.count);
-            size += IsoReaderWriter.WriteInt8Array(stream, count, this.rtpmap_string);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.payloadID);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.count);
+            boxSize += IsoReaderWriter.WriteInt8Array(stream, count, this.rtpmap_string);
+            return boxSize;
         }
     }
 
@@ -1198,15 +1198,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 30, this.reserved);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.single_view_allowed);
-            size += IsoReaderWriter.WriteUInt32(stream, this.stereo_scheme);
-            size += IsoReaderWriter.WriteUInt32(stream, this.length);
-            size += IsoReaderWriter.WriteBytes(stream, length, this.stereo_indication_type);
-            size += IsoReaderWriter.WriteBoxes(stream, this.any_box);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 30, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.single_view_allowed);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.stereo_scheme);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.length);
+            boxSize += IsoReaderWriter.WriteBytes(stream, length, this.stereo_indication_type);
+            boxSize += IsoReaderWriter.WriteBoxes(stream, this.any_box);
+            return boxSize;
         }
     }
 
@@ -1227,10 +1227,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.extended_language);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.extended_language);
+            return boxSize;
         }
     }
 
@@ -1255,12 +1255,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.bufferSizeDB);
-            size += IsoReaderWriter.WriteUInt32(stream, this.maxBitrate);
-            size += IsoReaderWriter.WriteUInt32(stream, this.avgBitrate);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.bufferSizeDB);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxBitrate);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.avgBitrate);
+            return boxSize;
         }
     }
 
@@ -1283,11 +1283,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.hSpacing);
-            size += IsoReaderWriter.WriteUInt32(stream, this.vSpacing);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.hSpacing);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.vSpacing);
+            return boxSize;
         }
     }
 
@@ -1322,17 +1322,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthD);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightD);
-            size += IsoReaderWriter.WriteUInt32(stream, this.horizOffN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.horizOffD);
-            size += IsoReaderWriter.WriteUInt32(stream, this.vertOffN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.vertOffD);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthD);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightD);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.horizOffN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.horizOffD);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertOffN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertOffD);
+            return boxSize;
         }
     }
 
@@ -1395,41 +1395,41 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.reserved1);
-            size += IsoReaderWriter.WriteBit(stream, this.reserved2);
-            size += IsoReaderWriter.WriteBit(stream, this.ccv_primaries_present_flag);
-            size += IsoReaderWriter.WriteBit(stream, this.ccv_min_luminance_value_present_flag);
-            size += IsoReaderWriter.WriteBit(stream, this.ccv_max_luminance_value_present_flag);
-            size += IsoReaderWriter.WriteBit(stream, this.ccv_avg_luminance_value_present_flag);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.ccv_reserved_zero_2bits);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.reserved1);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.reserved2);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.ccv_primaries_present_flag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.ccv_min_luminance_value_present_flag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.ccv_max_luminance_value_present_flag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.ccv_avg_luminance_value_present_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.ccv_reserved_zero_2bits);
 
             if (ccv_primaries_present_flag)
             {
 
                 for (int c = 0; c < 3; c++)
                 {
-                    size += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_x[c]);
-                    size += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_y[c]);
+                    boxSize += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_x[c]);
+                    boxSize += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_y[c]);
                 }
             }
 
             if (ccv_min_luminance_value_present_flag)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.ccv_min_luminance_value);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.ccv_min_luminance_value);
             }
 
             if (ccv_max_luminance_value_present_flag)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.ccv_max_luminance_value);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.ccv_max_luminance_value);
             }
 
             if (ccv_avg_luminance_value_present_flag)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.ccv_avg_luminance_value);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.ccv_avg_luminance_value);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -1476,29 +1476,29 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.colour_type);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.colour_type);
 
             if (colour_type == IsoReaderWriter.FromFourCC("nclx"))
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.colour_primaries);
-                size += IsoReaderWriter.WriteUInt16(stream, this.transfer_characteristics);
-                size += IsoReaderWriter.WriteUInt16(stream, this.matrix_coefficients);
-                size += IsoReaderWriter.WriteBit(stream, this.full_range_flag);
-                size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.colour_primaries);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.transfer_characteristics);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.matrix_coefficients);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.full_range_flag);
+                boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
             }
 
             else if (colour_type == IsoReaderWriter.FromFourCC("rICC"))
             {
-                size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
+                boxSize += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
             }
 
             else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
             {
-                size += IsoReaderWriter.WriteClass(stream, this.ICC_profile0);
+                boxSize += IsoReaderWriter.WriteClass(stream, this.ICC_profile0);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -1521,11 +1521,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.max_content_light_level);
-            size += IsoReaderWriter.WriteUInt16(stream, this.max_pic_average_light_level);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_content_light_level);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_pic_average_light_level);
+            return boxSize;
         }
     }
 
@@ -1560,19 +1560,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             for (int c = 0; c < 3; c++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_x);
-                size += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_y);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_x);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_y);
             }
-            size += IsoReaderWriter.WriteUInt16(stream, this.white_point_x);
-            size += IsoReaderWriter.WriteUInt16(stream, this.white_point_y);
-            size += IsoReaderWriter.WriteUInt32(stream, this.max_display_mastering_luminance);
-            size += IsoReaderWriter.WriteUInt32(stream, this.min_display_mastering_luminance);
-            return size;
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.white_point_x);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.white_point_y);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.max_display_mastering_luminance);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.min_display_mastering_luminance);
+            return boxSize;
         }
     }
 
@@ -1595,11 +1595,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.scheme_type_box);
-            size += IsoReaderWriter.WriteBox(stream, this.info);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scheme_type_box);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.info);
+            return boxSize;
         }
     }
 
@@ -1638,7 +1638,7 @@ namespace BoxGenerator2
             {
                 this.stream_structure = IsoReaderWriter.ReadUInt8(stream);
 
-                if ((stream_structure & channelStructured) == channelStructured)
+                if ((stream_structure & 1) == 1)
                 {
                     this.definedLayout = IsoReaderWriter.ReadUInt8(stream);
 
@@ -1665,7 +1665,7 @@ namespace BoxGenerator2
                     }
                 }
 
-                if ((stream_structure & objectStructured) == objectStructured)
+                if ((stream_structure & 2) == 2)
                 {
                     this.object_count = IsoReaderWriter.ReadUInt8(stream);
                 }
@@ -1677,7 +1677,7 @@ namespace BoxGenerator2
                 this.format_ordering = IsoReaderWriter.ReadBits(stream, 4);
                 this.baseChannelCount = IsoReaderWriter.ReadUInt8(stream);
 
-                if ((stream_structure & channelStructured) == channelStructured)
+                if ((stream_structure & 1) == 1)
                 {
                     this.definedLayout0 = IsoReaderWriter.ReadUInt8(stream);
 
@@ -1711,7 +1711,7 @@ namespace BoxGenerator2
                     }
                 }
 
-                if ((stream_structure & objectStructured) == objectStructured)
+                if ((stream_structure & 2) == 2)
                 {
                     /*  object_count is derived from baseChannelCount */
                 }
@@ -1720,16 +1720,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.stream_structure);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.stream_structure);
 
-                if ((stream_structure & channelStructured) == channelStructured)
+                if ((stream_structure & 1) == 1)
                 {
-                    size += IsoReaderWriter.WriteUInt8(stream, this.definedLayout);
+                    boxSize += IsoReaderWriter.WriteUInt8(stream, this.definedLayout);
 
                     if (definedLayout == 0)
                     {
@@ -1737,75 +1737,75 @@ namespace BoxGenerator2
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
                             /*   layout_channel_count comes from the sample entry */
-                            size += IsoReaderWriter.WriteUInt8(stream, this.speaker_position);
+                            boxSize += IsoReaderWriter.WriteUInt8(stream, this.speaker_position);
 
                             if (speaker_position == 126)
                             {
                                 /*  explicit position */
-                                size += IsoReaderWriter.WriteInt16(stream, this.azimuth);
-                                size += IsoReaderWriter.WriteInt8(stream, this.elevation);
+                                boxSize += IsoReaderWriter.WriteInt16(stream, this.azimuth);
+                                boxSize += IsoReaderWriter.WriteInt8(stream, this.elevation);
                             }
                         }
                     }
 
                     else
                     {
-                        size += IsoReaderWriter.WriteUInt64(stream, this.omittedChannelsMap);
+                        boxSize += IsoReaderWriter.WriteUInt64(stream, this.omittedChannelsMap);
                     }
                 }
 
-                if ((stream_structure & objectStructured) == objectStructured)
+                if ((stream_structure & 2) == 2)
                 {
-                    size += IsoReaderWriter.WriteUInt8(stream, this.object_count);
+                    boxSize += IsoReaderWriter.WriteUInt8(stream, this.object_count);
                 }
             }
 
             else
             {
-                size += IsoReaderWriter.WriteBits(stream, 4, this.stream_structure0);
-                size += IsoReaderWriter.WriteBits(stream, 4, this.format_ordering);
-                size += IsoReaderWriter.WriteUInt8(stream, this.baseChannelCount);
+                boxSize += IsoReaderWriter.WriteBits(stream, 4, this.stream_structure0);
+                boxSize += IsoReaderWriter.WriteBits(stream, 4, this.format_ordering);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.baseChannelCount);
 
-                if ((stream_structure & channelStructured) == channelStructured)
+                if ((stream_structure & 1) == 1)
                 {
-                    size += IsoReaderWriter.WriteUInt8(stream, this.definedLayout0);
+                    boxSize += IsoReaderWriter.WriteUInt8(stream, this.definedLayout0);
 
                     if (definedLayout == 0)
                     {
-                        size += IsoReaderWriter.WriteUInt8(stream, this.layout_channel_count);
+                        boxSize += IsoReaderWriter.WriteUInt8(stream, this.layout_channel_count);
 
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-                            size += IsoReaderWriter.WriteUInt8(stream, this.speaker_position0);
+                            boxSize += IsoReaderWriter.WriteUInt8(stream, this.speaker_position0);
 
                             if (speaker_position == 126)
                             {
                                 /*  explicit position */
-                                size += IsoReaderWriter.WriteInt16(stream, this.azimuth0);
-                                size += IsoReaderWriter.WriteInt8(stream, this.elevation0);
+                                boxSize += IsoReaderWriter.WriteInt16(stream, this.azimuth0);
+                                boxSize += IsoReaderWriter.WriteInt8(stream, this.elevation0);
                             }
                         }
                     }
 
                     else
                     {
-                        size += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
-                        size += IsoReaderWriter.WriteBits(stream, 3, this.channel_order_definition);
-                        size += IsoReaderWriter.WriteBit(stream, this.omitted_channels_present);
+                        boxSize += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
+                        boxSize += IsoReaderWriter.WriteBits(stream, 3, this.channel_order_definition);
+                        boxSize += IsoReaderWriter.WriteBit(stream, this.omitted_channels_present);
 
                         if (omitted_channels_present == true)
                         {
-                            size += IsoReaderWriter.WriteUInt64(stream, this.omittedChannelsMap0);
+                            boxSize += IsoReaderWriter.WriteUInt64(stream, this.omittedChannelsMap0);
                         }
                     }
                 }
 
-                if ((stream_structure & objectStructured) == objectStructured)
+                if ((stream_structure & 2) == 2)
                 {
                     /*  object_count is derived from baseChannelCount */
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -1822,7 +1822,6 @@ namespace BoxGenerator2
         public bool in_stream { get; set; }
         public byte downmix_ID { get; set; }
         public byte bs_downmix_offset { get; set; }
-        public int size { get; set; } = 4;
         public byte bs_downmix_coefficient_v1 { get; set; }
         public byte[] reserved00 { get; set; } = [];  //  byte align
         public byte bs_downmix_coefficient { get; set; }
@@ -1832,7 +1831,7 @@ namespace BoxGenerator2
 
         public async override Task ReadAsync(Stream stream)
         {
-            await base.ReadAsync(stream);
+            await base.ReadAsync(stream); int baseChannelCount = 0; // TODO: get somewhere
 
             if (version >= 1)
             {
@@ -1861,7 +1860,7 @@ namespace BoxGenerator2
                     if (version >= 1)
                     {
                         this.bs_downmix_offset = IsoReaderWriter.ReadBits(stream, 4);
-                        this.size = IsoReaderWriter.ReadInt32(stream);
+                        int size = 4;
 
                         for (int i = 1; i <= targetChannelCount; i++)
                         {
@@ -1893,27 +1892,27 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream); int baseChannelCount = 0; // TODO: get somewhere
 
             if (version >= 1)
             {
-                size += IsoReaderWriter.WriteBit(stream, this.reserved);
-                size += IsoReaderWriter.WriteBits(stream, 7, this.downmix_instructions_count);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.reserved);
+                boxSize += IsoReaderWriter.WriteBits(stream, 7, this.downmix_instructions_count);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteInt32(stream, this.downmix_instructions_count0);
+                boxSize += IsoReaderWriter.WriteInt32(stream, this.downmix_instructions_count0);
             }
 
             for (int a = 1; a <= downmix_instructions_count; a++)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.targetLayout);
-                size += IsoReaderWriter.WriteBit(stream, this.reserved0);
-                size += IsoReaderWriter.WriteBits(stream, 7, this.targetChannelCount);
-                size += IsoReaderWriter.WriteBit(stream, this.in_stream);
-                size += IsoReaderWriter.WriteBits(stream, 7, this.downmix_ID);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.targetLayout);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.reserved0);
+                boxSize += IsoReaderWriter.WriteBits(stream, 7, this.targetChannelCount);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.in_stream);
+                boxSize += IsoReaderWriter.WriteBits(stream, 7, this.downmix_ID);
 
                 if (in_stream == false)
                 {
@@ -1922,19 +1921,19 @@ namespace BoxGenerator2
 
                     if (version >= 1)
                     {
-                        size += IsoReaderWriter.WriteBits(stream, 4, this.bs_downmix_offset);
-                        size += IsoReaderWriter.WriteInt32(stream, this.size);
+                        boxSize += IsoReaderWriter.WriteBits(stream, 4, this.bs_downmix_offset);
+                        int size = 4;
 
                         for (int i = 1; i <= targetChannelCount; i++)
                         {
 
                             for (int j = 1; j <= baseChannelCount; j++)
                             {
-                                size += IsoReaderWriter.WriteBits(stream, 5, this.bs_downmix_coefficient_v1);
+                                boxSize += IsoReaderWriter.WriteBits(stream, 5, this.bs_downmix_coefficient_v1);
                                 size += 5;
                             }
                         }
-                        size += IsoReaderWriter.WriteBytes(stream, (ulong)(Math.Ceiling(size / 8d) - size), this.reserved00);
+                        boxSize += IsoReaderWriter.WriteBytes(stream, (ulong)(Math.Ceiling(size / 8d) - size), this.reserved00);
                     }
 
                     else
@@ -1945,13 +1944,13 @@ namespace BoxGenerator2
 
                             for (int j = 1; j <= baseChannelCount; j++)
                             {
-                                size += IsoReaderWriter.WriteBits(stream, 4, this.bs_downmix_coefficient);
+                                boxSize += IsoReaderWriter.WriteBits(stream, 4, this.bs_downmix_coefficient);
                             }
                         }
                     }
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -1972,10 +1971,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.sampling_rate);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.sampling_rate);
+            return boxSize;
         }
     }
 
@@ -1996,10 +1995,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.text_config);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.text_config);
+            return boxSize;
         }
     }
 
@@ -2020,10 +2019,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8Array(stream, this.uri_initialization_data);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.uri_initialization_data);
+            return boxSize;
         }
     }
 
@@ -2048,12 +2047,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.pad);
-            size += IsoReaderWriter.WriteBitsArray(stream, 5, 3, this.language);
-            size += IsoReaderWriter.WriteString(stream, this.notice);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.pad);
+            boxSize += IsoReaderWriter.WriteBitsArray(stream, 5, 3, this.language);
+            boxSize += IsoReaderWriter.WriteString(stream, this.notice);
+            return boxSize;
         }
     }
 
@@ -2076,11 +2075,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.schemeURI);
-            size += IsoReaderWriter.WriteString(stream, this.value);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.schemeURI);
+            boxSize += IsoReaderWriter.WriteString(stream, this.value);
+            return boxSize;
         }
     }
 
@@ -2103,11 +2102,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.switch_group);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.attribute_list);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.switch_group);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.attribute_list);
+            return boxSize;
         }
     }
 
@@ -2126,9 +2125,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -2147,9 +2146,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -2170,10 +2169,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
+            return boxSize;
         }
     }
 
@@ -2192,9 +2191,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -2215,10 +2214,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
+            return boxSize;
         }
     }
 
@@ -2237,9 +2236,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -2262,11 +2261,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.descriptionformat);
-            size += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.descriptionformat);
+            boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
+            return boxSize;
         }
     }
 
@@ -2285,9 +2284,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -2309,11 +2308,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
             /*  not more than one TrackLoudnessInfo box with version>=1 is allowed */
-            size += IsoReaderWriter.WriteInt32Array(stream, this.TrackLoudnessInfo);
-            return size;
+            boxSize += IsoReaderWriter.WriteInt32Array(stream, this.TrackLoudnessInfo);
+            return boxSize;
         }
     }
 
@@ -2332,9 +2331,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -2353,9 +2352,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -2376,10 +2375,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.location);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.location);
+            return boxSize;
         }
     }
 
@@ -2402,11 +2401,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.name);
-            size += IsoReaderWriter.WriteString(stream, this.location);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.name);
+            boxSize += IsoReaderWriter.WriteString(stream, this.location);
+            return boxSize;
         }
     }
 
@@ -2427,10 +2426,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.imda_ref_identifier);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.imda_ref_identifier);
+            return boxSize;
         }
     }
 
@@ -2449,9 +2448,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -2474,12 +2473,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBoxes(stream, this.properties);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBoxes(stream, this.properties);
             /*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
             /*  to fill the box */
-            return size;
+            return boxSize;
         }
     }
 
@@ -2536,40 +2535,40 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
             for (int i = 0; i < entry_count; i++)
             {
 
                 if (version < 1)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
                 }
 
                 else
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
                 }
-                size += IsoReaderWriter.WriteUInt8(stream, this.association_count);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.association_count);
 
                 for (int j = 0; j < association_count; j++)
                 {
-                    size += IsoReaderWriter.WriteBit(stream, this.essential);
+                    boxSize += IsoReaderWriter.WriteBit(stream, this.essential);
 
                     if ((flags & 1) == 1)
                     {
-                        size += IsoReaderWriter.WriteBits(stream, 15, this.property_index);
+                        boxSize += IsoReaderWriter.WriteBits(stream, 15, this.property_index);
                     }
 
                     else
                     {
-                        size += IsoReaderWriter.WriteBits(stream, 7, this.property_index0);
+                        boxSize += IsoReaderWriter.WriteBits(stream, 7, this.property_index0);
                     }
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -2592,11 +2591,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.property_container);
-            size += IsoReaderWriter.WriteBoxes(stream, this.association);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.property_container);
+            boxSize += IsoReaderWriter.WriteBoxes(stream, this.association);
+            return boxSize;
         }
     }
 
@@ -2635,25 +2634,25 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteInt32(stream, this.min_initial_alt_startup_offset);
+                boxSize += IsoReaderWriter.WriteInt32(stream, this.min_initial_alt_startup_offset);
             }
 
             else if (version == 1)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.num_entries);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entries);
 
                 for (int j = 1; j <= num_entries; j++)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
-                    size += IsoReaderWriter.WriteInt32(stream, this.min_initial_alt_startup_offset0);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
+                    boxSize += IsoReaderWriter.WriteInt32(stream, this.min_initial_alt_startup_offset0);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -2674,10 +2673,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8Array(stream, this.data);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data);
+            return boxSize;
         }
     }
 
@@ -2698,10 +2697,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.original_format);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.original_format);
+            return boxSize;
         }
     }
 
@@ -2728,15 +2727,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt64(stream, this.chunk_offset);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.chunk_offset);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -2756,7 +2755,11 @@ namespace BoxGenerator2
 
         public async override Task ReadAsync(Stream stream)
         {
-            await base.ReadAsync(stream);
+            await base.ReadAsync(stream); bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
+            int count_size_code = (flags >> 2) & 0x3;
+            int pattern_size_code = (flags >> 4) & 0x3;
+            int index_size_code = flags & 0x3;
+
             this.grouping_type = IsoReaderWriter.ReadUInt32(stream);
 
             if (grouping_type_parameter_present == true)
@@ -2784,21 +2787,25 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream); bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
+            int count_size_code = (flags >> 2) & 0x3;
+            int pattern_size_code = (flags >> 4) & 0x3;
+            int index_size_code = flags & 0x3;
+
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
 
             if (grouping_type_parameter_present == true)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
             }
-            size += IsoReaderWriter.WriteUInt32(stream, this.pattern_count);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.pattern_count);
             uint totalPatternLength = 0;
 
             for (int i = 1; i <= pattern_count; i++)
             {
-                size += IsoReaderWriter.WriteBits(stream, pattern_size_code, this.pattern_length[i]);
-                size += IsoReaderWriter.WriteBits(stream, count_size_code, this.sample_count[i]);
+                boxSize += IsoReaderWriter.WriteBits(stream, pattern_size_code, this.pattern_length[i]);
+                boxSize += IsoReaderWriter.WriteBits(stream, count_size_code, this.sample_count[i]);
             }
 
             for (int j = 1; j <= pattern_count; j++)
@@ -2806,10 +2813,10 @@ namespace BoxGenerator2
 
                 for (int k = 1; k <= pattern_length[j]; k++)
                 {
-                    size += IsoReaderWriter.WriteBits(stream, index_size_code, this.sample_group_description_index[j][k]);
+                    boxSize += IsoReaderWriter.WriteBits(stream, index_size_code, this.sample_group_description_index[j][k]);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -2856,27 +2863,27 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteInt32(stream, this.compositionToDTSShift);
-                size += IsoReaderWriter.WriteInt32(stream, this.leastDecodeToDisplayDelta);
-                size += IsoReaderWriter.WriteInt32(stream, this.greatestDecodeToDisplayDelta);
-                size += IsoReaderWriter.WriteInt32(stream, this.compositionStartTime);
-                size += IsoReaderWriter.WriteInt32(stream, this.compositionEndTime);
+                boxSize += IsoReaderWriter.WriteInt32(stream, this.compositionToDTSShift);
+                boxSize += IsoReaderWriter.WriteInt32(stream, this.leastDecodeToDisplayDelta);
+                boxSize += IsoReaderWriter.WriteInt32(stream, this.greatestDecodeToDisplayDelta);
+                boxSize += IsoReaderWriter.WriteInt32(stream, this.compositionStartTime);
+                boxSize += IsoReaderWriter.WriteInt32(stream, this.compositionEndTime);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteInt64(stream, this.compositionToDTSShift0);
-                size += IsoReaderWriter.WriteInt64(stream, this.leastDecodeToDisplayDelta0);
-                size += IsoReaderWriter.WriteInt64(stream, this.greatestDecodeToDisplayDelta0);
-                size += IsoReaderWriter.WriteInt64(stream, this.compositionStartTime0);
-                size += IsoReaderWriter.WriteInt64(stream, this.compositionEndTime0);
+                boxSize += IsoReaderWriter.WriteInt64(stream, this.compositionToDTSShift0);
+                boxSize += IsoReaderWriter.WriteInt64(stream, this.leastDecodeToDisplayDelta0);
+                boxSize += IsoReaderWriter.WriteInt64(stream, this.greatestDecodeToDisplayDelta0);
+                boxSize += IsoReaderWriter.WriteInt64(stream, this.compositionStartTime0);
+                boxSize += IsoReaderWriter.WriteInt64(stream, this.compositionEndTime0);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -2922,9 +2929,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
 
             if (version == 0)
@@ -2932,8 +2939,8 @@ namespace BoxGenerator2
 
                 for (int i = 0; i < entry_count; i++)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
-                    size += IsoReaderWriter.WriteUInt32(stream, this.sample_offset);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_offset);
                 }
             }
 
@@ -2942,11 +2949,11 @@ namespace BoxGenerator2
 
                 for (int i = 0; i < entry_count; i++)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.sample_count0);
-                    size += IsoReaderWriter.WriteInt32(stream, this.sample_offset0);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_count0);
+                    boxSize += IsoReaderWriter.WriteInt32(stream, this.sample_offset0);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -2965,9 +2972,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -2994,15 +3001,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
-                size += IsoReaderWriter.WriteBox(stream, this.data_entry);
+                boxSize += IsoReaderWriter.WriteBox(stream, this.data_entry);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -3021,9 +3028,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -3069,29 +3076,29 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
 
                 if (version == 1)
                 {
-                    size += IsoReaderWriter.WriteUInt64(stream, this.edit_duration);
-                    size += IsoReaderWriter.WriteInt64(stream, this.media_time);
+                    boxSize += IsoReaderWriter.WriteUInt64(stream, this.edit_duration);
+                    boxSize += IsoReaderWriter.WriteInt64(stream, this.media_time);
                 }
 
                 else
                 {
                     /*  version==0 */
-                    size += IsoReaderWriter.WriteUInt32(stream, this.edit_duration0);
-                    size += IsoReaderWriter.WriteInt32(stream, this.media_time0);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.edit_duration0);
+                    boxSize += IsoReaderWriter.WriteInt32(stream, this.media_time0);
                 }
-                size += IsoReaderWriter.WriteInt16(stream, this.media_rate_integer);
-                size += IsoReaderWriter.WriteInt16(stream, this.media_rate_fraction);
+                boxSize += IsoReaderWriter.WriteInt16(stream, this.media_rate_integer);
+                boxSize += IsoReaderWriter.WriteInt16(stream, this.media_rate_fraction);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -3112,10 +3119,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBoxes(stream, this.compatible_combinations);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBoxes(stream, this.compatible_combinations);
+            return boxSize;
         }
     }
 
@@ -3150,19 +3157,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.content_location);
-            size += IsoReaderWriter.WriteString(stream, this.content_MD5);
-            size += IsoReaderWriter.WriteUInt64(stream, this.content_length);
-            size += IsoReaderWriter.WriteUInt64(stream, this.transfer_length);
-            size += IsoReaderWriter.WriteUInt8(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.content_location);
+            boxSize += IsoReaderWriter.WriteString(stream, this.content_MD5);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.content_length);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.transfer_length);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -3211,17 +3218,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -3229,16 +3236,16 @@ namespace BoxGenerator2
 
                 if (version == 0)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
                 }
 
                 else
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
                 }
-                size += IsoReaderWriter.WriteUInt32(stream, this.symbol_count);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.symbol_count);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -3263,12 +3270,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.blocks_and_symbols);
-            size += IsoReaderWriter.WriteBox(stream, this.FEC_symbol_locations);
-            size += IsoReaderWriter.WriteBox(stream, this.File_symbol_locations);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.blocks_and_symbols);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.FEC_symbol_locations);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.File_symbol_locations);
+            return boxSize;
         }
     }
 
@@ -3295,13 +3302,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
-            size += IsoReaderWriter.WriteClasses(stream, entry_count, this.partition_entries);
-            size += IsoReaderWriter.WriteBox(stream, this.session_info);
-            size += IsoReaderWriter.WriteBox(stream, this.group_id_to_name);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
+            boxSize += IsoReaderWriter.WriteClasses(stream, entry_count, this.partition_entries);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.session_info);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.group_id_to_name);
+            return boxSize;
         }
     }
 
@@ -3350,17 +3357,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -3368,16 +3375,16 @@ namespace BoxGenerator2
 
                 if (version == 0)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
                 }
 
                 else
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
                 }
-                size += IsoReaderWriter.WriteUInt32(stream, this.symbol_count);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.symbol_count);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -3444,43 +3451,43 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
             }
-            size += IsoReaderWriter.WriteUInt16(stream, this.packet_payload_size);
-            size += IsoReaderWriter.WriteUInt8(stream, this.reserved);
-            size += IsoReaderWriter.WriteUInt8(stream, this.FEC_encoding_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.FEC_instance_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.max_source_block_length);
-            size += IsoReaderWriter.WriteUInt16(stream, this.encoding_symbol_length);
-            size += IsoReaderWriter.WriteUInt16(stream, this.max_number_of_encoding_symbols);
-            size += IsoReaderWriter.WriteString(stream, this.scheme_specific_info);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.packet_payload_size);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.FEC_encoding_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.FEC_instance_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_source_block_length);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.encoding_symbol_length);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_number_of_encoding_symbols);
+            boxSize += IsoReaderWriter.WriteString(stream, this.scheme_specific_info);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
             }
 
             for (int i = 1; i <= entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.block_count);
-                size += IsoReaderWriter.WriteUInt32(stream, this.block_size);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.block_count);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.block_size);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -3501,10 +3508,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8Array(stream, this.data);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data);
+            return boxSize;
         }
     }
 
@@ -3527,12 +3534,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.data_format);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.data_format);
             /*  or un-transformed sample entry (in case of restriction */
             /*  and complete track information) */
-            return size;
+            return boxSize;
         }
     }
 
@@ -3551,9 +3558,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -3582,16 +3589,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.group_ID);
-                size += IsoReaderWriter.WriteString(stream, this.group_name);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_ID);
+                boxSize += IsoReaderWriter.WriteString(stream, this.group_name);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -3610,9 +3617,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -3639,13 +3646,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt32(stream, this.handler_type);
-            size += IsoReaderWriter.WriteUInt32Array(stream, 3, this.reserved);
-            size += IsoReaderWriter.WriteString(stream, this.name);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.pre_defined);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.handler_type);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, 3, this.reserved);
+            boxSize += IsoReaderWriter.WriteString(stream, this.name);
+            return boxSize;
         }
     }
 
@@ -3674,14 +3681,14 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.maxPDUsize);
-            size += IsoReaderWriter.WriteUInt16(stream, this.avgPDUsize);
-            size += IsoReaderWriter.WriteUInt32(stream, this.maxbitrate);
-            size += IsoReaderWriter.WriteUInt32(stream, this.avgbitrate);
-            size += IsoReaderWriter.WriteUInt32(stream, this.reserved);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.maxPDUsize);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.avgPDUsize);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxbitrate);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.avgbitrate);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.reserved);
+            return boxSize;
         }
     }
 
@@ -3702,10 +3709,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8Array(stream, this.data);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data);
+            return boxSize;
         }
     }
 
@@ -3738,20 +3745,20 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
             }
-            size += IsoReaderWriter.WriteClasses(stream, entry_count, this.item_infos);
-            return size;
+            boxSize += IsoReaderWriter.WriteClasses(stream, entry_count, this.item_infos);
+            return boxSize;
         }
     }
 
@@ -3844,30 +3851,30 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.offset_size);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.length_size);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.base_offset_size);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.offset_size);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.length_size);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.base_offset_size);
 
             if ((version == 1) || (version == 2))
             {
-                size += IsoReaderWriter.WriteBits(stream, 4, this.index_size);
+                boxSize += IsoReaderWriter.WriteBits(stream, 4, this.index_size);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
+                boxSize += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
             }
 
             if (version < 2)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.item_count);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_count);
             }
 
             else if (version == 2)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.item_count0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_count0);
             }
 
             for (int i = 0; i < item_count; i++)
@@ -3875,35 +3882,35 @@ namespace BoxGenerator2
 
                 if (version < 2)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
                 }
 
                 else if (version == 2)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
                 }
 
                 if ((version == 1) || (version == 2))
                 {
-                    size += IsoReaderWriter.WriteBits(stream, 12, this.reserved0);
-                    size += IsoReaderWriter.WriteBits(stream, 4, this.construction_method);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 12, this.reserved0);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 4, this.construction_method);
                 }
-                size += IsoReaderWriter.WriteUInt16(stream, this.data_reference_index);
-                size += IsoReaderWriter.WriteBytes(stream, base_offset_size, this.base_offset);
-                size += IsoReaderWriter.WriteUInt16(stream, this.extent_count);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.data_reference_index);
+                boxSize += IsoReaderWriter.WriteBytes(stream, base_offset_size, this.base_offset);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.extent_count);
 
                 for (int j = 0; j < extent_count; j++)
                 {
 
                     if (((version == 1) || (version == 2)) && (index_size > 0))
                     {
-                        size += IsoReaderWriter.WriteBytes(stream, index_size, this.item_reference_index);
+                        boxSize += IsoReaderWriter.WriteBytes(stream, index_size, this.item_reference_index);
                     }
-                    size += IsoReaderWriter.WriteBytes(stream, offset_size, this.extent_offset);
-                    size += IsoReaderWriter.WriteBytes(stream, length_size, this.extent_length);
+                    boxSize += IsoReaderWriter.WriteBytes(stream, offset_size, this.extent_offset);
+                    boxSize += IsoReaderWriter.WriteBytes(stream, length_size, this.extent_length);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -3926,11 +3933,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.imda_identifier);
-            size += IsoReaderWriter.WriteUInt8Array(stream, this.data);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.imda_identifier);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data);
+            return boxSize;
         }
     }
 
@@ -4007,21 +4014,21 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if ((version == 0) || (version == 1))
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
-                size += IsoReaderWriter.WriteUInt16(stream, this.item_protection_index);
-                size += IsoReaderWriter.WriteString(stream, this.item_name);
-                size += IsoReaderWriter.WriteString(stream, this.content_type);
-                size += IsoReaderWriter.WriteString(stream, this.content_encoding);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_protection_index);
+                boxSize += IsoReaderWriter.WriteString(stream, this.item_name);
+                boxSize += IsoReaderWriter.WriteString(stream, this.content_type);
+                boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding);
             }
 
             if (version == 1)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.extension_type);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.extension_type);
                 // TODO: This should likely be a FullBox: ItemInfoExtensionextension_type; //optional
 
             }
@@ -4031,29 +4038,29 @@ namespace BoxGenerator2
 
                 if (version == 2)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.item_ID0);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_ID0);
                 }
 
                 else if (version == 3)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID00);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_ID00);
                 }
-                size += IsoReaderWriter.WriteUInt16(stream, this.item_protection_index0);
-                size += IsoReaderWriter.WriteUInt32(stream, this.item_type);
-                size += IsoReaderWriter.WriteString(stream, this.item_name0);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_protection_index0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_type);
+                boxSize += IsoReaderWriter.WriteString(stream, this.item_name0);
 
                 if (item_type == IsoReaderWriter.FromFourCC("mime"))
                 {
-                    size += IsoReaderWriter.WriteString(stream, this.content_type0);
-                    size += IsoReaderWriter.WriteString(stream, this.content_encoding0);
+                    boxSize += IsoReaderWriter.WriteString(stream, this.content_type0);
+                    boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding0);
                 }
 
                 else if (item_type == IsoReaderWriter.FromFourCC("uri "))
                 {
-                    size += IsoReaderWriter.WriteString(stream, this.item_uri_type);
+                    boxSize += IsoReaderWriter.WriteString(stream, this.item_uri_type);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -4080,15 +4087,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.protection_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.protection_count);
 
             for (int i = 1; i <= protection_count; i++)
             {
-                size += IsoReaderWriter.WriteBox(stream, this.protection_information);
+                boxSize += IsoReaderWriter.WriteBox(stream, this.protection_information);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -4119,19 +4126,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteBoxes(stream, this.references);
+                boxSize += IsoReaderWriter.WriteBoxes(stream, this.references);
             }
 
             else if (version == 1)
             {
-                size += IsoReaderWriter.WriteBoxes(stream, this.references0);
+                boxSize += IsoReaderWriter.WriteBoxes(stream, this.references0);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -4193,25 +4200,25 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.level_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.level_count);
 
             for (int j = 1; j <= level_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
-                size += IsoReaderWriter.WriteBit(stream, this.padding_flag);
-                size += IsoReaderWriter.WriteBits(stream, 7, this.assignment_type);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.padding_flag);
+                boxSize += IsoReaderWriter.WriteBits(stream, 7, this.assignment_type);
 
                 if (assignment_type == 0)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
                 }
 
                 else if (assignment_type == 1)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type0);
-                    size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type0);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
                 }
 
                 else if (assignment_type == 2)
@@ -4226,11 +4233,11 @@ namespace BoxGenerator2
 
                 else if (assignment_type == 4)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.sub_track_ID);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.sub_track_ID);
                 }
                 /*  other assignment_type values are reserved */
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -4251,10 +4258,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8Array(stream, this.data);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data);
+            return boxSize;
         }
     }
 
@@ -4304,29 +4311,29 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 1)
             {
-                size += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
-                size += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
-                size += IsoReaderWriter.WriteUInt32(stream, this.timescale);
-                size += IsoReaderWriter.WriteUInt64(stream, this.duration);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.timescale);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.duration);
             }
 
             else
             {
                 /*  version==0 */
-                size += IsoReaderWriter.WriteUInt32(stream, this.creation_time0);
-                size += IsoReaderWriter.WriteUInt32(stream, this.modification_time0);
-                size += IsoReaderWriter.WriteUInt32(stream, this.timescale0);
-                size += IsoReaderWriter.WriteUInt32(stream, this.duration0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.creation_time0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.modification_time0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.timescale0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.duration0);
             }
-            size += IsoReaderWriter.WriteBit(stream, this.pad);
-            size += IsoReaderWriter.WriteBitsArray(stream, 5, 3, this.language);
-            size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            return size;
+            boxSize += IsoReaderWriter.WriteBit(stream, this.pad);
+            boxSize += IsoReaderWriter.WriteBitsArray(stream, 5, 3, this.language);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
+            return boxSize;
         }
     }
 
@@ -4345,9 +4352,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -4379,20 +4386,20 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 1)
             {
-                size += IsoReaderWriter.WriteUInt64(stream, this.fragment_duration);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.fragment_duration);
             }
 
             else
             {
                 /*  version==0 */
-                size += IsoReaderWriter.WriteUInt32(stream, this.fragment_duration0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.fragment_duration0);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -4431,19 +4438,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.theHandler);
-            size += IsoReaderWriter.WriteBox(stream, this.primary_resource);
-            size += IsoReaderWriter.WriteBox(stream, this.file_locations);
-            size += IsoReaderWriter.WriteBox(stream, this.item_locations);
-            size += IsoReaderWriter.WriteBox(stream, this.protections);
-            size += IsoReaderWriter.WriteBox(stream, this.item_infos);
-            size += IsoReaderWriter.WriteBox(stream, this.IPMP_control);
-            size += IsoReaderWriter.WriteBox(stream, this.item_refs);
-            size += IsoReaderWriter.WriteBox(stream, this.item_data);
-            size += IsoReaderWriter.WriteBoxes(stream, this.other_boxes);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.theHandler);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.primary_resource);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.file_locations);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.item_locations);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.protections);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.item_infos);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.IPMP_control);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.item_refs);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.item_data);
+            boxSize += IsoReaderWriter.WriteBoxes(stream, this.other_boxes);
+            return boxSize;
         }
     }
 
@@ -4464,10 +4471,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.sequence_number);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.sequence_number);
+            return boxSize;
         }
     }
 
@@ -4486,9 +4493,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -4509,10 +4516,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.parent_size);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.parent_size);
+            return boxSize;
         }
     }
 
@@ -4531,9 +4538,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -4552,9 +4559,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -4573,9 +4580,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -4594,9 +4601,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -4655,33 +4662,33 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 1)
             {
-                size += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
-                size += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
-                size += IsoReaderWriter.WriteUInt32(stream, this.timescale);
-                size += IsoReaderWriter.WriteUInt64(stream, this.duration);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.timescale);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.duration);
             }
 
             else
             {
                 /*  version==0 */
-                size += IsoReaderWriter.WriteUInt32(stream, this.creation_time0);
-                size += IsoReaderWriter.WriteUInt32(stream, this.modification_time0);
-                size += IsoReaderWriter.WriteUInt32(stream, this.timescale0);
-                size += IsoReaderWriter.WriteUInt32(stream, this.duration0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.creation_time0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.modification_time0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.timescale0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.duration0);
             }
-            size += IsoReaderWriter.WriteInt32(stream, this.rate);
-            size += IsoReaderWriter.WriteInt16(stream, this.volume);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
-            size += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved0);
-            size += IsoReaderWriter.WriteUInt32Array(stream, 9, this.matrix);
-            size += IsoReaderWriter.WriteUInt32Array(stream, 6, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt32(stream, this.next_track_ID);
-            return size;
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.rate);
+            boxSize += IsoReaderWriter.WriteInt16(stream, this.volume);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved0);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, 9, this.matrix);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, 6, this.pre_defined);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.next_track_ID);
+            return boxSize;
         }
     }
 
@@ -4700,9 +4707,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -4721,9 +4728,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -4757,19 +4764,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
 
 
             for (int i = 0; i < ((sample_count + 1) / 2); i++)
             {
-                size += IsoReaderWriter.WriteBit(stream, this.reserved);
-                size += IsoReaderWriter.WriteBits(stream, 3, this.pad1);
-                size += IsoReaderWriter.WriteBit(stream, this.reserved0);
-                size += IsoReaderWriter.WriteBits(stream, 3, this.pad2);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.reserved);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.pad1);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.reserved0);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.pad2);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -4794,12 +4801,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.blocks_and_symbols);
-            size += IsoReaderWriter.WriteBox(stream, this.FEC_symbol_locations);
-            size += IsoReaderWriter.WriteBox(stream, this.File_symbol_locations);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.blocks_and_symbols);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.FEC_symbol_locations);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.File_symbol_locations);
+            return boxSize;
         }
     }
 
@@ -4826,13 +4833,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
-            size += IsoReaderWriter.WriteClasses(stream, entry_count, this.partition_entries);
-            size += IsoReaderWriter.WriteBox(stream, this.session_info);
-            size += IsoReaderWriter.WriteBox(stream, this.group_id_to_name);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
+            boxSize += IsoReaderWriter.WriteClasses(stream, entry_count, this.partition_entries);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.session_info);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.group_id_to_name);
+            return boxSize;
         }
     }
 
@@ -4860,16 +4867,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             for (int i = 0; ; i++)
             {
                 /*  to end of box */
-                size += IsoReaderWriter.WriteUInt32(stream, this.rate);
-                size += IsoReaderWriter.WriteUInt32(stream, this.initial_delay);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.rate);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.initial_delay);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -4900,19 +4907,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -4947,21 +4954,21 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.reference_track_ID);
-            size += IsoReaderWriter.WriteUInt64(stream, this.ntp_timestamp);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.reference_track_ID);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.ntp_timestamp);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.media_time);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.media_time);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteUInt64(stream, this.media_time0);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.media_time0);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -4986,12 +4993,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.original_format);
-            size += IsoReaderWriter.WriteBox(stream, this.scheme_type_box);
-            size += IsoReaderWriter.WriteBox(stream, this.info);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.original_format);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scheme_type_box);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.info);
+            return boxSize;
         }
     }
 
@@ -5032,26 +5039,26 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if ((flags & 1) == 1)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type);
-                size += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type_parameter);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type_parameter);
             }
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteUInt32Array(stream, entry_count, this.offset);
+                boxSize += IsoReaderWriter.WriteUInt32Array(stream, entry_count, this.offset);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteUInt64Array(stream, entry_count, this.offset0);
+                boxSize += IsoReaderWriter.WriteUInt64Array(stream, entry_count, this.offset0);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5088,22 +5095,22 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if ((flags & 1) == 1)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type);
-                size += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type_parameter);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.aux_info_type_parameter);
             }
-            size += IsoReaderWriter.WriteUInt8(stream, this.default_sample_info_size);
-            size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.default_sample_info_size);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
 
             if (default_sample_info_size == 0)
             {
-                size += IsoReaderWriter.WriteBytes(stream, sample_count, this.sample_info_size);
+                boxSize += IsoReaderWriter.WriteBytes(stream, sample_count, this.sample_info_size);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5140,22 +5147,22 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
 
             if (version == 1)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
             }
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
-                size += IsoReaderWriter.WriteUInt32(stream, this.group_description_index);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_description_index);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5176,10 +5183,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBoxes(stream, this.scheme_specific_data);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBoxes(stream, this.scheme_specific_data);
+            return boxSize;
         }
     }
 
@@ -5208,16 +5215,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.scheme_type);
-            size += IsoReaderWriter.WriteUInt32(stream, this.scheme_version);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.scheme_type);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.scheme_version);
 
             if ((flags & 0x000001) == 0x000001)
             {
-                size += IsoReaderWriter.WriteString(stream, this.scheme_uri);
+                boxSize += IsoReaderWriter.WriteString(stream, this.scheme_uri);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5247,17 +5254,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
             /*  identical syntax to SchemeTypeBox */
-            size += IsoReaderWriter.WriteUInt32(stream, this.scheme_type);
-            size += IsoReaderWriter.WriteUInt32(stream, this.scheme_version);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.scheme_type);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.scheme_version);
 
             if ((flags & 0x000001) == 0x000001)
             {
-                size += IsoReaderWriter.WriteString(stream, this.scheme_uri);
+                boxSize += IsoReaderWriter.WriteString(stream, this.scheme_uri);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5275,7 +5282,8 @@ namespace BoxGenerator2
 
         public async override Task ReadAsync(Stream stream)
         {
-            await base.ReadAsync(stream);
+            await base.ReadAsync(stream); int sample_count = 0; // TODO: taken from the stsz sample_count
+
 
             for (int i = 0; i < sample_count; i++)
             {
@@ -5288,17 +5296,18 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream); int sample_count = 0; // TODO: taken from the stsz sample_count
+
 
             for (int i = 0; i < sample_count; i++)
             {
-                size += IsoReaderWriter.WriteBits(stream, 2, this.is_leading);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.sample_depends_on);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.sample_is_depended_on);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.sample_has_redundancy);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.is_leading);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.sample_depends_on);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.sample_is_depended_on);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.sample_has_redundancy);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5339,26 +5348,26 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.num_session_groups);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_session_groups);
 
             for (int i = 0; i < num_session_groups; i++)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.entry_count);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.entry_count);
 
                 for (int j = 0; j < entry_count; j++)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.group_ID);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_ID);
                 }
-                size += IsoReaderWriter.WriteUInt16(stream, this.num_channels_in_session_group);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_channels_in_session_group);
 
                 for (int k = 0; k < num_channels_in_session_group; k++)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.hint_track_ID);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.hint_track_ID);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5411,20 +5420,20 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
 
             if (version >= 1)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.default_length);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_length);
             }
 
             if (version >= 2)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.default_group_description_index);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_group_description_index);
             }
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
 
             for (int i = 1; i <= entry_count; i++)
@@ -5435,14 +5444,14 @@ namespace BoxGenerator2
 
                     if (default_length == 0)
                     {
-                        size += IsoReaderWriter.WriteUInt32(stream, this.description_length);
+                        boxSize += IsoReaderWriter.WriteUInt32(stream, this.description_length);
                     }
                 }
                 // TODO: This should likely be a FullBox: SampleGroupDescriptionEntrygrouping_type; // an instance of a class derived from SampleGroupDescriptionEntry
 
                 /*   that is appropriate and permitted for the media type */
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5461,9 +5470,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -5488,12 +5497,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.original_format);
-            size += IsoReaderWriter.WriteBox(stream, this.scheme_type_box);
-            size += IsoReaderWriter.WriteBox(stream, this.info);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.original_format);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scheme_type_box);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.info);
+            return boxSize;
         }
     }
 
@@ -5514,10 +5523,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8Array(stream, this.data);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data);
+            return boxSize;
         }
     }
 
@@ -5540,11 +5549,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt16(stream, this.balance);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt16(stream, this.balance);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved);
+            return boxSize;
         }
     }
 
@@ -5575,15 +5584,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.encryption_algorithm_rtp);
-            size += IsoReaderWriter.WriteUInt32(stream, this.encryption_algorithm_rtcp);
-            size += IsoReaderWriter.WriteUInt32(stream, this.integrity_algorithm_rtp);
-            size += IsoReaderWriter.WriteUInt32(stream, this.integrity_algorithm_rtcp);
-            size += IsoReaderWriter.WriteBox(stream, this.scheme_type_box);
-            size += IsoReaderWriter.WriteBox(stream, this.info);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.encryption_algorithm_rtp);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.encryption_algorithm_rtcp);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.integrity_algorithm_rtp);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.integrity_algorithm_rtcp);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scheme_type_box);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.info);
+            return boxSize;
         }
     }
 
@@ -5602,9 +5611,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -5623,9 +5632,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -5652,15 +5661,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.chunk_offset);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.chunk_offset);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5675,7 +5684,8 @@ namespace BoxGenerator2
 
         public async override Task ReadAsync(Stream stream)
         {
-            await base.ReadAsync(stream);
+            await base.ReadAsync(stream); int sample_count = 0; // TODO: taken from the stsz sample_count
+
 
 
             for (int i = 0; i < sample_count; i++)
@@ -5686,15 +5696,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream); int sample_count = 0; // TODO: taken from the stsz sample_count
+
 
 
             for (int i = 0; i < sample_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.priority);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.priority);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5713,9 +5724,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -5734,9 +5745,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -5763,13 +5774,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt16(stream, this.switch_group);
-            size += IsoReaderWriter.WriteInt16(stream, this.alternate_group);
-            size += IsoReaderWriter.WriteUInt32(stream, this.sub_track_ID);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.attribute_list);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt16(stream, this.switch_group);
+            boxSize += IsoReaderWriter.WriteInt16(stream, this.alternate_group);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.sub_track_ID);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.attribute_list);
+            return boxSize;
         }
     }
 
@@ -5800,17 +5811,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.first_chunk);
-                size += IsoReaderWriter.WriteUInt32(stream, this.samples_per_chunk);
-                size += IsoReaderWriter.WriteUInt32(stream, this.sample_description_index);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.first_chunk);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.samples_per_chunk);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_description_index);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5838,17 +5849,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
                 // TODO: This should likely be a FullBox: SampleEntry; // an instance of a class derived from SampleEntry
 
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5877,16 +5888,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
-            size += IsoReaderWriter.WriteUInt16(stream, this.item_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_count);
 
             for (int i = 0; i < item_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.group_description_index);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_description_index);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5916,17 +5927,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
 
             for (int i = 0; i < entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.shadowed_sample_number);
-                size += IsoReaderWriter.WriteUInt32(stream, this.sync_sample_number);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.shadowed_sample_number);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.sync_sample_number);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5954,16 +5965,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
 
             for (int i = 0; i < entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.sample_number);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_number);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -5996,20 +6007,20 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.sample_size);
-            size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_size);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
 
             if (sample_size == 0)
             {
 
                 for (int i = 1; i <= sample_count; i++)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.entry_size);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_size);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -6039,17 +6050,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
 
             for (int i = 0; i < entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
-                size += IsoReaderWriter.WriteUInt32(stream, this.sample_delta);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_delta);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -6068,9 +6079,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -6101,17 +6112,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt24(stream, this.reserved);
-            size += IsoReaderWriter.WriteUInt8(stream, this.field_size);
-            size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt24(stream, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.field_size);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
 
             for (int i = 1; i <= sample_count; i++)
             {
-                size += IsoReaderWriter.WriteBytes(stream, field_size, this.entry_size);
+                boxSize += IsoReaderWriter.WriteBytes(stream, field_size, this.entry_size);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -6167,15 +6178,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
 
             for (int i = 0; i < entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.sample_delta);
-                size += IsoReaderWriter.WriteUInt16(stream, this.subsample_count);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_delta);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.subsample_count);
 
                 if (subsample_count > 0)
                 {
@@ -6185,20 +6196,20 @@ namespace BoxGenerator2
 
                         if (version == 1)
                         {
-                            size += IsoReaderWriter.WriteUInt32(stream, this.subsample_size);
+                            boxSize += IsoReaderWriter.WriteUInt32(stream, this.subsample_size);
                         }
 
                         else
                         {
-                            size += IsoReaderWriter.WriteUInt16(stream, this.subsample_size0);
+                            boxSize += IsoReaderWriter.WriteUInt16(stream, this.subsample_size0);
                         }
-                        size += IsoReaderWriter.WriteUInt8(stream, this.subsample_priority);
-                        size += IsoReaderWriter.WriteUInt8(stream, this.discardable);
-                        size += IsoReaderWriter.WriteUInt32(stream, this.codec_specific_parameters);
+                        boxSize += IsoReaderWriter.WriteUInt8(stream, this.subsample_priority);
+                        boxSize += IsoReaderWriter.WriteUInt8(stream, this.discardable);
+                        boxSize += IsoReaderWriter.WriteUInt32(stream, this.codec_specific_parameters);
                     }
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -6230,20 +6241,20 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 1)
             {
-                size += IsoReaderWriter.WriteUInt64(stream, this.baseMediaDecodeTime);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.baseMediaDecodeTime);
             }
 
             else
             {
                 /*  version==0 */
-                size += IsoReaderWriter.WriteUInt32(stream, this.baseMediaDecodeTime0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.baseMediaDecodeTime0);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -6275,16 +6286,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
             /*  their presence is indicated by bits in the tf_flags */
-            size += IsoReaderWriter.WriteUInt64(stream, this.base_data_offset);
-            size += IsoReaderWriter.WriteUInt32(stream, this.sample_description_index);
-            size += IsoReaderWriter.WriteUInt32(stream, this.default_sample_duration);
-            size += IsoReaderWriter.WriteUInt32(stream, this.default_sample_size);
-            size += IsoReaderWriter.WriteUInt32(stream, this.default_sample_flags);
-            return size;
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.base_data_offset);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_description_index);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_sample_duration);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_sample_size);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_sample_flags);
+            return boxSize;
         }
     }
 
@@ -6341,34 +6352,34 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
-            size += IsoReaderWriter.WriteBits(stream, 26, this.reserved);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.length_size_of_traf_num);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.length_size_of_trun_num);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.length_size_of_sample_num);
-            size += IsoReaderWriter.WriteUInt32(stream, this.number_of_entry);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
+            boxSize += IsoReaderWriter.WriteBits(stream, 26, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.length_size_of_traf_num);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.length_size_of_trun_num);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.length_size_of_sample_num);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.number_of_entry);
 
             for (int i = 1; i <= number_of_entry; i++)
             {
 
                 if (version == 1)
                 {
-                    size += IsoReaderWriter.WriteUInt64(stream, this.time);
-                    size += IsoReaderWriter.WriteUInt64(stream, this.moof_offset);
+                    boxSize += IsoReaderWriter.WriteUInt64(stream, this.time);
+                    boxSize += IsoReaderWriter.WriteUInt64(stream, this.moof_offset);
                 }
 
                 else
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.time0);
-                    size += IsoReaderWriter.WriteUInt32(stream, this.moof_offset0);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.time0);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.moof_offset0);
                 }
-                size += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_traf_num + 1), this.traf_number);
-                size += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_trun_num + 1), this.trun_number);
-                size += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_sample_num + 1), this.sample_delta);
+                boxSize += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_traf_num + 1), this.traf_number);
+                boxSize += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_trun_num + 1), this.trun_number);
+                boxSize += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_sample_num + 1), this.sample_delta);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -6433,36 +6444,36 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             if (version == 1)
             {
-                size += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
-                size += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
-                size += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
-                size += IsoReaderWriter.WriteUInt32(stream, this.reserved);
-                size += IsoReaderWriter.WriteUInt64(stream, this.duration);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.reserved);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.duration);
             }
 
             else
             {
                 /*  version==0 */
-                size += IsoReaderWriter.WriteUInt32(stream, this.creation_time0);
-                size += IsoReaderWriter.WriteUInt32(stream, this.modification_time0);
-                size += IsoReaderWriter.WriteUInt32(stream, this.track_ID0);
-                size += IsoReaderWriter.WriteUInt32(stream, this.reserved0);
-                size += IsoReaderWriter.WriteUInt32(stream, this.duration0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.creation_time0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.modification_time0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_ID0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.reserved0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.duration0);
             }
-            size += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved1);
-            size += IsoReaderWriter.WriteInt16(stream, this.layer);
-            size += IsoReaderWriter.WriteInt16(stream, this.alternate_group);
-            size += IsoReaderWriter.WriteInt16(stream, this.volume);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved2);
-            size += IsoReaderWriter.WriteUInt32Array(stream, 9, this.matrix);
-            size += IsoReaderWriter.WriteUInt32(stream, this.width);
-            size += IsoReaderWriter.WriteUInt32(stream, this.height);
-            return size;
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved1);
+            boxSize += IsoReaderWriter.WriteInt16(stream, this.layer);
+            boxSize += IsoReaderWriter.WriteInt16(stream, this.alternate_group);
+            boxSize += IsoReaderWriter.WriteInt16(stream, this.volume);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved2);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, 9, this.matrix);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.width);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.height);
+            return boxSize;
         }
     }
 
@@ -6481,9 +6492,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -6502,9 +6513,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -6525,10 +6536,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBoxes(stream, this.TrackReferenceTypeBox);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBoxes(stream, this.TrackReferenceTypeBox);
+            return boxSize;
         }
     }
 
@@ -6549,10 +6560,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
+            return boxSize;
         }
     }
 
@@ -6581,14 +6592,14 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
-            size += IsoReaderWriter.WriteUInt32(stream, this.default_sample_description_index);
-            size += IsoReaderWriter.WriteUInt32(stream, this.default_sample_duration);
-            size += IsoReaderWriter.WriteUInt32(stream, this.default_sample_size);
-            size += IsoReaderWriter.WriteUInt32(stream, this.default_sample_flags);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_sample_description_index);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_sample_duration);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_sample_size);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_sample_flags);
+            return boxSize;
         }
     }
 
@@ -6607,9 +6618,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -6636,14 +6647,14 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
-            size += IsoReaderWriter.WriteInt32(stream, this.data_offset);
-            size += IsoReaderWriter.WriteUInt32(stream, this.first_sample_flags);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.data_offset);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.first_sample_flags);
             /*  as indicated by bits set in the tr_flags */
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -6662,9 +6673,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -6685,10 +6696,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.compatible_brands);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.compatible_brands);
+            return boxSize;
         }
     }
 
@@ -6707,9 +6718,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -6748,13 +6759,13 @@ namespace BoxGenerator2
 
         public async Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += IsoReaderWriter.WriteUInt32(stream, this.size);
-            size += IsoReaderWriter.WriteUInt32(stream, this.type);
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.size);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.type);
 
             if (size == 1)
             {
-                size += IsoReaderWriter.WriteUInt64(stream, this.largesize);
+                boxSize += IsoReaderWriter.WriteUInt64(stream, this.largesize);
             }
 
             else if (size == 0)
@@ -6764,9 +6775,9 @@ namespace BoxGenerator2
 
             if (type == IsoReaderWriter.FromFourCC("uuid"))
             {
-                size += IsoReaderWriter.WriteBytes(stream, 16, this.usertype);
+                boxSize += IsoReaderWriter.WriteBytes(stream, 16, this.usertype);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -6789,11 +6800,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.graphicsmode);
-            size += IsoReaderWriter.WriteUInt16Array(stream, 3, this.opcolor);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.graphicsmode);
+            boxSize += IsoReaderWriter.WriteUInt16Array(stream, 3, this.opcolor);
+            return boxSize;
         }
     }
 
@@ -6814,10 +6825,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.xml);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.xml);
+            return boxSize;
         }
     }
 
@@ -6836,9 +6847,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -6857,9 +6868,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -6878,9 +6889,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -6899,9 +6910,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -6926,12 +6937,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.ambient_illuminance);
-            size += IsoReaderWriter.WriteUInt16(stream, this.ambient_light_x);
-            size += IsoReaderWriter.WriteUInt16(stream, this.ambient_light_y);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.ambient_illuminance);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.ambient_light_x);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.ambient_light_y);
+            return boxSize;
         }
     }
 
@@ -6952,10 +6963,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBoxes(stream, this.MetadataKeyBox);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBoxes(stream, this.MetadataKeyBox);
+            return boxSize;
         }
     }
 
@@ -6976,10 +6987,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.theURI);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.theURI);
+            return boxSize;
         }
     }
 
@@ -7026,29 +7037,29 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.iroi_type);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.iroi_type);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
 
             if (iroi_type == 0)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.grid_roi_mb_width);
-                size += IsoReaderWriter.WriteUInt8(stream, this.grid_roi_mb_height);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.grid_roi_mb_width);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.grid_roi_mb_height);
             }
 
             else if (iroi_type == 1)
             {
-                size += IsoReaderWriter.WriteUInt24(stream, this.num_roi);
+                boxSize += IsoReaderWriter.WriteUInt24(stream, this.num_roi);
 
                 for (int i = 1; i <= num_roi; i++)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.top_left_mb);
-                    size += IsoReaderWriter.WriteUInt8(stream, this.roi_mb_width);
-                    size += IsoReaderWriter.WriteUInt8(stream, this.roi_mb_height);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.top_left_mb);
+                    boxSize += IsoReaderWriter.WriteUInt8(stream, this.roi_mb_width);
+                    boxSize += IsoReaderWriter.WriteUInt8(stream, this.roi_mb_height);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7075,15 +7086,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
 
             for (int i = 0; i < entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.dependencyTierId);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.dependencyTierId);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7118,17 +7129,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 3, this.min_dependency_id);
-            size += IsoReaderWriter.WriteBits(stream, 3, this.min_temporal_id);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.min_quality_id);
-            size += IsoReaderWriter.WriteBits(stream, 3, this.max_dependency_id);
-            size += IsoReaderWriter.WriteBits(stream, 3, this.max_temporal_id);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved0);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.max_quality_id);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.min_dependency_id);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.min_temporal_id);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.min_quality_id);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.max_dependency_id);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.max_temporal_id);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved0);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.max_quality_id);
+            return boxSize;
         }
     }
 
@@ -7163,21 +7174,21 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.sps_id_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.sps_id_count);
 
             for (int i = 0; i < sps_id_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.SPS_index);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.SPS_index);
             }
-            size += IsoReaderWriter.WriteUInt8(stream, this.pps_id_count);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.pps_id_count);
 
             for (int i = 0; i < pps_id_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.PPS_index);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.PPS_index);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7204,13 +7215,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.reserved1);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.min_priorityId);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.reserved2);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.max_priorityId);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved1);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.min_priorityId);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved2);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.max_priorityId);
+            return boxSize;
         }
     }
 
@@ -7257,27 +7268,27 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.conversion_idc);
-            size += IsoReaderWriter.WriteBit(stream, this.cavlc_info_present_flag);
-            size += IsoReaderWriter.WriteBit(stream, this.cabac_info_present_flag);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.conversion_idc);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.cavlc_info_present_flag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.cabac_info_present_flag);
 
             if (cavlc_info_present_flag)
             {
-                size += IsoReaderWriter.WriteUInt24(stream, this.cavlc_profile_level_idc);
-                size += IsoReaderWriter.WriteUInt32(stream, this.cavlc_max_bitrate);
-                size += IsoReaderWriter.WriteUInt32(stream, this.cavlc_avg_bitrate);
+                boxSize += IsoReaderWriter.WriteUInt24(stream, this.cavlc_profile_level_idc);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.cavlc_max_bitrate);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.cavlc_avg_bitrate);
             }
 
             if (cabac_info_present_flag)
             {
-                size += IsoReaderWriter.WriteUInt24(stream, this.cabac_profile_level_idc);
-                size += IsoReaderWriter.WriteUInt32(stream, this.cabac_max_bitrate);
-                size += IsoReaderWriter.WriteUInt32(stream, this.cabac_avg_bitrate);
+                boxSize += IsoReaderWriter.WriteUInt24(stream, this.cabac_profile_level_idc);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.cabac_max_bitrate);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.cabac_avg_bitrate);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7314,20 +7325,20 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.base_region_tierID);
-            size += IsoReaderWriter.WriteBit(stream, this.dynamic_rect);
-            size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.base_region_tierID);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.dynamic_rect);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
 
             if (dynamic_rect == false)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.horizontal_offset);
-                size += IsoReaderWriter.WriteUInt16(stream, this.vertical_offset);
-                size += IsoReaderWriter.WriteUInt16(stream, this.region_width);
-                size += IsoReaderWriter.WriteUInt16(stream, this.region_height);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.horizontal_offset);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.vertical_offset);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.region_width);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.region_height);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7362,19 +7373,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.operating_point_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.operating_point_count);
 
             for (int i = 0; i < operating_point_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.byte_rate);
-                size += IsoReaderWriter.WriteUInt32(stream, this.cpb_size);
-                size += IsoReaderWriter.WriteUInt32(stream, this.dpb_size);
-                size += IsoReaderWriter.WriteUInt32(stream, this.init_cpb_delay);
-                size += IsoReaderWriter.WriteUInt32(stream, this.init_dpb_delay);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.byte_rate);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.cpb_size);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.dpb_size);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.init_cpb_delay);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.init_dpb_delay);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7405,17 +7416,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.item_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_count);
 
             for (int i = 0; i < item_count; i++)
             {
-                size += IsoReaderWriter.WriteBits(stream, 10, this.view_id);
-                size += IsoReaderWriter.WriteBits(stream, 4, this.temporal_id);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
+                boxSize += IsoReaderWriter.WriteBits(stream, 10, this.view_id);
+                boxSize += IsoReaderWriter.WriteBits(stream, 4, this.temporal_id);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7488,46 +7499,46 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.multiview_group_id);
-            size += IsoReaderWriter.WriteUInt16(stream, this.num_entries);
-            size += IsoReaderWriter.WriteUInt8(stream, this.reserved);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.multiview_group_id);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_entries);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.reserved);
 
             for (int i = 0; i < num_entries; i++)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.entry_type);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.entry_type);
 
                 if (entry_type == 0)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.track_id);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_id);
                 }
 
                 else if (entry_type == 1)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.track_id0);
-                    size += IsoReaderWriter.WriteUInt16(stream, this.tier_id);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_id0);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.tier_id);
                 }
 
                 else if (entry_type == 2)
                 {
-                    size += IsoReaderWriter.WriteBits(stream, 6, this.reserved1);
-                    size += IsoReaderWriter.WriteBits(stream, 10, this.output_view_id);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved1);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 10, this.output_view_id);
                 }
 
                 else if (entry_type == 3)
                 {
-                    size += IsoReaderWriter.WriteBits(stream, 6, this.reserved2);
-                    size += IsoReaderWriter.WriteBits(stream, 10, this.start_view_id);
-                    size += IsoReaderWriter.WriteUInt16(stream, this.view_count);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved2);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 10, this.start_view_id);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.view_count);
                 }
             }
-            size += IsoReaderWriter.WriteBox(stream, this.subset_stream_info);
-            size += IsoReaderWriter.WriteBox(stream, this.relation_attributes);
-            size += IsoReaderWriter.WriteBox(stream, this.subset_stream_bit_rate);
-            size += IsoReaderWriter.WriteBox(stream, this.subset_stream_buffering);
-            size += IsoReaderWriter.WriteBox(stream, this.multiview_scene_info);
-            return size;
+            boxSize += IsoReaderWriter.WriteBox(stream, this.subset_stream_info);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.relation_attributes);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.subset_stream_bit_rate);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.subset_stream_buffering);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.multiview_scene_info);
+            return boxSize;
         }
     }
 
@@ -7546,9 +7557,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -7594,25 +7605,25 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.depth_width);
-            size += IsoReaderWriter.WriteUInt16(stream, this.depth_height);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.depth_width);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.depth_height);
             /*  The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox).  */
-            size += IsoReaderWriter.WriteUInt16(stream, this.depth_hor_mult_minus1);
-            size += IsoReaderWriter.WriteUInt16(stream, this.depth_ver_mult_minus1);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.depth_hor_rsh);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.depth_ver_rsh);
-            size += IsoReaderWriter.WriteUInt16(stream, this.grid_pos_num_views);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.depth_hor_mult_minus1);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.depth_ver_mult_minus1);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.depth_hor_rsh);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.depth_ver_rsh);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.grid_pos_num_views);
 
             for (int i = 0; i < grid_pos_num_views; i++)
             {
-                size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
-                size += IsoReaderWriter.WriteBits(stream, 10, this.grid_pos_view_id[i]);
-                size += IsoReaderWriter.WriteInt16(stream, this.grid_pos_x[grid_pos_view_id[i]]);
-                size += IsoReaderWriter.WriteInt16(stream, this.grid_pos_y[grid_pos_view_id[i]]);
+                boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+                boxSize += IsoReaderWriter.WriteBits(stream, 10, this.grid_pos_view_id[i]);
+                boxSize += IsoReaderWriter.WriteInt16(stream, this.grid_pos_x[grid_pos_view_id[i]]);
+                boxSize += IsoReaderWriter.WriteInt16(stream, this.grid_pos_y[grid_pos_view_id[i]]);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7653,24 +7664,24 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved1);
-            size += IsoReaderWriter.WriteUInt16(stream, this.num_common_attributes);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved1);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_common_attributes);
 
             for (int i = 0; i < num_common_attributes; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.common_attribute);
-                size += IsoReaderWriter.WriteUInt32(stream, this.common_value);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.common_attribute);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.common_value);
             }
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved2);
-            size += IsoReaderWriter.WriteUInt16(stream, this.num_differentiating_attributes);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved2);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_differentiating_attributes);
 
             for (int i = 0; i < num_differentiating_attributes; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.differentiating_attribute);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.differentiating_attribute);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7686,7 +7697,8 @@ namespace BoxGenerator2
 
         public async override Task ReadAsync(Stream stream)
         {
-            await base.ReadAsync(stream);
+            await base.ReadAsync(stream); int sample_count = 0; // TODO: taken from the stsz sample_count
+
 
             for (int i = 0; i < sample_count; i++)
             {
@@ -7701,19 +7713,20 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream); int sample_count = 0; // TODO: taken from the stsz sample_count
+
 
             for (int i = 0; i < sample_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.dependency_count);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.dependency_count);
 
                 for (int k = 0; k < dependency_count; k++)
                 {
-                    size += IsoReaderWriter.WriteInt16(stream, this.relative_sample_number);
+                    boxSize += IsoReaderWriter.WriteInt16(stream, this.relative_sample_number);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7748,21 +7761,21 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.numRequiredSEIs);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.numRequiredSEIs);
 
             for (int i = 0; i < numRequiredSEIs; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.requiredSEI_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.requiredSEI_ID);
             }
-            size += IsoReaderWriter.WriteUInt16(stream, this.numNotRequiredSEIs);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.numNotRequiredSEIs);
 
             for (int i = 0; i < numNotRequiredSEIs; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.notrequiredSEI_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.notrequiredSEI_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7803,22 +7816,22 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.item_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_count);
 
             for (int i = 0; i < item_count; i++)
             {
-                size += IsoReaderWriter.WriteBits(stream, 3, this.dependency_id);
-                size += IsoReaderWriter.WriteBits(stream, 4, this.quality_id);
-                size += IsoReaderWriter.WriteBits(stream, 3, this.temporal_id);
-                size += IsoReaderWriter.WriteBits(stream, 6, this.priority_id);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.dependency_id_range);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.quality_id_range);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.temporal_id_range);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.priority_id_range);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.dependency_id);
+                boxSize += IsoReaderWriter.WriteBits(stream, 4, this.quality_id);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.temporal_id);
+                boxSize += IsoReaderWriter.WriteBits(stream, 6, this.priority_id);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.dependency_id_range);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.quality_id_range);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.temporal_id_range);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.priority_id_range);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7845,15 +7858,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.item_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_count);
 
             for (int i = 0; i < item_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.MultiviewGroupId);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.MultiviewGroupId);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7880,15 +7893,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.item_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_count);
 
             for (int i = 0; i < item_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.tierID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.tierID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -7917,16 +7930,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entries);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entries);
 
             for (int i = 0; i < num_entries; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.multiview_group_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.multiview_group_id);
             }
-            size += IsoReaderWriter.WriteBox(stream, this.relation_attributes);
-            return size;
+            boxSize += IsoReaderWriter.WriteBox(stream, this.relation_attributes);
+            return boxSize;
         }
     }
 
@@ -7957,15 +7970,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.baseBitRate);
-            size += IsoReaderWriter.WriteUInt32(stream, this.maxBitRate);
-            size += IsoReaderWriter.WriteUInt32(stream, this.avgBitRate);
-            size += IsoReaderWriter.WriteUInt32(stream, this.tierBaseBitRate);
-            size += IsoReaderWriter.WriteUInt32(stream, this.tierMaxBitRate);
-            size += IsoReaderWriter.WriteUInt32(stream, this.tierAvgBitRate);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.baseBitRate);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxBitRate);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.avgBitRate);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.tierBaseBitRate);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.tierMaxBitRate);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.tierAvgBitRate);
+            return boxSize;
         }
     }
 
@@ -8007,21 +8020,21 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
             /* Mandatory Box */
-            size += IsoReaderWriter.WriteUInt16(stream, this.tierID);
-            size += IsoReaderWriter.WriteUInt8(stream, this.profileIndication);
-            size += IsoReaderWriter.WriteUInt8(stream, this.profile_compatibility);
-            size += IsoReaderWriter.WriteUInt8(stream, this.levelIndication);
-            size += IsoReaderWriter.WriteUInt8(stream, this.reserved);
-            size += IsoReaderWriter.WriteUInt16(stream, this.visualWidth);
-            size += IsoReaderWriter.WriteUInt16(stream, this.visualHeight);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.discardable);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.constantFrameRate);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.reserved0);
-            size += IsoReaderWriter.WriteUInt16(stream, this.frameRate);
-            return size;
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.tierID);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.profileIndication);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.profile_compatibility);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.levelIndication);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.visualWidth);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.visualHeight);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.discardable);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.constantFrameRate);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.reserved0);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.frameRate);
+            return boxSize;
         }
     }
 
@@ -8048,15 +8061,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.item_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_count);
 
             for (int i = 0; i < item_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.tileGroupID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.tileGroupID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -8077,10 +8090,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.max_disparity);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.max_disparity);
+            return boxSize;
         }
     }
 
@@ -8103,11 +8116,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.MVDConfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdDepthRes);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.MVDConfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdDepthRes);
+            return boxSize;
         }
     }
 
@@ -8130,11 +8143,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.MVDConfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdDepthRes);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.MVDConfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdDepthRes);
+            return boxSize;
         }
     }
 
@@ -8195,34 +8208,34 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.reserved6);
-            size += IsoReaderWriter.WriteBits(stream, 3, this.min_temporal_id);
-            size += IsoReaderWriter.WriteBits(stream, 3, this.max_temporal_id);
-            size += IsoReaderWriter.WriteUInt16(stream, this.num_views);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved6);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.min_temporal_id);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.max_temporal_id);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_views);
 
             for (int i = 0; i < num_views; i++)
             {
-                size += IsoReaderWriter.WriteBits(stream, 6, this.reserved1);
-                size += IsoReaderWriter.WriteBits(stream, 10, this.view_id[i]);
-                size += IsoReaderWriter.WriteBits(stream, 6, this.reserved2);
-                size += IsoReaderWriter.WriteBits(stream, 10, this.view_order_index);
-                size += IsoReaderWriter.WriteBit(stream, this.texture_in_stream[i]);
-                size += IsoReaderWriter.WriteBit(stream, this.texture_in_track[i]);
-                size += IsoReaderWriter.WriteBit(stream, this.depth_in_stream[i]);
-                size += IsoReaderWriter.WriteBit(stream, this.depth_in_track[i]);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.base_view_type);
-                size += IsoReaderWriter.WriteBits(stream, 10, this.num_ref_views);
+                boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved1);
+                boxSize += IsoReaderWriter.WriteBits(stream, 10, this.view_id[i]);
+                boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved2);
+                boxSize += IsoReaderWriter.WriteBits(stream, 10, this.view_order_index);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.texture_in_stream[i]);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.texture_in_track[i]);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.depth_in_stream[i]);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.depth_in_track[i]);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.base_view_type);
+                boxSize += IsoReaderWriter.WriteBits(stream, 10, this.num_ref_views);
 
                 for (int j = 0; j < num_ref_views; j++)
                 {
-                    size += IsoReaderWriter.WriteBits(stream, 4, this.reserved5);
-                    size += IsoReaderWriter.WriteBits(stream, 2, this.dependent_component_idc[i][j]);
-                    size += IsoReaderWriter.WriteBits(stream, 10, this.ref_view_id[i][j]);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 4, this.reserved5);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 2, this.dependent_component_idc[i][j]);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 10, this.ref_view_id[i][j]);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -8243,10 +8256,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.MVCConfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.MVCConfig);
+            return boxSize;
         }
     }
 
@@ -8267,10 +8280,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.AVCConfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.AVCConfig);
+            return boxSize;
         }
     }
 
@@ -8291,10 +8304,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.HEVCConfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.HEVCConfig);
+            return boxSize;
         }
     }
 
@@ -8315,10 +8328,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.LHEVCConfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.LHEVCConfig);
+            return boxSize;
         }
     }
 
@@ -8339,10 +8352,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClasses(stream, this.Descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.Descr);
+            return boxSize;
         }
     }
 
@@ -8363,10 +8376,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.SVCConfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.SVCConfig);
+            return boxSize;
         }
     }
 
@@ -8387,10 +8400,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBytes(stream, size - 64, this.scalinfosei);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBytes(stream, size - 64, this.scalinfosei);
+            return boxSize;
         }
     }
 
@@ -8413,11 +8426,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.method_count);
-            size += IsoReaderWriter.WriteStringArray(stream, method_count, this.PriorityAssignmentURI);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.method_count);
+            boxSize += IsoReaderWriter.WriteStringArray(stream, method_count, this.PriorityAssignmentURI);
+            return boxSize;
         }
     }
 
@@ -8438,10 +8451,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBytes(stream, size - 64, this.mvcscalinfosei);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBytes(stream, size - 64, this.mvcscalinfosei);
+            return boxSize;
         }
     }
 
@@ -8462,10 +8475,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBytes(stream, size - 64, this.mvdscalinfosei);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBytes(stream, size - 64, this.mvdscalinfosei);
+            return boxSize;
         }
     }
 
@@ -8488,11 +8501,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.method_count);
-            size += IsoReaderWriter.WriteStringArray(stream, method_count, this.PriorityAssignmentURI);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.method_count);
+            boxSize += IsoReaderWriter.WriteStringArray(stream, method_count, this.PriorityAssignmentURI);
+            return boxSize;
         }
     }
 
@@ -8513,10 +8526,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.HEVCTileTierLevelConfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.HEVCTileTierLevelConfig);
+            return boxSize;
         }
     }
 
@@ -8537,10 +8550,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.EVCConfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.EVCConfig);
+            return boxSize;
         }
     }
 
@@ -8573,18 +8586,18 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.pr_layer_num);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.pr_layer_num);
 
             for (int j = 0; j < pr_layer_num; j++)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.pr_layer);
-                size += IsoReaderWriter.WriteUInt24(stream, this.profile_level_idc);
-                size += IsoReaderWriter.WriteUInt32(stream, this.max_bitrate);
-                size += IsoReaderWriter.WriteUInt32(stream, this.avg_bitrate);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.pr_layer);
+                boxSize += IsoReaderWriter.WriteUInt24(stream, this.profile_level_idc);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.max_bitrate);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.avg_bitrate);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -8605,10 +8618,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.VvcConfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.VvcConfig);
+            return boxSize;
         }
     }
 
@@ -8631,11 +8644,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.LengthSizeMinusOne);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.LengthSizeMinusOne);
+            return boxSize;
         }
     }
 
@@ -8688,14 +8701,14 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entries);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entries);
 
             for (int i = 1; i <= num_entries; i++)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.constructor_type);
-                size += IsoReaderWriter.WriteUInt8(stream, this.flags);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.constructor_type);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.flags);
 
                 if (constructor_type == 0)
                 {
@@ -8721,7 +8734,7 @@ namespace BoxGenerator2
 
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -8758,21 +8771,21 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
-            size += IsoReaderWriter.WriteUInt8(stream, this.sample_statement_type);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.sample_statement_type);
             /*  normally group, or seq  */
-            size += IsoReaderWriter.WriteUInt8(stream, this.default_statement_type);
-            size += IsoReaderWriter.WriteUInt8(stream, this.default_statement_length);
-            size += IsoReaderWriter.WriteUInt8(stream, this.entry_count);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.default_statement_type);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.default_statement_length);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.entry_count);
 
             for (int i = 1; i <= entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.statement_type);
-                size += IsoReaderWriter.WriteString(stream, this.statement_namespace);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.statement_type);
+                boxSize += IsoReaderWriter.WriteString(stream, this.statement_namespace);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -8793,10 +8806,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.config);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.config);
+            return boxSize;
         }
     }
 
@@ -8817,10 +8830,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.config);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.config);
+            return boxSize;
         }
     }
 
@@ -8841,10 +8854,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.source_label);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.source_label);
+            return boxSize;
         }
     }
 
@@ -8869,13 +8882,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.label);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.label);
             // TODO: This should likely be a FullBox: MPEG4BitRateBox; // optional
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -8896,10 +8909,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.aux_track_type);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.aux_track_type);
+            return boxSize;
         }
     }
 
@@ -8926,13 +8939,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.all_ref_pics_intra);
-            size += IsoReaderWriter.WriteBit(stream, this.intra_pred_used);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.max_ref_per_pic);
-            size += IsoReaderWriter.WriteBits(stream, 26, this.reserved);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.all_ref_pics_intra);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.intra_pred_used);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.max_ref_per_pic);
+            boxSize += IsoReaderWriter.WriteBits(stream, 26, this.reserved);
+            return boxSize;
         }
     }
 
@@ -8975,27 +8988,27 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBytes(stream, 16, this.input_MD5);
-            size += IsoReaderWriter.WriteUInt32(stream, this.input_4cc);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBytes(stream, 16, this.input_MD5);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.input_4cc);
 
             if (input_4cc == IsoReaderWriter.FromFourCC("sgpd"))
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
 
                 if ((flags & 1) == 1)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
                 }
-                size += IsoReaderWriter.WriteUInt32(stream, this.num_entries);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entries);
 
                 for (int i = 0; i < num_entries; i++)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.group_description_index[i]);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_description_index[i]);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -9046,30 +9059,30 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved);
-            size += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
-            size += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
-            size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
-            size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
             // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
             // TODO: This should likely be a FullBox: ChannelLayout;
 
-            size += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
             // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
             // TODO: This should likely be a FullBox: ChannelLayout;
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -9123,32 +9136,32 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.entry_version);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_version);
             /*  and shall be in an stsd with version ==1 */
-            size += IsoReaderWriter.WriteUInt16Array(stream, 3, this.reserved);
-            size += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
-            size += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
-            size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
-            size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
+            boxSize += IsoReaderWriter.WriteUInt16Array(stream, 3, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
             // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
             // TODO: This should likely be a FullBox: ChannelLayout;
 
-            size += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
             // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
             // TODO: This should likely be a FullBox: ChannelLayout;
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -9202,32 +9215,32 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.entry_version);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_version);
             /*  and shall be in an stsd with version ==1 */
-            size += IsoReaderWriter.WriteUInt16Array(stream, 3, this.reserved);
-            size += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
-            size += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
-            size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
-            size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
+            boxSize += IsoReaderWriter.WriteUInt16Array(stream, 3, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
             // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
             // TODO: This should likely be a FullBox: ChannelLayout;
 
-            size += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
             // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
             // TODO: This should likely be a FullBox: ChannelLayout;
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -9247,10 +9260,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
             /* other boxes from derived specifications */
-            return size;
+            return boxSize;
         }
     }
 
@@ -9269,9 +9282,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -9296,12 +9309,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.content_encoding);
-            size += IsoReaderWriter.WriteString(stream, this.ns);
-            size += IsoReaderWriter.WriteString(stream, this.schema_location);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding);
+            boxSize += IsoReaderWriter.WriteString(stream, this.ns);
+            boxSize += IsoReaderWriter.WriteString(stream, this.schema_location);
+            return boxSize;
         }
     }
 
@@ -9326,13 +9339,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.content_encoding);
-            size += IsoReaderWriter.WriteString(stream, this.mime_format);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding);
+            boxSize += IsoReaderWriter.WriteString(stream, this.mime_format);
             // TODO: This should likely be a FullBox: TextConfigBox; // optional
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -9355,11 +9368,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.the_label);
-            size += IsoReaderWriter.WriteBox(stream, this.init);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.the_label);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.init);
+            return boxSize;
         }
     }
 
@@ -9382,13 +9395,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
             // TODO: This should likely be a FullBox: MetadataKeyTableBox; // mandatory
 
             // TODO: This should likely be a FullBox: BitRateBox; // optional
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -9415,13 +9428,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
-            size += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
-            size += IsoReaderWriter.WriteUInt16(stream, this.partition_entry_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.FEC_overhead);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.partition_entry_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.FEC_overhead);
+            return boxSize;
         }
     }
 
@@ -9444,12 +9457,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
             // TODO: This should likely be a FullBox: CompleteTrackInfoBox;
 
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            return size;
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
         }
     }
 
@@ -9470,10 +9483,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.SchemeInformation);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.SchemeInformation);
+            return boxSize;
         }
     }
 
@@ -9494,10 +9507,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.SchemeInformation);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.SchemeInformation);
+            return boxSize;
         }
     }
 
@@ -9516,9 +9529,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -9543,12 +9556,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
-            size += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
-            size += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
+            return boxSize;
         }
     }
 
@@ -9573,12 +9586,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
-            size += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
-            size += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
+            return boxSize;
         }
     }
 
@@ -9597,9 +9610,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -9618,9 +9631,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -9643,11 +9656,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.descriptionformat);
-            size += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.descriptionformat);
+            boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
+            return boxSize;
         }
     }
 
@@ -9672,13 +9685,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.content_encoding);
-            size += IsoReaderWriter.WriteString(stream, this.mime_format);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding);
+            boxSize += IsoReaderWriter.WriteString(stream, this.mime_format);
             // TODO: This should likely be a FullBox: TextConfigBox; // optional
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -9697,9 +9710,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -9724,12 +9737,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
-            size += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
-            size += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
+            return boxSize;
         }
     }
 
@@ -9754,12 +9767,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.ns);
-            size += IsoReaderWriter.WriteString(stream, this.schema_location);
-            size += IsoReaderWriter.WriteString(stream, this.auxiliary_mime_types);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.ns);
+            boxSize += IsoReaderWriter.WriteString(stream, this.schema_location);
+            boxSize += IsoReaderWriter.WriteString(stream, this.auxiliary_mime_types);
+            return boxSize;
         }
     }
 
@@ -9784,13 +9797,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.content_encoding);
-            size += IsoReaderWriter.WriteString(stream, this.mime_format);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding);
+            boxSize += IsoReaderWriter.WriteString(stream, this.mime_format);
             // TODO: This should likely be a FullBox: TextConfigBox; // optional
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -9811,10 +9824,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBoxes(stream, this.otherboxes);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBoxes(stream, this.otherboxes);
+            return boxSize;
         }
     }
 
@@ -9835,10 +9848,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBytes(stream, 32, this.compressorname);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBytes(stream, 32, this.compressorname);
+            return boxSize;
         }
     }
 
@@ -9885,23 +9898,23 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
-            size += IsoReaderWriter.WriteUInt32Array(stream, 3, this.pre_defined0);
-            size += IsoReaderWriter.WriteUInt16(stream, this.width);
-            size += IsoReaderWriter.WriteUInt16(stream, this.height);
-            size += IsoReaderWriter.WriteUInt32(stream, this.horizresolution);
-            size += IsoReaderWriter.WriteUInt32(stream, this.vertresolution);
-            size += IsoReaderWriter.WriteUInt32(stream, this.reserved0);
-            size += IsoReaderWriter.WriteUInt16(stream, this.frame_count);
-            size += IsoReaderWriter.WriteBytes(stream, 32, this.compressorname);
-            size += IsoReaderWriter.WriteUInt16(stream, this.depth);
-            size += IsoReaderWriter.WriteInt16(stream, this.pre_defined1);
-            size += IsoReaderWriter.WriteBox(stream, this.clap);
-            size += IsoReaderWriter.WriteBox(stream, this.pasp);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, 3, this.pre_defined0);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.width);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.height);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.horizresolution);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertresolution);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.reserved0);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.frame_count);
+            boxSize += IsoReaderWriter.WriteBytes(stream, 32, this.compressorname);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.depth);
+            boxSize += IsoReaderWriter.WriteInt16(stream, this.pre_defined1);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.clap);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.pasp);
+            return boxSize;
         }
     }
 
@@ -9952,30 +9965,30 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved);
-            size += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
-            size += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
-            size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
-            size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
             // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
             // TODO: This should likely be a FullBox: ChannelLayout;
 
-            size += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
             // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
             // TODO: This should likely be a FullBox: ChannelLayout;
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -10029,32 +10042,32 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.entry_version);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_version);
             /*  and shall be in an stsd with version ==1 */
-            size += IsoReaderWriter.WriteUInt16Array(stream, 3, this.reserved);
-            size += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
-            size += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
-            size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
-            size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
+            boxSize += IsoReaderWriter.WriteUInt16Array(stream, 3, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
             // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
             // TODO: This should likely be a FullBox: ChannelLayout;
 
-            size += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
-            size += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC);
             // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
             // TODO: This should likely be a FullBox: ChannelLayout;
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -10073,9 +10086,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -10095,10 +10108,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
             /* other boxes from derived specifications */
-            return size;
+            return boxSize;
         }
     }
 
@@ -10119,10 +10132,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBoxes(stream, this.otherboxes);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBoxes(stream, this.otherboxes);
+            return boxSize;
         }
     }
 
@@ -10143,10 +10156,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBytes(stream, 32, this.compressorname);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBytes(stream, 32, this.compressorname);
+            return boxSize;
         }
     }
 
@@ -10171,12 +10184,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
-            size += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
-            size += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
+            return boxSize;
         }
     }
 
@@ -10205,16 +10218,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -10233,9 +10246,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -10264,16 +10277,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -10302,16 +10315,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -10340,16 +10353,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -10378,16 +10391,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -10427,25 +10440,25 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.roll_count);
-            size += IsoReaderWriter.WriteUInt16(stream, this.first_output_sample);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.roll_count);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.first_output_sample);
 
             for (int i = 1; i <= roll_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.sample_offset[i]);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_offset[i]);
             }
             int j = 1;
 
             while (true)
             {
                 /*  optional, until the end of the structure */
-                size += IsoReaderWriter.WriteUInt16(stream, this.num_output_samples[j]);
-                size += IsoReaderWriter.WriteUInt16(stream, this.num_total_samples[j]);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_output_samples[j]);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_total_samples[j]);
                 j++;
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -10468,11 +10481,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 3, this.DRAP_type);
-            size += IsoReaderWriter.WriteBits(stream, 29, this.reserved);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.DRAP_type);
+            boxSize += IsoReaderWriter.WriteBits(stream, 29, this.reserved);
+            return boxSize;
         }
     }
 
@@ -10493,10 +10506,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt16(stream, this.roll_distance);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt16(stream, this.roll_distance);
+            return boxSize;
         }
     }
 
@@ -10519,11 +10532,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.num_leading_samples_known);
-            size += IsoReaderWriter.WriteBits(stream, 7, this.num_leading_samples);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.num_leading_samples_known);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.num_leading_samples);
+            return boxSize;
         }
     }
 
@@ -10568,13 +10581,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.operation_point_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.operation_point_count);
 
             if (operation_point_count == 1)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.target_rate_share);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.target_rate_share);
             }
 
             else
@@ -10582,14 +10595,14 @@ namespace BoxGenerator2
 
                 for (int i = 0; i < operation_point_count; i++)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.available_bitrate);
-                    size += IsoReaderWriter.WriteUInt16(stream, this.target_rate_share0);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.available_bitrate);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.target_rate_share0);
                 }
             }
-            size += IsoReaderWriter.WriteUInt32(stream, this.maximum_bitrate);
-            size += IsoReaderWriter.WriteUInt32(stream, this.minimum_bitrate);
-            size += IsoReaderWriter.WriteUInt8(stream, this.discard_priority);
-            return size;
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.maximum_bitrate);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.minimum_bitrate);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.discard_priority);
+            return boxSize;
         }
     }
 
@@ -10610,10 +10623,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt16(stream, this.roll_distance);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt16(stream, this.roll_distance);
+            return boxSize;
         }
     }
 
@@ -10638,12 +10651,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.dependent_flag);
-            size += IsoReaderWriter.WriteBits(stream, 3, this.reserved);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.SAP_type);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.dependent_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.SAP_type);
+            return boxSize;
         }
     }
 
@@ -10672,16 +10685,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.meta_box_handler_type);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_items);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.meta_box_handler_type);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_items);
 
             for (int i = 0; i < num_items; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.item_id[i]);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_id[i]);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -10704,11 +10717,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.level_independently_decodable);
-            size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.level_independently_decodable);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
+            return boxSize;
         }
     }
 
@@ -10731,11 +10744,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.hSpacing);
-            size += IsoReaderWriter.WriteUInt32(stream, this.vSpacing);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.hSpacing);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.vSpacing);
+            return boxSize;
         }
     }
 
@@ -10770,17 +10783,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthD);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightD);
-            size += IsoReaderWriter.WriteUInt32(stream, this.horizOffN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.horizOffD);
-            size += IsoReaderWriter.WriteUInt32(stream, this.vertOffN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.vertOffD);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthD);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightD);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.horizOffN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.horizOffD);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertOffN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertOffD);
+            return boxSize;
         }
     }
 
@@ -10802,11 +10815,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.track_group_id);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_group_id);
             /*   for a particular track_group_type */
-            return size;
+            return boxSize;
         }
     }
 
@@ -10829,11 +10842,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.left_view_flag);
-            size += IsoReaderWriter.WriteBits(stream, 31, this.reserved);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.left_view_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 31, this.reserved);
+            return boxSize;
         }
     }
 
@@ -10854,10 +10867,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -10878,10 +10891,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -10902,10 +10915,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -10926,10 +10939,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -10950,10 +10963,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -10974,10 +10987,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -10998,10 +11011,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -11022,10 +11035,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -11046,10 +11059,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -11070,10 +11083,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -11094,10 +11107,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -11120,11 +11133,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11145,10 +11158,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            return boxSize;
         }
     }
 
@@ -11171,11 +11184,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11196,10 +11209,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            return boxSize;
         }
     }
 
@@ -11222,11 +11235,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11247,10 +11260,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            return boxSize;
         }
     }
 
@@ -11273,11 +11286,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11300,11 +11313,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11327,11 +11340,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11352,10 +11365,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            return boxSize;
         }
     }
 
@@ -11378,11 +11391,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11403,10 +11416,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            return boxSize;
         }
     }
 
@@ -11429,11 +11442,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11454,10 +11467,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            return boxSize;
         }
     }
 
@@ -11478,10 +11491,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
         }
     }
 
@@ -11504,11 +11517,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11531,11 +11544,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11572,18 +11585,18 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -11620,18 +11633,18 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -11654,11 +11667,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11681,11 +11694,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -11722,18 +11735,18 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -11770,18 +11783,18 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -11820,19 +11833,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -11871,19 +11884,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -11922,19 +11935,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -11973,19 +11986,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_priority_method);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -12018,16 +12031,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -12060,16 +12073,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -12102,16 +12115,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -12144,16 +12157,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            return boxSize;
         }
     }
 
@@ -12184,15 +12197,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            return boxSize;
         }
     }
 
@@ -12223,15 +12236,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            return boxSize;
         }
     }
 
@@ -12262,15 +12275,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            return boxSize;
         }
     }
 
@@ -12301,15 +12314,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
-            size += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
-            size += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.view_identifiers);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params);
+            return boxSize;
         }
     }
 
@@ -12334,12 +12347,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.svcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.method);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.svcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.method);
+            return boxSize;
         }
     }
 
@@ -12364,12 +12377,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.svcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.method);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.svcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.method);
+            return boxSize;
         }
     }
 
@@ -12394,12 +12407,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.svcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.method);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.svcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.method);
+            return boxSize;
         }
     }
 
@@ -12424,12 +12437,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.svcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.method);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.svcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.method);
+            return boxSize;
         }
     }
 
@@ -12456,13 +12469,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.svcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.method);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.svcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.method);
+            return boxSize;
         }
     }
 
@@ -12489,13 +12502,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.svcconfig);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            size += IsoReaderWriter.WriteBox(stream, this.scalability);
-            size += IsoReaderWriter.WriteBox(stream, this.method);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.svcconfig);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scalability);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.method);
+            return boxSize;
         }
     }
 
@@ -12516,10 +12529,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
         }
     }
 
@@ -12538,9 +12551,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -12561,10 +12574,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
         }
     }
 
@@ -12585,10 +12598,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
         }
     }
 
@@ -12611,11 +12624,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -12638,11 +12651,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -12663,10 +12676,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
         }
     }
 
@@ -12687,10 +12700,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
         }
     }
 
@@ -12713,11 +12726,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.descr);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.descr);
+            return boxSize;
         }
     }
 
@@ -12742,12 +12755,12 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            size += IsoReaderWriter.WriteBox(stream, this.methods);
-            size += IsoReaderWriter.WriteBox(stream, this.priorities);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.methods);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.priorities);
+            return boxSize;
         }
     }
 
@@ -12768,10 +12781,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
         }
     }
 
@@ -12792,10 +12805,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBox(stream, this.config);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
         }
     }
 
@@ -12834,23 +12847,23 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.level_is_present_flag);
-            size += IsoReaderWriter.WriteBit(stream, this.level_is_static_flag);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.level_is_present_flag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.level_is_static_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
 
             if (level_is_present_flag)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
             }
 
             if (level_is_static_flag == false)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.level_info_entity_idx);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.level_info_entity_idx);
             }
-            size += IsoReaderWriter.WriteUInt16(stream, this.num_active_tracks);
-            return size;
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_active_tracks);
+            return boxSize;
         }
     }
 
@@ -12902,34 +12915,34 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.level_is_present_flag);
-            size += IsoReaderWriter.WriteBit(stream, this.level_is_static_flag);
-            size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.level_is_present_flag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.level_is_static_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
 
             if (level_is_present_flag)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
             }
 
             if (level_is_static_flag == false)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.level_info_entity_idx);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.level_info_entity_idx);
             }
-            size += IsoReaderWriter.WriteUInt16(stream, this.num_subgroup_ids);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_subgroup_ids);
             ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.track_subgroup_id[i]);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_subgroup_id[i]);
             }
 
             for (int i = 0; i < num_subgroup_ids; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.num_active_tracks[i]);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_active_tracks[i]);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -13054,82 +13067,82 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.num_profile_tier_level_minus1);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.num_profile_tier_level_minus1);
 
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
-                size += IsoReaderWriter.WriteClass(stream, this.opeg_ptl[i]);
+                boxSize += IsoReaderWriter.WriteClass(stream, this.opeg_ptl[i]);
             }
-            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
-            size += IsoReaderWriter.WriteBit(stream, this.incomplete_operating_points_flag);
-            size += IsoReaderWriter.WriteBits(stream, 9, this.num_olss);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.incomplete_operating_points_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 9, this.num_olss);
 
             for (int i = 0; i < num_olss; i++)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.ptl_idx[i]);
-                size += IsoReaderWriter.WriteBits(stream, 9, this.ols_idx[i]);
-                size += IsoReaderWriter.WriteBits(stream, 6, this.layer_count[i]);
-                size += IsoReaderWriter.WriteBit(stream, this.reserved0);
-                size += IsoReaderWriter.WriteBit(stream, this.layer_info_present_flag[i]);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.ptl_idx[i]);
+                boxSize += IsoReaderWriter.WriteBits(stream, 9, this.ols_idx[i]);
+                boxSize += IsoReaderWriter.WriteBits(stream, 6, this.layer_count[i]);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.reserved0);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.layer_info_present_flag[i]);
 
                 if (layer_info_present_flag[i])
                 {
 
                     for (int j = 0; j < layer_count[i]; j++)
                     {
-                        size += IsoReaderWriter.WriteBits(stream, 6, this.layer_id[i][j]);
-                        size += IsoReaderWriter.WriteBits(stream, 1, this.is_output_layer[i][j]);
-                        size += IsoReaderWriter.WriteBit(stream, this.reserved00);
+                        boxSize += IsoReaderWriter.WriteBits(stream, 6, this.layer_id[i][j]);
+                        boxSize += IsoReaderWriter.WriteBits(stream, 1, this.is_output_layer[i][j]);
+                        boxSize += IsoReaderWriter.WriteBit(stream, this.reserved00);
                     }
                 }
             }
-            size += IsoReaderWriter.WriteBits(stream, 4, this.reserved1);
-            size += IsoReaderWriter.WriteBits(stream, 12, this.num_operating_points);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.reserved1);
+            boxSize += IsoReaderWriter.WriteBits(stream, 12, this.num_operating_points);
 
             for (int i = 0; i < num_operating_points; i++)
             {
-                size += IsoReaderWriter.WriteBits(stream, 9, this.ols_loop_entry_idx);
-                size += IsoReaderWriter.WriteBits(stream, 3, this.max_temporal_id);
-                size += IsoReaderWriter.WriteBit(stream, this.frame_rate_info_flag);
-                size += IsoReaderWriter.WriteBit(stream, this.bit_rate_info_flag);
+                boxSize += IsoReaderWriter.WriteBits(stream, 9, this.ols_loop_entry_idx);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.max_temporal_id);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.frame_rate_info_flag);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.bit_rate_info_flag);
 
                 if (incomplete_operating_points_flag)
                 {
-                    size += IsoReaderWriter.WriteBits(stream, 2, this.op_availability_idc);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 2, this.op_availability_idc);
                 }
 
                 else
                 {
-                    size += IsoReaderWriter.WriteBits(stream, 2, this.reserved2);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved2);
                 }
-                size += IsoReaderWriter.WriteBits(stream, 3, this.reserved01);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.chroma_format_idc);
-                size += IsoReaderWriter.WriteBits(stream, 3, this.bit_depth_minus8);
-                size += IsoReaderWriter.WriteUInt16(stream, this.max_picture_width);
-                size += IsoReaderWriter.WriteUInt16(stream, this.max_picture_height);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.reserved01);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.chroma_format_idc);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.bit_depth_minus8);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_picture_width);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_picture_height);
 
                 if (frame_rate_info_flag)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.avg_frame_rate);
-                    size += IsoReaderWriter.WriteBits(stream, 6, this.reserved10);
-                    size += IsoReaderWriter.WriteBits(stream, 2, this.constant_frame_rate);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.avg_frame_rate);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved10);
+                    boxSize += IsoReaderWriter.WriteBits(stream, 2, this.constant_frame_rate);
                 }
 
                 if (bit_rate_info_flag)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.max_bit_rate);
-                    size += IsoReaderWriter.WriteUInt32(stream, this.avg_bit_rate);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.max_bit_rate);
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.avg_bit_rate);
                 }
-                size += IsoReaderWriter.WriteUInt8(stream, this.entity_count);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.entity_count);
 
                 for (int j = 0; j < entity_count; j++)
                 {
-                    size += IsoReaderWriter.WriteUInt8(stream, this.entity_idx);
+                    boxSize += IsoReaderWriter.WriteUInt8(stream, this.entity_idx);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -13154,14 +13167,14 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.track_switch_hierarchy_id[i]);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.track_switch_hierarchy_id[i]);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -13190,16 +13203,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -13220,10 +13233,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 24, this.audNalUnit);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 24, this.audNalUnit);
+            return boxSize;
         }
     }
 
@@ -13252,14 +13265,14 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.layerNumber);
-            size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
-            size += IsoReaderWriter.WriteBit(stream, this.accurateStatisticsFlag);
-            size += IsoReaderWriter.WriteUInt16(stream, this.avgBitRate);
-            size += IsoReaderWriter.WriteUInt16(stream, this.avgFrameRate);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.layerNumber);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.accurateStatisticsFlag);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.avgBitRate);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.avgFrameRate);
+            return boxSize;
         }
     }
 
@@ -13310,29 +13323,29 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.subSequenceIdentifer);
-            size += IsoReaderWriter.WriteUInt8(stream, this.layerNumber);
-            size += IsoReaderWriter.WriteBit(stream, this.durationFlag);
-            size += IsoReaderWriter.WriteBit(stream, this.avgRateFlag);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.subSequenceIdentifer);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.layerNumber);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.durationFlag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.avgRateFlag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
 
             if (durationFlag)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.duration);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.duration);
             }
 
             if (avgRateFlag)
             {
-                size += IsoReaderWriter.WriteBits(stream, 7, this.reserved0);
-                size += IsoReaderWriter.WriteBit(stream, this.accurateStatisticsFlag);
-                size += IsoReaderWriter.WriteUInt16(stream, this.avgBitRate);
-                size += IsoReaderWriter.WriteUInt16(stream, this.avgFrameRate);
+                boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved0);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.accurateStatisticsFlag);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.avgBitRate);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.avgFrameRate);
             }
-            size += IsoReaderWriter.WriteUInt8(stream, this.numReferences);
-            size += IsoReaderWriter.WriteClasses(stream, numReferences, this.dependency);
-            return size;
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.numReferences);
+            boxSize += IsoReaderWriter.WriteClasses(stream, numReferences, this.dependency);
+            return boxSize;
         }
     }
 
@@ -13355,11 +13368,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.dci_nal_unit_length);
-            size += IsoReaderWriter.WriteBytes(stream, dci_nal_unit_length, this.dci_nal_unit);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.dci_nal_unit_length);
+            boxSize += IsoReaderWriter.WriteBytes(stream, dci_nal_unit_length, this.dci_nal_unit);
+            return boxSize;
         }
     }
 
@@ -13388,16 +13401,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.tierCount);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.tierCount);
 
             for (int i = 1; i <= tierCount; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.tierID);
-                size += IsoReaderWriter.WriteInt16(stream, this.delta);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.tierID);
+                boxSize += IsoReaderWriter.WriteInt16(stream, this.delta);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -13418,10 +13431,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.eobNalUnit);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.eobNalUnit);
+            return boxSize;
         }
     }
 
@@ -13448,15 +13461,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.num_eos_nal_unit_minus1);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.num_eos_nal_unit_minus1);
 
             for (int i = 0; i <= num_eos_nal_unit_minus1; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.eosNalUnit[i]);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.eosNalUnit[i]);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -13483,13 +13496,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.reserved);
-            size += IsoReaderWriter.WriteBit(stream, this.bl_irap_pic_flag);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.bl_irap_nal_unit_type);
-            size += IsoReaderWriter.WriteInt8(stream, this.sample_offset);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.reserved);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.bl_irap_pic_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.bl_irap_nal_unit_type);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.sample_offset);
+            return boxSize;
         }
     }
 
@@ -13532,23 +13545,23 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.num_layers_in_track);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.num_layers_in_track);
 
             for (int i = 0; i < num_layers_in_track; i++)
             {
-                size += IsoReaderWriter.WriteBits(stream, 2, this.reserved0);
-                size += IsoReaderWriter.WriteBit(stream, this.irap_gdr_pics_in_layer_only_flag);
-                size += IsoReaderWriter.WriteBit(stream, this.completeness_flag);
-                size += IsoReaderWriter.WriteBits(stream, 6, this.layer_id);
-                size += IsoReaderWriter.WriteBits(stream, 3, this.min_TemporalId);
-                size += IsoReaderWriter.WriteBits(stream, 3, this.max_TemporalId);
-                size += IsoReaderWriter.WriteBit(stream, this.reserved00);
-                size += IsoReaderWriter.WriteBits(stream, 7, this.sub_layer_presence_flags);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved0);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.irap_gdr_pics_in_layer_only_flag);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.completeness_flag);
+                boxSize += IsoReaderWriter.WriteBits(stream, 6, this.layer_id);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.min_TemporalId);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.max_TemporalId);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.reserved00);
+                boxSize += IsoReaderWriter.WriteBits(stream, 7, this.sub_layer_presence_flags);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -13581,18 +13594,18 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.num_mix_nalu_pic_idx);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_mix_nalu_pic_idx);
 
             for (int i = 0; i < num_mix_nalu_pic_idx; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.mix_subp_track_idx1[i]);
-                size += IsoReaderWriter.WriteUInt16(stream, this.mix_subp_track_idx2[i]);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.mix_subp_track_idx1[i]);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.mix_subp_track_idx2[i]);
             }
-            size += IsoReaderWriter.WriteBits(stream, 10, this.pps_mix_nalu_types_in_pic_bit_pos);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.pps_id);
-            return size;
+            boxSize += IsoReaderWriter.WriteBits(stream, 10, this.pps_mix_nalu_types_in_pic_bit_pos);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.pps_id);
+            return boxSize;
         }
     }
 
@@ -13646,14 +13659,14 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.groupID);
-            size += IsoReaderWriter.WriteUInt8(stream, this.primary_groupID);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
-            size += IsoReaderWriter.WriteBit(stream, this.is_tl_switching_point);
-            size += IsoReaderWriter.WriteBits(stream, 3, this.reserved0);
-            size += IsoReaderWriter.WriteUInt8(stream, this.tl_switching_distance);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.groupID);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.primary_groupID);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.is_tl_switching_point);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.reserved0);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.tl_switching_distance);
 
             if (groupID == primary_groupID)
             {
@@ -13677,7 +13690,7 @@ namespace BoxGenerator2
                 // TODO: This should likely be a FullBox: ViewPriorityBox; // optional
 
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -13736,20 +13749,20 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
-            size += IsoReaderWriter.WriteBit(stream, this.large_size);
-            size += IsoReaderWriter.WriteBit(stream, this.rle);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.large_size);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.rle);
 
             if (large_size)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.entry_count0);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.entry_count0);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -13760,17 +13773,17 @@ namespace BoxGenerator2
 
                     if (large_size)
                     {
-                        size += IsoReaderWriter.WriteUInt16(stream, this.NALU_start_number);
+                        boxSize += IsoReaderWriter.WriteUInt16(stream, this.NALU_start_number);
                     }
 
                     else
                     {
-                        size += IsoReaderWriter.WriteUInt8(stream, this.NALU_start_number0);
+                        boxSize += IsoReaderWriter.WriteUInt8(stream, this.NALU_start_number0);
                     }
                 }
-                size += IsoReaderWriter.WriteUInt16(stream, this.groupID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.groupID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -13791,10 +13804,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.oinf);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.oinf);
+            return boxSize;
         }
     }
 
@@ -13815,10 +13828,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt32(stream, this.delta_time);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt32(stream, this.delta_time);
+            return boxSize;
         }
     }
 
@@ -13841,11 +13854,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.ps_nalu_length);
-            size += IsoReaderWriter.WriteBytes(stream, ps_nalu_length, this.ps_nal_unit);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.ps_nalu_length);
+            boxSize += IsoReaderWriter.WriteBytes(stream, ps_nalu_length, this.ps_nal_unit);
+            return boxSize;
         }
     }
 
@@ -13872,13 +13885,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.sps_present);
-            size += IsoReaderWriter.WriteBit(stream, this.pps_present);
-            size += IsoReaderWriter.WriteBit(stream, this.aps_present);
-            size += IsoReaderWriter.WriteBits(stream, 5, this.reserved);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.sps_present);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.pps_present);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.aps_present);
+            boxSize += IsoReaderWriter.WriteBits(stream, 5, this.reserved);
+            return boxSize;
         }
     }
 
@@ -13931,34 +13944,34 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.subpic_id_info_flag);
-            size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
-            size += IsoReaderWriter.WriteUInt16(stream, this.num_alternate_region_set);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.subpic_id_info_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_alternate_region_set);
 
             for (int i = 0; i < num_alternate_region_set; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.num_regions_in_set[i]);
-                size += IsoReaderWriter.WriteUInt16(stream, this.alternate_region_set_id[i]);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_regions_in_set[i]);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.alternate_region_set_id[i]);
 
                 for (int j = 0; j < num_regions_in_set[i]; j++)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.groupID[i][j]);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.groupID[i][j]);
                 }
             }
-            size += IsoReaderWriter.WriteUInt16(stream, this.num_regions_minus1);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_regions_minus1);
 
             for (int i = 0; i < num_regions_minus1; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.region_id[i]);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.region_id[i]);
             }
 
             if (subpic_id_info_flag)
             {
-                size += IsoReaderWriter.WriteClass(stream, this.subpic_id_rewriting_info);
+                boxSize += IsoReaderWriter.WriteClass(stream, this.subpic_id_rewriting_info);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -14022,17 +14035,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.groupID);
-            size += IsoReaderWriter.WriteUInt8(stream, this.primary_groupID);
-            size += IsoReaderWriter.WriteBit(stream, this.is_tier_IDR);
-            size += IsoReaderWriter.WriteBit(stream, this.noInterLayerPredFlag);
-            size += IsoReaderWriter.WriteBit(stream, this.useRefBasePicFlag);
-            size += IsoReaderWriter.WriteBit(stream, this.storeBaseRepFlag);
-            size += IsoReaderWriter.WriteBit(stream, this.is_tl_switching_point);
-            size += IsoReaderWriter.WriteBits(stream, 3, this.reserved);
-            size += IsoReaderWriter.WriteUInt8(stream, this.tl_switching_distance);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.groupID);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.primary_groupID);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.is_tier_IDR);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.noInterLayerPredFlag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.useRefBasePicFlag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.storeBaseRepFlag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.is_tl_switching_point);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.tl_switching_distance);
 
             if (groupID == primary_groupID)
             {
@@ -14060,7 +14073,7 @@ namespace BoxGenerator2
                 // TODO: This should likely be a FullBox: TranscodingInfoBox; // optional
 
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -14089,16 +14102,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.reserved);
-            size += IsoReaderWriter.WriteUInt8(stream, this.NALU_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.reserved);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.NALU_count);
 
             for (int i = 1; i <= NALU_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.groupID);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.groupID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -14141,27 +14154,27 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.rect_region_flag);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
-            size += IsoReaderWriter.WriteBit(stream, this.continuous_id_flag);
-            size += IsoReaderWriter.WriteBits(stream, 12, this.num_subpics_minus1);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.rect_region_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.continuous_id_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 12, this.num_subpics_minus1);
 
             for (int i = 0; i <= num_subpics_minus1; i++)
             {
 
                 if ((continuous_id_flag && i == 0) || !continuous_id_flag)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.subpic_id[i]);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.subpic_id[i]);
                 }
 
                 if (rect_region_flag)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.groupID[i]);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.groupID[i]);
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -14182,10 +14195,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
+            return boxSize;
         }
     }
 
@@ -14220,21 +14233,21 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.subpic_id_info_flag);
-            size += IsoReaderWriter.WriteBits(stream, 15, this.num_subpic_ref_idx);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.subpic_id_info_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 15, this.num_subpic_ref_idx);
 
             for (int i = 0; i < num_subpic_ref_idx; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.subp_track_ref_idx[i]);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.subp_track_ref_idx[i]);
             }
 
             if (subpic_id_info_flag)
             {
-                size += IsoReaderWriter.WriteClass(stream, this.subpic_id_rewriting_info);
+                boxSize += IsoReaderWriter.WriteClass(stream, this.subpic_id_rewriting_info);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -14253,9 +14266,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -14284,16 +14297,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.groupID_info_4cc);
-            size += IsoReaderWriter.WriteUInt16(stream, this.entry_count_minus1);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.groupID_info_4cc);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count_minus1);
 
             for (int i = 0; i <= entry_count_minus1; i++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.groupID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.groupID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -14316,11 +14329,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.NAL_unit_type);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.NAL_unit_type);
+            return boxSize;
         }
     }
 
@@ -14387,43 +14400,43 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.groupID);
-            size += IsoReaderWriter.WriteBit(stream, this.rect_region_flag);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.groupID);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.rect_region_flag);
 
             if (!rect_region_flag)
             {
-                size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
+                boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteBits(stream, 2, this.independent_idc);
-                size += IsoReaderWriter.WriteBit(stream, this.full_picture);
-                size += IsoReaderWriter.WriteBit(stream, this.filtering_disabled);
-                size += IsoReaderWriter.WriteBit(stream, this.has_dependency_list);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.reserved0);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.independent_idc);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.full_picture);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.filtering_disabled);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.has_dependency_list);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved0);
 
                 if (!full_picture)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.horizontal_offset);
-                    size += IsoReaderWriter.WriteUInt16(stream, this.vertical_offset);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.horizontal_offset);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.vertical_offset);
                 }
-                size += IsoReaderWriter.WriteUInt16(stream, this.region_width);
-                size += IsoReaderWriter.WriteUInt16(stream, this.region_height);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.region_width);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.region_height);
 
                 if (has_dependency_list)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.dependency_rect_region_count);
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.dependency_rect_region_count);
 
                     for (int i = 1; i <= dependency_rect_region_count; i++)
                     {
-                        size += IsoReaderWriter.WriteUInt16(stream, this.dependencyRectRegionGroupID);
+                        boxSize += IsoReaderWriter.WriteUInt16(stream, this.dependencyRectRegionGroupID);
                     }
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -14442,9 +14455,9 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
         }
     }
 
@@ -14485,20 +14498,20 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.temporalLayerId);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.tlprofile_space);
-            size += IsoReaderWriter.WriteBit(stream, this.tltier_flag);
-            size += IsoReaderWriter.WriteBits(stream, 5, this.tlprofile_idc);
-            size += IsoReaderWriter.WriteUInt32(stream, this.tlprofile_compatibility_flags);
-            size += IsoReaderWriter.WriteUInt48(stream, this.tlconstraint_indicator_flags);
-            size += IsoReaderWriter.WriteUInt8(stream, this.tllevel_idc);
-            size += IsoReaderWriter.WriteUInt16(stream, this.tlMaxBitRate);
-            size += IsoReaderWriter.WriteUInt16(stream, this.tlAvgBitRate);
-            size += IsoReaderWriter.WriteUInt8(stream, this.tlConstantFrameRate);
-            size += IsoReaderWriter.WriteUInt16(stream, this.tlAvgFrameRate);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.temporalLayerId);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.tlprofile_space);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.tltier_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 5, this.tlprofile_idc);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.tlprofile_compatibility_flags);
+            boxSize += IsoReaderWriter.WriteUInt48(stream, this.tlconstraint_indicator_flags);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.tllevel_idc);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.tlMaxBitRate);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.tlAvgBitRate);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.tlConstantFrameRate);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.tlAvgFrameRate);
+            return boxSize;
         }
     }
 
@@ -14519,11 +14532,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
             // TODO: This should likely be a FullBox: ViewPriorityBox;
 
-            return size;
+            return boxSize;
         }
     }
 
@@ -14544,10 +14557,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.oinf);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.oinf);
+            return boxSize;
         }
     }
 
@@ -14569,11 +14582,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.track_group_id);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_group_id);
             /*   for a particular track_group_type */
-            return size;
+            return boxSize;
         }
     }
 
@@ -14595,11 +14608,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.track_group_id);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_group_id);
             /*   for a particular track_group_type */
-            return size;
+            return boxSize;
         }
     }
 
@@ -14621,11 +14634,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.track_group_id);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_group_id);
             /*   for a particular track_group_type */
-            return size;
+            return boxSize;
         }
     }
 
@@ -14646,10 +14659,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14670,10 +14683,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14694,10 +14707,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14718,10 +14731,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14742,10 +14755,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14766,10 +14779,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14790,10 +14803,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14814,10 +14827,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14838,10 +14851,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14862,10 +14875,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14886,10 +14899,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14910,10 +14923,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14934,10 +14947,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14958,10 +14971,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -14982,10 +14995,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -15006,10 +15019,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
         }
     }
 
@@ -15038,16 +15051,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15076,16 +15089,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15114,16 +15127,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15152,16 +15165,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15190,16 +15203,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15228,16 +15241,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15266,16 +15279,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15304,16 +15317,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15342,16 +15355,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15380,16 +15393,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15418,16 +15431,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15456,16 +15469,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15494,16 +15507,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.group_id);
-            size += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.num_entities_in_group);
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15526,11 +15539,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.aux_type);
-            size += IsoReaderWriter.WriteUInt8Array(stream, this.aux_subtype);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.aux_type);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.aux_subtype);
+            return boxSize;
         }
     }
 
@@ -15551,10 +15564,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.AVCConfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.AVCConfig);
+            return boxSize;
         }
     }
 
@@ -15589,17 +15602,17 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthD);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightD);
-            size += IsoReaderWriter.WriteUInt32(stream, this.horizOffN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.horizOffD);
-            size += IsoReaderWriter.WriteUInt32(stream, this.vertOffN);
-            size += IsoReaderWriter.WriteUInt32(stream, this.vertOffD);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureWidthD);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.cleanApertureHeightD);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.horizOffN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.horizOffD);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertOffN);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertOffD);
+            return boxSize;
         }
     }
 
@@ -15646,29 +15659,29 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.colour_type);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.colour_type);
 
             if (colour_type == IsoReaderWriter.FromFourCC("nclx"))
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.colour_primaries);
-                size += IsoReaderWriter.WriteUInt16(stream, this.transfer_characteristics);
-                size += IsoReaderWriter.WriteUInt16(stream, this.matrix_coefficients);
-                size += IsoReaderWriter.WriteBit(stream, this.full_range_flag);
-                size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.colour_primaries);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.transfer_characteristics);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.matrix_coefficients);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.full_range_flag);
+                boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
             }
 
             else if (colour_type == IsoReaderWriter.FromFourCC("rICC"))
             {
-                size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
+                boxSize += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
             }
 
             else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
             {
-                size += IsoReaderWriter.WriteClass(stream, this.ICC_profile0);
+                boxSize += IsoReaderWriter.WriteClass(stream, this.ICC_profile0);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15689,10 +15702,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.HEVCConfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.HEVCConfig);
+            return boxSize;
         }
     }
 
@@ -15715,11 +15728,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
-            size += IsoReaderWriter.WriteBit(stream, this.axis);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.axis);
+            return boxSize;
         }
     }
 
@@ -15742,11 +15755,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.angle);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.angle);
+            return boxSize;
         }
     }
 
@@ -15769,11 +15782,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.image_width);
-            size += IsoReaderWriter.WriteUInt32(stream, this.image_height);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.image_width);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.image_height);
+            return boxSize;
         }
     }
 
@@ -15794,10 +15807,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8Array(stream, this.JPEGprefix);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.JPEGprefix);
+            return boxSize;
         }
     }
 
@@ -15818,10 +15831,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.LHEVCConfig);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.LHEVCConfig);
+            return boxSize;
         }
     }
 
@@ -15842,10 +15855,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.layer_id);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.layer_id);
+            return boxSize;
         }
     }
 
@@ -15866,10 +15879,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.op_info);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.op_info);
+            return boxSize;
         }
     }
 
@@ -15892,11 +15905,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.hSpacing);
-            size += IsoReaderWriter.WriteUInt32(stream, this.vSpacing);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.hSpacing);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.vSpacing);
+            return boxSize;
         }
     }
 
@@ -15923,15 +15936,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.num_channels);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.num_channels);
 
             for (int i = 0; i < num_channels; i++)
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.bits_per_channel);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.bits_per_channel);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -15954,11 +15967,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.horizontal_offset);
-            size += IsoReaderWriter.WriteUInt32(stream, this.vertical_offset);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.horizontal_offset);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertical_offset);
+            return boxSize;
         }
     }
 
@@ -16014,15 +16027,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
 
 
             for (int i = 0; i < entry_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.sample_delta);
-                size += IsoReaderWriter.WriteUInt16(stream, this.subsample_count);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_delta);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.subsample_count);
 
                 if (subsample_count > 0)
                 {
@@ -16032,20 +16045,20 @@ namespace BoxGenerator2
 
                         if (version == 1)
                         {
-                            size += IsoReaderWriter.WriteUInt32(stream, this.subsample_size);
+                            boxSize += IsoReaderWriter.WriteUInt32(stream, this.subsample_size);
                         }
 
                         else
                         {
-                            size += IsoReaderWriter.WriteUInt16(stream, this.subsample_size0);
+                            boxSize += IsoReaderWriter.WriteUInt16(stream, this.subsample_size0);
                         }
-                        size += IsoReaderWriter.WriteUInt8(stream, this.subsample_priority);
-                        size += IsoReaderWriter.WriteUInt8(stream, this.discardable);
-                        size += IsoReaderWriter.WriteUInt32(stream, this.codec_specific_parameters);
+                        boxSize += IsoReaderWriter.WriteUInt8(stream, this.subsample_priority);
+                        boxSize += IsoReaderWriter.WriteUInt8(stream, this.discardable);
+                        boxSize += IsoReaderWriter.WriteUInt32(stream, this.codec_specific_parameters);
                     }
                 }
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -16066,10 +16079,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.target_ols_idx);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.target_ols_idx);
+            return boxSize;
         }
     }
 
@@ -16092,11 +16105,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt8(stream, this.exposure_step);
-            size += IsoReaderWriter.WriteInt8(stream, this.exposure_numerator);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.exposure_step);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.exposure_numerator);
+            return boxSize;
         }
     }
 
@@ -16119,11 +16132,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt8(stream, this.flash_exposure_numerator);
-            size += IsoReaderWriter.WriteInt8(stream, this.flash_exposure_denominator);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.flash_exposure_numerator);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.flash_exposure_denominator);
+            return boxSize;
         }
     }
 
@@ -16146,11 +16159,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.alt_text);
-            size += IsoReaderWriter.WriteString(stream, this.alt_lang);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.alt_text);
+            boxSize += IsoReaderWriter.WriteString(stream, this.alt_lang);
+            return boxSize;
         }
     }
 
@@ -16171,10 +16184,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
+            return boxSize;
         }
     }
 
@@ -16197,11 +16210,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt8(stream, this.f_stop_numerator);
-            size += IsoReaderWriter.WriteInt8(stream, this.f_stop_denominator);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.f_stop_numerator);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.f_stop_denominator);
+            return boxSize;
         }
     }
 
@@ -16224,11 +16237,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.focus_distance_numerator);
-            size += IsoReaderWriter.WriteUInt16(stream, this.focus_distance_denominator);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.focus_distance_numerator);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.focus_distance_denominator);
+            return boxSize;
         }
     }
 
@@ -16255,13 +16268,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.target_width_numerator);
-            size += IsoReaderWriter.WriteUInt16(stream, this.target_width_denominator);
-            size += IsoReaderWriter.WriteUInt16(stream, this.target_height_numerator);
-            size += IsoReaderWriter.WriteUInt16(stream, this.target_height_denominator);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.target_width_numerator);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.target_width_denominator);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.target_height_numerator);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.target_height_denominator);
+            return boxSize;
         }
     }
 
@@ -16282,10 +16295,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
+            return boxSize;
         }
     }
 
@@ -16306,10 +16319,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.frame_number);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.frame_number);
+            return boxSize;
         }
     }
 
@@ -16336,15 +16349,15 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.reference_type_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.reference_type_count);
 
             for (int i = 0; i < reference_type_count; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.reference_type[i]);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.reference_type[i]);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -16371,13 +16384,13 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteString(stream, this.lang);
-            size += IsoReaderWriter.WriteString(stream, this.name);
-            size += IsoReaderWriter.WriteString(stream, this.description);
-            size += IsoReaderWriter.WriteString(stream, this.tags);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.lang);
+            boxSize += IsoReaderWriter.WriteString(stream, this.name);
+            boxSize += IsoReaderWriter.WriteString(stream, this.description);
+            boxSize += IsoReaderWriter.WriteString(stream, this.tags);
+            return boxSize;
         }
     }
 
@@ -16400,11 +16413,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.blue_amber);
-            size += IsoReaderWriter.WriteInt8(stream, this.green_magenta);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.blue_amber);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.green_magenta);
+            return boxSize;
         }
     }
 
@@ -16467,41 +16480,41 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.reserved1);
-            size += IsoReaderWriter.WriteBit(stream, this.reserved2);
-            size += IsoReaderWriter.WriteBit(stream, this.ccv_primaries_present_flag);
-            size += IsoReaderWriter.WriteBit(stream, this.ccv_min_luminance_value_present_flag);
-            size += IsoReaderWriter.WriteBit(stream, this.ccv_max_luminance_value_present_flag);
-            size += IsoReaderWriter.WriteBit(stream, this.ccv_avg_luminance_value_present_flag);
-            size += IsoReaderWriter.WriteBits(stream, 2, this.ccv_reserved_zero_2bits);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.reserved1);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.reserved2);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.ccv_primaries_present_flag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.ccv_min_luminance_value_present_flag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.ccv_max_luminance_value_present_flag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.ccv_avg_luminance_value_present_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.ccv_reserved_zero_2bits);
 
             if (ccv_primaries_present_flag)
             {
 
                 for (int c = 0; c < 3; c++)
                 {
-                    size += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_x[c]);
-                    size += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_y[c]);
+                    boxSize += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_x[c]);
+                    boxSize += IsoReaderWriter.WriteInt32(stream, this.ccv_primaries_y[c]);
                 }
             }
 
             if (ccv_min_luminance_value_present_flag)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.ccv_min_luminance_value);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.ccv_min_luminance_value);
             }
 
             if (ccv_max_luminance_value_present_flag)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.ccv_max_luminance_value);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.ccv_max_luminance_value);
             }
 
             if (ccv_avg_luminance_value_present_flag)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.ccv_avg_luminance_value);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.ccv_avg_luminance_value);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -16536,19 +16549,19 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
 
             for (int c = 0; c < 3; c++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_x);
-                size += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_y);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_x);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.display_primaries_y);
             }
-            size += IsoReaderWriter.WriteUInt16(stream, this.white_point_x);
-            size += IsoReaderWriter.WriteUInt16(stream, this.white_point_y);
-            size += IsoReaderWriter.WriteUInt32(stream, this.max_display_mastering_luminance);
-            size += IsoReaderWriter.WriteUInt32(stream, this.min_display_mastering_luminance);
-            return size;
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.white_point_x);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.white_point_y);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.max_display_mastering_luminance);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.min_display_mastering_luminance);
+            return boxSize;
         }
     }
 
@@ -16571,11 +16584,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.max_content_light_level);
-            size += IsoReaderWriter.WriteUInt16(stream, this.max_pic_average_light_level);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_content_light_level);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_pic_average_light_level);
+            return boxSize;
         }
     }
 
@@ -16596,10 +16609,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.transition_direction);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.transition_direction);
+            return boxSize;
         }
     }
 
@@ -16622,11 +16635,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteBit(stream, this.transition_direction);
-            size += IsoReaderWriter.WriteBits(stream, 7, this.transition_shape);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.transition_direction);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.transition_shape);
+            return boxSize;
         }
     }
 
@@ -16647,10 +16660,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.transition_direction);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.transition_direction);
+            return boxSize;
         }
     }
 
@@ -16671,10 +16684,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.transition_direction);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.transition_direction);
+            return boxSize;
         }
     }
 
@@ -16695,10 +16708,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.transition_period);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.transition_period);
+            return boxSize;
         }
     }
 
@@ -16719,10 +16732,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.duration);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.duration);
+            return boxSize;
         }
     }
 
@@ -16743,10 +16756,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt8(stream, this.bits_per_pixel);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.bits_per_pixel);
+            return boxSize;
         }
     }
 
@@ -16767,10 +16780,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.sid_info);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.sid_info);
+            return boxSize;
         }
     }
 
@@ -16791,10 +16804,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteClass(stream, this.sor_info);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.sor_info);
+            return boxSize;
         }
     }
 
@@ -16823,16 +16836,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -16861,16 +16874,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -16899,16 +16912,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -16937,16 +16950,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -16975,16 +16988,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17013,16 +17026,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17051,16 +17064,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17089,16 +17102,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17127,16 +17140,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17165,16 +17178,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17203,16 +17216,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17241,16 +17254,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17279,16 +17292,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17317,16 +17330,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17355,16 +17368,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17393,16 +17406,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17431,16 +17444,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17469,16 +17482,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.from_item_ID);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.reference_count);
 
             for (int j = 0; j < reference_count; j++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17501,11 +17514,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt16(stream, this.time_offset);
-            size += IsoReaderWriter.WriteUInt16(stream, this.timescale_multiplier);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt16(stream, this.time_offset);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.timescale_multiplier);
+            return boxSize;
         }
     }
 
@@ -17534,16 +17547,16 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt32(stream, this.sample_id);
-            size += IsoReaderWriter.WriteUInt8(stream, this.num_direct_reference_samples);
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_id);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.num_direct_reference_samples);
 
             for (int i = 0; i < num_direct_reference_samples; i++)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.direct_reference_sample_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.direct_reference_sample_id);
             }
-            return size;
+            return boxSize;
         }
     }
 
@@ -17566,11 +17579,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt8(stream, this.exposure_step);
-            size += IsoReaderWriter.WriteInt8(stream, this.exposure_numerator);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.exposure_step);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.exposure_numerator);
+            return boxSize;
         }
     }
 
@@ -17593,11 +17606,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt8(stream, this.flash_exposure_numerator);
-            size += IsoReaderWriter.WriteInt8(stream, this.flash_exposure_denominator);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.flash_exposure_numerator);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.flash_exposure_denominator);
+            return boxSize;
         }
     }
 
@@ -17620,11 +17633,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteInt8(stream, this.f_stop_numerator);
-            size += IsoReaderWriter.WriteInt8(stream, this.f_stop_denominator);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.f_stop_numerator);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.f_stop_denominator);
+            return boxSize;
         }
     }
 
@@ -17647,11 +17660,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.focus_distance_numerator);
-            size += IsoReaderWriter.WriteUInt16(stream, this.focus_distance_denominator);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.focus_distance_numerator);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.focus_distance_denominator);
+            return boxSize;
         }
     }
 
@@ -17672,10 +17685,10 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.frame_number);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.frame_number);
+            return boxSize;
         }
     }
 
@@ -17698,11 +17711,11 @@ namespace BoxGenerator2
 
         public async override Task<ulong> WriteAsync(Stream stream)
         {
-            ulong size = 0;
-            size += await base.WriteAsync(stream);
-            size += IsoReaderWriter.WriteUInt16(stream, this.blue_amber);
-            size += IsoReaderWriter.WriteInt8(stream, this.green_magenta);
-            return size;
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.blue_amber);
+            boxSize += IsoReaderWriter.WriteInt8(stream, this.green_magenta);
+            return boxSize;
         }
     }
 

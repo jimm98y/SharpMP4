@@ -221,6 +221,7 @@ partial class Program
             Try(String("int i, j")), // WORKAROUND
             Try(String("int i,j")), // WORKAROUND
             Try(String("int i")), // WORKAROUND
+            Try(String("int size = 4")), // WORKAROUND
             Try(String("unsigned int(64)")),
             Try(String("unsigned int(48)")),
             Try(String("template int(32)[9]")),
@@ -638,8 +639,10 @@ namespace BoxGenerator2
 
     private static string BuildCode(PseudoClass? b)
     {
-        string cls = @$"public class {b.BoxName}";
-        if(b.Extended != null)
+        string cls = "";
+
+        cls += @$"public class {b.BoxName}";
+        if (b.Extended != null)
             cls += $" : {b.Extended.BoxName}";
 
         cls += "\r\n{\r\n";
@@ -659,6 +662,9 @@ namespace BoxGenerator2
         cls += $"\r\n\r\n\tpublic {b.BoxName}()\r\n\t{{ }}\r\n";
         cls += "\r\n\tpublic async " + (b.Extended != null ? "override " : "") + "Task ReadAsync(Stream stream)\r\n\t{" +
             (b.Extended != null ? "\r\n\t\tawait base.ReadAsync(stream);" : "");
+
+        cls = FixMissingCode(b, cls);
+
         foreach (var field in b.Fields)
         {
             cls += "\r\n" + BuildMethodCode(field, 2, true);
@@ -666,15 +672,39 @@ namespace BoxGenerator2
         cls += "\r\n\t}\r\n";
 
 
-        cls += "\r\n\tpublic async " + (b.Extended != null ? "override " : "") + "Task<ulong> WriteAsync(Stream stream)\r\n\t{\r\n\t\tulong size = 0;" +
-            (b.Extended != null ? "\r\n\t\tsize += await base.WriteAsync(stream);" : "");
+        cls += "\r\n\tpublic async " + (b.Extended != null ? "override " : "") + "Task<ulong> WriteAsync(Stream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
+            (b.Extended != null ? "\r\n\t\tboxSize += await base.WriteAsync(stream);" : "");
+
+        cls = FixMissingCode(b, cls);
+
         foreach (var field in b.Fields)
         {
             cls += "\r\n" + BuildMethodCode(field, 2, false);
         }
-        cls += "\r\n\t\treturn size;\r\n\t}\r\n";
+        cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
         cls += "}\r\n";
+
+        return cls;
+    }
+
+    private static string FixMissingCode(PseudoClass? box, string cls)
+    {
+        if (box.BoxName == "DegradationPriorityBox" || box.BoxName == "SampleDependencyTypeBox" || box.BoxName == "SampleDependencyBox")
+        {
+            cls += "\t\tint sample_count = 0; // TODO: taken from the stsz sample_count\r\n";
+        }
+        else if (box.BoxName == "DownMixInstructions")
+        {
+            cls += "\t\tint baseChannelCount = 0; // TODO: get somewhere";
+        }
+        else if(box.BoxName == "CompactSampleToGroupBox")
+        {
+            cls += "\t\tbool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);\r\n";
+            cls += "\t\tint count_size_code = (flags >> 2) & 0x3;\r\n";
+            cls += "\t\tint pattern_size_code = (flags >> 4) & 0x3;\r\n";
+            cls += "\t\tint index_size_code = flags & 0x3;\r\n";
+        }
 
         return cls;
     }
@@ -880,7 +910,7 @@ namespace BoxGenerator2
         if (isRead)
             return $"{spacing}this.{name}{typedef} = {m};";
         else
-            return $"{spacing}size += {m} this.{name}{typedef});";
+            return $"{spacing}boxSize += {m} this.{name}{typedef});";
     }
 
     private static string BuildComment(PseudoComment comment, int level, bool isRead)
@@ -939,6 +969,12 @@ namespace BoxGenerator2
                     .Replace("==0", "== false").Replace("==1", "== true")
                     .Replace("== 0", "== false").Replace("== 1", "== true");
             }
+
+            // other fixes - taken from ISO_IEC_14496-12_2015 comments
+            if (condition.Contains("channelStructured"))
+                condition = condition.Replace("channelStructured", "1");
+            if (condition.Contains("objectStructured"))
+                condition = condition.Replace("objectStructured", "2");
         }
 
         condition = FixFourCC(condition);
@@ -1456,6 +1492,7 @@ namespace BoxGenerator2
             "int i, j",
             "int i,j",
             "int i",
+            "int size = 4",
             "size += 5",
             "j=1",
             "j++",
