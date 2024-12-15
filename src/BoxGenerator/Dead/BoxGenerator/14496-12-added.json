@@ -1,0 +1,13 @@
+﻿{
+  "name": "Boxes",
+  "description": "Boxes (also called atoms)",
+  "entries": [
+    {
+      "fourcc": "uuid",
+      "containers": [ "*" ],
+      "description": "user-extension box",
+      "type": "Box",
+      "syntax": "aligned(8) class FullBox(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)\r\nextends Box(boxtype) { \r\nunsigned int(8) version = v;\r\nbit(24) flags = f;\r\n }"
+    }
+  ]
+}

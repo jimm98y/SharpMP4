@@ -478,7 +478,8 @@ partial class Program
             Try(String("('cstg')")),
             Try(String("('alte')")),
             Try(String("('vvcb', version, flags)")),
-            Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)"))
+            Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)")),
+            Try(String("(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)"))
             ).Labelled("class type");
 
     public static Parser<char, PseudoExtendedClass> ExtendedClass => Map((extendedBoxName, oldBoxType, boxType, parameters) => new PseudoExtendedClass(extendedBoxName, oldBoxType, boxType, parameters),
@@ -511,6 +512,7 @@ partial class Program
     static void Main(string[] args)
     {
         string[] files = {
+            "14496-12-added.json",
             "14496-12-boxes.json",
             "14496-15-boxes.json",
             "14496-30-boxes.json",
@@ -732,9 +734,9 @@ namespace BoxGenerator2
         {
             cls += "\r\n";
             cls += "\t\tbool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);\r\n";
-            cls += "\t\tint count_size_code = (flags >> 2) & 0x3;\r\n";
-            cls += "\t\tint pattern_size_code = (flags >> 4) & 0x3;\r\n";
-            cls += "\t\tint index_size_code = flags & 0x3;\r\n";
+            cls += "\t\tuint count_size_code = (flags >> 2) & 0x3;\r\n";
+            cls += "\t\tuint pattern_size_code = (flags >> 4) & 0x3;\r\n";
+            cls += "\t\tuint index_size_code = flags & 0x3;\r\n";
         }
 
         return cls;
@@ -829,6 +831,7 @@ namespace BoxGenerator2
                 {
                     value = "";
                 }
+
                 if (value == "= {if track_is_audio 0x0100 else 0}") // TODO
                 {
                     value = "= 0";
@@ -839,7 +842,8 @@ namespace BoxGenerator2
                     value = "= 0";
                     comment = "// = {if track_is_audio 0x0100 else 0};" + comment;
                 }
-                else if(value == "= boxtype" || value == "= extended_type" || value == "= codingname")
+                else if(value == "= boxtype" || value == "= extended_type" || value == "= codingname" ||
+                    value == "= f" || value == "= v")
                 {
                     comment = "// " + value;
                     value = "";

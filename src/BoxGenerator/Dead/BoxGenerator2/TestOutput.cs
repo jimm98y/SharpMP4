@@ -4,6 +4,46 @@ using System.Threading.Tasks;
 
 namespace BoxGenerator2
 {
+    public class FullBox : Box
+    {
+        public override string FourCC { get { return "uuid"; } }
+        protected byte version; // = v
+        public byte Version { get { return version; } set { version = value; } }
+        protected uint flags; // = f
+        public uint Flags { get { return flags; } set { flags = value; } }
+
+        public FullBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.version);
+            boxSize += IsoReaderWriter.ReadBits(stream, 24, out this.flags);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.version);
+            boxSize += IsoReaderWriter.WriteBits(stream, 24, this.flags);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // version
+            boxSize += 24; // flags
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get { return "rssr"; } }
@@ -4112,9 +4152,9 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
-            int count_size_code = (flags >> 2) & 0x3;
-            int pattern_size_code = (flags >> 4) & 0x3;
-            int index_size_code = flags & 0x3;
+            uint count_size_code = (flags >> 2) & 0x3;
+            uint pattern_size_code = (flags >> 4) & 0x3;
+            uint index_size_code = flags & 0x3;
 
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.grouping_type);
 
@@ -4147,9 +4187,9 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
-            int count_size_code = (flags >> 2) & 0x3;
-            int pattern_size_code = (flags >> 4) & 0x3;
-            int index_size_code = flags & 0x3;
+            uint count_size_code = (flags >> 2) & 0x3;
+            uint pattern_size_code = (flags >> 4) & 0x3;
+            uint index_size_code = flags & 0x3;
 
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
 
@@ -4182,9 +4222,9 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
-            int count_size_code = (flags >> 2) & 0x3;
-            int pattern_size_code = (flags >> 4) & 0x3;
-            int index_size_code = flags & 0x3;
+            uint count_size_code = (flags >> 2) & 0x3;
+            uint pattern_size_code = (flags >> 4) & 0x3;
+            uint index_size_code = flags & 0x3;
 
             boxSize += 32; // grouping_type
 

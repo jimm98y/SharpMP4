@@ -31,12 +31,6 @@ namespace BoxGenerator2
         }
     }
 
-    public abstract class FullBox : Box
-    {
-        public int version { get; set; }
-        public int flags { get; set; }
-    }
-
     public abstract class VisualSampleGroupEntry : Box
     {
 
