@@ -297,4 +297,24 @@ internal class IsoReaderWriter
     {
         throw new NotImplementedException();
     }
+
+    internal static ulong CalculateSize(Box[] boxes)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong CalculateSize(Box box)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong CalculateSize(string[] values)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong CalculateClassSize(object value)
+    {
+        throw new NotImplementedException();
+    }
 }

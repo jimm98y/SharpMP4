@@ -21,6 +21,11 @@ namespace BoxGenerator2
         {
             throw new NotImplementedException();
         }
+
+        public virtual ulong CalculateSize()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public abstract class FullBox : Box

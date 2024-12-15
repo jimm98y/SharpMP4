@@ -667,7 +667,7 @@ namespace BoxGenerator2
 
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildMethodCode(field, 2, true);
+            cls += "\r\n" + BuildMethodCode(field, 2, MethodType.Read);
         }
         cls += "\r\n\t}\r\n";
 
@@ -679,10 +679,23 @@ namespace BoxGenerator2
 
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildMethodCode(field, 2, false);
+            cls += "\r\n" + BuildMethodCode(field, 2, MethodType.Write);
         }
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
+        cls += "\r\n\tpublic " + (b.Extended != null ? "override " : "") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
+            (b.Extended != null ? "\r\n\t\tboxSize += base.CalculateSize();" : "");
+
+        cls = FixMissingCode(b, cls);
+
+        foreach (var field in b.Fields)
+        {
+            cls += "\r\n" + BuildMethodCode(field, 2, MethodType.Size);
+        }
+
+        cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
+
+        // end of class
         cls += "}\r\n";
 
         return cls;
@@ -853,25 +866,25 @@ namespace BoxGenerator2
         return name;
     }
 
-    private static string BuildMethodCode(PseudoCode field, int level, bool isRead)
+    private static string BuildMethodCode(PseudoCode field, int level, MethodType methodType)
     {
         string spacing = GetSpacing(level);
         var block = field as PseudoBlock;
         if(block != null)
         {
-            return BuildBlock(block, level, isRead);
+            return BuildBlock(block, level, methodType);
         }
 
         var method = field as PseudoMethod;
         if (method != null)
         {
-            return BuildMethod(method, level, isRead);
+            return BuildMethod(method, level, methodType);
         }
 
         var comment = field as PseudoComment;
         if (comment != null)
         {
-            return BuildComment(comment, level, isRead);
+            return BuildComment(comment, level, methodType);
         }
 
         string tt = (field as PseudoField)?.Type;
@@ -897,7 +910,7 @@ namespace BoxGenerator2
         }
 
         string name = GetFieldName(field);
-        string m = isRead ? GetReadMethod(tt) : GetWriteMethod(tt);
+        string m = methodType == MethodType.Read ? GetReadMethod(tt) : (methodType == MethodType.Write ? GetWriteMethod(tt) : GetCalculateSizeMethod(tt));
         string typedef = "";
         string value = (field as PseudoField)?.Value;
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
@@ -913,20 +926,22 @@ namespace BoxGenerator2
             fieldComment = "//" + (field as PseudoField).Comment;
         }
 
-        if (isRead)
+        if (methodType == MethodType.Read)
             return $"{spacing}this.{name}{typedef} = {m}; {fieldComment}";
-        else
+        else if(methodType == MethodType.Write)
             return $"{spacing}boxSize += {m} this.{name}{typedef}); {fieldComment}";
+        else
+            return $"{spacing}boxSize += {m.Replace("value", name)}; // {name}";
     }
 
-    private static string BuildComment(PseudoComment comment, int level, bool isRead)
+    private static string BuildComment(PseudoComment comment, int level, MethodType methodType)
     {
         string spacing = GetSpacing(level);
         string text = comment.Comment;
         return $"{spacing}/* {text} */";
     }
 
-    private static string BuildMethod(PseudoMethod method, int level, bool isRead)
+    private static string BuildMethod(PseudoMethod method, int level, MethodType methodType)
     {
         string comment = "";
         if (!string.IsNullOrEmpty(method.Comment))
@@ -937,7 +952,14 @@ namespace BoxGenerator2
         return $"// TODO: This should likely be a FullBox: {method.Name}{method.Value};{comment}\r\n";
     }
 
-    private static string BuildBlock(PseudoBlock block, int level, bool isRead)
+    public enum MethodType
+    {
+        Read,
+        Write,
+        Size
+    }
+
+    private static string BuildBlock(PseudoBlock block, int level, MethodType methodType)
     {
         string spacing = GetSpacing(level);
         string ret;
@@ -989,7 +1011,7 @@ namespace BoxGenerator2
 
         foreach (var field in block.Content)
         {
-            ret += "\r\n" + BuildMethodCode(field, level + 1, isRead);
+            ret += "\r\n" + BuildMethodCode(field, level + 1, methodType);
         }
 
         ret += $"\r\n{spacing}}}";
@@ -1254,6 +1276,239 @@ namespace BoxGenerator2
             { "char[]", "IsoReaderWriter.ReadInt8Array(stream)" },
             { "loudness[]", "IsoReaderWriter.ReadInt32Array(stream)" },
             { "string[method_count]", "IsoReaderWriter.ReadStringArray(stream, method_count)" },
+        };
+        return map[type];
+    }
+
+    private static string GetCalculateSizeMethod(string type)
+    {
+        Dictionary<string, string> map = new Dictionary<string, string>
+        {
+            { "unsigned int(64)[ entry_count ]", "(ulong)entry_count * 64" },
+            { "unsigned int(64)", "64" },
+            { "unsigned int(48)", "48" },
+            { "unsigned int(32)[ entry_count ]", "(ulong)entry_count * 32" },
+            { "template int(32)[9]", "9 * 32" },
+            { "unsigned int(32)[3]", "3 * 32" },
+            { "unsigned int(32)", "32" },
+            { "unsigned_int(32)", "32" },
+            { "unsigned int(24)", "24" },
+            { "unsigned int(29)", "29" },
+            { "unsigned int(26)", "26" },
+            { "unsigned int(16)[i]", "16" },
+            { "unsigned int(16)[j]", "16" },
+            { "unsigned int(16)[i][j]", "16" },
+            { "unsigned int(16)", "16" },
+            { "unsigned_int(16)", "16" },
+            { "unsigned int(15)", "15" },
+            { "unsigned int(12)", "12" },
+            { "unsigned int(10)[i][j]", "10" },
+            { "unsigned int(10)[i]", "10" },
+            { "unsigned int(10)", "10" },
+            { "unsigned int(8)[ sample_count ]", "(ulong)sample_count * 8" },
+            { "unsigned int(8)[length]", "(ulong)length * 8" },
+            { "unsigned int(8)[32]", "32 * 8" },
+            { "unsigned int(8)[16]", "16 * 8" },
+            { "unsigned int(9)", "9" },
+            { "unsigned int(8)", "8" },
+            { "unsigned int(7)", "7" },
+            { "unsigned int(6)", "6" },
+            { "unsigned int(5)[3]", "3 * 5" },
+            { "unsigned int(5)", "5" },
+            { "unsigned int(4)", "4" },
+            { "unsigned int(3)", "3" },
+            { "unsigned int(2)[i][j]", "2" },
+            { "unsigned int(2)", "2" },
+            { "unsigned int(1)[i]", "1" },
+            { "unsigned int(1)", "1" },
+            { "unsigned int (32)", "32" },
+            { "unsigned int(f(pattern_size_code))[i]", "(ulong)pattern_size_code" },
+            { "unsigned int(f(index_size_code))[i]", "(ulong)index_size_code" },
+            { "unsigned int(f(index_size_code))[j][k]", "(ulong)index_size_code" },
+            { "unsigned int(f(count_size_code))[i]", "(ulong)count_size_code" },
+            { "unsigned int(base_offset_size*8)", "(ulong)base_offset_size * 8" },
+            { "unsigned int(offset_size*8)", "(ulong)offset_size * 8" },
+            { "unsigned int(length_size*8)", "(ulong)length_size * 8" },
+            { "unsigned int(index_size*8)", "(ulong)index_size * 8" },
+            { "unsigned int(field_size)", "(ulong)field_size" },
+            { "unsigned int((length_size_of_traf_num+1) * 8)", "(ulong)(length_size_of_traf_num+1) * 8" },
+            { "unsigned int((length_size_of_trun_num+1) * 8)", "(ulong)(length_size_of_trun_num+1) * 8" },
+            { "unsigned int((length_size_of_sample_num+1) * 8)", "(ulong)(length_size_of_sample_num+1) * 8" },
+            { "unsigned int(8*size-64)", "(ulong)(size - 64) * 8" },
+            { "unsigned int(subgroupIdLen)[i]", "32" },
+            { "const unsigned int(32)[2]", "2 * 32" },
+            { "const unsigned int(32)[3]", "3 * 32" },
+            { "const unsigned int(32)", "32" },
+            { "const unsigned int(16)[3]", "3 * 16" },
+            { "const unsigned int(16)", "16" },
+            { "const unsigned int(26)", "26" },
+            { "template int(32)", "32" },
+            { "template int(16)", "16" },
+            { "template unsigned int(30)", "30" },
+            { "template unsigned int(32)", "32" },
+            { "template unsigned int(16)[3]", "3 * 16" },
+            { "template unsigned int(16)", "16" },
+            { "template unsigned int(8)[]", "(ulong)value.Length * 8" },
+            { "template unsigned int(8)", "8" },
+            { "int(64)", "64" },
+            { "int(32)", "32" },
+            { "int(16)", "16" },
+            { "int(8)", "8" },
+            { "int(4)", "4" },
+            { "int", "32" },
+            { "const bit(16)", "16" },
+            { "const bit(1)", "1" },
+            { "bit(1)", "1" },
+            { "bit(2)", "2" },
+            { "bit(3)", "3" },
+            { "bit(4)", "4" },
+            { "bit(5)", "5" },
+            { "bit(6)", "6" },
+            { "bit(7)", "7" },
+            { "bit(8)[]", "8 * (ulong)value.Length" },
+            { "bit(8)", "8" },
+            { "bit(16)[i]", "16" },
+            { "bit(16)", "16" },
+            { "bit(24)", "24" },
+            { "bit(31)", "31" },
+            { "bit(8 ceil(size / 8) \u2013 size)", "(ulong)(Math.Ceiling(size / 8d) - size) * 8" },
+            { "bit(8* ps_nalu_length)", "(ulong)ps_nalu_length * 8" },
+            { "utf8string", "(ulong)value.Length * 8" },
+            { "utfstring", "(ulong)value.Length * 8" },
+            { "utf8list", "(ulong)value.Length * 8" },
+            { "boxstring", "(ulong)value.Length * 8" },
+            { "string", "(ulong)value.Length * 8" },
+            { "bit(32)[6]", "6 * 32" },
+            { "uint(32)", "32" },
+            { "uint(16)", "16" },
+            { "uint(64)", "64" },
+            { "uint(8)[32]", "32 * 8" },
+            { "uint(8)", "8" },
+            { "signed int(32)", "32" },
+            { "signed int (16)", "16" },
+            { "signed int(16)[grid_pos_view_id[i]]", "16" },
+            { "signed int(16)", "16" },
+            { "signed int (8)", "8" },
+            { "signed int(64)", "64" },
+            { "signed   int(32)", "32" },
+            { "signed   int(8)", "8" },
+            { "Box()[]", "IsoReaderWriter.CalculateSize(value)" },
+            { "Box[]", "IsoReaderWriter.CalculateSize(value)" },
+            { "Box", "IsoReaderWriter.CalculateSize(value)" },
+            { "SchemeTypeBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "SchemeInformationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ItemPropertyContainerBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ItemPropertyAssociationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ItemPropertyAssociationBox[]", "IsoReaderWriter.CalculateSize(value)" },
+            { "char", "8" },
+            { "loudness", "32" },
+            { "ICC_profile", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "OriginalFormatBox(fmt)", "IsoReaderWriter.CalculateSize(value)" },
+            { "DataEntryBaseBox(entry_type, entry_flags)", "IsoReaderWriter.CalculateSize(value)" },
+            { "ItemInfoEntry[ entry_count ]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "TypeCombinationBox[]", "IsoReaderWriter.CalculateSize(value)" },
+            { "FilePartitionBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "FECReservoirBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "FileReservoirBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "PartitionEntry[ entry_count ]", "IsoReaderWriter.CalculateSize(value)" },
+            { "FDSessionGroupBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "GroupIdToNameBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "base64string", "(ulong)value.Length * 8" },
+            { "ProtectionSchemeInfoBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "SingleItemTypeReferenceBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "SingleItemTypeReferenceBox[]", "IsoReaderWriter.CalculateSize(value)" },
+            { "SingleItemTypeReferenceBoxLarge", "IsoReaderWriter.CalculateSize(value)" },
+            { "SingleItemTypeReferenceBoxLarge[]", "IsoReaderWriter.CalculateSize(value)" },
+            { "HandlerBox(handler_type)", "IsoReaderWriter.CalculateSize(value)" },
+            { "PrimaryItemBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "DataInformationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ItemLocationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ItemProtectionBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ItemInfoBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "IPMPControlBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ItemReferenceBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ItemDataBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "TrackReferenceTypeBox []", "IsoReaderWriter.CalculateSize(value)" },
+            { "MetadataKeyBox[]", "IsoReaderWriter.CalculateSize(value)" },
+            { "TierInfoBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "MultiviewRelationAttributeBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "TierBitRateBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "BufferingBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "MultiviewSceneInfoBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "MVDDecoderConfigurationRecord", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "MVDDepthResolutionBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "MVCDecoderConfigurationRecord()", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "AVCDecoderConfigurationRecord()", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "HEVCDecoderConfigurationRecord()", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "LHEVCDecoderConfigurationRecord()", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "SVCDecoderConfigurationRecord()", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "HEVCTileTierLevelConfigurationRecord()", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "EVCDecoderConfigurationRecord()", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "VvcDecoderConfigurationRecord()", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "EVCSliceComponentTrackConfigurationRecord()", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "SampleGroupDescriptionEntry (grouping_type)", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "Descriptor[0 .. 255]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "Descriptor", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "WebVTTConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "WebVTTSourceLabelBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "OperatingPointsRecord", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "VvcSubpicIDEntry", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "VvcSubpicOrderEntry", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "URIInitBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "URIBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "URIbox", "IsoReaderWriter.CalculateSize(value)" },
+            { "CleanApertureBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "PixelAspectRatioBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "DownMixInstructions() []", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "DRCCoefficientsBasic() []", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "DRCInstructionsBasic() []", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "DRCCoefficientsUniDRC() []", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "DRCInstructionsUniDRC() []", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "HEVCConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "LHEVCConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "AVCConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "SVCConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ScalabilityInformationSEIBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "SVCPriorityAssignmentBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ViewScalabilityInformationSEIBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ViewIdentifierBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "MVCConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "MVCViewPriorityAssignmentBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "IntrinsicCameraParametersBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "ExtrinsicCameraParametersBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "MVCDConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "MVDScalabilityInformationSEIBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "A3DConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "VvcOperatingPointsRecord", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "VVCSubpicIDRewritingInfomationStruct()", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "MPEG4ExtensionDescriptorsBox ()", "IsoReaderWriter.CalculateSize(value)" },
+            { "MPEG4ExtensionDescriptorsBox()", "IsoReaderWriter.CalculateSize(value)" },
+            { "MPEG4ExtensionDescriptorsBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "bit(8*dci_nal_unit_length)", "(ulong)dci_nal_unit_length * 8" },
+            { "DependencyInfo[numReferences]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "VvcPTLRecord(0)[i]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "EVCSliceComponentTrackConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "SVCMetadataSampleConfigBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "SVCPriorityLayerInfoBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "EVCConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "VvcNALUConfigBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "VvcConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "HEVCTileConfigurationBox", "IsoReaderWriter.CalculateSize(value)" },
+            { "MetadataKeyTableBox()", "IsoReaderWriter.CalculateSize(value)" },
+            { "BitRateBox ()", "IsoReaderWriter.CalculateSize(value)" },
+            { "char[count]", "(ulong)count * 8" },
+            { "signed int(32)[ c ]", "32" },
+            { "unsigned int(8)[]", "(ulong)value.Length * 8" },
+            { "unsigned int(8)[i]", "8" },
+            { "unsigned int(6)[i]", "6" },
+            { "unsigned int(6)[i][j]", "6" },
+            { "unsigned int(1)[i][j]", "1" },
+            { "unsigned int(9)[i]", "9" },
+            { "unsigned int(32)[]", "32" },
+            { "unsigned int(32)[i]", "32" },
+            { "char[]", "(ulong)value.Length * 8" },
+            { "loudness[]", "(ulong)value.Length * 32" },
+            { "string[method_count]", "IsoReaderWriter.CalculateSize(value)" },
         };
         return map[type];
     }

@@ -27,6 +27,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.SSRC);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // SSRC
+            return boxSize;
+        }
     }
 
 
@@ -54,6 +62,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBits(stream, 2, this.timestamp_sync);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 6; // reserved
+            boxSize += 2; // timestamp_sync
+            return boxSize;
+        }
     }
 
 
@@ -76,6 +93,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.timescale);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // timescale
             return boxSize;
         }
     }
@@ -102,6 +127,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // offset
+            return boxSize;
+        }
     }
 
 
@@ -124,6 +157,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // offset
             return boxSize;
         }
     }
@@ -150,6 +191,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.timescale);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // timescale
+            return boxSize;
+        }
     }
 
 
@@ -172,6 +221,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // offset
             return boxSize;
         }
     }
@@ -198,6 +255,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // offset
+            return boxSize;
+        }
     }
 
 
@@ -220,6 +285,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.timescale);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // timescale
             return boxSize;
         }
     }
@@ -246,6 +319,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // offset
+            return boxSize;
+        }
     }
 
 
@@ -268,6 +349,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt32(stream, this.offset);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // offset
             return boxSize;
         }
     }
@@ -294,6 +383,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
+            return boxSize;
+        }
     }
 
 
@@ -316,6 +413,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.packetssent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // packetssent
             return boxSize;
         }
     }
@@ -342,6 +447,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
+            return boxSize;
+        }
     }
 
 
@@ -364,6 +477,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
             return boxSize;
         }
     }
@@ -390,6 +511,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.packetssent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // packetssent
+            return boxSize;
+        }
     }
 
 
@@ -412,6 +541,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
             return boxSize;
         }
     }
@@ -438,6 +575,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
+            return boxSize;
+        }
     }
 
 
@@ -460,6 +605,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.packetssent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // packetssent
             return boxSize;
         }
     }
@@ -486,6 +639,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
+            return boxSize;
+        }
     }
 
 
@@ -508,6 +669,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // bytessent
             return boxSize;
         }
     }
@@ -534,6 +703,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.packetssent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // packetssent
+            return boxSize;
+        }
     }
 
 
@@ -556,6 +733,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // bytessent
             return boxSize;
         }
     }
@@ -582,6 +767,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // bytessent
+            return boxSize;
+        }
     }
 
 
@@ -604,6 +797,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.packetssent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // packetssent
             return boxSize;
         }
     }
@@ -630,6 +831,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // bytessent
+            return boxSize;
+        }
     }
 
 
@@ -652,6 +861,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // bytessent
             return boxSize;
         }
     }
@@ -678,6 +895,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.packetssent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // packetssent
+            return boxSize;
+        }
     }
 
 
@@ -700,6 +925,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytessent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // bytessent
             return boxSize;
         }
     }
@@ -731,6 +964,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytes);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  maximum data rate */
+            boxSize += 32; // period
+            boxSize += 32; // bytes
+            return boxSize;
+        }
     }
 
 
@@ -753,6 +996,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
             return boxSize;
         }
     }
@@ -779,6 +1030,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
+            return boxSize;
+        }
     }
 
 
@@ -801,6 +1060,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
             return boxSize;
         }
     }
@@ -827,6 +1094,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
+            return boxSize;
+        }
     }
 
 
@@ -849,6 +1124,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
             return boxSize;
         }
     }
@@ -875,6 +1158,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
+            return boxSize;
+        }
     }
 
 
@@ -897,6 +1188,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
             return boxSize;
         }
     }
@@ -923,6 +1222,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
+            return boxSize;
+        }
     }
 
 
@@ -945,6 +1252,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.bytessent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // bytessent
             return boxSize;
         }
     }
@@ -971,6 +1286,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt32(stream, this.time);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // time
+            return boxSize;
+        }
     }
 
 
@@ -993,6 +1316,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt32(stream, this.time);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // time
             return boxSize;
         }
     }
@@ -1019,6 +1350,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt32(stream, this.time);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // time
+            return boxSize;
+        }
     }
 
 
@@ -1041,6 +1380,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt32(stream, this.time);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // time
             return boxSize;
         }
     }
@@ -1067,6 +1414,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytes);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // bytes
+            return boxSize;
+        }
     }
 
 
@@ -1089,6 +1444,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.time);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // time
             return boxSize;
         }
     }
@@ -1115,6 +1478,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.bytes);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // bytes
+            return boxSize;
+        }
     }
 
 
@@ -1137,6 +1508,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.time);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // time
             return boxSize;
         }
     }
@@ -1167,6 +1546,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.payloadID); // payload ID used in RTP packets
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.count);
             boxSize += IsoReaderWriter.WriteInt8Array(stream, count, this.rtpmap_string);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // payloadID
+            boxSize += 8; // count
+            boxSize += (ulong)count * 8; // rtpmap_string
             return boxSize;
         }
     }
@@ -1208,6 +1597,19 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBoxes(stream, this.any_box); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 30; // reserved
+            boxSize += 2; // single_view_allowed
+            boxSize += 32; // stereo_scheme
+            boxSize += 32; // length
+            boxSize += (ulong)length * 8; // stereo_indication_type
+            boxSize += IsoReaderWriter.CalculateSize(any_box); // any_box
+            return boxSize;
+        }
     }
 
 
@@ -1230,6 +1632,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteString(stream, this.extended_language);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)extended_language.Length * 8; // extended_language
             return boxSize;
         }
     }
@@ -1262,6 +1672,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.avgBitrate);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // bufferSizeDB
+            boxSize += 32; // maxBitrate
+            boxSize += 32; // avgBitrate
+            return boxSize;
+        }
     }
 
 
@@ -1287,6 +1707,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.hSpacing);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.vSpacing);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // hSpacing
+            boxSize += 32; // vSpacing
             return boxSize;
         }
     }
@@ -1332,6 +1761,21 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.horizOffD);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertOffN);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertOffD);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // cleanApertureWidthN
+            boxSize += 32; // cleanApertureWidthD
+            boxSize += 32; // cleanApertureHeightN
+            boxSize += 32; // cleanApertureHeightD
+            boxSize += 32; // horizOffN
+            boxSize += 32; // horizOffD
+            boxSize += 32; // vertOffN
+            boxSize += 32; // vertOffD
             return boxSize;
         }
     }
@@ -1431,6 +1875,45 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved1
+            boxSize += 1; // reserved2
+            boxSize += 1; // ccv_primaries_present_flag
+            boxSize += 1; // ccv_min_luminance_value_present_flag
+            boxSize += 1; // ccv_max_luminance_value_present_flag
+            boxSize += 1; // ccv_avg_luminance_value_present_flag
+            boxSize += 2; // ccv_reserved_zero_2bits
+
+            if (ccv_primaries_present_flag)
+            {
+
+                for (int c = 0; c < 3; c++)
+                {
+                    boxSize += 32; // ccv_primaries_x
+                    boxSize += 32; // ccv_primaries_y
+                }
+            }
+
+            if (ccv_min_luminance_value_present_flag)
+            {
+                boxSize += 32; // ccv_min_luminance_value
+            }
+
+            if (ccv_max_luminance_value_present_flag)
+            {
+                boxSize += 32; // ccv_max_luminance_value
+            }
+
+            if (ccv_avg_luminance_value_present_flag)
+            {
+                boxSize += 32; // ccv_avg_luminance_value
+            }
+            return boxSize;
+        }
     }
 
 
@@ -1500,6 +1983,33 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // colour_type
+
+            if (colour_type == IsoReaderWriter.FromFourCC("nclx"))
+            {
+                boxSize += 16; // colour_primaries
+                boxSize += 16; // transfer_characteristics
+                boxSize += 16; // matrix_coefficients
+                boxSize += 1; // full_range_flag
+                boxSize += 7; // reserved
+            }
+
+            else if (colour_type == IsoReaderWriter.FromFourCC("rICC"))
+            {
+                boxSize += IsoReaderWriter.CalculateClassSize(ICC_profile); // ICC_profile
+            }
+
+            else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
+            {
+                boxSize += IsoReaderWriter.CalculateClassSize(ICC_profile0); // ICC_profile0
+            }
+            return boxSize;
+        }
     }
 
 
@@ -1525,6 +2035,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_content_light_level);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_pic_average_light_level);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // max_content_light_level
+            boxSize += 16; // max_pic_average_light_level
             return boxSize;
         }
     }
@@ -1574,6 +2093,23 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.min_display_mastering_luminance);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            for (int c = 0; c < 3; c++)
+            {
+                boxSize += 16; // display_primaries_x
+                boxSize += 16; // display_primaries_y
+            }
+            boxSize += 16; // white_point_x
+            boxSize += 16; // white_point_y
+            boxSize += 32; // max_display_mastering_luminance
+            boxSize += 32; // min_display_mastering_luminance
+            return boxSize;
+        }
     }
 
 
@@ -1599,6 +2135,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.scheme_type_box);
             boxSize += IsoReaderWriter.WriteBox(stream, this.info); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(scheme_type_box); // scheme_type_box
+            boxSize += IsoReaderWriter.CalculateSize(info); // info
             return boxSize;
         }
     }
@@ -1807,6 +2352,96 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 0)
+            {
+                boxSize += 8; // stream_structure
+
+                if ((stream_structure & 1) == 1)
+                {
+                    boxSize += 8; // definedLayout
+
+                    if (definedLayout == 0)
+                    {
+
+                        for (int i = 1; i <= layout_channel_count; i++)
+                        {
+                            /*   layout_channel_count comes from the sample entry */
+                            boxSize += 8; // speaker_position
+
+                            if (speaker_position == 126)
+                            {
+                                /*  explicit position */
+                                boxSize += 16; // azimuth
+                                boxSize += 8; // elevation
+                            }
+                        }
+                    }
+
+                    else
+                    {
+                        boxSize += 64; // omittedChannelsMap
+                    }
+                }
+
+                if ((stream_structure & 2) == 2)
+                {
+                    boxSize += 8; // object_count
+                }
+            }
+
+            else
+            {
+                boxSize += 4; // stream_structure0
+                boxSize += 4; // format_ordering
+                boxSize += 8; // baseChannelCount
+
+                if ((stream_structure & 1) == 1)
+                {
+                    boxSize += 8; // definedLayout0
+
+                    if (definedLayout == 0)
+                    {
+                        boxSize += 8; // layout_channel_count
+
+                        for (int i = 1; i <= layout_channel_count; i++)
+                        {
+                            boxSize += 8; // speaker_position0
+
+                            if (speaker_position == 126)
+                            {
+                                /*  explicit position */
+                                boxSize += 16; // azimuth0
+                                boxSize += 8; // elevation0
+                            }
+                        }
+                    }
+
+                    else
+                    {
+                        boxSize += 4; // reserved
+                        boxSize += 3; // channel_order_definition
+                        boxSize += 1; // omitted_channels_present
+
+                        if (omitted_channels_present == true)
+                        {
+                            boxSize += 64; // omittedChannelsMap0
+                        }
+                    }
+                }
+
+                if ((stream_structure & 2) == 2)
+                {
+                    /*  object_count is derived from baseChannelCount */
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -1952,6 +2587,69 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize(); int baseChannelCount = 0; // TODO: get somewhere
+
+            if (version >= 1)
+            {
+                boxSize += 1; // reserved
+                boxSize += 7; // downmix_instructions_count
+            }
+
+            else
+            {
+                boxSize += 32; // downmix_instructions_count0
+            }
+
+            for (int a = 1; a <= downmix_instructions_count; a++)
+            {
+                boxSize += 8; // targetLayout
+                boxSize += 1; // reserved0
+                boxSize += 7; // targetChannelCount
+                boxSize += 1; // in_stream
+                boxSize += 7; // downmix_ID
+
+                if (in_stream == false)
+                {
+                    /*  downmix coefficients are out of stream and supplied here */
+
+
+                    if (version >= 1)
+                    {
+                        boxSize += 4; // bs_downmix_offset
+                        int size = 4;
+
+                        for (int i = 1; i <= targetChannelCount; i++)
+                        {
+
+                            for (int j = 1; j <= baseChannelCount; j++)
+                            {
+                                boxSize += 5; // bs_downmix_coefficient_v1
+                                size += 5;
+                            }
+                        }
+                        boxSize += (ulong)(Math.Ceiling(size / 8d) - size) * 8; // reserved00
+                    }
+
+                    else
+                    {
+
+                        for (int i = 1; i <= targetChannelCount; i++)
+                        {
+
+                            for (int j = 1; j <= baseChannelCount; j++)
+                            {
+                                boxSize += 4; // bs_downmix_coefficient
+                            }
+                        }
+                    }
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -1974,6 +2672,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.sampling_rate);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // sampling_rate
             return boxSize;
         }
     }
@@ -2000,6 +2706,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteString(stream, this.text_config);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)text_config.Length * 8; // text_config
+            return boxSize;
+        }
     }
 
 
@@ -2022,6 +2736,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.uri_initialization_data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)uri_initialization_data.Length * 8; // uri_initialization_data
             return boxSize;
         }
     }
@@ -2054,6 +2776,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteString(stream, this.notice);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // pad
+            boxSize += 3 * 5; // language
+            boxSize += (ulong)notice.Length * 8; // notice
+            return boxSize;
+        }
     }
 
 
@@ -2079,6 +2811,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteString(stream, this.schemeURI);
             boxSize += IsoReaderWriter.WriteString(stream, this.value);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)schemeURI.Length * 8; // schemeURI
+            boxSize += (ulong)value.Length * 8; // value
             return boxSize;
         }
     }
@@ -2108,6 +2849,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.attribute_list); // to end of the box
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // switch_group
+            boxSize += 32; // attribute_list
+            return boxSize;
+        }
     }
 
 
@@ -2129,6 +2879,13 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
     }
 
 
@@ -2148,6 +2905,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -2174,6 +2938,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)sdptext.Length * 8; // sdptext
+            return boxSize;
+        }
     }
 
 
@@ -2193,6 +2965,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -2219,6 +2998,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)sdptext.Length * 8; // sdptext
+            return boxSize;
+        }
     }
 
 
@@ -2238,6 +3025,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -2267,6 +3061,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // descriptionformat
+            boxSize += (ulong)sdptext.Length * 8; // sdptext
+            return boxSize;
+        }
     }
 
 
@@ -2286,6 +3089,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -2314,6 +3124,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt32Array(stream, this.TrackLoudnessInfo); // not more than one AlbumLoudnessInfo box with version>=1 is allowed	albumLoudness	AlbumLoudnessInfo[];
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  not more than one TrackLoudnessInfo box with version>=1 is allowed */
+            boxSize += (ulong)TrackLoudnessInfo.Length * 32; // TrackLoudnessInfo
+            return boxSize;
+        }
     }
 
 
@@ -2335,6 +3154,13 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
     }
 
 
@@ -2354,6 +3180,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -2378,6 +3211,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteString(stream, this.location);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)location.Length * 8; // location
             return boxSize;
         }
     }
@@ -2407,6 +3248,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteString(stream, this.location);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)name.Length * 8; // name
+            boxSize += (ulong)location.Length * 8; // location
+            return boxSize;
+        }
     }
 
 
@@ -2431,6 +3281,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.imda_ref_identifier);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // imda_ref_identifier
+            return boxSize;
+        }
     }
 
 
@@ -2450,6 +3308,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -2476,6 +3341,16 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBoxes(stream, this.properties); // boxes derived from
+            /*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
+            /*  to fill the box */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(properties); // properties
             /*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
             /*  to fill the box */
             return boxSize;
@@ -2570,6 +3445,44 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+            for (int i = 0; i < entry_count; i++)
+            {
+
+                if (version < 1)
+                {
+                    boxSize += 16; // item_ID
+                }
+
+                else
+                {
+                    boxSize += 32; // item_ID0
+                }
+                boxSize += 8; // association_count
+
+                for (int j = 0; j < association_count; j++)
+                {
+                    boxSize += 1; // essential
+
+                    if ((flags & 1) == 1)
+                    {
+                        boxSize += 15; // property_index
+                    }
+
+                    else
+                    {
+                        boxSize += 7; // property_index0
+                    }
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -2595,6 +3508,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.property_container);
             boxSize += IsoReaderWriter.WriteBoxes(stream, this.association);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(property_container); // property_container
+            boxSize += IsoReaderWriter.CalculateSize(association); // association
             return boxSize;
         }
     }
@@ -2654,6 +3576,29 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 0)
+            {
+                boxSize += 32; // min_initial_alt_startup_offset
+            }
+
+            else if (version == 1)
+            {
+                boxSize += 32; // num_entries
+
+                for (int j = 1; j <= num_entries; j++)
+                {
+                    boxSize += 32; // grouping_type_parameter
+                    boxSize += 32; // min_initial_alt_startup_offset0
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -2678,6 +3623,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data); // to end of box
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)data.Length * 8; // data
+            return boxSize;
+        }
     }
 
 
@@ -2700,6 +3653,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.original_format);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(original_format); // original_format
             return boxSize;
         }
     }
@@ -2734,6 +3695,19 @@ namespace BoxGenerator2
             for (int i = 1; i <= entry_count; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt64(stream, this.chunk_offset);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += 64; // chunk_offset
             }
             return boxSize;
         }
@@ -2818,6 +3792,40 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize(); bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
+            int count_size_code = (flags >> 2) & 0x3;
+            int pattern_size_code = (flags >> 4) & 0x3;
+            int index_size_code = flags & 0x3;
+
+            boxSize += 32; // grouping_type
+
+            if (grouping_type_parameter_present == true)
+            {
+                boxSize += 32; // grouping_type_parameter
+            }
+            boxSize += 32; // pattern_count
+            uint totalPatternLength = 0;
+
+            for (int i = 1; i <= pattern_count; i++)
+            {
+                boxSize += (ulong)pattern_size_code; // pattern_length
+                boxSize += (ulong)count_size_code; // sample_count
+            }
+
+            for (int j = 1; j <= pattern_count; j++)
+            {
+
+                for (int k = 1; k <= pattern_length[j]; k++)
+                {
+                    boxSize += (ulong)index_size_code; // sample_group_description_index
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -2882,6 +3890,31 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.WriteInt64(stream, this.greatestDecodeToDisplayDelta0);
                 boxSize += IsoReaderWriter.WriteInt64(stream, this.compositionStartTime0);
                 boxSize += IsoReaderWriter.WriteInt64(stream, this.compositionEndTime0);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 0)
+            {
+                boxSize += 32; // compositionToDTSShift
+                boxSize += 32; // leastDecodeToDisplayDelta
+                boxSize += 32; // greatestDecodeToDisplayDelta
+                boxSize += 32; // compositionStartTime
+                boxSize += 32; // compositionEndTime
+            }
+
+            else
+            {
+                boxSize += 64; // compositionToDTSShift0
+                boxSize += 64; // leastDecodeToDisplayDelta0
+                boxSize += 64; // greatestDecodeToDisplayDelta0
+                boxSize += 64; // compositionStartTime0
+                boxSize += 64; // compositionEndTime0
             }
             return boxSize;
         }
@@ -2955,6 +3988,35 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+
+            if (version == 0)
+            {
+
+                for (int i = 0; i < entry_count; i++)
+                {
+                    boxSize += 32; // sample_count
+                    boxSize += 32; // sample_offset
+                }
+            }
+
+            else if (version == 1)
+            {
+
+                for (int i = 0; i < entry_count; i++)
+                {
+                    boxSize += 32; // sample_count0
+                    boxSize += 32; // sample_offset0
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -2974,6 +4036,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -3011,6 +4080,19 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += IsoReaderWriter.CalculateSize(data_entry); // data_entry
+            }
+            return boxSize;
+        }
     }
 
 
@@ -3030,6 +4112,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -3100,6 +4189,33 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+
+                if (version == 1)
+                {
+                    boxSize += 64; // edit_duration
+                    boxSize += 64; // media_time
+                }
+
+                else
+                {
+                    /*  version==0 */
+                    boxSize += 32; // edit_duration0
+                    boxSize += 32; // media_time0
+                }
+                boxSize += 16; // media_rate_integer
+                boxSize += 16; // media_rate_fraction
+            }
+            return boxSize;
+        }
     }
 
 
@@ -3122,6 +4238,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBoxes(stream, this.compatible_combinations); // to end of the box
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(compatible_combinations); // compatible_combinations
             return boxSize;
         }
     }
@@ -3168,6 +4292,23 @@ namespace BoxGenerator2
             for (int i = 1; i <= entry_count; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)content_location.Length * 8; // content_location
+            boxSize += (ulong)content_MD5.Length * 8; // content_MD5
+            boxSize += 64; // content_length
+            boxSize += 64; // transfer_length
+            boxSize += 8; // entry_count
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += 32; // group_id
             }
             return boxSize;
         }
@@ -3247,6 +4388,38 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 0)
+            {
+                boxSize += 16; // entry_count
+            }
+
+            else
+            {
+                boxSize += 32; // entry_count0
+            }
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+
+                if (version == 0)
+                {
+                    boxSize += 16; // item_ID
+                }
+
+                else
+                {
+                    boxSize += 32; // item_ID0
+                }
+                boxSize += 32; // symbol_count
+            }
+            return boxSize;
+        }
     }
 
 
@@ -3275,6 +4448,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.blocks_and_symbols);
             boxSize += IsoReaderWriter.WriteBox(stream, this.FEC_symbol_locations); //optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.File_symbol_locations); //optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(blocks_and_symbols); // blocks_and_symbols
+            boxSize += IsoReaderWriter.CalculateSize(FEC_symbol_locations); // FEC_symbol_locations
+            boxSize += IsoReaderWriter.CalculateSize(File_symbol_locations); // File_symbol_locations
             return boxSize;
         }
     }
@@ -3308,6 +4491,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClasses(stream, entry_count, this.partition_entries);
             boxSize += IsoReaderWriter.WriteBox(stream, this.session_info); //optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.group_id_to_name); //optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // entry_count
+            boxSize += IsoReaderWriter.CalculateSize(partition_entries); // partition_entries
+            boxSize += IsoReaderWriter.CalculateSize(session_info); // session_info
+            boxSize += IsoReaderWriter.CalculateSize(group_id_to_name); // group_id_to_name
             return boxSize;
         }
     }
@@ -3383,6 +4577,38 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
                 }
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.symbol_count);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 0)
+            {
+                boxSize += 16; // entry_count
+            }
+
+            else
+            {
+                boxSize += 32; // entry_count0
+            }
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+
+                if (version == 0)
+                {
+                    boxSize += 16; // item_ID
+                }
+
+                else
+                {
+                    boxSize += 32; // item_ID0
+                }
+                boxSize += 32; // symbol_count
             }
             return boxSize;
         }
@@ -3489,6 +4715,47 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 0)
+            {
+                boxSize += 16; // item_ID
+            }
+
+            else
+            {
+                boxSize += 32; // item_ID0
+            }
+            boxSize += 16; // packet_payload_size
+            boxSize += 8; // reserved
+            boxSize += 8; // FEC_encoding_ID
+            boxSize += 16; // FEC_instance_ID
+            boxSize += 16; // max_source_block_length
+            boxSize += 16; // encoding_symbol_length
+            boxSize += 16; // max_number_of_encoding_symbols
+            boxSize += (ulong)scheme_specific_info.Length * 8; // scheme_specific_info
+
+            if (version == 0)
+            {
+                boxSize += 16; // entry_count
+            }
+
+            else
+            {
+                boxSize += 32; // entry_count0
+            }
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += 16; // block_count
+                boxSize += 32; // block_size
+            }
+            return boxSize;
+        }
     }
 
 
@@ -3511,6 +4778,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)data.Length * 8; // data
             return boxSize;
         }
     }
@@ -3537,6 +4812,16 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.data_format); // format of decrypted, encoded data (in case of protection)
+            /*  or un-transformed sample entry (in case of restriction */
+            /*  and complete track information) */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // data_format
             /*  or un-transformed sample entry (in case of restriction */
             /*  and complete track information) */
             return boxSize;
@@ -3569,6 +4854,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.major_brand);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.minor_version);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.compatible_brands); // to end of the box
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // major_brand
+            boxSize += 32; // minor_version
+            boxSize += 32; // compatible_brands
             return boxSize;
         }
     }
@@ -3609,6 +4904,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // entry_count
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += 32; // group_ID
+                boxSize += (ulong)group_name.Length * 8; // group_name
+            }
+            return boxSize;
+        }
     }
 
 
@@ -3628,6 +4937,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -3661,6 +4977,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.handler_type);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, 3, this.reserved);
             boxSize += IsoReaderWriter.WriteString(stream, this.name);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // pre_defined
+            boxSize += 32; // handler_type
+            boxSize += 3 * 32; // reserved
+            boxSize += (ulong)name.Length * 8; // name
             return boxSize;
         }
     }
@@ -3699,6 +5026,18 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.reserved);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // maxPDUsize
+            boxSize += 16; // avgPDUsize
+            boxSize += 32; // maxbitrate
+            boxSize += 32; // avgbitrate
+            boxSize += 32; // reserved
+            return boxSize;
+        }
     }
 
 
@@ -3721,6 +5060,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
             return boxSize;
         }
     }
@@ -3767,6 +5114,24 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
             }
             boxSize += IsoReaderWriter.WriteClasses(stream, entry_count, this.item_infos);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 0)
+            {
+                boxSize += 16; // entry_count
+            }
+
+            else
+            {
+                boxSize += 32; // entry_count0
+            }
+            boxSize += IsoReaderWriter.CalculateClassSize(item_infos); // item_infos
             return boxSize;
         }
     }
@@ -3921,6 +5286,70 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 4; // offset_size
+            boxSize += 4; // length_size
+            boxSize += 4; // base_offset_size
+
+            if ((version == 1) || (version == 2))
+            {
+                boxSize += 4; // index_size
+            }
+
+            else
+            {
+                boxSize += 4; // reserved
+            }
+
+            if (version < 2)
+            {
+                boxSize += 16; // item_count
+            }
+
+            else if (version == 2)
+            {
+                boxSize += 32; // item_count0
+            }
+
+            for (int i = 0; i < item_count; i++)
+            {
+
+                if (version < 2)
+                {
+                    boxSize += 16; // item_ID
+                }
+
+                else if (version == 2)
+                {
+                    boxSize += 32; // item_ID0
+                }
+
+                if ((version == 1) || (version == 2))
+                {
+                    boxSize += 12; // reserved0
+                    boxSize += 4; // construction_method
+                }
+                boxSize += 16; // data_reference_index
+                boxSize += (ulong)base_offset_size * 8; // base_offset
+                boxSize += 16; // extent_count
+
+                for (int j = 0; j < extent_count; j++)
+                {
+
+                    if (((version == 1) || (version == 2)) && (index_size > 0))
+                    {
+                        boxSize += (ulong)index_size * 8; // item_reference_index
+                    }
+                    boxSize += (ulong)offset_size * 8; // extent_offset
+                    boxSize += (ulong)length_size * 8; // extent_length
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -3946,6 +5375,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.imda_identifier);
             boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data); // until the end of the box
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // imda_identifier
+            boxSize += 8 * (ulong)data.Length; // data
             return boxSize;
         }
     }
@@ -4071,6 +5509,57 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if ((version == 0) || (version == 1))
+            {
+                boxSize += 16; // item_ID
+                boxSize += 16; // item_protection_index
+                boxSize += (ulong)item_name.Length * 8; // item_name
+                boxSize += (ulong)content_type.Length * 8; // content_type
+                boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            }
+
+            if (version == 1)
+            {
+                boxSize += 32; // extension_type
+                               // TODO: This should likely be a FullBox: ItemInfoExtensionextension_type; //optional
+
+            }
+
+            if (version >= 2)
+            {
+
+                if (version == 2)
+                {
+                    boxSize += 16; // item_ID0
+                }
+
+                else if (version == 3)
+                {
+                    boxSize += 32; // item_ID00
+                }
+                boxSize += 16; // item_protection_index0
+                boxSize += 32; // item_type
+                boxSize += (ulong)item_name0.Length * 8; // item_name0
+
+                if (item_type == IsoReaderWriter.FromFourCC("mime"))
+                {
+                    boxSize += (ulong)content_type0.Length * 8; // content_type0
+                    boxSize += (ulong)content_encoding0.Length * 8; // content_encoding0
+                }
+
+                else if (item_type == IsoReaderWriter.FromFourCC("uri "))
+                {
+                    boxSize += (ulong)item_uri_type.Length * 8; // item_uri_type
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -4103,6 +5592,19 @@ namespace BoxGenerator2
             for (int i = 1; i <= protection_count; i++)
             {
                 boxSize += IsoReaderWriter.WriteBox(stream, this.protection_information);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // protection_count
+
+            for (int i = 1; i <= protection_count; i++)
+            {
+                boxSize += IsoReaderWriter.CalculateSize(protection_information); // protection_information
             }
             return boxSize;
         }
@@ -4146,6 +5648,23 @@ namespace BoxGenerator2
             else if (version == 1)
             {
                 boxSize += IsoReaderWriter.WriteBoxes(stream, this.references0);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 0)
+            {
+                boxSize += IsoReaderWriter.CalculateSize(references); // references
+            }
+
+            else if (version == 1)
+            {
+                boxSize += IsoReaderWriter.CalculateSize(references0); // references0
             }
             return boxSize;
         }
@@ -4248,6 +5767,48 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // level_count
+
+            for (int j = 1; j <= level_count; j++)
+            {
+                boxSize += 32; // track_ID
+                boxSize += 1; // padding_flag
+                boxSize += 7; // assignment_type
+
+                if (assignment_type == 0)
+                {
+                    boxSize += 32; // grouping_type
+                }
+
+                else if (assignment_type == 1)
+                {
+                    boxSize += 32; // grouping_type0
+                    boxSize += 32; // grouping_type_parameter
+                }
+
+                else if (assignment_type == 2)
+                {
+                }
+                /*  no further syntax elements needed */
+
+                else if (assignment_type == 3)
+                {
+                }
+                /*  no further syntax elements needed */
+
+                else if (assignment_type == 4)
+                {
+                    boxSize += 32; // sub_track_ID
+                }
+                /*  other assignment_type values are reserved */
+            }
+            return boxSize;
+        }
     }
 
 
@@ -4270,6 +5831,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
             return boxSize;
         }
     }
@@ -4344,6 +5913,33 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 1)
+            {
+                boxSize += 64; // creation_time
+                boxSize += 64; // modification_time
+                boxSize += 32; // timescale
+                boxSize += 64; // duration
+            }
+
+            else
+            {
+                /*  version==0 */
+                boxSize += 32; // creation_time0
+                boxSize += 32; // modification_time0
+                boxSize += 32; // timescale0
+                boxSize += 32; // duration0
+            }
+            boxSize += 1; // pad
+            boxSize += 3 * 5; // language
+            boxSize += 16; // pre_defined
+            return boxSize;
+        }
     }
 
 
@@ -4363,6 +5959,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -4407,6 +6010,24 @@ namespace BoxGenerator2
             {
                 /*  version==0 */
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.fragment_duration0);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 1)
+            {
+                boxSize += 64; // fragment_duration
+            }
+
+            else
+            {
+                /*  version==0 */
+                boxSize += 32; // fragment_duration0
             }
             return boxSize;
         }
@@ -4461,6 +6082,23 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBoxes(stream, this.other_boxes); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(theHandler); // theHandler
+            boxSize += IsoReaderWriter.CalculateSize(primary_resource); // primary_resource
+            boxSize += IsoReaderWriter.CalculateSize(file_locations); // file_locations
+            boxSize += IsoReaderWriter.CalculateSize(item_locations); // item_locations
+            boxSize += IsoReaderWriter.CalculateSize(protections); // protections
+            boxSize += IsoReaderWriter.CalculateSize(item_infos); // item_infos
+            boxSize += IsoReaderWriter.CalculateSize(IPMP_control); // IPMP_control
+            boxSize += IsoReaderWriter.CalculateSize(item_refs); // item_refs
+            boxSize += IsoReaderWriter.CalculateSize(item_data); // item_data
+            boxSize += IsoReaderWriter.CalculateSize(other_boxes); // other_boxes
+            return boxSize;
+        }
     }
 
 
@@ -4485,6 +6123,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.sequence_number);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // sequence_number
+            return boxSize;
+        }
     }
 
 
@@ -4504,6 +6150,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -4530,6 +6183,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.parent_size);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // parent_size
+            return boxSize;
+        }
     }
 
 
@@ -4549,6 +6210,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -4572,6 +6240,13 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
     }
 
 
@@ -4593,6 +6268,13 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
     }
 
 
@@ -4612,6 +6294,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -4699,6 +6388,37 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.next_track_ID);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 1)
+            {
+                boxSize += 64; // creation_time
+                boxSize += 64; // modification_time
+                boxSize += 32; // timescale
+                boxSize += 64; // duration
+            }
+
+            else
+            {
+                /*  version==0 */
+                boxSize += 32; // creation_time0
+                boxSize += 32; // modification_time0
+                boxSize += 32; // timescale0
+                boxSize += 32; // duration0
+            }
+            boxSize += 32; // rate
+            boxSize += 16; // volume
+            boxSize += 16; // reserved
+            boxSize += 2 * 32; // reserved0
+            boxSize += 9 * 32; // matrix
+            boxSize += 6 * 32; // pre_defined
+            boxSize += 32; // next_track_ID
+            return boxSize;
+        }
     }
 
 
@@ -4720,6 +6440,13 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
     }
 
 
@@ -4739,6 +6466,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -4787,6 +6521,23 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // sample_count
+
+
+            for (int i = 0; i < ((sample_count + 1) / 2); i++)
+            {
+                boxSize += 1; // reserved
+                boxSize += 3; // pad1
+                boxSize += 1; // reserved0
+                boxSize += 3; // pad2
+            }
+            return boxSize;
+        }
     }
 
 
@@ -4815,6 +6566,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.blocks_and_symbols);
             boxSize += IsoReaderWriter.WriteBox(stream, this.FEC_symbol_locations); //optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.File_symbol_locations); //optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(blocks_and_symbols); // blocks_and_symbols
+            boxSize += IsoReaderWriter.CalculateSize(FEC_symbol_locations); // FEC_symbol_locations
+            boxSize += IsoReaderWriter.CalculateSize(File_symbol_locations); // File_symbol_locations
             return boxSize;
         }
     }
@@ -4848,6 +6609,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClasses(stream, entry_count, this.partition_entries);
             boxSize += IsoReaderWriter.WriteBox(stream, this.session_info); //optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.group_id_to_name); //optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // entry_count
+            boxSize += IsoReaderWriter.CalculateSize(partition_entries); // partition_entries
+            boxSize += IsoReaderWriter.CalculateSize(session_info); // session_info
+            boxSize += IsoReaderWriter.CalculateSize(group_id_to_name); // group_id_to_name
             return boxSize;
         }
     }
@@ -4884,6 +6656,20 @@ namespace BoxGenerator2
                 /*  to end of box */
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.rate);
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.initial_delay);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            for (int i = 0; ; i++)
+            {
+                /*  to end of box */
+                boxSize += 32; // rate
+                boxSize += 32; // initial_delay
             }
             return boxSize;
         }
@@ -4927,6 +6713,23 @@ namespace BoxGenerator2
             else
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 0)
+            {
+                boxSize += 16; // item_ID
+            }
+
+            else
+            {
+                boxSize += 32; // item_ID0
             }
             return boxSize;
         }
@@ -4979,6 +6782,25 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // reference_track_ID
+            boxSize += 64; // ntp_timestamp
+
+            if (version == 0)
+            {
+                boxSize += 32; // media_time
+            }
+
+            else
+            {
+                boxSize += 64; // media_time0
+            }
+            return boxSize;
+        }
     }
 
 
@@ -5007,6 +6829,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.original_format);
             boxSize += IsoReaderWriter.WriteBox(stream, this.scheme_type_box);
             boxSize += IsoReaderWriter.WriteBox(stream, this.info); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(original_format); // original_format
+            boxSize += IsoReaderWriter.CalculateSize(scheme_type_box); // scheme_type_box
+            boxSize += IsoReaderWriter.CalculateSize(info); // info
             return boxSize;
         }
     }
@@ -5069,6 +6901,30 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if ((flags & 1) == 1)
+            {
+                boxSize += 32; // aux_info_type
+                boxSize += 32; // aux_info_type_parameter
+            }
+            boxSize += 32; // entry_count
+
+            if (version == 0)
+            {
+                boxSize += (ulong)entry_count * 32; // offset
+            }
+
+            else
+            {
+                boxSize += (ulong)entry_count * 64; // offset0
+            }
+            return boxSize;
+        }
     }
 
 
@@ -5118,6 +6974,26 @@ namespace BoxGenerator2
             if (default_sample_info_size == 0)
             {
                 boxSize += IsoReaderWriter.WriteBytes(stream, sample_count, this.sample_info_size);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if ((flags & 1) == 1)
+            {
+                boxSize += 32; // aux_info_type
+                boxSize += 32; // aux_info_type_parameter
+            }
+            boxSize += 8; // default_sample_info_size
+            boxSize += 32; // sample_count
+
+            if (default_sample_info_size == 0)
+            {
+                boxSize += (ulong)sample_count * 8; // sample_info_size
             }
             return boxSize;
         }
@@ -5173,6 +7049,26 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // grouping_type
+
+            if (version == 1)
+            {
+                boxSize += 32; // grouping_type_parameter
+            }
+            boxSize += 32; // entry_count
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += 32; // sample_count
+                boxSize += 32; // group_description_index
+            }
+            return boxSize;
+        }
     }
 
 
@@ -5195,6 +7091,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBoxes(stream, this.scheme_specific_data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(scheme_specific_data); // scheme_specific_data
             return boxSize;
         }
     }
@@ -5232,6 +7136,20 @@ namespace BoxGenerator2
             if ((flags & 0x000001) == 0x000001)
             {
                 boxSize += IsoReaderWriter.WriteString(stream, this.scheme_uri); // browser uri
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // scheme_type
+            boxSize += 32; // scheme_version
+
+            if ((flags & 0x000001) == 0x000001)
+            {
+                boxSize += (ulong)scheme_uri.Length * 8; // scheme_uri
             }
             return boxSize;
         }
@@ -5275,6 +7193,21 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  identical syntax to SchemeTypeBox */
+            boxSize += 32; // scheme_type
+            boxSize += 32; // scheme_version
+
+            if ((flags & 0x000001) == 0x000001)
+            {
+                boxSize += (ulong)scheme_uri.Length * 8; // scheme_uri
+            }
+            return boxSize;
+        }
     }
 
 
@@ -5315,6 +7248,22 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.WriteBits(stream, 2, this.sample_depends_on);
                 boxSize += IsoReaderWriter.WriteBits(stream, 2, this.sample_is_depended_on);
                 boxSize += IsoReaderWriter.WriteBits(stream, 2, this.sample_has_redundancy);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize(); int sample_count = 0; // TODO: taken from the stsz sample_count
+
+
+            for (int i = 0; i < sample_count; i++)
+            {
+                boxSize += 2; // is_leading
+                boxSize += 2; // sample_depends_on
+                boxSize += 2; // sample_is_depended_on
+                boxSize += 2; // sample_has_redundancy
             }
             return boxSize;
         }
@@ -5374,6 +7323,30 @@ namespace BoxGenerator2
                 for (int k = 0; k < num_channels_in_session_group; k++)
                 {
                     boxSize += IsoReaderWriter.WriteUInt32(stream, this.hint_track_ID);
+                }
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // num_session_groups
+
+            for (int i = 0; i < num_session_groups; i++)
+            {
+                boxSize += 8; // entry_count
+
+                for (int j = 0; j < entry_count; j++)
+                {
+                    boxSize += 32; // group_ID
+                }
+                boxSize += 16; // num_channels_in_session_group
+
+                for (int k = 0; k < num_channels_in_session_group; k++)
+                {
+                    boxSize += 32; // hint_track_ID
                 }
             }
             return boxSize;
@@ -5462,6 +7435,42 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // grouping_type
+
+            if (version >= 1)
+            {
+                boxSize += 32; // default_length
+            }
+
+            if (version >= 2)
+            {
+                boxSize += 32; // default_group_description_index
+            }
+            boxSize += 32; // entry_count
+
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+
+                if (version >= 1)
+                {
+
+                    if (default_length == 0)
+                    {
+                        boxSize += 32; // description_length
+                    }
+                }
+                // TODO: This should likely be a FullBox: SampleGroupDescriptionEntrygrouping_type; // an instance of a class derived from SampleGroupDescriptionEntry
+
+                /*   that is appropriate and permitted for the media type */
+            }
+            return boxSize;
+        }
     }
 
 
@@ -5481,6 +7490,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -5513,6 +7529,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.info); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(original_format); // original_format
+            boxSize += IsoReaderWriter.CalculateSize(scheme_type_box); // scheme_type_box
+            boxSize += IsoReaderWriter.CalculateSize(info); // info
+            return boxSize;
+        }
     }
 
 
@@ -5535,6 +7561,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)data.Length * 8; // data
             return boxSize;
         }
     }
@@ -5562,6 +7596,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt16(stream, this.balance);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.reserved);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // balance
+            boxSize += 16; // reserved
             return boxSize;
         }
     }
@@ -5603,6 +7646,19 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.info);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // encryption_algorithm_rtp
+            boxSize += 32; // encryption_algorithm_rtcp
+            boxSize += 32; // integrity_algorithm_rtp
+            boxSize += 32; // integrity_algorithm_rtcp
+            boxSize += IsoReaderWriter.CalculateSize(scheme_type_box); // scheme_type_box
+            boxSize += IsoReaderWriter.CalculateSize(info); // info
+            return boxSize;
+        }
     }
 
 
@@ -5624,6 +7680,13 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
     }
 
 
@@ -5643,6 +7706,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -5677,6 +7747,19 @@ namespace BoxGenerator2
             for (int i = 1; i <= entry_count; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.chunk_offset);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += 32; // chunk_offset
             }
             return boxSize;
         }
@@ -5716,6 +7799,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize(); int sample_count = 0; // TODO: taken from the stsz sample_count
+
+
+
+            for (int i = 0; i < sample_count; i++)
+            {
+                boxSize += 16; // priority
+            }
+            return boxSize;
+        }
     }
 
 
@@ -5737,6 +7834,13 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
     }
 
 
@@ -5756,6 +7860,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -5789,6 +7900,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt16(stream, this.alternate_group);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.sub_track_ID);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.attribute_list); // to the end of the box
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // switch_group
+            boxSize += 16; // alternate_group
+            boxSize += 32; // sub_track_ID
+            boxSize += 32; // attribute_list
             return boxSize;
         }
     }
@@ -5832,6 +7954,21 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += 32; // first_chunk
+                boxSize += 32; // samples_per_chunk
+                boxSize += 32; // sample_description_index
+            }
+            return boxSize;
+        }
     }
 
 
@@ -5862,6 +7999,21 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
 
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                // TODO: This should likely be a FullBox: SampleEntry; // an instance of a class derived from SampleEntry
+
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            boxSize += 32; // entry_count
 
             for (int i = 1; i <= entry_count; i++)
             {
@@ -5908,6 +8060,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // grouping_type
+            boxSize += 16; // item_count
+
+            for (int i = 0; i < item_count; i++)
+            {
+                boxSize += 32; // group_description_index
+            }
+            return boxSize;
+        }
     }
 
 
@@ -5948,6 +8114,21 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += 32; // shadowed_sample_number
+                boxSize += 32; // sync_sample_number
+            }
+            return boxSize;
+        }
     }
 
 
@@ -5982,6 +8163,20 @@ namespace BoxGenerator2
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.sample_number);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += 32; // sample_number
             }
             return boxSize;
         }
@@ -6031,6 +8226,24 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // sample_size
+            boxSize += 32; // sample_count
+
+            if (sample_size == 0)
+            {
+
+                for (int i = 1; i <= sample_count; i++)
+                {
+                    boxSize += 32; // entry_size
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -6071,6 +8284,21 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += 32; // sample_count
+                boxSize += 32; // sample_delta
+            }
+            return boxSize;
+        }
     }
 
 
@@ -6090,6 +8318,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -6130,6 +8365,21 @@ namespace BoxGenerator2
             for (int i = 1; i <= sample_count; i++)
             {
                 boxSize += IsoReaderWriter.WriteBytes(stream, field_size, this.entry_size);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 24; // reserved
+            boxSize += 8; // field_size
+            boxSize += 32; // sample_count
+
+            for (int i = 1; i <= sample_count; i++)
+            {
+                boxSize += (ulong)field_size; // entry_size
             }
             return boxSize;
         }
@@ -6220,6 +8470,42 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += 32; // sample_delta
+                boxSize += 16; // subsample_count
+
+                if (subsample_count > 0)
+                {
+
+                    for (int j = 0; j < subsample_count; j++)
+                    {
+
+                        if (version == 1)
+                        {
+                            boxSize += 32; // subsample_size
+                        }
+
+                        else
+                        {
+                            boxSize += 16; // subsample_size0
+                        }
+                        boxSize += 8; // subsample_priority
+                        boxSize += 8; // discardable
+                        boxSize += 32; // codec_specific_parameters
+                    }
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -6265,6 +8551,24 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 1)
+            {
+                boxSize += 64; // baseMediaDecodeTime
+            }
+
+            else
+            {
+                /*  version==0 */
+                boxSize += 32; // baseMediaDecodeTime0
+            }
+            return boxSize;
+        }
     }
 
 
@@ -6304,6 +8608,20 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_sample_duration);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_sample_size);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_sample_flags);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_ID
+            /*  their presence is indicated by bits in the tf_flags */
+            boxSize += 64; // base_data_offset
+            boxSize += 32; // sample_description_index
+            boxSize += 32; // default_sample_duration
+            boxSize += 32; // default_sample_size
+            boxSize += 32; // default_sample_flags
             return boxSize;
         }
     }
@@ -6387,6 +8705,38 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_traf_num + 1), this.traf_number);
                 boxSize += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_trun_num + 1), this.trun_number);
                 boxSize += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_sample_num + 1), this.sample_delta);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_ID
+            boxSize += 26; // reserved
+            boxSize += 2; // length_size_of_traf_num
+            boxSize += 2; // length_size_of_trun_num
+            boxSize += 2; // length_size_of_sample_num
+            boxSize += 32; // number_of_entry
+
+            for (int i = 1; i <= number_of_entry; i++)
+            {
+
+                if (version == 1)
+                {
+                    boxSize += 64; // time
+                    boxSize += 64; // moof_offset
+                }
+
+                else
+                {
+                    boxSize += 32; // time0
+                    boxSize += 32; // moof_offset0
+                }
+                boxSize += (ulong)(length_size_of_traf_num + 1) * 8; // traf_number
+                boxSize += (ulong)(length_size_of_trun_num + 1) * 8; // trun_number
+                boxSize += (ulong)(length_size_of_sample_num + 1) * 8; // sample_delta
             }
             return boxSize;
         }
@@ -6484,6 +8834,40 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.height);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 1)
+            {
+                boxSize += 64; // creation_time
+                boxSize += 64; // modification_time
+                boxSize += 32; // track_ID
+                boxSize += 32; // reserved
+                boxSize += 64; // duration
+            }
+
+            else
+            {
+                /*  version==0 */
+                boxSize += 32; // creation_time0
+                boxSize += 32; // modification_time0
+                boxSize += 32; // track_ID0
+                boxSize += 32; // reserved0
+                boxSize += 32; // duration0
+            }
+            boxSize += 2 * 32; // reserved1
+            boxSize += 16; // layer
+            boxSize += 16; // alternate_group
+            boxSize += 16; // volume
+            boxSize += 16; // reserved2
+            boxSize += 9 * 32; // matrix
+            boxSize += 32; // width
+            boxSize += 32; // height
+            return boxSize;
+        }
     }
 
 
@@ -6505,6 +8889,13 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
     }
 
 
@@ -6524,6 +8915,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -6550,6 +8948,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBoxes(stream, this.TrackReferenceTypeBox);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(TrackReferenceTypeBox); // TrackReferenceTypeBox
+            return boxSize;
+        }
     }
 
 
@@ -6572,6 +8978,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_ID); // Any number of boxes may follow
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_ID
             return boxSize;
         }
     }
@@ -6610,6 +9024,18 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.default_sample_flags);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_ID
+            boxSize += 32; // default_sample_description_index
+            boxSize += 32; // default_sample_duration
+            boxSize += 32; // default_sample_size
+            boxSize += 32; // default_sample_flags
+            return boxSize;
+        }
     }
 
 
@@ -6629,6 +9055,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -6665,6 +9098,18 @@ namespace BoxGenerator2
 
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // sample_count
+            boxSize += 32; // data_offset
+            boxSize += 32; // first_sample_flags
+            /*  as indicated by bits set in the tr_flags */
+
+            return boxSize;
+        }
     }
 
 
@@ -6684,6 +9129,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -6710,6 +9162,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.compatible_brands); // to end of the box
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // compatible_brands
+            return boxSize;
+        }
     }
 
 
@@ -6729,6 +9189,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -6788,6 +9255,29 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 32; // size
+            boxSize += 32; // type
+
+            if (size == 1)
+            {
+                boxSize += 64; // largesize
+            }
+
+            else if (size == 0)
+            {
+                /*  box extends to end of file */
+            }
+
+            if (type == IsoReaderWriter.FromFourCC("uuid"))
+            {
+                boxSize += 16 * 8; // usertype
+            }
+            return boxSize;
+        }
     }
 
 
@@ -6815,6 +9305,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16Array(stream, 3, this.opcolor);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // graphicsmode
+            boxSize += 3 * 16; // opcolor
+            return boxSize;
+        }
     }
 
 
@@ -6839,6 +9338,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteString(stream, this.xml);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)xml.Length * 8; // xml
+            return boxSize;
+        }
     }
 
 
@@ -6858,6 +9365,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -6881,6 +9395,13 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
     }
 
 
@@ -6902,6 +9423,13 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
     }
 
 
@@ -6921,6 +9449,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -6953,6 +9488,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.ambient_light_y);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // ambient_illuminance
+            boxSize += 16; // ambient_light_x
+            boxSize += 16; // ambient_light_y
+            return boxSize;
+        }
     }
 
 
@@ -6977,6 +9522,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBoxes(stream, this.MetadataKeyBox);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(MetadataKeyBox); // MetadataKeyBox
+            return boxSize;
+        }
     }
 
 
@@ -6999,6 +9552,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteString(stream, this.theURI);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)theURI.Length * 8; // theURI
             return boxSize;
         }
     }
@@ -7070,6 +9631,33 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 2; // iroi_type
+            boxSize += 6; // reserved
+
+            if (iroi_type == 0)
+            {
+                boxSize += 8; // grid_roi_mb_width
+                boxSize += 8; // grid_roi_mb_height
+            }
+
+            else if (iroi_type == 1)
+            {
+                boxSize += 24; // num_roi
+
+                for (int i = 1; i <= num_roi; i++)
+                {
+                    boxSize += 32; // top_left_mb
+                    boxSize += 8; // roi_mb_width
+                    boxSize += 8; // roi_mb_height
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -7102,6 +9690,19 @@ namespace BoxGenerator2
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.dependencyTierId);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // entry_count
+
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += 16; // dependencyTierId
             }
             return boxSize;
         }
@@ -7148,6 +9749,21 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBits(stream, 3, this.max_temporal_id);
             boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved0);
             boxSize += IsoReaderWriter.WriteBits(stream, 4, this.max_quality_id);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 3; // min_dependency_id
+            boxSize += 3; // min_temporal_id
+            boxSize += 6; // reserved
+            boxSize += 4; // min_quality_id
+            boxSize += 3; // max_dependency_id
+            boxSize += 3; // max_temporal_id
+            boxSize += 6; // reserved0
+            boxSize += 4; // max_quality_id
             return boxSize;
         }
     }
@@ -7199,6 +9815,25 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // sps_id_count
+
+            for (int i = 0; i < sps_id_count; i++)
+            {
+                boxSize += 8; // SPS_index
+            }
+            boxSize += 8; // pps_id_count
+
+            for (int i = 0; i < pps_id_count; i++)
+            {
+                boxSize += 8; // PPS_index
+            }
+            return boxSize;
+        }
     }
 
 
@@ -7230,6 +9865,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBits(stream, 6, this.min_priorityId);
             boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved2);
             boxSize += IsoReaderWriter.WriteBits(stream, 6, this.max_priorityId);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 2; // reserved1
+            boxSize += 6; // min_priorityId
+            boxSize += 2; // reserved2
+            boxSize += 6; // max_priorityId
             return boxSize;
         }
     }
@@ -7299,6 +9945,31 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 4; // reserved
+            boxSize += 2; // conversion_idc
+            boxSize += 1; // cavlc_info_present_flag
+            boxSize += 1; // cabac_info_present_flag
+
+            if (cavlc_info_present_flag)
+            {
+                boxSize += 24; // cavlc_profile_level_idc
+                boxSize += 32; // cavlc_max_bitrate
+                boxSize += 32; // cavlc_avg_bitrate
+            }
+
+            if (cabac_info_present_flag)
+            {
+                boxSize += 24; // cabac_profile_level_idc
+                boxSize += 32; // cabac_max_bitrate
+                boxSize += 32; // cabac_avg_bitrate
+            }
+            return boxSize;
+        }
     }
 
 
@@ -7349,6 +10020,24 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // base_region_tierID
+            boxSize += 1; // dynamic_rect
+            boxSize += 7; // reserved
+
+            if (dynamic_rect == false)
+            {
+                boxSize += 16; // horizontal_offset
+                boxSize += 16; // vertical_offset
+                boxSize += 16; // region_width
+                boxSize += 16; // region_height
+            }
+            return boxSize;
+        }
     }
 
 
@@ -7396,6 +10085,23 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // operating_point_count
+
+            for (int i = 0; i < operating_point_count; i++)
+            {
+                boxSize += 32; // byte_rate
+                boxSize += 32; // cpb_size
+                boxSize += 32; // dpb_size
+                boxSize += 32; // init_cpb_delay
+                boxSize += 32; // init_dpb_delay
+            }
+            return boxSize;
+        }
     }
 
 
@@ -7434,6 +10140,21 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.WriteBits(stream, 10, this.view_id);
                 boxSize += IsoReaderWriter.WriteBits(stream, 4, this.temporal_id);
                 boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // item_count
+
+            for (int i = 0; i < item_count; i++)
+            {
+                boxSize += 10; // view_id
+                boxSize += 4; // temporal_id
+                boxSize += 2; // reserved
             }
             return boxSize;
         }
@@ -7549,6 +10270,50 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.multiview_scene_info); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // multiview_group_id
+            boxSize += 16; // num_entries
+            boxSize += 8; // reserved
+
+            for (int i = 0; i < num_entries; i++)
+            {
+                boxSize += 8; // entry_type
+
+                if (entry_type == 0)
+                {
+                    boxSize += 32; // track_id
+                }
+
+                else if (entry_type == 1)
+                {
+                    boxSize += 32; // track_id0
+                    boxSize += 16; // tier_id
+                }
+
+                else if (entry_type == 2)
+                {
+                    boxSize += 6; // reserved1
+                    boxSize += 10; // output_view_id
+                }
+
+                else if (entry_type == 3)
+                {
+                    boxSize += 6; // reserved2
+                    boxSize += 10; // start_view_id
+                    boxSize += 16; // view_count
+                }
+            }
+            boxSize += IsoReaderWriter.CalculateSize(subset_stream_info); // subset_stream_info
+            boxSize += IsoReaderWriter.CalculateSize(relation_attributes); // relation_attributes
+            boxSize += IsoReaderWriter.CalculateSize(subset_stream_bit_rate); // subset_stream_bit_rate
+            boxSize += IsoReaderWriter.CalculateSize(subset_stream_buffering); // subset_stream_buffering
+            boxSize += IsoReaderWriter.CalculateSize(multiview_scene_info); // multiview_scene_info
+            return boxSize;
+        }
     }
 
 
@@ -7568,6 +10333,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -7634,6 +10406,29 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // depth_width
+            boxSize += 16; // depth_height
+            /*  The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox).  */
+            boxSize += 16; // depth_hor_mult_minus1
+            boxSize += 16; // depth_ver_mult_minus1
+            boxSize += 4; // depth_hor_rsh
+            boxSize += 4; // depth_ver_rsh
+            boxSize += 16; // grid_pos_num_views
+
+            for (int i = 0; i < grid_pos_num_views; i++)
+            {
+                boxSize += 6; // reserved
+                boxSize += 10; // grid_pos_view_id
+                boxSize += 16; // grid_pos_x
+                boxSize += 16; // grid_pos_y
+            }
+            return boxSize;
+        }
     }
 
 
@@ -7692,6 +10487,28 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // reserved1
+            boxSize += 16; // num_common_attributes
+
+            for (int i = 0; i < num_common_attributes; i++)
+            {
+                boxSize += 32; // common_attribute
+                boxSize += 32; // common_value
+            }
+            boxSize += 16; // reserved2
+            boxSize += 16; // num_differentiating_attributes
+
+            for (int i = 0; i < num_differentiating_attributes; i++)
+            {
+                boxSize += 32; // differentiating_attribute
+            }
+            return boxSize;
+        }
     }
 
 
@@ -7733,6 +10550,24 @@ namespace BoxGenerator2
                 for (int k = 0; k < dependency_count; k++)
                 {
                     boxSize += IsoReaderWriter.WriteInt16(stream, this.relative_sample_number);
+                }
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize(); int sample_count = 0; // TODO: taken from the stsz sample_count
+
+
+            for (int i = 0; i < sample_count; i++)
+            {
+                boxSize += 16; // dependency_count
+
+                for (int k = 0; k < dependency_count; k++)
+                {
+                    boxSize += 16; // relative_sample_number
                 }
             }
             return boxSize;
@@ -7783,6 +10618,25 @@ namespace BoxGenerator2
             for (int i = 0; i < numNotRequiredSEIs; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.notrequiredSEI_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // numRequiredSEIs
+
+            for (int i = 0; i < numRequiredSEIs; i++)
+            {
+                boxSize += 16; // requiredSEI_ID
+            }
+            boxSize += 16; // numNotRequiredSEIs
+
+            for (int i = 0; i < numNotRequiredSEIs; i++)
+            {
+                boxSize += 16; // notrequiredSEI_ID
             }
             return boxSize;
         }
@@ -7842,6 +10696,26 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // item_count
+
+            for (int i = 0; i < item_count; i++)
+            {
+                boxSize += 3; // dependency_id
+                boxSize += 4; // quality_id
+                boxSize += 3; // temporal_id
+                boxSize += 6; // priority_id
+                boxSize += 2; // dependency_id_range
+                boxSize += 2; // quality_id_range
+                boxSize += 2; // temporal_id_range
+                boxSize += 2; // priority_id_range
+            }
+            return boxSize;
+        }
     }
 
 
@@ -7877,6 +10751,19 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // item_count
+
+            for (int i = 0; i < item_count; i++)
+            {
+                boxSize += 32; // MultiviewGroupId
+            }
+            return boxSize;
+        }
     }
 
 
@@ -7909,6 +10796,19 @@ namespace BoxGenerator2
             for (int i = 0; i < item_count; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.tierID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // item_count
+
+            for (int i = 0; i < item_count; i++)
+            {
+                boxSize += 16; // tierID
             }
             return boxSize;
         }
@@ -7950,6 +10850,20 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.relation_attributes);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // num_entries
+
+            for (int i = 0; i < num_entries; i++)
+            {
+                boxSize += 32; // multiview_group_id
+            }
+            boxSize += IsoReaderWriter.CalculateSize(relation_attributes); // relation_attributes
+            return boxSize;
+        }
     }
 
 
@@ -7987,6 +10901,19 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.tierBaseBitRate);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.tierMaxBitRate);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.tierAvgBitRate);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // baseBitRate
+            boxSize += 32; // maxBitRate
+            boxSize += 32; // avgBitRate
+            boxSize += 32; // tierBaseBitRate
+            boxSize += 32; // tierMaxBitRate
+            boxSize += 32; // tierAvgBitRate
             return boxSize;
         }
     }
@@ -8045,6 +10972,25 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.frameRate);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /* Mandatory Box */
+            boxSize += 16; // tierID
+            boxSize += 8; // profileIndication
+            boxSize += 8; // profile_compatibility
+            boxSize += 8; // levelIndication
+            boxSize += 8; // reserved
+            boxSize += 16; // visualWidth
+            boxSize += 16; // visualHeight
+            boxSize += 2; // discardable
+            boxSize += 2; // constantFrameRate
+            boxSize += 4; // reserved0
+            boxSize += 16; // frameRate
+            return boxSize;
+        }
     }
 
 
@@ -8080,6 +11026,19 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // item_count
+
+            for (int i = 0; i < item_count; i++)
+            {
+                boxSize += 16; // tileGroupID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -8102,6 +11061,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.max_disparity);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // max_disparity
             return boxSize;
         }
     }
@@ -8131,6 +11098,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.mvdDepthRes); //Optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(MVDConfig); // MVDConfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdDepthRes); // mvdDepthRes
+            return boxSize;
+        }
     }
 
 
@@ -8156,6 +11132,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteClass(stream, this.MVDConfig);
             boxSize += IsoReaderWriter.WriteBox(stream, this.mvdDepthRes); //Optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(MVDConfig); // MVDConfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdDepthRes); // mvdDepthRes
             return boxSize;
         }
     }
@@ -8246,6 +11231,38 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 2; // reserved6
+            boxSize += 3; // min_temporal_id
+            boxSize += 3; // max_temporal_id
+            boxSize += 16; // num_views
+
+            for (int i = 0; i < num_views; i++)
+            {
+                boxSize += 6; // reserved1
+                boxSize += 10; // view_id
+                boxSize += 6; // reserved2
+                boxSize += 10; // view_order_index
+                boxSize += 1; // texture_in_stream
+                boxSize += 1; // texture_in_track
+                boxSize += 1; // depth_in_stream
+                boxSize += 1; // depth_in_track
+                boxSize += 2; // base_view_type
+                boxSize += 10; // num_ref_views
+
+                for (int j = 0; j < num_ref_views; j++)
+                {
+                    boxSize += 4; // reserved5
+                    boxSize += 2; // dependent_component_idc
+                    boxSize += 10; // ref_view_id
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -8268,6 +11285,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteClass(stream, this.MVCConfig);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(MVCConfig); // MVCConfig
             return boxSize;
         }
     }
@@ -8294,6 +11319,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClass(stream, this.AVCConfig);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(AVCConfig); // AVCConfig
+            return boxSize;
+        }
     }
 
 
@@ -8316,6 +11349,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteClass(stream, this.HEVCConfig);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(HEVCConfig); // HEVCConfig
             return boxSize;
         }
     }
@@ -8342,6 +11383,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClass(stream, this.LHEVCConfig);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(LHEVCConfig); // LHEVCConfig
+            return boxSize;
+        }
     }
 
 
@@ -8364,6 +11413,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteClasses(stream, this.Descr);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(Descr); // Descr
             return boxSize;
         }
     }
@@ -8390,6 +11447,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClass(stream, this.SVCConfig);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(SVCConfig); // SVCConfig
+            return boxSize;
+        }
     }
 
 
@@ -8412,6 +11477,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBytes(stream, size - 64, this.scalinfosei);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)(size - 64) * 8; // scalinfosei
             return boxSize;
         }
     }
@@ -8441,6 +11514,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteStringArray(stream, method_count, this.PriorityAssignmentURI);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // method_count
+            boxSize += IsoReaderWriter.CalculateSize(PriorityAssignmentURI); // PriorityAssignmentURI
+            return boxSize;
+        }
     }
 
 
@@ -8465,6 +11547,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBytes(stream, size - 64, this.mvcscalinfosei);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)(size - 64) * 8; // mvcscalinfosei
+            return boxSize;
+        }
     }
 
 
@@ -8487,6 +11577,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBytes(stream, size - 64, this.mvdscalinfosei);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)(size - 64) * 8; // mvdscalinfosei
             return boxSize;
         }
     }
@@ -8516,6 +11614,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteStringArray(stream, method_count, this.PriorityAssignmentURI);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // method_count
+            boxSize += IsoReaderWriter.CalculateSize(PriorityAssignmentURI); // PriorityAssignmentURI
+            return boxSize;
+        }
     }
 
 
@@ -8540,6 +11647,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClass(stream, this.HEVCTileTierLevelConfig);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(HEVCTileTierLevelConfig); // HEVCTileTierLevelConfig
+            return boxSize;
+        }
     }
 
 
@@ -8562,6 +11677,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteClass(stream, this.EVCConfig);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(EVCConfig); // EVCConfig
             return boxSize;
         }
     }
@@ -8608,6 +11731,22 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // pr_layer_num
+
+            for (int j = 0; j < pr_layer_num; j++)
+            {
+                boxSize += 8; // pr_layer
+                boxSize += 24; // profile_level_idc
+                boxSize += 32; // max_bitrate
+                boxSize += 32; // avg_bitrate
+            }
+            return boxSize;
+        }
     }
 
 
@@ -8630,6 +11769,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteClass(stream, this.VvcConfig);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(VvcConfig); // VvcConfig
             return boxSize;
         }
     }
@@ -8657,6 +11804,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
             boxSize += IsoReaderWriter.WriteBits(stream, 2, this.LengthSizeMinusOne);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 6; // reserved
+            boxSize += 2; // LengthSizeMinusOne
             return boxSize;
         }
     }
@@ -8745,6 +11901,44 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // num_entries
+
+            for (int i = 1; i <= num_entries; i++)
+            {
+                boxSize += 8; // constructor_type
+                boxSize += 8; // flags
+
+                if (constructor_type == 0)
+                {
+                    // TODO: This should likely be a FullBox: SampleConstructor;
+
+                }
+
+                else if (constructor_type == 2)
+                {
+                    // TODO: This should likely be a FullBox: InlineConstructor;
+
+                }
+
+                else if (constructor_type == 3)
+                {
+                    // TODO: This should likely be a FullBox: SampleConstructorFromTrackGroup;
+
+                }
+
+                else if (constructor_type == 6)
+                {
+                    // TODO: This should likely be a FullBox: NALUStartInlineConstructor;
+
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -8796,6 +11990,25 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            boxSize += 8; // sample_statement_type
+            /*  normally group, or seq  */
+            boxSize += 8; // default_statement_type
+            boxSize += 8; // default_statement_length
+            boxSize += 8; // entry_count
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += 8; // statement_type
+                boxSize += (ulong)statement_namespace.Length * 8; // statement_namespace
+            }
+            return boxSize;
+        }
     }
 
 
@@ -8818,6 +12031,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteClass(stream, this.config);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(config); // config
             return boxSize;
         }
     }
@@ -8844,6 +12065,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteString(stream, this.config);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)config.Length * 8; // config
+            return boxSize;
+        }
     }
 
 
@@ -8866,6 +12095,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteString(stream, this.source_label);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)source_label.Length * 8; // source_label
             return boxSize;
         }
     }
@@ -8899,6 +12136,17 @@ namespace BoxGenerator2
 
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(label); // label
+                                                             // TODO: This should likely be a FullBox: MPEG4BitRateBox; // optional
+
+            return boxSize;
+        }
     }
 
 
@@ -8921,6 +12169,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteString(stream, this.aux_track_type);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)aux_track_type.Length * 8; // aux_track_type
             return boxSize;
         }
     }
@@ -8954,6 +12210,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBit(stream, this.intra_pred_used);
             boxSize += IsoReaderWriter.WriteBits(stream, 4, this.max_ref_per_pic);
             boxSize += IsoReaderWriter.WriteBits(stream, 26, this.reserved);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // all_ref_pics_intra
+            boxSize += 1; // intra_pred_used
+            boxSize += 4; // max_ref_per_pic
+            boxSize += 26; // reserved
             return boxSize;
         }
     }
@@ -9015,6 +12282,31 @@ namespace BoxGenerator2
                 for (int i = 0; i < num_entries; i++)
                 {
                     boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_description_index[i]);
+                }
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16 * 8; // input_MD5
+            boxSize += 32; // input_4cc
+
+            if (input_4cc == IsoReaderWriter.FromFourCC("sgpd"))
+            {
+                boxSize += 32; // grouping_type
+
+                if ((flags & 1) == 1)
+                {
+                    boxSize += 32; // grouping_type_parameter
+                }
+                boxSize += 32; // num_entries
+
+                for (int i = 0; i < num_entries; i++)
+                {
+                    boxSize += 32; // group_description_index
                 }
             }
             return boxSize;
@@ -9086,6 +12378,34 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
             boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
                                                                                          // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
+
+            // TODO: This should likely be a FullBox: SamplingRateBox;
+
+            // TODO: This should likely be a FullBox: ChannelLayout;
+
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 2 * 32; // reserved
+            boxSize += 16; // channelcount
+            boxSize += 16; // samplesize
+            boxSize += 16; // pre_defined
+            boxSize += 16; // reserved0
+            boxSize += 32; // samplerate
+                           // TODO: This should likely be a FullBox: Box; // further boxes as needed
+
+            // TODO: This should likely be a FullBox: ChannelLayout;
+
+            boxSize += IsoReaderWriter.CalculateClassSize(DownMixInstructions); // DownMixInstructions
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCInstructionsBasic); // DRCInstructionsBasic
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+                                                                                  // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
@@ -9172,6 +12492,36 @@ namespace BoxGenerator2
 
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // entry_version
+            /*  and shall be in an stsd with version ==1 */
+            boxSize += 3 * 16; // reserved
+            boxSize += 16; // channelcount
+            boxSize += 16; // samplesize
+            boxSize += 16; // pre_defined
+            boxSize += 16; // reserved0
+            boxSize += 32; // samplerate
+                           // TODO: This should likely be a FullBox: SamplingRateBox;
+
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
+
+            // TODO: This should likely be a FullBox: ChannelLayout;
+
+            boxSize += IsoReaderWriter.CalculateClassSize(DownMixInstructions); // DownMixInstructions
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCInstructionsBasic); // DRCInstructionsBasic
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+                                                                                  // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
+
+            // TODO: This should likely be a FullBox: ChannelLayout;
+
+            return boxSize;
+        }
     }
 
 
@@ -9251,6 +12601,36 @@ namespace BoxGenerator2
 
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // entry_version
+            /*  and shall be in an stsd with version ==1 */
+            boxSize += 3 * 16; // reserved
+            boxSize += 16; // channelcount
+            boxSize += 16; // samplesize
+            boxSize += 16; // pre_defined
+            boxSize += 16; // reserved0
+            boxSize += 32; // samplerate
+                           // TODO: This should likely be a FullBox: SamplingRateBox;
+
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
+
+            // TODO: This should likely be a FullBox: ChannelLayout;
+
+            boxSize += IsoReaderWriter.CalculateClassSize(DownMixInstructions); // DownMixInstructions
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCInstructionsBasic); // DRCInstructionsBasic
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+                                                                                  // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
+
+            // TODO: This should likely be a FullBox: ChannelLayout;
+
+            return boxSize;
+        }
     }
 
 
@@ -9274,6 +12654,14 @@ namespace BoxGenerator2
             /* other boxes from derived specifications */
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /* other boxes from derived specifications */
+            return boxSize;
+        }
     }
 
 
@@ -9293,6 +12681,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -9323,6 +12718,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding); // optional
             boxSize += IsoReaderWriter.WriteString(stream, this.ns);
             boxSize += IsoReaderWriter.WriteString(stream, this.schema_location); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)ns.Length * 8; // ns
+            boxSize += (ulong)schema_location.Length * 8; // schema_location
             return boxSize;
         }
     }
@@ -9356,6 +12761,17 @@ namespace BoxGenerator2
 
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)mime_format.Length * 8; // mime_format
+                                                      // TODO: This should likely be a FullBox: TextConfigBox; // optional
+
+            return boxSize;
+        }
     }
 
 
@@ -9383,6 +12799,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.init); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(the_label); // the_label
+            boxSize += IsoReaderWriter.CalculateSize(init); // init
+            return boxSize;
+        }
     }
 
 
@@ -9406,6 +12831,17 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            // TODO: This should likely be a FullBox: MetadataKeyTableBox; // mandatory
+
+            // TODO: This should likely be a FullBox: BitRateBox; // optional
+
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             // TODO: This should likely be a FullBox: MetadataKeyTableBox; // mandatory
 
             // TODO: This should likely be a FullBox: BitRateBox; // optional
@@ -9445,6 +12881,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.FEC_overhead);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // hinttrackversion
+            boxSize += 16; // highestcompatibleversion
+            boxSize += 16; // partition_entry_ID
+            boxSize += 16; // FEC_overhead
+            return boxSize;
+        }
     }
 
 
@@ -9473,6 +12920,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.config);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // TODO: This should likely be a FullBox: CompleteTrackInfoBox;
+
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            return boxSize;
+        }
     }
 
 
@@ -9495,6 +12952,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.SchemeInformation);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(SchemeInformation); // SchemeInformation
             return boxSize;
         }
     }
@@ -9521,6 +12986,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.SchemeInformation);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(SchemeInformation); // SchemeInformation
+            return boxSize;
+        }
     }
 
 
@@ -9540,6 +13013,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -9572,6 +13052,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // hinttrackversion
+            boxSize += 16; // highestcompatibleversion
+            boxSize += 32; // maxpacketsize
+            return boxSize;
+        }
     }
 
 
@@ -9602,6 +13092,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // hinttrackversion
+            boxSize += 16; // highestcompatibleversion
+            boxSize += 32; // maxpacketsize
+            return boxSize;
+        }
     }
 
 
@@ -9623,6 +13123,13 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
     }
 
 
@@ -9642,6 +13149,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -9669,6 +13183,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.descriptionformat);
             boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // descriptionformat
+            boxSize += (ulong)sdptext.Length * 8; // sdptext
             return boxSize;
         }
     }
@@ -9702,6 +13225,17 @@ namespace BoxGenerator2
 
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)mime_format.Length * 8; // mime_format
+                                                      // TODO: This should likely be a FullBox: TextConfigBox; // optional
+
+            return boxSize;
+        }
     }
 
 
@@ -9721,6 +13255,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -9753,6 +13294,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // hinttrackversion
+            boxSize += 16; // highestcompatibleversion
+            boxSize += 32; // maxpacketsize
+            return boxSize;
+        }
     }
 
 
@@ -9781,6 +13332,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteString(stream, this.ns);
             boxSize += IsoReaderWriter.WriteString(stream, this.schema_location); // optional
             boxSize += IsoReaderWriter.WriteString(stream, this.auxiliary_mime_types); // optional, required if auxiliary resources are present
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)ns.Length * 8; // ns
+            boxSize += (ulong)schema_location.Length * 8; // schema_location
+            boxSize += (ulong)auxiliary_mime_types.Length * 8; // auxiliary_mime_types
             return boxSize;
         }
     }
@@ -9814,6 +13375,17 @@ namespace BoxGenerator2
 
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)mime_format.Length * 8; // mime_format
+                                                      // TODO: This should likely be a FullBox: TextConfigBox; // optional
+
+            return boxSize;
+        }
     }
 
 
@@ -9838,6 +13410,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBoxes(stream, this.otherboxes);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(otherboxes); // otherboxes
+            return boxSize;
+        }
     }
 
 
@@ -9860,6 +13440,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBytes(stream, 32, this.compressorname); // other boxes from derived specifications
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32 * 8; // compressorname
             return boxSize;
         }
     }
@@ -9923,6 +13511,27 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt16(stream, this.pre_defined1); // other boxes from derived specifications
             boxSize += IsoReaderWriter.WriteBox(stream, this.clap); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.pasp); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // pre_defined
+            boxSize += 16; // reserved
+            boxSize += 3 * 32; // pre_defined0
+            boxSize += 16; // width
+            boxSize += 16; // height
+            boxSize += 32; // horizresolution
+            boxSize += 32; // vertresolution
+            boxSize += 32; // reserved0
+            boxSize += 16; // frame_count
+            boxSize += 32 * 8; // compressorname
+            boxSize += 16; // depth
+            boxSize += 16; // pre_defined1
+            boxSize += IsoReaderWriter.CalculateSize(clap); // clap
+            boxSize += IsoReaderWriter.CalculateSize(pasp); // pasp
             return boxSize;
         }
     }
@@ -9992,6 +13601,34 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
             boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
                                                                                          // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
+
+            // TODO: This should likely be a FullBox: SamplingRateBox;
+
+            // TODO: This should likely be a FullBox: ChannelLayout;
+
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 2 * 32; // reserved
+            boxSize += 16; // channelcount
+            boxSize += 16; // samplesize
+            boxSize += 16; // pre_defined
+            boxSize += 16; // reserved0
+            boxSize += 32; // samplerate
+                           // TODO: This should likely be a FullBox: Box; // further boxes as needed
+
+            // TODO: This should likely be a FullBox: ChannelLayout;
+
+            boxSize += IsoReaderWriter.CalculateClassSize(DownMixInstructions); // DownMixInstructions
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCInstructionsBasic); // DRCInstructionsBasic
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+                                                                                  // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
 
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
@@ -10078,6 +13715,36 @@ namespace BoxGenerator2
 
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // entry_version
+            /*  and shall be in an stsd with version ==1 */
+            boxSize += 3 * 16; // reserved
+            boxSize += 16; // channelcount
+            boxSize += 16; // samplesize
+            boxSize += 16; // pre_defined
+            boxSize += 16; // reserved0
+            boxSize += 32; // samplerate
+                           // TODO: This should likely be a FullBox: SamplingRateBox;
+
+            // TODO: This should likely be a FullBox: Box; // further boxes as needed
+
+            // TODO: This should likely be a FullBox: ChannelLayout;
+
+            boxSize += IsoReaderWriter.CalculateClassSize(DownMixInstructions); // DownMixInstructions
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCInstructionsBasic); // DRCInstructionsBasic
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+            boxSize += IsoReaderWriter.CalculateClassSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+                                                                                  // TODO: This should likely be a FullBox: UniDrcConfigExtension; // optional boxes follow
+
+            // TODO: This should likely be a FullBox: ChannelLayout;
+
+            return boxSize;
+        }
     }
 
 
@@ -10097,6 +13764,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -10119,6 +13793,14 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            /* other boxes from derived specifications */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             /* other boxes from derived specifications */
             return boxSize;
         }
@@ -10146,6 +13828,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBoxes(stream, this.otherboxes);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(otherboxes); // otherboxes
+            return boxSize;
+        }
     }
 
 
@@ -10168,6 +13858,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBytes(stream, 32, this.compressorname); // other boxes from derived specifications
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32 * 8; // compressorname
             return boxSize;
         }
     }
@@ -10198,6 +13896,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxpacketsize);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // hinttrackversion
+            boxSize += 16; // highestcompatibleversion
+            boxSize += 32; // maxpacketsize
             return boxSize;
         }
     }
@@ -10238,6 +13946,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
+            }
+            return boxSize;
+        }
     }
 
 
@@ -10257,6 +13979,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -10294,6 +14023,20 @@ namespace BoxGenerator2
             for (int j = 0; j < reference_count; j++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
             }
             return boxSize;
         }
@@ -10335,6 +14078,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -10373,6 +14130,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -10408,6 +14179,20 @@ namespace BoxGenerator2
             for (int j = 0; j < reference_count; j++)
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.to_item_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
             }
             return boxSize;
         }
@@ -10469,6 +14254,29 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // roll_count
+            boxSize += 16; // first_output_sample
+
+            for (int i = 1; i <= roll_count; i++)
+            {
+                boxSize += 32; // sample_offset
+            }
+            int j = 1;
+
+            while (true)
+            {
+                /*  optional, until the end of the structure */
+                boxSize += 16; // num_output_samples
+                boxSize += 16; // num_total_samples
+                j++;
+            }
+            return boxSize;
+        }
     }
 
 
@@ -10496,6 +14304,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBits(stream, 29, this.reserved);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 3; // DRAP_type
+            boxSize += 29; // reserved
+            return boxSize;
+        }
     }
 
 
@@ -10518,6 +14335,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt16(stream, this.roll_distance);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // roll_distance
             return boxSize;
         }
     }
@@ -10545,6 +14370,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBit(stream, this.num_leading_samples_known);
             boxSize += IsoReaderWriter.WriteBits(stream, 7, this.num_leading_samples);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // num_leading_samples_known
+            boxSize += 7; // num_leading_samples
             return boxSize;
         }
     }
@@ -10613,6 +14447,32 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.discard_priority);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // operation_point_count
+
+            if (operation_point_count == 1)
+            {
+                boxSize += 16; // target_rate_share
+            }
+
+            else
+            {
+
+                for (int i = 0; i < operation_point_count; i++)
+                {
+                    boxSize += 32; // available_bitrate
+                    boxSize += 16; // target_rate_share0
+                }
+            }
+            boxSize += 32; // maximum_bitrate
+            boxSize += 32; // minimum_bitrate
+            boxSize += 8; // discard_priority
+            return boxSize;
+        }
     }
 
 
@@ -10635,6 +14495,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt16(stream, this.roll_distance);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // roll_distance
             return boxSize;
         }
     }
@@ -10665,6 +14533,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBit(stream, this.dependent_flag);
             boxSize += IsoReaderWriter.WriteBits(stream, 3, this.reserved);
             boxSize += IsoReaderWriter.WriteBits(stream, 4, this.SAP_type);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // dependent_flag
+            boxSize += 3; // reserved
+            boxSize += 4; // SAP_type
             return boxSize;
         }
     }
@@ -10705,6 +14583,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // meta_box_handler_type
+            boxSize += 32; // num_items
+
+            for (int i = 0; i < num_items; i++)
+            {
+                boxSize += 32; // item_id
+            }
+            return boxSize;
+        }
     }
 
 
@@ -10732,6 +14624,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // level_independently_decodable
+            boxSize += 7; // reserved
+            return boxSize;
+        }
     }
 
 
@@ -10757,6 +14658,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.hSpacing);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.vSpacing);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // hSpacing
+            boxSize += 32; // vSpacing
             return boxSize;
         }
     }
@@ -10804,6 +14714,21 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertOffD);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // cleanApertureWidthN
+            boxSize += 32; // cleanApertureWidthD
+            boxSize += 32; // cleanApertureHeightN
+            boxSize += 32; // cleanApertureHeightD
+            boxSize += 32; // horizOffN
+            boxSize += 32; // horizOffD
+            boxSize += 32; // vertOffN
+            boxSize += 32; // vertOffD
+            return boxSize;
+        }
     }
 
 
@@ -10827,6 +14752,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_group_id); // the remaining data may be specified 
+            /*   for a particular track_group_type */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_group_id
             /*   for a particular track_group_type */
             return boxSize;
         }
@@ -10857,6 +14791,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBits(stream, 31, this.reserved);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // left_view_flag
+            boxSize += 31; // reserved
+            return boxSize;
+        }
     }
 
 
@@ -10879,6 +14822,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -10905,6 +14856,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -10927,6 +14886,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -10953,6 +14920,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -10975,6 +14950,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -11001,6 +14984,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -11023,6 +15014,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -11049,6 +15048,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -11071,6 +15078,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -11097,6 +15112,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -11119,6 +15142,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -11148,6 +15179,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            return boxSize;
+        }
     }
 
 
@@ -11170,6 +15210,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(lhvcconfig); // lhvcconfig
             return boxSize;
         }
     }
@@ -11199,6 +15247,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            return boxSize;
+        }
     }
 
 
@@ -11221,6 +15278,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(lhvcconfig); // lhvcconfig
             return boxSize;
         }
     }
@@ -11250,6 +15315,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            return boxSize;
+        }
     }
 
 
@@ -11272,6 +15346,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(lhvcconfig); // lhvcconfig
             return boxSize;
         }
     }
@@ -11301,6 +15383,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(lhvcconfig); // lhvcconfig
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            return boxSize;
+        }
     }
 
 
@@ -11326,6 +15417,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(lhvcconfig); // lhvcconfig
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -11355,6 +15455,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            return boxSize;
+        }
     }
 
 
@@ -11377,6 +15486,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(lhvcconfig); // lhvcconfig
             return boxSize;
         }
     }
@@ -11406,6 +15523,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            return boxSize;
+        }
     }
 
 
@@ -11428,6 +15554,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(lhvcconfig); // lhvcconfig
             return boxSize;
         }
     }
@@ -11457,6 +15591,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            return boxSize;
+        }
     }
 
 
@@ -11481,6 +15624,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.lhvcconfig);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(lhvcconfig); // lhvcconfig
+            return boxSize;
+        }
     }
 
 
@@ -11503,6 +15654,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
             return boxSize;
         }
     }
@@ -11532,6 +15691,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            return boxSize;
+        }
     }
 
 
@@ -11557,6 +15725,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.config);
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -11607,6 +15784,22 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoReaderWriter.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            return boxSize;
+        }
     }
 
 
@@ -11655,6 +15848,22 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoReaderWriter.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            return boxSize;
+        }
     }
 
 
@@ -11682,6 +15891,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            return boxSize;
+        }
     }
 
 
@@ -11707,6 +15925,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.config);
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -11757,6 +15984,22 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoReaderWriter.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            return boxSize;
+        }
     }
 
 
@@ -11803,6 +16046,22 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoReaderWriter.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -11856,6 +16115,23 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            return boxSize;
+        }
     }
 
 
@@ -11905,6 +16181,23 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.mvcdconfig); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.mvdscalinfosei); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -11958,6 +16251,23 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            return boxSize;
+        }
     }
 
 
@@ -12009,6 +16319,23 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            return boxSize;
+        }
     }
 
 
@@ -12049,6 +16376,20 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -12093,6 +16434,20 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            return boxSize;
+        }
     }
 
 
@@ -12133,6 +16488,20 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -12177,6 +16546,20 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.a3dconfig); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            return boxSize;
+        }
     }
 
 
@@ -12214,6 +16597,19 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
             return boxSize;
         }
     }
@@ -12255,6 +16651,19 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            return boxSize;
+        }
     }
 
 
@@ -12292,6 +16701,19 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.intrinsic_camera_params); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
             return boxSize;
         }
     }
@@ -12333,6 +16755,19 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.extrinsic_camera_params); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoReaderWriter.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoReaderWriter.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoReaderWriter.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            return boxSize;
+        }
     }
 
 
@@ -12361,6 +16796,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.svcconfig); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.scalability); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.method); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(svcconfig); // svcconfig
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(method); // method
             return boxSize;
         }
     }
@@ -12393,6 +16838,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.method); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(svcconfig); // svcconfig
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(method); // method
+            return boxSize;
+        }
     }
 
 
@@ -12423,6 +16878,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.method); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(svcconfig); // svcconfig
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(method); // method
+            return boxSize;
+        }
     }
 
 
@@ -12451,6 +16916,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.svcconfig); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.scalability); // optional
             boxSize += IsoReaderWriter.WriteBox(stream, this.method); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(svcconfig); // svcconfig
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(method); // method
             return boxSize;
         }
     }
@@ -12486,6 +16961,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.method); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(svcconfig); // svcconfig
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(method); // method
+            return boxSize;
+        }
     }
 
 
@@ -12519,6 +17005,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.method); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(svcconfig); // svcconfig
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            boxSize += IsoReaderWriter.CalculateSize(scalability); // scalability
+            boxSize += IsoReaderWriter.CalculateSize(method); // method
+            return boxSize;
+        }
     }
 
 
@@ -12543,6 +17040,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.config); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            return boxSize;
+        }
     }
 
 
@@ -12562,6 +17067,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -12588,6 +17100,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.config); // optional 
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            return boxSize;
+        }
     }
 
 
@@ -12610,6 +17130,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.config); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
             return boxSize;
         }
     }
@@ -12639,6 +17167,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            return boxSize;
+        }
     }
 
 
@@ -12666,6 +17203,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
+            return boxSize;
+        }
     }
 
 
@@ -12690,6 +17236,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.config);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            return boxSize;
+        }
     }
 
 
@@ -12712,6 +17266,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
             return boxSize;
         }
     }
@@ -12739,6 +17301,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.config);
             boxSize += IsoReaderWriter.WriteBox(stream, this.descr); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -12771,6 +17342,16 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.priorities); // optional
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            boxSize += IsoReaderWriter.CalculateSize(methods); // methods
+            boxSize += IsoReaderWriter.CalculateSize(priorities); // priorities
+            return boxSize;
+        }
     }
 
 
@@ -12795,6 +17376,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.config);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
+            return boxSize;
+        }
     }
 
 
@@ -12817,6 +17406,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.config);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(config); // config
             return boxSize;
         }
     }
@@ -12872,6 +17469,27 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.level_info_entity_idx);
             }
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_active_tracks);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // level_is_present_flag
+            boxSize += 1; // level_is_static_flag
+            boxSize += 6; // reserved
+
+            if (level_is_present_flag)
+            {
+                boxSize += 8; // level_idc
+            }
+
+            if (level_is_static_flag == false)
+            {
+                boxSize += 32; // level_info_entity_idx
+            }
+            boxSize += 16; // num_active_tracks
             return boxSize;
         }
     }
@@ -12950,6 +17568,38 @@ namespace BoxGenerator2
             for (int i = 0; i < num_subgroup_ids; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_active_tracks[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // level_is_present_flag
+            boxSize += 1; // level_is_static_flag
+            boxSize += 7; // reserved
+
+            if (level_is_present_flag)
+            {
+                boxSize += 8; // level_idc
+            }
+
+            if (level_is_static_flag == false)
+            {
+                boxSize += 32; // level_info_entity_idx
+            }
+            boxSize += 16; // num_subgroup_ids
+            ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // track_subgroup_id
+            }
+
+            for (int i = 0; i < num_subgroup_ids; i++)
+            {
+                boxSize += 16; // num_active_tracks
             }
             return boxSize;
         }
@@ -13153,6 +17803,86 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // num_profile_tier_level_minus1
+
+            for (int i = 0; i <= num_profile_tier_level_minus1; i++)
+            {
+                boxSize += IsoReaderWriter.CalculateClassSize(opeg_ptl); // opeg_ptl
+            }
+            boxSize += 6; // reserved
+            boxSize += 1; // incomplete_operating_points_flag
+            boxSize += 9; // num_olss
+
+            for (int i = 0; i < num_olss; i++)
+            {
+                boxSize += 8; // ptl_idx
+                boxSize += 9; // ols_idx
+                boxSize += 6; // layer_count
+                boxSize += 1; // reserved0
+                boxSize += 1; // layer_info_present_flag
+
+                if (layer_info_present_flag[i])
+                {
+
+                    for (int j = 0; j < layer_count[i]; j++)
+                    {
+                        boxSize += 6; // layer_id
+                        boxSize += 1; // is_output_layer
+                        boxSize += 1; // reserved00
+                    }
+                }
+            }
+            boxSize += 4; // reserved1
+            boxSize += 12; // num_operating_points
+
+            for (int i = 0; i < num_operating_points; i++)
+            {
+                boxSize += 9; // ols_loop_entry_idx
+                boxSize += 3; // max_temporal_id
+                boxSize += 1; // frame_rate_info_flag
+                boxSize += 1; // bit_rate_info_flag
+
+                if (incomplete_operating_points_flag)
+                {
+                    boxSize += 2; // op_availability_idc
+                }
+
+                else
+                {
+                    boxSize += 2; // reserved2
+                }
+                boxSize += 3; // reserved01
+                boxSize += 2; // chroma_format_idc
+                boxSize += 3; // bit_depth_minus8
+                boxSize += 16; // max_picture_width
+                boxSize += 16; // max_picture_height
+
+                if (frame_rate_info_flag)
+                {
+                    boxSize += 16; // avg_frame_rate
+                    boxSize += 6; // reserved10
+                    boxSize += 2; // constant_frame_rate
+                }
+
+                if (bit_rate_info_flag)
+                {
+                    boxSize += 32; // max_bit_rate
+                    boxSize += 32; // avg_bit_rate
+                }
+                boxSize += 8; // entity_count
+
+                for (int j = 0; j < entity_count; j++)
+                {
+                    boxSize += 8; // entity_idx
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -13182,6 +17912,18 @@ namespace BoxGenerator2
             for (int i = 0; i < num_entities_in_group; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.track_switch_hierarchy_id[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 16; // track_switch_hierarchy_id
             }
             return boxSize;
         }
@@ -13223,6 +17965,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
+            }
+            return boxSize;
+        }
     }
 
 
@@ -13245,6 +18001,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBits(stream, 24, this.audNalUnit);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 24; // audNalUnit
             return boxSize;
         }
     }
@@ -13281,6 +18045,18 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBit(stream, this.accurateStatisticsFlag);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.avgBitRate);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.avgFrameRate);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // layerNumber
+            boxSize += 7; // reserved
+            boxSize += 1; // accurateStatisticsFlag
+            boxSize += 16; // avgBitRate
+            boxSize += 16; // avgFrameRate
             return boxSize;
         }
     }
@@ -13356,6 +18132,33 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClasses(stream, numReferences, this.dependency);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // subSequenceIdentifer
+            boxSize += 8; // layerNumber
+            boxSize += 1; // durationFlag
+            boxSize += 1; // avgRateFlag
+            boxSize += 6; // reserved
+
+            if (durationFlag)
+            {
+                boxSize += 32; // duration
+            }
+
+            if (avgRateFlag)
+            {
+                boxSize += 7; // reserved0
+                boxSize += 1; // accurateStatisticsFlag
+                boxSize += 16; // avgBitRate
+                boxSize += 16; // avgFrameRate
+            }
+            boxSize += 8; // numReferences
+            boxSize += IsoReaderWriter.CalculateClassSize(dependency); // dependency
+            return boxSize;
+        }
     }
 
 
@@ -13381,6 +18184,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.dci_nal_unit_length);
             boxSize += IsoReaderWriter.WriteBytes(stream, dci_nal_unit_length, this.dci_nal_unit);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // dci_nal_unit_length
+            boxSize += (ulong)dci_nal_unit_length * 8; // dci_nal_unit
             return boxSize;
         }
     }
@@ -13421,6 +18233,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // tierCount
+
+            for (int i = 1; i <= tierCount; i++)
+            {
+                boxSize += 16; // tierID
+                boxSize += 16; // delta
+            }
+            return boxSize;
+        }
     }
 
 
@@ -13443,6 +18269,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.eobNalUnit);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // eobNalUnit
             return boxSize;
         }
     }
@@ -13480,6 +18314,19 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // num_eos_nal_unit_minus1
+
+            for (int i = 0; i <= num_eos_nal_unit_minus1; i++)
+            {
+                boxSize += 16; // eosNalUnit
+            }
+            return boxSize;
+        }
     }
 
 
@@ -13511,6 +18358,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBit(stream, this.bl_irap_pic_flag);
             boxSize += IsoReaderWriter.WriteBits(stream, 6, this.bl_irap_nal_unit_type);
             boxSize += IsoReaderWriter.WriteInt8(stream, this.sample_offset);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
+            boxSize += 1; // bl_irap_pic_flag
+            boxSize += 6; // bl_irap_nal_unit_type
+            boxSize += 8; // sample_offset
             return boxSize;
         }
     }
@@ -13572,6 +18430,27 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 2; // reserved
+            boxSize += 6; // num_layers_in_track
+
+            for (int i = 0; i < num_layers_in_track; i++)
+            {
+                boxSize += 2; // reserved0
+                boxSize += 1; // irap_gdr_pics_in_layer_only_flag
+                boxSize += 1; // completeness_flag
+                boxSize += 6; // layer_id
+                boxSize += 3; // min_TemporalId
+                boxSize += 3; // max_TemporalId
+                boxSize += 1; // reserved00
+                boxSize += 7; // sub_layer_presence_flags
+            }
+            return boxSize;
+        }
     }
 
 
@@ -13614,6 +18493,22 @@ namespace BoxGenerator2
             }
             boxSize += IsoReaderWriter.WriteBits(stream, 10, this.pps_mix_nalu_types_in_pic_bit_pos);
             boxSize += IsoReaderWriter.WriteBits(stream, 6, this.pps_id);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // num_mix_nalu_pic_idx
+
+            for (int i = 0; i < num_mix_nalu_pic_idx; i++)
+            {
+                boxSize += 16; // mix_subp_track_idx1
+                boxSize += 16; // mix_subp_track_idx2
+            }
+            boxSize += 10; // pps_mix_nalu_types_in_pic_bit_pos
+            boxSize += 6; // pps_id
             return boxSize;
         }
     }
@@ -13676,6 +18571,42 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBit(stream, this.is_tl_switching_point);
             boxSize += IsoReaderWriter.WriteBits(stream, 3, this.reserved0);
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.tl_switching_distance);
+
+            if (groupID == primary_groupID)
+            {
+                // TODO: This should likely be a FullBox: ViewIdentifierBox; // Mandatory
+
+                // TODO: This should likely be a FullBox: TierInfoBox; // Mandatory
+
+                // TODO: This should likely be a FullBox: TierDependencyBox; // Mandatory
+
+                // TODO: This should likely be a FullBox: PriorityRangeBox; // Mandatory
+
+                /* Optional Boxes or fields may follow when defined later */
+                // TODO: This should likely be a FullBox: TierBitRateBox; // optional
+
+                // TODO: This should likely be a FullBox: BufferingBox; // optional
+
+                // TODO: This should likely be a FullBox: InitialParameterSetBox; // optional
+
+                // TODO: This should likely be a FullBox: ProtectionSchemeInfoBox; // optional
+
+                // TODO: This should likely be a FullBox: ViewPriorityBox; // optional
+
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // groupID
+            boxSize += 8; // primary_groupID
+            boxSize += 4; // reserved
+            boxSize += 1; // is_tl_switching_point
+            boxSize += 3; // reserved0
+            boxSize += 8; // tl_switching_distance
 
             if (groupID == primary_groupID)
             {
@@ -13794,6 +18725,45 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 6; // reserved
+            boxSize += 1; // large_size
+            boxSize += 1; // rle
+
+            if (large_size)
+            {
+                boxSize += 16; // entry_count
+            }
+
+            else
+            {
+                boxSize += 8; // entry_count0
+            }
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+
+                if (rle)
+                {
+
+                    if (large_size)
+                    {
+                        boxSize += 16; // NALU_start_number
+                    }
+
+                    else
+                    {
+                        boxSize += 8; // NALU_start_number0
+                    }
+                }
+                boxSize += 16; // groupID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -13818,6 +18788,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClass(stream, this.oinf);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(oinf); // oinf
+            return boxSize;
+        }
     }
 
 
@@ -13840,6 +18818,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt32(stream, this.delta_time);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // delta_time
             return boxSize;
         }
     }
@@ -13867,6 +18853,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.ps_nalu_length);
             boxSize += IsoReaderWriter.WriteBytes(stream, ps_nalu_length, this.ps_nal_unit);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // ps_nalu_length
+            boxSize += (ulong)ps_nalu_length * 8; // ps_nal_unit
             return boxSize;
         }
     }
@@ -13900,6 +18895,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBit(stream, this.pps_present);
             boxSize += IsoReaderWriter.WriteBit(stream, this.aps_present);
             boxSize += IsoReaderWriter.WriteBits(stream, 5, this.reserved);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // sps_present
+            boxSize += 1; // pps_present
+            boxSize += 1; // aps_present
+            boxSize += 5; // reserved
             return boxSize;
         }
     }
@@ -13979,6 +18985,38 @@ namespace BoxGenerator2
             if (subpic_id_info_flag)
             {
                 boxSize += IsoReaderWriter.WriteClass(stream, this.subpic_id_rewriting_info);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // subpic_id_info_flag
+            boxSize += 7; // reserved
+            boxSize += 16; // num_alternate_region_set
+
+            for (int i = 0; i < num_alternate_region_set; i++)
+            {
+                boxSize += 16; // num_regions_in_set
+                boxSize += 16; // alternate_region_set_id
+
+                for (int j = 0; j < num_regions_in_set[i]; j++)
+                {
+                    boxSize += 16; // groupID
+                }
+            }
+            boxSize += 16; // num_regions_minus1
+
+            for (int i = 0; i < num_regions_minus1; i++)
+            {
+                boxSize += 16; // region_id
+            }
+
+            if (subpic_id_info_flag)
+            {
+                boxSize += IsoReaderWriter.CalculateClassSize(subpic_id_rewriting_info); // subpic_id_rewriting_info
             }
             return boxSize;
         }
@@ -14084,6 +19122,49 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // groupID
+            boxSize += 8; // primary_groupID
+            boxSize += 1; // is_tier_IDR
+            boxSize += 1; // noInterLayerPredFlag
+            boxSize += 1; // useRefBasePicFlag
+            boxSize += 1; // storeBaseRepFlag
+            boxSize += 1; // is_tl_switching_point
+            boxSize += 3; // reserved
+            boxSize += 8; // tl_switching_distance
+
+            if (groupID == primary_groupID)
+            {
+                // TODO: This should likely be a FullBox: TierInfoBox; // Mandatory
+
+                // TODO: This should likely be a FullBox: SVCDependencyRangeBox; // Mandatory
+
+                // TODO: This should likely be a FullBox: PriorityRangeBox; // Mandatory
+
+                /* Optional Boxes or fields may follow when defined later */
+                // TODO: This should likely be a FullBox: TierBitRateBox; // optional
+
+                // TODO: This should likely be a FullBox: RectRegionBox; // optional
+
+                // TODO: This should likely be a FullBox: BufferingBox; // optional
+
+                // TODO: This should likely be a FullBox: TierDependencyBox; // optional
+
+                // TODO: This should likely be a FullBox: InitialParameterSetBox; // optional
+
+                // TODO: This should likely be a FullBox: IroiInfoBox; // optional
+
+                // TODO: This should likely be a FullBox: ProtectionSchemeInfoBox; // optional
+
+                // TODO: This should likely be a FullBox: TranscodingInfoBox; // optional
+
+            }
+            return boxSize;
+        }
     }
 
 
@@ -14119,6 +19200,20 @@ namespace BoxGenerator2
             for (int i = 1; i <= NALU_count; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt8(stream, this.groupID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // reserved
+            boxSize += 8; // NALU_count
+
+            for (int i = 1; i <= NALU_count; i++)
+            {
+                boxSize += 8; // groupID
             }
             return boxSize;
         }
@@ -14185,6 +19280,31 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // rect_region_flag
+            boxSize += 2; // reserved
+            boxSize += 1; // continuous_id_flag
+            boxSize += 12; // num_subpics_minus1
+
+            for (int i = 0; i <= num_subpics_minus1; i++)
+            {
+
+                if ((continuous_id_flag && i == 0) || !continuous_id_flag)
+                {
+                    boxSize += 16; // subpic_id
+                }
+
+                if (rect_region_flag)
+                {
+                    boxSize += 16; // groupID
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -14207,6 +19327,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // level_idc
             return boxSize;
         }
     }
@@ -14258,6 +19386,25 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // subpic_id_info_flag
+            boxSize += 15; // num_subpic_ref_idx
+
+            for (int i = 0; i < num_subpic_ref_idx; i++)
+            {
+                boxSize += 16; // subp_track_ref_idx
+            }
+
+            if (subpic_id_info_flag)
+            {
+                boxSize += IsoReaderWriter.CalculateClassSize(subpic_id_rewriting_info); // subpic_id_rewriting_info
+            }
+            return boxSize;
+        }
     }
 
 
@@ -14277,6 +19424,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -14317,6 +19471,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // groupID_info_4cc
+            boxSize += 16; // entry_count_minus1
+
+            for (int i = 0; i <= entry_count_minus1; i++)
+            {
+                boxSize += 16; // groupID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -14342,6 +19510,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
             boxSize += IsoReaderWriter.WriteBits(stream, 6, this.NAL_unit_type);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 2; // reserved
+            boxSize += 6; // NAL_unit_type
             return boxSize;
         }
     }
@@ -14447,6 +19624,47 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // groupID
+            boxSize += 1; // rect_region_flag
+
+            if (!rect_region_flag)
+            {
+                boxSize += 7; // reserved
+            }
+
+            else
+            {
+                boxSize += 2; // independent_idc
+                boxSize += 1; // full_picture
+                boxSize += 1; // filtering_disabled
+                boxSize += 1; // has_dependency_list
+                boxSize += 2; // reserved0
+
+                if (!full_picture)
+                {
+                    boxSize += 16; // horizontal_offset
+                    boxSize += 16; // vertical_offset
+                }
+                boxSize += 16; // region_width
+                boxSize += 16; // region_height
+
+                if (has_dependency_list)
+                {
+                    boxSize += 16; // dependency_rect_region_count
+
+                    for (int i = 1; i <= dependency_rect_region_count; i++)
+                    {
+                        boxSize += 16; // dependencyRectRegionGroupID
+                    }
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -14466,6 +19684,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -14522,6 +19747,24 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.tlAvgFrameRate);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // temporalLayerId
+            boxSize += 2; // tlprofile_space
+            boxSize += 1; // tltier_flag
+            boxSize += 5; // tlprofile_idc
+            boxSize += 32; // tlprofile_compatibility_flags
+            boxSize += 48; // tlconstraint_indicator_flags
+            boxSize += 8; // tllevel_idc
+            boxSize += 16; // tlMaxBitRate
+            boxSize += 16; // tlAvgBitRate
+            boxSize += 8; // tlConstantFrameRate
+            boxSize += 16; // tlAvgFrameRate
+            return boxSize;
+        }
     }
 
 
@@ -14543,6 +19786,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            // TODO: This should likely be a FullBox: ViewPriorityBox;
+
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             // TODO: This should likely be a FullBox: ViewPriorityBox;
 
             return boxSize;
@@ -14571,6 +19823,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClass(stream, this.oinf);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(oinf); // oinf
+            return boxSize;
+        }
     }
 
 
@@ -14594,6 +19854,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_group_id); // the remaining data may be specified 
+            /*   for a particular track_group_type */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_group_id
             /*   for a particular track_group_type */
             return boxSize;
         }
@@ -14623,6 +19892,15 @@ namespace BoxGenerator2
             /*   for a particular track_group_type */
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_group_id
+            /*   for a particular track_group_type */
+            return boxSize;
+        }
     }
 
 
@@ -14646,6 +19924,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.track_group_id); // the remaining data may be specified 
+            /*   for a particular track_group_type */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_group_id
             /*   for a particular track_group_type */
             return boxSize;
         }
@@ -14673,6 +19960,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -14695,6 +19990,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -14721,6 +20024,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -14743,6 +20054,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -14769,6 +20088,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -14791,6 +20118,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -14817,6 +20152,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -14839,6 +20182,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -14865,6 +20216,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -14887,6 +20246,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -14913,6 +20280,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -14935,6 +20310,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -14961,6 +20344,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -14983,6 +20374,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -15009,6 +20408,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
+            return boxSize;
+        }
     }
 
 
@@ -15031,6 +20438,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_IDs
             return boxSize;
         }
     }
@@ -15068,6 +20483,20 @@ namespace BoxGenerator2
             for (int i = 0; i < num_entities_in_group; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id); // the remaining data may be specified for a particular grouping_type
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
             }
             return boxSize;
         }
@@ -15109,6 +20538,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
+            }
+            return boxSize;
+        }
     }
 
 
@@ -15144,6 +20587,20 @@ namespace BoxGenerator2
             for (int i = 0; i < num_entities_in_group; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id); // the remaining data may be specified for a particular grouping_type
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
             }
             return boxSize;
         }
@@ -15185,6 +20642,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
+            }
+            return boxSize;
+        }
     }
 
 
@@ -15220,6 +20691,20 @@ namespace BoxGenerator2
             for (int i = 0; i < num_entities_in_group; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id); // the remaining data may be specified for a particular grouping_type
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
             }
             return boxSize;
         }
@@ -15261,6 +20746,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
+            }
+            return boxSize;
+        }
     }
 
 
@@ -15296,6 +20795,20 @@ namespace BoxGenerator2
             for (int i = 0; i < num_entities_in_group; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id); // the remaining data may be specified for a particular grouping_type
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
             }
             return boxSize;
         }
@@ -15337,6 +20850,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
+            }
+            return boxSize;
+        }
     }
 
 
@@ -15372,6 +20899,20 @@ namespace BoxGenerator2
             for (int i = 0; i < num_entities_in_group; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id); // the remaining data may be specified for a particular grouping_type
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
             }
             return boxSize;
         }
@@ -15413,6 +20954,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
+            }
+            return boxSize;
+        }
     }
 
 
@@ -15448,6 +21003,20 @@ namespace BoxGenerator2
             for (int i = 0; i < num_entities_in_group; i++)
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.entity_id); // the remaining data may be specified for a particular grouping_type
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
             }
             return boxSize;
         }
@@ -15489,6 +21058,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
+            }
+            return boxSize;
+        }
     }
 
 
@@ -15527,6 +21110,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
+            }
+            return boxSize;
+        }
     }
 
 
@@ -15554,6 +21151,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)aux_type.Length * 8; // aux_type
+            boxSize += (ulong)aux_subtype.Length * 8; // aux_subtype
+            return boxSize;
+        }
     }
 
 
@@ -15576,6 +21182,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteClass(stream, this.AVCConfig);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(AVCConfig); // AVCConfig
             return boxSize;
         }
     }
@@ -15621,6 +21235,21 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.horizOffD);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertOffN);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertOffD);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // cleanApertureWidthN
+            boxSize += 32; // cleanApertureWidthD
+            boxSize += 32; // cleanApertureHeightN
+            boxSize += 32; // cleanApertureHeightD
+            boxSize += 32; // horizOffN
+            boxSize += 32; // horizOffD
+            boxSize += 32; // vertOffN
+            boxSize += 32; // vertOffD
             return boxSize;
         }
     }
@@ -15692,6 +21321,33 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // colour_type
+
+            if (colour_type == IsoReaderWriter.FromFourCC("nclx"))
+            {
+                boxSize += 16; // colour_primaries
+                boxSize += 16; // transfer_characteristics
+                boxSize += 16; // matrix_coefficients
+                boxSize += 1; // full_range_flag
+                boxSize += 7; // reserved
+            }
+
+            else if (colour_type == IsoReaderWriter.FromFourCC("rICC"))
+            {
+                boxSize += IsoReaderWriter.CalculateClassSize(ICC_profile); // ICC_profile
+            }
+
+            else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
+            {
+                boxSize += IsoReaderWriter.CalculateClassSize(ICC_profile0); // ICC_profile0
+            }
+            return boxSize;
+        }
     }
 
 
@@ -15714,6 +21370,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteClass(stream, this.HEVCConfig);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(HEVCConfig); // HEVCConfig
             return boxSize;
         }
     }
@@ -15743,6 +21407,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBit(stream, this.axis);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 7; // reserved
+            boxSize += 1; // axis
+            return boxSize;
+        }
     }
 
 
@@ -15768,6 +21441,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
             boxSize += IsoReaderWriter.WriteBits(stream, 2, this.angle);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 6; // reserved
+            boxSize += 2; // angle
             return boxSize;
         }
     }
@@ -15797,6 +21479,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.image_height);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // image_width
+            boxSize += 32; // image_height
+            return boxSize;
+        }
     }
 
 
@@ -15819,6 +21510,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.JPEGprefix);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)JPEGprefix.Length * 8; // JPEGprefix
             return boxSize;
         }
     }
@@ -15845,6 +21544,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClass(stream, this.LHEVCConfig);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(LHEVCConfig); // LHEVCConfig
+            return boxSize;
+        }
     }
 
 
@@ -15869,6 +21576,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.layer_id);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // layer_id
+            return boxSize;
+        }
     }
 
 
@@ -15891,6 +21606,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteClass(stream, this.op_info); // specified in ISO/IEC 14496-15
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(op_info); // op_info
             return boxSize;
         }
     }
@@ -15918,6 +21641,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.hSpacing);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.vSpacing);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // hSpacing
+            boxSize += 32; // vSpacing
             return boxSize;
         }
     }
@@ -15955,6 +21687,19 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // num_channels
+
+            for (int i = 0; i < num_channels; i++)
+            {
+                boxSize += 8; // bits_per_channel
+            }
+            return boxSize;
+        }
     }
 
 
@@ -15980,6 +21725,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.horizontal_offset);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.vertical_offset);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // horizontal_offset
+            boxSize += 32; // vertical_offset
             return boxSize;
         }
     }
@@ -16069,6 +21823,42 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += 32; // sample_delta
+                boxSize += 16; // subsample_count
+
+                if (subsample_count > 0)
+                {
+
+                    for (int j = 0; j < subsample_count; j++)
+                    {
+
+                        if (version == 1)
+                        {
+                            boxSize += 32; // subsample_size
+                        }
+
+                        else
+                        {
+                            boxSize += 16; // subsample_size0
+                        }
+                        boxSize += 8; // subsample_priority
+                        boxSize += 8; // discardable
+                        boxSize += 32; // codec_specific_parameters
+                    }
+                }
+            }
+            return boxSize;
+        }
     }
 
 
@@ -16091,6 +21881,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.target_ols_idx);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // target_ols_idx
             return boxSize;
         }
     }
@@ -16120,6 +21918,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt8(stream, this.exposure_numerator);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // exposure_step
+            boxSize += 8; // exposure_numerator
+            return boxSize;
+        }
     }
 
 
@@ -16145,6 +21952,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt8(stream, this.flash_exposure_numerator);
             boxSize += IsoReaderWriter.WriteInt8(stream, this.flash_exposure_denominator);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // flash_exposure_numerator
+            boxSize += 8; // flash_exposure_denominator
             return boxSize;
         }
     }
@@ -16174,6 +21990,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteString(stream, this.alt_lang);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)alt_text.Length * 8; // alt_text
+            boxSize += (ulong)alt_lang.Length * 8; // alt_lang
+            return boxSize;
+        }
     }
 
 
@@ -16196,6 +22021,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.creation_time);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // creation_time
             return boxSize;
         }
     }
@@ -16225,6 +22058,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt8(stream, this.f_stop_denominator);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // f_stop_numerator
+            boxSize += 8; // f_stop_denominator
+            return boxSize;
+        }
     }
 
 
@@ -16250,6 +22092,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.focus_distance_numerator);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.focus_distance_denominator);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // focus_distance_numerator
+            boxSize += 16; // focus_distance_denominator
             return boxSize;
         }
     }
@@ -16285,6 +22136,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.target_height_denominator);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // target_width_numerator
+            boxSize += 16; // target_width_denominator
+            boxSize += 16; // target_height_numerator
+            boxSize += 16; // target_height_denominator
+            return boxSize;
+        }
     }
 
 
@@ -16309,6 +22171,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt64(stream, this.modification_time);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // modification_time
+            return boxSize;
+        }
     }
 
 
@@ -16331,6 +22201,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.frame_number);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // frame_number
             return boxSize;
         }
     }
@@ -16368,6 +22246,19 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // reference_type_count
+
+            for (int i = 0; i < reference_type_count; i++)
+            {
+                boxSize += 32; // reference_type
+            }
+            return boxSize;
+        }
     }
 
 
@@ -16401,6 +22292,17 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteString(stream, this.tags);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)lang.Length * 8; // lang
+            boxSize += (ulong)name.Length * 8; // name
+            boxSize += (ulong)description.Length * 8; // description
+            boxSize += (ulong)tags.Length * 8; // tags
+            return boxSize;
+        }
     }
 
 
@@ -16426,6 +22328,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.blue_amber);
             boxSize += IsoReaderWriter.WriteInt8(stream, this.green_magenta);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // blue_amber
+            boxSize += 8; // green_magenta
             return boxSize;
         }
     }
@@ -16525,6 +22436,45 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved1
+            boxSize += 1; // reserved2
+            boxSize += 1; // ccv_primaries_present_flag
+            boxSize += 1; // ccv_min_luminance_value_present_flag
+            boxSize += 1; // ccv_max_luminance_value_present_flag
+            boxSize += 1; // ccv_avg_luminance_value_present_flag
+            boxSize += 2; // ccv_reserved_zero_2bits
+
+            if (ccv_primaries_present_flag)
+            {
+
+                for (int c = 0; c < 3; c++)
+                {
+                    boxSize += 32; // ccv_primaries_x
+                    boxSize += 32; // ccv_primaries_y
+                }
+            }
+
+            if (ccv_min_luminance_value_present_flag)
+            {
+                boxSize += 32; // ccv_min_luminance_value
+            }
+
+            if (ccv_max_luminance_value_present_flag)
+            {
+                boxSize += 32; // ccv_max_luminance_value
+            }
+
+            if (ccv_avg_luminance_value_present_flag)
+            {
+                boxSize += 32; // ccv_avg_luminance_value
+            }
+            return boxSize;
+        }
     }
 
 
@@ -16572,6 +22522,23 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.min_display_mastering_luminance);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            for (int c = 0; c < 3; c++)
+            {
+                boxSize += 16; // display_primaries_x
+                boxSize += 16; // display_primaries_y
+            }
+            boxSize += 16; // white_point_x
+            boxSize += 16; // white_point_y
+            boxSize += 32; // max_display_mastering_luminance
+            boxSize += 32; // min_display_mastering_luminance
+            return boxSize;
+        }
     }
 
 
@@ -16599,6 +22566,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_pic_average_light_level);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // max_content_light_level
+            boxSize += 16; // max_pic_average_light_level
+            return boxSize;
+        }
     }
 
 
@@ -16621,6 +22597,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.transition_direction);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // transition_direction
             return boxSize;
         }
     }
@@ -16650,6 +22634,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBits(stream, 7, this.transition_shape);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // transition_direction
+            boxSize += 7; // transition_shape
+            return boxSize;
+        }
     }
 
 
@@ -16672,6 +22665,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.transition_direction);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // transition_direction
             return boxSize;
         }
     }
@@ -16698,6 +22699,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.transition_direction);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // transition_direction
+            return boxSize;
+        }
     }
 
 
@@ -16720,6 +22729,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.transition_period);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // transition_period
             return boxSize;
         }
     }
@@ -16746,6 +22763,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.duration);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // duration
+            return boxSize;
+        }
     }
 
 
@@ -16768,6 +22793,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.bits_per_pixel);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // bits_per_pixel
             return boxSize;
         }
     }
@@ -16794,6 +22827,14 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteClass(stream, this.sid_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(sid_info); // sid_info
+            return boxSize;
+        }
     }
 
 
@@ -16816,6 +22857,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteClass(stream, this.sor_info); // specified in ISO/IEC 14496-15
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateClassSize(sor_info); // sor_info
             return boxSize;
         }
     }
@@ -16853,6 +22902,20 @@ namespace BoxGenerator2
             for (int j = 0; j < reference_count; j++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
             }
             return boxSize;
         }
@@ -16894,6 +22957,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -16929,6 +23006,20 @@ namespace BoxGenerator2
             for (int j = 0; j < reference_count; j++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
             }
             return boxSize;
         }
@@ -16970,6 +23061,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -17005,6 +23110,20 @@ namespace BoxGenerator2
             for (int j = 0; j < reference_count; j++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
             }
             return boxSize;
         }
@@ -17046,6 +23165,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -17081,6 +23214,20 @@ namespace BoxGenerator2
             for (int j = 0; j < reference_count; j++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
             }
             return boxSize;
         }
@@ -17122,6 +23269,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -17157,6 +23318,20 @@ namespace BoxGenerator2
             for (int j = 0; j < reference_count; j++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
             }
             return boxSize;
         }
@@ -17198,6 +23373,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -17233,6 +23422,20 @@ namespace BoxGenerator2
             for (int j = 0; j < reference_count; j++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
             }
             return boxSize;
         }
@@ -17274,6 +23477,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -17309,6 +23526,20 @@ namespace BoxGenerator2
             for (int j = 0; j < reference_count; j++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
             }
             return boxSize;
         }
@@ -17350,6 +23581,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -17385,6 +23630,20 @@ namespace BoxGenerator2
             for (int j = 0; j < reference_count; j++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
             }
             return boxSize;
         }
@@ -17426,6 +23685,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -17461,6 +23734,20 @@ namespace BoxGenerator2
             for (int j = 0; j < reference_count; j++)
             {
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.to_item_ID);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
             }
             return boxSize;
         }
@@ -17502,6 +23789,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
+            }
+            return boxSize;
+        }
     }
 
 
@@ -17527,6 +23828,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt16(stream, this.time_offset);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.timescale_multiplier);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // time_offset
+            boxSize += 16; // timescale_multiplier
             return boxSize;
         }
     }
@@ -17567,6 +23877,20 @@ namespace BoxGenerator2
             }
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // sample_id
+            boxSize += 8; // num_direct_reference_samples
+
+            for (int i = 0; i < num_direct_reference_samples; i++)
+            {
+                boxSize += 32; // direct_reference_sample_id
+            }
+            return boxSize;
+        }
     }
 
 
@@ -17592,6 +23916,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt8(stream, this.exposure_step);
             boxSize += IsoReaderWriter.WriteInt8(stream, this.exposure_numerator);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // exposure_step
+            boxSize += 8; // exposure_numerator
             return boxSize;
         }
     }
@@ -17621,6 +23954,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteInt8(stream, this.flash_exposure_denominator);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // flash_exposure_numerator
+            boxSize += 8; // flash_exposure_denominator
+            return boxSize;
+        }
     }
 
 
@@ -17646,6 +23988,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteInt8(stream, this.f_stop_numerator);
             boxSize += IsoReaderWriter.WriteInt8(stream, this.f_stop_denominator);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // f_stop_numerator
+            boxSize += 8; // f_stop_denominator
             return boxSize;
         }
     }
@@ -17675,6 +24026,15 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.focus_distance_denominator);
             return boxSize;
         }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // focus_distance_numerator
+            boxSize += 16; // focus_distance_denominator
+            return boxSize;
+        }
     }
 
 
@@ -17697,6 +24057,14 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.frame_number);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // frame_number
             return boxSize;
         }
     }
@@ -17724,6 +24092,15 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.blue_amber);
             boxSize += IsoReaderWriter.WriteInt8(stream, this.green_magenta);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // blue_amber
+            boxSize += 8; // green_magenta
             return boxSize;
         }
     }
