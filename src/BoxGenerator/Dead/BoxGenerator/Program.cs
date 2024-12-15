@@ -812,6 +812,8 @@ namespace BoxGenerator2
                     tp = (field as PseudoField)?.Type;
                     value = "";
                 }
+
+                string tt = GetType((field as PseudoField)?.Type);
                 if (!string.IsNullOrEmpty(value) && value.StartsWith('('))
                 {
                     value = "";
@@ -831,7 +833,7 @@ namespace BoxGenerator2
                     comment = "// " + value;
                     value = "";
                 }
-                else if (GetType((field as PseudoField)?.Type) == "bool" && !string.IsNullOrEmpty(value))
+                else if (tt == "bool" && !string.IsNullOrEmpty(value))
                 {
                     if (value == "= 0")
                         value = "= false";
@@ -840,6 +842,10 @@ namespace BoxGenerator2
                     else
                         Debug.WriteLine($"Unsupported bool value: {value}");
                 }
+                else if(tt.StartsWith('[') && value == "= 0")
+                {
+                    value = "= []";
+                }
 
                 if (!string.IsNullOrEmpty(value))
                 {
@@ -847,7 +853,7 @@ namespace BoxGenerator2
                 }
                 
                 string name = GetFieldName(field);
-                return $"\tpublic {GetType((field as PseudoField)?.Type)} {name} {{ get; set; }}{value} {comment}";
+                return $"\tpublic {tt} {name} {{ get; set; }}{value} {comment}";
             }
         }
         else
