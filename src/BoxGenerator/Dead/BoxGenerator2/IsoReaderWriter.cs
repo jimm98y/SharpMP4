@@ -213,17 +213,17 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static uint FourCCToUInt32(Stream stream, string value)
-    {
-        throw new NotImplementedException();
-    }
-
     internal static sbyte[] ReadInt8Array(Stream stream)
     {
         throw new NotImplementedException();
     }
 
     internal static ulong WriteInt8Array(Stream stream, sbyte[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong WriteInt8Array(Stream stream, uint count, sbyte[] value)
     {
         throw new NotImplementedException();
     }
@@ -258,22 +258,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteInt32Array(Stream stream, int count, int[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static short[] ReadInt16Array(Stream stream, int count)
-    {
-        throw new NotImplementedException();
-    }
-
     internal static ulong WriteInt16Array(Stream stream, ushort count, short[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static int[] ReadInt32Array(Stream stream, int count)
     {
         throw new NotImplementedException();
     }
@@ -298,12 +283,17 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static sbyte ReadInt8Array(Stream stream, byte count)
+    internal static sbyte[] ReadInt8Array(Stream stream, byte count)
     {
         throw new NotImplementedException();
     }
 
     internal static ulong WriteUInt32Array(Stream stream, uint[] values)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong WriteInt32Array(Stream stream, int[] values)
     {
         throw new NotImplementedException();
     }

@@ -1415,7 +1415,7 @@
       "description": "user-extension box",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class BoxHeader (\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type) {\n\tunsigned int(32) size;\n\tunsigned int(32) type = boxtype;\n\tif (size==1) {\n\t\tunsigned int(64) largesize;\n\t} else if (size==0) {\n\t\t// box extends to end of file\n\t}\n\tif (boxtype=='uuid') {\n\t\tunsigned int(8)[16] usertype = extended_type;\n\t}\n}"
+      "syntax": "aligned(8) class BoxHeader (\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type) {\n\tunsigned int(32) size;\n\tunsigned int(32) type = boxtype;\n\tif (size==1) {\n\t\tunsigned int(64) largesize;\n\t} else if (size==0) {\n\t\t// box extends to end of file\n\t}\n\tif (type=='uuid') {\n\t\tunsigned int(8)[16] usertype = extended_type;\n\t}\n}"
     },
     {
       "fourcc": "vmhd",
