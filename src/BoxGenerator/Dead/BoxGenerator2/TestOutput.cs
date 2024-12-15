@@ -1444,6 +1444,7 @@ namespace BoxGenerator2
         public bool full_range_flag { get; set; }
         public byte reserved { get; set; } = 0;
         public ICC_profile ICC_profile { get; set; }  //  restricted ICC profile
+        public ICC_profile ICC_profile0 { get; set; }  //  unrestricted ICC profile
 
         public ColourInformationBox()
         { }
@@ -1469,7 +1470,7 @@ namespace BoxGenerator2
 
             else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
             {
-                this.ICC_profile = (ICC_profile)IsoReaderWriter.ReadClass(stream);
+                this.ICC_profile0 = (ICC_profile)IsoReaderWriter.ReadClass(stream);
             }
         }
 
@@ -1495,7 +1496,7 @@ namespace BoxGenerator2
 
             else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
             {
-                size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
+                size += IsoReaderWriter.WriteClass(stream, this.ICC_profile0);
             }
             return size;
         }
@@ -1613,12 +1614,18 @@ namespace BoxGenerator2
         public sbyte elevation { get; set; }
         public ulong omittedChannelsMap { get; set; }  //  a ‘1’ bit indicates ‘not in this track’
         public byte object_count { get; set; }
+        public byte stream_structure0 { get; set; }
         public byte format_ordering { get; set; }
         public byte baseChannelCount { get; set; }
+        public byte definedLayout0 { get; set; }
         public byte layout_channel_count { get; set; }
+        public byte speaker_position0 { get; set; }
+        public short azimuth0 { get; set; }
+        public sbyte elevation0 { get; set; }
         public byte reserved { get; set; } = 0;
         public byte channel_order_definition { get; set; }
         public bool omitted_channels_present { get; set; }
+        public ulong omittedChannelsMap0 { get; set; }  //  a ‘1’ bit indicates ‘not in this track’
 
         public ChannelLayout()
         { }
@@ -1666,13 +1673,13 @@ namespace BoxGenerator2
 
             else
             {
-                this.stream_structure = IsoReaderWriter.ReadBits(stream, 4);
+                this.stream_structure0 = IsoReaderWriter.ReadBits(stream, 4);
                 this.format_ordering = IsoReaderWriter.ReadBits(stream, 4);
                 this.baseChannelCount = IsoReaderWriter.ReadUInt8(stream);
 
                 if ((stream_structure & channelStructured) == channelStructured)
                 {
-                    this.definedLayout = IsoReaderWriter.ReadUInt8(stream);
+                    this.definedLayout0 = IsoReaderWriter.ReadUInt8(stream);
 
                     if (definedLayout == 0)
                     {
@@ -1680,13 +1687,13 @@ namespace BoxGenerator2
 
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-                            this.speaker_position = IsoReaderWriter.ReadUInt8(stream);
+                            this.speaker_position0 = IsoReaderWriter.ReadUInt8(stream);
 
                             if (speaker_position == 126)
                             {
                                 /*  explicit position */
-                                this.azimuth = IsoReaderWriter.ReadInt16(stream);
-                                this.elevation = IsoReaderWriter.ReadInt8(stream);
+                                this.azimuth0 = IsoReaderWriter.ReadInt16(stream);
+                                this.elevation0 = IsoReaderWriter.ReadInt8(stream);
                             }
                         }
                     }
@@ -1697,9 +1704,9 @@ namespace BoxGenerator2
                         this.channel_order_definition = IsoReaderWriter.ReadBits(stream, 3);
                         this.omitted_channels_present = IsoReaderWriter.ReadBit(stream);
 
-                        if (omitted_channels_present == 1)
+                        if (omitted_channels_present == true)
                         {
-                            this.omittedChannelsMap = IsoReaderWriter.ReadUInt64(stream);
+                            this.omittedChannelsMap0 = IsoReaderWriter.ReadUInt64(stream);
                         }
                     }
                 }
@@ -1755,13 +1762,13 @@ namespace BoxGenerator2
 
             else
             {
-                size += IsoReaderWriter.WriteBits(stream, 4, this.stream_structure);
+                size += IsoReaderWriter.WriteBits(stream, 4, this.stream_structure0);
                 size += IsoReaderWriter.WriteBits(stream, 4, this.format_ordering);
                 size += IsoReaderWriter.WriteUInt8(stream, this.baseChannelCount);
 
                 if ((stream_structure & channelStructured) == channelStructured)
                 {
-                    size += IsoReaderWriter.WriteUInt8(stream, this.definedLayout);
+                    size += IsoReaderWriter.WriteUInt8(stream, this.definedLayout0);
 
                     if (definedLayout == 0)
                     {
@@ -1769,13 +1776,13 @@ namespace BoxGenerator2
 
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-                            size += IsoReaderWriter.WriteUInt8(stream, this.speaker_position);
+                            size += IsoReaderWriter.WriteUInt8(stream, this.speaker_position0);
 
                             if (speaker_position == 126)
                             {
                                 /*  explicit position */
-                                size += IsoReaderWriter.WriteInt16(stream, this.azimuth);
-                                size += IsoReaderWriter.WriteInt8(stream, this.elevation);
+                                size += IsoReaderWriter.WriteInt16(stream, this.azimuth0);
+                                size += IsoReaderWriter.WriteInt8(stream, this.elevation0);
                             }
                         }
                     }
@@ -1786,9 +1793,9 @@ namespace BoxGenerator2
                         size += IsoReaderWriter.WriteBits(stream, 3, this.channel_order_definition);
                         size += IsoReaderWriter.WriteBit(stream, this.omitted_channels_present);
 
-                        if (omitted_channels_present == 1)
+                        if (omitted_channels_present == true)
                         {
-                            size += IsoReaderWriter.WriteUInt64(stream, this.omittedChannelsMap);
+                            size += IsoReaderWriter.WriteUInt64(stream, this.omittedChannelsMap0);
                         }
                     }
                 }
@@ -1806,15 +1813,18 @@ namespace BoxGenerator2
     public class DownMixInstructions : FullBox
     {
         public override string FourCC { get { return "dmix"; } }
-        public byte[] reserved { get; set; } = [];  //  byte align
-        public int downmix_instructions_count { get; set; } = 1;
+        public bool reserved { get; set; } = false;
+        public byte downmix_instructions_count { get; set; }
+        public int downmix_instructions_count0 { get; set; } = 1;
         public byte targetLayout { get; set; }
+        public bool reserved0 { get; set; } = false;
         public byte targetChannelCount { get; set; }
         public bool in_stream { get; set; }
         public byte downmix_ID { get; set; }
         public byte bs_downmix_offset { get; set; }
         public int size { get; set; } = 4;
         public byte bs_downmix_coefficient_v1 { get; set; }
+        public byte[] reserved00 { get; set; } = [];  //  byte align
         public byte bs_downmix_coefficient { get; set; }
 
         public DownMixInstructions()
@@ -1832,18 +1842,18 @@ namespace BoxGenerator2
 
             else
             {
-                this.downmix_instructions_count = IsoReaderWriter.ReadInt32(stream);
+                this.downmix_instructions_count0 = IsoReaderWriter.ReadInt32(stream);
             }
 
             for (int a = 1; a <= downmix_instructions_count; a++)
             {
                 this.targetLayout = IsoReaderWriter.ReadUInt8(stream);
-                this.reserved = IsoReaderWriter.ReadBit(stream);
+                this.reserved0 = IsoReaderWriter.ReadBit(stream);
                 this.targetChannelCount = IsoReaderWriter.ReadBits(stream, 7);
                 this.in_stream = IsoReaderWriter.ReadBit(stream);
                 this.downmix_ID = IsoReaderWriter.ReadBits(stream, 7);
 
-                if (in_stream == 0)
+                if (in_stream == false)
                 {
                     /*  downmix coefficients are out of stream and supplied here */
 
@@ -1862,7 +1872,7 @@ namespace BoxGenerator2
                                 size += 5;
                             }
                         }
-                        this.reserved = IsoReaderWriter.ReadBytes(stream, (ulong)(Math.Ceiling(size / 8d) - size));
+                        this.reserved00 = IsoReaderWriter.ReadBytes(stream, (ulong)(Math.Ceiling(size / 8d) - size));
                     }
 
                     else
@@ -1894,18 +1904,18 @@ namespace BoxGenerator2
 
             else
             {
-                size += IsoReaderWriter.WriteInt32(stream, this.downmix_instructions_count);
+                size += IsoReaderWriter.WriteInt32(stream, this.downmix_instructions_count0);
             }
 
             for (int a = 1; a <= downmix_instructions_count; a++)
             {
                 size += IsoReaderWriter.WriteUInt8(stream, this.targetLayout);
-                size += IsoReaderWriter.WriteBit(stream, this.reserved);
+                size += IsoReaderWriter.WriteBit(stream, this.reserved0);
                 size += IsoReaderWriter.WriteBits(stream, 7, this.targetChannelCount);
                 size += IsoReaderWriter.WriteBit(stream, this.in_stream);
                 size += IsoReaderWriter.WriteBits(stream, 7, this.downmix_ID);
 
-                if (in_stream == 0)
+                if (in_stream == false)
                 {
                     /*  downmix coefficients are out of stream and supplied here */
 
@@ -1924,7 +1934,7 @@ namespace BoxGenerator2
                                 size += 5;
                             }
                         }
-                        size += IsoReaderWriter.WriteBytes(stream, (ulong)(Math.Ceiling(size / 8d) - size), this.reserved);
+                        size += IsoReaderWriter.WriteBytes(stream, (ulong)(Math.Ceiling(size / 8d) - size), this.reserved00);
                     }
 
                     else
@@ -2237,7 +2247,7 @@ namespace BoxGenerator2
     public class rtpmoviehintinformation : Box
     {
         public override string FourCC { get { return "rtp "; } }
-        public uint descriptionformat { get; set; } = "sdp ";
+        public uint descriptionformat { get; set; } = IsoReaderWriter.FromFourCC("sdp ");
         public sbyte[] sdptext { get; set; }
 
         public rtpmoviehintinformation()
@@ -2478,10 +2488,12 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "ipma"; } }
         public uint entry_count { get; set; }
-        public uint item_ID { get; set; }
+        public ushort item_ID { get; set; }
+        public uint item_ID0 { get; set; }
         public byte association_count { get; set; }
         public bool essential { get; set; }
         public ushort property_index { get; set; }
+        public byte property_index0 { get; set; }
 
         public ItemPropertyAssociationBox()
         { }
@@ -2501,7 +2513,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    this.item_ID = IsoReaderWriter.ReadUInt32(stream);
+                    this.item_ID0 = IsoReaderWriter.ReadUInt32(stream);
                 }
                 this.association_count = IsoReaderWriter.ReadUInt8(stream);
 
@@ -2516,7 +2528,7 @@ namespace BoxGenerator2
 
                     else
                     {
-                        this.property_index = IsoReaderWriter.ReadBits(stream, 7);
+                        this.property_index0 = IsoReaderWriter.ReadBits(stream, 7);
                     }
                 }
             }
@@ -2538,7 +2550,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
+                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
                 }
                 size += IsoReaderWriter.WriteUInt8(stream, this.association_count);
 
@@ -2553,7 +2565,7 @@ namespace BoxGenerator2
 
                     else
                     {
-                        size += IsoReaderWriter.WriteBits(stream, 7, this.property_index);
+                        size += IsoReaderWriter.WriteBits(stream, 7, this.property_index0);
                     }
                 }
             }
@@ -2595,6 +2607,7 @@ namespace BoxGenerator2
         public int min_initial_alt_startup_offset { get; set; }
         public uint num_entries { get; set; }
         public uint grouping_type_parameter { get; set; }
+        public int min_initial_alt_startup_offset0 { get; set; }
 
         public AlternativeStartupSequencePropertiesBox()
         { }
@@ -2615,7 +2628,7 @@ namespace BoxGenerator2
                 for (int j = 1; j <= num_entries; j++)
                 {
                     this.grouping_type_parameter = IsoReaderWriter.ReadUInt32(stream);
-                    this.min_initial_alt_startup_offset = IsoReaderWriter.ReadInt32(stream);
+                    this.min_initial_alt_startup_offset0 = IsoReaderWriter.ReadInt32(stream);
                 }
             }
         }
@@ -2637,7 +2650,7 @@ namespace BoxGenerator2
                 for (int j = 1; j <= num_entries; j++)
                 {
                     size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
-                    size += IsoReaderWriter.WriteInt32(stream, this.min_initial_alt_startup_offset);
+                    size += IsoReaderWriter.WriteInt32(stream, this.min_initial_alt_startup_offset0);
                 }
             }
             return size;
@@ -2736,7 +2749,7 @@ namespace BoxGenerator2
         public uint pattern_count { get; set; }
         public byte[] pattern_length { get; set; }
         public byte[] sample_count { get; set; }
-        public byte[] sample_group_description_index { get; set; }  //  whose msb might indicate fragment_local or global
+        public byte[][] sample_group_description_index { get; set; }  //  whose msb might indicate fragment_local or global
 
         public CompactSampleToGroupBox()
         { }
@@ -2746,7 +2759,7 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
             this.grouping_type = IsoReaderWriter.ReadUInt32(stream);
 
-            if (grouping_type_parameter_present == 1)
+            if (grouping_type_parameter_present == true)
             {
                 this.grouping_type_parameter = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -2775,7 +2788,7 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
 
-            if (grouping_type_parameter_present == 1)
+            if (grouping_type_parameter_present == true)
             {
                 size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
             }
@@ -2804,11 +2817,16 @@ namespace BoxGenerator2
     public class CompositionToDecodeBox : FullBox
     {
         public override string FourCC { get { return "cslg"; } }
-        public long compositionToDTSShift { get; set; }
-        public long leastDecodeToDisplayDelta { get; set; }
-        public long greatestDecodeToDisplayDelta { get; set; }
-        public long compositionStartTime { get; set; }
-        public long compositionEndTime { get; set; }
+        public int compositionToDTSShift { get; set; }
+        public int leastDecodeToDisplayDelta { get; set; }
+        public int greatestDecodeToDisplayDelta { get; set; }
+        public int compositionStartTime { get; set; }
+        public int compositionEndTime { get; set; }
+        public long compositionToDTSShift0 { get; set; }
+        public long leastDecodeToDisplayDelta0 { get; set; }
+        public long greatestDecodeToDisplayDelta0 { get; set; }
+        public long compositionStartTime0 { get; set; }
+        public long compositionEndTime0 { get; set; }
 
         public CompositionToDecodeBox()
         { }
@@ -2828,11 +2846,11 @@ namespace BoxGenerator2
 
             else
             {
-                this.compositionToDTSShift = IsoReaderWriter.ReadInt64(stream);
-                this.leastDecodeToDisplayDelta = IsoReaderWriter.ReadInt64(stream);
-                this.greatestDecodeToDisplayDelta = IsoReaderWriter.ReadInt64(stream);
-                this.compositionStartTime = IsoReaderWriter.ReadInt64(stream);
-                this.compositionEndTime = IsoReaderWriter.ReadInt64(stream);
+                this.compositionToDTSShift0 = IsoReaderWriter.ReadInt64(stream);
+                this.leastDecodeToDisplayDelta0 = IsoReaderWriter.ReadInt64(stream);
+                this.greatestDecodeToDisplayDelta0 = IsoReaderWriter.ReadInt64(stream);
+                this.compositionStartTime0 = IsoReaderWriter.ReadInt64(stream);
+                this.compositionEndTime0 = IsoReaderWriter.ReadInt64(stream);
             }
         }
 
@@ -2852,11 +2870,11 @@ namespace BoxGenerator2
 
             else
             {
-                size += IsoReaderWriter.WriteInt64(stream, this.compositionToDTSShift);
-                size += IsoReaderWriter.WriteInt64(stream, this.leastDecodeToDisplayDelta);
-                size += IsoReaderWriter.WriteInt64(stream, this.greatestDecodeToDisplayDelta);
-                size += IsoReaderWriter.WriteInt64(stream, this.compositionStartTime);
-                size += IsoReaderWriter.WriteInt64(stream, this.compositionEndTime);
+                size += IsoReaderWriter.WriteInt64(stream, this.compositionToDTSShift0);
+                size += IsoReaderWriter.WriteInt64(stream, this.leastDecodeToDisplayDelta0);
+                size += IsoReaderWriter.WriteInt64(stream, this.greatestDecodeToDisplayDelta0);
+                size += IsoReaderWriter.WriteInt64(stream, this.compositionStartTime0);
+                size += IsoReaderWriter.WriteInt64(stream, this.compositionEndTime0);
             }
             return size;
         }
@@ -2869,6 +2887,8 @@ namespace BoxGenerator2
         public uint entry_count { get; set; }
         public uint sample_count { get; set; }
         public uint sample_offset { get; set; }
+        public uint sample_count0 { get; set; }
+        public int sample_offset0 { get; set; }
 
         public CompositionOffsetBox()
         { }
@@ -2894,8 +2914,8 @@ namespace BoxGenerator2
 
                 for (int i = 0; i < entry_count; i++)
                 {
-                    this.sample_count = IsoReaderWriter.ReadUInt32(stream);
-                    this.sample_offset = IsoReaderWriter.ReadInt32(stream);
+                    this.sample_count0 = IsoReaderWriter.ReadUInt32(stream);
+                    this.sample_offset0 = IsoReaderWriter.ReadInt32(stream);
                 }
             }
         }
@@ -2922,8 +2942,8 @@ namespace BoxGenerator2
 
                 for (int i = 0; i < entry_count; i++)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.sample_count);
-                    size += IsoReaderWriter.WriteInt32(stream, this.sample_offset);
+                    size += IsoReaderWriter.WriteUInt32(stream, this.sample_count0);
+                    size += IsoReaderWriter.WriteInt32(stream, this.sample_offset0);
                 }
             }
             return size;
@@ -3014,6 +3034,8 @@ namespace BoxGenerator2
         public uint entry_count { get; set; }
         public ulong edit_duration { get; set; }
         public long media_time { get; set; }
+        public uint edit_duration0 { get; set; }
+        public int media_time0 { get; set; }
         public short media_rate_integer { get; set; }
         public short media_rate_fraction { get; set; }
 
@@ -3037,8 +3059,8 @@ namespace BoxGenerator2
                 else
                 {
                     /*  version==0 */
-                    this.edit_duration = IsoReaderWriter.ReadUInt32(stream);
-                    this.media_time = IsoReaderWriter.ReadInt32(stream);
+                    this.edit_duration0 = IsoReaderWriter.ReadUInt32(stream);
+                    this.media_time0 = IsoReaderWriter.ReadInt32(stream);
                 }
                 this.media_rate_integer = IsoReaderWriter.ReadInt16(stream);
                 this.media_rate_fraction = IsoReaderWriter.ReadInt16(stream);
@@ -3063,8 +3085,8 @@ namespace BoxGenerator2
                 else
                 {
                     /*  version==0 */
-                    size += IsoReaderWriter.WriteUInt32(stream, this.edit_duration);
-                    size += IsoReaderWriter.WriteInt32(stream, this.media_time);
+                    size += IsoReaderWriter.WriteUInt32(stream, this.edit_duration0);
+                    size += IsoReaderWriter.WriteInt32(stream, this.media_time0);
                 }
                 size += IsoReaderWriter.WriteInt16(stream, this.media_rate_integer);
                 size += IsoReaderWriter.WriteInt16(stream, this.media_rate_fraction);
@@ -3148,8 +3170,10 @@ namespace BoxGenerator2
     public class FECReservoirBox : FullBox
     {
         public override string FourCC { get { return "fecr"; } }
-        public uint entry_count { get; set; }
-        public uint item_ID { get; set; }
+        public ushort entry_count { get; set; }
+        public uint entry_count0 { get; set; }
+        public ushort item_ID { get; set; }
+        public uint item_ID0 { get; set; }
         public uint symbol_count { get; set; }
 
         public FECReservoirBox()
@@ -3166,7 +3190,7 @@ namespace BoxGenerator2
 
             else
             {
-                this.entry_count = IsoReaderWriter.ReadUInt32(stream);
+                this.entry_count0 = IsoReaderWriter.ReadUInt32(stream);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -3179,7 +3203,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    this.item_ID = IsoReaderWriter.ReadUInt32(stream);
+                    this.item_ID0 = IsoReaderWriter.ReadUInt32(stream);
                 }
                 this.symbol_count = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -3197,7 +3221,7 @@ namespace BoxGenerator2
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -3210,7 +3234,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
+                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
                 }
                 size += IsoReaderWriter.WriteUInt32(stream, this.symbol_count);
             }
@@ -3285,8 +3309,10 @@ namespace BoxGenerator2
     public class FileReservoirBox : FullBox
     {
         public override string FourCC { get { return "fire"; } }
-        public uint entry_count { get; set; }
-        public uint item_ID { get; set; }
+        public ushort entry_count { get; set; }
+        public uint entry_count0 { get; set; }
+        public ushort item_ID { get; set; }
+        public uint item_ID0 { get; set; }
         public uint symbol_count { get; set; }
 
         public FileReservoirBox()
@@ -3303,7 +3329,7 @@ namespace BoxGenerator2
 
             else
             {
-                this.entry_count = IsoReaderWriter.ReadUInt32(stream);
+                this.entry_count0 = IsoReaderWriter.ReadUInt32(stream);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -3316,7 +3342,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    this.item_ID = IsoReaderWriter.ReadUInt32(stream);
+                    this.item_ID0 = IsoReaderWriter.ReadUInt32(stream);
                 }
                 this.symbol_count = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -3334,7 +3360,7 @@ namespace BoxGenerator2
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -3347,7 +3373,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
+                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
                 }
                 size += IsoReaderWriter.WriteUInt32(stream, this.symbol_count);
             }
@@ -3359,7 +3385,8 @@ namespace BoxGenerator2
     public class FilePartitionBox : FullBox
     {
         public override string FourCC { get { return "fpar"; } }
-        public uint item_ID { get; set; }
+        public ushort item_ID { get; set; }
+        public uint item_ID0 { get; set; }
         public ushort packet_payload_size { get; set; }
         public byte reserved { get; set; } = 0;
         public byte FEC_encoding_ID { get; set; }
@@ -3368,7 +3395,8 @@ namespace BoxGenerator2
         public ushort encoding_symbol_length { get; set; }
         public ushort max_number_of_encoding_symbols { get; set; }
         public string scheme_specific_info { get; set; }
-        public uint entry_count { get; set; }
+        public ushort entry_count { get; set; }
+        public uint entry_count0 { get; set; }
         public ushort block_count { get; set; }
         public uint block_size { get; set; }
 
@@ -3386,7 +3414,7 @@ namespace BoxGenerator2
 
             else
             {
-                this.item_ID = IsoReaderWriter.ReadUInt32(stream);
+                this.item_ID0 = IsoReaderWriter.ReadUInt32(stream);
             }
             this.packet_payload_size = IsoReaderWriter.ReadUInt16(stream);
             this.reserved = IsoReaderWriter.ReadUInt8(stream);
@@ -3404,7 +3432,7 @@ namespace BoxGenerator2
 
             else
             {
-                this.entry_count = IsoReaderWriter.ReadUInt32(stream);
+                this.entry_count0 = IsoReaderWriter.ReadUInt32(stream);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -3426,7 +3454,7 @@ namespace BoxGenerator2
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
+                size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
             }
             size += IsoReaderWriter.WriteUInt16(stream, this.packet_payload_size);
             size += IsoReaderWriter.WriteUInt8(stream, this.reserved);
@@ -3444,7 +3472,7 @@ namespace BoxGenerator2
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -3685,7 +3713,8 @@ namespace BoxGenerator2
     public class ItemInfoBox : FullBox
     {
         public override string FourCC { get { return "iinf"; } }
-        public uint entry_count { get; set; }
+        public ushort entry_count { get; set; }
+        public uint entry_count0 { get; set; }
         public ItemInfoEntry[] item_infos { get; set; }
 
         public ItemInfoBox()
@@ -3702,7 +3731,7 @@ namespace BoxGenerator2
 
             else
             {
-                this.entry_count = IsoReaderWriter.ReadUInt32(stream);
+                this.entry_count0 = IsoReaderWriter.ReadUInt32(stream);
             }
             this.item_infos = (ItemInfoEntry[])IsoReaderWriter.ReadClasses(stream);
         }
@@ -3719,7 +3748,7 @@ namespace BoxGenerator2
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count);
+                size += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
             }
             size += IsoReaderWriter.WriteClasses(stream, entry_count, this.item_infos);
             return size;
@@ -3734,9 +3763,12 @@ namespace BoxGenerator2
         public byte length_size { get; set; }
         public byte base_offset_size { get; set; }
         public byte index_size { get; set; }
-        public ushort reserved { get; set; } = 0;
-        public uint item_count { get; set; }
-        public uint item_ID { get; set; }
+        public byte reserved { get; set; }
+        public ushort item_count { get; set; }
+        public uint item_count0 { get; set; }
+        public ushort item_ID { get; set; }
+        public uint item_ID0 { get; set; }
+        public ushort reserved0 { get; set; } = 0;
         public byte construction_method { get; set; }
         public ushort data_reference_index { get; set; }
         public byte[] base_offset { get; set; }
@@ -3772,7 +3804,7 @@ namespace BoxGenerator2
 
             else if (version == 2)
             {
-                this.item_count = IsoReaderWriter.ReadUInt32(stream);
+                this.item_count0 = IsoReaderWriter.ReadUInt32(stream);
             }
 
             for (int i = 0; i < item_count; i++)
@@ -3785,12 +3817,12 @@ namespace BoxGenerator2
 
                 else if (version == 2)
                 {
-                    this.item_ID = IsoReaderWriter.ReadUInt32(stream);
+                    this.item_ID0 = IsoReaderWriter.ReadUInt32(stream);
                 }
 
                 if ((version == 1) || (version == 2))
                 {
-                    this.reserved = IsoReaderWriter.ReadBits(stream, 12);
+                    this.reserved0 = IsoReaderWriter.ReadBits(stream, 12);
                     this.construction_method = IsoReaderWriter.ReadBits(stream, 4);
                 }
                 this.data_reference_index = IsoReaderWriter.ReadUInt16(stream);
@@ -3835,7 +3867,7 @@ namespace BoxGenerator2
 
             else if (version == 2)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.item_count);
+                size += IsoReaderWriter.WriteUInt32(stream, this.item_count0);
             }
 
             for (int i = 0; i < item_count; i++)
@@ -3848,12 +3880,12 @@ namespace BoxGenerator2
 
                 else if (version == 2)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
+                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
                 }
 
                 if ((version == 1) || (version == 2))
                 {
-                    size += IsoReaderWriter.WriteBits(stream, 12, this.reserved);
+                    size += IsoReaderWriter.WriteBits(stream, 12, this.reserved0);
                     size += IsoReaderWriter.WriteBits(stream, 4, this.construction_method);
                 }
                 size += IsoReaderWriter.WriteUInt16(stream, this.data_reference_index);
@@ -3906,13 +3938,19 @@ namespace BoxGenerator2
     public class ItemInfoEntry : FullBox
     {
         public override string FourCC { get { return "infe"; } }
-        public uint item_ID { get; set; }
+        public ushort item_ID { get; set; }
         public ushort item_protection_index { get; set; }
         public string item_name { get; set; }
         public string content_type { get; set; }
         public string content_encoding { get; set; }  // optional
         public uint extension_type { get; set; }  // optional
+        public ushort item_ID0 { get; set; }
+        public uint item_ID00 { get; set; }
+        public ushort item_protection_index0 { get; set; }
         public uint item_type { get; set; }
+        public string item_name0 { get; set; }
+        public string content_type0 { get; set; }
+        public string content_encoding0 { get; set; }  // optional
         public string item_uri_type { get; set; }
 
         public ItemInfoEntry()
@@ -3943,21 +3981,21 @@ namespace BoxGenerator2
 
                 if (version == 2)
                 {
-                    this.item_ID = IsoReaderWriter.ReadUInt16(stream);
+                    this.item_ID0 = IsoReaderWriter.ReadUInt16(stream);
                 }
 
                 else if (version == 3)
                 {
-                    this.item_ID = IsoReaderWriter.ReadUInt32(stream);
+                    this.item_ID00 = IsoReaderWriter.ReadUInt32(stream);
                 }
-                this.item_protection_index = IsoReaderWriter.ReadUInt16(stream);
+                this.item_protection_index0 = IsoReaderWriter.ReadUInt16(stream);
                 this.item_type = IsoReaderWriter.ReadUInt32(stream);
-                this.item_name = IsoReaderWriter.ReadString(stream);
+                this.item_name0 = IsoReaderWriter.ReadString(stream);
 
                 if (item_type == IsoReaderWriter.FromFourCC("mime"))
                 {
-                    this.content_type = IsoReaderWriter.ReadString(stream);
-                    this.content_encoding = IsoReaderWriter.ReadString(stream);
+                    this.content_type0 = IsoReaderWriter.ReadString(stream);
+                    this.content_encoding0 = IsoReaderWriter.ReadString(stream);
                 }
 
                 else if (item_type == IsoReaderWriter.FromFourCC("uri "))
@@ -3993,21 +4031,21 @@ namespace BoxGenerator2
 
                 if (version == 2)
                 {
-                    size += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
+                    size += IsoReaderWriter.WriteUInt16(stream, this.item_ID0);
                 }
 
                 else if (version == 3)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
+                    size += IsoReaderWriter.WriteUInt32(stream, this.item_ID00);
                 }
-                size += IsoReaderWriter.WriteUInt16(stream, this.item_protection_index);
+                size += IsoReaderWriter.WriteUInt16(stream, this.item_protection_index0);
                 size += IsoReaderWriter.WriteUInt32(stream, this.item_type);
-                size += IsoReaderWriter.WriteString(stream, this.item_name);
+                size += IsoReaderWriter.WriteString(stream, this.item_name0);
 
                 if (item_type == IsoReaderWriter.FromFourCC("mime"))
                 {
-                    size += IsoReaderWriter.WriteString(stream, this.content_type);
-                    size += IsoReaderWriter.WriteString(stream, this.content_encoding);
+                    size += IsoReaderWriter.WriteString(stream, this.content_type0);
+                    size += IsoReaderWriter.WriteString(stream, this.content_encoding0);
                 }
 
                 else if (item_type == IsoReaderWriter.FromFourCC("uri "))
@@ -4058,7 +4096,8 @@ namespace BoxGenerator2
     public class ItemReferenceBox : FullBox
     {
         public override string FourCC { get { return "iref"; } }
-        public SingleItemTypeReferenceBoxLarge[] references { get; set; }
+        public SingleItemTypeReferenceBox[] references { get; set; }
+        public SingleItemTypeReferenceBoxLarge[] references0 { get; set; }
 
         public ItemReferenceBox()
         { }
@@ -4069,12 +4108,12 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-                this.references = (SingleItemTypeReferenceBox)IsoReaderWriter.ReadBox(stream);
+                this.references = (SingleItemTypeReferenceBox[])IsoReaderWriter.ReadBoxes(stream);
             }
 
             else if (version == 1)
             {
-                this.references = (SingleItemTypeReferenceBoxLarge[])IsoReaderWriter.ReadBoxes(stream);
+                this.references0 = (SingleItemTypeReferenceBoxLarge[])IsoReaderWriter.ReadBoxes(stream);
             }
         }
 
@@ -4085,12 +4124,12 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteBox(stream, this.references);
+                size += IsoReaderWriter.WriteBoxes(stream, this.references);
             }
 
             else if (version == 1)
             {
-                size += IsoReaderWriter.WriteBoxes(stream, this.references);
+                size += IsoReaderWriter.WriteBoxes(stream, this.references0);
             }
             return size;
         }
@@ -4105,6 +4144,7 @@ namespace BoxGenerator2
         public bool padding_flag { get; set; }
         public byte assignment_type { get; set; }
         public uint grouping_type { get; set; }
+        public uint grouping_type0 { get; set; }
         public uint grouping_type_parameter { get; set; }
         public uint sub_track_ID { get; set; }
 
@@ -4129,7 +4169,7 @@ namespace BoxGenerator2
 
                 else if (assignment_type == 1)
                 {
-                    this.grouping_type = IsoReaderWriter.ReadUInt32(stream);
+                    this.grouping_type0 = IsoReaderWriter.ReadUInt32(stream);
                     this.grouping_type_parameter = IsoReaderWriter.ReadUInt32(stream);
                 }
 
@@ -4170,7 +4210,7 @@ namespace BoxGenerator2
 
                 else if (assignment_type == 1)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type);
+                    size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type0);
                     size += IsoReaderWriter.WriteUInt32(stream, this.grouping_type_parameter);
                 }
 
@@ -4226,6 +4266,10 @@ namespace BoxGenerator2
         public ulong modification_time { get; set; }
         public uint timescale { get; set; }
         public ulong duration { get; set; }
+        public uint creation_time0 { get; set; }
+        public uint modification_time0 { get; set; }
+        public uint timescale0 { get; set; }
+        public uint duration0 { get; set; }
         public bool pad { get; set; } = false;
         public byte[] language { get; set; }  //  ISO-639-2/T language code
         public ushort pre_defined { get; set; } = 0;
@@ -4248,10 +4292,10 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                this.creation_time = IsoReaderWriter.ReadUInt32(stream);
-                this.modification_time = IsoReaderWriter.ReadUInt32(stream);
-                this.timescale = IsoReaderWriter.ReadUInt32(stream);
-                this.duration = IsoReaderWriter.ReadUInt32(stream);
+                this.creation_time0 = IsoReaderWriter.ReadUInt32(stream);
+                this.modification_time0 = IsoReaderWriter.ReadUInt32(stream);
+                this.timescale0 = IsoReaderWriter.ReadUInt32(stream);
+                this.duration0 = IsoReaderWriter.ReadUInt32(stream);
             }
             this.pad = IsoReaderWriter.ReadBit(stream);
             this.language = IsoReaderWriter.ReadBitsArray(stream, 5, 3);
@@ -4274,10 +4318,10 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                size += IsoReaderWriter.WriteUInt32(stream, this.creation_time);
-                size += IsoReaderWriter.WriteUInt32(stream, this.modification_time);
-                size += IsoReaderWriter.WriteUInt32(stream, this.timescale);
-                size += IsoReaderWriter.WriteUInt32(stream, this.duration);
+                size += IsoReaderWriter.WriteUInt32(stream, this.creation_time0);
+                size += IsoReaderWriter.WriteUInt32(stream, this.modification_time0);
+                size += IsoReaderWriter.WriteUInt32(stream, this.timescale0);
+                size += IsoReaderWriter.WriteUInt32(stream, this.duration0);
             }
             size += IsoReaderWriter.WriteBit(stream, this.pad);
             size += IsoReaderWriter.WriteBitsArray(stream, 5, 3, this.language);
@@ -4312,6 +4356,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "mehd"; } }
         public ulong fragment_duration { get; set; }
+        public uint fragment_duration0 { get; set; }
 
         public MovieExtendsHeaderBox()
         { }
@@ -4328,7 +4373,7 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                this.fragment_duration = IsoReaderWriter.ReadUInt32(stream);
+                this.fragment_duration0 = IsoReaderWriter.ReadUInt32(stream);
             }
         }
 
@@ -4345,7 +4390,7 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                size += IsoReaderWriter.WriteUInt32(stream, this.fragment_duration);
+                size += IsoReaderWriter.WriteUInt32(stream, this.fragment_duration0);
             }
             return size;
         }
@@ -4563,9 +4608,14 @@ namespace BoxGenerator2
         public ulong modification_time { get; set; }
         public uint timescale { get; set; }
         public ulong duration { get; set; }
+        public uint creation_time0 { get; set; }
+        public uint modification_time0 { get; set; }
+        public uint timescale0 { get; set; }
+        public uint duration0 { get; set; }
         public int rate { get; set; } = 0x00010000;  //  typically 1.0
         public short volume { get; set; } = 0x0100;  //  typically, full volume
-        public uint[] reserved { get; set; } = [];
+        public ushort reserved { get; set; } = 0;
+        public uint[] reserved0 { get; set; } = [];
         public uint[] matrix { get; set; } =
             { 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };  //  Unity matrix
         public uint[] pre_defined { get; set; } = [];
@@ -4589,15 +4639,15 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                this.creation_time = IsoReaderWriter.ReadUInt32(stream);
-                this.modification_time = IsoReaderWriter.ReadUInt32(stream);
-                this.timescale = IsoReaderWriter.ReadUInt32(stream);
-                this.duration = IsoReaderWriter.ReadUInt32(stream);
+                this.creation_time0 = IsoReaderWriter.ReadUInt32(stream);
+                this.modification_time0 = IsoReaderWriter.ReadUInt32(stream);
+                this.timescale0 = IsoReaderWriter.ReadUInt32(stream);
+                this.duration0 = IsoReaderWriter.ReadUInt32(stream);
             }
             this.rate = IsoReaderWriter.ReadInt32(stream);
             this.volume = IsoReaderWriter.ReadInt16(stream);
             this.reserved = IsoReaderWriter.ReadUInt16(stream);
-            this.reserved = IsoReaderWriter.ReadUInt32Array(stream, 2);
+            this.reserved0 = IsoReaderWriter.ReadUInt32Array(stream, 2);
             this.matrix = IsoReaderWriter.ReadUInt32Array(stream, 9);
             this.pre_defined = IsoReaderWriter.ReadUInt32Array(stream, 6);
             this.next_track_ID = IsoReaderWriter.ReadUInt32(stream);
@@ -4619,15 +4669,15 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                size += IsoReaderWriter.WriteUInt32(stream, this.creation_time);
-                size += IsoReaderWriter.WriteUInt32(stream, this.modification_time);
-                size += IsoReaderWriter.WriteUInt32(stream, this.timescale);
-                size += IsoReaderWriter.WriteUInt32(stream, this.duration);
+                size += IsoReaderWriter.WriteUInt32(stream, this.creation_time0);
+                size += IsoReaderWriter.WriteUInt32(stream, this.modification_time0);
+                size += IsoReaderWriter.WriteUInt32(stream, this.timescale0);
+                size += IsoReaderWriter.WriteUInt32(stream, this.duration0);
             }
             size += IsoReaderWriter.WriteInt32(stream, this.rate);
             size += IsoReaderWriter.WriteInt16(stream, this.volume);
             size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
-            size += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved);
+            size += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved0);
             size += IsoReaderWriter.WriteUInt32Array(stream, 9, this.matrix);
             size += IsoReaderWriter.WriteUInt32Array(stream, 6, this.pre_defined);
             size += IsoReaderWriter.WriteUInt32(stream, this.next_track_ID);
@@ -4684,6 +4734,7 @@ namespace BoxGenerator2
         public uint sample_count { get; set; }
         public bool reserved { get; set; } = false;
         public byte pad1 { get; set; }
+        public bool reserved0 { get; set; } = false;
         public byte pad2 { get; set; }
 
         public PaddingBitsBox()
@@ -4699,7 +4750,7 @@ namespace BoxGenerator2
             {
                 this.reserved = IsoReaderWriter.ReadBit(stream);
                 this.pad1 = IsoReaderWriter.ReadBits(stream, 3);
-                this.reserved = IsoReaderWriter.ReadBit(stream);
+                this.reserved0 = IsoReaderWriter.ReadBit(stream);
                 this.pad2 = IsoReaderWriter.ReadBits(stream, 3);
             }
         }
@@ -4715,7 +4766,7 @@ namespace BoxGenerator2
             {
                 size += IsoReaderWriter.WriteBit(stream, this.reserved);
                 size += IsoReaderWriter.WriteBits(stream, 3, this.pad1);
-                size += IsoReaderWriter.WriteBit(stream, this.reserved);
+                size += IsoReaderWriter.WriteBit(stream, this.reserved0);
                 size += IsoReaderWriter.WriteBits(stream, 3, this.pad2);
             }
             return size;
@@ -4826,7 +4877,8 @@ namespace BoxGenerator2
     public class PrimaryItemBox : FullBox
     {
         public override string FourCC { get { return "pitm"; } }
-        public uint item_ID { get; set; }
+        public ushort item_ID { get; set; }
+        public uint item_ID0 { get; set; }
 
         public PrimaryItemBox()
         { }
@@ -4842,7 +4894,7 @@ namespace BoxGenerator2
 
             else
             {
-                this.item_ID = IsoReaderWriter.ReadUInt32(stream);
+                this.item_ID0 = IsoReaderWriter.ReadUInt32(stream);
             }
         }
 
@@ -4858,7 +4910,7 @@ namespace BoxGenerator2
 
             else
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.item_ID);
+                size += IsoReaderWriter.WriteUInt32(stream, this.item_ID0);
             }
             return size;
         }
@@ -4870,7 +4922,8 @@ namespace BoxGenerator2
         public override string FourCC { get { return "prft"; } }
         public uint reference_track_ID { get; set; }
         public ulong ntp_timestamp { get; set; }
-        public ulong media_time { get; set; }
+        public uint media_time { get; set; }
+        public ulong media_time0 { get; set; }
 
         public ProducerReferenceTimeBox()
         { }
@@ -4888,7 +4941,7 @@ namespace BoxGenerator2
 
             else
             {
-                this.media_time = IsoReaderWriter.ReadUInt64(stream);
+                this.media_time0 = IsoReaderWriter.ReadUInt64(stream);
             }
         }
 
@@ -4906,7 +4959,7 @@ namespace BoxGenerator2
 
             else
             {
-                size += IsoReaderWriter.WriteUInt64(stream, this.media_time);
+                size += IsoReaderWriter.WriteUInt64(stream, this.media_time0);
             }
             return size;
         }
@@ -4949,7 +5002,8 @@ namespace BoxGenerator2
         public uint aux_info_type { get; set; }
         public uint aux_info_type_parameter { get; set; }
         public uint entry_count { get; set; }
-        public ulong[] offset { get; set; }
+        public uint[] offset { get; set; }
+        public ulong[] offset0 { get; set; }
 
         public SampleAuxiliaryInformationOffsetsBox()
         { }
@@ -4967,12 +5021,12 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-                this.offset = IsoReaderWriter.ReadUInt32(stream);
+                this.offset = IsoReaderWriter.ReadUInt32Array(stream, entry_count);
             }
 
             else
             {
-                this.offset = IsoReaderWriter.ReadUInt64Array(stream, entry_count);
+                this.offset0 = IsoReaderWriter.ReadUInt64Array(stream, entry_count);
             }
         }
 
@@ -4990,12 +5044,12 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-                size += IsoReaderWriter.WriteUInt32(stream, this.offset);
+                size += IsoReaderWriter.WriteUInt32Array(stream, entry_count, this.offset);
             }
 
             else
             {
-                size += IsoReaderWriter.WriteUInt64Array(stream, entry_count, this.offset);
+                size += IsoReaderWriter.WriteUInt64Array(stream, entry_count, this.offset0);
             }
             return size;
         }
@@ -5028,7 +5082,7 @@ namespace BoxGenerator2
 
             if (default_sample_info_size == 0)
             {
-                this.sample_info_size[sample_count] = IsoReaderWriter.ReadBytes(stream, sample_count);
+                this.sample_info_size = IsoReaderWriter.ReadBytes(stream, sample_count);
             }
         }
 
@@ -5047,7 +5101,7 @@ namespace BoxGenerator2
 
             if (default_sample_info_size == 0)
             {
-                size += IsoReaderWriter.WriteBytes(stream, sample_count, this.sample_info_size[sample_count]);
+                size += IsoReaderWriter.WriteBytes(stream, sample_count, this.sample_info_size);
             }
             return size;
         }
@@ -6069,6 +6123,7 @@ namespace BoxGenerator2
         public uint sample_delta { get; set; }
         public ushort subsample_count { get; set; }
         public uint subsample_size { get; set; }
+        public ushort subsample_size0 { get; set; }
         public byte subsample_priority { get; set; }
         public byte discardable { get; set; }
         public uint codec_specific_parameters { get; set; }
@@ -6100,7 +6155,7 @@ namespace BoxGenerator2
 
                         else
                         {
-                            this.subsample_size = IsoReaderWriter.ReadUInt16(stream);
+                            this.subsample_size0 = IsoReaderWriter.ReadUInt16(stream);
                         }
                         this.subsample_priority = IsoReaderWriter.ReadUInt8(stream);
                         this.discardable = IsoReaderWriter.ReadUInt8(stream);
@@ -6135,7 +6190,7 @@ namespace BoxGenerator2
 
                         else
                         {
-                            size += IsoReaderWriter.WriteUInt16(stream, this.subsample_size);
+                            size += IsoReaderWriter.WriteUInt16(stream, this.subsample_size0);
                         }
                         size += IsoReaderWriter.WriteUInt8(stream, this.subsample_priority);
                         size += IsoReaderWriter.WriteUInt8(stream, this.discardable);
@@ -6152,6 +6207,7 @@ namespace BoxGenerator2
     {
         public override string FourCC { get { return "tfdt"; } }
         public ulong baseMediaDecodeTime { get; set; }
+        public uint baseMediaDecodeTime0 { get; set; }
 
         public TrackFragmentBaseMediaDecodeTimeBox()
         { }
@@ -6168,7 +6224,7 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                this.baseMediaDecodeTime = IsoReaderWriter.ReadUInt32(stream);
+                this.baseMediaDecodeTime0 = IsoReaderWriter.ReadUInt32(stream);
             }
         }
 
@@ -6185,7 +6241,7 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                size += IsoReaderWriter.WriteUInt32(stream, this.baseMediaDecodeTime);
+                size += IsoReaderWriter.WriteUInt32(stream, this.baseMediaDecodeTime0);
             }
             return size;
         }
@@ -6244,6 +6300,8 @@ namespace BoxGenerator2
         public uint number_of_entry { get; set; }
         public ulong time { get; set; }
         public ulong moof_offset { get; set; }
+        public uint time0 { get; set; }
+        public uint moof_offset0 { get; set; }
         public byte[] traf_number { get; set; }
         public byte[] trun_number { get; set; }
         public byte[] sample_delta { get; set; }
@@ -6272,8 +6330,8 @@ namespace BoxGenerator2
 
                 else
                 {
-                    this.time = IsoReaderWriter.ReadUInt32(stream);
-                    this.moof_offset = IsoReaderWriter.ReadUInt32(stream);
+                    this.time0 = IsoReaderWriter.ReadUInt32(stream);
+                    this.moof_offset0 = IsoReaderWriter.ReadUInt32(stream);
                 }
                 this.traf_number = IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_traf_num + 1));
                 this.trun_number = IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_trun_num + 1));
@@ -6303,8 +6361,8 @@ namespace BoxGenerator2
 
                 else
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.time);
-                    size += IsoReaderWriter.WriteUInt32(stream, this.moof_offset);
+                    size += IsoReaderWriter.WriteUInt32(stream, this.time0);
+                    size += IsoReaderWriter.WriteUInt32(stream, this.moof_offset0);
                 }
                 size += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_traf_num + 1), this.traf_number);
                 size += IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_trun_num + 1), this.trun_number);
@@ -6321,11 +6379,18 @@ namespace BoxGenerator2
         public ulong creation_time { get; set; }
         public ulong modification_time { get; set; }
         public uint track_ID { get; set; }
-        public uint[] reserved { get; set; } = [];
+        public uint reserved { get; set; } = 0;
         public ulong duration { get; set; }
+        public uint creation_time0 { get; set; }
+        public uint modification_time0 { get; set; }
+        public uint track_ID0 { get; set; }
+        public uint reserved0 { get; set; } = 0;
+        public uint duration0 { get; set; }
+        public uint[] reserved1 { get; set; } = [];
         public short layer { get; set; } = 0;
         public short alternate_group { get; set; } = 0;
         public short volume { get; set; } = 0; // = { default samplerate of media}<<16;
+        public ushort reserved2 { get; set; } = 0;
         public uint[] matrix { get; set; } =
             { 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };  //  unity matrix
         public uint width { get; set; }
@@ -6350,17 +6415,17 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                this.creation_time = IsoReaderWriter.ReadUInt32(stream);
-                this.modification_time = IsoReaderWriter.ReadUInt32(stream);
-                this.track_ID = IsoReaderWriter.ReadUInt32(stream);
-                this.reserved = IsoReaderWriter.ReadUInt32(stream);
-                this.duration = IsoReaderWriter.ReadUInt32(stream);
+                this.creation_time0 = IsoReaderWriter.ReadUInt32(stream);
+                this.modification_time0 = IsoReaderWriter.ReadUInt32(stream);
+                this.track_ID0 = IsoReaderWriter.ReadUInt32(stream);
+                this.reserved0 = IsoReaderWriter.ReadUInt32(stream);
+                this.duration0 = IsoReaderWriter.ReadUInt32(stream);
             }
-            this.reserved = IsoReaderWriter.ReadUInt32Array(stream, 2);
+            this.reserved1 = IsoReaderWriter.ReadUInt32Array(stream, 2);
             this.layer = IsoReaderWriter.ReadInt16(stream);
             this.alternate_group = IsoReaderWriter.ReadInt16(stream);
             this.volume = IsoReaderWriter.ReadInt16(stream);
-            this.reserved = IsoReaderWriter.ReadUInt16(stream);
+            this.reserved2 = IsoReaderWriter.ReadUInt16(stream);
             this.matrix = IsoReaderWriter.ReadUInt32Array(stream, 9);
             this.width = IsoReaderWriter.ReadUInt32(stream);
             this.height = IsoReaderWriter.ReadUInt32(stream);
@@ -6383,17 +6448,17 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                size += IsoReaderWriter.WriteUInt32(stream, this.creation_time);
-                size += IsoReaderWriter.WriteUInt32(stream, this.modification_time);
-                size += IsoReaderWriter.WriteUInt32(stream, this.track_ID);
-                size += IsoReaderWriter.WriteUInt32(stream, this.reserved);
-                size += IsoReaderWriter.WriteUInt32(stream, this.duration);
+                size += IsoReaderWriter.WriteUInt32(stream, this.creation_time0);
+                size += IsoReaderWriter.WriteUInt32(stream, this.modification_time0);
+                size += IsoReaderWriter.WriteUInt32(stream, this.track_ID0);
+                size += IsoReaderWriter.WriteUInt32(stream, this.reserved0);
+                size += IsoReaderWriter.WriteUInt32(stream, this.duration0);
             }
-            size += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved);
+            size += IsoReaderWriter.WriteUInt32Array(stream, 2, this.reserved1);
             size += IsoReaderWriter.WriteInt16(stream, this.layer);
             size += IsoReaderWriter.WriteInt16(stream, this.alternate_group);
             size += IsoReaderWriter.WriteInt16(stream, this.volume);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
+            size += IsoReaderWriter.WriteUInt16(stream, this.reserved2);
             size += IsoReaderWriter.WriteUInt32Array(stream, 9, this.matrix);
             size += IsoReaderWriter.WriteUInt32(stream, this.width);
             size += IsoReaderWriter.WriteUInt32(stream, this.height);
@@ -7032,6 +7097,7 @@ namespace BoxGenerator2
         public byte min_quality_id { get; set; }
         public byte max_dependency_id { get; set; }
         public byte max_temporal_id { get; set; }
+        public byte reserved0 { get; set; } = 0;
         public byte max_quality_id { get; set; }
 
         public SVCDependencyRangeBox()
@@ -7046,7 +7112,7 @@ namespace BoxGenerator2
             this.min_quality_id = IsoReaderWriter.ReadBits(stream, 4);
             this.max_dependency_id = IsoReaderWriter.ReadBits(stream, 3);
             this.max_temporal_id = IsoReaderWriter.ReadBits(stream, 3);
-            this.reserved = IsoReaderWriter.ReadBits(stream, 6);
+            this.reserved0 = IsoReaderWriter.ReadBits(stream, 6);
             this.max_quality_id = IsoReaderWriter.ReadBits(stream, 4);
         }
 
@@ -7060,7 +7126,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBits(stream, 4, this.min_quality_id);
             size += IsoReaderWriter.WriteBits(stream, 3, this.max_dependency_id);
             size += IsoReaderWriter.WriteBits(stream, 3, this.max_temporal_id);
-            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            size += IsoReaderWriter.WriteBits(stream, 6, this.reserved0);
             size += IsoReaderWriter.WriteBits(stream, 4, this.max_quality_id);
             return size;
         }
@@ -7237,7 +7303,7 @@ namespace BoxGenerator2
             this.dynamic_rect = IsoReaderWriter.ReadBit(stream);
             this.reserved = IsoReaderWriter.ReadBits(stream, 7);
 
-            if (dynamic_rect == 0)
+            if (dynamic_rect == false)
             {
                 this.horizontal_offset = IsoReaderWriter.ReadUInt16(stream);
                 this.vertical_offset = IsoReaderWriter.ReadUInt16(stream);
@@ -7254,7 +7320,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteBit(stream, this.dynamic_rect);
             size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
 
-            if (dynamic_rect == 0)
+            if (dynamic_rect == false)
             {
                 size += IsoReaderWriter.WriteUInt16(stream, this.horizontal_offset);
                 size += IsoReaderWriter.WriteUInt16(stream, this.vertical_offset);
@@ -7362,6 +7428,7 @@ namespace BoxGenerator2
         public byte reserved { get; set; } = 0;
         public byte entry_type { get; set; }
         public uint track_id { get; set; }
+        public uint track_id0 { get; set; }
         public ushort tier_id { get; set; }
         public byte reserved1 { get; set; } = 0;
         public ushort output_view_id { get; set; }
@@ -7395,7 +7462,7 @@ namespace BoxGenerator2
 
                 else if (entry_type == 1)
                 {
-                    this.track_id = IsoReaderWriter.ReadUInt32(stream);
+                    this.track_id0 = IsoReaderWriter.ReadUInt32(stream);
                     this.tier_id = IsoReaderWriter.ReadUInt16(stream);
                 }
 
@@ -7438,7 +7505,7 @@ namespace BoxGenerator2
 
                 else if (entry_type == 1)
                 {
-                    size += IsoReaderWriter.WriteUInt32(stream, this.track_id);
+                    size += IsoReaderWriter.WriteUInt32(stream, this.track_id0);
                     size += IsoReaderWriter.WriteUInt16(stream, this.tier_id);
                 }
 
@@ -7542,8 +7609,8 @@ namespace BoxGenerator2
             {
                 size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
                 size += IsoReaderWriter.WriteBits(stream, 10, this.grid_pos_view_id[i]);
-                size += IsoReaderWriter.WriteInt16Array(stream, grid_pos_view_id[i], this.grid_pos_x[grid_pos_view_id[i]]);
-                size += IsoReaderWriter.WriteInt16Array(stream, grid_pos_view_id[i], this.grid_pos_y[grid_pos_view_id[i]]);
+                size += IsoReaderWriter.WriteInt16(stream, this.grid_pos_x[grid_pos_view_id[i]]);
+                size += IsoReaderWriter.WriteInt16(stream, this.grid_pos_y[grid_pos_view_id[i]]);
             }
             return size;
         }
@@ -7915,6 +7982,7 @@ namespace BoxGenerator2
         public ushort visualHeight { get; set; }
         public byte discardable { get; set; }
         public byte constantFrameRate { get; set; }
+        public byte reserved0 { get; set; } = 0;
         public ushort frameRate { get; set; }
 
         public TierInfoBox()
@@ -7933,7 +8001,7 @@ namespace BoxGenerator2
             this.visualHeight = IsoReaderWriter.ReadUInt16(stream);
             this.discardable = IsoReaderWriter.ReadBits(stream, 2);
             this.constantFrameRate = IsoReaderWriter.ReadBits(stream, 2);
-            this.reserved = IsoReaderWriter.ReadBits(stream, 4);
+            this.reserved0 = IsoReaderWriter.ReadBits(stream, 4);
             this.frameRate = IsoReaderWriter.ReadUInt16(stream);
         }
 
@@ -7951,7 +8019,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt16(stream, this.visualHeight);
             size += IsoReaderWriter.WriteBits(stream, 2, this.discardable);
             size += IsoReaderWriter.WriteBits(stream, 2, this.constantFrameRate);
-            size += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
+            size += IsoReaderWriter.WriteBits(stream, 4, this.reserved0);
             size += IsoReaderWriter.WriteUInt16(stream, this.frameRate);
             return size;
         }
@@ -8340,7 +8408,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.method_count = IsoReaderWriter.ReadUInt8(stream);
-            this.PriorityAssignmentURI[method_count] = IsoReaderWriter.ReadStringArray(stream, method_count);
+            this.PriorityAssignmentURI = IsoReaderWriter.ReadStringArray(stream, method_count);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8348,7 +8416,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt8(stream, this.method_count);
-            size += IsoReaderWriter.WriteStringArray(stream, method_count, this.PriorityAssignmentURI[method_count]);
+            size += IsoReaderWriter.WriteStringArray(stream, method_count, this.PriorityAssignmentURI);
             return size;
         }
     }
@@ -8415,7 +8483,7 @@ namespace BoxGenerator2
         {
             await base.ReadAsync(stream);
             this.method_count = IsoReaderWriter.ReadUInt8(stream);
-            this.PriorityAssignmentURI[method_count] = IsoReaderWriter.ReadStringArray(stream, method_count);
+            this.PriorityAssignmentURI = IsoReaderWriter.ReadStringArray(stream, method_count);
         }
 
         public async override Task<ulong> WriteAsync(Stream stream)
@@ -8423,7 +8491,7 @@ namespace BoxGenerator2
             ulong size = 0;
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt8(stream, this.method_count);
-            size += IsoReaderWriter.WriteStringArray(stream, method_count, this.PriorityAssignmentURI[method_count]);
+            size += IsoReaderWriter.WriteStringArray(stream, method_count, this.PriorityAssignmentURI);
             return size;
         }
     }
@@ -8939,6 +9007,7 @@ namespace BoxGenerator2
         public ushort channelcount { get; set; }
         public ushort samplesize { get; set; } = 16;
         public ushort pre_defined { get; set; } = 0;
+        public ushort reserved0 { get; set; } = 0;
         public uint samplerate { get; set; } = 0; // = {if track_is_audio 0x0100 else 0}; //  optional boxes follow
         public DownMixInstructions[] DownMixInstructions { get; set; }
         public DRCCoefficientsBasic[] DRCCoefficientsBasic { get; set; }
@@ -8956,7 +9025,7 @@ namespace BoxGenerator2
             this.channelcount = IsoReaderWriter.ReadUInt16(stream);
             this.samplesize = IsoReaderWriter.ReadUInt16(stream);
             this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
-            this.reserved = IsoReaderWriter.ReadUInt16(stream);
+            this.reserved0 = IsoReaderWriter.ReadUInt16(stream);
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
             // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
@@ -8983,7 +9052,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
             size += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
             size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
+            size += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
             size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
             // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
@@ -9013,6 +9082,7 @@ namespace BoxGenerator2
         public ushort channelcount { get; set; }  //  shall be correct
         public ushort samplesize { get; set; } = 16;
         public ushort pre_defined { get; set; } = 0;
+        public ushort reserved0 { get; set; } = 0;
         public uint samplerate { get; set; } = 1 << 16;  //  optional boxes follow
         public DownMixInstructions[] DownMixInstructions { get; set; }
         public DRCCoefficientsBasic[] DRCCoefficientsBasic { get; set; }
@@ -9032,7 +9102,7 @@ namespace BoxGenerator2
             this.channelcount = IsoReaderWriter.ReadUInt16(stream);
             this.samplesize = IsoReaderWriter.ReadUInt16(stream);
             this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
-            this.reserved = IsoReaderWriter.ReadUInt16(stream);
+            this.reserved0 = IsoReaderWriter.ReadUInt16(stream);
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
@@ -9061,7 +9131,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
             size += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
             size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
+            size += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
             size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
@@ -9091,6 +9161,7 @@ namespace BoxGenerator2
         public ushort channelcount { get; set; }  //  shall be correct
         public ushort samplesize { get; set; } = 16;
         public ushort pre_defined { get; set; } = 0;
+        public ushort reserved0 { get; set; } = 0;
         public uint samplerate { get; set; } = 1 << 16;  //  optional boxes follow
         public DownMixInstructions[] DownMixInstructions { get; set; }
         public DRCCoefficientsBasic[] DRCCoefficientsBasic { get; set; }
@@ -9110,7 +9181,7 @@ namespace BoxGenerator2
             this.channelcount = IsoReaderWriter.ReadUInt16(stream);
             this.samplesize = IsoReaderWriter.ReadUInt16(stream);
             this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
-            this.reserved = IsoReaderWriter.ReadUInt16(stream);
+            this.reserved0 = IsoReaderWriter.ReadUInt16(stream);
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
@@ -9139,7 +9210,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
             size += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
             size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
+            size += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
             size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
@@ -9557,7 +9628,7 @@ namespace BoxGenerator2
     public class rtpmoviehintinformation1 : Box
     {
         public override string FourCC { get { return "rtp "; } }
-        public uint descriptionformat { get; set; } = "sdp ";
+        public uint descriptionformat { get; set; } = IsoReaderWriter.FromFourCC("sdp ");
         public sbyte[] sdptext { get; set; }
 
         public rtpmoviehintinformation1()
@@ -9775,15 +9846,18 @@ namespace BoxGenerator2
     public class VisualSampleEntry : SampleEntry
     {
         public override string FourCC { get { return "resv"; } }
-        public uint[] pre_defined { get; set; } = [];
-        public uint reserved { get; set; } = 0;
+        public ushort pre_defined { get; set; } = 0;
+        public ushort reserved { get; set; } = 0;
+        public uint[] pre_defined0 { get; set; } = [];
         public ushort width { get; set; }
         public ushort height { get; set; }
         public uint horizresolution { get; set; } = 0x00480000;  //  72 dpi
         public uint vertresolution { get; set; } = 0x00480000;  //  72 dpi
+        public uint reserved0 { get; set; } = 0;
         public ushort frame_count { get; set; } = 1;
         public byte[] compressorname { get; set; }
         public ushort depth { get; set; } = 0x0018;
+        public short pre_defined1 { get; set; } = -1;  //  other boxes from derived specifications
         public CleanApertureBox clap { get; set; }  //  optional
         public PixelAspectRatioBox pasp { get; set; }  //  optional
 
@@ -9795,16 +9869,16 @@ namespace BoxGenerator2
             await base.ReadAsync(stream);
             this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
             this.reserved = IsoReaderWriter.ReadUInt16(stream);
-            this.pre_defined = IsoReaderWriter.ReadUInt32Array(stream, 3);
+            this.pre_defined0 = IsoReaderWriter.ReadUInt32Array(stream, 3);
             this.width = IsoReaderWriter.ReadUInt16(stream);
             this.height = IsoReaderWriter.ReadUInt16(stream);
             this.horizresolution = IsoReaderWriter.ReadUInt32(stream);
             this.vertresolution = IsoReaderWriter.ReadUInt32(stream);
-            this.reserved = IsoReaderWriter.ReadUInt32(stream);
+            this.reserved0 = IsoReaderWriter.ReadUInt32(stream);
             this.frame_count = IsoReaderWriter.ReadUInt16(stream);
             this.compressorname = IsoReaderWriter.ReadBytes(stream, 32);
             this.depth = IsoReaderWriter.ReadUInt16(stream);
-            this.pre_defined = IsoReaderWriter.ReadInt16(stream);
+            this.pre_defined1 = IsoReaderWriter.ReadInt16(stream);
             this.clap = (CleanApertureBox)IsoReaderWriter.ReadBox(stream);
             this.pasp = (PixelAspectRatioBox)IsoReaderWriter.ReadBox(stream);
         }
@@ -9815,16 +9889,16 @@ namespace BoxGenerator2
             size += await base.WriteAsync(stream);
             size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
             size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
-            size += IsoReaderWriter.WriteUInt32Array(stream, 3, this.pre_defined);
+            size += IsoReaderWriter.WriteUInt32Array(stream, 3, this.pre_defined0);
             size += IsoReaderWriter.WriteUInt16(stream, this.width);
             size += IsoReaderWriter.WriteUInt16(stream, this.height);
             size += IsoReaderWriter.WriteUInt32(stream, this.horizresolution);
             size += IsoReaderWriter.WriteUInt32(stream, this.vertresolution);
-            size += IsoReaderWriter.WriteUInt32(stream, this.reserved);
+            size += IsoReaderWriter.WriteUInt32(stream, this.reserved0);
             size += IsoReaderWriter.WriteUInt16(stream, this.frame_count);
             size += IsoReaderWriter.WriteBytes(stream, 32, this.compressorname);
             size += IsoReaderWriter.WriteUInt16(stream, this.depth);
-            size += IsoReaderWriter.WriteInt16(stream, this.pre_defined);
+            size += IsoReaderWriter.WriteInt16(stream, this.pre_defined1);
             size += IsoReaderWriter.WriteBox(stream, this.clap);
             size += IsoReaderWriter.WriteBox(stream, this.pasp);
             return size;
@@ -9839,6 +9913,7 @@ namespace BoxGenerator2
         public ushort channelcount { get; set; }
         public ushort samplesize { get; set; } = 16;
         public ushort pre_defined { get; set; } = 0;
+        public ushort reserved0 { get; set; } = 0;
         public uint samplerate { get; set; } = 0; // = {if track_is_audio 0x0100 else 0}; //  optional boxes follow
         public DownMixInstructions[] DownMixInstructions { get; set; }
         public DRCCoefficientsBasic[] DRCCoefficientsBasic { get; set; }
@@ -9856,7 +9931,7 @@ namespace BoxGenerator2
             this.channelcount = IsoReaderWriter.ReadUInt16(stream);
             this.samplesize = IsoReaderWriter.ReadUInt16(stream);
             this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
-            this.reserved = IsoReaderWriter.ReadUInt16(stream);
+            this.reserved0 = IsoReaderWriter.ReadUInt16(stream);
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
             // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
@@ -9883,7 +9958,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
             size += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
             size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
+            size += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
             size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
             // TODO: This should likely be a FullBox: Box; // further boxes as needed
 
@@ -9913,6 +9988,7 @@ namespace BoxGenerator2
         public ushort channelcount { get; set; }  //  shall be correct
         public ushort samplesize { get; set; } = 16;
         public ushort pre_defined { get; set; } = 0;
+        public ushort reserved0 { get; set; } = 0;
         public uint samplerate { get; set; } = 1 << 16;  //  optional boxes follow
         public DownMixInstructions[] DownMixInstructions { get; set; }
         public DRCCoefficientsBasic[] DRCCoefficientsBasic { get; set; }
@@ -9932,7 +10008,7 @@ namespace BoxGenerator2
             this.channelcount = IsoReaderWriter.ReadUInt16(stream);
             this.samplesize = IsoReaderWriter.ReadUInt16(stream);
             this.pre_defined = IsoReaderWriter.ReadUInt16(stream);
-            this.reserved = IsoReaderWriter.ReadUInt16(stream);
+            this.reserved0 = IsoReaderWriter.ReadUInt16(stream);
             this.samplerate = IsoReaderWriter.ReadUInt32(stream);
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
@@ -9961,7 +10037,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt16(stream, this.channelcount);
             size += IsoReaderWriter.WriteUInt16(stream, this.samplesize);
             size += IsoReaderWriter.WriteUInt16(stream, this.pre_defined);
-            size += IsoReaderWriter.WriteUInt16(stream, this.reserved);
+            size += IsoReaderWriter.WriteUInt16(stream, this.reserved0);
             size += IsoReaderWriter.WriteUInt32(stream, this.samplerate);
             // TODO: This should likely be a FullBox: SamplingRateBox;
 
@@ -10458,6 +10534,7 @@ namespace BoxGenerator2
         public ushort operation_point_count { get; set; }
         public ushort target_rate_share { get; set; }
         public uint available_bitrate { get; set; }
+        public ushort target_rate_share0 { get; set; }
         public uint maximum_bitrate { get; set; }
         public uint minimum_bitrate { get; set; }
         public byte discard_priority { get; set; }
@@ -10481,7 +10558,7 @@ namespace BoxGenerator2
                 for (int i = 0; i < operation_point_count; i++)
                 {
                     this.available_bitrate = IsoReaderWriter.ReadUInt32(stream);
-                    this.target_rate_share = IsoReaderWriter.ReadUInt16(stream);
+                    this.target_rate_share0 = IsoReaderWriter.ReadUInt16(stream);
                 }
             }
             this.maximum_bitrate = IsoReaderWriter.ReadUInt32(stream);
@@ -10506,7 +10583,7 @@ namespace BoxGenerator2
                 for (int i = 0; i < operation_point_count; i++)
                 {
                     size += IsoReaderWriter.WriteUInt32(stream, this.available_bitrate);
-                    size += IsoReaderWriter.WriteUInt16(stream, this.target_rate_share);
+                    size += IsoReaderWriter.WriteUInt16(stream, this.target_rate_share0);
                 }
             }
             size += IsoReaderWriter.WriteUInt32(stream, this.maximum_bitrate);
@@ -12748,7 +12825,7 @@ namespace BoxGenerator2
                 this.level_idc = IsoReaderWriter.ReadUInt8(stream);
             }
 
-            if (level_is_static_flag == 0)
+            if (level_is_static_flag == false)
             {
                 this.level_info_entity_idx = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -12768,7 +12845,7 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
             }
 
-            if (level_is_static_flag == 0)
+            if (level_is_static_flag == false)
             {
                 size += IsoReaderWriter.WriteUInt32(stream, this.level_info_entity_idx);
             }
@@ -12805,7 +12882,7 @@ namespace BoxGenerator2
                 this.level_idc = IsoReaderWriter.ReadUInt8(stream);
             }
 
-            if (level_is_static_flag == 0)
+            if (level_is_static_flag == false)
             {
                 this.level_info_entity_idx = IsoReaderWriter.ReadUInt32(stream);
             }
@@ -12814,7 +12891,7 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                this.track_subgroup_id[i] = IsoReaderWriter.ReadBytes(stream, subgroupIdLen);
+                this.track_subgroup_id[i] = IsoReaderWriter.ReadUInt32(stream);
             }
 
             for (int i = 0; i < num_subgroup_ids; i++)
@@ -12836,7 +12913,7 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
             }
 
-            if (level_is_static_flag == 0)
+            if (level_is_static_flag == false)
             {
                 size += IsoReaderWriter.WriteUInt32(stream, this.level_info_entity_idx);
             }
@@ -12845,7 +12922,7 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                size += IsoReaderWriter.WriteBytes(stream, subgroupIdLen, this.track_subgroup_id[i]);
+                size += IsoReaderWriter.WriteUInt32(stream, this.track_subgroup_id[i]);
             }
 
             for (int i = 0; i < num_subgroup_ids; i++)
@@ -12868,20 +12945,26 @@ namespace BoxGenerator2
         public byte[] ptl_idx { get; set; }
         public ushort[] ols_idx { get; set; }
         public byte[] layer_count { get; set; }
+        public bool reserved0 { get; set; } = false;
         public bool[] layer_info_present_flag { get; set; }
         public byte[][] layer_id { get; set; }
         public byte[][] is_output_layer { get; set; }
+        public bool reserved00 { get; set; } = false;
+        public byte reserved1 { get; set; } = 0;
         public ushort num_operating_points { get; set; }
         public ushort ols_loop_entry_idx { get; set; }
         public byte max_temporal_id { get; set; }
         public bool frame_rate_info_flag { get; set; }
         public bool bit_rate_info_flag { get; set; }
         public byte op_availability_idc { get; set; }
+        public byte reserved2 { get; set; } = 0;
+        public byte reserved01 { get; set; } = 0;
         public byte chroma_format_idc { get; set; }
         public byte bit_depth_minus8 { get; set; }
         public ushort max_picture_width { get; set; }
         public ushort max_picture_height { get; set; }
         public ushort avg_frame_rate { get; set; }
+        public byte reserved10 { get; set; } = 0;
         public byte constant_frame_rate { get; set; }
         public uint max_bit_rate { get; set; }
         public uint avg_bit_rate { get; set; }
@@ -12909,21 +12992,21 @@ namespace BoxGenerator2
                 this.ptl_idx[i] = IsoReaderWriter.ReadUInt8(stream);
                 this.ols_idx[i] = IsoReaderWriter.ReadBits(stream, 9);
                 this.layer_count[i] = IsoReaderWriter.ReadBits(stream, 6);
-                this.reserved = IsoReaderWriter.ReadBit(stream);
+                this.reserved0 = IsoReaderWriter.ReadBit(stream);
                 this.layer_info_present_flag[i] = IsoReaderWriter.ReadBit(stream);
 
-                if (layer_info_present_flag)
+                if (layer_info_present_flag[i])
                 {
 
-                    for (int j = 0; j < layer_count; j++)
+                    for (int j = 0; j < layer_count[i]; j++)
                     {
                         this.layer_id[i][j] = IsoReaderWriter.ReadBits(stream, 6);
                         this.is_output_layer[i][j] = IsoReaderWriter.ReadBits(stream, 1);
-                        this.reserved = IsoReaderWriter.ReadBit(stream);
+                        this.reserved00 = IsoReaderWriter.ReadBit(stream);
                     }
                 }
             }
-            this.reserved = IsoReaderWriter.ReadBits(stream, 4);
+            this.reserved1 = IsoReaderWriter.ReadBits(stream, 4);
             this.num_operating_points = IsoReaderWriter.ReadBits(stream, 12);
 
             for (int i = 0; i < num_operating_points; i++)
@@ -12940,9 +13023,9 @@ namespace BoxGenerator2
 
                 else
                 {
-                    this.reserved = IsoReaderWriter.ReadBits(stream, 2);
+                    this.reserved2 = IsoReaderWriter.ReadBits(stream, 2);
                 }
-                this.reserved = IsoReaderWriter.ReadBits(stream, 3);
+                this.reserved01 = IsoReaderWriter.ReadBits(stream, 3);
                 this.chroma_format_idc = IsoReaderWriter.ReadBits(stream, 2);
                 this.bit_depth_minus8 = IsoReaderWriter.ReadBits(stream, 3);
                 this.max_picture_width = IsoReaderWriter.ReadUInt16(stream);
@@ -12951,7 +13034,7 @@ namespace BoxGenerator2
                 if (frame_rate_info_flag)
                 {
                     this.avg_frame_rate = IsoReaderWriter.ReadUInt16(stream);
-                    this.reserved = IsoReaderWriter.ReadBits(stream, 6);
+                    this.reserved10 = IsoReaderWriter.ReadBits(stream, 6);
                     this.constant_frame_rate = IsoReaderWriter.ReadBits(stream, 2);
                 }
 
@@ -12988,21 +13071,21 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteUInt8(stream, this.ptl_idx[i]);
                 size += IsoReaderWriter.WriteBits(stream, 9, this.ols_idx[i]);
                 size += IsoReaderWriter.WriteBits(stream, 6, this.layer_count[i]);
-                size += IsoReaderWriter.WriteBit(stream, this.reserved);
+                size += IsoReaderWriter.WriteBit(stream, this.reserved0);
                 size += IsoReaderWriter.WriteBit(stream, this.layer_info_present_flag[i]);
 
-                if (layer_info_present_flag)
+                if (layer_info_present_flag[i])
                 {
 
-                    for (int j = 0; j < layer_count; j++)
+                    for (int j = 0; j < layer_count[i]; j++)
                     {
                         size += IsoReaderWriter.WriteBits(stream, 6, this.layer_id[i][j]);
                         size += IsoReaderWriter.WriteBits(stream, 1, this.is_output_layer[i][j]);
-                        size += IsoReaderWriter.WriteBit(stream, this.reserved);
+                        size += IsoReaderWriter.WriteBit(stream, this.reserved00);
                     }
                 }
             }
-            size += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
+            size += IsoReaderWriter.WriteBits(stream, 4, this.reserved1);
             size += IsoReaderWriter.WriteBits(stream, 12, this.num_operating_points);
 
             for (int i = 0; i < num_operating_points; i++)
@@ -13019,9 +13102,9 @@ namespace BoxGenerator2
 
                 else
                 {
-                    size += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
+                    size += IsoReaderWriter.WriteBits(stream, 2, this.reserved2);
                 }
-                size += IsoReaderWriter.WriteBits(stream, 3, this.reserved);
+                size += IsoReaderWriter.WriteBits(stream, 3, this.reserved01);
                 size += IsoReaderWriter.WriteBits(stream, 2, this.chroma_format_idc);
                 size += IsoReaderWriter.WriteBits(stream, 3, this.bit_depth_minus8);
                 size += IsoReaderWriter.WriteUInt16(stream, this.max_picture_width);
@@ -13030,7 +13113,7 @@ namespace BoxGenerator2
                 if (frame_rate_info_flag)
                 {
                     size += IsoReaderWriter.WriteUInt16(stream, this.avg_frame_rate);
-                    size += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+                    size += IsoReaderWriter.WriteBits(stream, 6, this.reserved10);
                     size += IsoReaderWriter.WriteBits(stream, 2, this.constant_frame_rate);
                 }
 
@@ -13190,6 +13273,7 @@ namespace BoxGenerator2
         public bool avgRateFlag { get; set; }
         public byte reserved { get; set; } = 0;
         public uint duration { get; set; }
+        public byte reserved0 { get; set; } = 0;
         public bool accurateStatisticsFlag { get; set; }
         public ushort avgBitRate { get; set; }
         public ushort avgFrameRate { get; set; }
@@ -13215,7 +13299,7 @@ namespace BoxGenerator2
 
             if (avgRateFlag)
             {
-                this.reserved = IsoReaderWriter.ReadBits(stream, 7);
+                this.reserved0 = IsoReaderWriter.ReadBits(stream, 7);
                 this.accurateStatisticsFlag = IsoReaderWriter.ReadBit(stream);
                 this.avgBitRate = IsoReaderWriter.ReadUInt16(stream);
                 this.avgFrameRate = IsoReaderWriter.ReadUInt16(stream);
@@ -13241,7 +13325,7 @@ namespace BoxGenerator2
 
             if (avgRateFlag)
             {
-                size += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
+                size += IsoReaderWriter.WriteBits(stream, 7, this.reserved0);
                 size += IsoReaderWriter.WriteBit(stream, this.accurateStatisticsFlag);
                 size += IsoReaderWriter.WriteUInt16(stream, this.avgBitRate);
                 size += IsoReaderWriter.WriteUInt16(stream, this.avgFrameRate);
@@ -13415,11 +13499,13 @@ namespace BoxGenerator2
         public override string FourCC { get { return "linf"; } }
         public byte reserved { get; set; } = 0;
         public byte num_layers_in_track { get; set; }
+        public byte reserved0 { get; set; } = 0;
         public bool irap_gdr_pics_in_layer_only_flag { get; set; }
         public bool completeness_flag { get; set; }
         public byte layer_id { get; set; }
         public byte min_TemporalId { get; set; }
         public byte max_TemporalId { get; set; }
+        public bool reserved00 { get; set; } = false;
         public byte sub_layer_presence_flags { get; set; }
 
         public LayerInfoGroupEntry()
@@ -13433,13 +13519,13 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_layers_in_track; i++)
             {
-                this.reserved = IsoReaderWriter.ReadBits(stream, 2);
+                this.reserved0 = IsoReaderWriter.ReadBits(stream, 2);
                 this.irap_gdr_pics_in_layer_only_flag = IsoReaderWriter.ReadBit(stream);
                 this.completeness_flag = IsoReaderWriter.ReadBit(stream);
                 this.layer_id = IsoReaderWriter.ReadBits(stream, 6);
                 this.min_TemporalId = IsoReaderWriter.ReadBits(stream, 3);
                 this.max_TemporalId = IsoReaderWriter.ReadBits(stream, 3);
-                this.reserved = IsoReaderWriter.ReadBit(stream);
+                this.reserved00 = IsoReaderWriter.ReadBit(stream);
                 this.sub_layer_presence_flags = IsoReaderWriter.ReadBits(stream, 7);
             }
         }
@@ -13453,13 +13539,13 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_layers_in_track; i++)
             {
-                size += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
+                size += IsoReaderWriter.WriteBits(stream, 2, this.reserved0);
                 size += IsoReaderWriter.WriteBit(stream, this.irap_gdr_pics_in_layer_only_flag);
                 size += IsoReaderWriter.WriteBit(stream, this.completeness_flag);
                 size += IsoReaderWriter.WriteBits(stream, 6, this.layer_id);
                 size += IsoReaderWriter.WriteBits(stream, 3, this.min_TemporalId);
                 size += IsoReaderWriter.WriteBits(stream, 3, this.max_TemporalId);
-                size += IsoReaderWriter.WriteBit(stream, this.reserved);
+                size += IsoReaderWriter.WriteBit(stream, this.reserved00);
                 size += IsoReaderWriter.WriteBits(stream, 7, this.sub_layer_presence_flags);
             }
             return size;
@@ -13518,6 +13604,7 @@ namespace BoxGenerator2
         public byte primary_groupID { get; set; }
         public byte reserved { get; set; } = 0;
         public bool is_tl_switching_point { get; set; }
+        public byte reserved0 { get; set; } = 0;
         public byte tl_switching_distance { get; set; }
 
         public MultiviewGroupEntry()
@@ -13530,7 +13617,7 @@ namespace BoxGenerator2
             this.primary_groupID = IsoReaderWriter.ReadUInt8(stream);
             this.reserved = IsoReaderWriter.ReadBits(stream, 4);
             this.is_tl_switching_point = IsoReaderWriter.ReadBit(stream);
-            this.reserved = IsoReaderWriter.ReadBits(stream, 3);
+            this.reserved0 = IsoReaderWriter.ReadBits(stream, 3);
             this.tl_switching_distance = IsoReaderWriter.ReadUInt8(stream);
 
             if (groupID == primary_groupID)
@@ -13565,7 +13652,7 @@ namespace BoxGenerator2
             size += IsoReaderWriter.WriteUInt8(stream, this.primary_groupID);
             size += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
             size += IsoReaderWriter.WriteBit(stream, this.is_tl_switching_point);
-            size += IsoReaderWriter.WriteBits(stream, 3, this.reserved);
+            size += IsoReaderWriter.WriteBits(stream, 3, this.reserved0);
             size += IsoReaderWriter.WriteUInt8(stream, this.tl_switching_distance);
 
             if (groupID == primary_groupID)
@@ -13602,7 +13689,9 @@ namespace BoxGenerator2
         public bool large_size { get; set; }
         public bool rle { get; set; }
         public ushort entry_count { get; set; }
+        public byte entry_count0 { get; set; }
         public ushort NALU_start_number { get; set; }
+        public byte NALU_start_number0 { get; set; }
         public ushort groupID { get; set; }
 
         public NALUMapEntry()
@@ -13622,7 +13711,7 @@ namespace BoxGenerator2
 
             else
             {
-                this.entry_count = IsoReaderWriter.ReadUInt8(stream);
+                this.entry_count0 = IsoReaderWriter.ReadUInt8(stream);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -13638,7 +13727,7 @@ namespace BoxGenerator2
 
                     else
                     {
-                        this.NALU_start_number = IsoReaderWriter.ReadUInt8(stream);
+                        this.NALU_start_number0 = IsoReaderWriter.ReadUInt8(stream);
                     }
                 }
                 this.groupID = IsoReaderWriter.ReadUInt16(stream);
@@ -13660,7 +13749,7 @@ namespace BoxGenerator2
 
             else
             {
-                size += IsoReaderWriter.WriteUInt8(stream, this.entry_count);
+                size += IsoReaderWriter.WriteUInt8(stream, this.entry_count0);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -13676,7 +13765,7 @@ namespace BoxGenerator2
 
                     else
                     {
-                        size += IsoReaderWriter.WriteUInt8(stream, this.NALU_start_number);
+                        size += IsoReaderWriter.WriteUInt8(stream, this.NALU_start_number0);
                     }
                 }
                 size += IsoReaderWriter.WriteUInt16(stream, this.groupID);
@@ -14246,6 +14335,7 @@ namespace BoxGenerator2
         public bool full_picture { get; set; }
         public bool filtering_disabled { get; set; }
         public bool has_dependency_list { get; set; }
+        public byte reserved0 { get; set; } = 0;
         public ushort horizontal_offset { get; set; }
         public ushort vertical_offset { get; set; }
         public ushort region_width { get; set; }
@@ -14273,7 +14363,7 @@ namespace BoxGenerator2
                 this.full_picture = IsoReaderWriter.ReadBit(stream);
                 this.filtering_disabled = IsoReaderWriter.ReadBit(stream);
                 this.has_dependency_list = IsoReaderWriter.ReadBit(stream);
-                this.reserved = IsoReaderWriter.ReadBits(stream, 2);
+                this.reserved0 = IsoReaderWriter.ReadBits(stream, 2);
 
                 if (!full_picture)
                 {
@@ -14313,7 +14403,7 @@ namespace BoxGenerator2
                 size += IsoReaderWriter.WriteBit(stream, this.full_picture);
                 size += IsoReaderWriter.WriteBit(stream, this.filtering_disabled);
                 size += IsoReaderWriter.WriteBit(stream, this.has_dependency_list);
-                size += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
+                size += IsoReaderWriter.WriteBits(stream, 2, this.reserved0);
 
                 if (!full_picture)
                 {
@@ -15524,6 +15614,7 @@ namespace BoxGenerator2
         public bool full_range_flag { get; set; }
         public byte reserved { get; set; } = 0;
         public ICC_profile ICC_profile { get; set; }  //  restricted ICC profile
+        public ICC_profile ICC_profile0 { get; set; }  //  unrestricted ICC profile
 
         public ColourInformationBox1()
         { }
@@ -15549,7 +15640,7 @@ namespace BoxGenerator2
 
             else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
             {
-                this.ICC_profile = (ICC_profile)IsoReaderWriter.ReadClass(stream);
+                this.ICC_profile0 = (ICC_profile)IsoReaderWriter.ReadClass(stream);
             }
         }
 
@@ -15575,7 +15666,7 @@ namespace BoxGenerator2
 
             else if (colour_type == IsoReaderWriter.FromFourCC("prof"))
             {
-                size += IsoReaderWriter.WriteClass(stream, this.ICC_profile);
+                size += IsoReaderWriter.WriteClass(stream, this.ICC_profile0);
             }
             return size;
         }
@@ -15879,6 +15970,7 @@ namespace BoxGenerator2
         public uint sample_delta { get; set; }
         public ushort subsample_count { get; set; }
         public uint subsample_size { get; set; }
+        public ushort subsample_size0 { get; set; }
         public byte subsample_priority { get; set; }
         public byte discardable { get; set; }
         public uint codec_specific_parameters { get; set; }
@@ -15910,7 +16002,7 @@ namespace BoxGenerator2
 
                         else
                         {
-                            this.subsample_size = IsoReaderWriter.ReadUInt16(stream);
+                            this.subsample_size0 = IsoReaderWriter.ReadUInt16(stream);
                         }
                         this.subsample_priority = IsoReaderWriter.ReadUInt8(stream);
                         this.discardable = IsoReaderWriter.ReadUInt8(stream);
@@ -15945,7 +16037,7 @@ namespace BoxGenerator2
 
                         else
                         {
-                            size += IsoReaderWriter.WriteUInt16(stream, this.subsample_size);
+                            size += IsoReaderWriter.WriteUInt16(stream, this.subsample_size0);
                         }
                         size += IsoReaderWriter.WriteUInt8(stream, this.subsample_priority);
                         size += IsoReaderWriter.WriteUInt8(stream, this.discardable);

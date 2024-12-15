@@ -82,7 +82,7 @@ public class PseudoField : PseudoCode
     }
 
     public string Type { get; set; }
-    public string Name { get; }
+    public string Name { get; set; }
     public string Value { get; }
     public string Comment { get; }
 }
@@ -689,85 +689,35 @@ namespace BoxGenerator2
                 if (IsWorkaround(field.Type))
                     continue;
 
-                string name = GetFieldName(field);
-                if (!ret.TryAdd(name, field))
-                {
-                    if (CompareTypeSize(ret[name].Type, field.Type) < 0)
-                    {
-                        ret[name] = field;
-                    }
-                }
+                AddAndResolveDuplicates(ret, field);
             }
             else if (code is PseudoBlock block)
             {
                 var blockFields = FlattenFields(block.Content);
                 foreach (var blockField in blockFields)
                 {
-                    string name = GetFieldName(blockField);
-                    if (!ret.TryAdd(name, blockField))
-                    {
-                        if (CompareTypeSize(ret[name].Type, blockField.Type) < 0)
-                        {
-                            ret[name] = blockField;
-                        }
-                    }
+                    AddAndResolveDuplicates(ret, blockField);
                 }
             }
         }
         return ret.Values.ToList();
     }
 
-    private static int CompareTypeSize(string type1, string type2)
+    private static void AddAndResolveDuplicates(Dictionary<string, PseudoField> ret, PseudoField field)
     {
-        if (type1 == type2)
-            return 0;
-
-        //if (type1.Contains('[') != type2.Contains("]"))
-        //    throw new Exception("Type mismatch!");
-
-        List<string> map = new List<string>()
+        string name = GetFieldName(field);
+        if (!ret.TryAdd(name, field))
         {
-            "bit(8 ceil(size / 8) – size)",
-            "unsigned int(64)",
-            "signed int(64)",
-            "int(64)",
-            "unsigned int(32)[3]",
-            "const unsigned int(32)[2]",
-            "const unsigned int(32)",
-            "int(32)",
-            "int",
-            "unsigned int(32)",
-            "signed int(32)",
-            "signed   int(32)",
-            "const unsigned int(16)[3]",
-            "const unsigned int(16)",
-            "unsigned int(16)",
-            "const bit(16)",
-            "int(16)",
-            "unsigned int(15)",
-            "unsigned int(12)",
-            "unsigned int(8)",
-            "bit(8)",
-            "bit(7)",
-            "unsigned int(7)",
-            "unsigned int(6)",
-            "bit(6)",
-            "unsigned int(4)",
-            "bit(4)",
-            "bit(3)",
-            "bit(2)",
-            "unsigned int(1)",
-            "bit(1)",
-            "SingleItemTypeReferenceBoxLarge",
-            "SingleItemTypeReferenceBox",
-        };
-
-        if (!map.Contains(type1))
-            throw new Exception(type1);
-        if (!map.Contains(type2))
-            throw new Exception(type2);
-
-        return map.IndexOf(type2) - map.IndexOf(type1); 
+            // TODO: this only works as long as the name does not appear in a condition/code
+            int i = 0;
+            string updatedName = $"{name}{i}";
+            while (!ret.TryAdd(updatedName, field))
+            {
+                i++;
+                updatedName = $"{name}{i}";
+            }
+            field.Name = updatedName;
+        }
     }
 
     private static string BuildProperty(PseudoCode field)
@@ -851,7 +801,9 @@ namespace BoxGenerator2
                 {
                     value = " " + value.Replace("'", "\"") + ";";
                 }
-                
+
+                value = FixFourCC(value);
+
                 string name = GetFieldName(field);
                 return $"\tpublic {tt} {name} {{ get; set; }}{value} {comment}";
             }
@@ -919,11 +871,13 @@ namespace BoxGenerator2
         string typedef = "";
         string value = (field as PseudoField)?.Value;
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
-            value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]" && value != "[0 .. 255]")
+            value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]" && value != "[0 .. 255]" &&
+            value != "[ sample_count ]" && value != "[method_count]")
         {
             typedef = value;
         }
-        if(isRead)
+
+        if (isRead)
             return $"{spacing}this.{name}{typedef} = {m};";
         else
             return $"{spacing}size += {m} this.{name}{typedef});";
@@ -958,7 +912,7 @@ namespace BoxGenerator2
         {
             condition = "(int " + condition.TrimStart('(');
         }
-        else if(blockType == "do")
+        else if (blockType == "do")
         {
             blockType = "while";
             condition = "(true)";
@@ -966,28 +920,28 @@ namespace BoxGenerator2
         else if (blockType == "if")
         {
             // fix "flags"
-            if(condition.Contains('&') && !condition.Contains("&&"))
+            if (condition.Contains('&') && !condition.Contains("&&"))
             {
                 string[] conditionParts = condition.TrimStart('(').TrimEnd(')').Split('&');
-                if(conditionParts.Length == 2)
+                if (conditionParts.Length == 2)
                 {
                     condition = $"(({conditionParts[0]} & {conditionParts[1]}) == {conditionParts[1]})"; // fix the "flags" syntax
                 }
             }
-        }
 
-        if (!string.IsNullOrEmpty(condition))
-        {
-            // fix 4cc
-            const string regex = "\\\"[\\w\\s\\!]{4}\\\"";
-            var match = Regex.Match(condition, regex);
-            if (match.Success)
+            if(condition.Contains("grouping_type_parameter_present") ||
+                condition.Contains("omitted_channels_present") ||
+                condition.Contains("in_stream") ||
+                condition.Contains("dynamic_rect") ||
+                condition.Contains("level_is_static_flag"))
             {
-                string inputValue = match.Value;
-                string replaceValue = "IsoReaderWriter.FromFourCC(" + inputValue + ")";
-                condition = condition.Replace(inputValue, replaceValue);
+                condition = condition
+                    .Replace("==0", "== false").Replace("==1", "== true")
+                    .Replace("== 0", "== false").Replace("== 1", "== true");
             }
         }
+
+        condition = FixFourCC(condition);
 
         ret = $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
 
@@ -999,6 +953,24 @@ namespace BoxGenerator2
         ret += $"\r\n{spacing}}}";
 
         return ret;
+    }
+
+    private static string FixFourCC(string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            // fix 4cc
+            const string regex = "\\\"[\\w\\s\\!]{4}\\\"";
+            var match = Regex.Match(value, regex);
+            if (match.Success)
+            {
+                string inputValue = match.Value;
+                string replaceValue = "IsoReaderWriter.FromFourCC(" + inputValue + ")";
+                value = value.Replace(inputValue, replaceValue);
+            }
+        }
+
+        return value;
     }
 
     public static string GetSpacing(int level)
@@ -1018,6 +990,7 @@ namespace BoxGenerator2
             { "unsigned int(64)[ entry_count ]", "IsoReaderWriter.ReadUInt64Array(stream, entry_count)" },
             { "unsigned int(64)", "IsoReaderWriter.ReadUInt64(stream)" },
             { "unsigned int(48)", "IsoReaderWriter.ReadUInt48(stream)" },
+            { "unsigned int(32)[ entry_count ]", "IsoReaderWriter.ReadUInt32Array(stream, entry_count)" },
             { "template int(32)[9]", "IsoReaderWriter.ReadUInt32Array(stream, 9)" },
             { "unsigned int(32)[3]", "IsoReaderWriter.ReadUInt32Array(stream, 3)" },
             { "unsigned int(32)", "IsoReaderWriter.ReadUInt32(stream)" },
@@ -1065,7 +1038,7 @@ namespace BoxGenerator2
             { "unsigned int((length_size_of_trun_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_trun_num+1))" },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_sample_num+1))" },
             { "unsigned int(8*size-64)", "IsoReaderWriter.ReadBytes(stream, size-64)" },
-            { "unsigned int(subgroupIdLen)[i]", "IsoReaderWriter.ReadBytes(stream, subgroupIdLen)" },
+            { "unsigned int(subgroupIdLen)[i]", "IsoReaderWriter.ReadUInt32(stream)" },
             { "const unsigned int(32)[2]", "IsoReaderWriter.ReadUInt32Array(stream, 2)" },
             { "const unsigned int(32)[3]", "IsoReaderWriter.ReadUInt32Array(stream, 3)" },
             { "const unsigned int(32)", "IsoReaderWriter.ReadUInt32(stream)" },
@@ -1251,6 +1224,7 @@ namespace BoxGenerator2
             { "unsigned int(64)", "IsoReaderWriter.WriteUInt64(stream, " },
             { "unsigned int(48)", "IsoReaderWriter.WriteUInt48(stream, " },
             { "template int(32)[9]", "IsoReaderWriter.WriteUInt32Array(stream, 9, " },
+            { "unsigned int(32)[ entry_count ]", "IsoReaderWriter.WriteUInt32Array(stream, entry_count, " },
             { "unsigned int(32)[3]", "IsoReaderWriter.WriteUInt32Array(stream, 3, " },
             { "unsigned int(32)", "IsoReaderWriter.WriteUInt32(stream, " },
             { "unsigned_int(32)", "IsoReaderWriter.WriteUInt32(stream, " },
@@ -1297,7 +1271,7 @@ namespace BoxGenerator2
             { "unsigned int((length_size_of_trun_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_trun_num+1), " },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "IsoReaderWriter.WriteBytes(stream, (ulong)(length_size_of_sample_num+1), " },
             { "unsigned int(8*size-64)", "IsoReaderWriter.WriteBytes(stream, size-64, " },
-            { "unsigned int(subgroupIdLen)[i]", "IsoReaderWriter.WriteBytes(stream, subgroupIdLen, " },
+            { "unsigned int(subgroupIdLen)[i]", "IsoReaderWriter.WriteUInt32(stream, " },
             { "const unsigned int(32)[2]", "IsoReaderWriter.WriteUInt32Array(stream, 2, " },
             { "const unsigned int(32)[3]", "IsoReaderWriter.WriteUInt32Array(stream, 3, " },
             { "const unsigned int(32)", "IsoReaderWriter.WriteUInt32(stream, " },
@@ -1348,7 +1322,7 @@ namespace BoxGenerator2
             { "uint(8)", "IsoReaderWriter.WriteUInt8(stream, " },
             { "signed int(32)", "IsoReaderWriter.WriteInt32(stream, " },
             { "signed int (16)", "IsoReaderWriter.WriteInt16(stream, " },
-            { "signed int(16)[grid_pos_view_id[i]]", "IsoReaderWriter.WriteInt16Array(stream, grid_pos_view_id[i], " },
+            { "signed int(16)[grid_pos_view_id[i]]", "IsoReaderWriter.WriteInt16(stream, " },
             { "signed int(16)", "IsoReaderWriter.WriteInt16(stream, " },
             { "signed int (8)", "IsoReaderWriter.WriteInt8(stream, " },
             { "signed int(64)", "IsoReaderWriter.WriteInt64(stream, " },
@@ -1498,6 +1472,7 @@ namespace BoxGenerator2
             { "unsigned int(64)", "ulong" },
             { "unsigned int(48)", "ulong" },
             { "template int(32)[9]", "uint[]" },
+            { "unsigned int(32)[ entry_count ]", "uint[]" },
             { "unsigned int(32)[3]", "uint[]" },
             { "unsigned int(32)", "uint" },
             { "unsigned_int(32)", "uint" },
@@ -1532,7 +1507,7 @@ namespace BoxGenerator2
             { "unsigned int(1)", "bool" },
             { "unsigned int (32)", "uint" },
             { "unsigned int(f(pattern_size_code))[i]", "byte[]" },
-            { "unsigned int(f(index_size_code))[j][k]", "byte[]" },
+            { "unsigned int(f(index_size_code))[j][k]", "byte[][]" },
             { "unsigned int(f(count_size_code))[i]", "byte[]" },
             { "unsigned int(base_offset_size*8)", "byte[]" },
             { "unsigned int(offset_size*8)", "byte[]" },

@@ -27,8 +27,6 @@ namespace BoxGenerator2
     {
         public int version { get; set; }
         public int flags { get; set; }
-
-        public int sample_count { get; set; }
     }
 
     public abstract class VisualSampleGroupEntry : Box
