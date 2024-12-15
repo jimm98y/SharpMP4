@@ -923,12 +923,26 @@ namespace BoxGenerator2
             fieldComment = "//" + (field as PseudoField).Comment;
         }
 
+        string optional = "";
+        if(fieldComment.Contains("optional"))
+        {
+            if (methodType == MethodType.Write || methodType == MethodType.Size)
+            {
+                optional = $"if(this.{name} != null) ";
+            }
+            else if(methodType == MethodType.Read)
+            {
+                // TODO: check if we can read
+                optional = "if(true) ";
+            }
+        }
+
         if (methodType == MethodType.Read)
-            return $"{spacing}this.{name}{typedef} = {m}; {fieldComment}";
+            return $"{spacing}{optional}this.{name}{typedef} = {m}; {fieldComment}";
         else if(methodType == MethodType.Write)
-            return $"{spacing}boxSize += {m} this.{name}{typedef}); {fieldComment}";
+            return $"{spacing}{optional}boxSize += {m} this.{name}{typedef}); {fieldComment}";
         else
-            return $"{spacing}boxSize += {m.Replace("value", name)}; // {name}";
+            return $"{spacing}{optional}boxSize += {m.Replace("value", name)}; // {name}";
     }
 
     private static string BuildComment(PseudoComment comment, int level, MethodType methodType)
