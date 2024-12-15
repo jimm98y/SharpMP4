@@ -1679,7 +1679,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.stereo_scheme);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.length);
             boxSize += IsoReaderWriter.ReadBytes(stream, length, out this.stereo_indication_type);
-            if (boxSize < size) boxSize += IsoReaderWriter.ReadBoxes(stream, out this.any_box); // optional
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.any_box); // optional
             return boxSize;
         }
 
@@ -1692,7 +1692,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.stereo_scheme);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.length);
             boxSize += IsoReaderWriter.WriteBytes(stream, length, this.stereo_indication_type);
-            if (this.any_box != null) boxSize += IsoReaderWriter.WriteBoxes(stream, this.any_box); // optional
+            if (this.any_box != null) boxSize += IsoReaderWriter.WriteBox(stream, this.any_box); // optional
             return boxSize;
         }
 
@@ -3497,7 +3497,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadBoxes(stream, out this.properties); // boxes derived from
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.properties); // boxes derived from
             /*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
             /*  to fill the box */
             return boxSize;
@@ -3507,7 +3507,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteBoxes(stream, this.properties); // boxes derived from
+            boxSize += IsoReaderWriter.WriteBox(stream, this.properties); // boxes derived from
             /*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
             /*  to fill the box */
             return boxSize;
@@ -3669,7 +3669,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.property_container);
-            boxSize += IsoReaderWriter.ReadBoxes(stream, out this.association);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.association);
             return boxSize;
         }
 
@@ -3678,7 +3678,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteBox(stream, this.property_container);
-            boxSize += IsoReaderWriter.WriteBoxes(stream, this.association);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.association);
             return boxSize;
         }
 
@@ -4427,7 +4427,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadBoxes(stream, out this.compatible_combinations); // to end of the box
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.compatible_combinations); // to end of the box
             return boxSize;
         }
 
@@ -4435,7 +4435,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteBoxes(stream, this.compatible_combinations); // to end of the box
+            boxSize += IsoReaderWriter.WriteBox(stream, this.compatible_combinations); // to end of the box
             return boxSize;
         }
 
@@ -4683,7 +4683,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.entry_count);
-            boxSize += IsoReaderWriter.ReadClasses(stream, entry_count, out this.partition_entries);
+            boxSize += IsoReaderWriter.ReadClass(stream, entry_count, out this.partition_entries);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.session_info); //optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.group_id_to_name); //optional
             return boxSize;
@@ -4694,7 +4694,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
-            boxSize += IsoReaderWriter.WriteClasses(stream, entry_count, this.partition_entries);
+            boxSize += IsoReaderWriter.WriteClass(stream, entry_count, this.partition_entries);
             if (this.session_info != null) boxSize += IsoReaderWriter.WriteBox(stream, this.session_info); //optional
             if (this.group_id_to_name != null) boxSize += IsoReaderWriter.WriteBox(stream, this.group_id_to_name); //optional
             return boxSize;
@@ -5323,7 +5323,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entry_count0);
             }
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.item_infos);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.item_infos);
             return boxSize;
         }
 
@@ -5341,7 +5341,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
             }
-            boxSize += IsoReaderWriter.WriteClasses(stream, entry_count, this.item_infos);
+            boxSize += IsoReaderWriter.WriteClass(stream, entry_count, this.item_infos);
             return boxSize;
         }
 
@@ -5861,12 +5861,12 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-                boxSize += IsoReaderWriter.ReadBoxes(stream, out this.references);
+                boxSize += IsoReaderWriter.ReadBox(stream, out this.references);
             }
 
             else if (version == 1)
             {
-                boxSize += IsoReaderWriter.ReadBoxes(stream, out this.references0);
+                boxSize += IsoReaderWriter.ReadBox(stream, out this.references0);
             }
             return boxSize;
         }
@@ -5878,12 +5878,12 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-                boxSize += IsoReaderWriter.WriteBoxes(stream, this.references);
+                boxSize += IsoReaderWriter.WriteBox(stream, this.references);
             }
 
             else if (version == 1)
             {
-                boxSize += IsoReaderWriter.WriteBoxes(stream, this.references0);
+                boxSize += IsoReaderWriter.WriteBox(stream, this.references0);
             }
             return boxSize;
         }
@@ -6310,7 +6310,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.IPMP_control); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.item_refs); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.item_data); // optional
-            if (boxSize < size) boxSize += IsoReaderWriter.ReadBoxes(stream, out this.other_boxes); // optional
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.other_boxes); // optional
             return boxSize;
         }
 
@@ -6327,7 +6327,7 @@ namespace BoxGenerator2
             if (this.IPMP_control != null) boxSize += IsoReaderWriter.WriteBox(stream, this.IPMP_control); // optional
             if (this.item_refs != null) boxSize += IsoReaderWriter.WriteBox(stream, this.item_refs); // optional
             if (this.item_data != null) boxSize += IsoReaderWriter.WriteBox(stream, this.item_data); // optional
-            if (this.other_boxes != null) boxSize += IsoReaderWriter.WriteBoxes(stream, this.other_boxes); // optional
+            if (this.other_boxes != null) boxSize += IsoReaderWriter.WriteBox(stream, this.other_boxes); // optional
             return boxSize;
         }
 
@@ -6869,7 +6869,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.entry_count);
-            boxSize += IsoReaderWriter.ReadClasses(stream, entry_count, out this.partition_entries);
+            boxSize += IsoReaderWriter.ReadClass(stream, entry_count, out this.partition_entries);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.session_info); //optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.group_id_to_name); //optional
             return boxSize;
@@ -6880,7 +6880,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
-            boxSize += IsoReaderWriter.WriteClasses(stream, entry_count, this.partition_entries);
+            boxSize += IsoReaderWriter.WriteClass(stream, entry_count, this.partition_entries);
             if (this.session_info != null) boxSize += IsoReaderWriter.WriteBox(stream, this.session_info); //optional
             if (this.group_id_to_name != null) boxSize += IsoReaderWriter.WriteBox(stream, this.group_id_to_name); //optional
             return boxSize;
@@ -7372,7 +7372,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadBoxes(stream, out this.scheme_specific_data);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.scheme_specific_data);
             return boxSize;
         }
 
@@ -7380,7 +7380,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteBoxes(stream, this.scheme_specific_data);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.scheme_specific_data);
             return boxSize;
         }
 
@@ -9297,7 +9297,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadBoxes(stream, out this.TrackReferenceTypeBox);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.TrackReferenceTypeBox);
             return boxSize;
         }
 
@@ -9305,7 +9305,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteBoxes(stream, this.TrackReferenceTypeBox);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.TrackReferenceTypeBox);
             return boxSize;
         }
 
@@ -9903,7 +9903,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadBoxes(stream, out this.MetadataKeyBox);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.MetadataKeyBox);
             return boxSize;
         }
 
@@ -9911,7 +9911,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteBoxes(stream, this.MetadataKeyBox);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.MetadataKeyBox);
             return boxSize;
         }
 
@@ -11863,7 +11863,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.Descr);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.Descr);
             return boxSize;
         }
 
@@ -11871,7 +11871,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.Descr);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.Descr);
             return boxSize;
         }
 
@@ -12838,11 +12838,11 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadUInt32(stream, out this.samplerate); // optional boxes follow
             boxSize += IsoReaderWriter.ReadBox(stream, out this.Box); // further boxes as needed
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DownMixInstructions);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCCoefficientsBasic);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCInstructionsBasic);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCCoefficientsUniDRC);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DownMixInstructions);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.ReadBox(stream, out this.SamplingRateBox);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout0);
@@ -12861,11 +12861,11 @@ namespace BoxGenerator2
             if (this.samplerate != null) boxSize += IsoReaderWriter.WriteUInt32(stream, this.samplerate); // optional boxes follow
             boxSize += IsoReaderWriter.WriteBox(stream, this.Box); // further boxes as needed
             boxSize += IsoReaderWriter.WriteBox(stream, this.ChannelLayout);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             if (this.UniDrcConfigExtension != null) boxSize += IsoReaderWriter.WriteBox(stream, this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.WriteBox(stream, this.SamplingRateBox);
             boxSize += IsoReaderWriter.WriteBox(stream, this.ChannelLayout0);
@@ -12936,11 +12936,11 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.SamplingRateBox);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.Box); // further boxes as needed
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DownMixInstructions);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCCoefficientsBasic);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCInstructionsBasic);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCCoefficientsUniDRC);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DownMixInstructions);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout0);
             return boxSize;
@@ -12961,11 +12961,11 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.SamplingRateBox);
             boxSize += IsoReaderWriter.WriteBox(stream, this.Box); // further boxes as needed
             boxSize += IsoReaderWriter.WriteBox(stream, this.ChannelLayout);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             if (this.UniDrcConfigExtension != null) boxSize += IsoReaderWriter.WriteBox(stream, this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.WriteBox(stream, this.ChannelLayout0);
             return boxSize;
@@ -13037,11 +13037,11 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.SamplingRateBox);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.Box); // further boxes as needed
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DownMixInstructions);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCCoefficientsBasic);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCInstructionsBasic);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCCoefficientsUniDRC);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DownMixInstructions);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout0);
             return boxSize;
@@ -13062,11 +13062,11 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.SamplingRateBox);
             boxSize += IsoReaderWriter.WriteBox(stream, this.Box); // further boxes as needed
             boxSize += IsoReaderWriter.WriteBox(stream, this.ChannelLayout);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             if (this.UniDrcConfigExtension != null) boxSize += IsoReaderWriter.WriteBox(stream, this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.WriteBox(stream, this.ChannelLayout0);
             return boxSize;
@@ -13962,7 +13962,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadBoxes(stream, out this.otherboxes);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.otherboxes);
             return boxSize;
         }
 
@@ -13970,7 +13970,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteBoxes(stream, this.otherboxes);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.otherboxes);
             return boxSize;
         }
 
@@ -14139,11 +14139,11 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadUInt32(stream, out this.samplerate); // optional boxes follow
             boxSize += IsoReaderWriter.ReadBox(stream, out this.Box); // further boxes as needed
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DownMixInstructions);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCCoefficientsBasic);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCInstructionsBasic);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCCoefficientsUniDRC);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DownMixInstructions);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.ReadBox(stream, out this.SamplingRateBox);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout0);
@@ -14162,11 +14162,11 @@ namespace BoxGenerator2
             if (this.samplerate != null) boxSize += IsoReaderWriter.WriteUInt32(stream, this.samplerate); // optional boxes follow
             boxSize += IsoReaderWriter.WriteBox(stream, this.Box); // further boxes as needed
             boxSize += IsoReaderWriter.WriteBox(stream, this.ChannelLayout);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             if (this.UniDrcConfigExtension != null) boxSize += IsoReaderWriter.WriteBox(stream, this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.WriteBox(stream, this.SamplingRateBox);
             boxSize += IsoReaderWriter.WriteBox(stream, this.ChannelLayout0);
@@ -14237,11 +14237,11 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.SamplingRateBox);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.Box); // further boxes as needed
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DownMixInstructions);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCCoefficientsBasic);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCInstructionsBasic);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCCoefficientsUniDRC);
-            boxSize += IsoReaderWriter.ReadClasses(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DownMixInstructions);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout0);
             return boxSize;
@@ -14262,11 +14262,11 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.WriteBox(stream, this.SamplingRateBox);
             boxSize += IsoReaderWriter.WriteBox(stream, this.Box); // further boxes as needed
             boxSize += IsoReaderWriter.WriteBox(stream, this.ChannelLayout);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DownMixInstructions);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsBasic);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsBasic);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCCoefficientsUniDRC);
-            boxSize += IsoReaderWriter.WriteClasses(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DownMixInstructions);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsBasic);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsBasic);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCCoefficientsUniDRC);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             if (this.UniDrcConfigExtension != null) boxSize += IsoReaderWriter.WriteBox(stream, this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.WriteBox(stream, this.ChannelLayout0);
             return boxSize;
@@ -14374,7 +14374,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadBoxes(stream, out this.otherboxes);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.otherboxes);
             return boxSize;
         }
 
@@ -14382,7 +14382,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteBoxes(stream, this.otherboxes);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.otherboxes);
             return boxSize;
         }
 
@@ -18845,7 +18845,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.avgFrameRate);
             }
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.numReferences);
-            boxSize += IsoReaderWriter.ReadClasses(stream, numReferences, out this.dependency);
+            boxSize += IsoReaderWriter.ReadClass(stream, numReferences, out this.dependency);
             return boxSize;
         }
 
@@ -18872,7 +18872,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.WriteUInt16(stream, this.avgFrameRate);
             }
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.numReferences);
-            boxSize += IsoReaderWriter.WriteClasses(stream, numReferences, this.dependency);
+            boxSize += IsoReaderWriter.WriteClass(stream, numReferences, this.dependency);
             return boxSize;
         }
 

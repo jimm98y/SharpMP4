@@ -33,7 +33,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong ReadBoxes<T>(Stream stream, out T[] value) where T : Box
+    internal static ulong ReadBox<T>(Stream stream, out T[] value) where T : Box
     {
         throw new NotImplementedException();
     }
@@ -48,12 +48,12 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong ReadClasses<T>(Stream stream, out T[] value) where T : class
+    internal static ulong ReadClass<T>(Stream stream, out T[] value) where T : class
     {
         throw new NotImplementedException();
     }
 
-    internal static ulong ReadClasses<T>(Stream stream, int count, out T[] value) where T : class
+    internal static ulong ReadClass<T>(Stream stream, int count, out T[] value) where T : class
     {
         throw new NotImplementedException();
     }
@@ -153,11 +153,6 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong ReadClasses(Stream stream, uint count, out object[] value)
-    {
-        throw new NotImplementedException();
-    }
-
     internal static ulong ReadInt8Array(Stream stream, uint count, out sbyte[] value)
     {
         throw new NotImplementedException();
@@ -183,7 +178,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteBoxes(Stream stream, Box[] value)
+    internal static ulong WriteBox(Stream stream, Box[] value)
     {
         throw new NotImplementedException();
     }
@@ -198,7 +193,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteClasses(Stream stream, object[] values)
+    internal static ulong WriteClass(Stream stream, object[] values)
     {
         throw new NotImplementedException();
     }
@@ -294,7 +289,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteClasses(Stream stream, uint count, object[] values)
+    internal static ulong WriteClass(Stream stream, uint count, object[] values)
     {
         throw new NotImplementedException();
     }
