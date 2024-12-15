@@ -907,10 +907,16 @@ namespace BoxGenerator2
             typedef = value;
         }
 
+        string fieldComment = "";
+        if (!string.IsNullOrEmpty((field as PseudoField)?.Comment))
+        {
+            fieldComment = "//" + (field as PseudoField).Comment;
+        }
+
         if (isRead)
-            return $"{spacing}this.{name}{typedef} = {m};";
+            return $"{spacing}this.{name}{typedef} = {m}; {fieldComment}";
         else
-            return $"{spacing}boxSize += {m} this.{name}{typedef});";
+            return $"{spacing}boxSize += {m} this.{name}{typedef}); {fieldComment}";
     }
 
     private static string BuildComment(PseudoComment comment, int level, bool isRead)

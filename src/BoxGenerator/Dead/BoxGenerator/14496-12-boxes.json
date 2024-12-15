@@ -634,7 +634,7 @@
       "description": "file type and compatibility",
       "containers": [ "file" ],
       "type": "GeneralTypeBox",
-      "syntax": "aligned(8) class FileTypeBox extends GeneralTypeBox ('ftyp')\n{}"
+      "syntax": "aligned(8) class FileTypeBox\r\nextends Box('ftyp')\r\n{\r\nunsigned int(32) major_brand;\r\nunsigned int(32) minor_version;\r\nunsigned int(32) compatible_brands[];// to end of the box\r\n}"
     },
     {
       "fourcc": "gitn",
