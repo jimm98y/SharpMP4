@@ -3,107 +3,162 @@ using BoxGenerator2;
 
 internal class IsoReaderWriter
 {
-    internal static bool ReadBit(Stream stream)
+    internal static ulong ReadBit(Stream stream, out bool value)
     {
         throw new NotImplementedException();
     }
 
-    internal static byte ReadBits(Stream stream, int count)
+    internal static ulong ReadBits(Stream stream, int count, out byte value)
     {
         throw new NotImplementedException();
     }
 
-    internal static byte[] ReadBitsArray(Stream stream, int bitCount, int count)
+    internal static ulong ReadBits(Stream stream, int count, out ushort value)
     {
         throw new NotImplementedException();
     }
 
-    internal static Box ReadBox(Stream stream)
+    internal static ulong ReadBits(Stream stream, int count, out uint value)
     {
         throw new NotImplementedException();
     }
 
-    internal static Box[] ReadBoxes(Stream stream)
+    internal static ulong ReadBitsArray(Stream stream, int bitCount, int count, out byte[] value)
     {
         throw new NotImplementedException();
     }
 
-    internal static byte[] ReadBytes(Stream stream, ulong length)
+    internal static ulong ReadBox<T>(Stream stream, out T value) where T : Box
     {
         throw new NotImplementedException();
     }
 
-    internal static object ReadClass(Stream stream)
+    internal static ulong ReadBoxes<T>(Stream stream, out T[] value) where T : Box
     {
         throw new NotImplementedException();
     }
 
-    internal static object ReadClasses(Stream stream)
+    internal static ulong ReadBytes(Stream stream, ulong length, out byte[] value)
     {
         throw new NotImplementedException();
     }
 
-    internal static short ReadInt16(Stream stream)
+    internal static ulong ReadClass<T>(Stream stream, out T value) where T : class
     {
         throw new NotImplementedException();
     }
 
-    internal static int ReadInt32(Stream stream)
+    internal static ulong ReadClasses<T>(Stream stream, out T[] value) where T : class
     {
         throw new NotImplementedException();
     }
 
-    internal static long ReadInt64(Stream stream)
+    internal static ulong ReadClasses<T>(Stream stream, int count, out T[] value) where T : class
     {
         throw new NotImplementedException();
     }
 
-    internal static sbyte ReadInt8(Stream stream)
+    internal static ulong ReadInt16(Stream stream, out short value)
     {
         throw new NotImplementedException();
     }
 
-    internal static string ReadString(Stream stream)
+    internal static ulong ReadInt32(Stream stream, out int value)
     {
         throw new NotImplementedException();
     }
 
-    internal static ushort ReadUInt16(Stream stream)
+    internal static ulong ReadInt64(Stream stream, out long value)
     {
         throw new NotImplementedException();
     }
 
-    internal static ushort[] ReadUInt16Array(Stream stream, int value)
+    internal static ulong ReadInt8(Stream stream, out sbyte value)
     {
         throw new NotImplementedException();
     }
 
-    internal static uint ReadUInt24(Stream stream)
+    internal static ulong ReadString(Stream stream, out string value)
     {
         throw new NotImplementedException();
     }
 
-    internal static uint ReadUInt32(Stream stream)
+    internal static ulong ReadUInt16(Stream stream, out ushort value)
     {
         throw new NotImplementedException();
     }
 
-    internal static uint[] ReadUInt32Array(Stream stream, uint value)
+    internal static ulong ReadUInt16Array(Stream stream, int count, out ushort[] value)
     {
         throw new NotImplementedException();
     }
 
-    internal static ulong ReadUInt48(Stream stream)
+    internal static ulong ReadUInt24(Stream stream, out uint value)
     {
         throw new NotImplementedException();
     }
 
-    internal static ulong ReadUInt64(Stream stream)
+    internal static ulong ReadUInt32(Stream stream, out uint value)
     {
         throw new NotImplementedException();
     }
 
-    internal static byte ReadUInt8(Stream stream)
+    internal static ulong ReadUInt32Array(Stream stream, uint count, out uint[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadUInt48(Stream stream, out ulong value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadUInt64(Stream stream, out ulong value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadUInt8(Stream stream, out byte value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadInt8Array(Stream stream, out sbyte[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadStringArray(Stream stream, uint count, out string[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadUInt64Array(Stream stream, uint count, out ulong[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadUInt8Array(Stream stream, out byte[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadInt32Array(Stream stream, out int[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadUInt32Array(Stream stream, out uint[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadClasses(Stream stream, uint count, out object[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadInt8Array(Stream stream, uint count, out sbyte[] value)
     {
         throw new NotImplementedException();
     }
@@ -213,11 +268,6 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static sbyte[] ReadInt8Array(Stream stream)
-    {
-        throw new NotImplementedException();
-    }
-
     internal static ulong WriteInt8Array(Stream stream, sbyte[] value)
     {
         throw new NotImplementedException();
@@ -228,22 +278,8 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static string[] ReadStringArray(Stream stream, uint count)
-    {
-        throw new NotImplementedException();
-    }
 
     internal static ulong WriteStringArray(Stream stream, uint count, string[] values)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static ulong[] ReadUInt64Array(Stream stream, uint count)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static byte[] ReadUInt8Array(Stream stream)
     {
         throw new NotImplementedException();
     }
@@ -259,26 +295,6 @@ internal class IsoReaderWriter
     }
 
     internal static ulong WriteClasses(Stream stream, uint count, object[] values)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static int[] ReadInt32Array(Stream stream)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static uint[] ReadUInt32Array(Stream stream)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static object[] ReadClasses(Stream stream, uint count)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static sbyte[] ReadInt8Array(Stream stream, uint count)
     {
         throw new NotImplementedException();
     }

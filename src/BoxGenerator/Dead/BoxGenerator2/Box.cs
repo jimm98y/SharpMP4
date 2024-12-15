@@ -12,7 +12,7 @@ namespace BoxGenerator2
 
         public ulong size { get; set; }
 
-        public async virtual Task ReadAsync(Stream stream)
+        public async virtual Task<ulong> ReadAsync(Stream stream)
         {
             throw new NotImplementedException();
         }
@@ -35,11 +35,6 @@ namespace BoxGenerator2
     }
 
     public abstract class VisualSampleGroupEntry : Box
-    {
-
-    }
-    
-    public abstract class SampleEntry : Box
     {
 
     }
