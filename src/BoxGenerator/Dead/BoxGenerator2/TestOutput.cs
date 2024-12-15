@@ -44,6 +44,316 @@ namespace BoxGenerator2
     }
 
 
+    public abstract class SampleGroupDescriptionEntry : Box
+    {
+
+
+        public SampleGroupDescriptionEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public abstract class VisualSampleGroupEntry : SampleGroupDescriptionEntry
+    {
+
+
+        public VisualSampleGroupEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public abstract class AudioSampleGroupEntry : SampleGroupDescriptionEntry
+    {
+
+
+        public AudioSampleGroupEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public abstract class HintSampleGroupEntry : SampleGroupDescriptionEntry
+    {
+
+
+        public HintSampleGroupEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public abstract class SubtitleSampleGroupEntry : SampleGroupDescriptionEntry
+    {
+
+
+        public SubtitleSampleGroupEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public abstract class TextSampleGroupEntry : SampleGroupDescriptionEntry
+    {
+
+
+        public TextSampleGroupEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public abstract class SubtitleSampleEntry : SampleEntry
+    {
+
+
+        public SubtitleSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public class XMLSubtitleSampleEntry : SubtitleSampleEntry
+    {
+
+        protected string ns;
+        public string Ns { get { return ns; } set { ns = value; } }
+        protected string schema_location;  //  optional 
+        public string SchemaLocation { get { return schema_location; } set { schema_location = value; } }
+        protected string auxiliary_mime_types;  //  optional, required if auxiliary resources are present 
+        public string AuxiliaryMimeTypes { get { return auxiliary_mime_types; } set { auxiliary_mime_types = value; } }
+        protected BitRateBox BitRateBox;
+        public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
+
+        public XMLSubtitleSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadString(stream, out this.ns);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.schema_location); // optional 
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.ns);
+            if (this.schema_location != null) boxSize += IsoReaderWriter.WriteString(stream, this.schema_location); // optional 
+            if (this.auxiliary_mime_types != null) boxSize += IsoReaderWriter.WriteString(stream, this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+            boxSize += IsoReaderWriter.WriteBox(stream, this.BitRateBox);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)ns.Length * 8; // ns
+            if (this.schema_location != null) boxSize += (ulong)schema_location.Length * 8; // schema_location
+            if (this.auxiliary_mime_types != null) boxSize += (ulong)auxiliary_mime_types.Length * 8; // auxiliary_mime_types
+            boxSize += IsoReaderWriter.CalculateSize(BitRateBox); // BitRateBox
+            return boxSize;
+        }
+    }
+
+
+    public class TextSubtitleSampleEntry : SubtitleSampleEntry
+    {
+
+        protected string content_encoding;  //  optional 
+        public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
+        protected string mime_format;
+        public string MimeFormat { get { return mime_format; } set { mime_format = value; } }
+        protected BitRateBox BitRateBox;  //  optional 
+        public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
+        protected TextConfigBox TextConfigBox;  //  optional 
+        public TextConfigBox _TextConfigBox { get { return TextConfigBox; } set { TextConfigBox = value; } }
+
+        public TextSubtitleSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.content_encoding); // optional 
+            boxSize += IsoReaderWriter.ReadString(stream, out this.mime_format);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox); // optional 
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.TextConfigBox); // optional 
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            if (this.content_encoding != null) boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding); // optional 
+            boxSize += IsoReaderWriter.WriteString(stream, this.mime_format);
+            if (this.BitRateBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.BitRateBox); // optional 
+            if (this.TextConfigBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.TextConfigBox); // optional 
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)mime_format.Length * 8; // mime_format
+            if (this.BitRateBox != null) boxSize += IsoReaderWriter.CalculateSize(BitRateBox); // BitRateBox
+            if (this.TextConfigBox != null) boxSize += IsoReaderWriter.CalculateSize(TextConfigBox); // TextConfigBox
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get { return "rssr"; } }
@@ -10264,7 +10574,7 @@ namespace BoxGenerator2
         public BoxHeader()
         { }
 
-        public async Task<ulong> ReadAsync(Stream stream)
+        public async virtual Task<ulong> ReadAsync(Stream stream)
         {
             ulong boxSize = 0;
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.size);
@@ -10287,7 +10597,7 @@ namespace BoxGenerator2
             return boxSize;
         }
 
-        public async Task<ulong> WriteAsync(Stream stream)
+        public async virtual Task<ulong> WriteAsync(Stream stream)
         {
             ulong boxSize = 0;
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.size);
@@ -10310,7 +10620,7 @@ namespace BoxGenerator2
             return boxSize;
         }
 
-        public ulong CalculateSize()
+        public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
             boxSize += 32; // size
@@ -14766,7 +15076,7 @@ namespace BoxGenerator2
     }
 
 
-    public class TextSubtitleSampleEntry : SubtitleSampleEntry
+    public class TextSubtitleSampleEntry1 : SubtitleSampleEntry
     {
         public override string FourCC { get { return "sbtt"; } }
         protected string content_encoding;  //  optional
@@ -14776,7 +15086,7 @@ namespace BoxGenerator2
         protected TextConfigBox TextConfigBox;  //  optional
         public TextConfigBox _TextConfigBox { get { return TextConfigBox; } set { TextConfigBox = value; } }
 
-        public TextSubtitleSampleEntry()
+        public TextSubtitleSampleEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -14892,7 +15202,7 @@ namespace BoxGenerator2
     }
 
 
-    public class XMLSubtitleSampleEntry : SubtitleSampleEntry
+    public class XMLSubtitleSampleEntry1 : SubtitleSampleEntry
     {
         public override string FourCC { get { return "stpp"; } }
         protected string ns;
@@ -14902,7 +15212,7 @@ namespace BoxGenerator2
         protected string auxiliary_mime_types;  //  optional, required if auxiliary resources are present
         public string AuxiliaryMimeTypes { get { return auxiliary_mime_types; } set { auxiliary_mime_types = value; } }
 
-        public XMLSubtitleSampleEntry()
+        public XMLSubtitleSampleEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)

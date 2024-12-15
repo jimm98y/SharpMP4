@@ -30,11 +30,6 @@ namespace BoxGenerator2
             throw new NotImplementedException();
         }
     }
-
-    public abstract class VisualSampleGroupEntry : Box
-    {
-
-    }
     
     public abstract class ItemFullProperty : Box
     {
@@ -88,22 +83,7 @@ namespace BoxGenerator2
     
     public abstract class RtpReceptionHintSampleEntry : Box
     {
-
-    }
-    
-    public abstract class SubtitleSampleEntry : Box
-    {
-
-    }
-    
-    public abstract class AudioSampleGroupEntry : Box
-    {
-
-    }
-    
-    public abstract class SampleGroupDescriptionEntry : Box
-    {
-
+        
     }
     
     public abstract class ExtrinsicCameraParametersBox : Box

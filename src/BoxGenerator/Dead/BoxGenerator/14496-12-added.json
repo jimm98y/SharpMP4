@@ -8,6 +8,20 @@
       "description": "user-extension box",
       "type": "Box",
       "syntax": "aligned(8) class FullBox(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)\r\nextends Box(boxtype) { \r\nunsigned int(8) version = v;\r\nbit(24) flags = f;\r\n }"
+    },
+    {
+      "fourcc": "    ",
+      "containers": [ "*" ],
+      "description": "Sequence Entry",
+      "type": "Box",
+      "syntax": "// Sequence Entry  \r\nabstract class SampleGroupDescriptionEntry (unsigned int(32) grouping_type) extends Box(grouping_type) \r\n{ \r\n} \r\n\r\nabstract class VisualSampleGroupEntry (unsigned int(32) grouping_type) extends \r\nSampleGroupDescriptionEntry (grouping_type) \r\n{ \r\n} \r\n\r\nabstract class AudioSampleGroupEntry (unsigned int(32) grouping_type) extends \r\nSampleGroupDescriptionEntry (grouping_type) \r\n{ \r\n} \r\n\r\nabstract class HintSampleGroupEntry (unsigned int(32) grouping_type) extends \r\nSampleGroupDescriptionEntry (grouping_type) \r\n{ \r\n} \r\n\r\nabstract class SubtitleSampleGroupEntry (unsigned int(32) grouping_type) extends \r\nSampleGroupDescriptionEntry (grouping_type) \r\n{ \r\n} \r\n\r\nabstract class TextSampleGroupEntry (unsigned int(32) grouping_type) extends \r\nSampleGroupDescriptionEntry (grouping_type) \r\n{ \r\n}"
+    },
+    {
+      "fourcc": "   ",
+      "containers": [ "*" ],
+      "description": "Subtitle sample entry",
+      "type": "Box",
+      "syntax": "class SubtitleSampleEntry(codingname) extends SampleEntry (codingname) { \r\n} \r\n\r\nclass XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') { \r\n string namespace; \r\n string schema_location;  // optional \r\n string auxiliary_mime_types; // optional, required if auxiliary resources are present \r\n BitRateBox (); \r\n} \r\n\r\nclass TextSubtitleSampleEntry() extends SubtitleSampleEntry ('sbtt') { \r\n string content_encoding; // optional \r\n string mime_format; \r\n BitRateBox (); // optional \r\n TextConfigBox (); // optional \r\n}"
     }
   ]
 }

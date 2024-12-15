@@ -479,6 +479,7 @@ partial class Program
             Try(String("('alte')")),
             Try(String("('vvcb', version, flags)")),
             Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)")),
+            Try(String("(unsigned int(32) grouping_type)")),
             Try(String("(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)"))
             ).Labelled("class type");
 
@@ -499,7 +500,7 @@ partial class Program
         Map((comment, alignment, boxName, classType, extended, fields, endComment) => new PseudoClass(comment, alignment, boxName, classType, extended, fields, endComment),
             SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
             Try(String("aligned(8)")).Optional(),
-            SkipWhitespaces.Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
+            SkipWhitespaces.Then(Try(String("abstract")).Optional()).Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
             SkipWhitespaces.Then(Try(ClassType).Optional()),
             SkipWhitespaces.Then(Try(ExtendedClass).Optional()),
             Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}')),
@@ -643,13 +644,18 @@ namespace BoxGenerator2
     {
         string cls = "";
 
-        cls += @$"public class {b.BoxName}";
+        string optAbstract = "";
+        if (b.BoxName == "SampleGroupDescriptionEntry" || b.BoxName == "AudioSampleGroupEntry" || b.BoxName == "VisualSampleGroupEntry" ||
+            b.BoxName == "SubtitleSampleGroupEntry" || b.BoxName == "TextSampleGroupEntry" || b.BoxName == "HintSampleGroupEntry" || b.BoxName == "SubtitleSampleEntry")
+            optAbstract = "abstract ";
+
+        cls += @$"public {optAbstract}class {b.BoxName}";
         if (b.Extended != null)
             cls += $" : {b.Extended.BoxName}";
 
         cls += "\r\n{\r\n";
 
-        if (b.Extended != null)
+        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.FourCC))
         {
             cls += $"\tpublic override string FourCC {{ get {{ return \"{b.FourCC}\"; }} }}";
         }
@@ -662,7 +668,7 @@ namespace BoxGenerator2
         }
 
         cls += $"\r\n\r\n\tpublic {b.BoxName}()\r\n\t{{ }}\r\n";
-        cls += "\r\n\tpublic async " + (b.Extended != null ? "override " : "") + "Task<ulong> ReadAsync(Stream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
+        cls += "\r\n\tpublic async " + (b.Extended != null ? "override " : "virtual ") + "Task<ulong> ReadAsync(Stream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null ? "\r\n\t\tboxSize += await base.ReadAsync(stream);" : "");
 
         cls = FixMissingCode(b, cls);
@@ -680,7 +686,7 @@ namespace BoxGenerator2
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
 
-        cls += "\r\n\tpublic async " + (b.Extended != null ? "override " : "") + "Task<ulong> WriteAsync(Stream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
+        cls += "\r\n\tpublic async " + (b.Extended != null ? "override " : "virtual ") + "Task<ulong> WriteAsync(Stream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null ? "\r\n\t\tboxSize += await base.WriteAsync(stream);" : "");
 
         cls = FixMissingCode(b, cls);
@@ -697,7 +703,7 @@ namespace BoxGenerator2
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
-        cls += "\r\n\tpublic " + (b.Extended != null ? "override " : "") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
+        cls += "\r\n\tpublic " + (b.Extended != null ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null ? "\r\n\t\tboxSize += base.CalculateSize();" : "");
 
         cls = FixMissingCode(b, cls);
