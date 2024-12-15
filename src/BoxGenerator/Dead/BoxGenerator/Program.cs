@@ -592,10 +592,9 @@ partial class Program
         string js = Newtonsoft.Json.JsonConvert.SerializeObject(ret.Values.ToArray());
         File.WriteAllText("result.json", js);
 
-        string resultCode = @"using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+        string resultCode = 
+@"using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace BoxGenerator2
