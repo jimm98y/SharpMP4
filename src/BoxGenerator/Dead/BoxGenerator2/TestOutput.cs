@@ -12693,6 +12693,70 @@ namespace BoxGenerator2
     }
 
 
+    public class SampleEntry : Box
+    {
+        public override string FourCC { get { return "encv"; } }
+
+        public SampleEntry()
+        { }
+
+        public async override Task ReadAsync(Stream stream)
+        {
+            await base.ReadAsync(stream);
+            /*  ProtectionSchemeInfoBox { */
+            /*  OriginalFormatBox;	// data_format is 'resv' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  tRestrictedSchemeInfoBox { */
+            /*  OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  Boxes specific to the untransformed sample entry type */
+            /*  For 'avc1', these would include AVCConfigurationBox */
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            /*  ProtectionSchemeInfoBox { */
+            /*  OriginalFormatBox;	// data_format is 'resv' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  tRestrictedSchemeInfoBox { */
+            /*  OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  Boxes specific to the untransformed sample entry type */
+            /*  For 'avc1', these would include AVCConfigurationBox */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  ProtectionSchemeInfoBox { */
+            /*  OriginalFormatBox;	// data_format is 'resv' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  tRestrictedSchemeInfoBox { */
+            /*  OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  Boxes specific to the untransformed sample entry type */
+            /*  For 'avc1', these would include AVCConfigurationBox */
+            return boxSize;
+        }
+    }
+
+
     public class XMLMetaDataSampleEntry : MetaDataSampleEntry
     {
         public override string FourCC { get { return "metx"; } }

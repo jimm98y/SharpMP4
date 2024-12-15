@@ -618,9 +618,6 @@ namespace BoxGenerator2
 ";
         foreach (var b in ret.Values.ToArray())
         {
-            if (b.FourCC == "encv") // skip
-                continue;
-
             string code = BuildCode(b);
             resultCode += code + "\r\n\r\n";
         }
