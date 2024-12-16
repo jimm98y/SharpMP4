@@ -221,6 +221,7 @@ partial class Program
             Try(String("unsigned_int(16)")),
             Try(String("unsigned int(15)")),
             Try(String("unsigned int(12)")),
+            Try(String("signed int(12)")),
             Try(String("unsigned int(10)")),
             Try(String("unsigned int(8)[length]")),
             Try(String("unsigned int(8)[32]")),
@@ -401,6 +402,8 @@ partial class Program
             Try(String("HEVCTileConfigurationBox")),
             Try(String("MetadataKeyTableBox()")),
             Try(String("BitRateBox ()")),
+            Try(String("TrackLoudnessInfo[]")),
+            Try(String("AlbumLoudnessInfo[]")),           
             Try(String("size += 5")), // WORKAROUND
             Try(String("j=1")), // WORKAROUND
             Try(String("j++")), // WORKAROUND
@@ -647,7 +650,9 @@ namespace BoxGenerator2
         string optAbstract = "";
         if (b.BoxName == "SampleGroupDescriptionEntry" || b.BoxName == "AudioSampleGroupEntry" || b.BoxName == "VisualSampleGroupEntry" ||
             b.BoxName == "SubtitleSampleGroupEntry" || b.BoxName == "TextSampleGroupEntry" || b.BoxName == "HintSampleGroupEntry" || b.BoxName == "SubtitleSampleEntry")
+        {
             optAbstract = "abstract ";
+        }
 
         cls += @$"public {optAbstract}class {b.BoxName}";
         if (b.Extended != null)
@@ -1100,6 +1105,7 @@ namespace BoxGenerator2
             { "unsigned_int(16)", "IsoReaderWriter.ReadUInt16(stream, " },
             { "unsigned int(15)", "IsoReaderWriter.ReadBits(stream, 15, " },
             { "unsigned int(12)", "IsoReaderWriter.ReadBits(stream, 12, " },
+            { "signed int(12)", "IsoReaderWriter.ReadBits(stream, 12, " },
             { "unsigned int(10)[i][j]", "IsoReaderWriter.ReadBits(stream, 10, " },
             { "unsigned int(10)[i]", "IsoReaderWriter.ReadBits(stream, 10, " },
             { "unsigned int(10)", "IsoReaderWriter.ReadBits(stream, 10, " },
@@ -1305,7 +1311,6 @@ namespace BoxGenerator2
             { "unsigned int(32)[]", "IsoReaderWriter.ReadUInt32Array(stream, " },
             { "unsigned int(32)[i]", "IsoReaderWriter.ReadUInt32(stream, " },
             { "char[]", "IsoReaderWriter.ReadInt8Array(stream, " },
-            { "loudness[]", "IsoReaderWriter.ReadInt32Array(stream, " },
             { "string[method_count]", "IsoReaderWriter.ReadStringArray(stream, method_count, " },
             { "ItemInfoExtension", "IsoReaderWriter.ReadBox(stream, " },
             { "SampleGroupDescriptionEntry", "IsoReaderWriter.ReadBox(stream, " },
@@ -1330,6 +1335,8 @@ namespace BoxGenerator2
             { "RectRegionBox", "IsoReaderWriter.ReadBox(stream, " },
             { "IroiInfoBox", "IsoReaderWriter.ReadBox(stream, " },
             { "TranscodingInfoBox", "IsoReaderWriter.ReadBox(stream, " },
+            { "TrackLoudnessInfo[]", "IsoReaderWriter.ReadBox(stream, " },
+            { "AlbumLoudnessInfo[]", "IsoReaderWriter.ReadBox(stream, " },
         };
         return map[type];
     }
@@ -1356,6 +1363,7 @@ namespace BoxGenerator2
             { "unsigned_int(16)", "16" },
             { "unsigned int(15)", "15" },
             { "unsigned int(12)", "12" },
+            { "signed int(12)", "12" },
             { "unsigned int(10)[i][j]", "10" },
             { "unsigned int(10)[i]", "10" },
             { "unsigned int(10)", "10" },
@@ -1455,7 +1463,6 @@ namespace BoxGenerator2
             { "ItemPropertyAssociationBox", "IsoReaderWriter.CalculateSize(value)" },
             { "ItemPropertyAssociationBox[]", "IsoReaderWriter.CalculateSize(value)" },
             { "char", "8" },
-            { "loudness", "32" },
             { "ICC_profile", "IsoReaderWriter.CalculateClassSize(value)" },
             { "OriginalFormatBox(fmt)", "IsoReaderWriter.CalculateSize(value)" },
             { "DataEntryBaseBox(entry_type, entry_flags)", "IsoReaderWriter.CalculateSize(value)" },
@@ -1561,7 +1568,6 @@ namespace BoxGenerator2
             { "unsigned int(32)[]", "32" },
             { "unsigned int(32)[i]", "32" },
             { "char[]", "(ulong)value.Length * 8" },
-            { "loudness[]", "(ulong)value.Length * 32" },
             { "string[method_count]", "IsoReaderWriter.CalculateSize(value)" },
             { "ItemInfoExtension", "IsoReaderWriter.CalculateSize(value)" },
             { "SampleGroupDescriptionEntry", "IsoReaderWriter.CalculateSize(value)" },
@@ -1586,7 +1592,9 @@ namespace BoxGenerator2
             { "RectRegionBox", "IsoReaderWriter.CalculateSize(value)" },
             { "IroiInfoBox", "IsoReaderWriter.CalculateSize(value)" },
             { "TranscodingInfoBox", "IsoReaderWriter.CalculateSize(value)" },
-        };
+            { "TrackLoudnessInfo[]", "IsoReaderWriter.CalculateSize(value)" },
+            { "AlbumLoudnessInfo[]", "IsoReaderWriter.CalculateSize(value)" },
+       };
         return map[type];
     }
 
@@ -1612,6 +1620,7 @@ namespace BoxGenerator2
             { "unsigned_int(16)", "IsoReaderWriter.WriteUInt16(stream, " },
             { "unsigned int(15)", "IsoReaderWriter.WriteBits(stream, 15, " },
             { "unsigned int(12)", "IsoReaderWriter.WriteBits(stream, 12, " },
+            { "signed int(12)", "IsoReaderWriter.WriteBits(stream, 12, " },
             { "unsigned int(10)[i][j]", "IsoReaderWriter.WriteBits(stream, 10, " },
             { "unsigned int(10)[i]", "IsoReaderWriter.WriteBits(stream, 10, " },
             { "unsigned int(10)", "IsoReaderWriter.WriteBits(stream, 10, " },
@@ -1711,7 +1720,6 @@ namespace BoxGenerator2
             { "ItemPropertyAssociationBox", "IsoReaderWriter.WriteBox(stream, " },
             { "ItemPropertyAssociationBox[]", "IsoReaderWriter.WriteBox(stream, " },
             { "char", "IsoReaderWriter.WriteInt8(stream, " },
-            { "loudness", "IsoReaderWriter.WriteInt32(stream, " },
             { "ICC_profile", "IsoReaderWriter.WriteClass(stream, " },
             { "OriginalFormatBox(fmt)", "IsoReaderWriter.WriteBox(stream, " },
             { "DataEntryBaseBox(entry_type, entry_flags)", "IsoReaderWriter.WriteBox(stream, " },
@@ -1817,7 +1825,6 @@ namespace BoxGenerator2
             { "unsigned int(32)[]", "IsoReaderWriter.WriteUInt32Array(stream, " },
             { "unsigned int(32)[i]", "IsoReaderWriter.WriteUInt32(stream, " },
             { "char[]", "IsoReaderWriter.WriteInt8Array(stream, " },
-            { "loudness[]", "IsoReaderWriter.WriteInt32Array(stream, " },
             { "string[method_count]", "IsoReaderWriter.WriteStringArray(stream, method_count, " },
              { "ItemInfoExtension", "IsoReaderWriter.WriteBox(stream, " },
             { "SampleGroupDescriptionEntry", "IsoReaderWriter.WriteBox(stream, " },
@@ -1842,6 +1849,8 @@ namespace BoxGenerator2
             { "RectRegionBox", "IsoReaderWriter.WriteBox(stream, " },
             { "IroiInfoBox", "IsoReaderWriter.WriteBox(stream, " },
             { "TranscodingInfoBox", "IsoReaderWriter.WriteBox(stream, " },
+            { "TrackLoudnessInfo[]", "IsoReaderWriter.WriteBox(stream, " },
+            { "AlbumLoudnessInfo[]", "IsoReaderWriter.WriteBox(stream, " },
         };
         return map[type];
     }
@@ -1884,6 +1893,7 @@ namespace BoxGenerator2
             { "unsigned_int(16)", "ushort" },
             { "unsigned int(15)", "ushort" },
             { "unsigned int(12)", "ushort" },
+            { "signed int(12)", "short" },
             { "unsigned int(10)[i][j]", "ushort[][]" },
             { "unsigned int(10)[i]", "ushort[]" },
             { "unsigned int(10)", "ushort" },
@@ -2113,6 +2123,8 @@ namespace BoxGenerator2
             { "RectRegionBox", "RectRegionBox" },
             { "IroiInfoBox", "IroiInfoBox" },
             { "TranscodingInfoBox", "TranscodingInfoBox" },
+            { "TrackLoudnessInfo[]", "TrackLoudnessInfo[]" },
+            { "AlbumLoudnessInfo[]", "AlbumLoudnessInfo[]" },
         };
         return map[type];
     }

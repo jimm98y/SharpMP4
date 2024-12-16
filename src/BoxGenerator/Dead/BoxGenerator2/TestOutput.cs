@@ -354,6 +354,171 @@ namespace BoxGenerator2
     }
 
 
+    public class LoudnessBaseBox : FullBox
+    {
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        protected byte downmix_ID;  //  matching downmix 
+        public byte DownmixID { get { return downmix_ID; } set { downmix_ID = value; } }
+        protected byte DRC_set_ID;  //  to match a DRC box 
+        public byte DRCSetID { get { return DRC_set_ID; } set { DRC_set_ID = value; } }
+        protected short bs_sample_peak_level;
+        public short BsSamplePeakLevel { get { return bs_sample_peak_level; } set { bs_sample_peak_level = value; } }
+        protected short bs_true_peak_level;
+        public short BsTruePeakLevel { get { return bs_true_peak_level; } set { bs_true_peak_level = value; } }
+        protected byte measurement_system_for_TP;
+        public byte MeasurementSystemForTP { get { return measurement_system_for_TP; } set { measurement_system_for_TP = value; } }
+        protected byte reliability_for_TP;
+        public byte ReliabilityForTP { get { return reliability_for_TP; } set { reliability_for_TP = value; } }
+        protected byte measurement_count;
+        public byte MeasurementCount { get { return measurement_count; } set { measurement_count = value; } }
+        protected byte method_definition;
+        public byte MethodDefinition { get { return method_definition; } set { method_definition = value; } }
+        protected byte method_value;
+        public byte MethodValue { get { return method_value; } set { method_value = value; } }
+        protected byte measurement_system;
+        public byte MeasurementSystem { get { return measurement_system; } set { measurement_system = value; } }
+        protected byte reliability;
+        public byte Reliability { get { return reliability; } set { reliability = value; } }
+
+        public LoudnessBaseBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.reserved);
+            boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.downmix_ID); // matching downmix 
+            boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.DRC_set_ID); // to match a DRC box 
+            boxSize += IsoReaderWriter.ReadBits(stream, 12, out this.bs_sample_peak_level);
+            boxSize += IsoReaderWriter.ReadBits(stream, 12, out this.bs_true_peak_level);
+            boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.measurement_system_for_TP);
+            boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.reliability_for_TP);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.measurement_count);
+
+
+            for (int i = 1; i <= measurement_count; i++)
+            {
+                boxSize += IsoReaderWriter.ReadUInt8(stream, out this.method_definition);
+                boxSize += IsoReaderWriter.ReadUInt8(stream, out this.method_value);
+                boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.measurement_system);
+                boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.reliability);
+            }
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.downmix_ID); // matching downmix 
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.DRC_set_ID); // to match a DRC box 
+            boxSize += IsoReaderWriter.WriteBits(stream, 12, this.bs_sample_peak_level);
+            boxSize += IsoReaderWriter.WriteBits(stream, 12, this.bs_true_peak_level);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.measurement_system_for_TP);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.reliability_for_TP);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.measurement_count);
+
+
+            for (int i = 1; i <= measurement_count; i++)
+            {
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.method_definition);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.method_value);
+                boxSize += IsoReaderWriter.WriteBits(stream, 4, this.measurement_system);
+                boxSize += IsoReaderWriter.WriteBits(stream, 4, this.reliability);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 3; // reserved
+            boxSize += 7; // downmix_ID
+            boxSize += 6; // DRC_set_ID
+            boxSize += 12; // bs_sample_peak_level
+            boxSize += 12; // bs_true_peak_level
+            boxSize += 4; // measurement_system_for_TP
+            boxSize += 4; // reliability_for_TP
+            boxSize += 8; // measurement_count
+
+
+            for (int i = 1; i <= measurement_count; i++)
+            {
+                boxSize += 8; // method_definition
+                boxSize += 8; // method_value
+                boxSize += 4; // measurement_system
+                boxSize += 4; // reliability
+            }
+            return boxSize;
+        }
+    }
+
+
+    public class TrackLoudnessInfo : LoudnessBaseBox
+    {
+
+
+        public TrackLoudnessInfo()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public class AlbumLoudnessInfo : LoudnessBaseBox
+    {
+
+
+        public AlbumLoudnessInfo()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get { return "rssr"; } }
@@ -3768,8 +3933,10 @@ namespace BoxGenerator2
     public class LoudnessBox : Box
     {
         public override string FourCC { get { return "ludt"; } }
-        protected int[] TrackLoudnessInfo;  //  not more than one AlbumLoudnessInfo box with version>=1 is allowed	albumLoudness	AlbumLoudnessInfo[];
-        public int[] _TrackLoudnessInfo { get { return TrackLoudnessInfo; } set { TrackLoudnessInfo = value; } }
+        protected TrackLoudnessInfo[] loudness;  //  not more than one AlbumLoudnessInfo box with version>=1 is allowed
+        public TrackLoudnessInfo[] Loudness { get { return loudness; } set { loudness = value; } }
+        protected AlbumLoudnessInfo[] albumLoudness;
+        public AlbumLoudnessInfo[] AlbumLoudness { get { return albumLoudness; } set { albumLoudness = value; } }
 
         public LoudnessBox()
         { }
@@ -3779,7 +3946,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             /*  not more than one TrackLoudnessInfo box with version>=1 is allowed */
-            boxSize += IsoReaderWriter.ReadInt32Array(stream, out this.TrackLoudnessInfo); // not more than one AlbumLoudnessInfo box with version>=1 is allowed	albumLoudness	AlbumLoudnessInfo[];
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.loudness); // not more than one AlbumLoudnessInfo box with version>=1 is allowed
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.albumLoudness);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
             return boxSize;
         }
@@ -3789,7 +3957,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             /*  not more than one TrackLoudnessInfo box with version>=1 is allowed */
-            boxSize += IsoReaderWriter.WriteInt32Array(stream, this.TrackLoudnessInfo); // not more than one AlbumLoudnessInfo box with version>=1 is allowed	albumLoudness	AlbumLoudnessInfo[];
+            boxSize += IsoReaderWriter.WriteBox(stream, this.loudness); // not more than one AlbumLoudnessInfo box with version>=1 is allowed
+            boxSize += IsoReaderWriter.WriteBox(stream, this.albumLoudness);
             boxSize += IsoReaderWriter.WriteBoxChildren(stream, this);
             return boxSize;
         }
@@ -3799,18 +3968,19 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             /*  not more than one TrackLoudnessInfo box with version>=1 is allowed */
-            boxSize += (ulong)TrackLoudnessInfo.Length * 32; // TrackLoudnessInfo
+            boxSize += IsoReaderWriter.CalculateSize(loudness); // loudness
+            boxSize += IsoReaderWriter.CalculateSize(albumLoudness); // albumLoudness
             boxSize += IsoReaderWriter.CalculateSize(children);
             return boxSize;
         }
     }
 
 
-    public class TrackLoudnessInfo : LoudnessBaseBox
+    public class TrackLoudnessInfo1 : LoudnessBaseBox
     {
         public override string FourCC { get { return "tlou"; } }
 
-        public TrackLoudnessInfo()
+        public TrackLoudnessInfo1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -3836,11 +4006,11 @@ namespace BoxGenerator2
     }
 
 
-    public class AlbumLoudnessInfo : LoudnessBaseBox
+    public class AlbumLoudnessInfo1 : LoudnessBaseBox
     {
         public override string FourCC { get { return "alou"; } }
 
-        public AlbumLoudnessInfo()
+        public AlbumLoudnessInfo1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)

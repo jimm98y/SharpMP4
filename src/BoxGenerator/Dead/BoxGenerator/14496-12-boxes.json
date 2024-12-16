@@ -380,7 +380,7 @@
       "description": "Track loudness container",
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class LoudnessBox extends Box('ludt') {\n\t// not more than one TrackLoudnessInfo box with version>=1 is allowed\n\tloudness\t\t\tTrackLoudnessInfo[];\n\t// not more than one AlbumLoudnessInfo box with version>=1 is allowed\talbumLoudness\tAlbumLoudnessInfo[];\n}"
+      "syntax": "aligned(8) class LoudnessBox extends Box('ludt') {\n\t// not more than one TrackLoudnessInfo box with version>=1 is allowed\n\tTrackLoudnessInfo[]\t\t\tloudness;\n\t// not more than one AlbumLoudnessInfo box with version>=1 is allowed\r\n\tAlbumLoudnessInfo[] albumLoudness\t;\n}"
     },
     {
       "fourcc": "tlou",

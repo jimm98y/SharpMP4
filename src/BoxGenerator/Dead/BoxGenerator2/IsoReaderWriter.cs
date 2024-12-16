@@ -21,6 +21,11 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
+    internal static ulong ReadBits(Stream stream, uint count, out short value)
+    {
+        throw new NotImplementedException();
+    }
+
     internal static ulong ReadBits(Stream stream, uint count, out uint value)
     {
         throw new NotImplementedException();

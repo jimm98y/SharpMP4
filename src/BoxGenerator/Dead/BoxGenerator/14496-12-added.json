@@ -22,6 +22,13 @@
       "description": "Subtitle sample entry",
       "type": "Box",
       "syntax": "class SubtitleSampleEntry(codingname) extends SampleEntry (codingname) { \r\n} \r\n\r\nclass XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') { \r\n string namespace; \r\n string schema_location;  // optional \r\n string auxiliary_mime_types; // optional, required if auxiliary resources are present \r\n BitRateBox (); \r\n} \r\n\r\nclass TextSubtitleSampleEntry() extends SubtitleSampleEntry ('sbtt') { \r\n string content_encoding; // optional \r\n string mime_format; \r\n BitRateBox (); // optional \r\n TextConfigBox (); // optional \r\n}"
+    },
+    {
+      "fourcc": "  ",
+      "containers": [ "*" ],
+      "description": "loudness boxes",
+      "type": "Box",
+      "syntax": "aligned(8) class LoudnessBaseBox extends FullBox(loudnessType) { \r\nunsigned int(3) reserved = 0; \r\nunsigned int(7) downmix_ID;  // matching downmix \r\nunsigned int(6) DRC_set_ID;  // to match a DRC box \r\nsigned int(12)  bs_sample_peak_level; \r\nsigned int(12)  bs_true_peak_level; \r\nunsigned int(4) measurement_system_for_TP; \r\nunsigned int(4) reliability_for_TP; \r\nunsigned int(8) measurement_count; \r\nint i; \r\nfor (i = 1 ; i <= measurement_count; i++){ \r\n  unsigned int(8) method_definition; \r\n  unsigned int(8) method_value; \r\n  unsigned int(4) measurement_system; \r\n  unsigned int(4) reliability; \r\n } \r\n} \r\n\r\naligned(8) class TrackLoudnessInfo extends LoudnessBaseBox('tlou') { } \r\n\r\naligned(8) class AlbumLoudnessInfo extends LoudnessBaseBox ('alou') { } \r\n"
     }
   ]
 }

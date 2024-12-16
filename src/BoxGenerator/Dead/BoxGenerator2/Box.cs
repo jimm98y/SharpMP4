@@ -40,12 +40,7 @@ namespace BoxGenerator2
     {
 
     }
-    
-    public abstract class LoudnessBaseBox : Box
-    {
-
-    }
-    
+        
     public abstract class DataEntryBaseBox : Box
     {
 
