@@ -23,6 +23,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.version);
             boxSize += IsoReaderWriter.ReadBits(stream, 24, out this.flags);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -57,6 +58,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -87,6 +89,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -117,6 +120,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -147,6 +151,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -177,6 +182,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -207,6 +213,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -237,6 +244,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -283,6 +291,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.schema_location); // optional 
             if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
             boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -337,6 +346,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadString(stream, out this.mime_format);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox); // optional 
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.TextConfigBox); // optional 
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -428,6 +438,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.measurement_system);
                 boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.reliability);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -492,6 +503,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -522,6 +534,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -556,6 +569,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.SSRC);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -596,6 +610,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved);
             boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.timestamp_sync);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -634,6 +649,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.timescale);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -670,6 +686,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.offset);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -706,6 +723,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.offset);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -742,6 +760,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.timescale);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -778,6 +797,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.offset);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -814,6 +834,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.offset);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -850,6 +871,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.timescale);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -886,6 +908,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.offset);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -922,6 +945,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.offset);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -958,6 +982,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -994,6 +1019,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.packetssent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1030,6 +1056,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1066,6 +1093,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1102,6 +1130,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.packetssent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1138,6 +1167,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1174,6 +1204,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1210,6 +1241,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.packetssent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1246,6 +1278,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1282,6 +1315,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1318,6 +1352,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.packetssent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1354,6 +1389,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1390,6 +1426,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1426,6 +1463,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.packetssent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1462,6 +1500,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1498,6 +1537,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1534,6 +1574,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.packetssent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1570,6 +1611,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1611,6 +1653,7 @@ namespace BoxGenerator2
             /*  maximum data rate */
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.period); // in milliseconds
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bytes);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1651,6 +1694,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1687,6 +1731,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1723,6 +1768,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1759,6 +1805,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1795,6 +1842,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1831,6 +1879,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1867,6 +1916,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1903,6 +1953,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1939,6 +1990,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.bytessent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1975,6 +2027,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.time);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2011,6 +2064,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.time);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2047,6 +2101,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.time);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2083,6 +2138,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.time);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2119,6 +2175,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bytes);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2155,6 +2212,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.time);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2191,6 +2249,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bytes);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2227,6 +2286,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.time);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2271,6 +2331,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.payloadID); // payload ID used in RTP packets
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.count);
             boxSize += IsoReaderWriter.ReadInt8Array(stream, count, out this.rtpmap_string);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2331,6 +2392,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.length);
             boxSize += IsoReaderWriter.ReadBytes(stream, length, out this.stereo_indication_type);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.any_box); // optional
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2377,6 +2439,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.extended_language);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2421,6 +2484,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bufferSizeDB);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.maxBitrate);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.avgBitrate);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2465,6 +2529,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.hSpacing);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.vSpacing);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2531,6 +2596,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.horizOffD);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.vertOffN);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.vertOffD);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2645,6 +2711,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.ccv_avg_luminance_value);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2783,6 +2850,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadClass(stream, out this.ICC_profile0); // unrestricted ICC profile
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2861,6 +2929,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.max_content_light_level);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.max_pic_average_light_level);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2923,6 +2992,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.white_point_y);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.max_display_mastering_luminance);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.min_display_mastering_luminance);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -2981,6 +3051,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.scheme_type_box);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.info); // optional
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3155,6 +3226,7 @@ namespace BoxGenerator2
                     /*  object_count is derived from baseChannelCount */
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3444,6 +3516,7 @@ namespace BoxGenerator2
                     }
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3592,6 +3665,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.sampling_rate);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3628,6 +3702,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.text_config);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3664,6 +3739,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.uri_initialization_data);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3708,6 +3784,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBit(stream, out this.pad);
             boxSize += IsoReaderWriter.ReadBitsArray(stream, 5, 3, out this.language); // ISO-639-2/T language code
             boxSize += IsoReaderWriter.ReadString(stream, out this.notice);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3752,6 +3829,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.schemeURI);
             boxSize += IsoReaderWriter.ReadString(stream, out this.value);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3794,6 +3872,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.switch_group);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.attribute_list); // to end of the box
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3829,6 +3908,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3862,6 +3942,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3899,6 +3980,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt8Array(stream, out this.sdptext);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3933,6 +4015,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -3967,6 +4050,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt8Array(stream, out this.sdptext);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4000,6 +4084,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4041,6 +4126,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.descriptionformat);
             boxSize += IsoReaderWriter.ReadInt8Array(stream, out this.sdptext);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4078,6 +4164,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4120,6 +4207,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.loudness); // not more than one AlbumLoudnessInfo box with version>=1 is allowed
             boxSize += IsoReaderWriter.ReadBox(stream, out this.albumLoudness);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4158,6 +4246,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4188,6 +4277,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4222,6 +4312,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.location);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4262,6 +4353,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.name);
             boxSize += IsoReaderWriter.ReadString(stream, out this.location);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4300,6 +4392,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.imda_ref_identifier);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4332,6 +4425,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4369,6 +4463,7 @@ namespace BoxGenerator2
             /*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
             /*  to fill the box */
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4459,6 +4554,7 @@ namespace BoxGenerator2
                     }
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4560,6 +4656,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.property_container);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.association);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4624,6 +4721,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadInt32(stream, out this.min_initial_alt_startup_offset0);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4690,6 +4788,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.data); // to end of box
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4726,6 +4825,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.original_format);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4770,6 +4870,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt64(stream, out this.chunk_offset);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4858,6 +4959,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadBits(stream, index_size_code, out this.sample_group_description_index[j][k]); // whose msb might indicate fragment_local or global
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -4992,6 +5094,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadInt64(stream, out this.compositionStartTime0);
                 boxSize += IsoReaderWriter.ReadInt64(stream, out this.compositionEndTime0);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5095,6 +5198,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadInt32(stream, out this.sample_offset0);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5170,6 +5274,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5215,6 +5320,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBox(stream, out this.data_entry);
             }
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5260,6 +5366,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5333,6 +5440,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadInt16(stream, out this.media_rate_integer);
                 boxSize += IsoReaderWriter.ReadInt16(stream, out this.media_rate_fraction);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5408,6 +5516,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.compatible_combinations); // to end of the box
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5470,6 +5579,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.group_id);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5560,6 +5670,7 @@ namespace BoxGenerator2
                 }
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.symbol_count);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5653,6 +5764,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.FEC_symbol_locations); //optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.File_symbol_locations); //optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5708,6 +5820,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.session_info); //optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.group_id_to_name); //optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5788,6 +5901,7 @@ namespace BoxGenerator2
                 }
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.symbol_count);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -5944,6 +6058,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.block_count);
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.block_size);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6046,6 +6161,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.data);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6084,6 +6200,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.data_format); // format of decrypted, encoded data (in case of protection)
             /*  or un-transformed sample entry (in case of restriction */
             /*  and complete track information) */
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6132,6 +6249,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.major_brand);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.minor_version);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.compatible_brands); // to end of the box
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6184,6 +6302,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.group_ID);
                 boxSize += IsoReaderWriter.ReadString(stream, out this.group_name);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6229,6 +6348,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6277,6 +6397,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.handler_type);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, 3, out this.reserved);
             boxSize += IsoReaderWriter.ReadString(stream, out this.name);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6335,6 +6456,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.maxbitrate);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.avgbitrate);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.reserved);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6379,6 +6501,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.data);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6432,6 +6555,7 @@ namespace BoxGenerator2
             }
             boxSize += IsoReaderWriter.ReadClass(stream, out this.item_infos);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6594,6 +6718,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadBytes(stream, length_size, out this.extent_length);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6746,6 +6871,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.imda_identifier);
             boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.data); // until the end of the box
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -6869,6 +6995,7 @@ namespace BoxGenerator2
                 }
             }
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7000,6 +7127,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBox(stream, out this.protection_information);
             }
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7061,6 +7189,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBox(stream, out this.references0);
             }
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7172,6 +7301,7 @@ namespace BoxGenerator2
                 }
                 /*  other assignment_type values are reserved */
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7276,6 +7406,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.data);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7361,6 +7492,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBit(stream, out this.pad);
             boxSize += IsoReaderWriter.ReadBitsArray(stream, 5, 3, out this.language); // ISO-639-2/T language code
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.pre_defined);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7432,6 +7564,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7481,6 +7614,7 @@ namespace BoxGenerator2
                 /*  version==0 */
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.fragment_duration0);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7574,6 +7708,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.item_data); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.other_boxes); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7630,6 +7765,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.sequence_number);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7663,6 +7799,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7699,6 +7836,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.parent_size);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7732,6 +7870,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7765,6 +7904,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7798,6 +7938,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7831,6 +7972,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -7933,6 +8075,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, 9, out this.matrix); // Unity matrix
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, 6, out this.pre_defined);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.next_track_ID);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8011,6 +8154,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8042,6 +8186,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8099,6 +8244,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBit(stream, out this.reserved0);
                 boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.pad2);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8162,6 +8308,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.FEC_symbol_locations); //optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.File_symbol_locations); //optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8217,6 +8364,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.session_info); //optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.group_id_to_name); //optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8270,6 +8418,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.rate);
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.initial_delay);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8330,6 +8479,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.item_ID0);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8404,6 +8554,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt64(stream, out this.media_time0);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8471,6 +8622,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.scheme_type_box);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.info); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8541,6 +8693,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt64Array(stream, entry_count, out this.offset0);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8633,6 +8786,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadBytes(stream, sample_count, out this.sample_info_size);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8717,6 +8871,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.sample_count);
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.group_description_index);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8778,6 +8933,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.scheme_specific_data);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8828,6 +8984,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadString(stream, out this.scheme_uri); // browser uri
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8889,6 +9046,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadString(stream, out this.scheme_uri); // browser uri
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -8957,6 +9115,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.sample_is_depended_on);
                 boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.sample_has_redundancy);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9039,6 +9198,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadUInt32(stream, out this.hint_track_ID);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9150,6 +9310,7 @@ namespace BoxGenerator2
                 /*   that is appropriate and permitted for the media type */
             }
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9238,6 +9399,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9281,6 +9443,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.scheme_type_box); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.info); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9323,6 +9486,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.data);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9363,6 +9527,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt16(stream, out this.balance);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.reserved);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9421,6 +9586,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.integrity_algorithm_rtcp);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.scheme_type_box);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.info);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9463,6 +9629,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9494,6 +9661,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9538,6 +9706,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.chunk_offset);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9591,6 +9760,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.priority);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9637,6 +9807,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9668,6 +9839,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9716,6 +9888,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadInt16(stream, out this.alternate_group);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.sub_track_ID);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.attribute_list); // to the end of the box
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9774,6 +9947,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.samples_per_chunk);
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.sample_description_index);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9834,6 +10008,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBox(stream, out this.SampleEntry); // an instance of a class derived from SampleEntry
             }
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9896,6 +10071,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.group_description_index);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -9957,6 +10133,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.shadowed_sample_number);
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.sync_sample_number);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10016,6 +10193,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.sample_number);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10080,6 +10258,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entry_size);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10149,6 +10328,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.sample_count);
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.sample_delta);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10195,6 +10375,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10245,6 +10426,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadBytes(stream, field_size, out this.entry_size);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10344,6 +10526,7 @@ namespace BoxGenerator2
                     }
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10449,6 +10632,7 @@ namespace BoxGenerator2
                 /*  version==0 */
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.baseMediaDecodeTime0);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10526,6 +10710,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.default_sample_duration);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.default_sample_size);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.default_sample_flags);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10634,6 +10819,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_trun_num + 1), out this.trun_number);
                 boxSize += IsoReaderWriter.ReadBytes(stream, (ulong)(length_size_of_sample_num + 1), out this.sample_delta);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10796,6 +10982,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, 9, out this.matrix); // unity matrix
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.width);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.height);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10881,6 +11068,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10914,6 +11102,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10951,6 +11140,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.TrackReferenceTypeBox);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -10990,6 +11180,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.track_ID); // Any number of boxes may follow
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11044,6 +11235,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.default_sample_duration);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.default_sample_size);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.default_sample_flags);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11085,6 +11277,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11131,6 +11324,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadUInt32(stream, out this.first_sample_flags); // all fields in the following array are optional
             /*  as indicated by bits set in the tr_flags */
 
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11171,6 +11365,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11205,6 +11400,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.compatible_brands); // to end of the box
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11238,6 +11434,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11298,6 +11495,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadBytes(stream, 16, out this.usertype);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11368,6 +11566,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.graphicsmode); // copy, see below
             boxSize += IsoReaderWriter.ReadUInt16Array(stream, 3, out this.opcolor);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11406,6 +11605,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.xml);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11438,6 +11638,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11468,6 +11669,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11498,6 +11700,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11528,6 +11731,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11570,6 +11774,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.ambient_illuminance);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.ambient_light_x);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.ambient_light_y);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11610,6 +11815,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.MetadataKeyBox);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11646,6 +11852,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.theURI);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11722,6 +11929,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadUInt8(stream, out this.roi_mb_height);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11804,6 +12012,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.dependencyTierId);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11878,6 +12087,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.max_temporal_id);
             boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved0);
             boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.max_quality_id);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -11948,6 +12158,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt8(stream, out this.PPS_index);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -12018,6 +12229,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.min_priorityId);
             boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.reserved2);
             boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.max_priorityId);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -12104,6 +12316,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.cabac_max_bitrate);
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.cabac_avg_bitrate);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -12202,6 +12415,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.region_width);
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.region_height);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -12282,6 +12496,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.init_cpb_delay);
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.init_dpb_delay);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -12352,6 +12567,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.temporal_id);
                 boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.reserved);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -12487,6 +12703,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.subset_stream_buffering); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.multiview_scene_info); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -12594,6 +12811,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -12675,6 +12893,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadInt16(stream, out this.grid_pos_x[grid_pos_view_id[i]]);
                 boxSize += IsoReaderWriter.ReadInt16(stream, out this.grid_pos_y[grid_pos_view_id[i]]);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -12773,6 +12992,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.differentiating_attribute);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -12851,6 +13071,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadInt16(stream, out this.relative_sample_number);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -12929,6 +13150,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.notrequiredSEI_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13023,6 +13245,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.temporal_id_range);
                 boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.priority_id_range);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13091,6 +13314,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.MultiviewGroupId);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13145,6 +13369,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.tierID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13204,6 +13429,7 @@ namespace BoxGenerator2
             }
             boxSize += IsoReaderWriter.ReadBox(stream, out this.relation_attributes);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13274,6 +13500,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.tierBaseBitRate);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.tierMaxBitRate);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.tierAvgBitRate);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13361,6 +13588,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.constantFrameRate);
             boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.reserved0);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.frameRate);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13427,6 +13655,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.tileGroupID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13473,6 +13702,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.max_disparity);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13514,6 +13744,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadClass(stream, out this.MVDConfig);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.mvdDepthRes); //Optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13559,6 +13790,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadClass(stream, out this.MVDConfig);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.mvdDepthRes); //Optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13671,6 +13903,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadBits(stream, 10, out this.ref_view_id[i][j]);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13755,6 +13988,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.MVCConfig);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13791,6 +14025,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.AVCConfig);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13827,6 +14062,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.HEVCConfig);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13863,6 +14099,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.LHEVCConfig);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13899,6 +14136,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.Descr);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13935,6 +14173,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.SVCConfig);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -13971,6 +14210,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBytes(stream, size - 64, out this.scalinfosei);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14011,6 +14251,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.method_count);
             boxSize += IsoReaderWriter.ReadStringArray(stream, method_count, out this.PriorityAssignmentURI);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14049,6 +14290,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBytes(stream, size - 64, out this.mvcscalinfosei);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14085,6 +14327,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBytes(stream, size - 64, out this.mvdscalinfosei);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14125,6 +14368,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.method_count);
             boxSize += IsoReaderWriter.ReadStringArray(stream, method_count, out this.PriorityAssignmentURI);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14163,6 +14407,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.HEVCTileTierLevelConfig);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14199,6 +14444,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.EVCConfig);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14255,6 +14501,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.max_bitrate);
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.avg_bitrate);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14307,6 +14554,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.VvcConfig);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14347,6 +14595,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved);
             boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.LengthSizeMinusOne);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14429,6 +14678,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadBox(stream, out this.NALUStartInlineConstructor);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14543,6 +14793,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt8(stream, out this.statement_type); // from the user extension ranges
                 boxSize += IsoReaderWriter.ReadString(stream, out this.statement_namespace);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14601,6 +14852,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.config);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14637,6 +14889,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.config);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14673,6 +14926,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.source_label);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14718,6 +14972,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.label); // recommended
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.MPEG4BitRateBox); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14760,6 +15015,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.aux_track_type);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14808,6 +15064,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBit(stream, out this.intra_pred_used);
             boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.max_ref_per_pic);
             boxSize += IsoReaderWriter.ReadBits(stream, 26, out this.reserved);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -14882,6 +15139,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadUInt32(stream, out this.group_description_index[i]);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15013,6 +15271,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.SamplingRateBox);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout0);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15146,6 +15405,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             boxSize += IsoReaderWriter.ReadBox(stream, out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout0);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15281,6 +15541,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             boxSize += IsoReaderWriter.ReadBox(stream, out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout0);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15348,6 +15609,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             /* other boxes from derived specifications */
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15380,6 +15642,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15423,6 +15686,7 @@ namespace BoxGenerator2
             /*  Boxes specific to the untransformed sample entry type */
             /*  For 'avc1', these would include AVCConfigurationBox */
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15491,6 +15755,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.content_encoding); // optional
             boxSize += IsoReaderWriter.ReadString(stream, out this.ns);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.schema_location); // optional
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15540,6 +15805,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadString(stream, out this.mime_format);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.TextConfigBox); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15587,6 +15853,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.the_label);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.init); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15632,6 +15899,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.MetadataKeyTableBox); // mandatory
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15685,6 +15953,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.partition_entry_ID);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.FEC_overhead);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15734,6 +16003,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.CompleteTrackInfoBox);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15774,6 +16044,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.SchemeInformation);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15810,6 +16081,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.SchemeInformation);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15842,6 +16114,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15885,6 +16158,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.highestcompatibleversion);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.maxpacketsize);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15935,6 +16209,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.hinttrackversion);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.highestcompatibleversion);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.maxpacketsize);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -15971,6 +16246,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16002,6 +16278,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16043,6 +16320,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.descriptionformat);
             boxSize += IsoReaderWriter.ReadInt8Array(stream, out this.sdptext);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16092,6 +16370,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadString(stream, out this.mime_format);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.TextConfigBox); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16130,6 +16409,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16173,6 +16453,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.highestcompatibleversion);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.maxpacketsize);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16223,6 +16504,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadString(stream, out this.ns);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.schema_location); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16272,6 +16554,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadString(stream, out this.mime_format);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.TextConfigBox); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16314,6 +16597,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.otherboxes);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16350,6 +16634,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBytes(stream, 32, out this.compressorname); // other boxes from derived specifications
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16439,6 +16724,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.clap); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.pasp); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16563,6 +16849,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.ReadBox(stream, out this.SamplingRateBox);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout0);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16694,6 +16981,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadClass(stream, out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             boxSize += IsoReaderWriter.ReadBox(stream, out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ChannelLayout0);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16760,6 +17048,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16791,6 +17080,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             /* other boxes from derived specifications */
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16827,6 +17117,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.otherboxes);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16863,6 +17154,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBytes(stream, 32, out this.compressorname); // other boxes from derived specifications
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16908,6 +17200,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.highestcompatibleversion);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.maxpacketsize);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -16962,6 +17255,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17006,6 +17300,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17052,6 +17347,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17112,6 +17408,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17172,6 +17469,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17232,6 +17530,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17307,6 +17606,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.num_total_samples[j]);
                 j++;
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17377,6 +17677,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.DRAP_type);
             boxSize += IsoReaderWriter.ReadBits(stream, 29, out this.reserved);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17415,6 +17716,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt16(stream, out this.roll_distance);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17455,6 +17757,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBit(stream, out this.num_leading_samples_known);
             boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.num_leading_samples);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17529,6 +17832,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.maximum_bitrate);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.minimum_bitrate);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.discard_priority);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17601,6 +17905,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt16(stream, out this.roll_distance);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17645,6 +17950,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBit(stream, out this.dependent_flag);
             boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.reserved);
             boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.SAP_type);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17697,6 +18003,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.item_id[i]);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17749,6 +18056,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBit(stream, out this.level_independently_decodable);
             boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.reserved);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17791,6 +18099,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.hSpacing);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.vSpacing);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17857,6 +18166,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.horizOffD);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.vertOffN);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.vertOffD);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17908,6 +18218,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.track_group_id); // the remaining data may be specified 
             /*   for a particular track_group_type */
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17950,6 +18261,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBit(stream, out this.left_view_flag);
             boxSize += IsoReaderWriter.ReadBits(stream, 31, out this.reserved);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -17988,6 +18300,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18024,6 +18337,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18060,6 +18374,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18096,6 +18411,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18132,6 +18448,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18168,6 +18485,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18204,6 +18522,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18240,6 +18559,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18276,6 +18596,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18312,6 +18633,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18348,6 +18670,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18389,6 +18712,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18430,6 +18754,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.lhvcconfig);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18473,6 +18798,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18514,6 +18840,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.lhvcconfig);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18557,6 +18884,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18598,6 +18926,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.lhvcconfig);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18641,6 +18970,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.lhvcconfig);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18686,6 +19016,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.lhvcconfig);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18731,6 +19062,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18772,6 +19104,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.lhvcconfig);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18815,6 +19148,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18856,6 +19190,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.lhvcconfig);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18899,6 +19234,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18940,6 +19276,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.lhvcconfig);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -18979,6 +19316,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19022,6 +19360,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19067,6 +19406,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19140,6 +19480,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.mvdscalinfosei); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19227,6 +19568,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.mvdscalinfosei); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19286,6 +19628,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19331,6 +19674,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19404,6 +19748,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.mvdscalinfosei); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19491,6 +19836,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.mvdscalinfosei); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19582,6 +19928,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.mvdscalinfosei); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19675,6 +20022,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.mvdscalinfosei); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19768,6 +20116,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.mvdscalinfosei); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19861,6 +20210,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.mvdscalinfosei); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -19942,6 +20292,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.extrinsic_camera_params); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20017,6 +20368,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.extrinsic_camera_params); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20092,6 +20444,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.extrinsic_camera_params); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20167,6 +20520,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.extrinsic_camera_params); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.a3dconfig); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20238,6 +20592,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.intrinsic_camera_params); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.extrinsic_camera_params); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20307,6 +20662,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.intrinsic_camera_params); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.extrinsic_camera_params); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20376,6 +20732,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.intrinsic_camera_params); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.extrinsic_camera_params); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20445,6 +20802,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.intrinsic_camera_params); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.extrinsic_camera_params); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20502,6 +20860,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.scalability); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.method); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20553,6 +20912,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.scalability); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.method); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20604,6 +20964,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.scalability); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.method); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20655,6 +21016,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.scalability); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.method); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20710,6 +21072,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.scalability); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.method); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20767,6 +21130,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.scalability); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.method); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20812,6 +21176,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.config); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20846,6 +21211,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20881,6 +21247,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.config); // optional 
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20920,6 +21287,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.config); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -20963,6 +21331,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21008,6 +21377,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21049,6 +21419,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21088,6 +21459,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21131,6 +21503,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.descr); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21180,6 +21553,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.methods); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.priorities); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21223,6 +21597,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21262,6 +21637,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.config);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21328,6 +21704,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.level_info_entity_idx);
             }
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.num_active_tracks);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21435,6 +21812,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.num_active_tracks[i]);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21687,6 +22065,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadUInt8(stream, out this.entity_idx);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21871,6 +22250,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.track_switch_hierarchy_id[i]);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21927,6 +22307,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -21975,6 +22356,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBits(stream, 24, out this.audNalUnit);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22027,6 +22409,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBit(stream, out this.accurateStatisticsFlag);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.avgBitRate);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.avgFrameRate);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22123,6 +22506,7 @@ namespace BoxGenerator2
             }
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.numReferences);
             boxSize += IsoReaderWriter.ReadClass(stream, numReferences, out this.dependency);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22201,6 +22585,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.dci_nal_unit_length);
             boxSize += IsoReaderWriter.ReadBytes(stream, dci_nal_unit_length, out this.dci_nal_unit);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22251,6 +22636,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.tierID);
                 boxSize += IsoReaderWriter.ReadInt16(stream, out this.delta);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22299,6 +22685,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.eobNalUnit);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22343,6 +22730,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.eosNalUnit[i]);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22401,6 +22789,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBit(stream, out this.bl_irap_pic_flag);
             boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.bl_irap_nal_unit_type);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.sample_offset);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22483,6 +22872,7 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBit(stream, out this.reserved00);
                 boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.sub_layer_presence_flags);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22565,6 +22955,7 @@ namespace BoxGenerator2
             }
             boxSize += IsoReaderWriter.ReadBits(stream, 10, out this.pps_mix_nalu_types_in_pic_bit_pos);
             boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.pps_id);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22679,6 +23070,7 @@ namespace BoxGenerator2
                 if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.ViewPriorityBox); // optional
             }
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22807,6 +23199,7 @@ namespace BoxGenerator2
                 }
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.groupID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22905,6 +23298,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.oinf);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22941,6 +23335,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt32(stream, out this.delta_time);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -22981,6 +23376,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.ps_nalu_length);
             boxSize += IsoReaderWriter.ReadBytes(stream, ps_nalu_length, out this.ps_nal_unit);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23031,6 +23427,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBit(stream, out this.pps_present);
             boxSize += IsoReaderWriter.ReadBit(stream, out this.aps_present);
             boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.reserved);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23121,6 +23518,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadClass(stream, out this.subpic_id_rewriting_info);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23287,6 +23685,7 @@ namespace BoxGenerator2
                 if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.TranscodingInfoBox); // optional
             }
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23385,6 +23784,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt8(stream, out this.groupID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23465,6 +23865,7 @@ namespace BoxGenerator2
                     boxSize += IsoReaderWriter.ReadUInt16(stream, out this.groupID[i]);
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23535,6 +23936,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.level_idc);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23591,6 +23993,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadClass(stream, out this.subpic_id_rewriting_info);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23645,6 +24048,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23691,6 +24095,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.groupID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23743,6 +24148,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.reserved);
             boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.NAL_unit_type);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23853,6 +24259,7 @@ namespace BoxGenerator2
                     }
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23951,6 +24358,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24025,6 +24433,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.tlAvgBitRate);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.tlConstantFrameRate);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.tlAvgFrameRate);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24081,6 +24490,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.ViewPriorityBox);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24117,6 +24527,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.oinf);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24154,6 +24565,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.track_group_id); // the remaining data may be specified 
             /*   for a particular track_group_type */
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24193,6 +24605,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.track_group_id); // the remaining data may be specified 
             /*   for a particular track_group_type */
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24232,6 +24645,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.track_group_id); // the remaining data may be specified 
             /*   for a particular track_group_type */
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24271,6 +24685,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24309,6 +24724,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24345,6 +24761,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24381,6 +24798,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24417,6 +24835,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24453,6 +24872,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24489,6 +24909,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24525,6 +24946,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24561,6 +24983,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24597,6 +25020,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24633,6 +25057,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24669,6 +25094,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24705,6 +25131,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24741,6 +25168,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24777,6 +25205,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24814,6 +25243,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.track_IDs);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24864,6 +25294,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24924,6 +25355,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -24984,6 +25416,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25044,6 +25477,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25104,6 +25538,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25164,6 +25599,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25224,6 +25660,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25284,6 +25721,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25344,6 +25782,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25404,6 +25843,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25464,6 +25904,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25524,6 +25965,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25584,6 +26026,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entity_id); // the remaining data may be specified for a particular grouping_type
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25636,6 +26079,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.aux_type);
             boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25674,6 +26118,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.AVCConfig);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25738,6 +26183,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.horizOffD);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.vertOffN);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.vertOffD);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25828,6 +26274,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadClass(stream, out this.ICC_profile0); // unrestricted ICC profile
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25902,6 +26349,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.HEVCConfig);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25942,6 +26390,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.reserved);
             boxSize += IsoReaderWriter.ReadBit(stream, out this.axis);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -25984,6 +26433,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved);
             boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.angle);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26026,6 +26476,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.image_width);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.image_height);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26064,6 +26515,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.JPEGprefix);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26100,6 +26552,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.LHEVCConfig);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26136,6 +26589,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.layer_id);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26172,6 +26626,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.op_info); // specified in ISO/IEC 14496-15
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26212,6 +26667,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.hSpacing);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.vSpacing);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26258,6 +26714,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt8(stream, out this.bits_per_channel);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26308,6 +26765,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.horizontal_offset);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.vertical_offset);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26395,6 +26853,7 @@ namespace BoxGenerator2
                     }
                 }
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26487,6 +26946,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.target_ols_idx);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26527,6 +26987,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.exposure_step);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.exposure_numerator);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26569,6 +27030,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.flash_exposure_numerator);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.flash_exposure_denominator);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26611,6 +27073,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.alt_text);
             boxSize += IsoReaderWriter.ReadString(stream, out this.alt_lang);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26649,6 +27112,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.creation_time);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26689,6 +27153,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.f_stop_numerator);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.f_stop_denominator);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26731,6 +27196,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.focus_distance_numerator);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.focus_distance_denominator);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26781,6 +27247,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.target_width_denominator);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.target_height_numerator);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.target_height_denominator);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26823,6 +27290,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt64(stream, out this.modification_time);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26859,6 +27327,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.frame_number);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26903,6 +27372,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.reference_type[i]);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -26961,6 +27431,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadString(stream, out this.name);
             boxSize += IsoReaderWriter.ReadString(stream, out this.description);
             boxSize += IsoReaderWriter.ReadString(stream, out this.tags);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27007,6 +27478,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.blue_amber);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.green_magenta);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27109,6 +27581,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.ccv_avg_luminance_value);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27231,6 +27704,7 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.white_point_y);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.max_display_mastering_luminance);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.min_display_mastering_luminance);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27289,6 +27763,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.max_content_light_level);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.max_pic_average_light_level);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27327,6 +27802,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.transition_direction);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27367,6 +27843,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBit(stream, out this.transition_direction);
             boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.transition_shape);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27405,6 +27882,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.transition_direction);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27441,6 +27919,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.transition_direction);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27477,6 +27956,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.transition_period);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27513,6 +27993,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.duration);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27549,6 +28030,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.bits_per_pixel);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27585,6 +28067,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.sid_info); // specified in ISO/IEC 14496-15
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27621,6 +28104,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadClass(stream, out this.sor_info); // specified in ISO/IEC 14496-15
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27669,6 +28153,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27729,6 +28214,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27789,6 +28275,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27849,6 +28336,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27909,6 +28397,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -27969,6 +28458,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28029,6 +28519,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28089,6 +28580,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28149,6 +28641,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28209,6 +28702,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28269,6 +28763,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28329,6 +28824,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28389,6 +28885,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28449,6 +28946,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28509,6 +29007,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28569,6 +29068,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28629,6 +29129,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt16(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28689,6 +29190,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.to_item_ID);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28741,6 +29243,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt16(stream, out this.time_offset);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.timescale_multiplier);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28791,6 +29294,7 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadUInt32(stream, out this.direct_reference_sample_id);
             }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28843,6 +29347,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.exposure_step);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.exposure_numerator);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28885,6 +29390,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.flash_exposure_numerator);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.flash_exposure_denominator);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28927,6 +29433,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.f_stop_numerator);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.f_stop_denominator);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -28969,6 +29476,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.focus_distance_numerator);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.focus_distance_denominator);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -29007,6 +29515,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.frame_number);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -29047,6 +29556,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt16(stream, out this.blue_amber);
             boxSize += IsoReaderWriter.ReadInt8(stream, out this.green_magenta);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 

@@ -366,4 +366,15 @@ internal class IsoReaderWriter
         }
         return boxSize;
     }
+
+    internal static ulong ReadSkip(Stream stream, ulong size, ulong boxSize)
+    {
+        if (boxSize != size)
+        {
+            // TODO
+            throw new Exception("Unread bytes at the end of the box!");
+        }
+
+        return 0;
+    }
 }

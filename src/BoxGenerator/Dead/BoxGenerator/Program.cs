@@ -688,6 +688,8 @@ namespace BoxGenerator2
             cls += "\r\n" + "boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);";
         }
 
+        cls += "\r\n" + "boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);";
+
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
 
