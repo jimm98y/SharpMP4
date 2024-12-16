@@ -36,6 +36,13 @@
       "description": "MPEG2TS boxes",
       "type": "Box",
       "syntax": "class MPEG2TSReceptionSampleEntry extends MPEG2TSSampleEntry('rm2t') { \r\n}\r\n \r\nclass MPEG2TSServerSampleEntry extends MPEG2TSSampleEntry('sm2t') { \r\n} \r\n\r\nclass MPEG2TSSampleEntry(name) extends HintSampleEntry(name) { \r\n uint(16) hinttrackversion = 1; \r\n uint(16) highestcompatibleversion = 1; \r\n uint(8) precedingbyteslen; \r\n uint(8) trailingbyteslen; \r\n uint(1) precomputed_only_flag; \r\n uint(7) reserved; \r\n Box  additionaldata[]; \r\n} "
+    },
+    {
+      "fourcc": "         ",
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "class MetadataSampleEntry(codingname) extends SampleEntry (codingname) { \r\n Box[] other_boxes; // optional \r\n} \r\n\r\nclass XMLMetadataSampleEntry() extends MetadataSampleEntry ('metx') { \r\n string content_encoding; // optional \r\n string namespace; \r\n string schema_location; // optional \r\n BitRateBox (); // optional \r\n} \r\n\r\nclass TextMetadataSampleEntry() extends MetadataSampleEntry ('mett') { \r\n string content_encoding; // optional \r\n string mime_format; \r\n BitRateBox (); // optional \r\n TextConfigBox (); // optional \r\n} \r\n\r\naligned(8) class URIBox extends FullBox('uri ', version = 0, 0) { \r\n string theURI; \r\n} \r\n\r\naligned(8) class URIInitBox extends FullBox('uriI', version = 0, 0) { \r\n unsigned int(8) uri_initialization_data[]; \r\n} \r\n\r\nclass URIMetaSampleEntry() extends MetadataSampleEntry ('urim') { \r\n URIbox   the_label; \r\n URIInitBox  init;  // optional\r\n BitRateBox ();  // optional\r\n} \r\n"
     }
   ]
 }

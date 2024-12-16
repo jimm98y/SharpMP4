@@ -689,6 +689,276 @@ namespace BoxGenerator2
     }
 
 
+    public class MetadataSampleEntry : SampleEntry
+    {
+
+
+        protected Box[] other_boxes;  //  optional 
+        public Box[] OtherBoxes { get { return other_boxes; } set { other_boxes = value; } }
+
+        public MetadataSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.other_boxes); // optional 
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            if (this.other_boxes != null) boxSize += IsoReaderWriter.WriteBox(stream, this.other_boxes); // optional 
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            if (this.other_boxes != null) boxSize += IsoReaderWriter.CalculateSize(other_boxes); // other_boxes
+            return boxSize;
+        }
+    }
+
+
+    public class XMLMetadataSampleEntry : MetadataSampleEntry
+    {
+
+
+        protected string content_encoding;  //  optional 
+        public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
+
+        protected string ns;
+        public string Ns { get { return ns; } set { ns = value; } }
+
+        protected string schema_location;  //  optional 
+        public string SchemaLocation { get { return schema_location; } set { schema_location = value; } }
+
+        protected BitRateBox BitRateBox;  //  optional 
+        public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
+
+        public XMLMetadataSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.content_encoding); // optional 
+            boxSize += IsoReaderWriter.ReadString(stream, out this.ns);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.schema_location); // optional 
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox); // optional 
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            if (this.content_encoding != null) boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding); // optional 
+            boxSize += IsoReaderWriter.WriteString(stream, this.ns);
+            if (this.schema_location != null) boxSize += IsoReaderWriter.WriteString(stream, this.schema_location); // optional 
+            if (this.BitRateBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.BitRateBox); // optional 
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)ns.Length * 8; // ns
+            if (this.schema_location != null) boxSize += (ulong)schema_location.Length * 8; // schema_location
+            if (this.BitRateBox != null) boxSize += IsoReaderWriter.CalculateSize(BitRateBox); // BitRateBox
+            return boxSize;
+        }
+    }
+
+
+    public class TextMetadataSampleEntry : MetadataSampleEntry
+    {
+
+
+        protected string content_encoding;  //  optional 
+        public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
+
+        protected string mime_format;
+        public string MimeFormat { get { return mime_format; } set { mime_format = value; } }
+
+        protected BitRateBox BitRateBox;  //  optional 
+        public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
+
+        protected TextConfigBox TextConfigBox;  //  optional 
+        public TextConfigBox _TextConfigBox { get { return TextConfigBox; } set { TextConfigBox = value; } }
+
+        public TextMetadataSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.content_encoding); // optional 
+            boxSize += IsoReaderWriter.ReadString(stream, out this.mime_format);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox); // optional 
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.TextConfigBox); // optional 
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            if (this.content_encoding != null) boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding); // optional 
+            boxSize += IsoReaderWriter.WriteString(stream, this.mime_format);
+            if (this.BitRateBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.BitRateBox); // optional 
+            if (this.TextConfigBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.TextConfigBox); // optional 
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)mime_format.Length * 8; // mime_format
+            if (this.BitRateBox != null) boxSize += IsoReaderWriter.CalculateSize(BitRateBox); // BitRateBox
+            if (this.TextConfigBox != null) boxSize += IsoReaderWriter.CalculateSize(TextConfigBox); // TextConfigBox
+            return boxSize;
+        }
+    }
+
+
+    public class URIBox : FullBox
+    {
+
+
+        protected string theURI;
+        public string TheURI { get { return theURI; } set { theURI = value; } }
+
+        public URIBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadString(stream, out this.theURI);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.theURI);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)theURI.Length * 8; // theURI
+            return boxSize;
+        }
+    }
+
+
+    public class URIInitBox : FullBox
+    {
+
+
+        protected byte[] uri_initialization_data;
+        public byte[] UriInitializationData { get { return uri_initialization_data; } set { uri_initialization_data = value; } }
+
+        public URIInitBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.uri_initialization_data);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.uri_initialization_data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)uri_initialization_data.Length * 8; // uri_initialization_data
+            return boxSize;
+        }
+    }
+
+
+    public class URIMetaSampleEntry : MetadataSampleEntry
+    {
+
+
+        protected URIBox the_label;
+        public URIBox TheLabel { get { return the_label; } set { the_label = value; } }
+
+        protected URIInitBox init;  //  optional
+        public URIInitBox Init { get { return init; } set { init = value; } }
+
+        protected BitRateBox BitRateBox;  //  optional
+        public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
+
+        public URIMetaSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.the_label);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.init); // optional
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox); // optional
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.the_label);
+            if (this.init != null) boxSize += IsoReaderWriter.WriteBox(stream, this.init); // optional
+            if (this.BitRateBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.BitRateBox); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(the_label); // the_label
+            if (this.init != null) boxSize += IsoReaderWriter.CalculateSize(init); // init
+            if (this.BitRateBox != null) boxSize += IsoReaderWriter.CalculateSize(BitRateBox); // BitRateBox
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get { return "rssr"; } }
@@ -3859,14 +4129,14 @@ namespace BoxGenerator2
     }
 
 
-    public class URIInitBox : FullBox
+    public class URIInitBox1 : FullBox
     {
         public override string FourCC { get { return "uriI"; } }
 
         protected byte[] uri_initialization_data;
         public byte[] UriInitializationData { get { return uri_initialization_data; } set { uri_initialization_data = value; } }
 
-        public URIInitBox()
+        public URIInitBox1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -11972,14 +12242,14 @@ namespace BoxGenerator2
     }
 
 
-    public class URIBox : FullBox
+    public class URIBox1 : FullBox
     {
         public override string FourCC { get { return "uri "; } }
 
         protected string theURI;
         public string TheURI { get { return theURI; } set { theURI = value; } }
 
-        public URIBox()
+        public URIBox1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -15968,7 +16238,7 @@ namespace BoxGenerator2
     }
 
 
-    public class URIMetaSampleEntry : MetaDataSampleEntry
+    public class URIMetaSampleEntry1 : MetaDataSampleEntry
     {
         public override string FourCC { get { return "urim"; } }
 
@@ -15978,7 +16248,7 @@ namespace BoxGenerator2
         protected URIInitBox init;  //  optional
         public URIInitBox Init { get { return init; } set { init = value; } }
 
-        public URIMetaSampleEntry()
+        public URIMetaSampleEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)

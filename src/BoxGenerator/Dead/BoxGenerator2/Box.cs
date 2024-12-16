@@ -41,21 +41,6 @@ namespace BoxGenerator2
 
     }
 
-    public abstract class MetadataSampleEntry : Box
-    {
-
-    }
-
-    public abstract class MetadataKeyBox : Box
-    {
-
-    }
-
-    public abstract class UniDrcConfigExtension : Box
-    {
-
-    }
-
     public class ICC_profile
     {
         // ISO 15076‐1 or ICC.1:2010
@@ -112,4 +97,6 @@ namespace BoxGenerator2
     public abstract class SampleConstructorFromTrackGroup : Box { }
     public class VVCSubpicIDRewritingInfomationStruct { }
     public abstract class IPMPControlBox : Box { }
+    public abstract class UniDrcConfigExtension : Box { }
+    public abstract class MetadataKeyBox : Box { }
 }
