@@ -554,6 +554,141 @@ namespace BoxGenerator2
     }
 
 
+    public class MPEG2TSReceptionSampleEntry : MPEG2TSSampleEntry
+    {
+
+
+        public MPEG2TSReceptionSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
+    {
+
+
+        public MPEG2TSServerSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public class MPEG2TSSampleEntry : HintSampleEntry
+    {
+
+
+        protected ushort hinttrackversion = 1;
+        public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
+
+        protected ushort highestcompatibleversion = 1;
+        public ushort Highestcompatibleversion { get { return highestcompatibleversion; } set { highestcompatibleversion = value; } }
+
+        protected byte precedingbyteslen;
+        public byte Precedingbyteslen { get { return precedingbyteslen; } set { precedingbyteslen = value; } }
+
+        protected byte trailingbyteslen;
+        public byte Trailingbyteslen { get { return trailingbyteslen; } set { trailingbyteslen = value; } }
+
+        protected byte precomputed_only_flag;
+        public byte PrecomputedOnlyFlag { get { return precomputed_only_flag; } set { precomputed_only_flag = value; } }
+
+        protected byte reserved;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+
+        protected Box[] additionaldata;
+        public Box[] Additionaldata { get { return additionaldata; } set { additionaldata = value; } }
+
+        public MPEG2TSSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt16(stream, out this.hinttrackversion);
+            boxSize += IsoReaderWriter.ReadUInt16(stream, out this.highestcompatibleversion);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.precedingbyteslen);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.trailingbyteslen);
+            boxSize += IsoReaderWriter.ReadBits(stream, 1, out this.precomputed_only_flag);
+            boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.reserved);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.additionaldata);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.hinttrackversion);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.highestcompatibleversion);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.precedingbyteslen);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.trailingbyteslen);
+            boxSize += IsoReaderWriter.WriteBits(stream, 1, this.precomputed_only_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.reserved);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.additionaldata);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // hinttrackversion
+            boxSize += 16; // highestcompatibleversion
+            boxSize += 8; // precedingbyteslen
+            boxSize += 8; // trailingbyteslen
+            boxSize += 1; // precomputed_only_flag
+            boxSize += 7; // reserved
+            boxSize += IsoReaderWriter.CalculateSize(additionaldata); // additionaldata
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get { return "rssr"; } }
@@ -16103,11 +16238,11 @@ namespace BoxGenerator2
     }
 
 
-    public class MPEG2TSReceptionSampleEntry : MPEG2TSSampleEntry
+    public class MPEG2TSReceptionSampleEntry1 : MPEG2TSSampleEntry
     {
         public override string FourCC { get { return "rm2t"; } }
 
-        public MPEG2TSReceptionSampleEntry()
+        public MPEG2TSReceptionSampleEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -16398,11 +16533,11 @@ namespace BoxGenerator2
     }
 
 
-    public class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
+    public class MPEG2TSServerSampleEntry1 : MPEG2TSSampleEntry
     {
         public override string FourCC { get { return "sm2t"; } }
 
-        public MPEG2TSServerSampleEntry()
+        public MPEG2TSServerSampleEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)

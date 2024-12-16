@@ -46,11 +46,6 @@ namespace BoxGenerator2
 
     }
 
-    public abstract class MPEG2TSSampleEntry : Box
-    {
-
-    }
-
     public abstract class MetadataKeyBox : Box
     {
 

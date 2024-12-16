@@ -29,6 +29,13 @@
       "description": "loudness boxes",
       "type": "Box",
       "syntax": "aligned(8) class LoudnessBaseBox extends FullBox(loudnessType) { \r\nunsigned int(3) reserved = 0; \r\nunsigned int(7) downmix_ID;  // matching downmix \r\nunsigned int(6) DRC_set_ID;  // to match a DRC box \r\nsigned int(12)  bs_sample_peak_level; \r\nsigned int(12)  bs_true_peak_level; \r\nunsigned int(4) measurement_system_for_TP; \r\nunsigned int(4) reliability_for_TP; \r\nunsigned int(8) measurement_count; \r\nint i; \r\nfor (i = 1 ; i <= measurement_count; i++){ \r\n  unsigned int(8) method_definition; \r\n  unsigned int(8) method_value; \r\n  unsigned int(4) measurement_system; \r\n  unsigned int(4) reliability; \r\n } \r\n} \r\n\r\naligned(8) class TrackLoudnessInfo extends LoudnessBaseBox('tlou') { } \r\n\r\naligned(8) class AlbumLoudnessInfo extends LoudnessBaseBox ('alou') { } \r\n"
+    },
+    {
+      "fourcc": " ",
+      "containers": [ "*" ],
+      "description": "MPEG2TS boxes",
+      "type": "Box",
+      "syntax": "class MPEG2TSReceptionSampleEntry extends MPEG2TSSampleEntry('rm2t') { \r\n}\r\n \r\nclass MPEG2TSServerSampleEntry extends MPEG2TSSampleEntry('sm2t') { \r\n} \r\n\r\nclass MPEG2TSSampleEntry(name) extends HintSampleEntry(name) { \r\n uint(16) hinttrackversion = 1; \r\n uint(16) highestcompatibleversion = 1; \r\n uint(8) precedingbyteslen; \r\n uint(8) trailingbyteslen; \r\n uint(1) precomputed_only_flag; \r\n uint(7) reserved; \r\n Box  additionaldata[]; \r\n} "
     }
   ]
 }
