@@ -833,7 +833,6 @@ namespace BoxGenerator2
                 // TODO: incorrectly parsed type
                 if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
                 {
-                    Debug.WriteLine($"Wrong: {value}");
                     (field as PseudoField).Type = tp + value;
                     tp = (field as PseudoField)?.Type;
                     value = "";
