@@ -30,214 +30,91 @@ namespace BoxGenerator2
             throw new NotImplementedException();
         }
     }
-    
-    public abstract class ItemFullProperty : Box
-    {
 
-    } 
-    
-    public abstract class ItemProperty : Box
-    {
-
-    }
-        
-    public abstract class DataEntryBaseBox : Box
-    {
-
-    }
-    
-    public abstract class GeneralTypeBox : Box
-    {
-
-    }
-    
     public abstract class ItemInfoExtension : Box
     {
 
     }
-    
-    public abstract class CompressedBox : Box
-    {
 
-    }
-    
     public abstract class PlainTextSampleEntry : Box
     {
 
     }
-    
+
     public abstract class MetadataSampleEntry : Box
     {
 
     }
-    
+
     public abstract class MPEG2TSSampleEntry : Box
     {
 
     }
-    
-    public abstract class RtpReceptionHintSampleEntry : Box
-    {
-        
-    }
-    
-    public abstract class ExtrinsicCameraParametersBox : Box
-    {
-        // TODO
-    }
-    
-    public abstract class IntrinsicCameraParametersBox : Box
-    {
-        // TODO
-    }
 
-    public class Descriptor
-    {
-
-    }
-    
-    public class OperatingPointsRecord
-    {
-
-    }
-    
-    public class ICC_profile
-    {
-
-    }
-    
-    public class LHEVCDecoderConfigurationRecord
-    {
-
-    }
-    
-    public class HEVCDecoderConfigurationRecord
-    {
-
-    }
-    
-    public class AVCDecoderConfigurationRecord
-    {
-
-    }
-    
-    public class VvcPTLRecord
-    {
-
-    }
-    
-    public class MVDDecoderConfigurationRecord
-    {
-
-    }
-    
-    public class MVCDecoderConfigurationRecord
-    {
-
-    }
-    
-    public class SVCDecoderConfigurationRecord
-    {
-
-    }
-    
-    public class HEVCTileTierLevelConfigurationRecord
-    {
-
-    }
-    
-    public class EVCDecoderConfigurationRecord
-    {
-
-    }
-    
-    public class VvcDecoderConfigurationRecord
-    {
-
-    }
-    
-    public class EVCSliceComponentTrackConfigurationRecord
-    {
-
-    }
-    
-    public class DRCCoefficientsBasic
-    {
-
-    }
-    
-    public class DRCInstructionsBasic
-    {
-
-    }
-    
-    public class DRCCoefficientsUniDRC
-    {
-
-    } 
-    
-    public class DRCInstructionsUniDRC
-    {
-
-    } 
-    
-    public class VVCSubpicIDRewritingInfomationStruct
-    {
-
-    }
-    
-    public class VvcOperatingPointsRecord
-    {
-
-    }
-    
-    public class DependencyInfo
-    {
-
-    }
-    
-    public abstract class IPMPControlBox : Box
-    {
-
-    }
-    
     public abstract class MetadataKeyBox : Box
     {
 
     }
-    
+
     public abstract class UniDrcConfigExtension : Box
     {
 
     }
-    
-    public abstract class ViewPriorityBox : Box
-    {
 
+    public class ICC_profile
+    {
+        // ISO 15076‐1 or ICC.1:2010
     }
 
-    public abstract class MPEG4BitRateBox : Box
+    public class DRCCoefficientsBasic
     {
-
+        // ISO/IEC 23003‐4
     }
 
-    public abstract class SampleConstructor : Box
+    public class DRCInstructionsBasic
     {
-
+        // ISO/IEC 23003‐4
     }
 
-    public abstract class InlineConstructor : Box
+    public class DRCCoefficientsUniDRC
     {
-
+        // ISO/IEC 23003‐4
     }
 
-    public abstract class NALUStartInlineConstructor : Box
+    public class DRCInstructionsUniDRC
     {
-
+        // ISO/IEC 23003‐4
     }
-    
-    public abstract class SampleConstructorFromTrackGroup : Box
-    {
 
-    }
+    public abstract class ExtrinsicCameraParametersBox : Box { }
+    public abstract class IntrinsicCameraParametersBox : Box { }
+    public abstract class ItemFullProperty : Box  { } 
+    public abstract class ItemProperty : Box { }
+    public abstract class DataEntryBaseBox : Box { }
+    public abstract class GeneralTypeBox : Box { }
+    public abstract class CompressedBox : Box { }
+    public abstract class RtpReceptionHintSampleEntry : Box { }
+    public class Descriptor { }
+    public class OperatingPointsRecord { }
+    public class LHEVCDecoderConfigurationRecord { }
+    public class HEVCDecoderConfigurationRecord { }
+    public class AVCDecoderConfigurationRecord { }
+    public class VvcPTLRecord { }
+    public class MVDDecoderConfigurationRecord { }
+    public class MVCDecoderConfigurationRecord { }
+    public class SVCDecoderConfigurationRecord { }
+    public class HEVCTileTierLevelConfigurationRecord { }
+    public class EVCDecoderConfigurationRecord { }
+    public class VvcDecoderConfigurationRecord { }
+    public class EVCSliceComponentTrackConfigurationRecord { }
+    public class VvcOperatingPointsRecord { }
+    public abstract class MPEG4BitRateBox : Box { }
+    public abstract class ViewPriorityBox : Box { }
+    public class DependencyInfo { }
+    public abstract class SampleConstructor : Box { }
+    public abstract class InlineConstructor : Box { }
+    public abstract class NALUStartInlineConstructor : Box { }
+    public abstract class SampleConstructorFromTrackGroup : Box { }
+    public class VVCSubpicIDRewritingInfomationStruct { }
+    public abstract class IPMPControlBox : Box { }
 }
