@@ -7,7 +7,7 @@ namespace BoxGenerator2
 {
     public abstract class Box
     {
-        public abstract string FourCC { get; }
+        public virtual string FourCC { get; set; }
 
         protected ulong size = 0;
         public ulong Size { get { return size; } set { size = value; } }
@@ -56,37 +56,36 @@ namespace BoxGenerator2
         // ISO/IEC 23003‐4
     }
 
-    public abstract class ExtrinsicCameraParametersBox : Box { }
-    public abstract class IntrinsicCameraParametersBox : Box { }
-    public abstract class ItemFullProperty : Box  { } 
-    public abstract class ItemProperty : Box { }
-    public abstract class DataEntryBaseBox : Box { }
-    public abstract class GeneralTypeBox : Box { }
+    public class ExtrinsicCameraParametersBox : FullBox { }
+    public class IntrinsicCameraParametersBox : FullBox { }
+    public abstract class DataEntryBaseBox : FullBox { }
+
     public abstract class CompressedBox : Box { }
     public abstract class RtpReceptionHintSampleEntry : Box { }
     public class Descriptor { }
     public class OperatingPointsRecord { }
-    public class LHEVCDecoderConfigurationRecord { }
-    public class HEVCDecoderConfigurationRecord { }
-    public class AVCDecoderConfigurationRecord { }
-    public class VvcPTLRecord { }
-    public class MVDDecoderConfigurationRecord { }
-    public class MVCDecoderConfigurationRecord { }
-    public class SVCDecoderConfigurationRecord { }
-    public class HEVCTileTierLevelConfigurationRecord { }
-    public class EVCDecoderConfigurationRecord { }
-    public class VvcDecoderConfigurationRecord { }
-    public class EVCSliceComponentTrackConfigurationRecord { }
-    public class VvcOperatingPointsRecord { }
-    public abstract class MPEG4BitRateBox : Box { }
     public abstract class ViewPriorityBox : Box { }
     public class DependencyInfo { }
     public abstract class SampleConstructor : Box { }
     public abstract class InlineConstructor : Box { }
-    public abstract class NALUStartInlineConstructor : Box { }
     public abstract class SampleConstructorFromTrackGroup : Box { }
-    public class VVCSubpicIDRewritingInfomationStruct { }
     public abstract class IPMPControlBox : Box { }
     public abstract class UniDrcConfigExtension : Box { }
     public abstract class MetadataKeyBox : Box { }
+
+    public class LHEVCDecoderConfigurationRecord { }
+    public class HEVCDecoderConfigurationRecord { }
+    public class HEVCTileTierLevelConfigurationRecord { }
+    public class AVCDecoderConfigurationRecord { }
+    public class MVDDecoderConfigurationRecord { }
+    public class MVCDecoderConfigurationRecord { }
+    public class SVCDecoderConfigurationRecord { }
+    public class EVCDecoderConfigurationRecord { }
+    public class EVCSliceComponentTrackConfigurationRecord { }
+    public class VvcPTLRecord { }
+    public class VvcOperatingPointsRecord { }
+    public class VvcDecoderConfigurationRecord { }
+    public class VVCSubpicIDRewritingInfomationStruct { }
+    public abstract class MPEG4BitRateBox : Box { }
+    public abstract class NALUStartInlineConstructor : Box { }
 }

@@ -6,7 +6,7 @@ namespace BoxGenerator2
 {
     public class FullBox : Box
     {
-        public override string FourCC { get { return "uuid"; } }
+        public override string FourCC { get; set; } = "uuid";
 
         protected byte version; // = v
         public byte Version { get { return version; } set { version = value; } }
@@ -961,8 +961,7 @@ namespace BoxGenerator2
 
     public class ItemInfoExtension : Box
     {
-        private string extensionType;
-        public override string FourCC { get { return extensionType; } }
+
 
         public ItemInfoExtension()
         { }
@@ -1434,9 +1433,120 @@ namespace BoxGenerator2
     }
 
 
+    public class ItemProperty : Box
+    {
+
+
+        public ItemProperty()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public class ItemFullProperty : FullBox
+    {
+
+
+        public ItemFullProperty()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public class GeneralTypeBox : Box
+    {
+
+
+        protected uint major_brand;
+        public uint MajorBrand { get { return major_brand; } set { major_brand = value; } }
+
+        protected uint minor_version;
+        public uint MinorVersion { get { return minor_version; } set { minor_version = value; } }
+
+        protected uint[] compatible_brands;  //  to end of the box
+        public uint[] CompatibleBrands { get { return compatible_brands; } set { compatible_brands = value; } }
+
+        public GeneralTypeBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.major_brand);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.minor_version);
+            boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.compatible_brands); // to end of the box
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.major_brand);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.minor_version);
+            boxSize += IsoReaderWriter.WriteUInt32Array(stream, this.compatible_brands); // to end of the box
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // major_brand
+            boxSize += 32; // minor_version
+            boxSize += 32; // compatible_brands
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
-        public override string FourCC { get { return "rssr"; } }
+        public override string FourCC { get; set; } = "rssr";
 
         protected uint SSRC;
         public uint _SSRC { get { return SSRC; } set { SSRC = value; } }
@@ -1473,7 +1583,7 @@ namespace BoxGenerator2
 
     public class timestampsynchrony : Box
     {
-        public override string FourCC { get { return "tssy"; } }
+        public override string FourCC { get; set; } = "tssy";
 
         protected byte reserved;
         public byte Reserved { get { return reserved; } set { reserved = value; } }
@@ -1516,7 +1626,7 @@ namespace BoxGenerator2
 
     public class timescaleentry : Box
     {
-        public override string FourCC { get { return "tims"; } }
+        public override string FourCC { get; set; } = "tims";
 
         protected uint timescale;
         public uint Timescale { get { return timescale; } set { timescale = value; } }
@@ -1553,7 +1663,7 @@ namespace BoxGenerator2
 
     public class timeoffset : Box
     {
-        public override string FourCC { get { return "tims"; } }
+        public override string FourCC { get; set; } = "tims";
 
         protected int offset;
         public int Offset { get { return offset; } set { offset = value; } }
@@ -1590,7 +1700,7 @@ namespace BoxGenerator2
 
     public class sequenceoffset : Box
     {
-        public override string FourCC { get { return "tims"; } }
+        public override string FourCC { get; set; } = "tims";
 
         protected int offset;
         public int Offset { get { return offset; } set { offset = value; } }
@@ -1627,7 +1737,7 @@ namespace BoxGenerator2
 
     public class timescaleentry1 : Box
     {
-        public override string FourCC { get { return "tsro"; } }
+        public override string FourCC { get; set; } = "tsro";
 
         protected uint timescale;
         public uint Timescale { get { return timescale; } set { timescale = value; } }
@@ -1664,7 +1774,7 @@ namespace BoxGenerator2
 
     public class timeoffset1 : Box
     {
-        public override string FourCC { get { return "tsro"; } }
+        public override string FourCC { get; set; } = "tsro";
 
         protected int offset;
         public int Offset { get { return offset; } set { offset = value; } }
@@ -1701,7 +1811,7 @@ namespace BoxGenerator2
 
     public class sequenceoffset1 : Box
     {
-        public override string FourCC { get { return "tsro"; } }
+        public override string FourCC { get; set; } = "tsro";
 
         protected int offset;
         public int Offset { get { return offset; } set { offset = value; } }
@@ -1738,7 +1848,7 @@ namespace BoxGenerator2
 
     public class timescaleentry2 : Box
     {
-        public override string FourCC { get { return "snro"; } }
+        public override string FourCC { get; set; } = "snro";
 
         protected uint timescale;
         public uint Timescale { get { return timescale; } set { timescale = value; } }
@@ -1775,7 +1885,7 @@ namespace BoxGenerator2
 
     public class timeoffset2 : Box
     {
-        public override string FourCC { get { return "snro"; } }
+        public override string FourCC { get; set; } = "snro";
 
         protected int offset;
         public int Offset { get { return offset; } set { offset = value; } }
@@ -1812,7 +1922,7 @@ namespace BoxGenerator2
 
     public class sequenceoffset2 : Box
     {
-        public override string FourCC { get { return "snro"; } }
+        public override string FourCC { get; set; } = "snro";
 
         protected int offset;
         public int Offset { get { return offset; } set { offset = value; } }
@@ -1849,7 +1959,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent : Box
     {
-        public override string FourCC { get { return "trpy"; } }
+        public override string FourCC { get; set; } = "trpy";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -1886,7 +1996,7 @@ namespace BoxGenerator2
 
     public class hintPacketsSent : Box
     {
-        public override string FourCC { get { return "trpy"; } }
+        public override string FourCC { get; set; } = "trpy";
 
         protected ulong packetssent;
         public ulong Packetssent { get { return packetssent; } set { packetssent = value; } }
@@ -1923,7 +2033,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent1 : Box
     {
-        public override string FourCC { get { return "trpy"; } }
+        public override string FourCC { get; set; } = "trpy";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -1960,7 +2070,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent2 : Box
     {
-        public override string FourCC { get { return "nump"; } }
+        public override string FourCC { get; set; } = "nump";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -1997,7 +2107,7 @@ namespace BoxGenerator2
 
     public class hintPacketsSent1 : Box
     {
-        public override string FourCC { get { return "nump"; } }
+        public override string FourCC { get; set; } = "nump";
 
         protected ulong packetssent;
         public ulong Packetssent { get { return packetssent; } set { packetssent = value; } }
@@ -2034,7 +2144,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent3 : Box
     {
-        public override string FourCC { get { return "nump"; } }
+        public override string FourCC { get; set; } = "nump";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2071,7 +2181,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent4 : Box
     {
-        public override string FourCC { get { return "tpyl"; } }
+        public override string FourCC { get; set; } = "tpyl";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2108,7 +2218,7 @@ namespace BoxGenerator2
 
     public class hintPacketsSent2 : Box
     {
-        public override string FourCC { get { return "tpyl"; } }
+        public override string FourCC { get; set; } = "tpyl";
 
         protected ulong packetssent;
         public ulong Packetssent { get { return packetssent; } set { packetssent = value; } }
@@ -2145,7 +2255,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent5 : Box
     {
-        public override string FourCC { get { return "tpyl"; } }
+        public override string FourCC { get; set; } = "tpyl";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2182,7 +2292,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent6 : Box
     {
-        public override string FourCC { get { return "totl"; } }
+        public override string FourCC { get; set; } = "totl";
 
         protected uint bytessent;
         public uint Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2219,7 +2329,7 @@ namespace BoxGenerator2
 
     public class hintPacketsSent3 : Box
     {
-        public override string FourCC { get { return "totl"; } }
+        public override string FourCC { get; set; } = "totl";
 
         protected uint packetssent;
         public uint Packetssent { get { return packetssent; } set { packetssent = value; } }
@@ -2256,7 +2366,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent7 : Box
     {
-        public override string FourCC { get { return "totl"; } }
+        public override string FourCC { get; set; } = "totl";
 
         protected uint bytessent;
         public uint Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2293,7 +2403,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent8 : Box
     {
-        public override string FourCC { get { return "npck"; } }
+        public override string FourCC { get; set; } = "npck";
 
         protected uint bytessent;
         public uint Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2330,7 +2440,7 @@ namespace BoxGenerator2
 
     public class hintPacketsSent4 : Box
     {
-        public override string FourCC { get { return "npck"; } }
+        public override string FourCC { get; set; } = "npck";
 
         protected uint packetssent;
         public uint Packetssent { get { return packetssent; } set { packetssent = value; } }
@@ -2367,7 +2477,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent9 : Box
     {
-        public override string FourCC { get { return "npck"; } }
+        public override string FourCC { get; set; } = "npck";
 
         protected uint bytessent;
         public uint Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2404,7 +2514,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent10 : Box
     {
-        public override string FourCC { get { return "tpay"; } }
+        public override string FourCC { get; set; } = "tpay";
 
         protected uint bytessent;
         public uint Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2441,7 +2551,7 @@ namespace BoxGenerator2
 
     public class hintPacketsSent5 : Box
     {
-        public override string FourCC { get { return "tpay"; } }
+        public override string FourCC { get; set; } = "tpay";
 
         protected uint packetssent;
         public uint Packetssent { get { return packetssent; } set { packetssent = value; } }
@@ -2478,7 +2588,7 @@ namespace BoxGenerator2
 
     public class hintBytesSent11 : Box
     {
-        public override string FourCC { get { return "tpay"; } }
+        public override string FourCC { get; set; } = "tpay";
 
         protected uint bytessent;
         public uint Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2515,7 +2625,7 @@ namespace BoxGenerator2
 
     public class hintmaxrate : Box
     {
-        public override string FourCC { get { return "maxr"; } }
+        public override string FourCC { get; set; } = "maxr";
 
         protected uint period;  //  in milliseconds
         public uint Period { get { return period; } set { period = value; } }
@@ -2561,7 +2671,7 @@ namespace BoxGenerator2
 
     public class hintmediaBytesSent : Box
     {
-        public override string FourCC { get { return "dmed"; } }
+        public override string FourCC { get; set; } = "dmed";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2598,7 +2708,7 @@ namespace BoxGenerator2
 
     public class hintimmediateBytesSent : Box
     {
-        public override string FourCC { get { return "dmed"; } }
+        public override string FourCC { get; set; } = "dmed";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2635,7 +2745,7 @@ namespace BoxGenerator2
 
     public class hintrepeatedBytesSent : Box
     {
-        public override string FourCC { get { return "dmed"; } }
+        public override string FourCC { get; set; } = "dmed";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2672,7 +2782,7 @@ namespace BoxGenerator2
 
     public class hintmediaBytesSent1 : Box
     {
-        public override string FourCC { get { return "dimm"; } }
+        public override string FourCC { get; set; } = "dimm";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2709,7 +2819,7 @@ namespace BoxGenerator2
 
     public class hintimmediateBytesSent1 : Box
     {
-        public override string FourCC { get { return "dimm"; } }
+        public override string FourCC { get; set; } = "dimm";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2746,7 +2856,7 @@ namespace BoxGenerator2
 
     public class hintrepeatedBytesSent1 : Box
     {
-        public override string FourCC { get { return "dimm"; } }
+        public override string FourCC { get; set; } = "dimm";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2783,7 +2893,7 @@ namespace BoxGenerator2
 
     public class hintmediaBytesSent2 : Box
     {
-        public override string FourCC { get { return "drep"; } }
+        public override string FourCC { get; set; } = "drep";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2820,7 +2930,7 @@ namespace BoxGenerator2
 
     public class hintimmediateBytesSent2 : Box
     {
-        public override string FourCC { get { return "drep"; } }
+        public override string FourCC { get; set; } = "drep";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2857,7 +2967,7 @@ namespace BoxGenerator2
 
     public class hintrepeatedBytesSent2 : Box
     {
-        public override string FourCC { get { return "drep"; } }
+        public override string FourCC { get; set; } = "drep";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
@@ -2894,7 +3004,7 @@ namespace BoxGenerator2
 
     public class hintminrelativetime : Box
     {
-        public override string FourCC { get { return "tmin"; } }
+        public override string FourCC { get; set; } = "tmin";
 
         protected int time;
         public int Time { get { return time; } set { time = value; } }
@@ -2931,7 +3041,7 @@ namespace BoxGenerator2
 
     public class hintmaxrelativetime : Box
     {
-        public override string FourCC { get { return "tmin"; } }
+        public override string FourCC { get; set; } = "tmin";
 
         protected int time;
         public int Time { get { return time; } set { time = value; } }
@@ -2968,7 +3078,7 @@ namespace BoxGenerator2
 
     public class hintminrelativetime1 : Box
     {
-        public override string FourCC { get { return "tmax"; } }
+        public override string FourCC { get; set; } = "tmax";
 
         protected int time;
         public int Time { get { return time; } set { time = value; } }
@@ -3005,7 +3115,7 @@ namespace BoxGenerator2
 
     public class hintmaxrelativetime1 : Box
     {
-        public override string FourCC { get { return "tmax"; } }
+        public override string FourCC { get; set; } = "tmax";
 
         protected int time;
         public int Time { get { return time; } set { time = value; } }
@@ -3042,7 +3152,7 @@ namespace BoxGenerator2
 
     public class hintlargestpacket : Box
     {
-        public override string FourCC { get { return "pmax"; } }
+        public override string FourCC { get; set; } = "pmax";
 
         protected uint bytes;
         public uint Bytes { get { return bytes; } set { bytes = value; } }
@@ -3079,7 +3189,7 @@ namespace BoxGenerator2
 
     public class hintlongestpacket : Box
     {
-        public override string FourCC { get { return "pmax"; } }
+        public override string FourCC { get; set; } = "pmax";
 
         protected uint time;
         public uint Time { get { return time; } set { time = value; } }
@@ -3116,7 +3226,7 @@ namespace BoxGenerator2
 
     public class hintlargestpacket1 : Box
     {
-        public override string FourCC { get { return "dmax"; } }
+        public override string FourCC { get; set; } = "dmax";
 
         protected uint bytes;
         public uint Bytes { get { return bytes; } set { bytes = value; } }
@@ -3153,7 +3263,7 @@ namespace BoxGenerator2
 
     public class hintlongestpacket1 : Box
     {
-        public override string FourCC { get { return "dmax"; } }
+        public override string FourCC { get; set; } = "dmax";
 
         protected uint time;
         public uint Time { get { return time; } set { time = value; } }
@@ -3190,7 +3300,7 @@ namespace BoxGenerator2
 
     public class hintpayloadID : Box
     {
-        public override string FourCC { get { return "payt"; } }
+        public override string FourCC { get; set; } = "payt";
 
         protected uint payloadID;  //  payload ID used in RTP packets
         public uint PayloadID { get { return payloadID; } set { payloadID = value; } }
@@ -3239,7 +3349,7 @@ namespace BoxGenerator2
 
     public class StereoVideoBox : FullBox
     {
-        public override string FourCC { get { return "stvi"; } }
+        public override string FourCC { get; set; } = "stvi";
 
         protected uint reserved = 0;
         public uint Reserved { get { return reserved; } set { reserved = value; } }
@@ -3306,7 +3416,7 @@ namespace BoxGenerator2
 
     public class ExtendedLanguageBox : FullBox
     {
-        public override string FourCC { get { return "elng"; } }
+        public override string FourCC { get; set; } = "elng";
 
         protected string extended_language;
         public string ExtendedLanguage { get { return extended_language; } set { extended_language = value; } }
@@ -3343,7 +3453,7 @@ namespace BoxGenerator2
 
     public class BitRateBox : Box
     {
-        public override string FourCC { get { return "btrt"; } }
+        public override string FourCC { get; set; } = "btrt";
 
         protected uint bufferSizeDB;
         public uint BufferSizeDB { get { return bufferSizeDB; } set { bufferSizeDB = value; } }
@@ -3392,7 +3502,7 @@ namespace BoxGenerator2
 
     public class PixelAspectRatioBox : Box
     {
-        public override string FourCC { get { return "pasp"; } }
+        public override string FourCC { get; set; } = "pasp";
 
         protected uint hSpacing;
         public uint HSpacing { get { return hSpacing; } set { hSpacing = value; } }
@@ -3435,7 +3545,7 @@ namespace BoxGenerator2
 
     public class CleanApertureBox : Box
     {
-        public override string FourCC { get { return "clap"; } }
+        public override string FourCC { get; set; } = "clap";
 
         protected uint cleanApertureWidthN;
         public uint CleanApertureWidthN { get { return cleanApertureWidthN; } set { cleanApertureWidthN = value; } }
@@ -3514,7 +3624,7 @@ namespace BoxGenerator2
 
     public class ContentColourVolumeBox : Box
     {
-        public override string FourCC { get { return "cclv"; } }
+        public override string FourCC { get; set; } = "cclv";
 
         protected bool reserved1 = false;  //  ccv_cancel_flag
         public bool Reserved1 { get { return reserved1; } set { reserved1 = value; } }
@@ -3677,7 +3787,7 @@ namespace BoxGenerator2
 
     public class ColourInformationBox : Box
     {
-        public override string FourCC { get { return "colr"; } }
+        public override string FourCC { get; set; } = "colr";
 
         protected uint colour_type;
         public uint ColourType { get { return colour_type; } set { colour_type = value; } }
@@ -3792,7 +3902,7 @@ namespace BoxGenerator2
 
     public class ContentLightLevelBox : Box
     {
-        public override string FourCC { get { return "clli"; } }
+        public override string FourCC { get; set; } = "clli";
 
         protected ushort max_content_light_level;
         public ushort MaxContentLightLevel { get { return max_content_light_level; } set { max_content_light_level = value; } }
@@ -3835,7 +3945,7 @@ namespace BoxGenerator2
 
     public class MasteringDisplayColourVolumeBox : Box
     {
-        public override string FourCC { get { return "mdcv"; } }
+        public override string FourCC { get; set; } = "mdcv";
 
         protected ushort display_primaries_x;
         public ushort DisplayPrimariesX { get { return display_primaries_x; } set { display_primaries_x = value; } }
@@ -3914,7 +4024,7 @@ namespace BoxGenerator2
 
     public class ScrambleSchemeInfoBox : Box
     {
-        public override string FourCC { get { return "scrb"; } }
+        public override string FourCC { get; set; } = "scrb";
 
         protected SchemeTypeBox scheme_type_box;
         public SchemeTypeBox SchemeTypeBox { get { return scheme_type_box; } set { scheme_type_box = value; } }
@@ -3957,7 +4067,7 @@ namespace BoxGenerator2
 
     public class ChannelLayout : FullBox
     {
-        public override string FourCC { get { return "chnl"; } }
+        public override string FourCC { get; set; } = "chnl";
 
         protected byte stream_structure;
         public byte StreamStructure { get { return stream_structure; } set { stream_structure = value; } }
@@ -4294,7 +4404,7 @@ namespace BoxGenerator2
 
     public class DownMixInstructions : FullBox
     {
-        public override string FourCC { get { return "dmix"; } }
+        public override string FourCC { get; set; } = "dmix";
 
         protected bool reserved = false;
         public bool Reserved { get { return reserved; } set { reserved = value; } }
@@ -4532,7 +4642,7 @@ namespace BoxGenerator2
 
     public class SamplingRateBox : FullBox
     {
-        public override string FourCC { get { return "srat"; } }
+        public override string FourCC { get; set; } = "srat";
 
         protected uint sampling_rate;
         public uint SamplingRate { get { return sampling_rate; } set { sampling_rate = value; } }
@@ -4569,7 +4679,7 @@ namespace BoxGenerator2
 
     public class TextConfigBox : FullBox
     {
-        public override string FourCC { get { return "txtC"; } }
+        public override string FourCC { get; set; } = "txtC";
 
         protected string text_config;
         public string TextConfig { get { return text_config; } set { text_config = value; } }
@@ -4606,7 +4716,7 @@ namespace BoxGenerator2
 
     public class URIInitBox1 : FullBox
     {
-        public override string FourCC { get { return "uriI"; } }
+        public override string FourCC { get; set; } = "uriI";
 
         protected byte[] uri_initialization_data;
         public byte[] UriInitializationData { get { return uri_initialization_data; } set { uri_initialization_data = value; } }
@@ -4643,7 +4753,7 @@ namespace BoxGenerator2
 
     public class CopyrightBox : FullBox
     {
-        public override string FourCC { get { return "cprt"; } }
+        public override string FourCC { get; set; } = "cprt";
 
         protected bool pad = false;
         public bool Pad { get { return pad; } set { pad = value; } }
@@ -4692,7 +4802,7 @@ namespace BoxGenerator2
 
     public class KindBox : FullBox
     {
-        public override string FourCC { get { return "kind"; } }
+        public override string FourCC { get; set; } = "kind";
 
         protected string schemeURI;
         public string SchemeURI { get { return schemeURI; } set { schemeURI = value; } }
@@ -4735,7 +4845,7 @@ namespace BoxGenerator2
 
     public class TrackSelectionBox : FullBox
     {
-        public override string FourCC { get { return "tsel"; } }
+        public override string FourCC { get; set; } = "tsel";
 
         protected int switch_group = 0;
         public int SwitchGroup { get { return switch_group; } set { switch_group = value; } }
@@ -4778,7 +4888,7 @@ namespace BoxGenerator2
 
     public class SubTrackBox : Box
     {
-        public override string FourCC { get { return "strk"; } }
+        public override string FourCC { get; set; } = "strk";
 
         public SubTrackBox()
         { }
@@ -4812,7 +4922,7 @@ namespace BoxGenerator2
 
     public class trackhintinformation : Box
     {
-        public override string FourCC { get { return "hnti"; } }
+        public override string FourCC { get; set; } = "hnti";
 
         public trackhintinformation()
         { }
@@ -4846,7 +4956,7 @@ namespace BoxGenerator2
 
     public class rtptracksdphintinformation : Box
     {
-        public override string FourCC { get { return "hnti"; } }
+        public override string FourCC { get; set; } = "hnti";
 
         protected sbyte[] sdptext;
         public sbyte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
@@ -4886,7 +4996,7 @@ namespace BoxGenerator2
 
     public class trackhintinformation1 : Box
     {
-        public override string FourCC { get { return "sdp "; } }
+        public override string FourCC { get; set; } = "sdp ";
 
         public trackhintinformation1()
         { }
@@ -4917,7 +5027,7 @@ namespace BoxGenerator2
 
     public class rtptracksdphintinformation1 : Box
     {
-        public override string FourCC { get { return "sdp "; } }
+        public override string FourCC { get; set; } = "sdp ";
 
         protected sbyte[] sdptext;
         public sbyte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
@@ -4954,7 +5064,7 @@ namespace BoxGenerator2
 
     public class moviehintinformation : Box
     {
-        public override string FourCC { get { return "rtp "; } }
+        public override string FourCC { get; set; } = "rtp ";
 
         public moviehintinformation()
         { }
@@ -4988,7 +5098,7 @@ namespace BoxGenerator2
 
     public class rtpmoviehintinformation : Box
     {
-        public override string FourCC { get { return "rtp "; } }
+        public override string FourCC { get; set; } = "rtp ";
 
         protected uint descriptionformat = IsoReaderWriter.FromFourCC("sdp ");
         public uint Descriptionformat { get { return descriptionformat; } set { descriptionformat = value; } }
@@ -5034,7 +5144,7 @@ namespace BoxGenerator2
 
     public class hintstatisticsbox : Box
     {
-        public override string FourCC { get { return "hinf"; } }
+        public override string FourCC { get; set; } = "hinf";
 
         public hintstatisticsbox()
         { }
@@ -5068,7 +5178,7 @@ namespace BoxGenerator2
 
     public class LoudnessBox : Box
     {
-        public override string FourCC { get { return "ludt"; } }
+        public override string FourCC { get; set; } = "ludt";
 
         protected TrackLoudnessInfo[] loudness;  //  not more than one AlbumLoudnessInfo box with version>=1 is allowed
         public TrackLoudnessInfo[] Loudness { get { return loudness; } set { loudness = value; } }
@@ -5117,7 +5227,7 @@ namespace BoxGenerator2
 
     public class TrackLoudnessInfo1 : LoudnessBaseBox
     {
-        public override string FourCC { get { return "tlou"; } }
+        public override string FourCC { get; set; } = "tlou";
 
         public TrackLoudnessInfo1()
         { }
@@ -5148,7 +5258,7 @@ namespace BoxGenerator2
 
     public class AlbumLoudnessInfo1 : LoudnessBaseBox
     {
-        public override string FourCC { get { return "alou"; } }
+        public override string FourCC { get; set; } = "alou";
 
         public AlbumLoudnessInfo1()
         { }
@@ -5179,7 +5289,7 @@ namespace BoxGenerator2
 
     public class DataEntryUrlBox : DataEntryBaseBox
     {
-        public override string FourCC { get { return "url "; } }
+        public override string FourCC { get; set; } = "url ";
 
         protected string location;
         public string Location { get { return location; } set { location = value; } }
@@ -5216,7 +5326,7 @@ namespace BoxGenerator2
 
     public class DataEntryUrnBox : DataEntryBaseBox
     {
-        public override string FourCC { get { return "urn "; } }
+        public override string FourCC { get; set; } = "urn ";
 
         protected string name;
         public string Name { get { return name; } set { name = value; } }
@@ -5259,7 +5369,7 @@ namespace BoxGenerator2
 
     public class DataEntryImdaBox : DataEntryBaseBox
     {
-        public override string FourCC { get { return "imdt"; } }
+        public override string FourCC { get; set; } = "imdt";
 
         protected uint imda_ref_identifier;
         public uint ImdaRefIdentifier { get { return imda_ref_identifier; } set { imda_ref_identifier = value; } }
@@ -5296,7 +5406,7 @@ namespace BoxGenerator2
 
     public class DataEntrySeqNumImdaBox : DataEntryBaseBox
     {
-        public override string FourCC { get { return "snim"; } }
+        public override string FourCC { get; set; } = "snim";
 
         public DataEntrySeqNumImdaBox()
         { }
@@ -5327,7 +5437,7 @@ namespace BoxGenerator2
 
     public class ItemPropertyContainerBox : Box
     {
-        public override string FourCC { get { return "ipco"; } }
+        public override string FourCC { get; set; } = "ipco";
 
         protected Box[] properties;  //  boxes derived from
         public Box[] Properties { get { return properties; } set { properties = value; } }
@@ -5373,7 +5483,7 @@ namespace BoxGenerator2
 
     public class ItemPropertyAssociationBox : FullBox
     {
-        public override string FourCC { get { return "ipma"; } }
+        public override string FourCC { get; set; } = "ipma";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -5518,7 +5628,7 @@ namespace BoxGenerator2
 
     public class ItemPropertiesBox : Box
     {
-        public override string FourCC { get { return "iprp"; } }
+        public override string FourCC { get; set; } = "iprp";
 
         protected ItemPropertyContainerBox property_container;
         public ItemPropertyContainerBox PropertyContainer { get { return property_container; } set { property_container = value; } }
@@ -5564,7 +5674,7 @@ namespace BoxGenerator2
 
     public class AlternativeStartupSequencePropertiesBox : FullBox
     {
-        public override string FourCC { get { return "assp"; } }
+        public override string FourCC { get; set; } = "assp";
 
         protected int min_initial_alt_startup_offset;
         public int MinInitialAltStartupOffset { get { return min_initial_alt_startup_offset; } set { min_initial_alt_startup_offset = value; } }
@@ -5655,7 +5765,7 @@ namespace BoxGenerator2
 
     public class BinaryXMLBox : FullBox
     {
-        public override string FourCC { get { return "bxml"; } }
+        public override string FourCC { get; set; } = "bxml";
 
         protected byte[] data;  //  to end of box
         public byte[] Data { get { return data; } set { data = value; } }
@@ -5692,7 +5802,7 @@ namespace BoxGenerator2
 
     public class CompleteTrackInfoBox : Box
     {
-        public override string FourCC { get { return "cinf"; } }
+        public override string FourCC { get; set; } = "cinf";
 
         protected OriginalFormatBox original_format;
         public OriginalFormatBox OriginalFormat { get { return original_format; } set { original_format = value; } }
@@ -5729,7 +5839,7 @@ namespace BoxGenerator2
 
     public class ChunkLargeOffsetBox : FullBox
     {
-        public override string FourCC { get { return "co64"; } }
+        public override string FourCC { get; set; } = "co64";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -5784,7 +5894,7 @@ namespace BoxGenerator2
 
     public class CompactSampleToGroupBox : FullBox
     {
-        public override string FourCC { get { return "csgp"; } }
+        public override string FourCC { get; set; } = "csgp";
 
         protected uint grouping_type;
         public uint GroupingType { get { return grouping_type; } set { grouping_type = value; } }
@@ -5917,7 +6027,7 @@ namespace BoxGenerator2
 
     public class CompositionToDecodeBox : FullBox
     {
-        public override string FourCC { get { return "cslg"; } }
+        public override string FourCC { get; set; } = "cslg";
 
         protected int compositionToDTSShift;
         public int CompositionToDTSShift { get { return compositionToDTSShift; } set { compositionToDTSShift = value; } }
@@ -6032,7 +6142,7 @@ namespace BoxGenerator2
 
     public class CompositionOffsetBox : FullBox
     {
-        public override string FourCC { get { return "ctts"; } }
+        public override string FourCC { get; set; } = "ctts";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -6144,7 +6254,7 @@ namespace BoxGenerator2
 
     public class DataInformationBox : Box
     {
-        public override string FourCC { get { return "dinf"; } }
+        public override string FourCC { get; set; } = "dinf";
 
         public DataInformationBox()
         { }
@@ -6178,7 +6288,7 @@ namespace BoxGenerator2
 
     public class DataReferenceBox : FullBox
     {
-        public override string FourCC { get { return "dref"; } }
+        public override string FourCC { get; set; } = "dref";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -6236,7 +6346,7 @@ namespace BoxGenerator2
 
     public class EditBox : Box
     {
-        public override string FourCC { get { return "edts"; } }
+        public override string FourCC { get; set; } = "edts";
 
         public EditBox()
         { }
@@ -6270,7 +6380,7 @@ namespace BoxGenerator2
 
     public class EditListBox : FullBox
     {
-        public override string FourCC { get { return "elst"; } }
+        public override string FourCC { get; set; } = "elst";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -6382,7 +6492,7 @@ namespace BoxGenerator2
 
     public class ExtendedTypeBox : Box
     {
-        public override string FourCC { get { return "etyp"; } }
+        public override string FourCC { get; set; } = "etyp";
 
         protected TypeCombinationBox[] compatible_combinations;  //  to end of the box
         public TypeCombinationBox[] CompatibleCombinations { get { return compatible_combinations; } set { compatible_combinations = value; } }
@@ -6422,7 +6532,7 @@ namespace BoxGenerator2
 
     public class FDItemInfoExtension1 : ItemInfoExtension
     {
-        public override string FourCC { get { return "fdel"; } }
+        public override string FourCC { get; set; } = "fdel";
 
         protected string content_location;
         public string ContentLocation { get { return content_location; } set { content_location = value; } }
@@ -6501,7 +6611,7 @@ namespace BoxGenerator2
 
     public class FECReservoirBox : FullBox
     {
-        public override string FourCC { get { return "fecr"; } }
+        public override string FourCC { get; set; } = "fecr";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -6622,7 +6732,7 @@ namespace BoxGenerator2
 
     public class PartitionEntry : Box
     {
-        public override string FourCC { get { return "fiin"; } }
+        public override string FourCC { get; set; } = "fiin";
 
         protected FilePartitionBox blocks_and_symbols;
         public FilePartitionBox BlocksAndSymbols { get { return blocks_and_symbols; } set { blocks_and_symbols = value; } }
@@ -6674,7 +6784,7 @@ namespace BoxGenerator2
 
     public class FDItemInformationBox : FullBox
     {
-        public override string FourCC { get { return "fiin"; } }
+        public override string FourCC { get; set; } = "fiin";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -6732,7 +6842,7 @@ namespace BoxGenerator2
 
     public class FileReservoirBox : FullBox
     {
-        public override string FourCC { get { return "fire"; } }
+        public override string FourCC { get; set; } = "fire";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -6853,7 +6963,7 @@ namespace BoxGenerator2
 
     public class FilePartitionBox : FullBox
     {
-        public override string FourCC { get { return "fpar"; } }
+        public override string FourCC { get; set; } = "fpar";
 
         protected ushort item_ID;
         public ushort ItemID { get { return item_ID; } set { item_ID = value; } }
@@ -7028,7 +7138,7 @@ namespace BoxGenerator2
 
     public class FreeSpaceBox : Box
     {
-        public override string FourCC { get { return "free"; } }
+        public override string FourCC { get; set; } = "free";
 
         protected byte[] data;
         public byte[] Data { get { return data; } set { data = value; } }
@@ -7065,7 +7175,7 @@ namespace BoxGenerator2
 
     public class OriginalFormatBox : Box
     {
-        public override string FourCC { get { return "frma"; } }
+        public override string FourCC { get; set; } = "frma";
 
         protected uint data_format; // = codingname
         public uint DataFormat { get { return data_format; } set { data_format = value; } }
@@ -7108,7 +7218,7 @@ namespace BoxGenerator2
 
     public class FileTypeBox : Box
     {
-        public override string FourCC { get { return "ftyp"; } }
+        public override string FourCC { get; set; } = "ftyp";
 
         protected uint major_brand;
         public uint MajorBrand { get { return major_brand; } set { major_brand = value; } }
@@ -7157,7 +7267,7 @@ namespace BoxGenerator2
 
     public class GroupIdToNameBox : FullBox
     {
-        public override string FourCC { get { return "gitn"; } }
+        public override string FourCC { get; set; } = "gitn";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -7218,7 +7328,7 @@ namespace BoxGenerator2
 
     public class GroupsListBox : Box
     {
-        public override string FourCC { get { return "grpl"; } }
+        public override string FourCC { get; set; } = "grpl";
 
         public GroupsListBox()
         { }
@@ -7252,7 +7362,7 @@ namespace BoxGenerator2
 
     public class HandlerBox : FullBox
     {
-        public override string FourCC { get { return "hdlr"; } }
+        public override string FourCC { get; set; } = "hdlr";
 
         protected uint pre_defined = 0;
         public uint PreDefined { get { return pre_defined; } set { pre_defined = value; } }
@@ -7307,7 +7417,7 @@ namespace BoxGenerator2
 
     public class HintMediaHeaderBox : FullBox
     {
-        public override string FourCC { get { return "hmhd"; } }
+        public override string FourCC { get; set; } = "hmhd";
 
         protected ushort maxPDUsize;
         public ushort MaxPDUsize { get { return maxPDUsize; } set { maxPDUsize = value; } }
@@ -7368,7 +7478,7 @@ namespace BoxGenerator2
 
     public class ItemDataBox : Box
     {
-        public override string FourCC { get { return "idat"; } }
+        public override string FourCC { get; set; } = "idat";
 
         protected byte[] data;
         public byte[] Data { get { return data; } set { data = value; } }
@@ -7405,7 +7515,7 @@ namespace BoxGenerator2
 
     public class ItemInfoBox1 : FullBox
     {
-        public override string FourCC { get { return "iinf"; } }
+        public override string FourCC { get; set; } = "iinf";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -7481,7 +7591,7 @@ namespace BoxGenerator2
 
     public class ItemLocationBox : FullBox
     {
-        public override string FourCC { get { return "iloc"; } }
+        public override string FourCC { get; set; } = "iloc";
 
         protected byte offset_size;
         public byte OffsetSize { get { return offset_size; } set { offset_size = value; } }
@@ -7734,7 +7844,7 @@ namespace BoxGenerator2
 
     public class IdentifiedMediaDataBox : Box
     {
-        public override string FourCC { get { return "imda"; } }
+        public override string FourCC { get; set; } = "imda";
 
         protected uint imda_identifier;
         public uint ImdaIdentifier { get { return imda_identifier; } set { imda_identifier = value; } }
@@ -7777,7 +7887,7 @@ namespace BoxGenerator2
 
     public class ItemInfoEntry1 : FullBox
     {
-        public override string FourCC { get { return "infe"; } }
+        public override string FourCC { get; set; } = "infe";
 
         protected ushort item_ID;
         public ushort ItemID { get { return item_ID; } set { item_ID = value; } }
@@ -7985,7 +8095,7 @@ namespace BoxGenerator2
 
     public class ItemProtectionBox : FullBox
     {
-        public override string FourCC { get { return "ipro"; } }
+        public override string FourCC { get; set; } = "ipro";
 
         protected ushort protection_count;
         public ushort ProtectionCount { get { return protection_count; } set { protection_count = value; } }
@@ -8043,7 +8153,7 @@ namespace BoxGenerator2
 
     public class ItemReferenceBox : FullBox
     {
-        public override string FourCC { get { return "iref"; } }
+        public override string FourCC { get; set; } = "iref";
 
         protected SingleItemTypeReferenceBox[] references;
         public SingleItemTypeReferenceBox[] References { get { return references; } set { references = value; } }
@@ -8113,7 +8223,7 @@ namespace BoxGenerator2
 
     public class LevelAssignmentBox : FullBox
     {
-        public override string FourCC { get { return "leva"; } }
+        public override string FourCC { get; set; } = "leva";
 
         protected byte level_count;
         public byte LevelCount { get { return level_count; } set { level_count = value; } }
@@ -8273,7 +8383,7 @@ namespace BoxGenerator2
 
     public class MediaDataBox : Box
     {
-        public override string FourCC { get { return "mdat"; } }
+        public override string FourCC { get; set; } = "mdat";
 
         protected byte[] data;
         public byte[] Data { get { return data; } set { data = value; } }
@@ -8310,7 +8420,7 @@ namespace BoxGenerator2
 
     public class MediaHeaderBox : FullBox
     {
-        public override string FourCC { get { return "mdhd"; } }
+        public override string FourCC { get; set; } = "mdhd";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return creation_time; } set { creation_time = value; } }
@@ -8434,7 +8544,7 @@ namespace BoxGenerator2
 
     public class MediaBox : Box
     {
-        public override string FourCC { get { return "mdia"; } }
+        public override string FourCC { get; set; } = "mdia";
 
         public MediaBox()
         { }
@@ -8468,7 +8578,7 @@ namespace BoxGenerator2
 
     public class MovieExtendsHeaderBox : FullBox
     {
-        public override string FourCC { get { return "mehd"; } }
+        public override string FourCC { get; set; } = "mehd";
 
         protected ulong fragment_duration;
         public ulong FragmentDuration { get { return fragment_duration; } set { fragment_duration = value; } }
@@ -8538,7 +8648,7 @@ namespace BoxGenerator2
 
     public class MetaBox : FullBox
     {
-        public override string FourCC { get { return "meta"; } }
+        public override string FourCC { get; set; } = "meta";
 
         protected HandlerBox theHandler;
         public HandlerBox TheHandler { get { return theHandler; } set { theHandler = value; } }
@@ -8632,7 +8742,7 @@ namespace BoxGenerator2
 
     public class MovieFragmentHeaderBox : FullBox
     {
-        public override string FourCC { get { return "mfhd"; } }
+        public override string FourCC { get; set; } = "mfhd";
 
         protected uint sequence_number;
         public uint SequenceNumber { get { return sequence_number; } set { sequence_number = value; } }
@@ -8669,7 +8779,7 @@ namespace BoxGenerator2
 
     public class MovieFragmentRandomAccessBox : Box
     {
-        public override string FourCC { get { return "mfra"; } }
+        public override string FourCC { get; set; } = "mfra";
 
         public MovieFragmentRandomAccessBox()
         { }
@@ -8703,7 +8813,7 @@ namespace BoxGenerator2
 
     public class MovieFragmentRandomAccessOffsetBox : FullBox
     {
-        public override string FourCC { get { return "mfro"; } }
+        public override string FourCC { get; set; } = "mfro";
 
         protected uint parent_size;
         public uint ParentSize { get { return parent_size; } set { parent_size = value; } }
@@ -8740,7 +8850,7 @@ namespace BoxGenerator2
 
     public class MediaInformationBox : Box
     {
-        public override string FourCC { get { return "minf"; } }
+        public override string FourCC { get; set; } = "minf";
 
         public MediaInformationBox()
         { }
@@ -8774,7 +8884,7 @@ namespace BoxGenerator2
 
     public class CompressedMovieFragmentBox : CompressedBox
     {
-        public override string FourCC { get { return "moof"; } }
+        public override string FourCC { get; set; } = "moof";
 
         public CompressedMovieFragmentBox()
         { }
@@ -8808,7 +8918,7 @@ namespace BoxGenerator2
 
     public class CompressedMovieBox : CompressedBox
     {
-        public override string FourCC { get { return "moov"; } }
+        public override string FourCC { get; set; } = "moov";
 
         public CompressedMovieBox()
         { }
@@ -8842,7 +8952,7 @@ namespace BoxGenerator2
 
     public class MovieExtendsBox : Box
     {
-        public override string FourCC { get { return "mvex"; } }
+        public override string FourCC { get; set; } = "mvex";
 
         public MovieExtendsBox()
         { }
@@ -8876,7 +8986,7 @@ namespace BoxGenerator2
 
     public class MovieHeaderBox : FullBox
     {
-        public override string FourCC { get { return "mvhd"; } }
+        public override string FourCC { get; set; } = "mvhd";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return creation_time; } set { creation_time = value; } }
@@ -9025,7 +9135,7 @@ namespace BoxGenerator2
 
     public class NullMediaHeaderBox : FullBox
     {
-        public override string FourCC { get { return "nmhd"; } }
+        public override string FourCC { get; set; } = "nmhd";
 
         public NullMediaHeaderBox()
         { }
@@ -9056,7 +9166,7 @@ namespace BoxGenerator2
 
     public class OriginalFileTypeBox : Box
     {
-        public override string FourCC { get { return "otyp"; } }
+        public override string FourCC { get; set; } = "otyp";
 
         public OriginalFileTypeBox()
         { }
@@ -9090,7 +9200,7 @@ namespace BoxGenerator2
 
     public class PaddingBitsBox : FullBox
     {
-        public override string FourCC { get { return "padb"; } }
+        public override string FourCC { get; set; } = "padb";
 
         protected uint sample_count;
         public uint SampleCount { get { return sample_count; } set { sample_count = value; } }
@@ -9166,7 +9276,7 @@ namespace BoxGenerator2
 
     public class PartitionEntry1 : Box
     {
-        public override string FourCC { get { return "paen"; } }
+        public override string FourCC { get; set; } = "paen";
 
         protected FilePartitionBox blocks_and_symbols;
         public FilePartitionBox BlocksAndSymbols { get { return blocks_and_symbols; } set { blocks_and_symbols = value; } }
@@ -9218,7 +9328,7 @@ namespace BoxGenerator2
 
     public class FDItemInformationBox1 : FullBox
     {
-        public override string FourCC { get { return "paen"; } }
+        public override string FourCC { get; set; } = "paen";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -9276,7 +9386,7 @@ namespace BoxGenerator2
 
     public class ProgressiveDownloadInfoBox : FullBox
     {
-        public override string FourCC { get { return "pdin"; } }
+        public override string FourCC { get; set; } = "pdin";
 
         protected uint rate;
         public uint Rate { get { return rate; } set { rate = value; } }
@@ -9334,7 +9444,7 @@ namespace BoxGenerator2
 
     public class PrimaryItemBox : FullBox
     {
-        public override string FourCC { get { return "pitm"; } }
+        public override string FourCC { get; set; } = "pitm";
 
         protected ushort item_ID;
         public ushort ItemID { get { return item_ID; } set { item_ID = value; } }
@@ -9401,7 +9511,7 @@ namespace BoxGenerator2
 
     public class ProducerReferenceTimeBox : FullBox
     {
-        public override string FourCC { get { return "prft"; } }
+        public override string FourCC { get; set; } = "prft";
 
         protected uint reference_track_ID;
         public uint ReferenceTrackID { get { return reference_track_ID; } set { reference_track_ID = value; } }
@@ -9480,7 +9590,7 @@ namespace BoxGenerator2
 
     public class RestrictedSchemeInfoBox : Box
     {
-        public override string FourCC { get { return "rinf"; } }
+        public override string FourCC { get; set; } = "rinf";
 
         protected OriginalFormatBox original_format;
         public OriginalFormatBox OriginalFormat { get { return original_format; } set { original_format = value; } }
@@ -9532,7 +9642,7 @@ namespace BoxGenerator2
 
     public class SampleAuxiliaryInformationOffsetsBox : FullBox
     {
-        public override string FourCC { get { return "saio"; } }
+        public override string FourCC { get; set; } = "saio";
 
         protected uint aux_info_type;
         public uint AuxInfoType { get { return aux_info_type; } set { aux_info_type = value; } }
@@ -9629,7 +9739,7 @@ namespace BoxGenerator2
 
     public class SampleAuxiliaryInformationSizesBox : FullBox
     {
-        public override string FourCC { get { return "saiz"; } }
+        public override string FourCC { get; set; } = "saiz";
 
         protected uint aux_info_type;
         public uint AuxInfoType { get { return aux_info_type; } set { aux_info_type = value; } }
@@ -9714,7 +9824,7 @@ namespace BoxGenerator2
 
     public class SampleToGroupBox : FullBox
     {
-        public override string FourCC { get { return "sbgp"; } }
+        public override string FourCC { get; set; } = "sbgp";
 
         protected uint grouping_type;
         public uint GroupingType { get { return grouping_type; } set { grouping_type = value; } }
@@ -9799,7 +9909,7 @@ namespace BoxGenerator2
 
     public class SchemeInformationBox : Box
     {
-        public override string FourCC { get { return "schi"; } }
+        public override string FourCC { get; set; } = "schi";
 
         protected Box[] scheme_specific_data;
         public Box[] SchemeSpecificData { get { return scheme_specific_data; } set { scheme_specific_data = value; } }
@@ -9839,7 +9949,7 @@ namespace BoxGenerator2
 
     public class SchemeTypeBox : FullBox
     {
-        public override string FourCC { get { return "schm"; } }
+        public override string FourCC { get; set; } = "schm";
 
         protected uint scheme_type;  //  4CC identifying the scheme
         public uint SchemeType { get { return scheme_type; } set { scheme_type = value; } }
@@ -9900,7 +10010,7 @@ namespace BoxGenerator2
 
     public class CompatibleSchemeTypeBox : FullBox
     {
-        public override string FourCC { get { return "csch"; } }
+        public override string FourCC { get; set; } = "csch";
 
         protected uint scheme_type;  //  4CC identifying the scheme
         public uint SchemeType { get { return scheme_type; } set { scheme_type = value; } }
@@ -9964,7 +10074,7 @@ namespace BoxGenerator2
 
     public class SampleDependencyTypeBox : FullBox
     {
-        public override string FourCC { get { return "sdtp"; } }
+        public override string FourCC { get; set; } = "sdtp";
 
         protected byte is_leading;
         public byte IsLeading { get { return is_leading; } set { is_leading = value; } }
@@ -10037,7 +10147,7 @@ namespace BoxGenerator2
 
     public class FDSessionGroupBox : Box
     {
-        public override string FourCC { get { return "segr"; } }
+        public override string FourCC { get; set; } = "segr";
 
         protected ushort num_session_groups;
         public ushort NumSessionGroups { get { return num_session_groups; } set { num_session_groups = value; } }
@@ -10134,7 +10244,7 @@ namespace BoxGenerator2
 
     public class SampleGroupDescriptionBox : FullBox
     {
-        public override string FourCC { get { return "sgpd"; } }
+        public override string FourCC { get; set; } = "sgpd";
 
         protected uint grouping_type;
         public uint GroupingType { get { return grouping_type; } set { grouping_type = value; } }
@@ -10270,7 +10380,7 @@ namespace BoxGenerator2
 
     public class CompressedSegmentIndexBox : CompressedBox
     {
-        public override string FourCC { get { return "sidx"; } }
+        public override string FourCC { get; set; } = "sidx";
 
         public CompressedSegmentIndexBox()
         { }
@@ -10301,7 +10411,7 @@ namespace BoxGenerator2
 
     public class ProtectionSchemeInfoBox : Box
     {
-        public override string FourCC { get { return "sinf"; } }
+        public override string FourCC { get; set; } = "sinf";
 
         protected OriginalFormatBox original_format;
         public OriginalFormatBox OriginalFormat { get { return original_format; } set { original_format = value; } }
@@ -10353,7 +10463,7 @@ namespace BoxGenerator2
 
     public class FreeSpaceBox1 : Box
     {
-        public override string FourCC { get { return "skip"; } }
+        public override string FourCC { get; set; } = "skip";
 
         protected byte[] data;
         public byte[] Data { get { return data; } set { data = value; } }
@@ -10390,7 +10500,7 @@ namespace BoxGenerator2
 
     public class SoundMediaHeaderBox : FullBox
     {
-        public override string FourCC { get { return "smhd"; } }
+        public override string FourCC { get; set; } = "smhd";
 
         protected short balance = 0;
         public short Balance { get { return balance; } set { balance = value; } }
@@ -10433,7 +10543,7 @@ namespace BoxGenerator2
 
     public class SRTPProcessBox : FullBox
     {
-        public override string FourCC { get { return "srpp"; } }
+        public override string FourCC { get; set; } = "srpp";
 
         protected uint encryption_algorithm_rtp;
         public uint EncryptionAlgorithmRtp { get { return encryption_algorithm_rtp; } set { encryption_algorithm_rtp = value; } }
@@ -10500,7 +10610,7 @@ namespace BoxGenerator2
 
     public class CompressedSubsegmentIndexBox : CompressedBox
     {
-        public override string FourCC { get { return "ssix"; } }
+        public override string FourCC { get; set; } = "ssix";
 
         public CompressedSubsegmentIndexBox()
         { }
@@ -10531,7 +10641,7 @@ namespace BoxGenerator2
 
     public class SampleTableBox : Box
     {
-        public override string FourCC { get { return "stbl"; } }
+        public override string FourCC { get; set; } = "stbl";
 
         public SampleTableBox()
         { }
@@ -10565,7 +10675,7 @@ namespace BoxGenerator2
 
     public class ChunkOffsetBox : FullBox
     {
-        public override string FourCC { get { return "stco"; } }
+        public override string FourCC { get; set; } = "stco";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -10620,7 +10730,7 @@ namespace BoxGenerator2
 
     public class DegradationPriorityBox : FullBox
     {
-        public override string FourCC { get { return "stdp"; } }
+        public override string FourCC { get; set; } = "stdp";
 
         protected ushort priority;
         public ushort Priority { get { return priority; } set { priority = value; } }
@@ -10678,7 +10788,7 @@ namespace BoxGenerator2
 
     public class SubtitleMediaHeaderBox : FullBox
     {
-        public override string FourCC { get { return "sthd"; } }
+        public override string FourCC { get; set; } = "sthd";
 
         public SubtitleMediaHeaderBox()
         { }
@@ -10709,7 +10819,7 @@ namespace BoxGenerator2
 
     public class SubTrackDefinitionBox : Box
     {
-        public override string FourCC { get { return "strd"; } }
+        public override string FourCC { get; set; } = "strd";
 
         public SubTrackDefinitionBox()
         { }
@@ -10743,7 +10853,7 @@ namespace BoxGenerator2
 
     public class SubTrackInformationBox : FullBox
     {
-        public override string FourCC { get { return "stri"; } }
+        public override string FourCC { get; set; } = "stri";
 
         protected short switch_group = 0;
         public short SwitchGroup { get { return switch_group; } set { switch_group = value; } }
@@ -10798,7 +10908,7 @@ namespace BoxGenerator2
 
     public class SampleToChunkBox : FullBox
     {
-        public override string FourCC { get { return "stsc"; } }
+        public override string FourCC { get; set; } = "stsc";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -10865,7 +10975,7 @@ namespace BoxGenerator2
 
     public class SampleDescriptionBox : FullBox
     {
-        public override string FourCC { get { return "stsd"; } }
+        public override string FourCC { get; set; } = "stsd";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -10926,7 +11036,7 @@ namespace BoxGenerator2
 
     public class SubTrackSampleGroupBox : FullBox
     {
-        public override string FourCC { get { return "stsg"; } }
+        public override string FourCC { get; set; } = "stsg";
 
         protected uint grouping_type;
         public uint GroupingType { get { return grouping_type; } set { grouping_type = value; } }
@@ -10987,7 +11097,7 @@ namespace BoxGenerator2
 
     public class ShadowSyncSampleBox : FullBox
     {
-        public override string FourCC { get { return "stsh"; } }
+        public override string FourCC { get; set; } = "stsh";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -11051,7 +11161,7 @@ namespace BoxGenerator2
 
     public class SyncSampleBox : FullBox
     {
-        public override string FourCC { get { return "stss"; } }
+        public override string FourCC { get; set; } = "stss";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -11109,7 +11219,7 @@ namespace BoxGenerator2
 
     public class SampleSizeBox : FullBox
     {
-        public override string FourCC { get { return "stsz"; } }
+        public override string FourCC { get; set; } = "stsz";
 
         protected uint sample_size;
         public uint SampleSize { get { return sample_size; } set { sample_size = value; } }
@@ -11182,7 +11292,7 @@ namespace BoxGenerator2
 
     public class TimeToSampleBox : FullBox
     {
-        public override string FourCC { get { return "stts"; } }
+        public override string FourCC { get; set; } = "stts";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -11246,7 +11356,7 @@ namespace BoxGenerator2
 
     public class SegmentTypeBox : GeneralTypeBox
     {
-        public override string FourCC { get { return "styp"; } }
+        public override string FourCC { get; set; } = "styp";
 
         public SegmentTypeBox()
         { }
@@ -11277,7 +11387,7 @@ namespace BoxGenerator2
 
     public class CompactSampleSizeBox : FullBox
     {
-        public override string FourCC { get { return "stz2"; } }
+        public override string FourCC { get; set; } = "stz2";
 
         protected uint reserved = 0;
         public uint Reserved { get { return reserved; } set { reserved = value; } }
@@ -11344,7 +11454,7 @@ namespace BoxGenerator2
 
     public class SubSampleInformationBox : FullBox
     {
-        public override string FourCC { get { return "subs"; } }
+        public override string FourCC { get; set; } = "subs";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -11486,7 +11596,7 @@ namespace BoxGenerator2
 
     public class TrackFragmentBaseMediaDecodeTimeBox : FullBox
     {
-        public override string FourCC { get { return "tfdt"; } }
+        public override string FourCC { get; set; } = "tfdt";
 
         protected ulong baseMediaDecodeTime;
         public ulong BaseMediaDecodeTime { get { return baseMediaDecodeTime; } set { baseMediaDecodeTime = value; } }
@@ -11556,7 +11666,7 @@ namespace BoxGenerator2
 
     public class TrackFragmentHeaderBox : FullBox
     {
-        public override string FourCC { get { return "tfhd"; } }
+        public override string FourCC { get; set; } = "tfhd";
 
         protected uint track_ID;  //  all the following are optional fields
         public uint TrackID { get { return track_ID; } set { track_ID = value; } }
@@ -11626,7 +11736,7 @@ namespace BoxGenerator2
 
     public class TrackFragmentRandomAccessBox : FullBox
     {
-        public override string FourCC { get { return "tfra"; } }
+        public override string FourCC { get; set; } = "tfra";
 
         protected uint track_ID;
         public uint TrackID { get { return track_ID; } set { track_ID = value; } }
@@ -11771,7 +11881,7 @@ namespace BoxGenerator2
 
     public class TrackHeaderBox : FullBox
     {
-        public override string FourCC { get { return "tkhd"; } }
+        public override string FourCC { get; set; } = "tkhd";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return creation_time; } set { creation_time = value; } }
@@ -11938,7 +12048,7 @@ namespace BoxGenerator2
 
     public class TrackFragmentBox : Box
     {
-        public override string FourCC { get { return "traf"; } }
+        public override string FourCC { get; set; } = "traf";
 
         public TrackFragmentBox()
         { }
@@ -11972,7 +12082,7 @@ namespace BoxGenerator2
 
     public class TrackBox : Box
     {
-        public override string FourCC { get { return "trak"; } }
+        public override string FourCC { get; set; } = "trak";
 
         public TrackBox()
         { }
@@ -12006,7 +12116,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceBox : Box
     {
-        public override string FourCC { get { return "tref"; } }
+        public override string FourCC { get; set; } = "tref";
 
         protected TrackReferenceTypeBox[] TrackReferenceTypeBox;
         public TrackReferenceTypeBox[] _TrackReferenceTypeBox { get { return TrackReferenceTypeBox; } set { TrackReferenceTypeBox = value; } }
@@ -12046,7 +12156,7 @@ namespace BoxGenerator2
 
     public class TrackExtensionPropertiesBox : FullBox
     {
-        public override string FourCC { get { return "trep"; } }
+        public override string FourCC { get; set; } = "trep";
 
         protected uint track_ID;  //  Any number of boxes may follow
         public uint TrackID { get { return track_ID; } set { track_ID = value; } }
@@ -12086,7 +12196,7 @@ namespace BoxGenerator2
 
     public class TrackExtendsBox : FullBox
     {
-        public override string FourCC { get { return "trex"; } }
+        public override string FourCC { get; set; } = "trex";
 
         protected uint track_ID;
         public uint TrackID { get { return track_ID; } set { track_ID = value; } }
@@ -12147,7 +12257,7 @@ namespace BoxGenerator2
 
     public class TrackGroupBox : Box
     {
-        public override string FourCC { get { return "trgr"; } }
+        public override string FourCC { get; set; } = "trgr";
 
         public TrackGroupBox()
         { }
@@ -12181,7 +12291,7 @@ namespace BoxGenerator2
 
     public class TrackRunBox : FullBox
     {
-        public override string FourCC { get { return "trun"; } }
+        public override string FourCC { get; set; } = "trun";
 
         protected uint sample_count;  //  the following are optional fields
         public uint SampleCount { get { return sample_count; } set { sample_count = value; } }
@@ -12236,7 +12346,7 @@ namespace BoxGenerator2
 
     public class TrackTypeBox : GeneralTypeBox
     {
-        public override string FourCC { get { return "ttyp"; } }
+        public override string FourCC { get; set; } = "ttyp";
 
         public TrackTypeBox()
         { }
@@ -12267,7 +12377,7 @@ namespace BoxGenerator2
 
     public class TypeCombinationBox : Box
     {
-        public override string FourCC { get { return "tyco"; } }
+        public override string FourCC { get; set; } = "tyco";
 
         protected uint[] compatible_brands;  //  to end of the box
         public uint[] CompatibleBrands { get { return compatible_brands; } set { compatible_brands = value; } }
@@ -12304,7 +12414,7 @@ namespace BoxGenerator2
 
     public class UserDataBox : Box
     {
-        public override string FourCC { get { return "udta"; } }
+        public override string FourCC { get; set; } = "udta";
 
         public UserDataBox()
         { }
@@ -12429,7 +12539,7 @@ namespace BoxGenerator2
 
     public class VideoMediaHeaderBox : FullBox
     {
-        public override string FourCC { get { return "vmhd"; } }
+        public override string FourCC { get; set; } = "vmhd";
 
         protected ushort graphicsmode = 0;  //  copy, see below
         public ushort Graphicsmode { get { return graphicsmode; } set { graphicsmode = value; } }
@@ -12472,7 +12582,7 @@ namespace BoxGenerator2
 
     public class XMLBox : FullBox
     {
-        public override string FourCC { get { return "xml "; } }
+        public override string FourCC { get; set; } = "xml ";
 
         protected string xml;
         public string Xml { get { return xml; } set { xml = value; } }
@@ -12509,7 +12619,7 @@ namespace BoxGenerator2
 
     public class CompressedMovieFragmentBox1 : CompressedBox
     {
-        public override string FourCC { get { return "!mof"; } }
+        public override string FourCC { get; set; } = "!mof";
 
         public CompressedMovieFragmentBox1()
         { }
@@ -12540,7 +12650,7 @@ namespace BoxGenerator2
 
     public class CompressedMovieBox1 : CompressedBox
     {
-        public override string FourCC { get { return "!mov"; } }
+        public override string FourCC { get; set; } = "!mov";
 
         public CompressedMovieBox1()
         { }
@@ -12571,7 +12681,7 @@ namespace BoxGenerator2
 
     public class CompressedSegmentIndexBox1 : CompressedBox
     {
-        public override string FourCC { get { return "!six"; } }
+        public override string FourCC { get; set; } = "!six";
 
         public CompressedSegmentIndexBox1()
         { }
@@ -12602,7 +12712,7 @@ namespace BoxGenerator2
 
     public class CompressedSubsegmentIndexBox1 : CompressedBox
     {
-        public override string FourCC { get { return "!ssx"; } }
+        public override string FourCC { get; set; } = "!ssx";
 
         public CompressedSubsegmentIndexBox1()
         { }
@@ -12633,7 +12743,7 @@ namespace BoxGenerator2
 
     public class AmbientViewingEnvironmentBox : Box
     {
-        public override string FourCC { get { return "amve"; } }
+        public override string FourCC { get; set; } = "amve";
 
         protected uint ambient_illuminance;
         public uint AmbientIlluminance { get { return ambient_illuminance; } set { ambient_illuminance = value; } }
@@ -12682,7 +12792,7 @@ namespace BoxGenerator2
 
     public class MetadataKeyTableBox : Box
     {
-        public override string FourCC { get { return "keys"; } }
+        public override string FourCC { get; set; } = "keys";
 
         protected MetadataKeyBox[] MetadataKeyBox;
         public MetadataKeyBox[] _MetadataKeyBox { get { return MetadataKeyBox; } set { MetadataKeyBox = value; } }
@@ -12719,7 +12829,7 @@ namespace BoxGenerator2
 
     public class URIBox1 : FullBox
     {
-        public override string FourCC { get { return "uri "; } }
+        public override string FourCC { get; set; } = "uri ";
 
         protected string theURI;
         public string TheURI { get { return theURI; } set { theURI = value; } }
@@ -12756,7 +12866,7 @@ namespace BoxGenerator2
 
     public class IroiInfoBox : Box
     {
-        public override string FourCC { get { return "iroi"; } }
+        public override string FourCC { get; set; } = "iroi";
 
         protected byte iroi_type;
         public byte IroiType { get { return iroi_type; } set { iroi_type = value; } }
@@ -12871,7 +12981,7 @@ namespace BoxGenerator2
 
     public class TierDependencyBox : Box
     {
-        public override string FourCC { get { return "ldep"; } }
+        public override string FourCC { get; set; } = "ldep";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -12926,7 +13036,7 @@ namespace BoxGenerator2
 
     public class SVCDependencyRangeBox : Box
     {
-        public override string FourCC { get { return "svdr"; } }
+        public override string FourCC { get; set; } = "svdr";
 
         protected byte min_dependency_id;
         public byte MinDependencyId { get { return min_dependency_id; } set { min_dependency_id = value; } }
@@ -13005,7 +13115,7 @@ namespace BoxGenerator2
 
     public class InitialParameterSetBox : Box
     {
-        public override string FourCC { get { return "svip"; } }
+        public override string FourCC { get; set; } = "svip";
 
         protected byte sps_id_count;
         public byte SpsIdCount { get { return sps_id_count; } set { sps_id_count = value; } }
@@ -13084,7 +13194,7 @@ namespace BoxGenerator2
 
     public class PriorityRangeBox : Box
     {
-        public override string FourCC { get { return "svpr"; } }
+        public override string FourCC { get; set; } = "svpr";
 
         protected byte reserved1 = 0;
         public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
@@ -13139,7 +13249,7 @@ namespace BoxGenerator2
 
     public class TranscodingInfoBox : Box
     {
-        public override string FourCC { get { return "tran"; } }
+        public override string FourCC { get; set; } = "tran";
 
         protected byte reserved = 0;
         public byte Reserved { get { return reserved; } set { reserved = value; } }
@@ -13254,7 +13364,7 @@ namespace BoxGenerator2
 
     public class RectRegionBox : Box
     {
-        public override string FourCC { get { return "rrgn"; } }
+        public override string FourCC { get; set; } = "rrgn";
 
         protected ushort base_region_tierID;
         public ushort BaseRegionTierID { get { return base_region_tierID; } set { base_region_tierID = value; } }
@@ -13339,7 +13449,7 @@ namespace BoxGenerator2
 
     public class BufferingBox : Box
     {
-        public override string FourCC { get { return "buff"; } }
+        public override string FourCC { get; set; } = "buff";
 
         protected ushort operating_point_count;
         public ushort OperatingPointCount { get { return operating_point_count; } set { operating_point_count = value; } }
@@ -13418,7 +13528,7 @@ namespace BoxGenerator2
 
     public class MVCSubTrackViewBox : FullBox
     {
-        public override string FourCC { get { return "mstv"; } }
+        public override string FourCC { get; set; } = "mstv";
 
         protected ushort item_count;
         public ushort ItemCount { get { return item_count; } set { item_count = value; } }
@@ -13485,7 +13595,7 @@ namespace BoxGenerator2
 
     public class MultiviewGroupBox : FullBox
     {
-        public override string FourCC { get { return "mvcg"; } }
+        public override string FourCC { get; set; } = "mvcg";
 
         protected uint multiview_group_id;
         public uint MultiviewGroupId { get { return multiview_group_id; } set { multiview_group_id = value; } }
@@ -13681,7 +13791,7 @@ namespace BoxGenerator2
 
     public class MultiviewInformationBox : FullBox
     {
-        public override string FourCC { get { return "mvci"; } }
+        public override string FourCC { get; set; } = "mvci";
 
         public MultiviewInformationBox()
         { }
@@ -13715,7 +13825,7 @@ namespace BoxGenerator2
 
     public class MVDDepthResolutionBox : Box
     {
-        public override string FourCC { get { return "3dpr"; } }
+        public override string FourCC { get; set; } = "3dpr";
 
         protected ushort depth_width;
         public ushort DepthWidth { get { return depth_width; } set { depth_width = value; } }
@@ -13827,7 +13937,7 @@ namespace BoxGenerator2
 
     public class MultiviewRelationAttributeBox : FullBox
     {
-        public override string FourCC { get { return "mvra"; } }
+        public override string FourCC { get; set; } = "mvra";
 
         protected ushort reserved1 = 0;
         public ushort Reserved1 { get { return reserved1; } set { reserved1 = value; } }
@@ -13924,7 +14034,7 @@ namespace BoxGenerator2
 
     public class SampleDependencyBox : FullBox
     {
-        public override string FourCC { get { return "sdep"; } }
+        public override string FourCC { get; set; } = "sdep";
 
         protected ushort dependency_count;
         public ushort DependencyCount { get { return dependency_count; } set { dependency_count = value; } }
@@ -13997,7 +14107,7 @@ namespace BoxGenerator2
 
     public class SeiInformationBox : Box
     {
-        public override string FourCC { get { return "seii"; } }
+        public override string FourCC { get; set; } = "seii";
 
         protected ushort numRequiredSEIs;
         public ushort NumRequiredSEIs { get { return numRequiredSEIs; } set { numRequiredSEIs = value; } }
@@ -14076,7 +14186,7 @@ namespace BoxGenerator2
 
     public class SVCSubTrackLayerBox : FullBox
     {
-        public override string FourCC { get { return "sstl"; } }
+        public override string FourCC { get; set; } = "sstl";
 
         protected ushort item_count;
         public ushort ItemCount { get { return item_count; } set { item_count = value; } }
@@ -14173,7 +14283,7 @@ namespace BoxGenerator2
 
     public class MVCSubTrackMultiviewGroupBox : FullBox
     {
-        public override string FourCC { get { return "stmg"; } }
+        public override string FourCC { get; set; } = "stmg";
 
         protected ushort item_count;
         public ushort ItemCount { get { return item_count; } set { item_count = value; } }
@@ -14228,7 +14338,7 @@ namespace BoxGenerator2
 
     public class SubTrackTierBox : FullBox
     {
-        public override string FourCC { get { return "stti"; } }
+        public override string FourCC { get; set; } = "stti";
 
         protected ushort item_count;
         public ushort ItemCount { get { return item_count; } set { item_count = value; } }
@@ -14283,7 +14393,7 @@ namespace BoxGenerator2
 
     public class MultiviewGroupRelationBox : FullBox
     {
-        public override string FourCC { get { return "swtc"; } }
+        public override string FourCC { get; set; } = "swtc";
 
         protected uint num_entries;
         public uint NumEntries { get { return num_entries; } set { num_entries = value; } }
@@ -14347,7 +14457,7 @@ namespace BoxGenerator2
 
     public class TierBitRateBox : Box
     {
-        public override string FourCC { get { return "tibr"; } }
+        public override string FourCC { get; set; } = "tibr";
 
         protected uint baseBitRate;
         public uint BaseBitRate { get { return baseBitRate; } set { baseBitRate = value; } }
@@ -14414,7 +14524,7 @@ namespace BoxGenerator2
 
     public class TierInfoBox : Box
     {
-        public override string FourCC { get { return "tiri"; } }
+        public override string FourCC { get; set; } = "tiri";
 
         protected ushort tierID;
         public ushort TierID { get { return tierID; } set { tierID = value; } }
@@ -14514,7 +14624,7 @@ namespace BoxGenerator2
 
     public class TileSubTrackGroupBox : FullBox
     {
-        public override string FourCC { get { return "tstb"; } }
+        public override string FourCC { get; set; } = "tstb";
 
         protected ushort item_count;
         public ushort ItemCount { get { return item_count; } set { item_count = value; } }
@@ -14569,7 +14679,7 @@ namespace BoxGenerator2
 
     public class MultiviewSceneInfoBox : Box
     {
-        public override string FourCC { get { return "vwdi"; } }
+        public override string FourCC { get; set; } = "vwdi";
 
         protected byte max_disparity;
         public byte MaxDisparity { get { return max_disparity; } set { max_disparity = value; } }
@@ -14606,7 +14716,7 @@ namespace BoxGenerator2
 
     public class MVCDConfigurationBox : Box
     {
-        public override string FourCC { get { return "mvdC"; } }
+        public override string FourCC { get; set; } = "mvdC";
 
         protected MVDDecoderConfigurationRecord MVDConfig;
         public MVDDecoderConfigurationRecord _MVDConfig { get { return MVDConfig; } set { MVDConfig = value; } }
@@ -14652,7 +14762,7 @@ namespace BoxGenerator2
 
     public class A3DConfigurationBox : Box
     {
-        public override string FourCC { get { return "a3dC"; } }
+        public override string FourCC { get; set; } = "a3dC";
 
         protected MVDDecoderConfigurationRecord MVDConfig;
         public MVDDecoderConfigurationRecord _MVDConfig { get { return MVDConfig; } set { MVDConfig = value; } }
@@ -14698,7 +14808,7 @@ namespace BoxGenerator2
 
     public class ViewIdentifierBox : FullBox
     {
-        public override string FourCC { get { return "vwid"; } }
+        public override string FourCC { get; set; } = "vwid";
 
         protected byte reserved6 = 0;
         public byte Reserved6 { get { return reserved6; } set { reserved6 = value; } }
@@ -14855,7 +14965,7 @@ namespace BoxGenerator2
 
     public class MVCConfigurationBox : Box
     {
-        public override string FourCC { get { return "mvcC"; } }
+        public override string FourCC { get; set; } = "mvcC";
 
         protected MVCDecoderConfigurationRecord MVCConfig;
         public MVCDecoderConfigurationRecord _MVCConfig { get { return MVCConfig; } set { MVCConfig = value; } }
@@ -14892,7 +15002,7 @@ namespace BoxGenerator2
 
     public class AVCConfigurationBox : Box
     {
-        public override string FourCC { get { return "avcC"; } }
+        public override string FourCC { get; set; } = "avcC";
 
         protected AVCDecoderConfigurationRecord AVCConfig;
         public AVCDecoderConfigurationRecord _AVCConfig { get { return AVCConfig; } set { AVCConfig = value; } }
@@ -14929,7 +15039,7 @@ namespace BoxGenerator2
 
     public class HEVCConfigurationBox : Box
     {
-        public override string FourCC { get { return "hvcC"; } }
+        public override string FourCC { get; set; } = "hvcC";
 
         protected HEVCDecoderConfigurationRecord HEVCConfig;
         public HEVCDecoderConfigurationRecord _HEVCConfig { get { return HEVCConfig; } set { HEVCConfig = value; } }
@@ -14966,7 +15076,7 @@ namespace BoxGenerator2
 
     public class LHEVCConfigurationBox : Box
     {
-        public override string FourCC { get { return "lhvC"; } }
+        public override string FourCC { get; set; } = "lhvC";
 
         protected LHEVCDecoderConfigurationRecord LHEVCConfig;
         public LHEVCDecoderConfigurationRecord _LHEVCConfig { get { return LHEVCConfig; } set { LHEVCConfig = value; } }
@@ -15003,7 +15113,7 @@ namespace BoxGenerator2
 
     public class MPEG4ExtensionDescriptorsBox : Box
     {
-        public override string FourCC { get { return "m4ds"; } }
+        public override string FourCC { get; set; } = "m4ds";
 
         protected Descriptor[] Descr;
         public Descriptor[] _Descr { get { return Descr; } set { Descr = value; } }
@@ -15040,7 +15150,7 @@ namespace BoxGenerator2
 
     public class SVCConfigurationBox : Box
     {
-        public override string FourCC { get { return "svcC"; } }
+        public override string FourCC { get; set; } = "svcC";
 
         protected SVCDecoderConfigurationRecord SVCConfig;
         public SVCDecoderConfigurationRecord _SVCConfig { get { return SVCConfig; } set { SVCConfig = value; } }
@@ -15077,7 +15187,7 @@ namespace BoxGenerator2
 
     public class ScalabilityInformationSEIBox : Box
     {
-        public override string FourCC { get { return "seib"; } }
+        public override string FourCC { get; set; } = "seib";
 
         protected byte[] scalinfosei;
         public byte[] Scalinfosei { get { return scalinfosei; } set { scalinfosei = value; } }
@@ -15114,7 +15224,7 @@ namespace BoxGenerator2
 
     public class SVCPriorityAssignmentBox : Box
     {
-        public override string FourCC { get { return "svcP"; } }
+        public override string FourCC { get; set; } = "svcP";
 
         protected byte method_count;
         public byte MethodCount { get { return method_count; } set { method_count = value; } }
@@ -15157,7 +15267,7 @@ namespace BoxGenerator2
 
     public class ViewScalabilityInformationSEIBox : Box
     {
-        public override string FourCC { get { return "vsib"; } }
+        public override string FourCC { get; set; } = "vsib";
 
         protected byte[] mvcscalinfosei;
         public byte[] Mvcscalinfosei { get { return mvcscalinfosei; } set { mvcscalinfosei = value; } }
@@ -15194,7 +15304,7 @@ namespace BoxGenerator2
 
     public class MVDScalabilityInformationSEIBox : Box
     {
-        public override string FourCC { get { return "3sib"; } }
+        public override string FourCC { get; set; } = "3sib";
 
         protected byte[] mvdscalinfosei;
         public byte[] Mvdscalinfosei { get { return mvdscalinfosei; } set { mvdscalinfosei = value; } }
@@ -15231,7 +15341,7 @@ namespace BoxGenerator2
 
     public class MVCViewPriorityAssignmentBox : Box
     {
-        public override string FourCC { get { return "mvcP"; } }
+        public override string FourCC { get; set; } = "mvcP";
 
         protected byte method_count;
         public byte MethodCount { get { return method_count; } set { method_count = value; } }
@@ -15274,7 +15384,7 @@ namespace BoxGenerator2
 
     public class HEVCTileConfigurationBox : Box
     {
-        public override string FourCC { get { return "hvtC"; } }
+        public override string FourCC { get; set; } = "hvtC";
 
         protected HEVCTileTierLevelConfigurationRecord HEVCTileTierLevelConfig;
         public HEVCTileTierLevelConfigurationRecord _HEVCTileTierLevelConfig { get { return HEVCTileTierLevelConfig; } set { HEVCTileTierLevelConfig = value; } }
@@ -15311,7 +15421,7 @@ namespace BoxGenerator2
 
     public class EVCConfigurationBox : Box
     {
-        public override string FourCC { get { return "evcC"; } }
+        public override string FourCC { get; set; } = "evcC";
 
         protected EVCDecoderConfigurationRecord EVCConfig;
         public EVCDecoderConfigurationRecord _EVCConfig { get { return EVCConfig; } set { EVCConfig = value; } }
@@ -15348,7 +15458,7 @@ namespace BoxGenerator2
 
     public class SVCPriorityLayerInfoBox : Box
     {
-        public override string FourCC { get { return "qlif"; } }
+        public override string FourCC { get; set; } = "qlif";
 
         protected byte pr_layer_num;
         public byte PrLayerNum { get { return pr_layer_num; } set { pr_layer_num = value; } }
@@ -15421,7 +15531,7 @@ namespace BoxGenerator2
 
     public class VvcConfigurationBox : FullBox
     {
-        public override string FourCC { get { return "vvcC"; } }
+        public override string FourCC { get; set; } = "vvcC";
 
         protected VvcDecoderConfigurationRecord VvcConfig;
         public VvcDecoderConfigurationRecord _VvcConfig { get { return VvcConfig; } set { VvcConfig = value; } }
@@ -15458,7 +15568,7 @@ namespace BoxGenerator2
 
     public class VvcNALUConfigBox : FullBox
     {
-        public override string FourCC { get { return "vvnC"; } }
+        public override string FourCC { get; set; } = "vvnC";
 
         protected byte reserved = 0;
         public byte Reserved { get { return reserved; } set { reserved = value; } }
@@ -15501,7 +15611,7 @@ namespace BoxGenerator2
 
     public class DefaultHevcExtractorConstructorBox : FullBox
     {
-        public override string FourCC { get { return "dhec"; } }
+        public override string FourCC { get; set; } = "dhec";
 
         protected uint num_entries;
         public uint NumEntries { get { return num_entries; } set { num_entries = value; } }
@@ -15634,7 +15744,7 @@ namespace BoxGenerator2
 
     public class SVCMetadataSampleConfigBox : FullBox
     {
-        public override string FourCC { get { return "svmC"; } }
+        public override string FourCC { get; set; } = "svmC";
 
         protected byte sample_statement_type;
         public byte SampleStatementType { get { return sample_statement_type; } set { sample_statement_type = value; } }
@@ -15719,7 +15829,7 @@ namespace BoxGenerator2
 
     public class EVCSliceComponentTrackConfigurationBox : Box
     {
-        public override string FourCC { get { return "evsC"; } }
+        public override string FourCC { get; set; } = "evsC";
 
         protected EVCSliceComponentTrackConfigurationRecord config;
         public EVCSliceComponentTrackConfigurationRecord Config { get { return config; } set { config = value; } }
@@ -15756,7 +15866,7 @@ namespace BoxGenerator2
 
     public class WebVTTConfigurationBox : Box
     {
-        public override string FourCC { get { return "vttC"; } }
+        public override string FourCC { get; set; } = "vttC";
 
         protected string config;
         public string Config { get { return config; } set { config = value; } }
@@ -15793,7 +15903,7 @@ namespace BoxGenerator2
 
     public class WebVTTSourceLabelBox : Box
     {
-        public override string FourCC { get { return "vlab"; } }
+        public override string FourCC { get; set; } = "vlab";
 
         protected string source_label;
         public string SourceLabel { get { return source_label; } set { source_label = value; } }
@@ -15830,7 +15940,7 @@ namespace BoxGenerator2
 
     public class WVTTSampleEntry : PlainTextSampleEntry
     {
-        public override string FourCC { get { return "wvtt"; } }
+        public override string FourCC { get; set; } = "wvtt";
 
         protected WebVTTConfigurationBox config;
         public WebVTTConfigurationBox Config { get { return config; } set { config = value; } }
@@ -15882,7 +15992,7 @@ namespace BoxGenerator2
 
     public class AuxiliaryTypeInfoBox : FullBox
     {
-        public override string FourCC { get { return "auxi"; } }
+        public override string FourCC { get; set; } = "auxi";
 
         protected string aux_track_type;
         public string AuxTrackType { get { return aux_track_type; } set { aux_track_type = value; } }
@@ -15919,7 +16029,7 @@ namespace BoxGenerator2
 
     public class CodingConstraintsBox : FullBox
     {
-        public override string FourCC { get { return "ccst"; } }
+        public override string FourCC { get; set; } = "ccst";
 
         protected bool all_ref_pics_intra;
         public bool AllRefPicsIntra { get { return all_ref_pics_intra; } set { all_ref_pics_intra = value; } }
@@ -15974,7 +16084,7 @@ namespace BoxGenerator2
 
     public class MD5IntegrityBox : FullBox
     {
-        public override string FourCC { get { return "md5i"; } }
+        public override string FourCC { get; set; } = "md5i";
 
         protected byte[] input_MD5;
         public byte[] InputMD5 { get { return input_MD5; } set { input_MD5 = value; } }
@@ -16077,7 +16187,7 @@ namespace BoxGenerator2
 
     public class AudioSampleEntry : SampleEntry
     {
-        public override string FourCC { get { return "enca"; } }
+        public override string FourCC { get; set; } = "enca";
 
         protected uint[] reserved = [];
         public uint[] Reserved { get { return reserved; } set { reserved = value; } }
@@ -16207,7 +16317,7 @@ namespace BoxGenerator2
 
     public class AudioSampleEntryV1 : SampleEntry
     {
-        public override string FourCC { get { return "enca"; } }
+        public override string FourCC { get; set; } = "enca";
 
         protected ushort entry_version;  //  shall be 1, 
         public ushort EntryVersion { get { return entry_version; } set { entry_version = value; } }
@@ -16343,7 +16453,7 @@ namespace BoxGenerator2
 
     public class AudioSampleEntryV11 : SampleEntry
     {
-        public override string FourCC { get { return "enca"; } }
+        public override string FourCC { get; set; } = "enca";
 
         protected ushort entry_version;  //  shall be 1, 
         public ushort EntryVersion { get { return entry_version; } set { entry_version = value; } }
@@ -16479,7 +16589,7 @@ namespace BoxGenerator2
 
     public class FontSampleEntry : SampleEntry
     {
-        public override string FourCC { get { return "encf"; } }
+        public override string FourCC { get; set; } = "encf";
 
         public FontSampleEntry()
         { }
@@ -16513,7 +16623,7 @@ namespace BoxGenerator2
 
     public class MetaDataSampleEntry : SampleEntry
     {
-        public override string FourCC { get { return "encm"; } }
+        public override string FourCC { get; set; } = "encm";
 
         public MetaDataSampleEntry()
         { }
@@ -16544,7 +16654,7 @@ namespace BoxGenerator2
 
     public class SampleEntry : Box
     {
-        public override string FourCC { get { return "encv"; } }
+        public override string FourCC { get; set; } = "encv";
 
         public SampleEntry()
         { }
@@ -16614,7 +16724,7 @@ namespace BoxGenerator2
 
     public class XMLMetaDataSampleEntry : MetaDataSampleEntry
     {
-        public override string FourCC { get { return "metx"; } }
+        public override string FourCC { get; set; } = "metx";
 
         protected string content_encoding;  //  optional
         public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
@@ -16663,7 +16773,7 @@ namespace BoxGenerator2
 
     public class TextMetaDataSampleEntry : MetaDataSampleEntry
     {
-        public override string FourCC { get { return "mett"; } }
+        public override string FourCC { get; set; } = "mett";
 
         protected string content_encoding;  //  optional
         public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
@@ -16715,7 +16825,7 @@ namespace BoxGenerator2
 
     public class URIMetaSampleEntry1 : MetaDataSampleEntry
     {
-        public override string FourCC { get { return "urim"; } }
+        public override string FourCC { get; set; } = "urim";
 
         protected URIBox the_label;
         public URIBox TheLabel { get { return the_label; } set { the_label = value; } }
@@ -16761,7 +16871,7 @@ namespace BoxGenerator2
 
     public class BoxedMetadataSampleEntry : MetadataSampleEntry
     {
-        public override string FourCC { get { return "mebx"; } }
+        public override string FourCC { get; set; } = "mebx";
 
         protected MetadataKeyTableBox MetadataKeyTableBox;  //  mandatory
         public MetadataKeyTableBox _MetadataKeyTableBox { get { return MetadataKeyTableBox; } set { MetadataKeyTableBox = value; } }
@@ -16807,7 +16917,7 @@ namespace BoxGenerator2
 
     public class FDHintSampleEntry : HintSampleEntry
     {
-        public override string FourCC { get { return "fdp "; } }
+        public override string FourCC { get; set; } = "fdp ";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
@@ -16865,7 +16975,7 @@ namespace BoxGenerator2
 
     public class IncompleteAVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "icpv"; } }
+        public override string FourCC { get; set; } = "icpv";
 
         protected CompleteTrackInfoBox CompleteTrackInfoBox;
         public CompleteTrackInfoBox _CompleteTrackInfoBox { get { return CompleteTrackInfoBox; } set { CompleteTrackInfoBox = value; } }
@@ -16911,7 +17021,7 @@ namespace BoxGenerator2
 
     public class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEntry
     {
-        public override string FourCC { get { return "pm2t"; } }
+        public override string FourCC { get; set; } = "pm2t";
 
         protected ProtectionSchemeInfoBox SchemeInformation;
         public ProtectionSchemeInfoBox _SchemeInformation { get { return SchemeInformation; } set { SchemeInformation = value; } }
@@ -16948,7 +17058,7 @@ namespace BoxGenerator2
 
     public class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
     {
-        public override string FourCC { get { return "prtp"; } }
+        public override string FourCC { get; set; } = "prtp";
 
         protected ProtectionSchemeInfoBox SchemeInformation;
         public ProtectionSchemeInfoBox _SchemeInformation { get { return SchemeInformation; } set { SchemeInformation = value; } }
@@ -16985,7 +17095,7 @@ namespace BoxGenerator2
 
     public class MPEG2TSReceptionSampleEntry1 : MPEG2TSSampleEntry
     {
-        public override string FourCC { get { return "rm2t"; } }
+        public override string FourCC { get; set; } = "rm2t";
 
         public MPEG2TSReceptionSampleEntry1()
         { }
@@ -17016,7 +17126,7 @@ namespace BoxGenerator2
 
     public class ReceivedRtpHintSampleEntry : HintSampleEntry
     {
-        public override string FourCC { get { return "rrtp"; } }
+        public override string FourCC { get; set; } = "rrtp";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
@@ -17068,7 +17178,7 @@ namespace BoxGenerator2
 
     public class ReceivedSrtpHintSampleEntry : HintSampleEntry
     {
-        public override string FourCC { get { return "rsrp"; } }
+        public override string FourCC { get; set; } = "rsrp";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
@@ -17117,7 +17227,7 @@ namespace BoxGenerator2
 
     public class HintSampleEntry : SampleEntry
     {
-        public override string FourCC { get { return "rtcp"; } }
+        public override string FourCC { get; set; } = "rtcp";
 
         public HintSampleEntry()
         { }
@@ -17148,7 +17258,7 @@ namespace BoxGenerator2
 
     public class moviehintinformation1 : Box
     {
-        public override string FourCC { get { return "rtp "; } }
+        public override string FourCC { get; set; } = "rtp ";
 
         public moviehintinformation1()
         { }
@@ -17182,7 +17292,7 @@ namespace BoxGenerator2
 
     public class rtpmoviehintinformation1 : Box
     {
-        public override string FourCC { get { return "rtp "; } }
+        public override string FourCC { get; set; } = "rtp ";
 
         protected uint descriptionformat = IsoReaderWriter.FromFourCC("sdp ");
         public uint Descriptionformat { get { return descriptionformat; } set { descriptionformat = value; } }
@@ -17228,7 +17338,7 @@ namespace BoxGenerator2
 
     public class TextSubtitleSampleEntry1 : SubtitleSampleEntry
     {
-        public override string FourCC { get { return "sbtt"; } }
+        public override string FourCC { get; set; } = "sbtt";
 
         protected string content_encoding;  //  optional
         public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
@@ -17280,7 +17390,7 @@ namespace BoxGenerator2
 
     public class MPEG2TSServerSampleEntry1 : MPEG2TSSampleEntry
     {
-        public override string FourCC { get { return "sm2t"; } }
+        public override string FourCC { get; set; } = "sm2t";
 
         public MPEG2TSServerSampleEntry1()
         { }
@@ -17311,7 +17421,7 @@ namespace BoxGenerator2
 
     public class SrtpHintSampleEntry : HintSampleEntry
     {
-        public override string FourCC { get { return "srtp"; } }
+        public override string FourCC { get; set; } = "srtp";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
@@ -17363,7 +17473,7 @@ namespace BoxGenerator2
 
     public class XMLSubtitleSampleEntry1 : SubtitleSampleEntry
     {
-        public override string FourCC { get { return "stpp"; } }
+        public override string FourCC { get; set; } = "stpp";
 
         protected string ns;
         public string Ns { get { return ns; } set { ns = value; } }
@@ -17412,7 +17522,7 @@ namespace BoxGenerator2
 
     public class SimpleTextSampleEntry1 : PlainTextSampleEntry
     {
-        public override string FourCC { get { return "stxt"; } }
+        public override string FourCC { get; set; } = "stxt";
 
         protected string content_encoding;  //  optional
         public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
@@ -17464,7 +17574,7 @@ namespace BoxGenerator2
 
     public class HapticSampleEntry : SampleEntry
     {
-        public override string FourCC { get { return "encp"; } }
+        public override string FourCC { get; set; } = "encp";
 
         protected Box[] otherboxes;
         public Box[] Otherboxes { get { return otherboxes; } set { otherboxes = value; } }
@@ -17501,7 +17611,7 @@ namespace BoxGenerator2
 
     public class VolumetricVisualSampleEntry : SampleEntry
     {
-        public override string FourCC { get { return "enc3"; } }
+        public override string FourCC { get; set; } = "enc3";
 
         protected byte[] compressorname;  //  other boxes from derived specifications
         public byte[] Compressorname { get { return compressorname; } set { compressorname = value; } }
@@ -17538,7 +17648,7 @@ namespace BoxGenerator2
 
     public class VisualSampleEntry : SampleEntry
     {
-        public override string FourCC { get { return "resv"; } }
+        public override string FourCC { get; set; } = "resv";
 
         protected ushort pre_defined = 0;
         public ushort PreDefined { get { return pre_defined; } set { pre_defined = value; } }
@@ -17656,7 +17766,7 @@ namespace BoxGenerator2
 
     public class AudioSampleEntry1 : SampleEntry
     {
-        public override string FourCC { get { return "resa"; } }
+        public override string FourCC { get; set; } = "resa";
 
         protected uint[] reserved = [];
         public uint[] Reserved { get { return reserved; } set { reserved = value; } }
@@ -17783,7 +17893,7 @@ namespace BoxGenerator2
 
     public class AudioSampleEntryV12 : SampleEntry
     {
-        public override string FourCC { get { return "resa"; } }
+        public override string FourCC { get; set; } = "resa";
 
         protected ushort entry_version;  //  shall be 1, 
         public ushort EntryVersion { get { return entry_version; } set { entry_version = value; } }
@@ -17919,7 +18029,7 @@ namespace BoxGenerator2
 
     public class MetaDataSampleEntry1 : SampleEntry
     {
-        public override string FourCC { get { return "resm"; } }
+        public override string FourCC { get; set; } = "resm";
 
         public MetaDataSampleEntry1()
         { }
@@ -17950,7 +18060,7 @@ namespace BoxGenerator2
 
     public class FontSampleEntry1 : SampleEntry
     {
-        public override string FourCC { get { return "resf"; } }
+        public override string FourCC { get; set; } = "resf";
 
         public FontSampleEntry1()
         { }
@@ -17984,7 +18094,7 @@ namespace BoxGenerator2
 
     public class HapticSampleEntry1 : SampleEntry
     {
-        public override string FourCC { get { return "resp"; } }
+        public override string FourCC { get; set; } = "resp";
 
         protected Box[] otherboxes;
         public Box[] Otherboxes { get { return otherboxes; } set { otherboxes = value; } }
@@ -18021,7 +18131,7 @@ namespace BoxGenerator2
 
     public class VolumetricVisualSampleEntry1 : SampleEntry
     {
-        public override string FourCC { get { return "res3"; } }
+        public override string FourCC { get; set; } = "res3";
 
         protected byte[] compressorname;  //  other boxes from derived specifications
         public byte[] Compressorname { get { return compressorname; } set { compressorname = value; } }
@@ -18058,7 +18168,7 @@ namespace BoxGenerator2
 
     public class RtpHintSampleEntry : HintSampleEntry
     {
-        public override string FourCC { get { return "rtp "; } }
+        public override string FourCC { get; set; } = "rtp ";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
@@ -18110,7 +18220,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox : FullBox
     {
-        public override string FourCC { get { return "altr"; } }
+        public override string FourCC { get; set; } = "altr";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -18171,7 +18281,7 @@ namespace BoxGenerator2
 
     public class BrandProperty : GeneralTypeBox
     {
-        public override string FourCC { get { return "brnd"; } }
+        public override string FourCC { get; set; } = "brnd";
 
         public BrandProperty()
         { }
@@ -18202,7 +18312,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBox : Box
     {
-        public override string FourCC { get { return "fdel"; } }
+        public override string FourCC { get; set; } = "fdel";
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -18263,7 +18373,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBoxLarge : Box
     {
-        public override string FourCC { get { return "fdel"; } }
+        public override string FourCC { get; set; } = "fdel";
 
         protected uint from_item_ID;
         public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -18324,7 +18434,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBox1 : Box
     {
-        public override string FourCC { get { return "iloc"; } }
+        public override string FourCC { get; set; } = "iloc";
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -18385,7 +18495,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBoxLarge1 : Box
     {
-        public override string FourCC { get { return "iloc"; } }
+        public override string FourCC { get; set; } = "iloc";
 
         protected uint from_item_ID;
         public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -18446,7 +18556,7 @@ namespace BoxGenerator2
 
     public class AlternativeStartupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "alst"; } }
+        public override string FourCC { get; set; } = "alst";
 
         protected ushort roll_count;
         public ushort RollCount { get { return roll_count; } set { roll_count = value; } }
@@ -18540,7 +18650,7 @@ namespace BoxGenerator2
 
     public class VisualDRAPEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "drap"; } }
+        public override string FourCC { get; set; } = "drap";
 
         protected byte DRAP_type;
         public byte DRAPType { get { return DRAP_type; } set { DRAP_type = value; } }
@@ -18583,7 +18693,7 @@ namespace BoxGenerator2
 
     public class AudioPreRollEntry : AudioSampleGroupEntry
     {
-        public override string FourCC { get { return "prol"; } }
+        public override string FourCC { get; set; } = "prol";
 
         protected short roll_distance;
         public short RollDistance { get { return roll_distance; } set { roll_distance = value; } }
@@ -18620,7 +18730,7 @@ namespace BoxGenerator2
 
     public class VisualRandomAccessEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "rap "; } }
+        public override string FourCC { get; set; } = "rap ";
 
         protected bool num_leading_samples_known;
         public bool NumLeadingSamplesKnown { get { return num_leading_samples_known; } set { num_leading_samples_known = value; } }
@@ -18663,7 +18773,7 @@ namespace BoxGenerator2
 
     public class RateShareEntry : SampleGroupDescriptionEntry
     {
-        public override string FourCC { get { return "rash"; } }
+        public override string FourCC { get; set; } = "rash";
 
         protected ushort operation_point_count;
         public ushort OperationPointCount { get { return operation_point_count; } set { operation_point_count = value; } }
@@ -18772,7 +18882,7 @@ namespace BoxGenerator2
 
     public class AudioRollRecoveryEntry : AudioSampleGroupEntry
     {
-        public override string FourCC { get { return "roll"; } }
+        public override string FourCC { get; set; } = "roll";
 
         protected short roll_distance;
         public short RollDistance { get { return roll_distance; } set { roll_distance = value; } }
@@ -18809,7 +18919,7 @@ namespace BoxGenerator2
 
     public class SAPEntry : SampleGroupDescriptionEntry
     {
-        public override string FourCC { get { return "sap "; } }
+        public override string FourCC { get; set; } = "sap ";
 
         protected bool dependent_flag;
         public bool DependentFlag { get { return dependent_flag; } set { dependent_flag = value; } }
@@ -18858,7 +18968,7 @@ namespace BoxGenerator2
 
     public class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
     {
-        public override string FourCC { get { return "stmi"; } }
+        public override string FourCC { get; set; } = "stmi";
 
         protected uint meta_box_handler_type;
         public uint MetaBoxHandlerType { get { return meta_box_handler_type; } set { meta_box_handler_type = value; } }
@@ -18919,7 +19029,7 @@ namespace BoxGenerator2
 
     public class TemporalLevelEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "tele"; } }
+        public override string FourCC { get; set; } = "tele";
 
         protected bool level_independently_decodable;
         public bool LevelIndependentlyDecodable { get { return level_independently_decodable; } set { level_independently_decodable = value; } }
@@ -18962,7 +19072,7 @@ namespace BoxGenerator2
 
     public class PixelAspectRatioEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "pasr"; } }
+        public override string FourCC { get; set; } = "pasr";
 
         protected uint hSpacing;
         public uint HSpacing { get { return hSpacing; } set { hSpacing = value; } }
@@ -19005,7 +19115,7 @@ namespace BoxGenerator2
 
     public class CleanApertureEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "casg"; } }
+        public override string FourCC { get; set; } = "casg";
 
         protected uint cleanApertureWidthN;
         public uint CleanApertureWidthN { get { return cleanApertureWidthN; } set { cleanApertureWidthN = value; } }
@@ -19084,7 +19194,7 @@ namespace BoxGenerator2
 
     public class TrackGroupTypeBox : FullBox
     {
-        public override string FourCC { get { return "msrc"; } }
+        public override string FourCC { get; set; } = "msrc";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return track_group_id; } set { track_group_id = value; } }
@@ -19124,7 +19234,7 @@ namespace BoxGenerator2
 
     public class StereoVideoGroupBox : TrackGroupTypeBox
     {
-        public override string FourCC { get { return "ster"; } }
+        public override string FourCC { get; set; } = "ster";
 
         protected bool left_view_flag;
         public bool LeftViewFlag { get { return left_view_flag; } set { left_view_flag = value; } }
@@ -19167,7 +19277,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox : Box
     {
-        public override string FourCC { get { return "auxl"; } }
+        public override string FourCC { get; set; } = "auxl";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -19204,7 +19314,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox1 : Box
     {
-        public override string FourCC { get { return "font"; } }
+        public override string FourCC { get; set; } = "font";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -19241,7 +19351,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox2 : Box
     {
-        public override string FourCC { get { return "hind"; } }
+        public override string FourCC { get; set; } = "hind";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -19278,7 +19388,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox3 : Box
     {
-        public override string FourCC { get { return "hint"; } }
+        public override string FourCC { get; set; } = "hint";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -19315,7 +19425,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox4 : Box
     {
-        public override string FourCC { get { return "subt"; } }
+        public override string FourCC { get; set; } = "subt";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -19352,7 +19462,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox5 : Box
     {
-        public override string FourCC { get { return "thmb"; } }
+        public override string FourCC { get; set; } = "thmb";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -19389,7 +19499,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox6 : Box
     {
-        public override string FourCC { get { return "vdep"; } }
+        public override string FourCC { get; set; } = "vdep";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -19426,7 +19536,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox7 : Box
     {
-        public override string FourCC { get { return "vplx"; } }
+        public override string FourCC { get; set; } = "vplx";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -19463,7 +19573,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox8 : Box
     {
-        public override string FourCC { get { return "cdsc"; } }
+        public override string FourCC { get; set; } = "cdsc";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -19500,7 +19610,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox9 : Box
     {
-        public override string FourCC { get { return "adda"; } }
+        public override string FourCC { get; set; } = "adda";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -19537,7 +19647,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox10 : Box
     {
-        public override string FourCC { get { return "adrc"; } }
+        public override string FourCC { get; set; } = "adrc";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -19574,7 +19684,7 @@ namespace BoxGenerator2
 
     public class HEVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "hvc1"; } }
+        public override string FourCC { get; set; } = "hvc1";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -19620,7 +19730,7 @@ namespace BoxGenerator2
 
     public class HEVCLHVCSampleEntry : HEVCSampleEntry
     {
-        public override string FourCC { get { return "hvc1"; } }
+        public override string FourCC { get; set; } = "hvc1";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return lhvcconfig; } set { lhvcconfig = value; } }
@@ -19660,7 +19770,7 @@ namespace BoxGenerator2
 
     public class HEVCSampleEntry1 : VisualSampleEntry
     {
-        public override string FourCC { get { return "hvc2"; } }
+        public override string FourCC { get; set; } = "hvc2";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -19706,7 +19816,7 @@ namespace BoxGenerator2
 
     public class HEVCLHVCSampleEntry1 : HEVCSampleEntry
     {
-        public override string FourCC { get { return "hvc2"; } }
+        public override string FourCC { get; set; } = "hvc2";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return lhvcconfig; } set { lhvcconfig = value; } }
@@ -19746,7 +19856,7 @@ namespace BoxGenerator2
 
     public class HEVCSampleEntry2 : VisualSampleEntry
     {
-        public override string FourCC { get { return "hvc3"; } }
+        public override string FourCC { get; set; } = "hvc3";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -19792,7 +19902,7 @@ namespace BoxGenerator2
 
     public class HEVCLHVCSampleEntry2 : HEVCSampleEntry
     {
-        public override string FourCC { get { return "hvc3"; } }
+        public override string FourCC { get; set; } = "hvc3";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return lhvcconfig; } set { lhvcconfig = value; } }
@@ -19832,7 +19942,7 @@ namespace BoxGenerator2
 
     public class LHEVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "lhv1"; } }
+        public override string FourCC { get; set; } = "lhv1";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return lhvcconfig; } set { lhvcconfig = value; } }
@@ -19878,7 +19988,7 @@ namespace BoxGenerator2
 
     public class LHEVCSampleEntry1 : VisualSampleEntry
     {
-        public override string FourCC { get { return "lhe1"; } }
+        public override string FourCC { get; set; } = "lhe1";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return lhvcconfig; } set { lhvcconfig = value; } }
@@ -19924,7 +20034,7 @@ namespace BoxGenerator2
 
     public class HEVCSampleEntry3 : VisualSampleEntry
     {
-        public override string FourCC { get { return "hev1"; } }
+        public override string FourCC { get; set; } = "hev1";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -19970,7 +20080,7 @@ namespace BoxGenerator2
 
     public class HEVCLHVCSampleEntry3 : HEVCSampleEntry
     {
-        public override string FourCC { get { return "hev1"; } }
+        public override string FourCC { get; set; } = "hev1";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return lhvcconfig; } set { lhvcconfig = value; } }
@@ -20010,7 +20120,7 @@ namespace BoxGenerator2
 
     public class HEVCSampleEntry4 : VisualSampleEntry
     {
-        public override string FourCC { get { return "hev2"; } }
+        public override string FourCC { get; set; } = "hev2";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -20056,7 +20166,7 @@ namespace BoxGenerator2
 
     public class HEVCLHVCSampleEntry4 : HEVCSampleEntry
     {
-        public override string FourCC { get { return "hev2"; } }
+        public override string FourCC { get; set; } = "hev2";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return lhvcconfig; } set { lhvcconfig = value; } }
@@ -20096,7 +20206,7 @@ namespace BoxGenerator2
 
     public class HEVCSampleEntry5 : VisualSampleEntry
     {
-        public override string FourCC { get { return "hev3"; } }
+        public override string FourCC { get; set; } = "hev3";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -20142,7 +20252,7 @@ namespace BoxGenerator2
 
     public class HEVCLHVCSampleEntry5 : HEVCSampleEntry
     {
-        public override string FourCC { get { return "hev3"; } }
+        public override string FourCC { get; set; } = "hev3";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return lhvcconfig; } set { lhvcconfig = value; } }
@@ -20182,7 +20292,7 @@ namespace BoxGenerator2
 
     public class AVCParameterSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "avcp"; } }
+        public override string FourCC { get; set; } = "avcp";
 
         protected AVCConfigurationBox config;
         public AVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -20222,7 +20332,7 @@ namespace BoxGenerator2
 
     public class AVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "avc1"; } }
+        public override string FourCC { get; set; } = "avc1";
 
         protected AVCConfigurationBox config;
         public AVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -20268,7 +20378,7 @@ namespace BoxGenerator2
 
     public class AVCSampleEntry1 : VisualSampleEntry
     {
-        public override string FourCC { get { return "avc3"; } }
+        public override string FourCC { get; set; } = "avc3";
 
         protected AVCConfigurationBox config;
         public AVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -20314,7 +20424,7 @@ namespace BoxGenerator2
 
     public class AVCMVCSampleEntry : AVCSampleEntry
     {
-        public override string FourCC { get { return "avc1"; } }
+        public override string FourCC { get; set; } = "avc1";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return scalability; } set { scalability = value; } }
@@ -20402,7 +20512,7 @@ namespace BoxGenerator2
 
     public class AVCMVCSampleEntry1 : AVCSampleEntry
     {
-        public override string FourCC { get { return "avc3"; } }
+        public override string FourCC { get; set; } = "avc3";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return scalability; } set { scalability = value; } }
@@ -20490,7 +20600,7 @@ namespace BoxGenerator2
 
     public class AVC2SampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "avc2"; } }
+        public override string FourCC { get; set; } = "avc2";
 
         protected AVCConfigurationBox config;
         public AVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -20536,7 +20646,7 @@ namespace BoxGenerator2
 
     public class AVC2SampleEntry1 : VisualSampleEntry
     {
-        public override string FourCC { get { return "avc4"; } }
+        public override string FourCC { get; set; } = "avc4";
 
         protected AVCConfigurationBox config;
         public AVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -20582,7 +20692,7 @@ namespace BoxGenerator2
 
     public class AVC2MVCSampleEntry : AVC2SampleEntry
     {
-        public override string FourCC { get { return "avc2"; } }
+        public override string FourCC { get; set; } = "avc2";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return scalability; } set { scalability = value; } }
@@ -20670,7 +20780,7 @@ namespace BoxGenerator2
 
     public class AVC2MVCSampleEntry1 : AVC2SampleEntry
     {
-        public override string FourCC { get { return "avc4"; } }
+        public override string FourCC { get; set; } = "avc4";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return scalability; } set { scalability = value; } }
@@ -20758,7 +20868,7 @@ namespace BoxGenerator2
 
     public class MVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "mvc1"; } }
+        public override string FourCC { get; set; } = "mvc1";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return mvcconfig; } set { mvcconfig = value; } }
@@ -20852,7 +20962,7 @@ namespace BoxGenerator2
 
     public class MVCSampleEntry1 : VisualSampleEntry
     {
-        public override string FourCC { get { return "mvc2"; } }
+        public override string FourCC { get; set; } = "mvc2";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return mvcconfig; } set { mvcconfig = value; } }
@@ -20946,7 +21056,7 @@ namespace BoxGenerator2
 
     public class MVCSampleEntry2 : VisualSampleEntry
     {
-        public override string FourCC { get { return "mvc3"; } }
+        public override string FourCC { get; set; } = "mvc3";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return mvcconfig; } set { mvcconfig = value; } }
@@ -21040,7 +21150,7 @@ namespace BoxGenerator2
 
     public class MVCSampleEntry3 : VisualSampleEntry
     {
-        public override string FourCC { get { return "mvc4"; } }
+        public override string FourCC { get; set; } = "mvc4";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return mvcconfig; } set { mvcconfig = value; } }
@@ -21134,7 +21244,7 @@ namespace BoxGenerator2
 
     public class MVCDSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "mvd1"; } }
+        public override string FourCC { get; set; } = "mvd1";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return mvcdconfig; } set { mvcdconfig = value; } }
@@ -21210,7 +21320,7 @@ namespace BoxGenerator2
 
     public class MVCDSampleEntry1 : VisualSampleEntry
     {
-        public override string FourCC { get { return "mvd2"; } }
+        public override string FourCC { get; set; } = "mvd2";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return mvcdconfig; } set { mvcdconfig = value; } }
@@ -21286,7 +21396,7 @@ namespace BoxGenerator2
 
     public class MVCDSampleEntry2 : VisualSampleEntry
     {
-        public override string FourCC { get { return "mvd3"; } }
+        public override string FourCC { get; set; } = "mvd3";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return mvcdconfig; } set { mvcdconfig = value; } }
@@ -21362,7 +21472,7 @@ namespace BoxGenerator2
 
     public class MVCDSampleEntry3 : VisualSampleEntry
     {
-        public override string FourCC { get { return "mvd4"; } }
+        public override string FourCC { get; set; } = "mvd4";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return mvcdconfig; } set { mvcdconfig = value; } }
@@ -21438,7 +21548,7 @@ namespace BoxGenerator2
 
     public class A3DSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "a3d1"; } }
+        public override string FourCC { get; set; } = "a3d1";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return a3dconfig; } set { a3dconfig = value; } }
@@ -21508,7 +21618,7 @@ namespace BoxGenerator2
 
     public class A3DSampleEntry1 : VisualSampleEntry
     {
-        public override string FourCC { get { return "a3d2"; } }
+        public override string FourCC { get; set; } = "a3d2";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return a3dconfig; } set { a3dconfig = value; } }
@@ -21578,7 +21688,7 @@ namespace BoxGenerator2
 
     public class A3DSampleEntry2 : VisualSampleEntry
     {
-        public override string FourCC { get { return "a3d3"; } }
+        public override string FourCC { get; set; } = "a3d3";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return a3dconfig; } set { a3dconfig = value; } }
@@ -21648,7 +21758,7 @@ namespace BoxGenerator2
 
     public class A3DSampleEntry3 : VisualSampleEntry
     {
-        public override string FourCC { get { return "a3d4"; } }
+        public override string FourCC { get; set; } = "a3d4";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return a3dconfig; } set { a3dconfig = value; } }
@@ -21718,7 +21828,7 @@ namespace BoxGenerator2
 
     public class AVCSVCSampleEntry : AVCSampleEntry
     {
-        public override string FourCC { get { return "avc1"; } }
+        public override string FourCC { get; set; } = "avc1";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return svcconfig; } set { svcconfig = value; } }
@@ -21770,7 +21880,7 @@ namespace BoxGenerator2
 
     public class AVCSVCSampleEntry1 : AVCSampleEntry
     {
-        public override string FourCC { get { return "avc3"; } }
+        public override string FourCC { get; set; } = "avc3";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return svcconfig; } set { svcconfig = value; } }
@@ -21822,7 +21932,7 @@ namespace BoxGenerator2
 
     public class AVC2SVCSampleEntry : AVC2SampleEntry
     {
-        public override string FourCC { get { return "avc2"; } }
+        public override string FourCC { get; set; } = "avc2";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return svcconfig; } set { svcconfig = value; } }
@@ -21874,7 +21984,7 @@ namespace BoxGenerator2
 
     public class AVC2SVCSampleEntry1 : AVC2SampleEntry
     {
-        public override string FourCC { get { return "avc4"; } }
+        public override string FourCC { get; set; } = "avc4";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return svcconfig; } set { svcconfig = value; } }
@@ -21926,7 +22036,7 @@ namespace BoxGenerator2
 
     public class SVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "svc1"; } }
+        public override string FourCC { get; set; } = "svc1";
 
         protected SVCConfigurationBox svcconfig;
         public SVCConfigurationBox Svcconfig { get { return svcconfig; } set { svcconfig = value; } }
@@ -21984,7 +22094,7 @@ namespace BoxGenerator2
 
     public class SVCSampleEntry1 : VisualSampleEntry
     {
-        public override string FourCC { get { return "svc2"; } }
+        public override string FourCC { get; set; } = "svc2";
 
         protected SVCConfigurationBox svcconfig;
         public SVCConfigurationBox Svcconfig { get { return svcconfig; } set { svcconfig = value; } }
@@ -22042,7 +22152,7 @@ namespace BoxGenerator2
 
     public class HEVCTileSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "hvt1"; } }
+        public override string FourCC { get; set; } = "hvt1";
 
         protected HEVCTileConfigurationBox config;  //  optional
         public HEVCTileConfigurationBox Config { get { return config; } set { config = value; } }
@@ -22082,7 +22192,7 @@ namespace BoxGenerator2
 
     public class LHEVCTileSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "lht1"; } }
+        public override string FourCC { get; set; } = "lht1";
 
         public LHEVCTileSampleEntry()
         { }
@@ -22113,7 +22223,7 @@ namespace BoxGenerator2
 
     public class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "hvt3"; } }
+        public override string FourCC { get; set; } = "hvt3";
 
         protected HEVCTileConfigurationBox config;  //  optional 
         public HEVCTileConfigurationBox Config { get { return config; } set { config = value; } }
@@ -22153,7 +22263,7 @@ namespace BoxGenerator2
 
     public class HEVCSliceSegmentDataSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "hvt2"; } }
+        public override string FourCC { get; set; } = "hvt2";
 
         protected HEVCTileConfigurationBox config;  //  optional
         public HEVCTileConfigurationBox Config { get { return config; } set { config = value; } }
@@ -22193,7 +22303,7 @@ namespace BoxGenerator2
 
     public class VvcSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "vvc1"; } }
+        public override string FourCC { get; set; } = "vvc1";
 
         protected VvcConfigurationBox config;
         public VvcConfigurationBox Config { get { return config; } set { config = value; } }
@@ -22239,7 +22349,7 @@ namespace BoxGenerator2
 
     public class VvcSampleEntry1 : VisualSampleEntry
     {
-        public override string FourCC { get { return "vvi1"; } }
+        public override string FourCC { get; set; } = "vvi1";
 
         protected VvcConfigurationBox config;
         public VvcConfigurationBox Config { get { return config; } set { config = value; } }
@@ -22285,7 +22395,7 @@ namespace BoxGenerator2
 
     public class VvcSubpicSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "vvs1"; } }
+        public override string FourCC { get; set; } = "vvs1";
 
         protected VvcNALUConfigBox config;
         public VvcNALUConfigBox Config { get { return config; } set { config = value; } }
@@ -22325,7 +22435,7 @@ namespace BoxGenerator2
 
     public class VvcNonVCLSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "vvcN"; } }
+        public override string FourCC { get; set; } = "vvcN";
 
         protected VvcNALUConfigBox config;
         public VvcNALUConfigBox Config { get { return config; } set { config = value; } }
@@ -22365,7 +22475,7 @@ namespace BoxGenerator2
 
     public class EVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "evc1"; } }
+        public override string FourCC { get; set; } = "evc1";
 
         protected EVCConfigurationBox config;
         public EVCConfigurationBox Config { get { return config; } set { config = value; } }
@@ -22411,7 +22521,7 @@ namespace BoxGenerator2
 
     public class SVCMetadataSampleEntry : MetadataSampleEntry
     {
-        public override string FourCC { get { return "svcM"; } }
+        public override string FourCC { get; set; } = "svcM";
 
         protected SVCMetadataSampleConfigBox config;
         public SVCMetadataSampleConfigBox Config { get { return config; } set { config = value; } }
@@ -22463,7 +22573,7 @@ namespace BoxGenerator2
 
     public class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get { return "evs1"; } }
+        public override string FourCC { get; set; } = "evs1";
 
         protected EVCSliceComponentTrackConfigurationBox config;
         public EVCSliceComponentTrackConfigurationBox Config { get { return config; } set { config = value; } }
@@ -22503,7 +22613,7 @@ namespace BoxGenerator2
 
     public class EVCSliceComponentTrackSampleEntry1 : VisualSampleEntry
     {
-        public override string FourCC { get { return "evs2"; } }
+        public override string FourCC { get; set; } = "evs2";
 
         protected EVCSliceComponentTrackConfigurationBox config;
         public EVCSliceComponentTrackConfigurationBox Config { get { return config; } set { config = value; } }
@@ -22543,7 +22653,7 @@ namespace BoxGenerator2
 
     public class SubpicCommonGroupBox : EntityToGroupBox
     {
-        public override string FourCC { get { return "acgl"; } }
+        public override string FourCC { get; set; } = "acgl";
 
         protected bool level_is_present_flag;
         public bool LevelIsPresentFlag { get { return level_is_present_flag; } set { level_is_present_flag = value; } }
@@ -22634,7 +22744,7 @@ namespace BoxGenerator2
 
     public class SubpicMultipleGroupsBox : EntityToGroupBox
     {
-        public override string FourCC { get { return "amgl"; } }
+        public override string FourCC { get; set; } = "amgl";
 
         protected bool level_is_present_flag;
         public bool LevelIsPresentFlag { get { return level_is_present_flag; } set { level_is_present_flag = value; } }
@@ -22764,7 +22874,7 @@ namespace BoxGenerator2
 
     public class OperatingPointGroupBox : EntityToGroupBox
     {
-        public override string FourCC { get { return "opeg"; } }
+        public override string FourCC { get; set; } = "opeg";
 
         protected byte num_profile_tier_level_minus1;
         public byte NumProfileTierLevelMinus1 { get { return num_profile_tier_level_minus1; } set { num_profile_tier_level_minus1 = value; } }
@@ -23113,7 +23223,7 @@ namespace BoxGenerator2
 
     public class SwitchableTracks : EntityToGroupBox
     {
-        public override string FourCC { get { return "swtk"; } }
+        public override string FourCC { get; set; } = "swtk";
 
         protected ushort[] track_switch_hierarchy_id;
         public ushort[] TrackSwitchHierarchyId { get { return track_switch_hierarchy_id; } set { track_switch_hierarchy_id = value; } }
@@ -23162,7 +23272,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox1 : FullBox
     {
-        public override string FourCC { get { return "vvcb"; } }
+        public override string FourCC { get; set; } = "vvcb";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -23223,7 +23333,7 @@ namespace BoxGenerator2
 
     public class AUDSampleEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "aud "; } }
+        public override string FourCC { get; set; } = "aud ";
 
         protected uint audNalUnit;
         public uint AudNalUnit { get { return audNalUnit; } set { audNalUnit = value; } }
@@ -23260,7 +23370,7 @@ namespace BoxGenerator2
 
     public class AVCLayerEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "avll"; } }
+        public override string FourCC { get; set; } = "avll";
 
         protected byte layerNumber;
         public byte LayerNumber { get { return layerNumber; } set { layerNumber = value; } }
@@ -23321,7 +23431,7 @@ namespace BoxGenerator2
 
     public class AVCSubSequenceEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "avss"; } }
+        public override string FourCC { get; set; } = "avss";
 
         protected ushort subSequenceIdentifer;
         public ushort SubSequenceIdentifer { get { return subSequenceIdentifer; } set { subSequenceIdentifer = value; } }
@@ -23448,7 +23558,7 @@ namespace BoxGenerator2
 
     public class DecodingCapabilityInformation : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "dcfi"; } }
+        public override string FourCC { get; set; } = "dcfi";
 
         protected ushort dci_nal_unit_length;
         public ushort DciNalUnitLength { get { return dci_nal_unit_length; } set { dci_nal_unit_length = value; } }
@@ -23491,7 +23601,7 @@ namespace BoxGenerator2
 
     public class DecodeRetimingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "dtrt"; } }
+        public override string FourCC { get; set; } = "dtrt";
 
         protected byte tierCount;
         public byte TierCount { get { return tierCount; } set { tierCount = value; } }
@@ -23552,7 +23662,7 @@ namespace BoxGenerator2
 
     public class EndOfBitstreamSampleEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "eob "; } }
+        public override string FourCC { get; set; } = "eob ";
 
         protected ushort eobNalUnit;
         public ushort EobNalUnit { get { return eobNalUnit; } set { eobNalUnit = value; } }
@@ -23589,7 +23699,7 @@ namespace BoxGenerator2
 
     public class EndOfSequenceSampleEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "eos "; } }
+        public override string FourCC { get; set; } = "eos ";
 
         protected byte num_eos_nal_unit_minus1;
         public byte NumEosNalUnitMinus1 { get { return num_eos_nal_unit_minus1; } set { num_eos_nal_unit_minus1 = value; } }
@@ -23644,7 +23754,7 @@ namespace BoxGenerator2
 
     public class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "lbli"; } }
+        public override string FourCC { get; set; } = "lbli";
 
         protected bool reserved = true;
         public bool Reserved { get { return reserved; } set { reserved = value; } }
@@ -23699,7 +23809,7 @@ namespace BoxGenerator2
 
     public class LayerInfoGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "linf"; } }
+        public override string FourCC { get; set; } = "linf";
 
         protected byte reserved = 0;
         public byte Reserved { get { return reserved; } set { reserved = value; } }
@@ -23802,7 +23912,7 @@ namespace BoxGenerator2
 
     public class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "minp"; } }
+        public override string FourCC { get; set; } = "minp";
 
         protected ushort num_mix_nalu_pic_idx;
         public ushort NumMixNaluPicIdx { get { return num_mix_nalu_pic_idx; } set { num_mix_nalu_pic_idx = value; } }
@@ -23875,7 +23985,7 @@ namespace BoxGenerator2
 
     public class MultiviewGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "mvif"; } }
+        public override string FourCC { get; set; } = "mvif";
 
         protected byte groupID;
         public byte GroupID { get { return groupID; } set { groupID = value; } }
@@ -24014,7 +24124,7 @@ namespace BoxGenerator2
 
     public class NALUMapEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "nalm"; } }
+        public override string FourCC { get; set; } = "nalm";
 
         protected byte reserved = 0;
         public byte Reserved { get { return reserved; } set { reserved = value; } }
@@ -24165,7 +24275,7 @@ namespace BoxGenerator2
 
     public class OperatingPointsInformation : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "oinf"; } }
+        public override string FourCC { get; set; } = "oinf";
 
         protected OperatingPointsRecord oinf;
         public OperatingPointsRecord Oinf { get { return oinf; } set { oinf = value; } }
@@ -24202,7 +24312,7 @@ namespace BoxGenerator2
 
     public class OperatingPointDecodeTimeHint : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "opth"; } }
+        public override string FourCC { get; set; } = "opth";
 
         protected int delta_time;
         public int DeltaTime { get { return delta_time; } set { delta_time = value; } }
@@ -24239,7 +24349,7 @@ namespace BoxGenerator2
 
     public class ParameterSetNALUEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "pase"; } }
+        public override string FourCC { get; set; } = "pase";
 
         protected ushort ps_nalu_length;
         public ushort PsNaluLength { get { return ps_nalu_length; } set { ps_nalu_length = value; } }
@@ -24282,7 +24392,7 @@ namespace BoxGenerator2
 
     public class PSSampleGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "pss1"; } }
+        public override string FourCC { get; set; } = "pss1";
 
         protected bool sps_present;
         public bool SpsPresent { get { return sps_present; } set { sps_present = value; } }
@@ -24337,7 +24447,7 @@ namespace BoxGenerator2
 
     public class VvcRectRegionOrderEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "rror"; } }
+        public override string FourCC { get; set; } = "rror";
 
         protected bool subpic_id_info_flag;
         public bool SubpicIdInfoFlag { get { return subpic_id_info_flag; } set { subpic_id_info_flag = value; } }
@@ -24470,7 +24580,7 @@ namespace BoxGenerator2
 
     public class ScalableGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "scif"; } }
+        public override string FourCC { get; set; } = "scif";
 
         protected byte groupID;
         public byte GroupID { get { return groupID; } set { groupID = value; } }
@@ -24639,7 +24749,7 @@ namespace BoxGenerator2
 
     public class ScalableNALUMapEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "scnm"; } }
+        public override string FourCC { get; set; } = "scnm";
 
         protected byte reserved = 0;
         public byte Reserved { get { return reserved; } set { reserved = value; } }
@@ -24700,7 +24810,7 @@ namespace BoxGenerator2
 
     public class VvcSubpicIDEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "spid"; } }
+        public override string FourCC { get; set; } = "spid";
 
         protected bool rect_region_flag;
         public bool RectRegionFlag { get { return rect_region_flag; } set { rect_region_flag = value; } }
@@ -24803,7 +24913,7 @@ namespace BoxGenerator2
 
     public class SubpicLevelInfoEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "spli"; } }
+        public override string FourCC { get; set; } = "spli";
 
         protected byte level_idc;
         public byte LevelIdc { get { return level_idc; } set { level_idc = value; } }
@@ -24840,7 +24950,7 @@ namespace BoxGenerator2
 
     public class VvcSubpicOrderEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "spor"; } }
+        public override string FourCC { get; set; } = "spor";
 
         protected bool subpic_id_info_flag;
         public bool SubpicIdInfoFlag { get { return subpic_id_info_flag; } set { subpic_id_info_flag = value; } }
@@ -24919,7 +25029,7 @@ namespace BoxGenerator2
 
     public class StepwiseTemporalLayerEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "stsa"; } }
+        public override string FourCC { get; set; } = "stsa";
 
         public StepwiseTemporalLayerEntry()
         { }
@@ -24950,7 +25060,7 @@ namespace BoxGenerator2
 
     public class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "sulm"; } }
+        public override string FourCC { get; set; } = "sulm";
 
         protected uint groupID_info_4cc;
         public uint GroupIDInfo4cc { get { return groupID_info_4cc; } set { groupID_info_4cc = value; } }
@@ -25011,7 +25121,7 @@ namespace BoxGenerator2
 
     public class SyncSampleEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "sync"; } }
+        public override string FourCC { get; set; } = "sync";
 
         protected byte reserved = 0;
         public byte Reserved { get { return reserved; } set { reserved = value; } }
@@ -25054,7 +25164,7 @@ namespace BoxGenerator2
 
     public class RectangularRegionGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "trif"; } }
+        public override string FourCC { get; set; } = "trif";
 
         protected ushort groupID;
         public ushort GroupID { get { return groupID; } set { groupID = value; } }
@@ -25229,7 +25339,7 @@ namespace BoxGenerator2
 
     public class TemporalSubLayerEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "tsas"; } }
+        public override string FourCC { get; set; } = "tsas";
 
         public TemporalSubLayerEntry()
         { }
@@ -25260,7 +25370,7 @@ namespace BoxGenerator2
 
     public class TemporalLayerEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "tscl"; } }
+        public override string FourCC { get; set; } = "tscl";
 
         protected byte temporalLayerId;
         public byte TemporalLayerId { get { return temporalLayerId; } set { temporalLayerId = value; } }
@@ -25357,7 +25467,7 @@ namespace BoxGenerator2
 
     public class ViewPriorityEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "vipr"; } }
+        public override string FourCC { get; set; } = "vipr";
 
         protected ViewPriorityBox ViewPriorityBox;
         public ViewPriorityBox _ViewPriorityBox { get { return ViewPriorityBox; } set { ViewPriorityBox = value; } }
@@ -25394,7 +25504,7 @@ namespace BoxGenerator2
 
     public class VvcOperatingPointsInformation : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "vopi"; } }
+        public override string FourCC { get; set; } = "vopi";
 
         protected VvcOperatingPointsRecord oinf;
         public VvcOperatingPointsRecord Oinf { get { return oinf; } set { oinf = value; } }
@@ -25431,7 +25541,7 @@ namespace BoxGenerator2
 
     public class TrackGroupTypeBox1 : FullBox
     {
-        public override string FourCC { get { return "alte"; } }
+        public override string FourCC { get; set; } = "alte";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return track_group_id; } set { track_group_id = value; } }
@@ -25471,7 +25581,7 @@ namespace BoxGenerator2
 
     public class TrackGroupTypeBox2 : FullBox
     {
-        public override string FourCC { get { return "cstg"; } }
+        public override string FourCC { get; set; } = "cstg";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return track_group_id; } set { track_group_id = value; } }
@@ -25511,7 +25621,7 @@ namespace BoxGenerator2
 
     public class TrackGroupTypeBox3 : FullBox
     {
-        public override string FourCC { get { return "snut"; } }
+        public override string FourCC { get; set; } = "snut";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return track_group_id; } set { track_group_id = value; } }
@@ -25551,7 +25661,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox11 : Box
     {
-        public override string FourCC { get { return "avcp"; } }
+        public override string FourCC { get; set; } = "avcp";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25591,7 +25701,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox12 : Box
     {
-        public override string FourCC { get { return "deps"; } }
+        public override string FourCC { get; set; } = "deps";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25628,7 +25738,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox13 : Box
     {
-        public override string FourCC { get { return "evcr"; } }
+        public override string FourCC { get; set; } = "evcr";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25665,7 +25775,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox14 : Box
     {
-        public override string FourCC { get { return "mixn"; } }
+        public override string FourCC { get; set; } = "mixn";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25702,7 +25812,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox15 : Box
     {
-        public override string FourCC { get { return "oref"; } }
+        public override string FourCC { get; set; } = "oref";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25739,7 +25849,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox16 : Box
     {
-        public override string FourCC { get { return "recr"; } }
+        public override string FourCC { get; set; } = "recr";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25776,7 +25886,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox17 : Box
     {
-        public override string FourCC { get { return "sabt"; } }
+        public override string FourCC { get; set; } = "sabt";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25813,7 +25923,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox18 : Box
     {
-        public override string FourCC { get { return "sbas"; } }
+        public override string FourCC { get; set; } = "sbas";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25850,7 +25960,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox19 : Box
     {
-        public override string FourCC { get { return "scal"; } }
+        public override string FourCC { get; set; } = "scal";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25887,7 +25997,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox20 : Box
     {
-        public override string FourCC { get { return "subp"; } }
+        public override string FourCC { get; set; } = "subp";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25924,7 +26034,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox21 : Box
     {
-        public override string FourCC { get { return "swfr"; } }
+        public override string FourCC { get; set; } = "swfr";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25961,7 +26071,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox22 : Box
     {
-        public override string FourCC { get { return "swto"; } }
+        public override string FourCC { get; set; } = "swto";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -25998,7 +26108,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox23 : Box
     {
-        public override string FourCC { get { return "tbas"; } }
+        public override string FourCC { get; set; } = "tbas";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -26035,7 +26145,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox24 : Box
     {
-        public override string FourCC { get { return "vref"; } }
+        public override string FourCC { get; set; } = "vref";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -26072,7 +26182,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox25 : Box
     {
-        public override string FourCC { get { return "vreg"; } }
+        public override string FourCC { get; set; } = "vreg";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -26109,7 +26219,7 @@ namespace BoxGenerator2
 
     public class TrackReferenceTypeBox26 : Box
     {
-        public override string FourCC { get { return "vvcN"; } }
+        public override string FourCC { get; set; } = "vvcN";
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
@@ -26149,7 +26259,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox2 : FullBox
     {
-        public override string FourCC { get { return "eqiv"; } }
+        public override string FourCC { get; set; } = "eqiv";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26210,7 +26320,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox3 : FullBox
     {
-        public override string FourCC { get { return "ster"; } }
+        public override string FourCC { get; set; } = "ster";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26271,7 +26381,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox4 : FullBox
     {
-        public override string FourCC { get { return "aebr"; } }
+        public override string FourCC { get; set; } = "aebr";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26332,7 +26442,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox5 : FullBox
     {
-        public override string FourCC { get { return "afbr"; } }
+        public override string FourCC { get; set; } = "afbr";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26393,7 +26503,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox6 : FullBox
     {
-        public override string FourCC { get { return "albc"; } }
+        public override string FourCC { get; set; } = "albc";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26454,7 +26564,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox7 : FullBox
     {
-        public override string FourCC { get { return "brst"; } }
+        public override string FourCC { get; set; } = "brst";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26515,7 +26625,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox8 : FullBox
     {
-        public override string FourCC { get { return "iaug"; } }
+        public override string FourCC { get; set; } = "iaug";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26576,7 +26686,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox9 : FullBox
     {
-        public override string FourCC { get { return "tsyn"; } }
+        public override string FourCC { get; set; } = "tsyn";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26637,7 +26747,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox10 : FullBox
     {
-        public override string FourCC { get { return "dobr"; } }
+        public override string FourCC { get; set; } = "dobr";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26698,7 +26808,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox11 : FullBox
     {
-        public override string FourCC { get { return "favc"; } }
+        public override string FourCC { get; set; } = "favc";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26759,7 +26869,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox12 : FullBox
     {
-        public override string FourCC { get { return "fobr"; } }
+        public override string FourCC { get; set; } = "fobr";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26820,7 +26930,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox13 : FullBox
     {
-        public override string FourCC { get { return "pano"; } }
+        public override string FourCC { get; set; } = "pano";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26881,7 +26991,7 @@ namespace BoxGenerator2
 
     public class EntityToGroupBox14 : FullBox
     {
-        public override string FourCC { get { return "wbbr"; } }
+        public override string FourCC { get; set; } = "wbbr";
 
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
@@ -26942,7 +27052,7 @@ namespace BoxGenerator2
 
     public class AuxiliaryTypeProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "auxC"; } }
+        public override string FourCC { get; set; } = "auxC";
 
         protected string aux_type;
         public string AuxType { get { return aux_type; } set { aux_type = value; } }
@@ -26985,7 +27095,7 @@ namespace BoxGenerator2
 
     public class AVCConfigurationBox1 : Box
     {
-        public override string FourCC { get { return "avcC"; } }
+        public override string FourCC { get; set; } = "avcC";
 
         protected AVCDecoderConfigurationRecord AVCConfig;
         public AVCDecoderConfigurationRecord _AVCConfig { get { return AVCConfig; } set { AVCConfig = value; } }
@@ -27022,7 +27132,7 @@ namespace BoxGenerator2
 
     public class CleanApertureBox1 : Box
     {
-        public override string FourCC { get { return "clap"; } }
+        public override string FourCC { get; set; } = "clap";
 
         protected uint cleanApertureWidthN;
         public uint CleanApertureWidthN { get { return cleanApertureWidthN; } set { cleanApertureWidthN = value; } }
@@ -27101,7 +27211,7 @@ namespace BoxGenerator2
 
     public class ColourInformationBox1 : Box
     {
-        public override string FourCC { get { return "colr"; } }
+        public override string FourCC { get; set; } = "colr";
 
         protected uint colour_type;
         public uint ColourType { get { return colour_type; } set { colour_type = value; } }
@@ -27216,7 +27326,7 @@ namespace BoxGenerator2
 
     public class HEVCConfigurationBox1 : Box
     {
-        public override string FourCC { get { return "hvcC"; } }
+        public override string FourCC { get; set; } = "hvcC";
 
         protected HEVCDecoderConfigurationRecord HEVCConfig;
         public HEVCDecoderConfigurationRecord _HEVCConfig { get { return HEVCConfig; } set { HEVCConfig = value; } }
@@ -27253,7 +27363,7 @@ namespace BoxGenerator2
 
     public class ImageMirror : ItemProperty
     {
-        public override string FourCC { get { return "imir"; } }
+        public override string FourCC { get; set; } = "imir";
 
         protected byte reserved = 0;
         public byte Reserved { get { return reserved; } set { reserved = value; } }
@@ -27296,7 +27406,7 @@ namespace BoxGenerator2
 
     public class ImageRotation : ItemProperty
     {
-        public override string FourCC { get { return "irot"; } }
+        public override string FourCC { get; set; } = "irot";
 
         protected byte reserved = 0;
         public byte Reserved { get { return reserved; } set { reserved = value; } }
@@ -27339,7 +27449,7 @@ namespace BoxGenerator2
 
     public class ImageSpatialExtentsProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "ispe"; } }
+        public override string FourCC { get; set; } = "ispe";
 
         protected uint image_width;
         public uint ImageWidth { get { return image_width; } set { image_width = value; } }
@@ -27382,7 +27492,7 @@ namespace BoxGenerator2
 
     public class JPEGConfigurationBox : Box
     {
-        public override string FourCC { get { return "jpgC"; } }
+        public override string FourCC { get; set; } = "jpgC";
 
         protected byte[] JPEGprefix;
         public byte[] _JPEGprefix { get { return JPEGprefix; } set { JPEGprefix = value; } }
@@ -27419,7 +27529,7 @@ namespace BoxGenerator2
 
     public class LHEVCConfigurationBox1 : Box
     {
-        public override string FourCC { get { return "lhvC"; } }
+        public override string FourCC { get; set; } = "lhvC";
 
         protected LHEVCDecoderConfigurationRecord LHEVCConfig;
         public LHEVCDecoderConfigurationRecord _LHEVCConfig { get { return LHEVCConfig; } set { LHEVCConfig = value; } }
@@ -27456,7 +27566,7 @@ namespace BoxGenerator2
 
     public class LayerSelectorProperty : ItemProperty
     {
-        public override string FourCC { get { return "lsel"; } }
+        public override string FourCC { get; set; } = "lsel";
 
         protected ushort layer_id;
         public ushort LayerId { get { return layer_id; } set { layer_id = value; } }
@@ -27493,7 +27603,7 @@ namespace BoxGenerator2
 
     public class OperatingPointsInformationProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "oinf"; } }
+        public override string FourCC { get; set; } = "oinf";
 
         protected OperatingPointsRecord op_info;  //  specified in ISO/IEC 14496-15
         public OperatingPointsRecord OpInfo { get { return op_info; } set { op_info = value; } }
@@ -27530,7 +27640,7 @@ namespace BoxGenerator2
 
     public class PixelAspectRatioBox1 : Box
     {
-        public override string FourCC { get { return "pasp"; } }
+        public override string FourCC { get; set; } = "pasp";
 
         protected uint hSpacing;
         public uint HSpacing { get { return hSpacing; } set { hSpacing = value; } }
@@ -27573,7 +27683,7 @@ namespace BoxGenerator2
 
     public class PixelInformationProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "pixi"; } }
+        public override string FourCC { get; set; } = "pixi";
 
         protected byte num_channels;
         public byte NumChannels { get { return num_channels; } set { num_channels = value; } }
@@ -27628,7 +27738,7 @@ namespace BoxGenerator2
 
     public class RelativeLocationProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "rloc"; } }
+        public override string FourCC { get; set; } = "rloc";
 
         protected uint horizontal_offset;
         public uint HorizontalOffset { get { return horizontal_offset; } set { horizontal_offset = value; } }
@@ -27671,7 +27781,7 @@ namespace BoxGenerator2
 
     public class SubSampleInformationBox1 : FullBox
     {
-        public override string FourCC { get { return "subs"; } }
+        public override string FourCC { get; set; } = "subs";
 
         protected uint entry_count;
         public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
@@ -27813,7 +27923,7 @@ namespace BoxGenerator2
 
     public class TargetOlsProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "tols"; } }
+        public override string FourCC { get; set; } = "tols";
 
         protected ushort target_ols_idx;
         public ushort TargetOlsIdx { get { return target_ols_idx; } set { target_ols_idx = value; } }
@@ -27850,7 +27960,7 @@ namespace BoxGenerator2
 
     public class AutoExposureBracketingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "aebr"; } }
+        public override string FourCC { get; set; } = "aebr";
 
         protected sbyte exposure_step;
         public sbyte ExposureStep { get { return exposure_step; } set { exposure_step = value; } }
@@ -27893,7 +28003,7 @@ namespace BoxGenerator2
 
     public class FlashExposureBracketingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "afbr"; } }
+        public override string FourCC { get; set; } = "afbr";
 
         protected sbyte flash_exposure_numerator;
         public sbyte FlashExposureNumerator { get { return flash_exposure_numerator; } set { flash_exposure_numerator = value; } }
@@ -27936,7 +28046,7 @@ namespace BoxGenerator2
 
     public class AccessibilityTextProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "altt"; } }
+        public override string FourCC { get; set; } = "altt";
 
         protected string alt_text;
         public string AltText { get { return alt_text; } set { alt_text = value; } }
@@ -27979,7 +28089,7 @@ namespace BoxGenerator2
 
     public class CreationTimeProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "crtt"; } }
+        public override string FourCC { get; set; } = "crtt";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return creation_time; } set { creation_time = value; } }
@@ -28016,7 +28126,7 @@ namespace BoxGenerator2
 
     public class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "dobr"; } }
+        public override string FourCC { get; set; } = "dobr";
 
         protected sbyte f_stop_numerator;
         public sbyte FStopNumerator { get { return f_stop_numerator; } set { f_stop_numerator = value; } }
@@ -28059,7 +28169,7 @@ namespace BoxGenerator2
 
     public class FocusBracketingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "fobr"; } }
+        public override string FourCC { get; set; } = "fobr";
 
         protected ushort focus_distance_numerator;
         public ushort FocusDistanceNumerator { get { return focus_distance_numerator; } set { focus_distance_numerator = value; } }
@@ -28102,7 +28212,7 @@ namespace BoxGenerator2
 
     public class ImageScaling : ItemFullProperty
     {
-        public override string FourCC { get { return "iscl"; } }
+        public override string FourCC { get; set; } = "iscl";
 
         protected ushort target_width_numerator;
         public ushort TargetWidthNumerator { get { return target_width_numerator; } set { target_width_numerator = value; } }
@@ -28157,7 +28267,7 @@ namespace BoxGenerator2
 
     public class ModificationTimeProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "mdft"; } }
+        public override string FourCC { get; set; } = "mdft";
 
         protected ulong modification_time;
         public ulong ModificationTime { get { return modification_time; } set { modification_time = value; } }
@@ -28194,7 +28304,7 @@ namespace BoxGenerator2
 
     public class PanoramaEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "pano"; } }
+        public override string FourCC { get; set; } = "pano";
 
         protected ushort frame_number;
         public ushort FrameNumber { get { return frame_number; } set { frame_number = value; } }
@@ -28231,7 +28341,7 @@ namespace BoxGenerator2
 
     public class RequiredReferenceTypesProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "rref"; } }
+        public override string FourCC { get; set; } = "rref";
 
         protected byte reference_type_count;
         public byte ReferenceTypeCount { get { return reference_type_count; } set { reference_type_count = value; } }
@@ -28286,7 +28396,7 @@ namespace BoxGenerator2
 
     public class UserDescriptionProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "udes"; } }
+        public override string FourCC { get; set; } = "udes";
 
         protected string lang;
         public string Lang { get { return lang; } set { lang = value; } }
@@ -28341,7 +28451,7 @@ namespace BoxGenerator2
 
     public class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "wbbr"; } }
+        public override string FourCC { get; set; } = "wbbr";
 
         protected ushort blue_amber;
         public ushort BlueAmber { get { return blue_amber; } set { blue_amber = value; } }
@@ -28384,7 +28494,7 @@ namespace BoxGenerator2
 
     public class ContentColourVolumeBox1 : Box
     {
-        public override string FourCC { get { return "cclv"; } }
+        public override string FourCC { get; set; } = "cclv";
 
         protected bool reserved1 = false;  //  ccv_cancel_flag
         public bool Reserved1 { get { return reserved1; } set { reserved1 = value; } }
@@ -28547,7 +28657,7 @@ namespace BoxGenerator2
 
     public class MasteringDisplayColourVolumeBox1 : Box
     {
-        public override string FourCC { get { return "mdcv"; } }
+        public override string FourCC { get; set; } = "mdcv";
 
         protected ushort display_primaries_x;
         public ushort DisplayPrimariesX { get { return display_primaries_x; } set { display_primaries_x = value; } }
@@ -28626,7 +28736,7 @@ namespace BoxGenerator2
 
     public class ContentLightLevelBox1 : Box
     {
-        public override string FourCC { get { return "clli"; } }
+        public override string FourCC { get; set; } = "clli";
 
         protected ushort max_content_light_level;
         public ushort MaxContentLightLevel { get { return max_content_light_level; } set { max_content_light_level = value; } }
@@ -28669,7 +28779,7 @@ namespace BoxGenerator2
 
     public class WipeTransitionEffectProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "wipe"; } }
+        public override string FourCC { get; set; } = "wipe";
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return transition_direction; } set { transition_direction = value; } }
@@ -28706,7 +28816,7 @@ namespace BoxGenerator2
 
     public class ZoomTransitionEffectProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "zoom"; } }
+        public override string FourCC { get; set; } = "zoom";
 
         protected bool transition_direction;
         public bool TransitionDirection { get { return transition_direction; } set { transition_direction = value; } }
@@ -28749,7 +28859,7 @@ namespace BoxGenerator2
 
     public class FadeTransitionEffectProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "fade"; } }
+        public override string FourCC { get; set; } = "fade";
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return transition_direction; } set { transition_direction = value; } }
@@ -28786,7 +28896,7 @@ namespace BoxGenerator2
 
     public class SplitTransitionEffectProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "splt"; } }
+        public override string FourCC { get; set; } = "splt";
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return transition_direction; } set { transition_direction = value; } }
@@ -28823,7 +28933,7 @@ namespace BoxGenerator2
 
     public class SuggestedTransitionPeriodProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "stpe"; } }
+        public override string FourCC { get; set; } = "stpe";
 
         protected byte transition_period;
         public byte TransitionPeriod { get { return transition_period; } set { transition_period = value; } }
@@ -28860,7 +28970,7 @@ namespace BoxGenerator2
 
     public class SuggestedTimeDisplayDurationProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "ssld"; } }
+        public override string FourCC { get; set; } = "ssld";
 
         protected ushort duration;
         public ushort Duration { get { return duration; } set { duration = value; } }
@@ -28897,7 +29007,7 @@ namespace BoxGenerator2
 
     public class MaskConfigurationProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "mskC"; } }
+        public override string FourCC { get; set; } = "mskC";
 
         protected byte bits_per_pixel;
         public byte BitsPerPixel { get { return bits_per_pixel; } set { bits_per_pixel = value; } }
@@ -28934,7 +29044,7 @@ namespace BoxGenerator2
 
     public class VvcSubpicIDProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "spid"; } }
+        public override string FourCC { get; set; } = "spid";
 
         protected VvcSubpicIDEntry sid_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicIDEntry SidInfo { get { return sid_info; } set { sid_info = value; } }
@@ -28971,7 +29081,7 @@ namespace BoxGenerator2
 
     public class VvcSubpicOrderProperty : ItemFullProperty
     {
-        public override string FourCC { get { return "spor"; } }
+        public override string FourCC { get; set; } = "spor";
 
         protected VvcSubpicOrderEntry sor_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicOrderEntry SorInfo { get { return sor_info; } set { sor_info = value; } }
@@ -29008,7 +29118,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBox2 : Box
     {
-        public override string FourCC { get { return "auxl"; } }
+        public override string FourCC { get; set; } = "auxl";
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29069,7 +29179,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBoxLarge2 : Box
     {
-        public override string FourCC { get { return "auxl"; } }
+        public override string FourCC { get; set; } = "auxl";
 
         protected uint from_item_ID;
         public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29130,7 +29240,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBox3 : Box
     {
-        public override string FourCC { get { return "base"; } }
+        public override string FourCC { get; set; } = "base";
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29191,7 +29301,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBoxLarge3 : Box
     {
-        public override string FourCC { get { return "base"; } }
+        public override string FourCC { get; set; } = "base";
 
         protected uint from_item_ID;
         public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29252,7 +29362,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBox4 : Box
     {
-        public override string FourCC { get { return "dimg"; } }
+        public override string FourCC { get; set; } = "dimg";
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29313,7 +29423,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBoxLarge4 : Box
     {
-        public override string FourCC { get { return "dimg"; } }
+        public override string FourCC { get; set; } = "dimg";
 
         protected uint from_item_ID;
         public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29374,7 +29484,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBox5 : Box
     {
-        public override string FourCC { get { return "dpnd"; } }
+        public override string FourCC { get; set; } = "dpnd";
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29435,7 +29545,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBoxLarge5 : Box
     {
-        public override string FourCC { get { return "dpnd"; } }
+        public override string FourCC { get; set; } = "dpnd";
 
         protected uint from_item_ID;
         public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29496,7 +29606,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBox6 : Box
     {
-        public override string FourCC { get { return "exbl"; } }
+        public override string FourCC { get; set; } = "exbl";
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29557,7 +29667,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBoxLarge6 : Box
     {
-        public override string FourCC { get { return "exbl"; } }
+        public override string FourCC { get; set; } = "exbl";
 
         protected uint from_item_ID;
         public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29618,7 +29728,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBox7 : Box
     {
-        public override string FourCC { get { return "grid"; } }
+        public override string FourCC { get; set; } = "grid";
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29679,7 +29789,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBoxLarge7 : Box
     {
-        public override string FourCC { get { return "grid"; } }
+        public override string FourCC { get; set; } = "grid";
 
         protected uint from_item_ID;
         public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29740,7 +29850,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBox8 : Box
     {
-        public override string FourCC { get { return "thmb"; } }
+        public override string FourCC { get; set; } = "thmb";
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29801,7 +29911,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBoxLarge8 : Box
     {
-        public override string FourCC { get { return "thmb"; } }
+        public override string FourCC { get; set; } = "thmb";
 
         protected uint from_item_ID;
         public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29862,7 +29972,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBox9 : Box
     {
-        public override string FourCC { get { return "pred"; } }
+        public override string FourCC { get; set; } = "pred";
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29923,7 +30033,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBoxLarge9 : Box
     {
-        public override string FourCC { get { return "pred"; } }
+        public override string FourCC { get; set; } = "pred";
 
         protected uint from_item_ID;
         public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -29984,7 +30094,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBox10 : Box
     {
-        public override string FourCC { get { return "tbas"; } }
+        public override string FourCC { get; set; } = "tbas";
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -30045,7 +30155,7 @@ namespace BoxGenerator2
 
     public class SingleItemTypeReferenceBoxLarge10 : Box
     {
-        public override string FourCC { get { return "tbas"; } }
+        public override string FourCC { get; set; } = "tbas";
 
         protected uint from_item_ID;
         public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
@@ -30106,7 +30216,7 @@ namespace BoxGenerator2
 
     public class VisualEquivalenceEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "eqiv"; } }
+        public override string FourCC { get; set; } = "eqiv";
 
         protected short time_offset;
         public short TimeOffset { get { return time_offset; } set { time_offset = value; } }
@@ -30149,7 +30259,7 @@ namespace BoxGenerator2
 
     public class DirectReferenceSamplesList : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "refs"; } }
+        public override string FourCC { get; set; } = "refs";
 
         protected uint sample_id;
         public uint SampleId { get { return sample_id; } set { sample_id = value; } }
@@ -30210,7 +30320,7 @@ namespace BoxGenerator2
 
     public class AutoExposureBracketingEntry1 : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "aebr"; } }
+        public override string FourCC { get; set; } = "aebr";
 
         protected sbyte exposure_step;
         public sbyte ExposureStep { get { return exposure_step; } set { exposure_step = value; } }
@@ -30253,7 +30363,7 @@ namespace BoxGenerator2
 
     public class FlashExposureBracketingEntry1 : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "afbr"; } }
+        public override string FourCC { get; set; } = "afbr";
 
         protected sbyte flash_exposure_numerator;
         public sbyte FlashExposureNumerator { get { return flash_exposure_numerator; } set { flash_exposure_numerator = value; } }
@@ -30296,7 +30406,7 @@ namespace BoxGenerator2
 
     public class DepthOfFieldBracketingEntry1 : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "dobr"; } }
+        public override string FourCC { get; set; } = "dobr";
 
         protected sbyte f_stop_numerator;
         public sbyte FStopNumerator { get { return f_stop_numerator; } set { f_stop_numerator = value; } }
@@ -30339,7 +30449,7 @@ namespace BoxGenerator2
 
     public class FocusBracketingEntry1 : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "fobr"; } }
+        public override string FourCC { get; set; } = "fobr";
 
         protected ushort focus_distance_numerator;
         public ushort FocusDistanceNumerator { get { return focus_distance_numerator; } set { focus_distance_numerator = value; } }
@@ -30382,7 +30492,7 @@ namespace BoxGenerator2
 
     public class PanoramaEntry1 : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "pano"; } }
+        public override string FourCC { get; set; } = "pano";
 
         protected ushort frame_number;
         public ushort FrameNumber { get { return frame_number; } set { frame_number = value; } }
@@ -30419,7 +30529,7 @@ namespace BoxGenerator2
 
     public class WhiteBalanceBracketingEntry1 : VisualSampleGroupEntry
     {
-        public override string FourCC { get { return "wbbr"; } }
+        public override string FourCC { get; set; } = "wbbr";
 
         protected ushort blue_amber;
         public ushort BlueAmber { get { return blue_amber; } set { blue_amber = value; } }
