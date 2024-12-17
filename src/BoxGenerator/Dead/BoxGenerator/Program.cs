@@ -483,6 +483,7 @@ partial class Program
             Try(String("('cstg')")),
             Try(String("('alte')")),
             Try(String("(name)")),
+            Try(String("(unsigned int(32) extension_type)")),
             Try(String("('vvcb', version, flags)")),
             Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)")),
             Try(String("(unsigned int(32) grouping_type)")),
@@ -656,6 +657,7 @@ namespace BoxGenerator2
         {
             optAbstract = "abstract ";
         }
+        
 
         cls += @$"public {optAbstract}class {b.BoxName}";
         if (b.Extended != null)
@@ -666,6 +668,10 @@ namespace BoxGenerator2
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.FourCC))
         {
             cls += $"\tpublic override string FourCC {{ get {{ return \"{b.FourCC}\"; }} }}";
+        }
+        else if(b.BoxName == "ItemInfoExtension")
+        {
+            cls += " private string extensionType;\r\n        public override string FourCC { get { return extensionType; } }";
         }
 
         var fields = FlattenFields(b.Fields);

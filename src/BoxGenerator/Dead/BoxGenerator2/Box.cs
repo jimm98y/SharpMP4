@@ -31,16 +31,6 @@ namespace BoxGenerator2
         }
     }
 
-    public abstract class ItemInfoExtension : Box
-    {
-
-    }
-
-    public abstract class PlainTextSampleEntry : Box
-    {
-
-    }
-
     public class ICC_profile
     {
         // ISO 15076‐1 or ICC.1:2010

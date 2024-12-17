@@ -959,6 +959,481 @@ namespace BoxGenerator2
     }
 
 
+    public class ItemInfoExtension : Box
+    {
+        private string extensionType;
+        public override string FourCC { get { return extensionType; } }
+
+        public ItemInfoExtension()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public class FDItemInfoExtension : ItemInfoExtension
+    {
+
+
+        protected string content_location;
+        public string ContentLocation { get { return content_location; } set { content_location = value; } }
+
+        protected string content_MD5;
+        public string ContentMD5 { get { return content_MD5; } set { content_MD5 = value; } }
+
+        protected ulong content_length;
+        public ulong ContentLength { get { return content_length; } set { content_length = value; } }
+
+        protected ulong transfer_length;
+        public ulong TransferLength { get { return transfer_length; } set { transfer_length = value; } }
+
+        protected byte entry_count;
+        public byte EntryCount { get { return entry_count; } set { entry_count = value; } }
+
+        protected uint group_id;
+        public uint GroupId { get { return group_id; } set { group_id = value; } }
+
+        public FDItemInfoExtension()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadString(stream, out this.content_location);
+            boxSize += IsoReaderWriter.ReadString(stream, out this.content_MD5);
+            boxSize += IsoReaderWriter.ReadUInt64(stream, out this.content_length);
+            boxSize += IsoReaderWriter.ReadUInt64(stream, out this.transfer_length);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.entry_count);
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += IsoReaderWriter.ReadUInt32(stream, out this.group_id);
+            }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.content_location);
+            boxSize += IsoReaderWriter.WriteString(stream, this.content_MD5);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.content_length);
+            boxSize += IsoReaderWriter.WriteUInt64(stream, this.transfer_length);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.entry_count);
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.group_id);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)content_location.Length * 8; // content_location
+            boxSize += (ulong)content_MD5.Length * 8; // content_MD5
+            boxSize += 64; // content_length
+            boxSize += 64; // transfer_length
+            boxSize += 8; // entry_count
+
+            for (int i = 1; i <= entry_count; i++)
+            {
+                boxSize += 32; // group_id
+            }
+            return boxSize;
+        }
+    }
+
+
+    public class ItemInfoEntry : FullBox
+    {
+
+
+        protected ushort item_ID;
+        public ushort ItemID { get { return item_ID; } set { item_ID = value; } }
+
+        protected ushort item_protection_index;
+        public ushort ItemProtectionIndex { get { return item_protection_index; } set { item_protection_index = value; } }
+
+        protected string item_name;
+        public string ItemName { get { return item_name; } set { item_name = value; } }
+
+        protected string content_type;
+        public string ContentType { get { return content_type; } set { content_type = value; } }
+
+        protected string content_encoding;  // optional 
+        public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
+
+        protected uint extension_type;  //  optional 
+        public uint ExtensionType { get { return extension_type; } set { extension_type = value; } }
+
+        protected ItemInfoExtension ItemInfoExtension;  //  optional 
+        public ItemInfoExtension _ItemInfoExtension { get { return ItemInfoExtension; } set { ItemInfoExtension = value; } }
+
+        protected ushort item_ID0;
+        public ushort ItemID0 { get { return item_ID0; } set { item_ID0 = value; } }
+
+        protected uint item_ID00;
+        public uint ItemID00 { get { return item_ID00; } set { item_ID00 = value; } }
+
+        protected ushort item_protection_index0;
+        public ushort ItemProtectionIndex0 { get { return item_protection_index0; } set { item_protection_index0 = value; } }
+
+        protected uint item_type;
+        public uint ItemType { get { return item_type; } set { item_type = value; } }
+
+        protected string item_name0;
+        public string ItemName0 { get { return item_name0; } set { item_name0 = value; } }
+
+        protected string content_type0;
+        public string ContentType0 { get { return content_type0; } set { content_type0 = value; } }
+
+        protected string content_encoding0;  //  optional 
+        public string ContentEncoding0 { get { return content_encoding0; } set { content_encoding0 = value; } }
+
+        protected string item_uri_type;
+        public string ItemUriType { get { return item_uri_type; } set { item_uri_type = value; } }
+
+        public ItemInfoEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+
+            if ((version == 0) || (version == 1))
+            {
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.item_ID);
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.item_protection_index);
+                boxSize += IsoReaderWriter.ReadString(stream, out this.item_name);
+                boxSize += IsoReaderWriter.ReadString(stream, out this.content_type);
+                if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.content_encoding); //optional 
+            }
+
+            if (version == 1)
+            {
+                if (boxSize < size) boxSize += IsoReaderWriter.ReadUInt32(stream, out this.extension_type); // optional 
+                if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.ItemInfoExtension); // optional 
+            }
+
+            if (version >= 2)
+            {
+
+                if (version == 2)
+                {
+                    boxSize += IsoReaderWriter.ReadUInt16(stream, out this.item_ID0);
+                }
+
+                else if (version == 3)
+                {
+                    boxSize += IsoReaderWriter.ReadUInt32(stream, out this.item_ID00);
+                }
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.item_protection_index0);
+                boxSize += IsoReaderWriter.ReadUInt32(stream, out this.item_type);
+                boxSize += IsoReaderWriter.ReadString(stream, out this.item_name0);
+
+                if (item_type == IsoReaderWriter.FromFourCC("mime"))
+                {
+                    boxSize += IsoReaderWriter.ReadString(stream, out this.content_type0);
+                    if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.content_encoding0); // optional 
+                }
+
+                else if (item_type == IsoReaderWriter.FromFourCC("uri "))
+                {
+                    boxSize += IsoReaderWriter.ReadString(stream, out this.item_uri_type);
+                }
+            }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+
+            if ((version == 0) || (version == 1))
+            {
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_ID);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_protection_index);
+                boxSize += IsoReaderWriter.WriteString(stream, this.item_name);
+                boxSize += IsoReaderWriter.WriteString(stream, this.content_type);
+                if (this.content_encoding != null) boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding); //optional 
+            }
+
+            if (version == 1)
+            {
+                if (this.extension_type != null) boxSize += IsoReaderWriter.WriteUInt32(stream, this.extension_type); // optional 
+                if (this.ItemInfoExtension != null) boxSize += IsoReaderWriter.WriteBox(stream, this.ItemInfoExtension); // optional 
+            }
+
+            if (version >= 2)
+            {
+
+                if (version == 2)
+                {
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_ID0);
+                }
+
+                else if (version == 3)
+                {
+                    boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_ID00);
+                }
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.item_protection_index0);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.item_type);
+                boxSize += IsoReaderWriter.WriteString(stream, this.item_name0);
+
+                if (item_type == IsoReaderWriter.FromFourCC("mime"))
+                {
+                    boxSize += IsoReaderWriter.WriteString(stream, this.content_type0);
+                    if (this.content_encoding0 != null) boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding0); // optional 
+                }
+
+                else if (item_type == IsoReaderWriter.FromFourCC("uri "))
+                {
+                    boxSize += IsoReaderWriter.WriteString(stream, this.item_uri_type);
+                }
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if ((version == 0) || (version == 1))
+            {
+                boxSize += 16; // item_ID
+                boxSize += 16; // item_protection_index
+                boxSize += (ulong)item_name.Length * 8; // item_name
+                boxSize += (ulong)content_type.Length * 8; // content_type
+                if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            }
+
+            if (version == 1)
+            {
+                if (this.extension_type != null) boxSize += 32; // extension_type
+                if (this.ItemInfoExtension != null) boxSize += IsoReaderWriter.CalculateSize(ItemInfoExtension); // ItemInfoExtension
+            }
+
+            if (version >= 2)
+            {
+
+                if (version == 2)
+                {
+                    boxSize += 16; // item_ID0
+                }
+
+                else if (version == 3)
+                {
+                    boxSize += 32; // item_ID00
+                }
+                boxSize += 16; // item_protection_index0
+                boxSize += 32; // item_type
+                boxSize += (ulong)item_name0.Length * 8; // item_name0
+
+                if (item_type == IsoReaderWriter.FromFourCC("mime"))
+                {
+                    boxSize += (ulong)content_type0.Length * 8; // content_type0
+                    if (this.content_encoding0 != null) boxSize += (ulong)content_encoding0.Length * 8; // content_encoding0
+                }
+
+                else if (item_type == IsoReaderWriter.FromFourCC("uri "))
+                {
+                    boxSize += (ulong)item_uri_type.Length * 8; // item_uri_type
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    public class ItemInfoBox : FullBox
+    {
+
+
+        protected ushort entry_count;
+        public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
+
+        protected uint entry_count0;
+        public uint EntryCount0 { get { return entry_count0; } set { entry_count0 = value; } }
+
+        protected ItemInfoEntry[] item_infos;
+        public ItemInfoEntry[] ItemInfos { get { return item_infos; } set { item_infos = value; } }
+
+        public ItemInfoBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+
+            if (version == 0)
+            {
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.entry_count);
+            }
+
+            else
+            {
+                boxSize += IsoReaderWriter.ReadUInt32(stream, out this.entry_count0);
+            }
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.item_infos);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+
+            if (version == 0)
+            {
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.entry_count);
+            }
+
+            else
+            {
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.entry_count0);
+            }
+            boxSize += IsoReaderWriter.WriteClass(stream, entry_count, this.item_infos);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 0)
+            {
+                boxSize += 16; // entry_count
+            }
+
+            else
+            {
+                boxSize += 32; // entry_count0
+            }
+            boxSize += IsoReaderWriter.CalculateClassSize(item_infos); // item_infos
+            return boxSize;
+        }
+    }
+
+
+    public class PlainTextSampleEntry : SampleEntry
+    {
+
+
+        public PlainTextSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    public class SimpleTextSampleEntry : PlainTextSampleEntry
+    {
+
+
+        protected string content_encoding;  //  optional 
+        public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
+
+        protected string mime_format;
+        public string MimeFormat { get { return mime_format; } set { mime_format = value; } }
+
+        protected BitRateBox BitRateBox;  //  optional 
+        public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
+
+        protected TextConfigBox TextConfigBox;  //  optional 
+        public TextConfigBox _TextConfigBox { get { return TextConfigBox; } set { TextConfigBox = value; } }
+
+        public SimpleTextSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.content_encoding); // optional 
+            boxSize += IsoReaderWriter.ReadString(stream, out this.mime_format);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox); // optional 
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.TextConfigBox); // optional 
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            if (this.content_encoding != null) boxSize += IsoReaderWriter.WriteString(stream, this.content_encoding); // optional 
+            boxSize += IsoReaderWriter.WriteString(stream, this.mime_format);
+            if (this.BitRateBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.BitRateBox); // optional 
+            if (this.TextConfigBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.TextConfigBox); // optional 
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)mime_format.Length * 8; // mime_format
+            if (this.BitRateBox != null) boxSize += IsoReaderWriter.CalculateSize(BitRateBox); // BitRateBox
+            if (this.TextConfigBox != null) boxSize += IsoReaderWriter.CalculateSize(TextConfigBox); // TextConfigBox
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get { return "rssr"; } }
@@ -5945,7 +6420,7 @@ namespace BoxGenerator2
     }
 
 
-    public class FDItemInfoExtension : ItemInfoExtension
+    public class FDItemInfoExtension1 : ItemInfoExtension
     {
         public override string FourCC { get { return "fdel"; } }
 
@@ -5967,7 +6442,7 @@ namespace BoxGenerator2
         protected uint group_id;
         public uint GroupId { get { return group_id; } set { group_id = value; } }
 
-        public FDItemInfoExtension()
+        public FDItemInfoExtension1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -6928,7 +7403,7 @@ namespace BoxGenerator2
     }
 
 
-    public class ItemInfoBox : FullBox
+    public class ItemInfoBox1 : FullBox
     {
         public override string FourCC { get { return "iinf"; } }
 
@@ -6941,7 +7416,7 @@ namespace BoxGenerator2
         protected ItemInfoEntry[] item_infos;
         public ItemInfoEntry[] ItemInfos { get { return item_infos; } set { item_infos = value; } }
 
-        public ItemInfoBox()
+        public ItemInfoBox1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -7300,7 +7775,7 @@ namespace BoxGenerator2
     }
 
 
-    public class ItemInfoEntry : FullBox
+    public class ItemInfoEntry1 : FullBox
     {
         public override string FourCC { get { return "infe"; } }
 
@@ -7349,7 +7824,7 @@ namespace BoxGenerator2
         protected string item_uri_type;
         public string ItemUriType { get { return item_uri_type; } set { item_uri_type = value; } }
 
-        public ItemInfoEntry()
+        public ItemInfoEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -16935,7 +17410,7 @@ namespace BoxGenerator2
     }
 
 
-    public class SimpleTextSampleEntry : PlainTextSampleEntry
+    public class SimpleTextSampleEntry1 : PlainTextSampleEntry
     {
         public override string FourCC { get { return "stxt"; } }
 
@@ -16948,7 +17423,7 @@ namespace BoxGenerator2
         protected TextConfigBox TextConfigBox;  //  optional
         public TextConfigBox _TextConfigBox { get { return TextConfigBox; } set { TextConfigBox = value; } }
 
-        public SimpleTextSampleEntry()
+        public SimpleTextSampleEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)

@@ -43,6 +43,20 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "class MetadataSampleEntry(codingname) extends SampleEntry (codingname) { \r\n Box[] other_boxes; // optional \r\n} \r\n\r\nclass XMLMetadataSampleEntry() extends MetadataSampleEntry ('metx') { \r\n string content_encoding; // optional \r\n string namespace; \r\n string schema_location; // optional \r\n BitRateBox (); // optional \r\n} \r\n\r\nclass TextMetadataSampleEntry() extends MetadataSampleEntry ('mett') { \r\n string content_encoding; // optional \r\n string mime_format; \r\n BitRateBox (); // optional \r\n TextConfigBox (); // optional \r\n} \r\n\r\naligned(8) class URIBox extends FullBox('uri ', version = 0, 0) { \r\n string theURI; \r\n} \r\n\r\naligned(8) class URIInitBox extends FullBox('uriI', version = 0, 0) { \r\n unsigned int(8) uri_initialization_data[]; \r\n} \r\n\r\nclass URIMetaSampleEntry() extends MetadataSampleEntry ('urim') { \r\n URIbox   the_label; \r\n URIInitBox  init;  // optional\r\n BitRateBox ();  // optional\r\n} \r\n"
+    },
+    {
+      "fourcc": "          ",
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ItemInfoExtension(unsigned int(32) extension_type) extends Box(boxtype) \r\n{ \r\n} \r\naligned(8) class FDItemInfoExtension() extends ItemInfoExtension ('fdel') \r\n{  \r\n string content_location; \r\n string content_MD5; \r\n unsigned int(64)  content_length; \r\n unsigned int(64) transfer_length; \r\n unsigned int(8) entry_count; \r\nfor (i=1; i <= entry_count; i++) \r\n  unsigned int(32) group_id; \r\n} \r\naligned(8) class ItemInfoEntry extends FullBox('infe', version, 0) { \r\nif ((version == 0) || (version == 1)) { \r\n  unsigned int(16) item_ID; \r\n  unsigned int(16) item_protection_index; \r\n  string    item_name; \r\n  string    content_type; \r\n  string    content_encoding; //optional \r\n } \r\nif (version == 1) { \r\n  unsigned int(32) extension_type;  // optional \r\n  ItemInfoExtension(extension_type); // optional \r\n } \r\nif (version >= 2) { \r\nif (version == 2) { \r\n   unsigned int(16) item_ID; \r\n} else if (version == 3) { \r\n   unsigned int(32) item_ID; \r\n}\r\n \r\n  unsigned int(16) item_protection_index; \r\n  unsigned int(32) item_type;  \r\n  string    item_name; \r\n  if (item_type=='mime') { \r\n   string   content_type; \r\n   string   content_encoding; // optional \r\n} else if (item_type == 'uri ') { \r\n   string   item_uri_type; \r\n  }\r\n } \r\n} \r\naligned(8) class ItemInfoBox extends FullBox('iinf', version, 0) { \r\nif (version == 0) { \r\n  unsigned int(16) entry_count; \r\n} else { \r\n  unsigned int(32) entry_count; \r\n } \r\nItemInfoEntry[ entry_count ]  item_infos;\r\n} \r\n"
+    },
+    {
+      "fourcc": "           ",
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "class PlainTextSampleEntry(codingname) extends SampleEntry (codingname) { \r\n} \r\nclass SimpleTextSampleEntry(codingname) extends PlainTextSampleEntry ('stxt') { \r\n string content_encoding; // optional \r\n string mime_format; \r\n BitRateBox (); \r\n    // optional \r\n TextConfigBox (); \r\n \r\n   // optional \r\n} "
     }
   ]
 }
