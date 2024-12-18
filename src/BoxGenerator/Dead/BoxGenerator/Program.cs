@@ -524,6 +524,7 @@ partial class Program
     {
         string[] files = {
             "14496-12-added.json",
+            "14496-15-added.json",
             "14496-12-boxes.json",
             "14496-15-boxes.json",
             "14496-30-boxes.json",
@@ -696,7 +697,10 @@ namespace BoxGenerator2
             cls += "\r\n" + "boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);";
         }
 
-        cls += "\r\n" + "boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);";
+        if (b.Extended != null)
+        {
+            cls += "\r\n" + "boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);";
+        }
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 

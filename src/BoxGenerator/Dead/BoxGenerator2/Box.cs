@@ -31,41 +31,21 @@ namespace BoxGenerator2
         }
     }
 
-    public class ICC_profile
-    {
-        // ISO 15076‐1 or ICC.1:2010
-    }
+    public class Descriptor : Box
+    { }
 
-    public class DRCCoefficientsBasic
-    {
-        // ISO/IEC 23003‐4
-    }
-
-    public class DRCInstructionsBasic
-    {
-        // ISO/IEC 23003‐4
-    }
-
-    public class DRCCoefficientsUniDRC
-    {
-        // ISO/IEC 23003‐4
-    }
-
-    public class DRCInstructionsUniDRC
-    {
-        // ISO/IEC 23003‐4
-    }
-
+    public class ICC_profile { } // ISO 15076‐1 or ICC.1:2010
+    public class DRCCoefficientsBasic { } // ISO/IEC 23003‐4
+    public class DRCInstructionsBasic { } // ISO/IEC 23003‐4
+    public class DRCCoefficientsUniDRC { } // ISO/IEC 23003‐4
+    public class DRCInstructionsUniDRC { } // ISO/IEC 23003‐4
+    public abstract class DataEntryBaseBox : FullBox { } // # ISO/IEC 14496-12:2022, Section 8.7.2.2
     public class ExtrinsicCameraParametersBox : FullBox { }
     public class IntrinsicCameraParametersBox : FullBox { }
-    public abstract class DataEntryBaseBox : FullBox { }
-
     public abstract class CompressedBox : Box { }
     public abstract class RtpReceptionHintSampleEntry : Box { }
-    public class Descriptor { }
     public class OperatingPointsRecord { }
-    public abstract class ViewPriorityBox : Box { }
-    public class DependencyInfo { }
+
     public abstract class SampleConstructor : Box { }
     public abstract class InlineConstructor : Box { }
     public abstract class SampleConstructorFromTrackGroup : Box { }

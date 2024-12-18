@@ -1544,6 +1544,273 @@ namespace BoxGenerator2
     }
 
 
+    public class ViewPriorityBox : Box
+    {
+        public override string FourCC { get; set; } = "vipr";
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+
+        protected ushort view_id;
+        public ushort ViewId { get { return view_id; } set { view_id = value; } }
+
+        protected uint content_priority_id;
+        public uint ContentPriorityId { get { return content_priority_id; } set { content_priority_id = value; } }
+
+        public ViewPriorityBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+
+            for (int i = 0; ; i++)
+            {
+                /*  To end of box  */
+                boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved);
+                boxSize += IsoReaderWriter.ReadBits(stream, 10, out this.view_id);
+                boxSize += IsoReaderWriter.ReadUInt32(stream, out this.content_priority_id);
+            }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+
+            for (int i = 0; ; i++)
+            {
+                /*  To end of box  */
+                boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+                boxSize += IsoReaderWriter.WriteBits(stream, 10, this.view_id);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.content_priority_id);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            for (int i = 0; ; i++)
+            {
+                /*  To end of box  */
+                boxSize += 6; // reserved
+                boxSize += 10; // view_id
+                boxSize += 32; // content_priority_id
+            }
+            return boxSize;
+        }
+    }
+
+
+    public class ViewPriorityEntry : VisualSampleGroupEntry
+    {
+        public override string FourCC { get; set; } = "vipr";
+
+        protected ViewPriorityBox ViewPriorityBox;
+        public ViewPriorityBox _ViewPriorityBox { get { return ViewPriorityBox; } set { ViewPriorityBox = value; } }
+
+        public ViewPriorityEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.ViewPriorityBox);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.ViewPriorityBox);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(ViewPriorityBox); // ViewPriorityBox
+            return boxSize;
+        }
+    }
+
+
+    public class DependencyInfo
+    {
+
+
+        protected byte subSeqDirectionFlag;
+        public byte SubSeqDirectionFlag { get { return subSeqDirectionFlag; } set { subSeqDirectionFlag = value; } }
+
+        protected byte layerNumber;
+        public byte LayerNumber { get { return layerNumber; } set { layerNumber = value; } }
+
+        protected ushort subSequenceIdentifier;
+        public ushort SubSequenceIdentifier { get { return subSequenceIdentifier; } set { subSequenceIdentifier = value; } }
+
+        public DependencyInfo()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.subSeqDirectionFlag);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.layerNumber);
+            boxSize += IsoReaderWriter.ReadUInt16(stream, out this.subSequenceIdentifier);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.subSeqDirectionFlag);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.layerNumber);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.subSequenceIdentifier);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // subSeqDirectionFlag
+            boxSize += 8; // layerNumber
+            boxSize += 16; // subSequenceIdentifier
+            return boxSize;
+        }
+    }
+
+
+    public class AVCSubSequenceEntry : VisualSampleGroupEntry
+    {
+
+
+        protected ushort subSequenceIdentifer;
+        public ushort SubSequenceIdentifer { get { return subSequenceIdentifer; } set { subSequenceIdentifer = value; } }
+
+        protected byte layerNumber;
+        public byte LayerNumber { get { return layerNumber; } set { layerNumber = value; } }
+
+        protected bool durationFlag;
+        public bool DurationFlag { get { return durationFlag; } set { durationFlag = value; } }
+
+        protected bool avgRateFlag;
+        public bool AvgRateFlag { get { return avgRateFlag; } set { avgRateFlag = value; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+
+        protected uint duration;
+        public uint Duration { get { return duration; } set { duration = value; } }
+
+        protected byte accurateStatisticsFlag;
+        public byte AccurateStatisticsFlag { get { return accurateStatisticsFlag; } set { accurateStatisticsFlag = value; } }
+
+        protected ushort avgBitRate;
+        public ushort AvgBitRate { get { return avgBitRate; } set { avgBitRate = value; } }
+
+        protected ushort avgFrameRate;
+        public ushort AvgFrameRate { get { return avgFrameRate; } set { avgFrameRate = value; } }
+
+        protected byte numReferences;
+        public byte NumReferences { get { return numReferences; } set { numReferences = value; } }
+
+        protected DependencyInfo[] dependency;
+        public DependencyInfo[] Dependency { get { return dependency; } set { dependency = value; } }
+
+        public AVCSubSequenceEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt16(stream, out this.subSequenceIdentifer);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.layerNumber);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.durationFlag);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.avgRateFlag);
+            boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved);
+
+            if (durationFlag)
+            {
+                boxSize += IsoReaderWriter.ReadUInt32(stream, out this.duration);
+            }
+
+            if (avgRateFlag)
+            {
+                boxSize += IsoReaderWriter.ReadUInt8(stream, out this.accurateStatisticsFlag);
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.avgBitRate);
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.avgFrameRate);
+            }
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.numReferences);
+            boxSize += IsoReaderWriter.ReadClass(stream, numReferences, out this.dependency);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.subSequenceIdentifer);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.layerNumber);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.durationFlag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.avgRateFlag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+
+            if (durationFlag)
+            {
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.duration);
+            }
+
+            if (avgRateFlag)
+            {
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.accurateStatisticsFlag);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.avgBitRate);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.avgFrameRate);
+            }
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.numReferences);
+            boxSize += IsoReaderWriter.WriteClass(stream, numReferences, this.dependency);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // subSequenceIdentifer
+            boxSize += 8; // layerNumber
+            boxSize += 1; // durationFlag
+            boxSize += 1; // avgRateFlag
+            boxSize += 6; // reserved
+
+            if (durationFlag)
+            {
+                boxSize += 32; // duration
+            }
+
+            if (avgRateFlag)
+            {
+                boxSize += 8; // accurateStatisticsFlag
+                boxSize += 16; // avgBitRate
+                boxSize += 16; // avgFrameRate
+            }
+            boxSize += 8; // numReferences
+            boxSize += IsoReaderWriter.CalculateClassSize(dependency); // dependency
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get; set; } = "rssr";
@@ -12485,7 +12752,6 @@ namespace BoxGenerator2
             {
                 boxSize += IsoReaderWriter.ReadBytes(stream, 16, out this.usertype);
             }
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -23429,7 +23695,7 @@ namespace BoxGenerator2
     }
 
 
-    public class AVCSubSequenceEntry : VisualSampleGroupEntry
+    public class AVCSubSequenceEntry1 : VisualSampleGroupEntry
     {
         public override string FourCC { get; set; } = "avss";
 
@@ -23469,7 +23735,7 @@ namespace BoxGenerator2
         protected DependencyInfo[] dependency;
         public DependencyInfo[] Dependency { get { return dependency; } set { dependency = value; } }
 
-        public AVCSubSequenceEntry()
+        public AVCSubSequenceEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -25465,14 +25731,14 @@ namespace BoxGenerator2
     }
 
 
-    public class ViewPriorityEntry : VisualSampleGroupEntry
+    public class ViewPriorityEntry1 : VisualSampleGroupEntry
     {
         public override string FourCC { get; set; } = "vipr";
 
         protected ViewPriorityBox ViewPriorityBox;
         public ViewPriorityBox _ViewPriorityBox { get { return ViewPriorityBox; } set { ViewPriorityBox = value; } }
 
-        public ViewPriorityEntry()
+        public ViewPriorityEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
