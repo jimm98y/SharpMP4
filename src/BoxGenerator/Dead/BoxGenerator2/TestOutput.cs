@@ -1811,6 +1811,55 @@ namespace BoxGenerator2
     }
 
 
+    public class MPEG4BitRateBox : Box
+    {
+
+
+        protected uint bufferSizeDB;
+        public uint BufferSizeDB { get { return bufferSizeDB; } set { bufferSizeDB = value; } }
+
+        protected uint maxBitrate;
+        public uint MaxBitrate { get { return maxBitrate; } set { maxBitrate = value; } }
+
+        protected uint avgBitrate;
+        public uint AvgBitrate { get { return avgBitrate; } set { avgBitrate = value; } }
+
+        public MPEG4BitRateBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bufferSizeDB);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.maxBitrate);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.avgBitrate);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.bufferSizeDB);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxBitrate);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.avgBitrate);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // bufferSizeDB
+            boxSize += 32; // maxBitrate
+            boxSize += 32; // avgBitrate
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get; set; } = "rssr";

@@ -15,6 +15,13 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class DependencyInfo  \r\n{ \r\nunsigned int(8)   subSeqDirectionFlag; \r\nunsigned int(8)   layerNumber; \r\nunsigned int(16)  subSequenceIdentifier; \r\n} \r\nclass AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss') \r\n{ \r\n  unsigned int(16) subSequenceIdentifer; \r\n  unsigned int(8)  layerNumber;  \r\n  unsigned int(1)  durationFlag; \r\n  unsigned int(1)  avgRateFlag; \r\n  unsigned int(6)  reserved = 0;  \r\n  if (durationFlag) \r\n   unsigned int(32) duration; \r\n  if (avgRateFlag) \r\n  {\r\n   unsigned int(8)  accurateStatisticsFlag; \r\n   unsigned int(16) avgBitRate; \r\n   unsigned int(16) avgFrameRate; \r\n  }\r\n  unsigned int(8) numReferences; \r\n  DependencyInfo dependency[numReferences]; \r\n } \r\n} "
+    },
+    {
+      "fourcc": "            ",
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "class MPEG4BitRateBox extends Box('btrt'){ \r\nunsigned int(32) bufferSizeDB; \r\nunsigned int(32) maxBitrate; \r\nunsigned int(32) avgBitrate; \r\n}\r\n"
     }
   ]
 }

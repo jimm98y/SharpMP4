@@ -40,11 +40,18 @@ namespace BoxGenerator2
     public class DRCCoefficientsUniDRC { } // ISO/IEC 23003‐4
     public class DRCInstructionsUniDRC { } // ISO/IEC 23003‐4
     public abstract class DataEntryBaseBox : FullBox { } // # ISO/IEC 14496-12:2022, Section 8.7.2.2
-    public class ExtrinsicCameraParametersBox : FullBox { }
-    public class IntrinsicCameraParametersBox : FullBox { }
     public abstract class CompressedBox : Box { }
     public abstract class RtpReceptionHintSampleEntry : Box { }
     public class OperatingPointsRecord { }
+
+
+    // TODO:
+    public class ExtrinsicCameraParametersBox : FullBox { }
+    public class IntrinsicCameraParametersBox : FullBox { }
+    public class AVCDecoderConfigurationRecord { }
+    public class MVCDecoderConfigurationRecord { }
+    public class SVCDecoderConfigurationRecord { }
+
 
     public abstract class SampleConstructor : Box { }
     public abstract class InlineConstructor : Box { }
@@ -56,16 +63,12 @@ namespace BoxGenerator2
     public class LHEVCDecoderConfigurationRecord { }
     public class HEVCDecoderConfigurationRecord { }
     public class HEVCTileTierLevelConfigurationRecord { }
-    public class AVCDecoderConfigurationRecord { }
     public class MVDDecoderConfigurationRecord { }
-    public class MVCDecoderConfigurationRecord { }
-    public class SVCDecoderConfigurationRecord { }
     public class EVCDecoderConfigurationRecord { }
     public class EVCSliceComponentTrackConfigurationRecord { }
     public class VvcPTLRecord { }
     public class VvcOperatingPointsRecord { }
     public class VvcDecoderConfigurationRecord { }
     public class VVCSubpicIDRewritingInfomationStruct { }
-    public abstract class MPEG4BitRateBox : Box { }
     public abstract class NALUStartInlineConstructor : Box { }
 }
