@@ -1860,6 +1860,236 @@ namespace BoxGenerator2
     }
 
 
+    public class IntrinsicCameraParametersBox : FullBox
+    {
+
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+
+        protected ushort ref_view_id;
+        public ushort RefViewId { get { return ref_view_id; } set { ref_view_id = value; } }
+
+        protected uint prec_focal_length;
+        public uint PrecFocalLength { get { return prec_focal_length; } set { prec_focal_length = value; } }
+
+        protected uint prec_principal_point;
+        public uint PrecPrincipalPoint { get { return prec_principal_point; } set { prec_principal_point = value; } }
+
+        protected uint prec_skew_factor;
+        public uint PrecSkewFactor { get { return prec_skew_factor; } set { prec_skew_factor = value; } }
+
+        protected byte exponent_focal_length_x;
+        public byte ExponentFocalLengthX { get { return exponent_focal_length_x; } set { exponent_focal_length_x = value; } }
+
+        protected long mantissa_focal_length_x;
+        public long MantissaFocalLengthX { get { return mantissa_focal_length_x; } set { mantissa_focal_length_x = value; } }
+
+        protected byte exponent_focal_length_y;
+        public byte ExponentFocalLengthY { get { return exponent_focal_length_y; } set { exponent_focal_length_y = value; } }
+
+        protected long mantissa_focal_length_y;
+        public long MantissaFocalLengthY { get { return mantissa_focal_length_y; } set { mantissa_focal_length_y = value; } }
+
+        protected byte exponent_principal_point_x;
+        public byte ExponentPrincipalPointX { get { return exponent_principal_point_x; } set { exponent_principal_point_x = value; } }
+
+        protected long mantissa_principal_point_x;
+        public long MantissaPrincipalPointX { get { return mantissa_principal_point_x; } set { mantissa_principal_point_x = value; } }
+
+        protected byte exponent_principal_point_y;
+        public byte ExponentPrincipalPointY { get { return exponent_principal_point_y; } set { exponent_principal_point_y = value; } }
+
+        protected long mantissa_principal_point_y;
+        public long MantissaPrincipalPointY { get { return mantissa_principal_point_y; } set { mantissa_principal_point_y = value; } }
+
+        protected byte exponent_skew_factor;
+        public byte ExponentSkewFactor { get { return exponent_skew_factor; } set { exponent_skew_factor = value; } }
+
+        protected long mantissa_skew_factor;
+        public long MantissaSkewFactor { get { return mantissa_skew_factor; } set { mantissa_skew_factor = value; } }
+
+        public IntrinsicCameraParametersBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved);
+            boxSize += IsoReaderWriter.ReadBits(stream, 10, out this.ref_view_id);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.prec_focal_length);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.prec_principal_point);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.prec_skew_factor);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.exponent_focal_length_x);
+            boxSize += IsoReaderWriter.ReadInt64(stream, out this.mantissa_focal_length_x);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.exponent_focal_length_y);
+            boxSize += IsoReaderWriter.ReadInt64(stream, out this.mantissa_focal_length_y);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.exponent_principal_point_x);
+            boxSize += IsoReaderWriter.ReadInt64(stream, out this.mantissa_principal_point_x);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.exponent_principal_point_y);
+            boxSize += IsoReaderWriter.ReadInt64(stream, out this.mantissa_principal_point_y);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.exponent_skew_factor);
+            boxSize += IsoReaderWriter.ReadInt64(stream, out this.mantissa_skew_factor);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 10, this.ref_view_id);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.prec_focal_length);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.prec_principal_point);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.prec_skew_factor);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.exponent_focal_length_x);
+            boxSize += IsoReaderWriter.WriteInt64(stream, this.mantissa_focal_length_x);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.exponent_focal_length_y);
+            boxSize += IsoReaderWriter.WriteInt64(stream, this.mantissa_focal_length_y);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.exponent_principal_point_x);
+            boxSize += IsoReaderWriter.WriteInt64(stream, this.mantissa_principal_point_x);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.exponent_principal_point_y);
+            boxSize += IsoReaderWriter.WriteInt64(stream, this.mantissa_principal_point_y);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.exponent_skew_factor);
+            boxSize += IsoReaderWriter.WriteInt64(stream, this.mantissa_skew_factor);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 6; // reserved
+            boxSize += 10; // ref_view_id
+            boxSize += 32; // prec_focal_length
+            boxSize += 32; // prec_principal_point
+            boxSize += 32; // prec_skew_factor
+            boxSize += 8; // exponent_focal_length_x
+            boxSize += 64; // mantissa_focal_length_x
+            boxSize += 8; // exponent_focal_length_y
+            boxSize += 64; // mantissa_focal_length_y
+            boxSize += 8; // exponent_principal_point_x
+            boxSize += 64; // mantissa_principal_point_x
+            boxSize += 8; // exponent_principal_point_y
+            boxSize += 64; // mantissa_principal_point_y
+            boxSize += 8; // exponent_skew_factor
+            boxSize += 64; // mantissa_skew_factor
+            return boxSize;
+        }
+    }
+
+
+    public class ExtrinsicCameraParametersBox : FullBox
+    {
+
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+
+        protected ushort ref_view_id;
+        public ushort RefViewId { get { return ref_view_id; } set { ref_view_id = value; } }
+
+        protected byte prec_rotation_param;
+        public byte PrecRotationParam { get { return prec_rotation_param; } set { prec_rotation_param = value; } }
+
+        protected byte prec_translation_param;
+        public byte PrecTranslationParam { get { return prec_translation_param; } set { prec_translation_param = value; } }
+
+        protected byte[][] exponent_r;
+        public byte[][] ExponentR { get { return exponent_r; } set { exponent_r = value; } }
+
+        protected long[][] mantissa_r;
+        public long[][] MantissaR { get { return mantissa_r; } set { mantissa_r = value; } }
+
+        protected byte[] exponent_t;
+        public byte[] ExponentT { get { return exponent_t; } set { exponent_t = value; } }
+
+        protected long[] mantissa_t;
+        public long[] MantissaT { get { return mantissa_t; } set { mantissa_t = value; } }
+
+        public ExtrinsicCameraParametersBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved);
+            boxSize += IsoReaderWriter.ReadBits(stream, 10, out this.ref_view_id);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.prec_rotation_param);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.prec_translation_param);
+
+            for (int j = 1; j <= 3; j++)
+            {
+                /*  row  */
+
+                for (int k = 1; k <= 3; k++)
+                {
+                    /*  column  */
+                    boxSize += IsoReaderWriter.ReadUInt8(stream, out this.exponent_r[j][k]);
+                    boxSize += IsoReaderWriter.ReadInt64(stream, out this.mantissa_r[j][k]);
+                }
+                boxSize += IsoReaderWriter.ReadUInt8(stream, out this.exponent_t[j]);
+                boxSize += IsoReaderWriter.ReadInt64(stream, out this.mantissa_t[j]);
+            }
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 10, this.ref_view_id);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.prec_rotation_param);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.prec_translation_param);
+
+            for (int j = 1; j <= 3; j++)
+            {
+                /*  row  */
+
+                for (int k = 1; k <= 3; k++)
+                {
+                    /*  column  */
+                    boxSize += IsoReaderWriter.WriteUInt8(stream, this.exponent_r[j][k]);
+                    boxSize += IsoReaderWriter.WriteInt64(stream, this.mantissa_r[j][k]);
+                }
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.exponent_t[j]);
+                boxSize += IsoReaderWriter.WriteInt64(stream, this.mantissa_t[j]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 6; // reserved
+            boxSize += 10; // ref_view_id
+            boxSize += 8; // prec_rotation_param
+            boxSize += 8; // prec_translation_param
+
+            for (int j = 1; j <= 3; j++)
+            {
+                /*  row  */
+
+                for (int k = 1; k <= 3; k++)
+                {
+                    /*  column  */
+                    boxSize += 8; // exponent_r
+                    boxSize += 64; // mantissa_r
+                }
+                boxSize += 8; // exponent_t
+                boxSize += 64; // mantissa_t
+            }
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get; set; } = "rssr";

@@ -46,8 +46,6 @@ namespace BoxGenerator2
 
 
     // TODO:
-    public class ExtrinsicCameraParametersBox : FullBox { }
-    public class IntrinsicCameraParametersBox : FullBox { }
     public class AVCDecoderConfigurationRecord { }
     public class MVCDecoderConfigurationRecord { }
     public class SVCDecoderConfigurationRecord { }
