@@ -24,18 +24,25 @@
       "syntax": "class MPEG4BitRateBox extends Box('btrt'){ \r\nunsigned int(32) bufferSizeDB; \r\nunsigned int(32) maxBitrate; \r\nunsigned int(32) avgBitrate; \r\n}\r\n"
     },
     {
-      "fourcc": "             ",
+      "fourcc": "icam",
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) { \r\n unsigned int(6)  \r\n reserved=0;  \r\n unsigned int(10)  ref_view_id; \r\n unsigned int(32) prec_focal_length; \r\n unsigned int(32) prec_principal_point; \r\n unsigned int(32) prec_skew_factor; \r\n unsigned int(8) exponent_focal_length_x; \r\n signed   int(64) mantissa_focal_length_x; \r\n unsigned int(8) exponent_focal_length_y; \r\n signed   int(64) mantissa_focal_length_y;  \r\n unsigned int(8) exponent_principal_point_x; \r\n signed   int(64) mantissa_principal_point_x; \r\n unsigned int(8) exponent_principal_point_y; \r\n signed   int(64) mantissa_principal_point_y; \r\n unsigned int(8) exponent_skew_factor; \r\n signed   int(64) mantissa_skew_factor; \r\n} "
     },
     {
-      "fourcc": "              ",
+      "fourcc": "ecam",
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) { \r\n unsigned int(6)  reserved=0; \r\n unsigned int(10)  ref_view_id; \r\n unsigned int(8) prec_rotation_param; \r\n unsigned int(8) prec_translation_param; \r\n for (j=1; j<=3; j++) { /* row */   \r\n  for (k=1; k<=3; k++) { /* column */ \r\n   unsigned int(8) exponent_r[j][k]; \r\n   signed   int(64) mantissa_r [j][k]; \r\n  } \r\n  unsigned int(8) exponent_t[j]; \r\n  signed   int(64) mantissa_t[j]; \r\n } \r\n}"
+    },
+    {
+      "fourcc": "               ",
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AVCDecoderConfigurationRecord { \r\n unsigned int(8) configurationVersion = 1; \r\n unsigned int(8) AVCProfileIndication; \r\n unsigned int(8) profile_compatibility; \r\n unsigned int(8) AVCLevelIndication;  \r\n bit(6) reserved = '111111'b; \r\n unsigned int(2) lengthSizeMinusOne;  \r\n bit(3) reserved = '111'b; \r\n unsigned int(5) numOfSequenceParameterSets; \r\n for (i=0; i< numOfSequenceParameterSets;  i++) { \r\n  unsigned int(16) sequenceParameterSetLength ; \r\n  bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; \r\n } \r\n unsigned int(8) numOfPictureParameterSets; \r\n for (i=0; i< numOfPictureParameterSets;  i++) { \r\n  unsigned int(16) pictureParameterSetLength; \r\n  bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; \r\n } \r\n if( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || \r\n    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 ) \r\n { \r\n  bit(6) reserved = '111111'b; \r\n  unsigned int(2) chroma_format; \r\n  bit(5) reserved = '11111'b; \r\n  unsigned int(3) bit_depth_luma_minus8; \r\n  bit(5) reserved = '11111'b; \r\n  unsigned int(3) bit_depth_chroma_minus8; \r\n  unsigned int(8) numOfSequenceParameterSetExt; \r\n  for (i=0; i< numOfSequenceParameterSetExt; i++) { \r\n   unsigned int(16) sequenceParameterSetExtLength; \r\n   bit(8*sequenceParameterSetExtLength) sequenceParameterSetExtNALUnit; \r\n  }\r\n } \r\n}"
     }
   ]
 }

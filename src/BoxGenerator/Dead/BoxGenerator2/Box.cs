@@ -46,7 +46,6 @@ namespace BoxGenerator2
 
 
     // TODO:
-    public class AVCDecoderConfigurationRecord { }
     public class MVCDecoderConfigurationRecord { }
     public class SVCDecoderConfigurationRecord { }
 

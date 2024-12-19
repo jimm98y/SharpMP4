@@ -1862,7 +1862,7 @@ namespace BoxGenerator2
 
     public class IntrinsicCameraParametersBox : FullBox
     {
-
+        public override string FourCC { get; set; } = "icam";
 
         protected byte reserved = 0;
         public byte Reserved { get { return reserved; } set { reserved = value; } }
@@ -1983,7 +1983,7 @@ namespace BoxGenerator2
 
     public class ExtrinsicCameraParametersBox : FullBox
     {
-
+        public override string FourCC { get; set; } = "ecam";
 
         protected byte reserved = 0;
         public byte Reserved { get { return reserved; } set { reserved = value; } }
@@ -2084,6 +2084,216 @@ namespace BoxGenerator2
                 }
                 boxSize += 8; // exponent_t
                 boxSize += 64; // mantissa_t
+            }
+            return boxSize;
+        }
+    }
+
+
+    public class AVCDecoderConfigurationRecord
+    {
+
+
+        protected byte configurationVersion = 1;
+        public byte ConfigurationVersion { get { return configurationVersion; } set { configurationVersion = value; } }
+
+        protected byte AVCProfileIndication;
+        public byte _AVCProfileIndication { get { return AVCProfileIndication; } set { AVCProfileIndication = value; } }
+
+        protected byte profile_compatibility;
+        public byte ProfileCompatibility { get { return profile_compatibility; } set { profile_compatibility = value; } }
+
+        protected byte AVCLevelIndication;
+        public byte _AVCLevelIndication { get { return AVCLevelIndication; } set { AVCLevelIndication = value; } }
+
+        protected byte reserved = 0b111111;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+
+        protected byte lengthSizeMinusOne;
+        public byte LengthSizeMinusOne { get { return lengthSizeMinusOne; } set { lengthSizeMinusOne = value; } }
+
+        protected byte reserved0 = 0b111;
+        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+
+        protected byte numOfSequenceParameterSets;
+        public byte NumOfSequenceParameterSets { get { return numOfSequenceParameterSets; } set { numOfSequenceParameterSets = value; } }
+
+        protected ushort sequenceParameterSetLength;
+        public ushort SequenceParameterSetLength { get { return sequenceParameterSetLength; } set { sequenceParameterSetLength = value; } }
+
+        protected byte[] sequenceParameterSetNALUnit;
+        public byte[] SequenceParameterSetNALUnit { get { return sequenceParameterSetNALUnit; } set { sequenceParameterSetNALUnit = value; } }
+
+        protected byte numOfPictureParameterSets;
+        public byte NumOfPictureParameterSets { get { return numOfPictureParameterSets; } set { numOfPictureParameterSets = value; } }
+
+        protected ushort pictureParameterSetLength;
+        public ushort PictureParameterSetLength { get { return pictureParameterSetLength; } set { pictureParameterSetLength = value; } }
+
+        protected byte[] pictureParameterSetNALUnit;
+        public byte[] PictureParameterSetNALUnit { get { return pictureParameterSetNALUnit; } set { pictureParameterSetNALUnit = value; } }
+
+        protected byte reserved1 = 0b111111;
+        public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+
+        protected byte chroma_format;
+        public byte ChromaFormat { get { return chroma_format; } set { chroma_format = value; } }
+
+        protected byte reserved00 = 0b11111;
+        public byte Reserved00 { get { return reserved00; } set { reserved00 = value; } }
+
+        protected byte bit_depth_luma_minus8;
+        public byte BitDepthLumaMinus8 { get { return bit_depth_luma_minus8; } set { bit_depth_luma_minus8 = value; } }
+
+        protected byte reserved10 = 0b11111;
+        public byte Reserved10 { get { return reserved10; } set { reserved10 = value; } }
+
+        protected byte bit_depth_chroma_minus8;
+        public byte BitDepthChromaMinus8 { get { return bit_depth_chroma_minus8; } set { bit_depth_chroma_minus8 = value; } }
+
+        protected byte numOfSequenceParameterSetExt;
+        public byte NumOfSequenceParameterSetExt { get { return numOfSequenceParameterSetExt; } set { numOfSequenceParameterSetExt = value; } }
+
+        protected ushort sequenceParameterSetExtLength;
+        public ushort SequenceParameterSetExtLength { get { return sequenceParameterSetExtLength; } set { sequenceParameterSetExtLength = value; } }
+
+        protected byte[] sequenceParameterSetExtNALUnit;
+        public byte[] SequenceParameterSetExtNALUnit { get { return sequenceParameterSetExtNALUnit; } set { sequenceParameterSetExtNALUnit = value; } }
+
+        public AVCDecoderConfigurationRecord()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.configurationVersion);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.AVCProfileIndication);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.profile_compatibility);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.AVCLevelIndication);
+            boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved);
+            boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.lengthSizeMinusOne);
+            boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.reserved0);
+            boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.numOfSequenceParameterSets);
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.sequenceParameterSetLength);
+                boxSize += IsoReaderWriter.ReadBytes(stream, sequenceParameterSetLength, out this.sequenceParameterSetNALUnit);
+            }
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.numOfPictureParameterSets);
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.pictureParameterSetLength);
+                boxSize += IsoReaderWriter.ReadBytes(stream, pictureParameterSetLength, out this.pictureParameterSetNALUnit);
+            }
+
+            if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
+        AVCProfileIndication == 122 || AVCProfileIndication == 144)
+            {
+                boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved1);
+                boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.chroma_format);
+                boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.reserved00);
+                boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.bit_depth_luma_minus8);
+                boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.reserved10);
+                boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.bit_depth_chroma_minus8);
+                boxSize += IsoReaderWriter.ReadUInt8(stream, out this.numOfSequenceParameterSetExt);
+
+                for (int i = 0; i < numOfSequenceParameterSetExt; i++)
+                {
+                    boxSize += IsoReaderWriter.ReadUInt16(stream, out this.sequenceParameterSetExtLength);
+                    boxSize += IsoReaderWriter.ReadBytes(stream, sequenceParameterSetExtLength, out this.sequenceParameterSetExtNALUnit);
+                }
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.configurationVersion);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.AVCProfileIndication);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.profile_compatibility);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.AVCLevelIndication);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.lengthSizeMinusOne);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.reserved0);
+            boxSize += IsoReaderWriter.WriteBits(stream, 5, this.numOfSequenceParameterSets);
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.sequenceParameterSetLength);
+                boxSize += IsoReaderWriter.WriteBytes(stream, sequenceParameterSetLength, this.sequenceParameterSetNALUnit);
+            }
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.numOfPictureParameterSets);
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.pictureParameterSetLength);
+                boxSize += IsoReaderWriter.WriteBytes(stream, pictureParameterSetLength, this.pictureParameterSetNALUnit);
+            }
+
+            if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
+        AVCProfileIndication == 122 || AVCProfileIndication == 144)
+            {
+                boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved1);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.chroma_format);
+                boxSize += IsoReaderWriter.WriteBits(stream, 5, this.reserved00);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.bit_depth_luma_minus8);
+                boxSize += IsoReaderWriter.WriteBits(stream, 5, this.reserved10);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.bit_depth_chroma_minus8);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.numOfSequenceParameterSetExt);
+
+                for (int i = 0; i < numOfSequenceParameterSetExt; i++)
+                {
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.sequenceParameterSetExtLength);
+                    boxSize += IsoReaderWriter.WriteBytes(stream, sequenceParameterSetExtLength, this.sequenceParameterSetExtNALUnit);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // configurationVersion
+            boxSize += 8; // AVCProfileIndication
+            boxSize += 8; // profile_compatibility
+            boxSize += 8; // AVCLevelIndication
+            boxSize += 6; // reserved
+            boxSize += 2; // lengthSizeMinusOne
+            boxSize += 3; // reserved0
+            boxSize += 5; // numOfSequenceParameterSets
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += 16; // sequenceParameterSetLength
+                boxSize += (ulong)sequenceParameterSetLength * 8; // sequenceParameterSetNALUnit
+            }
+            boxSize += 8; // numOfPictureParameterSets
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += 16; // pictureParameterSetLength
+                boxSize += (ulong)pictureParameterSetLength * 8; // pictureParameterSetNALUnit
+            }
+
+            if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
+        AVCProfileIndication == 122 || AVCProfileIndication == 144)
+            {
+                boxSize += 6; // reserved1
+                boxSize += 2; // chroma_format
+                boxSize += 5; // reserved00
+                boxSize += 3; // bit_depth_luma_minus8
+                boxSize += 5; // reserved10
+                boxSize += 3; // bit_depth_chroma_minus8
+                boxSize += 8; // numOfSequenceParameterSetExt
+
+                for (int i = 0; i < numOfSequenceParameterSetExt; i++)
+                {
+                    boxSize += 16; // sequenceParameterSetExtLength
+                    boxSize += (ulong)sequenceParameterSetExtLength * 8; // sequenceParameterSetExtNALUnit
+                }
             }
             return boxSize;
         }
