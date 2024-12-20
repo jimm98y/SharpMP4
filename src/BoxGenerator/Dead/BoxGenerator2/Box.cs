@@ -44,21 +44,13 @@ namespace BoxGenerator2
     public abstract class RtpReceptionHintSampleEntry : Box { }
     public class OperatingPointsRecord { }
 
-
-    // TODO:
-    public class MVCDecoderConfigurationRecord { }
-    public class SVCDecoderConfigurationRecord { }
-
-
     public abstract class SampleConstructor : Box { }
     public abstract class InlineConstructor : Box { }
     public abstract class SampleConstructorFromTrackGroup : Box { }
     public abstract class IPMPControlBox : Box { }
     public abstract class UniDrcConfigExtension : Box { }
     public abstract class MetadataKeyBox : Box { }
-
-    public class LHEVCDecoderConfigurationRecord { }
-    public class HEVCDecoderConfigurationRecord { }
+    public class LHEVCDecoderConfigurationRecord { }    
     public class HEVCTileTierLevelConfigurationRecord { }
     public class MVDDecoderConfigurationRecord { }
     public class EVCDecoderConfigurationRecord { }

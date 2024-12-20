@@ -43,6 +43,27 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class AVCDecoderConfigurationRecord { \r\n unsigned int(8) configurationVersion = 1; \r\n unsigned int(8) AVCProfileIndication; \r\n unsigned int(8) profile_compatibility; \r\n unsigned int(8) AVCLevelIndication;  \r\n bit(6) reserved = '111111'b; \r\n unsigned int(2) lengthSizeMinusOne;  \r\n bit(3) reserved = '111'b; \r\n unsigned int(5) numOfSequenceParameterSets; \r\n for (i=0; i< numOfSequenceParameterSets;  i++) { \r\n  unsigned int(16) sequenceParameterSetLength ; \r\n  bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; \r\n } \r\n unsigned int(8) numOfPictureParameterSets; \r\n for (i=0; i< numOfPictureParameterSets;  i++) { \r\n  unsigned int(16) pictureParameterSetLength; \r\n  bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; \r\n } \r\n if( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || \r\n    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 ) \r\n { \r\n  bit(6) reserved = '111111'b; \r\n  unsigned int(2) chroma_format; \r\n  bit(5) reserved = '11111'b; \r\n  unsigned int(3) bit_depth_luma_minus8; \r\n  bit(5) reserved = '11111'b; \r\n  unsigned int(3) bit_depth_chroma_minus8; \r\n  unsigned int(8) numOfSequenceParameterSetExt; \r\n  for (i=0; i< numOfSequenceParameterSetExt; i++) { \r\n   unsigned int(16) sequenceParameterSetExtLength; \r\n   bit(8*sequenceParameterSetExtLength) sequenceParameterSetExtNALUnit; \r\n  }\r\n } \r\n}"
+    },
+    {
+      "fourcc": "                ",
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class MVCDecoderConfigurationRecord { \r\nunsigned int(8) configurationVersion = 1; \r\nunsigned int(8) AVCProfileIndication; \r\nunsigned int(8) profile_compatibility; \r\nunsigned int(8) AVCLevelIndication;  \r\n bit(1) complete_representation; \r\n bit(1) explicit_au_track; \r\nbit(4) reserved = '1111'b; \r\nunsigned int(2) lengthSizeMinusOne;  \r\nbit(1) reserved = '0'b; \r\nunsigned int(7) numOfSequenceParameterSets; \r\nfor (i=0; i< numOfSequenceParameterSets; i++) { \r\nunsigned int(16) sequenceParameterSetLength ; \r\n  bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; \r\n } \r\nunsigned int(8) numOfPictureParameterSets; \r\nfor (i=0; i< numOfPictureParameterSets; i++) { \r\n  unsigned int(16) pictureParameterSetLength; \r\n  bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; \r\n } \r\n}"
+    },
+    {
+      "fourcc": "                 ",
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class SVCDecoderConfigurationRecord { \r\nunsigned int(8) configurationVersion = 1; \r\nunsigned int(8) AVCProfileIndication; \r\nunsigned int(8) profile_compatibility; \r\nunsigned int(8) AVCLevelIndication;  \r\n bit(1) complete_represenation; \r\nbit(5) reserved = '11111'b; \r\nunsigned int(2) lengthSizeMinusOne;  \r\nbit(1) reserved = '0'b; \r\nunsigned int(7) numOfSequenceParameterSets; \r\nfor (i=0; i< numOfSequenceParameterSets; i++) { \r\nunsigned int(16) sequenceParameterSetLength ; \r\n  bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; \r\n } \r\nunsigned int(8) numOfPictureParameterSets; \r\nfor (i=0; i< numOfPictureParameterSets; i++) { \r\n  unsigned int(16) pictureParameterSetLength; \r\n  bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; \r\n } \r\n}"
+    },
+    {
+      "fourcc": "                  ",
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class HEVCDecoderConfigurationRecord {\r\n\tunsigned int(8) configurationVersion = 1;\r\n\tunsigned int(2) general_profile_space;\r\n\tunsigned int(1) general_tier_flag;\r\n\tunsigned int(5) general_profile_idc;\r\n\tunsigned int(32) general_profile_compatibility_flags;\r\n\tunsigned int(48) general_constraint_indicator_flags;\r\n\tunsigned int(8) general_level_idc;\r\n\tbit(4) reserved = '1111'b;\r\n\tunsigned int(12) min_spatial_segmentation_idc;\r\n\tbit(6) reserved = '111111'b;\r\n\tunsigned int(2) parallelismType;\r\n\tbit(6) reserved = '111111'b;\r\n\tunsigned int(2) chromaFormat;\r\n\tbit(5) reserved = '11111'b;\r\n\tunsigned int(3) bitDepthLumaMinus8;\r\n\tbit(5) reserved = '11111'b;\r\n\tunsigned int(3) bitDepthChromaMinus8;\r\n\tbit(16) avgFrameRate;\r\n\tbit(2) constantFrameRate;\r\n\tbit(3) numTemporalLayers;\r\n\tbit(1) temporalIdNested;\r\n\tunsigned int(2) lengthSizeMinusOne; \r\n\tunsigned int(8) numOfArrays;\r\n\tfor (j=0; j < numOfArrays; j++) {\r\n\t\tbit(1) array_completeness;\r\n\t\tunsigned int(1) reserved = 0;\r\n\t\tunsigned int(6) NAL_unit_type;\r\n\t\tunsigned int(16) numNalus;\r\n\t\tfor (i=0; i< numNalus; i++) {\r\n\t\t\tunsigned int(16) nalUnitLength;\r\n\t\t\tbit(8*nalUnitLength) nalUnit;\r\n\t\t}\r\n\t}\r\n}"
     }
   ]
 }

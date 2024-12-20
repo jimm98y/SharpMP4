@@ -284,6 +284,7 @@ partial class Program
             Try(String("bit(31)")),
             Try(String("bit(8 ceil(size / 8) \u2013 size)")),
             Try(String("bit(8* ps_nalu_length)")),
+            Try(String("bit(8*nalUnitLength)")),
             Try(String("bit(8*sequenceParameterSetLength)")),
             Try(String("bit(8*pictureParameterSetLength)")),
             Try(String("bit(8*sequenceParameterSetExtLength)")),
@@ -895,6 +896,9 @@ namespace BoxGenerator2
                     if (value.Contains("'b"))
                     {
                         value = value.Replace("'b", "").Replace("'", "0b");
+
+                        if (value == "= 0b0")
+                            value = "= false";
                     }
 
                     value = " " + value.Replace("'", "\"");
@@ -1199,6 +1203,7 @@ namespace BoxGenerator2
             { "bit(31)", "IsoReaderWriter.ReadBits(stream, 31, " },
             { "bit(8 ceil(size / 8) \u2013 size)", "IsoReaderWriter.ReadBytes(stream, (ulong)(Math.Ceiling(size / 8d) - size), " },
             { "bit(8* ps_nalu_length)", "IsoReaderWriter.ReadBytes(stream, ps_nalu_length, " },
+            { "bit(8*nalUnitLength)", "IsoReaderWriter.ReadBytes(stream, nalUnitLength, " },
             { "bit(8*sequenceParameterSetLength)", "IsoReaderWriter.ReadBytes(stream, sequenceParameterSetLength, " },
             { "bit(8*pictureParameterSetLength)", "IsoReaderWriter.ReadBytes(stream, pictureParameterSetLength, " },
             { "bit(8*sequenceParameterSetExtLength)", "IsoReaderWriter.ReadBytes(stream, sequenceParameterSetExtLength, " },
@@ -1467,6 +1472,7 @@ namespace BoxGenerator2
             { "bit(31)", "31" },
             { "bit(8 ceil(size / 8) \u2013 size)", "(ulong)(Math.Ceiling(size / 8d) - size) * 8" },
             { "bit(8* ps_nalu_length)", "(ulong)ps_nalu_length * 8" },
+            { "bit(8*nalUnitLength)", "(ulong)nalUnitLength * 8" },
             { "bit(8*sequenceParameterSetLength)", "(ulong)sequenceParameterSetLength * 8" },
             { "bit(8*pictureParameterSetLength)", "(ulong)pictureParameterSetLength * 8" },
             { "bit(8*sequenceParameterSetExtLength)", "(ulong)sequenceParameterSetExtLength * 8" },
@@ -1734,6 +1740,7 @@ namespace BoxGenerator2
             { "bit(31)", "IsoReaderWriter.WriteBits(stream, 31, " },
             { "bit(8 ceil(size / 8) \u2013 size)", "IsoReaderWriter.WriteBytes(stream, (ulong)(Math.Ceiling(size / 8d) - size), " },
             { "bit(8* ps_nalu_length)", "IsoReaderWriter.WriteBytes(stream, ps_nalu_length, " },
+            { "bit(8*nalUnitLength)", "IsoReaderWriter.WriteBytes(stream, nalUnitLength, " },
             { "bit(8*sequenceParameterSetLength)", "IsoReaderWriter.WriteBytes(stream, sequenceParameterSetLength, " },
             { "bit(8*pictureParameterSetLength)", "IsoReaderWriter.WriteBytes(stream, pictureParameterSetLength, " },
             { "bit(8*sequenceParameterSetExtLength)", "IsoReaderWriter.WriteBytes(stream, sequenceParameterSetExtLength, " },
@@ -2016,6 +2023,7 @@ namespace BoxGenerator2
             { "bit(31)", "uint" },
             { "bit(8 ceil(size / 8) \u2013 size)", "byte[]" },
             { "bit(8* ps_nalu_length)", "byte[]" },
+            { "bit(8*nalUnitLength)", "byte[]" },
             { "bit(8*sequenceParameterSetLength)", "byte[]" },
             { "bit(8*pictureParameterSetLength)", "byte[]" },
             { "bit(8*sequenceParameterSetExtLength)", "byte[]" },
