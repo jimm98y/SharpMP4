@@ -39,7 +39,8 @@ namespace BoxGenerator2
     public class DRCInstructionsBasic { } // ISO/IEC 23003‐4
     public class DRCCoefficientsUniDRC { } // ISO/IEC 23003‐4
     public class DRCInstructionsUniDRC { } // ISO/IEC 23003‐4
-    public abstract class DataEntryBaseBox : FullBox { } // # ISO/IEC 14496-12:2022, Section 8.7.2.2
+    public abstract class UniDrcConfigExtension : Box { } // ISO/IEC 23003‐4
+    public abstract class DataEntryBaseBox : FullBox { } // ISO/IEC 14496-12:2022, Section 8.7.2.2
     public abstract class CompressedBox : Box { }
     public abstract class RtpReceptionHintSampleEntry : Box { }
     public class OperatingPointsRecord { }
@@ -48,7 +49,6 @@ namespace BoxGenerator2
     public abstract class InlineConstructor : Box { }
     public abstract class SampleConstructorFromTrackGroup : Box { }
     public abstract class IPMPControlBox : Box { }
-    public abstract class UniDrcConfigExtension : Box { }
     public abstract class MetadataKeyBox : Box { }
     public class LHEVCDecoderConfigurationRecord { }    
     public class HEVCTileTierLevelConfigurationRecord { }
