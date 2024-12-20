@@ -288,6 +288,8 @@ partial class Program
             Try(String("bit(8*sequenceParameterSetLength)")),
             Try(String("bit(8*pictureParameterSetLength)")),
             Try(String("bit(8*sequenceParameterSetExtLength)")),
+            Try(String("unsigned int(8*num_bytes_constraint_info - 2)")),
+            Try(String("bit(8*nal_unit_length)")),
             Try(String("utf8string")),
             Try(String("utfstring")),
             Try(String("utf8list")),
@@ -411,6 +413,7 @@ partial class Program
             Try(String("BitRateBox ()")),
             Try(String("TrackLoudnessInfo[]")),
             Try(String("AlbumLoudnessInfo[]")),           
+            Try(String("VvcPTLRecord(num_sublayers)")),           
             Try(String("size += 5")), // WORKAROUND
             Try(String("j=1")), // WORKAROUND
             Try(String("j++")), // WORKAROUND
@@ -666,10 +669,9 @@ namespace BoxGenerator2
         {
             optAbstract = "abstract ";
         }
-        
 
         cls += @$"public {optAbstract}class {b.BoxName}";
-        if (b.Extended != null)
+        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
             cls += $" : {b.Extended.BoxName}";
 
         cls += "\r\n{\r\n";
@@ -687,8 +689,8 @@ namespace BoxGenerator2
         }
 
         cls += $"\r\n\r\n\tpublic {b.BoxName}()\r\n\t{{ }}\r\n";
-        cls += "\r\n\tpublic async " + (b.Extended != null ? "override " : "virtual ") + "Task<ulong> ReadAsync(Stream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
-            (b.Extended != null ? "\r\n\t\tboxSize += await base.ReadAsync(stream);" : "");
+        cls += "\r\n\tpublic async " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "Task<ulong> ReadAsync(Stream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
+            (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.ReadAsync(stream);" : "");
 
         cls = FixMissingCode(b, cls);
 
@@ -702,7 +704,7 @@ namespace BoxGenerator2
             cls += "\r\n" + "boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);";
         }
 
-        if (b.Extended != null)
+        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
         {
             cls += "\r\n" + "boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);";
         }
@@ -710,8 +712,8 @@ namespace BoxGenerator2
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
 
-        cls += "\r\n\tpublic async " + (b.Extended != null ? "override " : "virtual ") + "Task<ulong> WriteAsync(Stream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
-            (b.Extended != null ? "\r\n\t\tboxSize += await base.WriteAsync(stream);" : "");
+        cls += "\r\n\tpublic async " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "Task<ulong> WriteAsync(Stream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
+            (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.WriteAsync(stream);" : "");
 
         cls = FixMissingCode(b, cls);
 
@@ -727,8 +729,8 @@ namespace BoxGenerator2
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
-        cls += "\r\n\tpublic " + (b.Extended != null ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
-            (b.Extended != null ? "\r\n\t\tboxSize += base.CalculateSize();" : "");
+        cls += "\r\n\tpublic " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
+            (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += base.CalculateSize();" : "");
 
         cls = FixMissingCode(b, cls);
 
@@ -767,6 +769,17 @@ namespace BoxGenerator2
             cls += "\t\tuint count_size_code = (flags >> 2) & 0x3;\r\n";
             cls += "\t\tuint pattern_size_code = (flags >> 4) & 0x3;\r\n";
             cls += "\t\tuint index_size_code = flags & 0x3;\r\n";
+        }
+        else if(box.BoxName == "VvcPTLRecord")
+        {
+            cls += "\r\n";
+            cls += "\t\tint num_sublayers = 0; // TODO pass arg\r\n";
+        }
+        else if (box.BoxName == "VvcDecoderConfigurationRecord")
+        {
+            cls += "\r\n";
+            cls += "\t\tconst int OPI_NUT = 12;\r\n";
+            cls += "\t\tconst int DCI_NUT = 13;\r\n";
         }
 
         return cls;
@@ -1207,6 +1220,8 @@ namespace BoxGenerator2
             { "bit(8*sequenceParameterSetLength)", "IsoReaderWriter.ReadBytes(stream, sequenceParameterSetLength, " },
             { "bit(8*pictureParameterSetLength)", "IsoReaderWriter.ReadBytes(stream, pictureParameterSetLength, " },
             { "bit(8*sequenceParameterSetExtLength)", "IsoReaderWriter.ReadBytes(stream, sequenceParameterSetExtLength, " },
+            { "unsigned int(8*num_bytes_constraint_info - 2)", "IsoReaderWriter.ReadBytes(stream, (ulong)(num_bytes_constraint_info - 2), " },
+            { "bit(8*nal_unit_length)", "IsoReaderWriter.ReadBytes(stream, nal_unit_length, " },
             { "utf8string", "IsoReaderWriter.ReadString(stream, " },
             { "utfstring", "IsoReaderWriter.ReadString(stream, " },
             { "utf8list", "IsoReaderWriter.ReadString(stream, " },
@@ -1343,6 +1358,7 @@ namespace BoxGenerator2
             { "unsigned int(9)[i]", "IsoReaderWriter.ReadBits(stream, 9, " },
             { "unsigned int(32)[]", "IsoReaderWriter.ReadUInt32Array(stream, " },
             { "unsigned int(32)[i]", "IsoReaderWriter.ReadUInt32(stream, " },
+            { "unsigned int(32)[j]", "IsoReaderWriter.ReadUInt32(stream, " },
             { "unsigned int(8)[j][k]", "IsoReaderWriter.ReadUInt8(stream, " },
             { "signed   int(64)[j][k]", "IsoReaderWriter.ReadInt64(stream, " },
             { "unsigned int(8)[j]", "IsoReaderWriter.ReadUInt8(stream, " },
@@ -1374,6 +1390,7 @@ namespace BoxGenerator2
             { "TranscodingInfoBox", "IsoReaderWriter.ReadBox(stream, " },
             { "TrackLoudnessInfo[]", "IsoReaderWriter.ReadBox(stream, " },
             { "AlbumLoudnessInfo[]", "IsoReaderWriter.ReadBox(stream, " },
+            { "VvcPTLRecord(num_sublayers)", "IsoReaderWriter.ReadClass(stream, num_sublayers," },
         };
         return map[type];
     }
@@ -1476,6 +1493,8 @@ namespace BoxGenerator2
             { "bit(8*sequenceParameterSetLength)", "(ulong)sequenceParameterSetLength * 8" },
             { "bit(8*pictureParameterSetLength)", "(ulong)pictureParameterSetLength * 8" },
             { "bit(8*sequenceParameterSetExtLength)", "(ulong)sequenceParameterSetExtLength * 8" },
+            { "unsigned int(8*num_bytes_constraint_info - 2)", "(ulong)(num_bytes_constraint_info - 2)" },
+            { "bit(8*nal_unit_length)", "(ulong)nal_unit_length * 8" },
             { "utf8string", "(ulong)value.Length * 8" },
             { "utfstring", "(ulong)value.Length * 8" },
             { "utf8list", "(ulong)value.Length * 8" },
@@ -1611,6 +1630,7 @@ namespace BoxGenerator2
             { "unsigned int(9)[i]", "9" },
             { "unsigned int(32)[]", "32" },
             { "unsigned int(32)[i]", "32" },
+            { "unsigned int(32)[j]", "32" },
             { "unsigned int(8)[j][k]", "8" },
             { "unsigned int(8)[j]", "8" },
             { "signed   int(64)[j][k]", "64" },
@@ -1642,6 +1662,7 @@ namespace BoxGenerator2
             { "TranscodingInfoBox", "IsoReaderWriter.CalculateSize(value)" },
             { "TrackLoudnessInfo[]", "IsoReaderWriter.CalculateSize(value)" },
             { "AlbumLoudnessInfo[]", "IsoReaderWriter.CalculateSize(value)" },
+            { "VvcPTLRecord(num_sublayers)", "IsoReaderWriter.CalculateClassSize(value)" },
        };
         return map[type];
     }
@@ -1744,6 +1765,8 @@ namespace BoxGenerator2
             { "bit(8*sequenceParameterSetLength)", "IsoReaderWriter.WriteBytes(stream, sequenceParameterSetLength, " },
             { "bit(8*pictureParameterSetLength)", "IsoReaderWriter.WriteBytes(stream, pictureParameterSetLength, " },
             { "bit(8*sequenceParameterSetExtLength)", "IsoReaderWriter.WriteBytes(stream, sequenceParameterSetExtLength, " },
+            { "unsigned int(8*num_bytes_constraint_info - 2)", "IsoReaderWriter.WriteBytes(stream, (ulong)(num_bytes_constraint_info - 2), " },
+            { "bit(8*nal_unit_length)", "IsoReaderWriter.WriteBytes(stream, nal_unit_length, " },
             { "utf8string", "IsoReaderWriter.WriteString(stream, " },
             { "utfstring", "IsoReaderWriter.WriteString(stream, " },
             { "utf8list", "IsoReaderWriter.WriteString(stream, " },
@@ -1879,6 +1902,7 @@ namespace BoxGenerator2
             { "unsigned int(9)[i]", "IsoReaderWriter.WriteBits(stream, 9, " },
             { "unsigned int(32)[]", "IsoReaderWriter.WriteUInt32Array(stream, " },
             { "unsigned int(32)[i]", "IsoReaderWriter.WriteUInt32(stream, " },
+            { "unsigned int(32)[j]", "IsoReaderWriter.WriteUInt32(stream, " },
             { "unsigned int(8)[j][k]", "IsoReaderWriter.WriteUInt8(stream, " },
             { "signed   int(64)[j][k]", "IsoReaderWriter.WriteInt64(stream, " },
             { "unsigned int(8)[j]", "IsoReaderWriter.WriteUInt8(stream, " },
@@ -1910,6 +1934,7 @@ namespace BoxGenerator2
             { "TranscodingInfoBox", "IsoReaderWriter.WriteBox(stream, " },
             { "TrackLoudnessInfo[]", "IsoReaderWriter.WriteBox(stream, " },
             { "AlbumLoudnessInfo[]", "IsoReaderWriter.WriteBox(stream, " },
+            { "VvcPTLRecord(num_sublayers)", "IsoReaderWriter.WriteClass(stream, num_sublayers, " },
         };
         return map[type];
     }
@@ -2027,6 +2052,8 @@ namespace BoxGenerator2
             { "bit(8*sequenceParameterSetLength)", "byte[]" },
             { "bit(8*pictureParameterSetLength)", "byte[]" },
             { "bit(8*sequenceParameterSetExtLength)", "byte[]" },
+            { "unsigned int(8*num_bytes_constraint_info - 2)", "byte[]" },
+            { "bit(8*nal_unit_length)", "byte[]" },
             { "utf8string", "string" },
             { "utfstring", "string" },
             { "utf8list", "string" },
@@ -2166,6 +2193,7 @@ namespace BoxGenerator2
             { "unsigned int(9)[i]", "ushort[]" },
             { "unsigned int(32)[]", "uint[]" },
             { "unsigned int(32)[i]", "uint[]" },
+            { "unsigned int(32)[j]", "uint[]" },
             { "char[]", "sbyte[]" },
             { "loudness[]", "int[]" },
             { "ItemPropertyAssociationBox[]", "ItemPropertyAssociationBox[]" },
@@ -2195,6 +2223,7 @@ namespace BoxGenerator2
             { "TranscodingInfoBox", "TranscodingInfoBox" },
             { "TrackLoudnessInfo[]", "TrackLoudnessInfo[]" },
             { "AlbumLoudnessInfo[]", "AlbumLoudnessInfo[]" },
+            { "VvcPTLRecord(num_sublayers)", "VvcPTLRecord[]" },
         };
         return map[type];
     }

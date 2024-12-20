@@ -2801,6 +2801,381 @@ namespace BoxGenerator2
     }
 
 
+    public class VvcPTLRecord
+    {
+
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+
+        protected byte num_bytes_constraint_info;
+        public byte NumBytesConstraintInfo { get { return num_bytes_constraint_info; } set { num_bytes_constraint_info = value; } }
+
+        protected byte general_profile_idc;
+        public byte GeneralProfileIdc { get { return general_profile_idc; } set { general_profile_idc = value; } }
+
+        protected bool general_tier_flag;
+        public bool GeneralTierFlag { get { return general_tier_flag; } set { general_tier_flag = value; } }
+
+        protected byte general_level_idc;
+        public byte GeneralLevelIdc { get { return general_level_idc; } set { general_level_idc = value; } }
+
+        protected bool ptl_frame_only_constraint_flag;
+        public bool PtlFrameOnlyConstraintFlag { get { return ptl_frame_only_constraint_flag; } set { ptl_frame_only_constraint_flag = value; } }
+
+        protected bool ptl_multi_layer_enabled_flag;
+        public bool PtlMultiLayerEnabledFlag { get { return ptl_multi_layer_enabled_flag; } set { ptl_multi_layer_enabled_flag = value; } }
+
+        protected byte[] general_constraint_info;
+        public byte[] GeneralConstraintInfo { get { return general_constraint_info; } set { general_constraint_info = value; } }
+
+        protected bool[] ptl_sublayer_level_present_flag;
+        public bool[] PtlSublayerLevelPresentFlag { get { return ptl_sublayer_level_present_flag; } set { ptl_sublayer_level_present_flag = value; } }
+
+        protected bool ptl_reserved_zero_bit = false;
+        public bool PtlReservedZeroBit { get { return ptl_reserved_zero_bit; } set { ptl_reserved_zero_bit = value; } }
+
+        protected byte[] sublayer_level_idc;
+        public byte[] SublayerLevelIdc { get { return sublayer_level_idc; } set { sublayer_level_idc = value; } }
+
+        protected byte ptl_num_sub_profiles;
+        public byte PtlNumSubProfiles { get { return ptl_num_sub_profiles; } set { ptl_num_sub_profiles = value; } }
+
+        protected uint[] general_sub_profile_idc;
+        public uint[] GeneralSubProfileIdc { get { return general_sub_profile_idc; } set { general_sub_profile_idc = value; } }
+
+        public VvcPTLRecord()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            int num_sublayers = 0; // TODO pass arg
+
+            boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.reserved);
+            boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.num_bytes_constraint_info);
+            boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.general_profile_idc);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.general_tier_flag);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.general_level_idc);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.ptl_frame_only_constraint_flag);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.ptl_multi_layer_enabled_flag);
+            boxSize += IsoReaderWriter.ReadBytes(stream, (ulong)(num_bytes_constraint_info - 2), out this.general_constraint_info);
+
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.ptl_sublayer_level_present_flag[i]);
+            }
+
+            for (int j = num_sublayers; j <= 8 && num_sublayers > 1; j++)
+            {
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.ptl_reserved_zero_bit);
+            }
+
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+
+                if (ptl_sublayer_level_present_flag[i])
+                {
+                    boxSize += IsoReaderWriter.ReadUInt8(stream, out this.sublayer_level_idc[i]);
+                }
+            }
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.ptl_num_sub_profiles);
+
+            for (int j = 0; j < ptl_num_sub_profiles; j++)
+            {
+                boxSize += IsoReaderWriter.ReadUInt32(stream, out this.general_sub_profile_idc[j]);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            int num_sublayers = 0; // TODO pass arg
+
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.num_bytes_constraint_info);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.general_profile_idc);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.general_tier_flag);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.general_level_idc);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.ptl_frame_only_constraint_flag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.ptl_multi_layer_enabled_flag);
+            boxSize += IsoReaderWriter.WriteBytes(stream, (ulong)(num_bytes_constraint_info - 2), this.general_constraint_info);
+
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+                boxSize += IsoReaderWriter.WriteBit(stream, this.ptl_sublayer_level_present_flag[i]);
+            }
+
+            for (int j = num_sublayers; j <= 8 && num_sublayers > 1; j++)
+            {
+                boxSize += IsoReaderWriter.WriteBit(stream, this.ptl_reserved_zero_bit);
+            }
+
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+
+                if (ptl_sublayer_level_present_flag[i])
+                {
+                    boxSize += IsoReaderWriter.WriteUInt8(stream, this.sublayer_level_idc[i]);
+                }
+            }
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.ptl_num_sub_profiles);
+
+            for (int j = 0; j < ptl_num_sub_profiles; j++)
+            {
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.general_sub_profile_idc[j]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            int num_sublayers = 0; // TODO pass arg
+
+            boxSize += 2; // reserved
+            boxSize += 6; // num_bytes_constraint_info
+            boxSize += 7; // general_profile_idc
+            boxSize += 1; // general_tier_flag
+            boxSize += 8; // general_level_idc
+            boxSize += 1; // ptl_frame_only_constraint_flag
+            boxSize += 1; // ptl_multi_layer_enabled_flag
+            boxSize += (ulong)(num_bytes_constraint_info - 2); // general_constraint_info
+
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+                boxSize += 1; // ptl_sublayer_level_present_flag
+            }
+
+            for (int j = num_sublayers; j <= 8 && num_sublayers > 1; j++)
+            {
+                boxSize += 1; // ptl_reserved_zero_bit
+            }
+
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+
+                if (ptl_sublayer_level_present_flag[i])
+                {
+                    boxSize += 8; // sublayer_level_idc
+                }
+            }
+            boxSize += 8; // ptl_num_sub_profiles
+
+            for (int j = 0; j < ptl_num_sub_profiles; j++)
+            {
+                boxSize += 32; // general_sub_profile_idc
+            }
+            return boxSize;
+        }
+    }
+
+
+    public class VvcDecoderConfigurationRecord
+    {
+
+
+        protected byte reserved = 0b11111;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+
+        protected byte LengthSizeMinusOne;
+        public byte _LengthSizeMinusOne { get { return LengthSizeMinusOne; } set { LengthSizeMinusOne = value; } }
+
+        protected bool ptl_present_flag;
+        public bool PtlPresentFlag { get { return ptl_present_flag; } set { ptl_present_flag = value; } }
+
+        protected ushort ols_idx;
+        public ushort OlsIdx { get { return ols_idx; } set { ols_idx = value; } }
+
+        protected byte num_sublayers;
+        public byte NumSublayers { get { return num_sublayers; } set { num_sublayers = value; } }
+
+        protected byte constant_frame_rate;
+        public byte ConstantFrameRate { get { return constant_frame_rate; } set { constant_frame_rate = value; } }
+
+        protected byte chroma_format_idc;
+        public byte ChromaFormatIdc { get { return chroma_format_idc; } set { chroma_format_idc = value; } }
+
+        protected byte bit_depth_minus8;
+        public byte BitDepthMinus8 { get { return bit_depth_minus8; } set { bit_depth_minus8 = value; } }
+
+        protected byte reserved0 = 0b11111;
+        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+
+        protected VvcPTLRecord[] native_ptl;
+        public VvcPTLRecord[] NativePtl { get { return native_ptl; } set { native_ptl = value; } }
+
+        protected ushort max_picture_width;
+        public ushort MaxPictureWidth { get { return max_picture_width; } set { max_picture_width = value; } }
+
+        protected ushort max_picture_height;
+        public ushort MaxPictureHeight { get { return max_picture_height; } set { max_picture_height = value; } }
+
+        protected ushort avg_frame_rate;
+        public ushort AvgFrameRate { get { return avg_frame_rate; } set { avg_frame_rate = value; } }
+
+        protected byte num_of_arrays;
+        public byte NumOfArrays { get { return num_of_arrays; } set { num_of_arrays = value; } }
+
+        protected bool array_completeness;
+        public bool ArrayCompleteness { get { return array_completeness; } set { array_completeness = value; } }
+
+        protected byte reserved1 = 0;
+        public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+
+        protected byte NAL_unit_type;
+        public byte NALUnitType { get { return NAL_unit_type; } set { NAL_unit_type = value; } }
+
+        protected ushort num_nalus;
+        public ushort NumNalus { get { return num_nalus; } set { num_nalus = value; } }
+
+        protected ushort nal_unit_length;
+        public ushort NalUnitLength { get { return nal_unit_length; } set { nal_unit_length = value; } }
+
+        protected byte[] nal_unit;
+        public byte[] NalUnit { get { return nal_unit; } set { nal_unit = value; } }
+
+        public VvcDecoderConfigurationRecord()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            const int OPI_NUT = 12;
+            const int DCI_NUT = 13;
+
+            boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.reserved);
+            boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.LengthSizeMinusOne);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.ptl_present_flag);
+
+            if (ptl_present_flag)
+            {
+                boxSize += IsoReaderWriter.ReadBits(stream, 9, out this.ols_idx);
+                boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.num_sublayers);
+                boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.constant_frame_rate);
+                boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.chroma_format_idc);
+                boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.bit_depth_minus8);
+                boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.reserved0);
+                boxSize += IsoReaderWriter.ReadClass(stream, num_sublayers, out this.native_ptl);
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.max_picture_width);
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.max_picture_height);
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.avg_frame_rate);
+            }
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.num_of_arrays);
+
+            for (int j = 0; j < num_of_arrays; j++)
+            {
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.array_completeness);
+                boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.reserved1);
+                boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.NAL_unit_type);
+
+                if (NAL_unit_type != DCI_NUT && NAL_unit_type != OPI_NUT)
+                {
+                    boxSize += IsoReaderWriter.ReadUInt16(stream, out this.num_nalus);
+                }
+
+                for (int i = 0; i < num_nalus; i++)
+                {
+                    boxSize += IsoReaderWriter.ReadUInt16(stream, out this.nal_unit_length);
+                    boxSize += IsoReaderWriter.ReadBytes(stream, nal_unit_length, out this.nal_unit);
+                }
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            const int OPI_NUT = 12;
+            const int DCI_NUT = 13;
+
+            boxSize += IsoReaderWriter.WriteBits(stream, 5, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.LengthSizeMinusOne);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.ptl_present_flag);
+
+            if (ptl_present_flag)
+            {
+                boxSize += IsoReaderWriter.WriteBits(stream, 9, this.ols_idx);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.num_sublayers);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.constant_frame_rate);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.chroma_format_idc);
+                boxSize += IsoReaderWriter.WriteBits(stream, 3, this.bit_depth_minus8);
+                boxSize += IsoReaderWriter.WriteBits(stream, 5, this.reserved0);
+                boxSize += IsoReaderWriter.WriteClass(stream, num_sublayers, this.native_ptl);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_picture_width);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.max_picture_height);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.avg_frame_rate);
+            }
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.num_of_arrays);
+
+            for (int j = 0; j < num_of_arrays; j++)
+            {
+                boxSize += IsoReaderWriter.WriteBit(stream, this.array_completeness);
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved1);
+                boxSize += IsoReaderWriter.WriteBits(stream, 5, this.NAL_unit_type);
+
+                if (NAL_unit_type != DCI_NUT && NAL_unit_type != OPI_NUT)
+                {
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.num_nalus);
+                }
+
+                for (int i = 0; i < num_nalus; i++)
+                {
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.nal_unit_length);
+                    boxSize += IsoReaderWriter.WriteBytes(stream, nal_unit_length, this.nal_unit);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            const int OPI_NUT = 12;
+            const int DCI_NUT = 13;
+
+            boxSize += 5; // reserved
+            boxSize += 2; // LengthSizeMinusOne
+            boxSize += 1; // ptl_present_flag
+
+            if (ptl_present_flag)
+            {
+                boxSize += 9; // ols_idx
+                boxSize += 3; // num_sublayers
+                boxSize += 2; // constant_frame_rate
+                boxSize += 2; // chroma_format_idc
+                boxSize += 3; // bit_depth_minus8
+                boxSize += 5; // reserved0
+                boxSize += IsoReaderWriter.CalculateClassSize(native_ptl); // native_ptl
+                boxSize += 16; // max_picture_width
+                boxSize += 16; // max_picture_height
+                boxSize += 16; // avg_frame_rate
+            }
+            boxSize += 8; // num_of_arrays
+
+            for (int j = 0; j < num_of_arrays; j++)
+            {
+                boxSize += 1; // array_completeness
+                boxSize += 2; // reserved1
+                boxSize += 5; // NAL_unit_type
+
+                if (NAL_unit_type != DCI_NUT && NAL_unit_type != OPI_NUT)
+                {
+                    boxSize += 16; // num_nalus
+                }
+
+                for (int i = 0; i < num_nalus; i++)
+                {
+                    boxSize += 16; // nal_unit_length
+                    boxSize += (ulong)nal_unit_length * 8; // nal_unit
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get; set; } = "rssr";

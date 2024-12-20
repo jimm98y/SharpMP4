@@ -55,9 +55,7 @@ namespace BoxGenerator2
     public class MVDDecoderConfigurationRecord { }
     public class EVCDecoderConfigurationRecord { }
     public class EVCSliceComponentTrackConfigurationRecord { }
-    public class VvcPTLRecord { }
     public class VvcOperatingPointsRecord { }
-    public class VvcDecoderConfigurationRecord { }
     public class VVCSubpicIDRewritingInfomationStruct { }
     public abstract class NALUStartInlineConstructor : Box { }
 }
