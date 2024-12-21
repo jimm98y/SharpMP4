@@ -131,11 +131,6 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong ReadInt8Array(Stream stream, out sbyte[] value)
-    {
-        throw new NotImplementedException();
-    }
-
     internal static ulong ReadStringArray(Stream stream, uint count, out string[] value)
     {
         throw new NotImplementedException();
@@ -151,12 +146,12 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong ReadUInt32Array(Stream stream, out uint[] value)
+    internal static ulong ReadUInt8Array(Stream stream, ulong count, out byte[] value)
     {
         throw new NotImplementedException();
     }
 
-    internal static ulong ReadInt8Array(Stream stream, uint count, out sbyte[] value)
+    internal static ulong ReadUInt32Array(Stream stream, out uint[] value)
     {
         throw new NotImplementedException();
     }
@@ -246,11 +241,6 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteUInt32Array(Stream stream, uint count, uint[] value)
-    {
-        throw new NotImplementedException();
-    }
-
     internal static ulong WriteUInt48(Stream stream, ulong value)
     {
         throw new NotImplementedException();
@@ -266,23 +256,22 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteInt8Array(Stream stream, sbyte[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static ulong WriteInt8Array(Stream stream, uint count, sbyte[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-
     internal static ulong WriteStringArray(Stream stream, uint count, string[] values)
     {
         throw new NotImplementedException();
     }
 
     internal static ulong WriteUInt8Array(Stream stream, byte[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong WriteUInt8Array(Stream stream, ulong count, byte[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong WriteUInt32Array(Stream stream, uint count, uint[] value)
     {
         throw new NotImplementedException();
     }

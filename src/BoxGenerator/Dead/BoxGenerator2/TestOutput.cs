@@ -6105,8 +6105,8 @@ namespace BoxGenerator2
         protected byte count;
         public byte Count { get { return count; } set { count = value; } }
 
-        protected sbyte[] rtpmap_string;
-        public sbyte[] RtpmapString { get { return rtpmap_string; } set { rtpmap_string = value; } }
+        protected byte[] rtpmap_string;
+        public byte[] RtpmapString { get { return rtpmap_string; } set { rtpmap_string = value; } }
 
         public hintpayloadID()
         { }
@@ -6117,7 +6117,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.payloadID); // payload ID used in RTP packets
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.count);
-            boxSize += IsoReaderWriter.ReadInt8Array(stream, count, out this.rtpmap_string);
+            boxSize += IsoReaderWriter.ReadUInt8Array(stream, count, out this.rtpmap_string);
             boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
@@ -6128,7 +6128,7 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.payloadID); // payload ID used in RTP packets
             boxSize += IsoReaderWriter.WriteUInt8(stream, this.count);
-            boxSize += IsoReaderWriter.WriteInt8Array(stream, count, this.rtpmap_string);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, count, this.rtpmap_string);
             return boxSize;
         }
 
@@ -6911,8 +6911,8 @@ namespace BoxGenerator2
         protected sbyte elevation0;
         public sbyte Elevation0 { get { return elevation0; } set { elevation0 = value; } }
 
-        protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        protected sbyte reserved = 0;
+        public sbyte Reserved { get { return reserved; } set { reserved = value; } }
 
         protected byte channel_order_definition;
         public byte ChannelOrderDefinition { get { return channel_order_definition; } set { channel_order_definition = value; } }
@@ -7755,8 +7755,8 @@ namespace BoxGenerator2
     {
         public override string FourCC { get; set; } = "hnti";
 
-        protected sbyte[] sdptext;
-        public sbyte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
+        protected byte[] sdptext;
+        public byte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
 
         public rtptracksdphintinformation()
         { }
@@ -7765,7 +7765,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadInt8Array(stream, out this.sdptext);
+            boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.sdptext);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
             boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
@@ -7775,7 +7775,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.sdptext);
             boxSize += IsoReaderWriter.WriteBoxChildren(stream, this);
             return boxSize;
         }
@@ -7826,8 +7826,8 @@ namespace BoxGenerator2
     {
         public override string FourCC { get; set; } = "sdp ";
 
-        protected sbyte[] sdptext;
-        public sbyte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
+        protected byte[] sdptext;
+        public byte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
 
         public rtptracksdphintinformation1()
         { }
@@ -7836,7 +7836,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadInt8Array(stream, out this.sdptext);
+            boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.sdptext);
             boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
@@ -7845,7 +7845,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.sdptext);
             return boxSize;
         }
 
@@ -7900,8 +7900,8 @@ namespace BoxGenerator2
         protected uint descriptionformat = IsoReaderWriter.FromFourCC("sdp ");
         public uint Descriptionformat { get { return descriptionformat; } set { descriptionformat = value; } }
 
-        protected sbyte[] sdptext;
-        public sbyte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
+        protected byte[] sdptext;
+        public byte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
 
         public rtpmoviehintinformation()
         { }
@@ -7911,7 +7911,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.descriptionformat);
-            boxSize += IsoReaderWriter.ReadInt8Array(stream, out this.sdptext);
+            boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.sdptext);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
             boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
@@ -7922,7 +7922,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.descriptionformat);
-            boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.sdptext);
             boxSize += IsoReaderWriter.WriteBoxChildren(stream, this);
             return boxSize;
         }
@@ -20093,8 +20093,8 @@ namespace BoxGenerator2
         protected uint descriptionformat = IsoReaderWriter.FromFourCC("sdp ");
         public uint Descriptionformat { get { return descriptionformat; } set { descriptionformat = value; } }
 
-        protected sbyte[] sdptext;
-        public sbyte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
+        protected byte[] sdptext;
+        public byte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
 
         public rtpmoviehintinformation1()
         { }
@@ -20104,7 +20104,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.descriptionformat);
-            boxSize += IsoReaderWriter.ReadInt8Array(stream, out this.sdptext);
+            boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.sdptext);
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
             boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
@@ -20115,7 +20115,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += IsoReaderWriter.WriteUInt32(stream, this.descriptionformat);
-            boxSize += IsoReaderWriter.WriteInt8Array(stream, this.sdptext);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.sdptext);
             boxSize += IsoReaderWriter.WriteBoxChildren(stream, this);
             return boxSize;
         }
