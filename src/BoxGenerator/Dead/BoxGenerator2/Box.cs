@@ -31,7 +31,7 @@ namespace BoxGenerator2
         }
     }
 
-    public class Descriptor : Box
+    public class Descriptor 
     { }
 
     public class ICC_profile { } // ISO 15076‐1 or ICC.1:2010
@@ -44,7 +44,7 @@ namespace BoxGenerator2
     public abstract class CompressedBox : Box { }
     public abstract class RtpReceptionHintSampleEntry : Box { }
     public class OperatingPointsRecord { }
-    public class MetaDataDatatypeBox : Box { }
+    public class MetaDataDatatypeBox : Box { } // missing info
 
     public abstract class SampleConstructor : Box { }
     public abstract class InlineConstructor : Box { }
@@ -54,7 +54,6 @@ namespace BoxGenerator2
     public class HEVCTileTierLevelConfigurationRecord { }
     public class EVCDecoderConfigurationRecord { }
     public class EVCSliceComponentTrackConfigurationRecord { }
-    public class VvcOperatingPointsRecord { }
     public class VVCSubpicIDRewritingInfomationStruct { }
     public abstract class NALUStartInlineConstructor : Box { }
 }

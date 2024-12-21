@@ -71,6 +71,13 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class GeneralTypeBox(code) extends Box(code) {\r\n      unsigned int(32)    major_brand;\r\n      unsigned int(32)    minor_version;\r\n      unsigned int(32)    compatible_brands[];    // to end of the box\r\n    }"
+    },
+    {
+      "fourcc": "                      ",
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class MetaDataKeyBox extends\tBox(local_key_id) {\r\n MetaDataKeyDeclarationBox();\r\n MetaDataDatatypeBox();\t  // optional\r\n MetaDataLocaleBox();\t  // optional\r\n MetaDataSetupBox();\t  // optional\r\n MetaDataExtensionsBox();  // optional\r\n}\r\naligned(8) class MetaDataKeyDeclarationBox extends Box('keyd') {\r\n unsigned int(32) key_namespace;\r\n unsigned int(8) key_value[];\r\n}\r\n\r\naligned(8) class MetaDataLocaleBox extends Box('loca') {\r\n string locale_string;\r\n}\r\n\r\naligned(8) class MetaDataSetupBox extends Box('setu') { // 'init' instead?\r\n}\r\n\r\naligned(8) class MetaDataExtensionsBox extends Box('exte') {\r\n Box extensions[];\r\n}\r\n\r\naligned(8) class MetaDataInlineKeysPresentBox extends Box('keyi') {\r\nunsigned int(8) inlineKeyValueBoxesPresent;\r\n}\r\n\r\naligned(8) class MetaDataAccessUnit {\r\nBox boxes[];\r\n}\r\n\r\naligned(8) class MetaDataAUBox extends Box(local_key_id) {\r\n}\r\n\r\n"
     }
   ]
 }

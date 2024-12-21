@@ -414,6 +414,7 @@ partial class Program
             Try(String("TrackLoudnessInfo[]")),
             Try(String("AlbumLoudnessInfo[]")),           
             Try(String("VvcPTLRecord(num_sublayers)")),           
+            Try(String("VvcPTLRecord(ptl_max_temporal_id[i]+1)")),           
             Try(String("size += 5")), // WORKAROUND
             Try(String("j=1")), // WORKAROUND
             Try(String("j++")), // WORKAROUND
@@ -1396,6 +1397,7 @@ namespace BoxGenerator2
             { "TrackLoudnessInfo[]", "IsoReaderWriter.ReadBox(stream, " },
             { "AlbumLoudnessInfo[]", "IsoReaderWriter.ReadBox(stream, " },
             { "VvcPTLRecord(num_sublayers)", "IsoReaderWriter.ReadClass(stream, num_sublayers," },
+            { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "IsoReaderWriter.ReadClass(stream, " },
         };
         return map[type];
     }
@@ -1673,6 +1675,7 @@ namespace BoxGenerator2
             { "TrackLoudnessInfo[]", "IsoReaderWriter.CalculateSize(value)" },
             { "AlbumLoudnessInfo[]", "IsoReaderWriter.CalculateSize(value)" },
             { "VvcPTLRecord(num_sublayers)", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "IsoReaderWriter.CalculateClassSize(value)" },
        };
         return map[type];
     }
@@ -1950,6 +1953,7 @@ namespace BoxGenerator2
             { "TrackLoudnessInfo[]", "IsoReaderWriter.WriteBox(stream, " },
             { "AlbumLoudnessInfo[]", "IsoReaderWriter.WriteBox(stream, " },
             { "VvcPTLRecord(num_sublayers)", "IsoReaderWriter.WriteClass(stream, num_sublayers, " },
+            { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "IsoReaderWriter.WriteClass(stream, " },
         };
         return map[type];
     }
@@ -2244,6 +2248,7 @@ namespace BoxGenerator2
             { "TrackLoudnessInfo[]", "TrackLoudnessInfo[]" },
             { "AlbumLoudnessInfo[]", "AlbumLoudnessInfo[]" },
             { "VvcPTLRecord(num_sublayers)", "VvcPTLRecord[]" },
+            { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "VvcPTLRecord[]" },
         };
         return map[type];
     }

@@ -45,11 +45,6 @@ internal class IsoReaderWriter
     {
         throw new NotImplementedException();
     }
-    
-    internal static ulong ReadBox<T>(Stream stream, ulong count, out T[] value) where T : Box
-    {
-        throw new NotImplementedException();
-    }
 
     internal static ulong ReadBytes(Stream stream, ulong length, out byte[] value)
     {
@@ -66,7 +61,7 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong ReadClass<T>(Stream stream, int count, out T[] value) where T : class
+    internal static ulong ReadClass<T>(Stream stream, ulong count, out T[] value) where T : class
     {
         throw new NotImplementedException();
     }
@@ -156,11 +151,6 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong ReadInt32Array(Stream stream, out int[] value)
-    {
-        throw new NotImplementedException();
-    }
-
     internal static ulong ReadUInt32Array(Stream stream, out uint[] value)
     {
         throw new NotImplementedException();
@@ -192,11 +182,6 @@ internal class IsoReaderWriter
     }
 
     internal static ulong WriteBox(Stream stream, Box[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static ulong WriteBox(Stream stream, ulong count, Box[] value)
     {
         throw new NotImplementedException();
     }
@@ -313,11 +298,6 @@ internal class IsoReaderWriter
     }
 
     internal static ulong WriteUInt32Array(Stream stream, uint[] values)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static ulong WriteInt32Array(Stream stream, int[] values)
     {
         throw new NotImplementedException();
     }
