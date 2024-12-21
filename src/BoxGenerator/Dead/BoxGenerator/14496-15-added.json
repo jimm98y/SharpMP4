@@ -85,7 +85,20 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "class VvcOperatingPointsRecord { \r\nunsigned int(8) num_profile_tier_level_minus1;\r\nfor (i=0; i<=num_profile_tier_level_minus1; i++) { \r\n unsigned int(8) ptl_max_temporal_id[i]; \r\n VvcPTLRecord(ptl_max_temporal_id[i]+1) ptl[i];\r\n} \r\nunsigned int(1) all_independent_layers_flag; \r\nbit(7) reserved = 0; \r\nif (all_independent_layers_flag){ \r\n unsigned int(1) each_layer_is_an_ols_flag; \r\n bit(7) reserved = 0; \r\n} \r\nelse \r\n unsigned int(8) ols_mode_idc; \r\nunsigned int(16) num_operating_points; \r\nfor (i=0; i<num_operating_points; i++) { \r\n unsigned int(16) output_layer_set_idx; \r\n unsigned int(8) ptl_idx; \r\n unsigned int(8) max_temporal_id; \r\n unsigned int(8) layer_count; \r\n for (j=0; j<layer_count; j++) { \r\n  unsigned int(6) layer_id; \r\n  unsigned int(1) is_outputlayer;\r\n  bit(1) reserved = 0;\r\n }\r\n bit(6) reserved = 0; \r\n unsigned int(1) frame_rate_info_flag;\r\n unsigned int(1) bit_rate_info_flag;\r\n if (frame_rate_info_flag) { \r\n  unsigned int(16) avgFrameRate; \r\n  bit(6) reserved = 0; \r\n  unsigned int(2) constantFrameRate;\r\n } \r\n if (bit_rate_info_flag) { \r\n  unsigned int(32) maxBitRate; \r\n  unsigned int(32) avgBitRate;\r\n }\r\n}\r\nunsigned int(8) max_layer_count; \r\nfor (i=0; i<max_layer_count; i++) { \r\n unsigned int(8) layerID; \r\n unsigned int(8) num_direct_ref_layers; \r\n for (j=0; j<num_direct_ref_layers; j++) \r\n  unsigned int(8) direct_ref_layerID; \r\n unsigned int(8) max_tid_il_ref_pics_plus1; \r\n }\r\n}\r\n"
+    },
+    {
+      "fourcc": "                       ",
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class EVCDecoderConfigurationRecord {\r\nunsigned int(8) configurationVersion=1;\r\nunsigned int(8) profile_idc;\r\nunsigned int(8) level_idc;\r\n unsigned int(32) toolset_idc;\r\nunsigned int(2) chroma_format_idc;\r\n unsigned int(3) bit_depth_luma_minus8;\r\nunsigned int(3) bit_depth_chroma_minus8;\r\nunsigned int(32) pic_width_in_luma_samples;\r\nunsigned int(32) pic_height_in_luma_samples;\r\nunsigned int(5) reserved='00000'b;\r\nunsigned int(1) sps_in_stream;\r\n unsigned int(1) pps_in_stream;\r\nunsigned int(1) aps_in_stream;\r\n unsigned int(8) numOfArrays;\r\n for (j=0; j<numOfArrays; j++) {\r\nbit(2) reserved='00'b;\r\nunsigned int(6) NAL_unit_type;\r\n unsigned int(16) numNalus;\r\nfor (i=0; i<numNalus; i++) {\r\n unsigned int(16) nalUnitLength;\r\nbit(8*nalUnitLength) nalUnit;\r\n}\r\n}\r\n}"
+    },
+    {
+      "fourcc": "                        ",
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class LHEVCDecoderConfigurationRecord {\r\nunsigned int(8) configurationVersion = 1;\r\nunsigned int(2) general_profile_space;\r\nunsigned int(1) general_tier_flag;\r\nunsigned int(5) general_profile_idc;\r\nunsigned int(32) general_profile_compatibility_flags;\r\nunsigned int(48) general_constraint_indicator_flags;\r\nunsigned int(8) general_level_idc;\r\nbit(1) complete_representation;\r\nbit(3) reserved = '111'b;\r\nunsigned int(12) min_spatial_segmentation_idc;\r\nbit(6) reserved = '111111'b;\r\nunsigned int(2) parallelismType;\r\nbit(6) reserved = '111111'b;\r\nunsigned int(2) chromaFormat;\r\nbit(5) reserved = '11111'b;\r\nunsigned int(3) bitDepthLumaMinus8;\r\nbit(5) reserved = '11111'b;\r\nunsigned int(3) bitDepthChromaMinus8;\r\nbit(16) avgFrameRate;\r\nbit(2) constantFrameRate;\r\nbit(3) numTemporalLayers;\r\nbit(1) temporalIdNested;\r\nunsigned int(2) lengthSizeMinusOne;\r\nunsigned int(8) numOfArrays;\r\nfor (j = 0; j <numOfArrays; j ++) {\r\nbit(1) array_completeness;\r\nunsigned int(1) reserved = 0;\r\nunsigned int(6) NAL_unit_type;\r\nunsigned int(16) numNalus;\r\nfor (i = 0; i <numNalus; i ++) {\r\nunsigned int(16) nalUnitLength;\r\nbit(8*nalUnitLength) nalUnit;\r\n}\r\n}\r\nunsigned int(16) operationPointIdx;\r\n}"
     }
-
   ]
 }

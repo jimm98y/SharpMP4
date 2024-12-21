@@ -3939,6 +3939,408 @@ namespace BoxGenerator2
     }
 
 
+    public class EVCDecoderConfigurationRecord
+    {
+
+
+        protected byte configurationVersion = 1;
+        public byte ConfigurationVersion { get { return configurationVersion; } set { configurationVersion = value; } }
+
+        protected byte profile_idc;
+        public byte ProfileIdc { get { return profile_idc; } set { profile_idc = value; } }
+
+        protected byte level_idc;
+        public byte LevelIdc { get { return level_idc; } set { level_idc = value; } }
+
+        protected uint toolset_idc;
+        public uint ToolsetIdc { get { return toolset_idc; } set { toolset_idc = value; } }
+
+        protected byte chroma_format_idc;
+        public byte ChromaFormatIdc { get { return chroma_format_idc; } set { chroma_format_idc = value; } }
+
+        protected byte bit_depth_luma_minus8;
+        public byte BitDepthLumaMinus8 { get { return bit_depth_luma_minus8; } set { bit_depth_luma_minus8 = value; } }
+
+        protected byte bit_depth_chroma_minus8;
+        public byte BitDepthChromaMinus8 { get { return bit_depth_chroma_minus8; } set { bit_depth_chroma_minus8 = value; } }
+
+        protected uint pic_width_in_luma_samples;
+        public uint PicWidthInLumaSamples { get { return pic_width_in_luma_samples; } set { pic_width_in_luma_samples = value; } }
+
+        protected uint pic_height_in_luma_samples;
+        public uint PicHeightInLumaSamples { get { return pic_height_in_luma_samples; } set { pic_height_in_luma_samples = value; } }
+
+        protected byte reserved = 0b00000;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+
+        protected bool sps_in_stream;
+        public bool SpsInStream { get { return sps_in_stream; } set { sps_in_stream = value; } }
+
+        protected bool pps_in_stream;
+        public bool PpsInStream { get { return pps_in_stream; } set { pps_in_stream = value; } }
+
+        protected bool aps_in_stream;
+        public bool ApsInStream { get { return aps_in_stream; } set { aps_in_stream = value; } }
+
+        protected byte numOfArrays;
+        public byte NumOfArrays { get { return numOfArrays; } set { numOfArrays = value; } }
+
+        protected byte reserved0 = 0b00;
+        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+
+        protected byte NAL_unit_type;
+        public byte NALUnitType { get { return NAL_unit_type; } set { NAL_unit_type = value; } }
+
+        protected ushort numNalus;
+        public ushort NumNalus { get { return numNalus; } set { numNalus = value; } }
+
+        protected ushort nalUnitLength;
+        public ushort NalUnitLength { get { return nalUnitLength; } set { nalUnitLength = value; } }
+
+        protected byte[] nalUnit;
+        public byte[] NalUnit { get { return nalUnit; } set { nalUnit = value; } }
+
+        public EVCDecoderConfigurationRecord()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.configurationVersion);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.profile_idc);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.level_idc);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.toolset_idc);
+            boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.chroma_format_idc);
+            boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.bit_depth_luma_minus8);
+            boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.bit_depth_chroma_minus8);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.pic_width_in_luma_samples);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.pic_height_in_luma_samples);
+            boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.reserved);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.sps_in_stream);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.pps_in_stream);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.aps_in_stream);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.numOfArrays);
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.reserved0);
+                boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.NAL_unit_type);
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.numNalus);
+
+                for (int i = 0; i < numNalus; i++)
+                {
+                    boxSize += IsoReaderWriter.ReadUInt16(stream, out this.nalUnitLength);
+                    boxSize += IsoReaderWriter.ReadBytes(stream, nalUnitLength, out this.nalUnit);
+                }
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.configurationVersion);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.profile_idc);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.level_idc);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.toolset_idc);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.chroma_format_idc);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.bit_depth_luma_minus8);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.bit_depth_chroma_minus8);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.pic_width_in_luma_samples);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.pic_height_in_luma_samples);
+            boxSize += IsoReaderWriter.WriteBits(stream, 5, this.reserved);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.sps_in_stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.pps_in_stream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.aps_in_stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.numOfArrays);
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved0);
+                boxSize += IsoReaderWriter.WriteBits(stream, 6, this.NAL_unit_type);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.numNalus);
+
+                for (int i = 0; i < numNalus; i++)
+                {
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.nalUnitLength);
+                    boxSize += IsoReaderWriter.WriteBytes(stream, nalUnitLength, this.nalUnit);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // configurationVersion
+            boxSize += 8; // profile_idc
+            boxSize += 8; // level_idc
+            boxSize += 32; // toolset_idc
+            boxSize += 2; // chroma_format_idc
+            boxSize += 3; // bit_depth_luma_minus8
+            boxSize += 3; // bit_depth_chroma_minus8
+            boxSize += 32; // pic_width_in_luma_samples
+            boxSize += 32; // pic_height_in_luma_samples
+            boxSize += 5; // reserved
+            boxSize += 1; // sps_in_stream
+            boxSize += 1; // pps_in_stream
+            boxSize += 1; // aps_in_stream
+            boxSize += 8; // numOfArrays
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += 2; // reserved0
+                boxSize += 6; // NAL_unit_type
+                boxSize += 16; // numNalus
+
+                for (int i = 0; i < numNalus; i++)
+                {
+                    boxSize += 16; // nalUnitLength
+                    boxSize += (ulong)nalUnitLength * 8; // nalUnit
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    public class LHEVCDecoderConfigurationRecord
+    {
+
+
+        protected byte configurationVersion = 1;
+        public byte ConfigurationVersion { get { return configurationVersion; } set { configurationVersion = value; } }
+
+        protected byte general_profile_space;
+        public byte GeneralProfileSpace { get { return general_profile_space; } set { general_profile_space = value; } }
+
+        protected bool general_tier_flag;
+        public bool GeneralTierFlag { get { return general_tier_flag; } set { general_tier_flag = value; } }
+
+        protected byte general_profile_idc;
+        public byte GeneralProfileIdc { get { return general_profile_idc; } set { general_profile_idc = value; } }
+
+        protected uint general_profile_compatibility_flags;
+        public uint GeneralProfileCompatibilityFlags { get { return general_profile_compatibility_flags; } set { general_profile_compatibility_flags = value; } }
+
+        protected ulong general_constraint_indicator_flags;
+        public ulong GeneralConstraintIndicatorFlags { get { return general_constraint_indicator_flags; } set { general_constraint_indicator_flags = value; } }
+
+        protected byte general_level_idc;
+        public byte GeneralLevelIdc { get { return general_level_idc; } set { general_level_idc = value; } }
+
+        protected bool complete_representation;
+        public bool CompleteRepresentation { get { return complete_representation; } set { complete_representation = value; } }
+
+        protected byte reserved = 0b111;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+
+        protected ushort min_spatial_segmentation_idc;
+        public ushort MinSpatialSegmentationIdc { get { return min_spatial_segmentation_idc; } set { min_spatial_segmentation_idc = value; } }
+
+        protected byte reserved0 = 0b111111;
+        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+
+        protected byte parallelismType;
+        public byte ParallelismType { get { return parallelismType; } set { parallelismType = value; } }
+
+        protected byte reserved1 = 0b111111;
+        public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+
+        protected byte chromaFormat;
+        public byte ChromaFormat { get { return chromaFormat; } set { chromaFormat = value; } }
+
+        protected byte reserved2 = 0b11111;
+        public byte Reserved2 { get { return reserved2; } set { reserved2 = value; } }
+
+        protected byte bitDepthLumaMinus8;
+        public byte BitDepthLumaMinus8 { get { return bitDepthLumaMinus8; } set { bitDepthLumaMinus8 = value; } }
+
+        protected byte reserved3 = 0b11111;
+        public byte Reserved3 { get { return reserved3; } set { reserved3 = value; } }
+
+        protected byte bitDepthChromaMinus8;
+        public byte BitDepthChromaMinus8 { get { return bitDepthChromaMinus8; } set { bitDepthChromaMinus8 = value; } }
+
+        protected ushort avgFrameRate;
+        public ushort AvgFrameRate { get { return avgFrameRate; } set { avgFrameRate = value; } }
+
+        protected byte constantFrameRate;
+        public byte ConstantFrameRate { get { return constantFrameRate; } set { constantFrameRate = value; } }
+
+        protected byte numTemporalLayers;
+        public byte NumTemporalLayers { get { return numTemporalLayers; } set { numTemporalLayers = value; } }
+
+        protected bool temporalIdNested;
+        public bool TemporalIdNested { get { return temporalIdNested; } set { temporalIdNested = value; } }
+
+        protected byte lengthSizeMinusOne;
+        public byte LengthSizeMinusOne { get { return lengthSizeMinusOne; } set { lengthSizeMinusOne = value; } }
+
+        protected byte numOfArrays;
+        public byte NumOfArrays { get { return numOfArrays; } set { numOfArrays = value; } }
+
+        protected bool array_completeness;
+        public bool ArrayCompleteness { get { return array_completeness; } set { array_completeness = value; } }
+
+        protected bool reserved4 = false;
+        public bool Reserved4 { get { return reserved4; } set { reserved4 = value; } }
+
+        protected byte NAL_unit_type;
+        public byte NALUnitType { get { return NAL_unit_type; } set { NAL_unit_type = value; } }
+
+        protected ushort numNalus;
+        public ushort NumNalus { get { return numNalus; } set { numNalus = value; } }
+
+        protected ushort nalUnitLength;
+        public ushort NalUnitLength { get { return nalUnitLength; } set { nalUnitLength = value; } }
+
+        protected byte[] nalUnit;
+        public byte[] NalUnit { get { return nalUnit; } set { nalUnit = value; } }
+
+        protected ushort operationPointIdx;
+        public ushort OperationPointIdx { get { return operationPointIdx; } set { operationPointIdx = value; } }
+
+        public LHEVCDecoderConfigurationRecord()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.configurationVersion);
+            boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.general_profile_space);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.general_tier_flag);
+            boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.general_profile_idc);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.general_profile_compatibility_flags);
+            boxSize += IsoReaderWriter.ReadUInt48(stream, out this.general_constraint_indicator_flags);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.general_level_idc);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.complete_representation);
+            boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.reserved);
+            boxSize += IsoReaderWriter.ReadBits(stream, 12, out this.min_spatial_segmentation_idc);
+            boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved0);
+            boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.parallelismType);
+            boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.reserved1);
+            boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.chromaFormat);
+            boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.reserved2);
+            boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.bitDepthLumaMinus8);
+            boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.reserved3);
+            boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.bitDepthChromaMinus8);
+            boxSize += IsoReaderWriter.ReadUInt16(stream, out this.avgFrameRate);
+            boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.constantFrameRate);
+            boxSize += IsoReaderWriter.ReadBits(stream, 3, out this.numTemporalLayers);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.temporalIdNested);
+            boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.lengthSizeMinusOne);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.numOfArrays);
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.array_completeness);
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.reserved4);
+                boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.NAL_unit_type);
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.numNalus);
+
+                for (int i = 0; i < numNalus; i++)
+                {
+                    boxSize += IsoReaderWriter.ReadUInt16(stream, out this.nalUnitLength);
+                    boxSize += IsoReaderWriter.ReadBytes(stream, nalUnitLength, out this.nalUnit);
+                }
+            }
+            boxSize += IsoReaderWriter.ReadUInt16(stream, out this.operationPointIdx);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.configurationVersion);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.general_profile_space);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.general_tier_flag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 5, this.general_profile_idc);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.general_profile_compatibility_flags);
+            boxSize += IsoReaderWriter.WriteUInt48(stream, this.general_constraint_indicator_flags);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.general_level_idc);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.complete_representation);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 12, this.min_spatial_segmentation_idc);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved0);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.parallelismType);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.reserved1);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.chromaFormat);
+            boxSize += IsoReaderWriter.WriteBits(stream, 5, this.reserved2);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.bitDepthLumaMinus8);
+            boxSize += IsoReaderWriter.WriteBits(stream, 5, this.reserved3);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.bitDepthChromaMinus8);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.avgFrameRate);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.constantFrameRate);
+            boxSize += IsoReaderWriter.WriteBits(stream, 3, this.numTemporalLayers);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.temporalIdNested);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.lengthSizeMinusOne);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.numOfArrays);
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += IsoReaderWriter.WriteBit(stream, this.array_completeness);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.reserved4);
+                boxSize += IsoReaderWriter.WriteBits(stream, 6, this.NAL_unit_type);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.numNalus);
+
+                for (int i = 0; i < numNalus; i++)
+                {
+                    boxSize += IsoReaderWriter.WriteUInt16(stream, this.nalUnitLength);
+                    boxSize += IsoReaderWriter.WriteBytes(stream, nalUnitLength, this.nalUnit);
+                }
+            }
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.operationPointIdx);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // configurationVersion
+            boxSize += 2; // general_profile_space
+            boxSize += 1; // general_tier_flag
+            boxSize += 5; // general_profile_idc
+            boxSize += 32; // general_profile_compatibility_flags
+            boxSize += 48; // general_constraint_indicator_flags
+            boxSize += 8; // general_level_idc
+            boxSize += 1; // complete_representation
+            boxSize += 3; // reserved
+            boxSize += 12; // min_spatial_segmentation_idc
+            boxSize += 6; // reserved0
+            boxSize += 2; // parallelismType
+            boxSize += 6; // reserved1
+            boxSize += 2; // chromaFormat
+            boxSize += 5; // reserved2
+            boxSize += 3; // bitDepthLumaMinus8
+            boxSize += 5; // reserved3
+            boxSize += 3; // bitDepthChromaMinus8
+            boxSize += 16; // avgFrameRate
+            boxSize += 2; // constantFrameRate
+            boxSize += 3; // numTemporalLayers
+            boxSize += 1; // temporalIdNested
+            boxSize += 2; // lengthSizeMinusOne
+            boxSize += 8; // numOfArrays
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += 1; // array_completeness
+                boxSize += 1; // reserved4
+                boxSize += 6; // NAL_unit_type
+                boxSize += 16; // numNalus
+
+                for (int i = 0; i < numNalus; i++)
+                {
+                    boxSize += 16; // nalUnitLength
+                    boxSize += (ulong)nalUnitLength * 8; // nalUnit
+                }
+            }
+            boxSize += 16; // operationPointIdx
+            return boxSize;
+        }
+    }
+
+
     public class ReceivedSsrcBox : Box
     {
         public override string FourCC { get; set; } = "rssr";
