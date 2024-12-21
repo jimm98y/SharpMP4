@@ -75,9 +75,9 @@
     {
       "fourcc": "mebx",
       "description": "Timed metadata multiplex",
-      "type": "BoxedMetadataSampleEntry",
+      "type": "BoxedMetaDataSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "aligned(8) class BoxedMetadataSampleEntry \n\textends MetadataSampleEntry ('mebx') {\n\tMetadataKeyTableBox();\t\t\t\t// mandatory\n\tBitRateBox ();\t\t\t\t\t\t\t// optional\n}"
+      "syntax": "aligned(8) class BoxedMetaDataSampleEntry \n\textends MetaDataSampleEntry ('mebx') {\n\tMetaDataKeyTableBox();\t\t\t\t// mandatory\n\tBitRateBox ();\t\t\t\t\t\t\t// optional\n}"
     },
     {
       "fourcc": "fdp ",

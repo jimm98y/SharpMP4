@@ -432,7 +432,7 @@
           "SVCSampleEntry": ["svc1", "svc2"]
         },
         {
-          "SVCMetadataSampleEntry": ["svcM"]
+          "SVCMetaDataSampleEntry": ["svcM"]
         }
       ],
       "type": "Box",
@@ -528,7 +528,7 @@
       "description": "Layer quality assignments",
       "containers": [
         {
-          "SVCMetadataSampleEntry": ["svcM"]
+          "SVCMetaDataSampleEntry": ["svcM"]
         }
       ],
       "type": "Box",
@@ -589,7 +589,7 @@
       "flags": [],
       "containers": [
         {
-          "SVCMetadataSampleEntry": ["svcM"]
+          "SVCMetaDataSampleEntry": ["svcM"]
         }
       ],
       "type": "FullBox",

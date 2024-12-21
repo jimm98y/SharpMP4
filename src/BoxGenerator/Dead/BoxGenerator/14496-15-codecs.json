@@ -356,8 +356,8 @@
       "fourcc": "svcM",
       "description": "SVC metadata",
       "containers": [ "stsd" ],
-      "type": "SVCMetadataSampleEntry",
-      "syntax": "class SVCMetadataSampleEntry () extends MetadataSampleEntry('svcM')\n{\n\tSVCMetadataSampleConfigBox\tconfig;\n\tSVCPriorityAssignmentBox\tmethods;\t\t// optional\n\tSVCPriorityLayerInfoBox\t\tpriorities;\t// optional\n}"
+      "type": "SVCMetaDataSampleEntry",
+      "syntax": "class SVCMetaDataSampleEntry () extends MetaDataSampleEntry('svcM')\n{\n\tSVCMetadataSampleConfigBox\tconfig;\n\tSVCPriorityAssignmentBox\tmethods;\t\t// optional\n\tSVCPriorityLayerInfoBox\t\tpriorities;\t// optional\n}"
     },
     {
       "fourcc": "evs1",

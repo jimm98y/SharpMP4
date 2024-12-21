@@ -689,14 +689,14 @@ namespace BoxGenerator2
     }
 
 
-    public class MetadataSampleEntry : SampleEntry
+    public class MetaDataSampleEntry : SampleEntry
     {
 
 
         protected Box[] other_boxes;  //  optional 
         public Box[] OtherBoxes { get { return other_boxes; } set { other_boxes = value; } }
 
-        public MetadataSampleEntry()
+        public MetaDataSampleEntry()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -726,7 +726,7 @@ namespace BoxGenerator2
     }
 
 
-    public class XMLMetadataSampleEntry : MetadataSampleEntry
+    public class XMLMetaDataSampleEntry : MetaDataSampleEntry
     {
 
 
@@ -742,7 +742,7 @@ namespace BoxGenerator2
         protected BitRateBox BitRateBox;  //  optional 
         public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
 
-        public XMLMetadataSampleEntry()
+        public XMLMetaDataSampleEntry()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -781,7 +781,7 @@ namespace BoxGenerator2
     }
 
 
-    public class TextMetadataSampleEntry : MetadataSampleEntry
+    public class TextMetaDataSampleEntry : MetaDataSampleEntry
     {
 
 
@@ -797,7 +797,7 @@ namespace BoxGenerator2
         protected TextConfigBox TextConfigBox;  //  optional 
         public TextConfigBox _TextConfigBox { get { return TextConfigBox; } set { TextConfigBox = value; } }
 
-        public TextMetadataSampleEntry()
+        public TextMetaDataSampleEntry()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -910,7 +910,7 @@ namespace BoxGenerator2
     }
 
 
-    public class URIMetaSampleEntry : MetadataSampleEntry
+    public class URIMetaSampleEntry : MetaDataSampleEntry
     {
 
 
@@ -3171,6 +3171,460 @@ namespace BoxGenerator2
                     boxSize += (ulong)nal_unit_length * 8; // nal_unit
                 }
             }
+            return boxSize;
+        }
+    }
+
+
+    public class MVDDecoderConfigurationRecord
+    {
+
+
+        protected byte configurationVersion = 1;
+        public byte ConfigurationVersion { get { return configurationVersion; } set { configurationVersion = value; } }
+
+        protected byte AVCProfileIndication;
+        public byte _AVCProfileIndication { get { return AVCProfileIndication; } set { AVCProfileIndication = value; } }
+
+        protected byte profile_compatibility;
+        public byte ProfileCompatibility { get { return profile_compatibility; } set { profile_compatibility = value; } }
+
+        protected byte AVCLevelIndication;
+        public byte _AVCLevelIndication { get { return AVCLevelIndication; } set { AVCLevelIndication = value; } }
+
+        protected bool complete_representation;
+        public bool CompleteRepresentation { get { return complete_representation; } set { complete_representation = value; } }
+
+        protected bool explicit_au_track;
+        public bool ExplicitAuTrack { get { return explicit_au_track; } set { explicit_au_track = value; } }
+
+        protected byte reserved = 0b1111;
+        public byte Reserved { get { return reserved; } set { reserved = value; } }
+
+        protected byte lengthSizeMinusOne;
+        public byte LengthSizeMinusOne { get { return lengthSizeMinusOne; } set { lengthSizeMinusOne = value; } }
+
+        protected bool reserved0 = false;
+        public bool Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+
+        protected byte numOfSequenceParameterSets;
+        public byte NumOfSequenceParameterSets { get { return numOfSequenceParameterSets; } set { numOfSequenceParameterSets = value; } }
+
+        protected ushort sequenceParameterSetLength;
+        public ushort SequenceParameterSetLength { get { return sequenceParameterSetLength; } set { sequenceParameterSetLength = value; } }
+
+        protected byte[] sequenceParameterSetNALUnit;
+        public byte[] SequenceParameterSetNALUnit { get { return sequenceParameterSetNALUnit; } set { sequenceParameterSetNALUnit = value; } }
+
+        protected byte numOfPictureParameterSets;
+        public byte NumOfPictureParameterSets { get { return numOfPictureParameterSets; } set { numOfPictureParameterSets = value; } }
+
+        protected ushort pictureParameterSetLength;
+        public ushort PictureParameterSetLength { get { return pictureParameterSetLength; } set { pictureParameterSetLength = value; } }
+
+        protected byte[] pictureParameterSetNALUnit;
+        public byte[] PictureParameterSetNALUnit { get { return pictureParameterSetNALUnit; } set { pictureParameterSetNALUnit = value; } }
+
+        public MVDDecoderConfigurationRecord()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.configurationVersion);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.AVCProfileIndication);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.profile_compatibility);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.AVCLevelIndication);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.complete_representation);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.explicit_au_track);
+            boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.reserved);
+            boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.lengthSizeMinusOne);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.reserved0);
+            boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.numOfSequenceParameterSets);
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.sequenceParameterSetLength);
+                boxSize += IsoReaderWriter.ReadBytes(stream, sequenceParameterSetLength, out this.sequenceParameterSetNALUnit);
+            }
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.numOfPictureParameterSets);
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.pictureParameterSetLength);
+                boxSize += IsoReaderWriter.ReadBytes(stream, pictureParameterSetLength, out this.pictureParameterSetNALUnit);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.configurationVersion);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.AVCProfileIndication);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.profile_compatibility);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.AVCLevelIndication);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.complete_representation);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.explicit_au_track);
+            boxSize += IsoReaderWriter.WriteBits(stream, 4, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 2, this.lengthSizeMinusOne);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.reserved0);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.numOfSequenceParameterSets);
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.sequenceParameterSetLength);
+                boxSize += IsoReaderWriter.WriteBytes(stream, sequenceParameterSetLength, this.sequenceParameterSetNALUnit);
+            }
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.numOfPictureParameterSets);
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.pictureParameterSetLength);
+                boxSize += IsoReaderWriter.WriteBytes(stream, pictureParameterSetLength, this.pictureParameterSetNALUnit);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // configurationVersion
+            boxSize += 8; // AVCProfileIndication
+            boxSize += 8; // profile_compatibility
+            boxSize += 8; // AVCLevelIndication
+            boxSize += 1; // complete_representation
+            boxSize += 1; // explicit_au_track
+            boxSize += 4; // reserved
+            boxSize += 2; // lengthSizeMinusOne
+            boxSize += 1; // reserved0
+            boxSize += 7; // numOfSequenceParameterSets
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += 16; // sequenceParameterSetLength
+                boxSize += (ulong)sequenceParameterSetLength * 8; // sequenceParameterSetNALUnit
+            }
+            boxSize += 8; // numOfPictureParameterSets
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += 16; // pictureParameterSetLength
+                boxSize += (ulong)pictureParameterSetLength * 8; // pictureParameterSetNALUnit
+            }
+            return boxSize;
+        }
+    }
+
+
+    public class MetaDataKeyBox : Box
+    {
+
+
+        protected MetaDataKeyDeclarationBox MetaDataKeyDeclarationBox;
+        public MetaDataKeyDeclarationBox _MetaDataKeyDeclarationBox { get { return MetaDataKeyDeclarationBox; } set { MetaDataKeyDeclarationBox = value; } }
+
+        protected MetaDataDatatypeBox MetaDataDatatypeBox;  //  optional
+        public MetaDataDatatypeBox _MetaDataDatatypeBox { get { return MetaDataDatatypeBox; } set { MetaDataDatatypeBox = value; } }
+
+        protected MetaDataLocaleBox MetaDataLocaleBox;  //  optional
+        public MetaDataLocaleBox _MetaDataLocaleBox { get { return MetaDataLocaleBox; } set { MetaDataLocaleBox = value; } }
+
+        protected MetaDataSetupBox MetaDataSetupBox;  //  optional
+        public MetaDataSetupBox _MetaDataSetupBox { get { return MetaDataSetupBox; } set { MetaDataSetupBox = value; } }
+
+        protected MetaDataExtensionsBox MetaDataExtensionsBox;  //  optional
+        public MetaDataExtensionsBox _MetaDataExtensionsBox { get { return MetaDataExtensionsBox; } set { MetaDataExtensionsBox = value; } }
+
+        public MetaDataKeyBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.MetaDataKeyDeclarationBox);
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.MetaDataDatatypeBox); // optional
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.MetaDataLocaleBox); // optional
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.MetaDataSetupBox); // optional
+            if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.MetaDataExtensionsBox); // optional
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.MetaDataKeyDeclarationBox);
+            if (this.MetaDataDatatypeBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.MetaDataDatatypeBox); // optional
+            if (this.MetaDataLocaleBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.MetaDataLocaleBox); // optional
+            if (this.MetaDataSetupBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.MetaDataSetupBox); // optional
+            if (this.MetaDataExtensionsBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.MetaDataExtensionsBox); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(MetaDataKeyDeclarationBox); // MetaDataKeyDeclarationBox
+            if (this.MetaDataDatatypeBox != null) boxSize += IsoReaderWriter.CalculateSize(MetaDataDatatypeBox); // MetaDataDatatypeBox
+            if (this.MetaDataLocaleBox != null) boxSize += IsoReaderWriter.CalculateSize(MetaDataLocaleBox); // MetaDataLocaleBox
+            if (this.MetaDataSetupBox != null) boxSize += IsoReaderWriter.CalculateSize(MetaDataSetupBox); // MetaDataSetupBox
+            if (this.MetaDataExtensionsBox != null) boxSize += IsoReaderWriter.CalculateSize(MetaDataExtensionsBox); // MetaDataExtensionsBox
+            return boxSize;
+        }
+    }
+
+
+    public class MetaDataKeyDeclarationBox : Box
+    {
+
+
+        protected uint key_namespace;
+        public uint KeyNamespace { get { return key_namespace; } set { key_namespace = value; } }
+
+        protected byte[] key_value;
+        public byte[] KeyValue { get { return key_value; } set { key_value = value; } }
+
+        public MetaDataKeyDeclarationBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.key_namespace);
+            boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.key_value);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.key_namespace);
+            boxSize += IsoReaderWriter.WriteUInt8Array(stream, this.key_value);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // key_namespace
+            boxSize += (ulong)key_value.Length * 8; // key_value
+            return boxSize;
+        }
+    }
+
+
+    public class MetaDataLocaleBox : Box
+    {
+
+
+        protected string locale_string;
+        public string LocaleString { get { return locale_string; } set { locale_string = value; } }
+
+        public MetaDataLocaleBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadString(stream, out this.locale_string);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteString(stream, this.locale_string);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)locale_string.Length * 8; // locale_string
+            return boxSize;
+        }
+    }
+
+
+    public class MetaDataSetupBox : Box
+    {
+
+
+        public MetaDataSetupBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            /*  'init' instead? */
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            /*  'init' instead? */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  'init' instead? */
+            return boxSize;
+        }
+    }
+
+
+    public class MetaDataExtensionsBox : Box
+    {
+
+
+        protected Box[] extensions;
+        public Box[] Extensions { get { return extensions; } set { extensions = value; } }
+
+        public MetaDataExtensionsBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.extensions);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.extensions);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoReaderWriter.CalculateSize(extensions); // extensions
+            return boxSize;
+        }
+    }
+
+
+    public class MetaDataInlineKeysPresentBox : Box
+    {
+
+
+        protected byte inlineKeyValueBoxesPresent;
+        public byte InlineKeyValueBoxesPresent { get { return inlineKeyValueBoxesPresent; } set { inlineKeyValueBoxesPresent = value; } }
+
+        public MetaDataInlineKeysPresentBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.inlineKeyValueBoxesPresent);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.inlineKeyValueBoxesPresent);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // inlineKeyValueBoxesPresent
+            return boxSize;
+        }
+    }
+
+
+    public class MetaDataAccessUnit
+    {
+
+
+        protected Box[] boxes;
+        public Box[] Boxes { get { return boxes; } set { boxes = value; } }
+
+        public MetaDataAccessUnit()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.boxes);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.WriteBox(stream, this.boxes);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += IsoReaderWriter.CalculateSize(boxes); // boxes
+            return boxSize;
+        }
+    }
+
+
+    public class MetaDataAUBox : Box
+    {
+
+
+        public MetaDataAUBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -14421,21 +14875,21 @@ namespace BoxGenerator2
     }
 
 
-    public class MetadataKeyTableBox : Box
+    public class MetaDataKeyTableBox : Box
     {
         public override string FourCC { get; set; } = "keys";
 
-        protected MetadataKeyBox[] MetadataKeyBox;
-        public MetadataKeyBox[] _MetadataKeyBox { get { return MetadataKeyBox; } set { MetadataKeyBox = value; } }
+        protected MetaDataKeyBox[] MetaDataKeyBox;
+        public MetaDataKeyBox[] _MetaDataKeyBox { get { return MetaDataKeyBox; } set { MetaDataKeyBox = value; } }
 
-        public MetadataKeyTableBox()
+        public MetaDataKeyTableBox()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadBox(stream, out this.MetadataKeyBox);
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.MetaDataKeyBox);
             boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
@@ -14444,7 +14898,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteBox(stream, this.MetadataKeyBox);
+            boxSize += IsoReaderWriter.WriteBox(stream, this.MetaDataKeyBox);
             return boxSize;
         }
 
@@ -14452,7 +14906,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoReaderWriter.CalculateSize(MetadataKeyBox); // MetadataKeyBox
+            boxSize += IsoReaderWriter.CalculateSize(MetaDataKeyBox); // MetaDataKeyBox
             return boxSize;
         }
     }
@@ -18252,11 +18706,11 @@ namespace BoxGenerator2
     }
 
 
-    public class MetaDataSampleEntry : SampleEntry
+    public class MetaDataSampleEntry1 : SampleEntry
     {
         public override string FourCC { get; set; } = "encm";
 
-        public MetaDataSampleEntry()
+        public MetaDataSampleEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -18353,7 +18807,7 @@ namespace BoxGenerator2
     }
 
 
-    public class XMLMetaDataSampleEntry : MetaDataSampleEntry
+    public class XMLMetaDataSampleEntry1 : MetaDataSampleEntry
     {
         public override string FourCC { get; set; } = "metx";
 
@@ -18366,7 +18820,7 @@ namespace BoxGenerator2
         protected string schema_location;  //  optional
         public string SchemaLocation { get { return schema_location; } set { schema_location = value; } }
 
-        public XMLMetaDataSampleEntry()
+        public XMLMetaDataSampleEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -18402,7 +18856,7 @@ namespace BoxGenerator2
     }
 
 
-    public class TextMetaDataSampleEntry : MetaDataSampleEntry
+    public class TextMetaDataSampleEntry1 : MetaDataSampleEntry
     {
         public override string FourCC { get; set; } = "mett";
 
@@ -18415,7 +18869,7 @@ namespace BoxGenerator2
         protected TextConfigBox TextConfigBox;  //  optional
         public TextConfigBox _TextConfigBox { get { return TextConfigBox; } set { TextConfigBox = value; } }
 
-        public TextMetaDataSampleEntry()
+        public TextMetaDataSampleEntry1()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -18500,24 +18954,24 @@ namespace BoxGenerator2
     }
 
 
-    public class BoxedMetadataSampleEntry : MetadataSampleEntry
+    public class BoxedMetaDataSampleEntry : MetaDataSampleEntry
     {
         public override string FourCC { get; set; } = "mebx";
 
-        protected MetadataKeyTableBox MetadataKeyTableBox;  //  mandatory
-        public MetadataKeyTableBox _MetadataKeyTableBox { get { return MetadataKeyTableBox; } set { MetadataKeyTableBox = value; } }
+        protected MetaDataKeyTableBox MetaDataKeyTableBox;  //  mandatory
+        public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return MetaDataKeyTableBox; } set { MetaDataKeyTableBox = value; } }
 
         protected BitRateBox BitRateBox;  //  optional
         public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
 
-        public BoxedMetadataSampleEntry()
+        public BoxedMetaDataSampleEntry()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadBox(stream, out this.MetadataKeyTableBox); // mandatory
+            boxSize += IsoReaderWriter.ReadBox(stream, out this.MetaDataKeyTableBox); // mandatory
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox); // optional
             boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);
             boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
@@ -18528,7 +18982,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += IsoReaderWriter.WriteBox(stream, this.MetadataKeyTableBox); // mandatory
+            boxSize += IsoReaderWriter.WriteBox(stream, this.MetaDataKeyTableBox); // mandatory
             if (this.BitRateBox != null) boxSize += IsoReaderWriter.WriteBox(stream, this.BitRateBox); // optional
             boxSize += IsoReaderWriter.WriteBoxChildren(stream, this);
             return boxSize;
@@ -18538,7 +18992,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoReaderWriter.CalculateSize(MetadataKeyTableBox); // MetadataKeyTableBox
+            boxSize += IsoReaderWriter.CalculateSize(MetaDataKeyTableBox); // MetaDataKeyTableBox
             if (this.BitRateBox != null) boxSize += IsoReaderWriter.CalculateSize(BitRateBox); // BitRateBox
             boxSize += IsoReaderWriter.CalculateSize(children);
             return boxSize;
@@ -19658,11 +20112,11 @@ namespace BoxGenerator2
     }
 
 
-    public class MetaDataSampleEntry1 : SampleEntry
+    public class MetaDataSampleEntry2 : SampleEntry
     {
         public override string FourCC { get; set; } = "resm";
 
-        public MetaDataSampleEntry1()
+        public MetaDataSampleEntry2()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -24150,7 +24604,7 @@ namespace BoxGenerator2
     }
 
 
-    public class SVCMetadataSampleEntry : MetadataSampleEntry
+    public class SVCMetaDataSampleEntry : MetaDataSampleEntry
     {
         public override string FourCC { get; set; } = "svcM";
 
@@ -24163,7 +24617,7 @@ namespace BoxGenerator2
         protected SVCPriorityLayerInfoBox priorities;  //  optional
         public SVCPriorityLayerInfoBox Priorities { get { return priorities; } set { priorities = value; } }
 
-        public SVCMetadataSampleEntry()
+        public SVCMetaDataSampleEntry()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)

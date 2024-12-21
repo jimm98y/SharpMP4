@@ -1481,11 +1481,11 @@
       "description": "",
       "containers": [
         {
-          "BoxedMetadataSampleEntry": [ "mebx" ]
+          "BoxedMetaDataSampleEntry": [ "mebx" ]
         }
       ],
       "type": "Box",
-      "syntax": "class MetadataKeyTableBox extends Box('keys') { \n\tMetadataKeyBox[];\n}"
+      "syntax": "class MetaDataKeyTableBox extends Box('keys') { \n\tMetaDataKeyBox[];\n}"
     },
     {
       "fourcc": "uri ",
