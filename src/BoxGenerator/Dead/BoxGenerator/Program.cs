@@ -571,6 +571,7 @@ partial class Program
             {
                 foreach (JsonElement element in document.RootElement.GetProperty("entries").EnumerateArray())
                 {
+                    string fourCC = element.TryGetProperty("fourcc", out _) ? element.GetProperty("fourcc").GetString() : null;
                     string sample = element.GetProperty("syntax").GetString()!;
                     string[] cont = element.GetProperty("containers").EnumerateArray().Select(x => x.ToString()).ToArray();
                     foreach (var con in cont)
@@ -590,7 +591,7 @@ partial class Program
 
                     if (string.IsNullOrEmpty(sample))
                     {
-                        Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()} (empty)");
+                        Console.WriteLine($"Succeeded parsing: {fourCC} (empty)");
                         success++;
                         continue;
                     }
@@ -600,7 +601,7 @@ partial class Program
                         var result = Boxes.ParseOrThrow(sample);
                         foreach (var item in result)
                         {
-                            item.FourCC = element.GetProperty("fourcc").GetString();
+                            item.FourCC = fourCC;
                             item.Syntax = GetSampleCode(sample, item.BoxName);
                             if (ret.TryAdd(item.BoxName, item))
                             {
@@ -624,13 +625,13 @@ partial class Program
                             }
                         }
 
-                        Console.WriteLine($"Succeeded parsing: {element.GetProperty("fourcc").GetString()}");
+                        Console.WriteLine($"Succeeded parsing: {fourCC}");
 
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e.Message);
-                        Console.WriteLine($"Failed to parse: {element.GetProperty("fourcc").GetString()}");
+                        Console.WriteLine($"Failed to parse: {fourCC}");
                         fail++;
                     }
                 }
