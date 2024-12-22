@@ -7,7 +7,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "class ViewPriorityBox extends Box ('vipr') { \r\nfor (i=0; ; i++) {  \r\n// To end of box \r\n  unsigned int(6) reserved = 0; \r\n  unsigned int(10) view_id; \r\n  unsigned int(32) content_priority_id; \r\n } \r\n} \r\nclass ViewPriorityEntry() extends VisualSampleGroupEntry ('vipr') \r\n{ \r\n ViewPriorityBox(); \r\n}"
+      "syntax": "class ViewPriorityBox extends Box ('vipr') { \r\nfor (i=0; ; i++) {  \r\n// To end of box \r\n  unsigned int(6) reserved = 0; \r\n  unsigned int(10) view_id; \r\n  unsigned int(32) content_priority_id; \r\n } \r\n} \r\n"
     },
     {
       "fourcc": "           ",

@@ -31,6 +31,11 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
+    internal static ulong ReadBits(Stream stream, uint count, out ulong value)
+    {
+        throw new NotImplementedException();
+    }
+
     internal static ulong ReadBitsArray(Stream stream, uint bitCount, uint count, out byte[] value)
     {
         throw new NotImplementedException();
@@ -161,7 +166,22 @@ internal class IsoReaderWriter
         throw new NotImplementedException();
     }
 
-    internal static ulong WriteBits(Stream stream, uint count, long value)
+    internal static ulong WriteBits(Stream stream, uint count, byte value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong WriteBits(Stream stream, uint count, short value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong WriteBits(Stream stream, uint count, ushort value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong WriteBits(Stream stream, uint count, uint value)
     {
         throw new NotImplementedException();
     }

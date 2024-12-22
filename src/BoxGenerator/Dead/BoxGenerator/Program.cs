@@ -24,6 +24,7 @@ public class PseudoClass : PseudoCode
     public IList<PseudoCode> Fields { get; }
     public string Alignment { get; }
     public PseudoExtendedClass Extended { get; }
+    public string Syntax { get; internal set; }
 
     public PseudoClass(
         Maybe<string> comment,
@@ -556,10 +557,11 @@ partial class Program
             "23008-12-sample-groups.json",
         };
         int success = 0;
+        int duplicated = 0;
         int fail = 0;
 
         Dictionary<string, PseudoClass> ret = new Dictionary<string, PseudoClass>();
-        List<PseudoClass> dupliates = new List<PseudoClass>();
+        List<PseudoClass> duplicates = new List<PseudoClass>();
         List<string> containers = new List<string>();
 
         foreach (var file in files)
@@ -599,19 +601,26 @@ partial class Program
                         foreach (var item in result)
                         {
                             item.FourCC = element.GetProperty("fourcc").GetString();
-                            success++;
-                            if (!ret.TryAdd(item.BoxName, item))
+                            item.Syntax = GetSampleCode(sample, item.BoxName);
+                            if (ret.TryAdd(item.BoxName, item))
                             {
-                                dupliates.Add(item);
+                                success++;                                
+                            }
+                            else
+                            {
+                                duplicated++;
+                                duplicates.Add(item);
+                                Console.WriteLine($"Duplicated: {item.BoxName}, 4cc: {item.FourCC}");
 
-                                int index = 1;
-                                while (!ret.TryAdd($"{item.BoxName}{index}", item))
-                                {
-                                    index++;
-                                }
+                                // ignore duplicates: 
 
-                                // override the name
-                                item.BoxName = $"{item.BoxName}{index}";
+                                //int index = 1;
+                                //while (!ret.TryAdd($"{item.BoxName}{index}", item))
+                                //{
+                                //    index++;
+                                //}
+                                //// override the name
+                                //item.BoxName = $"{item.BoxName}{index}";
                             }
                         }
 
@@ -630,7 +639,7 @@ partial class Program
 
         containers = containers.Distinct().ToList();
 
-        Console.WriteLine($"Successful: {success}, Failed: {fail}, Total: {success + fail}");
+        Console.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
         string js = Newtonsoft.Json.JsonConvert.SerializeObject(ret.Values.ToArray());
         File.WriteAllText("result.json", js);
 
@@ -653,6 +662,35 @@ namespace BoxGenerator2
 ";
     }
 
+    private static string GetSampleCode(string sample, string boxName)
+    {
+        Dictionary<string, string> c = new System.Collections.Generic.Dictionary<string, string>();
+        List<string> lines = new List<string>();
+        string className = "";
+        using (var streamReader = new StringReader(sample))
+        {
+            String line;
+            while ((line = streamReader.ReadLine()) != null)
+            {
+                if (line.Contains("class "))
+                {
+                    if(!string.IsNullOrEmpty(className))
+                    {
+                        c.Add(className, string.Join("\r\n", lines));
+                        lines = new List<string>();
+                    }
+
+                    // start of class
+                    className = line;
+                }
+                lines.Add(line);
+            }
+            c.Add(className, string.Join("\r\n", lines));
+            lines = new List<string>();
+        }
+        return c.FirstOrDefault(x => x.Key.Contains(boxName)).Value;
+    }
+
     private static string Sanitize(string name)
     {
         if (name == "namespace")
@@ -670,6 +708,8 @@ namespace BoxGenerator2
         {
             optAbstract = "abstract ";
         }
+
+        cls += $"/*\r\n{b.Syntax.Replace("*/", "*//*")}\r\n*/\r\n";
 
         cls += @$"public {optAbstract}class {b.BoxName}";
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
@@ -2048,7 +2088,7 @@ namespace BoxGenerator2
             { "int(32)", "int" },
             { "int(16)", "short" },
             { "int(8)", "sbyte" },
-            { "int(4)", "sbyte" },
+            { "int(4)", "byte" },
             { "int", "int" },
             { "const bit(16)", "ushort" },
             { "const bit(1)", "bool" },
