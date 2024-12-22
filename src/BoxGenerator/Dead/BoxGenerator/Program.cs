@@ -665,15 +665,16 @@ partial class Program
                                 duplicates.Add(item);
                                 Console.WriteLine($"Duplicated: {item.BoxName}, 4cc: {item.FourCC}");
 
-                                // ignore duplicates: 
-
-                                //int index = 1;
-                                //while (!ret.TryAdd($"{item.BoxName}{index}", item))
-                                //{
-                                //    index++;
-                                //}
-                                //// override the name
-                                //item.BoxName = $"{item.BoxName}{index}";
+                                if (item.FourCC != ret[item.BoxName].FourCC)
+                                {
+                                    int index = 1;
+                                    while (!ret.TryAdd($"{item.BoxName}{index}", item))
+                                    {
+                                        index++;
+                                    }
+                                    // override the name
+                                    item.BoxName = $"{item.BoxName}{index}";
+                                }
                             }
                         }
 
