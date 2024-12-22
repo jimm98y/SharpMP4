@@ -19,7 +19,7 @@ namespace BoxGenerator2
     */
     public class BaseDescriptor
     {
-
+        public byte Tag { get; set; } = 0;
 
         protected bool nextByte;
         public bool NextByte { get { return this.nextByte; } set { this.nextByte = value; } }
@@ -97,7 +97,7 @@ namespace BoxGenerator2
     */
     public class DecoderSpecificInfo : BaseDescriptor
     {
-
+        public byte Tag { get; set; } = DescriptorTags.DecSpecificInfoTag;
 
         public DecoderSpecificInfo()
         { }
@@ -156,7 +156,7 @@ namespace BoxGenerator2
     */
     public class ES_Descriptor : BaseDescriptor
     {
-
+        public byte Tag { get; set; } = DescriptorTags.ES_DescrTag;
 
         protected ushort ES_ID;
         public ushort ESID { get { return this.ES_ID; } set { this.ES_ID = value; } }
@@ -364,7 +364,7 @@ namespace BoxGenerator2
     */
     public class SLConfigDescriptor : BaseDescriptor
     {
-
+        public byte Tag { get; set; } = DescriptorTags.SLConfigDescrTag;
 
         protected byte predefined;
         public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
@@ -587,7 +587,7 @@ namespace BoxGenerator2
     */
     public class DecoderConfigDescriptor : BaseDescriptor
     {
-
+        public byte Tag { get; set; } = DescriptorTags.DecoderConfigDescrTag;
 
         protected byte objectTypeIndication;
         public byte ObjectTypeIndication { get { return this.objectTypeIndication; } set { this.objectTypeIndication = value; } }
@@ -677,7 +677,7 @@ namespace BoxGenerator2
     */
     public class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
     {
-
+        public byte Tag { get; set; } = DescriptorTags.ProfileLevelIndicationIndexDescrTag;
 
         protected byte profileLevelIndicationIndex;
         public byte ProfileLevelIndicationIndex { get { return this.profileLevelIndicationIndex; } set { this.profileLevelIndicationIndex = value; } }
@@ -718,7 +718,7 @@ namespace BoxGenerator2
     */
     public class IPI_DescrPointer : BaseDescriptor
     {
-
+        public byte Tag { get; set; } = DescriptorTags.IPI_DescrPointerTag;
 
         protected ushort IPI_ES_Id;
         public ushort IPIESId { get { return this.IPI_ES_Id; } set { this.IPI_ES_Id = value; } }
@@ -761,7 +761,8 @@ namespace BoxGenerator2
     */
     public class IP_IdentificationDataSet : BaseDescriptor
     {
-
+        public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
+        public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag;
 
         public IP_IdentificationDataSet()
         { }
@@ -799,7 +800,7 @@ namespace BoxGenerator2
     */
     public class IPMP_DescriptorPointer : BaseDescriptor
     {
-
+        public byte Tag { get; set; } = DescriptorTags.IPMP_DescrPointerTag;
 
         protected byte IPMP_DescriptorID;
         public byte IPMPDescriptorID { get { return this.IPMP_DescriptorID; } set { this.IPMP_DescriptorID = value; } }
@@ -841,7 +842,8 @@ namespace BoxGenerator2
     */
     public class OCI_Descriptor : BaseDescriptor
     {
-
+        public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
+        public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange;
 
         public OCI_Descriptor()
         { }
@@ -879,7 +881,7 @@ namespace BoxGenerator2
     */
     public class LanguageDescriptor : OCI_Descriptor
     {
-
+        public byte Tag { get; set; } = DescriptorTags.LanguageDescrTag;
 
         protected uint languageCode;
         public uint LanguageCode { get { return this.languageCode; } set { this.languageCode = value; } }
@@ -923,7 +925,7 @@ namespace BoxGenerator2
     */
     public class QoS_Descriptor : BaseDescriptor
     {
-
+        public byte Tag { get; set; } = DescriptorTags.QoS_DescrTag;
 
         protected byte predefined;
         public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
@@ -982,7 +984,8 @@ namespace BoxGenerator2
     */
     public class QoS_Qualifier
     {
-
+        public byte TagMin { get; set; } = 0x01;
+        public byte TagMax { get; set; } = 0xff;
 
         public QoS_Qualifier()
         { }
@@ -1017,7 +1020,7 @@ namespace BoxGenerator2
     */
     public class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
     {
-
+        public byte Tag { get; set; } = 0x01;
 
         protected uint MAX_DELAY;
         public uint MAXDELAY { get { return this.MAX_DELAY; } set { this.MAX_DELAY = value; } }
@@ -1058,7 +1061,7 @@ namespace BoxGenerator2
     */
     public class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
     {
-
+        public byte Tag { get; set; } = 0x02;
 
         protected uint PREF_MAX_DELAY;
         public uint PREFMAXDELAY { get { return this.PREF_MAX_DELAY; } set { this.PREF_MAX_DELAY = value; } }
@@ -1099,7 +1102,7 @@ namespace BoxGenerator2
     */
     public class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
     {
-
+        public byte Tag { get; set; } = 0x03;
 
         protected double LOSS_PROB;
         public double LOSSPROB { get { return this.LOSS_PROB; } set { this.LOSS_PROB = value; } }
@@ -1140,7 +1143,7 @@ namespace BoxGenerator2
     */
     public class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
     {
-
+        public byte Tag { get; set; } = 0x04;
 
         protected uint MAX_GAP_LOSS;
         public uint MAXGAPLOSS { get { return this.MAX_GAP_LOSS; } set { this.MAX_GAP_LOSS = value; } }
@@ -1181,7 +1184,7 @@ namespace BoxGenerator2
     */
     public class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
     {
-
+        public byte Tag { get; set; } = 0x41;
 
         protected uint MAX_AU_SIZE;
         public uint MAXAUSIZE { get { return this.MAX_AU_SIZE; } set { this.MAX_AU_SIZE = value; } }
@@ -1222,7 +1225,7 @@ namespace BoxGenerator2
     */
     public class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
     {
-
+        public byte Tag { get; set; } = 0x42;
 
         protected uint AVG_AU_SIZE;
         public uint AVGAUSIZE { get { return this.AVG_AU_SIZE; } set { this.AVG_AU_SIZE = value; } }
@@ -1263,7 +1266,7 @@ namespace BoxGenerator2
     */
     public class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
     {
-
+        public byte Tag { get; set; } = 0x43;
 
         protected uint MAX_AU_RATE;
         public uint MAXAURATE { get { return this.MAX_AU_RATE; } set { this.MAX_AU_RATE = value; } }
@@ -1305,7 +1308,7 @@ namespace BoxGenerator2
     */
     public class RegistrationDescriptor : BaseDescriptor
     {
-
+        public byte Tag { get; set; } = DescriptorTags.RegistrationDescrTag;
 
         protected uint formatIdentifier;
         public uint FormatIdentifier { get { return this.formatIdentifier; } set { this.formatIdentifier = value; } }
@@ -1352,7 +1355,8 @@ namespace BoxGenerator2
     */
     public class ExtensionDescriptor : BaseDescriptor
     {
-
+        public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
+        public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange;
 
         public ExtensionDescriptor()
         { }

@@ -775,6 +775,32 @@ namespace BoxGenerator2
         {
             cls += $"\tpublic override string FourCC {{ get; set; }} = \"{b.FourCC}\";";
         }
+        else if(b.Extended != null && !string.IsNullOrEmpty(b.Extended.DescriptorTag))
+        {
+            if (!b.Extended.DescriptorTag.Contains(".."))
+            {
+                string tag = b.Extended.DescriptorTag.Replace("tag=", "");
+                if(!tag.StartsWith("0"))
+                {
+                    tag = "DescriptorTags." + tag;
+                }
+                cls += $"\tpublic byte Tag {{ get; set; }} = {tag};";
+            }
+            else
+            {
+                string[] tags = b.Extended.DescriptorTag.Replace("tag=", "").Split("..");
+                if (!tags[0].StartsWith("0"))
+                {
+                    tags[0] = "DescriptorTags." + tags[0];
+                }
+                if (!tags[1].StartsWith("0"))
+                {
+                    tags[1] = "DescriptorTags." + tags[1];
+                }
+                cls += $"\tpublic byte TagMin {{ get; set; }} = {tags[0]};\r\n";
+                cls += $"\tpublic byte TagMax {{ get; set; }} = {tags[1]};";
+            }
+        }
 
         var fields = FlattenFields(b.Fields);
 
