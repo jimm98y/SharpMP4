@@ -16,10 +16,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "uuid";
 
         protected byte version; // = v
-        public byte Version { get { return version; } set { version = value; } }
+        public byte Version { get { return this.version; } set { this.version = value; } }
 
         protected uint flags; // = f
-        public uint Flags { get { return flags; } set { flags = value; } }
+        public uint Flags { get { return this.flags; } set { this.flags = value; } }
 
         public FullBox()
         { }
@@ -331,16 +331,16 @@ namespace BoxGenerator2
 
 
         protected string ns;
-        public string Ns { get { return ns; } set { ns = value; } }
+        public string Ns { get { return this.ns; } set { this.ns = value; } }
 
         protected string schema_location;  //  optional 
-        public string SchemaLocation { get { return schema_location; } set { schema_location = value; } }
+        public string SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
 
         protected string auxiliary_mime_types;  //  optional, required if auxiliary resources are present 
-        public string AuxiliaryMimeTypes { get { return auxiliary_mime_types; } set { auxiliary_mime_types = value; } }
+        public string AuxiliaryMimeTypes { get { return this.auxiliary_mime_types; } set { this.auxiliary_mime_types = value; } }
 
         protected BitRateBox BitRateBox;
-        public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
+        public BitRateBox _BitRateBox { get { return this.BitRateBox; } set { this.BitRateBox = value; } }
 
         public XMLSubtitleSampleEntry()
         { }
@@ -394,16 +394,16 @@ namespace BoxGenerator2
 
 
         protected string content_encoding;  //  optional 
-        public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
+        public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
         protected string mime_format;
-        public string MimeFormat { get { return mime_format; } set { mime_format = value; } }
+        public string MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
 
         protected BitRateBox BitRateBox;  //  optional 
-        public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
+        public BitRateBox _BitRateBox { get { return this.BitRateBox; } set { this.BitRateBox = value; } }
 
         protected TextConfigBox TextConfigBox;  //  optional 
-        public TextConfigBox _TextConfigBox { get { return TextConfigBox; } set { TextConfigBox = value; } }
+        public TextConfigBox _TextConfigBox { get { return this.TextConfigBox; } set { this.TextConfigBox = value; } }
 
         public TextSubtitleSampleEntry()
         { }
@@ -468,40 +468,40 @@ namespace BoxGenerator2
 
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte downmix_ID;  //  matching downmix 
-        public byte DownmixID { get { return downmix_ID; } set { downmix_ID = value; } }
+        public byte DownmixID { get { return this.downmix_ID; } set { this.downmix_ID = value; } }
 
         protected byte DRC_set_ID;  //  to match a DRC box 
-        public byte DRCSetID { get { return DRC_set_ID; } set { DRC_set_ID = value; } }
+        public byte DRCSetID { get { return this.DRC_set_ID; } set { this.DRC_set_ID = value; } }
 
         protected short bs_sample_peak_level;
-        public short BsSamplePeakLevel { get { return bs_sample_peak_level; } set { bs_sample_peak_level = value; } }
+        public short BsSamplePeakLevel { get { return this.bs_sample_peak_level; } set { this.bs_sample_peak_level = value; } }
 
         protected short bs_true_peak_level;
-        public short BsTruePeakLevel { get { return bs_true_peak_level; } set { bs_true_peak_level = value; } }
+        public short BsTruePeakLevel { get { return this.bs_true_peak_level; } set { this.bs_true_peak_level = value; } }
 
         protected byte measurement_system_for_TP;
-        public byte MeasurementSystemForTP { get { return measurement_system_for_TP; } set { measurement_system_for_TP = value; } }
+        public byte MeasurementSystemForTP { get { return this.measurement_system_for_TP; } set { this.measurement_system_for_TP = value; } }
 
         protected byte reliability_for_TP;
-        public byte ReliabilityForTP { get { return reliability_for_TP; } set { reliability_for_TP = value; } }
+        public byte ReliabilityForTP { get { return this.reliability_for_TP; } set { this.reliability_for_TP = value; } }
 
         protected byte measurement_count;
-        public byte MeasurementCount { get { return measurement_count; } set { measurement_count = value; } }
+        public byte MeasurementCount { get { return this.measurement_count; } set { this.measurement_count = value; } }
 
         protected byte method_definition;
-        public byte MethodDefinition { get { return method_definition; } set { method_definition = value; } }
+        public byte MethodDefinition { get { return this.method_definition; } set { this.method_definition = value; } }
 
         protected byte method_value;
-        public byte MethodValue { get { return method_value; } set { method_value = value; } }
+        public byte MethodValue { get { return this.method_value; } set { this.method_value = value; } }
 
         protected byte measurement_system;
-        public byte MeasurementSystem { get { return measurement_system; } set { measurement_system = value; } }
+        public byte MeasurementSystem { get { return this.measurement_system; } set { this.measurement_system = value; } }
 
         protected byte reliability;
-        public byte Reliability { get { return reliability; } set { reliability = value; } }
+        public byte Reliability { get { return this.reliability; } set { this.reliability = value; } }
 
         public LoudnessBaseBox()
         { }
@@ -597,25 +597,25 @@ namespace BoxGenerator2
 
 
         protected ushort hinttrackversion = 1;
-        public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
+        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
 
         protected ushort highestcompatibleversion = 1;
-        public ushort Highestcompatibleversion { get { return highestcompatibleversion; } set { highestcompatibleversion = value; } }
+        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
 
         protected byte precedingbyteslen;
-        public byte Precedingbyteslen { get { return precedingbyteslen; } set { precedingbyteslen = value; } }
+        public byte Precedingbyteslen { get { return this.precedingbyteslen; } set { this.precedingbyteslen = value; } }
 
         protected byte trailingbyteslen;
-        public byte Trailingbyteslen { get { return trailingbyteslen; } set { trailingbyteslen = value; } }
+        public byte Trailingbyteslen { get { return this.trailingbyteslen; } set { this.trailingbyteslen = value; } }
 
         protected byte precomputed_only_flag;
-        public byte PrecomputedOnlyFlag { get { return precomputed_only_flag; } set { precomputed_only_flag = value; } }
+        public byte PrecomputedOnlyFlag { get { return this.precomputed_only_flag; } set { this.precomputed_only_flag = value; } }
 
         protected byte reserved;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected Box[] additionaldata;
-        public Box[] Additionaldata { get { return additionaldata; } set { additionaldata = value; } }
+        public Box[] Additionaldata { get { return this.additionaldata; } set { this.additionaldata = value; } }
 
         public MPEG2TSSampleEntry()
         { }
@@ -752,16 +752,16 @@ namespace BoxGenerator2
 
 
         protected string content_encoding;  //  optional 
-        public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
+        public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
         protected string mime_format;
-        public string MimeFormat { get { return mime_format; } set { mime_format = value; } }
+        public string MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
 
         protected BitRateBox BitRateBox;  //  optional 
-        public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
+        public BitRateBox _BitRateBox { get { return this.BitRateBox; } set { this.BitRateBox = value; } }
 
         protected TextConfigBox TextConfigBox;  //  optional 
-        public TextConfigBox _TextConfigBox { get { return TextConfigBox; } set { TextConfigBox = value; } }
+        public TextConfigBox _TextConfigBox { get { return this.TextConfigBox; } set { this.TextConfigBox = value; } }
 
         public SimpleTextSampleEntry()
         { }
@@ -882,13 +882,13 @@ namespace BoxGenerator2
 
 
         protected uint major_brand;
-        public uint MajorBrand { get { return major_brand; } set { major_brand = value; } }
+        public uint MajorBrand { get { return this.major_brand; } set { this.major_brand = value; } }
 
         protected uint minor_version;
-        public uint MinorVersion { get { return minor_version; } set { minor_version = value; } }
+        public uint MinorVersion { get { return this.minor_version; } set { this.minor_version = value; } }
 
         protected uint[] compatible_brands;  //  to end of the box
-        public uint[] CompatibleBrands { get { return compatible_brands; } set { compatible_brands = value; } }
+        public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
         public GeneralTypeBox()
         { }
@@ -940,19 +940,19 @@ namespace BoxGenerator2
 
 
         protected MetaDataKeyDeclarationBox MetaDataKeyDeclarationBox;
-        public MetaDataKeyDeclarationBox _MetaDataKeyDeclarationBox { get { return MetaDataKeyDeclarationBox; } set { MetaDataKeyDeclarationBox = value; } }
+        public MetaDataKeyDeclarationBox _MetaDataKeyDeclarationBox { get { return this.MetaDataKeyDeclarationBox; } set { this.MetaDataKeyDeclarationBox = value; } }
 
         protected MetaDataDatatypeBox MetaDataDatatypeBox;  //  optional
-        public MetaDataDatatypeBox _MetaDataDatatypeBox { get { return MetaDataDatatypeBox; } set { MetaDataDatatypeBox = value; } }
+        public MetaDataDatatypeBox _MetaDataDatatypeBox { get { return this.MetaDataDatatypeBox; } set { this.MetaDataDatatypeBox = value; } }
 
         protected MetaDataLocaleBox MetaDataLocaleBox;  //  optional
-        public MetaDataLocaleBox _MetaDataLocaleBox { get { return MetaDataLocaleBox; } set { MetaDataLocaleBox = value; } }
+        public MetaDataLocaleBox _MetaDataLocaleBox { get { return this.MetaDataLocaleBox; } set { this.MetaDataLocaleBox = value; } }
 
         protected MetaDataSetupBox MetaDataSetupBox;  //  optional
-        public MetaDataSetupBox _MetaDataSetupBox { get { return MetaDataSetupBox; } set { MetaDataSetupBox = value; } }
+        public MetaDataSetupBox _MetaDataSetupBox { get { return this.MetaDataSetupBox; } set { this.MetaDataSetupBox = value; } }
 
         protected MetaDataExtensionsBox MetaDataExtensionsBox;  //  optional
-        public MetaDataExtensionsBox _MetaDataExtensionsBox { get { return MetaDataExtensionsBox; } set { MetaDataExtensionsBox = value; } }
+        public MetaDataExtensionsBox _MetaDataExtensionsBox { get { return this.MetaDataExtensionsBox; } set { this.MetaDataExtensionsBox = value; } }
 
         public MetaDataKeyBox()
         { }
@@ -1008,10 +1008,10 @@ namespace BoxGenerator2
 
 
         protected uint key_namespace;
-        public uint KeyNamespace { get { return key_namespace; } set { key_namespace = value; } }
+        public uint KeyNamespace { get { return this.key_namespace; } set { this.key_namespace = value; } }
 
         protected byte[] key_value;
-        public byte[] KeyValue { get { return key_value; } set { key_value = value; } }
+        public byte[] KeyValue { get { return this.key_value; } set { this.key_value = value; } }
 
         public MetaDataKeyDeclarationBox()
         { }
@@ -1057,7 +1057,7 @@ namespace BoxGenerator2
 
 
         protected string locale_string;
-        public string LocaleString { get { return locale_string; } set { locale_string = value; } }
+        public string LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
 
         public MetaDataLocaleBox()
         { }
@@ -1139,7 +1139,7 @@ namespace BoxGenerator2
 
 
         protected Box[] extensions;
-        public Box[] Extensions { get { return extensions; } set { extensions = value; } }
+        public Box[] Extensions { get { return this.extensions; } set { this.extensions = value; } }
 
         public MetaDataExtensionsBox()
         { }
@@ -1182,7 +1182,7 @@ namespace BoxGenerator2
 
 
         protected byte inlineKeyValueBoxesPresent;
-        public byte InlineKeyValueBoxesPresent { get { return inlineKeyValueBoxesPresent; } set { inlineKeyValueBoxesPresent = value; } }
+        public byte InlineKeyValueBoxesPresent { get { return this.inlineKeyValueBoxesPresent; } set { this.inlineKeyValueBoxesPresent = value; } }
 
         public MetaDataInlineKeysPresentBox()
         { }
@@ -1225,7 +1225,7 @@ namespace BoxGenerator2
 
 
         protected Box[] boxes;
-        public Box[] Boxes { get { return boxes; } set { boxes = value; } }
+        public Box[] Boxes { get { return this.boxes; } set { this.boxes = value; } }
 
         public MetaDataAccessUnit()
         { }
@@ -1304,13 +1304,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vipr";
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort view_id;
-        public ushort ViewId { get { return view_id; } set { view_id = value; } }
+        public ushort ViewId { get { return this.view_id; } set { this.view_id = value; } }
 
         protected uint content_priority_id;
-        public uint ContentPriorityId { get { return content_priority_id; } set { content_priority_id = value; } }
+        public uint ContentPriorityId { get { return this.content_priority_id; } set { this.content_priority_id = value; } }
 
         public ViewPriorityBox()
         { }
@@ -1376,13 +1376,13 @@ namespace BoxGenerator2
 
 
         protected byte subSeqDirectionFlag;
-        public byte SubSeqDirectionFlag { get { return subSeqDirectionFlag; } set { subSeqDirectionFlag = value; } }
+        public byte SubSeqDirectionFlag { get { return this.subSeqDirectionFlag; } set { this.subSeqDirectionFlag = value; } }
 
         protected byte layerNumber;
-        public byte LayerNumber { get { return layerNumber; } set { layerNumber = value; } }
+        public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
 
         protected ushort subSequenceIdentifier;
-        public ushort SubSequenceIdentifier { get { return subSequenceIdentifier; } set { subSequenceIdentifier = value; } }
+        public ushort SubSequenceIdentifier { get { return this.subSequenceIdentifier; } set { this.subSequenceIdentifier = value; } }
 
         public DependencyInfo()
         { }
@@ -1442,37 +1442,37 @@ namespace BoxGenerator2
 
 
         protected ushort subSequenceIdentifer;
-        public ushort SubSequenceIdentifer { get { return subSequenceIdentifer; } set { subSequenceIdentifer = value; } }
+        public ushort SubSequenceIdentifer { get { return this.subSequenceIdentifer; } set { this.subSequenceIdentifer = value; } }
 
         protected byte layerNumber;
-        public byte LayerNumber { get { return layerNumber; } set { layerNumber = value; } }
+        public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
 
         protected bool durationFlag;
-        public bool DurationFlag { get { return durationFlag; } set { durationFlag = value; } }
+        public bool DurationFlag { get { return this.durationFlag; } set { this.durationFlag = value; } }
 
         protected bool avgRateFlag;
-        public bool AvgRateFlag { get { return avgRateFlag; } set { avgRateFlag = value; } }
+        public bool AvgRateFlag { get { return this.avgRateFlag; } set { this.avgRateFlag = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected uint duration;
-        public uint Duration { get { return duration; } set { duration = value; } }
+        public uint Duration { get { return this.duration; } set { this.duration = value; } }
 
         protected byte accurateStatisticsFlag;
-        public byte AccurateStatisticsFlag { get { return accurateStatisticsFlag; } set { accurateStatisticsFlag = value; } }
+        public byte AccurateStatisticsFlag { get { return this.accurateStatisticsFlag; } set { this.accurateStatisticsFlag = value; } }
 
         protected ushort avgBitRate;
-        public ushort AvgBitRate { get { return avgBitRate; } set { avgBitRate = value; } }
+        public ushort AvgBitRate { get { return this.avgBitRate; } set { this.avgBitRate = value; } }
 
         protected ushort avgFrameRate;
-        public ushort AvgFrameRate { get { return avgFrameRate; } set { avgFrameRate = value; } }
+        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
 
         protected byte numReferences;
-        public byte NumReferences { get { return numReferences; } set { numReferences = value; } }
+        public byte NumReferences { get { return this.numReferences; } set { this.numReferences = value; } }
 
         protected DependencyInfo[] dependency;
-        public DependencyInfo[] Dependency { get { return dependency; } set { dependency = value; } }
+        public DependencyInfo[] Dependency { get { return this.dependency; } set { this.dependency = value; } }
 
         public AVCSubSequenceEntry()
         { }
@@ -1570,13 +1570,13 @@ namespace BoxGenerator2
 
 
         protected uint bufferSizeDB;
-        public uint BufferSizeDB { get { return bufferSizeDB; } set { bufferSizeDB = value; } }
+        public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
 
         protected uint maxBitrate;
-        public uint MaxBitrate { get { return maxBitrate; } set { maxBitrate = value; } }
+        public uint MaxBitrate { get { return this.maxBitrate; } set { this.maxBitrate = value; } }
 
         protected uint avgBitrate;
-        public uint AvgBitrate { get { return avgBitrate; } set { avgBitrate = value; } }
+        public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
 
         public MPEG4BitRateBox()
         { }
@@ -1639,49 +1639,49 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "icam";
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort ref_view_id;
-        public ushort RefViewId { get { return ref_view_id; } set { ref_view_id = value; } }
+        public ushort RefViewId { get { return this.ref_view_id; } set { this.ref_view_id = value; } }
 
         protected uint prec_focal_length;
-        public uint PrecFocalLength { get { return prec_focal_length; } set { prec_focal_length = value; } }
+        public uint PrecFocalLength { get { return this.prec_focal_length; } set { this.prec_focal_length = value; } }
 
         protected uint prec_principal_point;
-        public uint PrecPrincipalPoint { get { return prec_principal_point; } set { prec_principal_point = value; } }
+        public uint PrecPrincipalPoint { get { return this.prec_principal_point; } set { this.prec_principal_point = value; } }
 
         protected uint prec_skew_factor;
-        public uint PrecSkewFactor { get { return prec_skew_factor; } set { prec_skew_factor = value; } }
+        public uint PrecSkewFactor { get { return this.prec_skew_factor; } set { this.prec_skew_factor = value; } }
 
         protected byte exponent_focal_length_x;
-        public byte ExponentFocalLengthX { get { return exponent_focal_length_x; } set { exponent_focal_length_x = value; } }
+        public byte ExponentFocalLengthX { get { return this.exponent_focal_length_x; } set { this.exponent_focal_length_x = value; } }
 
         protected long mantissa_focal_length_x;
-        public long MantissaFocalLengthX { get { return mantissa_focal_length_x; } set { mantissa_focal_length_x = value; } }
+        public long MantissaFocalLengthX { get { return this.mantissa_focal_length_x; } set { this.mantissa_focal_length_x = value; } }
 
         protected byte exponent_focal_length_y;
-        public byte ExponentFocalLengthY { get { return exponent_focal_length_y; } set { exponent_focal_length_y = value; } }
+        public byte ExponentFocalLengthY { get { return this.exponent_focal_length_y; } set { this.exponent_focal_length_y = value; } }
 
         protected long mantissa_focal_length_y;
-        public long MantissaFocalLengthY { get { return mantissa_focal_length_y; } set { mantissa_focal_length_y = value; } }
+        public long MantissaFocalLengthY { get { return this.mantissa_focal_length_y; } set { this.mantissa_focal_length_y = value; } }
 
         protected byte exponent_principal_point_x;
-        public byte ExponentPrincipalPointX { get { return exponent_principal_point_x; } set { exponent_principal_point_x = value; } }
+        public byte ExponentPrincipalPointX { get { return this.exponent_principal_point_x; } set { this.exponent_principal_point_x = value; } }
 
         protected long mantissa_principal_point_x;
-        public long MantissaPrincipalPointX { get { return mantissa_principal_point_x; } set { mantissa_principal_point_x = value; } }
+        public long MantissaPrincipalPointX { get { return this.mantissa_principal_point_x; } set { this.mantissa_principal_point_x = value; } }
 
         protected byte exponent_principal_point_y;
-        public byte ExponentPrincipalPointY { get { return exponent_principal_point_y; } set { exponent_principal_point_y = value; } }
+        public byte ExponentPrincipalPointY { get { return this.exponent_principal_point_y; } set { this.exponent_principal_point_y = value; } }
 
         protected long mantissa_principal_point_y;
-        public long MantissaPrincipalPointY { get { return mantissa_principal_point_y; } set { mantissa_principal_point_y = value; } }
+        public long MantissaPrincipalPointY { get { return this.mantissa_principal_point_y; } set { this.mantissa_principal_point_y = value; } }
 
         protected byte exponent_skew_factor;
-        public byte ExponentSkewFactor { get { return exponent_skew_factor; } set { exponent_skew_factor = value; } }
+        public byte ExponentSkewFactor { get { return this.exponent_skew_factor; } set { this.exponent_skew_factor = value; } }
 
         protected long mantissa_skew_factor;
-        public long MantissaSkewFactor { get { return mantissa_skew_factor; } set { mantissa_skew_factor = value; } }
+        public long MantissaSkewFactor { get { return this.mantissa_skew_factor; } set { this.mantissa_skew_factor = value; } }
 
         public IntrinsicCameraParametersBox()
         { }
@@ -1776,28 +1776,28 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ecam";
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort ref_view_id;
-        public ushort RefViewId { get { return ref_view_id; } set { ref_view_id = value; } }
+        public ushort RefViewId { get { return this.ref_view_id; } set { this.ref_view_id = value; } }
 
         protected byte prec_rotation_param;
-        public byte PrecRotationParam { get { return prec_rotation_param; } set { prec_rotation_param = value; } }
+        public byte PrecRotationParam { get { return this.prec_rotation_param; } set { this.prec_rotation_param = value; } }
 
         protected byte prec_translation_param;
-        public byte PrecTranslationParam { get { return prec_translation_param; } set { prec_translation_param = value; } }
+        public byte PrecTranslationParam { get { return this.prec_translation_param; } set { this.prec_translation_param = value; } }
 
         protected byte[][] exponent_r;
-        public byte[][] ExponentR { get { return exponent_r; } set { exponent_r = value; } }
+        public byte[][] ExponentR { get { return this.exponent_r; } set { this.exponent_r = value; } }
 
         protected long[][] mantissa_r;
-        public long[][] MantissaR { get { return mantissa_r; } set { mantissa_r = value; } }
+        public long[][] MantissaR { get { return this.mantissa_r; } set { this.mantissa_r = value; } }
 
         protected byte[] exponent_t;
-        public byte[] ExponentT { get { return exponent_t; } set { exponent_t = value; } }
+        public byte[] ExponentT { get { return this.exponent_t; } set { this.exponent_t = value; } }
 
         protected long[] mantissa_t;
-        public long[] MantissaT { get { return mantissa_t; } set { mantissa_t = value; } }
+        public long[] MantissaT { get { return this.mantissa_t; } set { this.mantissa_t = value; } }
 
         public ExtrinsicCameraParametersBox()
         { }
@@ -1921,70 +1921,70 @@ namespace BoxGenerator2
 
 
         protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return configurationVersion; } set { configurationVersion = value; } }
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
 
         protected byte AVCProfileIndication;
-        public byte _AVCProfileIndication { get { return AVCProfileIndication; } set { AVCProfileIndication = value; } }
+        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
 
         protected byte profile_compatibility;
-        public byte ProfileCompatibility { get { return profile_compatibility; } set { profile_compatibility = value; } }
+        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
 
         protected byte AVCLevelIndication;
-        public byte _AVCLevelIndication { get { return AVCLevelIndication; } set { AVCLevelIndication = value; } }
+        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
 
         protected byte reserved = 0b111111;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return lengthSizeMinusOne; } set { lengthSizeMinusOne = value; } }
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
 
         protected byte reserved0 = 0b111;
-        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte numOfSequenceParameterSets;
-        public byte NumOfSequenceParameterSets { get { return numOfSequenceParameterSets; } set { numOfSequenceParameterSets = value; } }
+        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
 
         protected ushort sequenceParameterSetLength;
-        public ushort SequenceParameterSetLength { get { return sequenceParameterSetLength; } set { sequenceParameterSetLength = value; } }
+        public ushort SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
 
         protected byte[] sequenceParameterSetNALUnit;
-        public byte[] SequenceParameterSetNALUnit { get { return sequenceParameterSetNALUnit; } set { sequenceParameterSetNALUnit = value; } }
+        public byte[] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
 
         protected byte numOfPictureParameterSets;
-        public byte NumOfPictureParameterSets { get { return numOfPictureParameterSets; } set { numOfPictureParameterSets = value; } }
+        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
 
         protected ushort pictureParameterSetLength;
-        public ushort PictureParameterSetLength { get { return pictureParameterSetLength; } set { pictureParameterSetLength = value; } }
+        public ushort PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
 
         protected byte[] pictureParameterSetNALUnit;
-        public byte[] PictureParameterSetNALUnit { get { return pictureParameterSetNALUnit; } set { pictureParameterSetNALUnit = value; } }
+        public byte[] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
 
         protected byte reserved1 = 0b111111;
-        public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected byte chroma_format;
-        public byte ChromaFormat { get { return chroma_format; } set { chroma_format = value; } }
+        public byte ChromaFormat { get { return this.chroma_format; } set { this.chroma_format = value; } }
 
         protected byte reserved00 = 0b11111;
-        public byte Reserved00 { get { return reserved00; } set { reserved00 = value; } }
+        public byte Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
 
         protected byte bit_depth_luma_minus8;
-        public byte BitDepthLumaMinus8 { get { return bit_depth_luma_minus8; } set { bit_depth_luma_minus8 = value; } }
+        public byte BitDepthLumaMinus8 { get { return this.bit_depth_luma_minus8; } set { this.bit_depth_luma_minus8 = value; } }
 
         protected byte reserved10 = 0b11111;
-        public byte Reserved10 { get { return reserved10; } set { reserved10 = value; } }
+        public byte Reserved10 { get { return this.reserved10; } set { this.reserved10 = value; } }
 
         protected byte bit_depth_chroma_minus8;
-        public byte BitDepthChromaMinus8 { get { return bit_depth_chroma_minus8; } set { bit_depth_chroma_minus8 = value; } }
+        public byte BitDepthChromaMinus8 { get { return this.bit_depth_chroma_minus8; } set { this.bit_depth_chroma_minus8 = value; } }
 
         protected byte numOfSequenceParameterSetExt;
-        public byte NumOfSequenceParameterSetExt { get { return numOfSequenceParameterSetExt; } set { numOfSequenceParameterSetExt = value; } }
+        public byte NumOfSequenceParameterSetExt { get { return this.numOfSequenceParameterSetExt; } set { this.numOfSequenceParameterSetExt = value; } }
 
         protected ushort sequenceParameterSetExtLength;
-        public ushort SequenceParameterSetExtLength { get { return sequenceParameterSetExtLength; } set { sequenceParameterSetExtLength = value; } }
+        public ushort SequenceParameterSetExtLength { get { return this.sequenceParameterSetExtLength; } set { this.sequenceParameterSetExtLength = value; } }
 
         protected byte[] sequenceParameterSetExtNALUnit;
-        public byte[] SequenceParameterSetExtNALUnit { get { return sequenceParameterSetExtNALUnit; } set { sequenceParameterSetExtNALUnit = value; } }
+        public byte[] SequenceParameterSetExtNALUnit { get { return this.sequenceParameterSetExtNALUnit; } set { this.sequenceParameterSetExtNALUnit = value; } }
 
         public AVCDecoderConfigurationRecord()
         { }
@@ -2154,49 +2154,49 @@ namespace BoxGenerator2
 
 
         protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return configurationVersion; } set { configurationVersion = value; } }
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
 
         protected byte AVCProfileIndication;
-        public byte _AVCProfileIndication { get { return AVCProfileIndication; } set { AVCProfileIndication = value; } }
+        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
 
         protected byte profile_compatibility;
-        public byte ProfileCompatibility { get { return profile_compatibility; } set { profile_compatibility = value; } }
+        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
 
         protected byte AVCLevelIndication;
-        public byte _AVCLevelIndication { get { return AVCLevelIndication; } set { AVCLevelIndication = value; } }
+        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
 
         protected bool complete_representation;
-        public bool CompleteRepresentation { get { return complete_representation; } set { complete_representation = value; } }
+        public bool CompleteRepresentation { get { return this.complete_representation; } set { this.complete_representation = value; } }
 
         protected bool explicit_au_track;
-        public bool ExplicitAuTrack { get { return explicit_au_track; } set { explicit_au_track = value; } }
+        public bool ExplicitAuTrack { get { return this.explicit_au_track; } set { this.explicit_au_track = value; } }
 
         protected byte reserved = 0b1111;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return lengthSizeMinusOne; } set { lengthSizeMinusOne = value; } }
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
 
         protected bool reserved0 = false;
-        public bool Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte numOfSequenceParameterSets;
-        public byte NumOfSequenceParameterSets { get { return numOfSequenceParameterSets; } set { numOfSequenceParameterSets = value; } }
+        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
 
         protected ushort sequenceParameterSetLength;
-        public ushort SequenceParameterSetLength { get { return sequenceParameterSetLength; } set { sequenceParameterSetLength = value; } }
+        public ushort SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
 
         protected byte[] sequenceParameterSetNALUnit;
-        public byte[] SequenceParameterSetNALUnit { get { return sequenceParameterSetNALUnit; } set { sequenceParameterSetNALUnit = value; } }
+        public byte[] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
 
         protected byte numOfPictureParameterSets;
-        public byte NumOfPictureParameterSets { get { return numOfPictureParameterSets; } set { numOfPictureParameterSets = value; } }
+        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
 
         protected ushort pictureParameterSetLength;
-        public ushort PictureParameterSetLength { get { return pictureParameterSetLength; } set { pictureParameterSetLength = value; } }
+        public ushort PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
 
         protected byte[] pictureParameterSetNALUnit;
-        public byte[] PictureParameterSetNALUnit { get { return pictureParameterSetNALUnit; } set { pictureParameterSetNALUnit = value; } }
+        public byte[] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
 
         public MVCDecoderConfigurationRecord()
         { }
@@ -2317,46 +2317,46 @@ namespace BoxGenerator2
 
 
         protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return configurationVersion; } set { configurationVersion = value; } }
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
 
         protected byte AVCProfileIndication;
-        public byte _AVCProfileIndication { get { return AVCProfileIndication; } set { AVCProfileIndication = value; } }
+        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
 
         protected byte profile_compatibility;
-        public byte ProfileCompatibility { get { return profile_compatibility; } set { profile_compatibility = value; } }
+        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
 
         protected byte AVCLevelIndication;
-        public byte _AVCLevelIndication { get { return AVCLevelIndication; } set { AVCLevelIndication = value; } }
+        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
 
         protected bool complete_represenation;
-        public bool CompleteRepresenation { get { return complete_represenation; } set { complete_represenation = value; } }
+        public bool CompleteRepresenation { get { return this.complete_represenation; } set { this.complete_represenation = value; } }
 
         protected byte reserved = 0b11111;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return lengthSizeMinusOne; } set { lengthSizeMinusOne = value; } }
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
 
         protected bool reserved0 = false;
-        public bool Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte numOfSequenceParameterSets;
-        public byte NumOfSequenceParameterSets { get { return numOfSequenceParameterSets; } set { numOfSequenceParameterSets = value; } }
+        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
 
         protected ushort sequenceParameterSetLength;
-        public ushort SequenceParameterSetLength { get { return sequenceParameterSetLength; } set { sequenceParameterSetLength = value; } }
+        public ushort SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
 
         protected byte[] sequenceParameterSetNALUnit;
-        public byte[] SequenceParameterSetNALUnit { get { return sequenceParameterSetNALUnit; } set { sequenceParameterSetNALUnit = value; } }
+        public byte[] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
 
         protected byte numOfPictureParameterSets;
-        public byte NumOfPictureParameterSets { get { return numOfPictureParameterSets; } set { numOfPictureParameterSets = value; } }
+        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
 
         protected ushort pictureParameterSetLength;
-        public ushort PictureParameterSetLength { get { return pictureParameterSetLength; } set { pictureParameterSetLength = value; } }
+        public ushort PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
 
         protected byte[] pictureParameterSetNALUnit;
-        public byte[] PictureParameterSetNALUnit { get { return pictureParameterSetNALUnit; } set { pictureParameterSetNALUnit = value; } }
+        public byte[] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
 
         public SVCDecoderConfigurationRecord()
         { }
@@ -2489,91 +2489,91 @@ namespace BoxGenerator2
 
 
         protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return configurationVersion; } set { configurationVersion = value; } }
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
 
         protected byte general_profile_space;
-        public byte GeneralProfileSpace { get { return general_profile_space; } set { general_profile_space = value; } }
+        public byte GeneralProfileSpace { get { return this.general_profile_space; } set { this.general_profile_space = value; } }
 
         protected bool general_tier_flag;
-        public bool GeneralTierFlag { get { return general_tier_flag; } set { general_tier_flag = value; } }
+        public bool GeneralTierFlag { get { return this.general_tier_flag; } set { this.general_tier_flag = value; } }
 
         protected byte general_profile_idc;
-        public byte GeneralProfileIdc { get { return general_profile_idc; } set { general_profile_idc = value; } }
+        public byte GeneralProfileIdc { get { return this.general_profile_idc; } set { this.general_profile_idc = value; } }
 
         protected uint general_profile_compatibility_flags;
-        public uint GeneralProfileCompatibilityFlags { get { return general_profile_compatibility_flags; } set { general_profile_compatibility_flags = value; } }
+        public uint GeneralProfileCompatibilityFlags { get { return this.general_profile_compatibility_flags; } set { this.general_profile_compatibility_flags = value; } }
 
         protected ulong general_constraint_indicator_flags;
-        public ulong GeneralConstraintIndicatorFlags { get { return general_constraint_indicator_flags; } set { general_constraint_indicator_flags = value; } }
+        public ulong GeneralConstraintIndicatorFlags { get { return this.general_constraint_indicator_flags; } set { this.general_constraint_indicator_flags = value; } }
 
         protected byte general_level_idc;
-        public byte GeneralLevelIdc { get { return general_level_idc; } set { general_level_idc = value; } }
+        public byte GeneralLevelIdc { get { return this.general_level_idc; } set { this.general_level_idc = value; } }
 
         protected byte reserved = 0b1111;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort min_spatial_segmentation_idc;
-        public ushort MinSpatialSegmentationIdc { get { return min_spatial_segmentation_idc; } set { min_spatial_segmentation_idc = value; } }
+        public ushort MinSpatialSegmentationIdc { get { return this.min_spatial_segmentation_idc; } set { this.min_spatial_segmentation_idc = value; } }
 
         protected byte reserved0 = 0b111111;
-        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte parallelismType;
-        public byte ParallelismType { get { return parallelismType; } set { parallelismType = value; } }
+        public byte ParallelismType { get { return this.parallelismType; } set { this.parallelismType = value; } }
 
         protected byte reserved1 = 0b111111;
-        public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected byte chromaFormat;
-        public byte ChromaFormat { get { return chromaFormat; } set { chromaFormat = value; } }
+        public byte ChromaFormat { get { return this.chromaFormat; } set { this.chromaFormat = value; } }
 
         protected byte reserved2 = 0b11111;
-        public byte Reserved2 { get { return reserved2; } set { reserved2 = value; } }
+        public byte Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
         protected byte bitDepthLumaMinus8;
-        public byte BitDepthLumaMinus8 { get { return bitDepthLumaMinus8; } set { bitDepthLumaMinus8 = value; } }
+        public byte BitDepthLumaMinus8 { get { return this.bitDepthLumaMinus8; } set { this.bitDepthLumaMinus8 = value; } }
 
         protected byte reserved3 = 0b11111;
-        public byte Reserved3 { get { return reserved3; } set { reserved3 = value; } }
+        public byte Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
 
         protected byte bitDepthChromaMinus8;
-        public byte BitDepthChromaMinus8 { get { return bitDepthChromaMinus8; } set { bitDepthChromaMinus8 = value; } }
+        public byte BitDepthChromaMinus8 { get { return this.bitDepthChromaMinus8; } set { this.bitDepthChromaMinus8 = value; } }
 
         protected ushort avgFrameRate;
-        public ushort AvgFrameRate { get { return avgFrameRate; } set { avgFrameRate = value; } }
+        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
 
         protected byte constantFrameRate;
-        public byte ConstantFrameRate { get { return constantFrameRate; } set { constantFrameRate = value; } }
+        public byte ConstantFrameRate { get { return this.constantFrameRate; } set { this.constantFrameRate = value; } }
 
         protected byte numTemporalLayers;
-        public byte NumTemporalLayers { get { return numTemporalLayers; } set { numTemporalLayers = value; } }
+        public byte NumTemporalLayers { get { return this.numTemporalLayers; } set { this.numTemporalLayers = value; } }
 
         protected bool temporalIdNested;
-        public bool TemporalIdNested { get { return temporalIdNested; } set { temporalIdNested = value; } }
+        public bool TemporalIdNested { get { return this.temporalIdNested; } set { this.temporalIdNested = value; } }
 
         protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return lengthSizeMinusOne; } set { lengthSizeMinusOne = value; } }
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
 
         protected byte numOfArrays;
-        public byte NumOfArrays { get { return numOfArrays; } set { numOfArrays = value; } }
+        public byte NumOfArrays { get { return this.numOfArrays; } set { this.numOfArrays = value; } }
 
         protected bool array_completeness;
-        public bool ArrayCompleteness { get { return array_completeness; } set { array_completeness = value; } }
+        public bool ArrayCompleteness { get { return this.array_completeness; } set { this.array_completeness = value; } }
 
         protected bool reserved4 = false;
-        public bool Reserved4 { get { return reserved4; } set { reserved4 = value; } }
+        public bool Reserved4 { get { return this.reserved4; } set { this.reserved4 = value; } }
 
         protected byte NAL_unit_type;
-        public byte NALUnitType { get { return NAL_unit_type; } set { NAL_unit_type = value; } }
+        public byte NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
 
         protected ushort numNalus;
-        public ushort NumNalus { get { return numNalus; } set { numNalus = value; } }
+        public ushort NumNalus { get { return this.numNalus; } set { this.numNalus = value; } }
 
         protected ushort nalUnitLength;
-        public ushort NalUnitLength { get { return nalUnitLength; } set { nalUnitLength = value; } }
+        public ushort NalUnitLength { get { return this.nalUnitLength; } set { this.nalUnitLength = value; } }
 
         protected byte[] nalUnit;
-        public byte[] NalUnit { get { return nalUnit; } set { nalUnit = value; } }
+        public byte[] NalUnit { get { return this.nalUnit; } set { this.nalUnit = value; } }
 
         public HEVCDecoderConfigurationRecord()
         { }
@@ -2736,43 +2736,43 @@ namespace BoxGenerator2
 
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte num_bytes_constraint_info;
-        public byte NumBytesConstraintInfo { get { return num_bytes_constraint_info; } set { num_bytes_constraint_info = value; } }
+        public byte NumBytesConstraintInfo { get { return this.num_bytes_constraint_info; } set { this.num_bytes_constraint_info = value; } }
 
         protected byte general_profile_idc;
-        public byte GeneralProfileIdc { get { return general_profile_idc; } set { general_profile_idc = value; } }
+        public byte GeneralProfileIdc { get { return this.general_profile_idc; } set { this.general_profile_idc = value; } }
 
         protected bool general_tier_flag;
-        public bool GeneralTierFlag { get { return general_tier_flag; } set { general_tier_flag = value; } }
+        public bool GeneralTierFlag { get { return this.general_tier_flag; } set { this.general_tier_flag = value; } }
 
         protected byte general_level_idc;
-        public byte GeneralLevelIdc { get { return general_level_idc; } set { general_level_idc = value; } }
+        public byte GeneralLevelIdc { get { return this.general_level_idc; } set { this.general_level_idc = value; } }
 
         protected bool ptl_frame_only_constraint_flag;
-        public bool PtlFrameOnlyConstraintFlag { get { return ptl_frame_only_constraint_flag; } set { ptl_frame_only_constraint_flag = value; } }
+        public bool PtlFrameOnlyConstraintFlag { get { return this.ptl_frame_only_constraint_flag; } set { this.ptl_frame_only_constraint_flag = value; } }
 
         protected bool ptl_multi_layer_enabled_flag;
-        public bool PtlMultiLayerEnabledFlag { get { return ptl_multi_layer_enabled_flag; } set { ptl_multi_layer_enabled_flag = value; } }
+        public bool PtlMultiLayerEnabledFlag { get { return this.ptl_multi_layer_enabled_flag; } set { this.ptl_multi_layer_enabled_flag = value; } }
 
         protected byte[] general_constraint_info;
-        public byte[] GeneralConstraintInfo { get { return general_constraint_info; } set { general_constraint_info = value; } }
+        public byte[] GeneralConstraintInfo { get { return this.general_constraint_info; } set { this.general_constraint_info = value; } }
 
         protected bool[] ptl_sublayer_level_present_flag;
-        public bool[] PtlSublayerLevelPresentFlag { get { return ptl_sublayer_level_present_flag; } set { ptl_sublayer_level_present_flag = value; } }
+        public bool[] PtlSublayerLevelPresentFlag { get { return this.ptl_sublayer_level_present_flag; } set { this.ptl_sublayer_level_present_flag = value; } }
 
         protected bool ptl_reserved_zero_bit = false;
-        public bool PtlReservedZeroBit { get { return ptl_reserved_zero_bit; } set { ptl_reserved_zero_bit = value; } }
+        public bool PtlReservedZeroBit { get { return this.ptl_reserved_zero_bit; } set { this.ptl_reserved_zero_bit = value; } }
 
         protected byte[] sublayer_level_idc;
-        public byte[] SublayerLevelIdc { get { return sublayer_level_idc; } set { sublayer_level_idc = value; } }
+        public byte[] SublayerLevelIdc { get { return this.sublayer_level_idc; } set { this.sublayer_level_idc = value; } }
 
         protected byte ptl_num_sub_profiles;
-        public byte PtlNumSubProfiles { get { return ptl_num_sub_profiles; } set { ptl_num_sub_profiles = value; } }
+        public byte PtlNumSubProfiles { get { return this.ptl_num_sub_profiles; } set { this.ptl_num_sub_profiles = value; } }
 
         protected uint[] general_sub_profile_idc;
-        public uint[] GeneralSubProfileIdc { get { return general_sub_profile_idc; } set { general_sub_profile_idc = value; } }
+        public uint[] GeneralSubProfileIdc { get { return this.general_sub_profile_idc; } set { this.general_sub_profile_idc = value; } }
 
         public VvcPTLRecord()
         { }
@@ -2938,64 +2938,64 @@ namespace BoxGenerator2
 
 
         protected byte reserved = 0b11111;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte LengthSizeMinusOne;
-        public byte _LengthSizeMinusOne { get { return LengthSizeMinusOne; } set { LengthSizeMinusOne = value; } }
+        public byte _LengthSizeMinusOne { get { return this.LengthSizeMinusOne; } set { this.LengthSizeMinusOne = value; } }
 
         protected bool ptl_present_flag;
-        public bool PtlPresentFlag { get { return ptl_present_flag; } set { ptl_present_flag = value; } }
+        public bool PtlPresentFlag { get { return this.ptl_present_flag; } set { this.ptl_present_flag = value; } }
 
         protected ushort ols_idx;
-        public ushort OlsIdx { get { return ols_idx; } set { ols_idx = value; } }
+        public ushort OlsIdx { get { return this.ols_idx; } set { this.ols_idx = value; } }
 
         protected byte num_sublayers;
-        public byte NumSublayers { get { return num_sublayers; } set { num_sublayers = value; } }
+        public byte NumSublayers { get { return this.num_sublayers; } set { this.num_sublayers = value; } }
 
         protected byte constant_frame_rate;
-        public byte ConstantFrameRate { get { return constant_frame_rate; } set { constant_frame_rate = value; } }
+        public byte ConstantFrameRate { get { return this.constant_frame_rate; } set { this.constant_frame_rate = value; } }
 
         protected byte chroma_format_idc;
-        public byte ChromaFormatIdc { get { return chroma_format_idc; } set { chroma_format_idc = value; } }
+        public byte ChromaFormatIdc { get { return this.chroma_format_idc; } set { this.chroma_format_idc = value; } }
 
         protected byte bit_depth_minus8;
-        public byte BitDepthMinus8 { get { return bit_depth_minus8; } set { bit_depth_minus8 = value; } }
+        public byte BitDepthMinus8 { get { return this.bit_depth_minus8; } set { this.bit_depth_minus8 = value; } }
 
         protected byte reserved0 = 0b11111;
-        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected VvcPTLRecord[] native_ptl;
-        public VvcPTLRecord[] NativePtl { get { return native_ptl; } set { native_ptl = value; } }
+        public VvcPTLRecord[] NativePtl { get { return this.native_ptl; } set { this.native_ptl = value; } }
 
         protected ushort max_picture_width;
-        public ushort MaxPictureWidth { get { return max_picture_width; } set { max_picture_width = value; } }
+        public ushort MaxPictureWidth { get { return this.max_picture_width; } set { this.max_picture_width = value; } }
 
         protected ushort max_picture_height;
-        public ushort MaxPictureHeight { get { return max_picture_height; } set { max_picture_height = value; } }
+        public ushort MaxPictureHeight { get { return this.max_picture_height; } set { this.max_picture_height = value; } }
 
         protected ushort avg_frame_rate;
-        public ushort AvgFrameRate { get { return avg_frame_rate; } set { avg_frame_rate = value; } }
+        public ushort AvgFrameRate { get { return this.avg_frame_rate; } set { this.avg_frame_rate = value; } }
 
         protected byte num_of_arrays;
-        public byte NumOfArrays { get { return num_of_arrays; } set { num_of_arrays = value; } }
+        public byte NumOfArrays { get { return this.num_of_arrays; } set { this.num_of_arrays = value; } }
 
         protected bool array_completeness;
-        public bool ArrayCompleteness { get { return array_completeness; } set { array_completeness = value; } }
+        public bool ArrayCompleteness { get { return this.array_completeness; } set { this.array_completeness = value; } }
 
         protected byte reserved1 = 0;
-        public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected byte NAL_unit_type;
-        public byte NALUnitType { get { return NAL_unit_type; } set { NAL_unit_type = value; } }
+        public byte NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
 
         protected ushort num_nalus;
-        public ushort NumNalus { get { return num_nalus; } set { num_nalus = value; } }
+        public ushort NumNalus { get { return this.num_nalus; } set { this.num_nalus = value; } }
 
         protected ushort nal_unit_length;
-        public ushort NalUnitLength { get { return nal_unit_length; } set { nal_unit_length = value; } }
+        public ushort NalUnitLength { get { return this.nal_unit_length; } set { this.nal_unit_length = value; } }
 
         protected byte[] nal_unit;
-        public byte[] NalUnit { get { return nal_unit; } set { nal_unit = value; } }
+        public byte[] NalUnit { get { return this.nal_unit; } set { this.nal_unit = value; } }
 
         public VvcDecoderConfigurationRecord()
         { }
@@ -3165,49 +3165,49 @@ namespace BoxGenerator2
 
 
         protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return configurationVersion; } set { configurationVersion = value; } }
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
 
         protected byte AVCProfileIndication;
-        public byte _AVCProfileIndication { get { return AVCProfileIndication; } set { AVCProfileIndication = value; } }
+        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
 
         protected byte profile_compatibility;
-        public byte ProfileCompatibility { get { return profile_compatibility; } set { profile_compatibility = value; } }
+        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
 
         protected byte AVCLevelIndication;
-        public byte _AVCLevelIndication { get { return AVCLevelIndication; } set { AVCLevelIndication = value; } }
+        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
 
         protected bool complete_representation;
-        public bool CompleteRepresentation { get { return complete_representation; } set { complete_representation = value; } }
+        public bool CompleteRepresentation { get { return this.complete_representation; } set { this.complete_representation = value; } }
 
         protected bool explicit_au_track;
-        public bool ExplicitAuTrack { get { return explicit_au_track; } set { explicit_au_track = value; } }
+        public bool ExplicitAuTrack { get { return this.explicit_au_track; } set { this.explicit_au_track = value; } }
 
         protected byte reserved = 0b1111;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return lengthSizeMinusOne; } set { lengthSizeMinusOne = value; } }
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
 
         protected bool reserved0 = false;
-        public bool Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte numOfSequenceParameterSets;
-        public byte NumOfSequenceParameterSets { get { return numOfSequenceParameterSets; } set { numOfSequenceParameterSets = value; } }
+        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
 
         protected ushort sequenceParameterSetLength;
-        public ushort SequenceParameterSetLength { get { return sequenceParameterSetLength; } set { sequenceParameterSetLength = value; } }
+        public ushort SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
 
         protected byte[] sequenceParameterSetNALUnit;
-        public byte[] SequenceParameterSetNALUnit { get { return sequenceParameterSetNALUnit; } set { sequenceParameterSetNALUnit = value; } }
+        public byte[] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
 
         protected byte numOfPictureParameterSets;
-        public byte NumOfPictureParameterSets { get { return numOfPictureParameterSets; } set { numOfPictureParameterSets = value; } }
+        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
 
         protected ushort pictureParameterSetLength;
-        public ushort PictureParameterSetLength { get { return pictureParameterSetLength; } set { pictureParameterSetLength = value; } }
+        public ushort PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
 
         protected byte[] pictureParameterSetNALUnit;
-        public byte[] PictureParameterSetNALUnit { get { return pictureParameterSetNALUnit; } set { pictureParameterSetNALUnit = value; } }
+        public byte[] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
 
         public MVDDecoderConfigurationRecord()
         { }
@@ -3355,91 +3355,91 @@ namespace BoxGenerator2
 
 
         protected byte num_profile_tier_level_minus1;
-        public byte NumProfileTierLevelMinus1 { get { return num_profile_tier_level_minus1; } set { num_profile_tier_level_minus1 = value; } }
+        public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }
 
         protected byte[] ptl_max_temporal_id;
-        public byte[] PtlMaxTemporalId { get { return ptl_max_temporal_id; } set { ptl_max_temporal_id = value; } }
+        public byte[] PtlMaxTemporalId { get { return this.ptl_max_temporal_id; } set { this.ptl_max_temporal_id = value; } }
 
         protected VvcPTLRecord[] ptl;
-        public VvcPTLRecord[] Ptl { get { return ptl; } set { ptl = value; } }
+        public VvcPTLRecord[] Ptl { get { return this.ptl; } set { this.ptl = value; } }
 
         protected bool all_independent_layers_flag;
-        public bool AllIndependentLayersFlag { get { return all_independent_layers_flag; } set { all_independent_layers_flag = value; } }
+        public bool AllIndependentLayersFlag { get { return this.all_independent_layers_flag; } set { this.all_independent_layers_flag = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected bool each_layer_is_an_ols_flag;
-        public bool EachLayerIsAnOlsFlag { get { return each_layer_is_an_ols_flag; } set { each_layer_is_an_ols_flag = value; } }
+        public bool EachLayerIsAnOlsFlag { get { return this.each_layer_is_an_ols_flag; } set { this.each_layer_is_an_ols_flag = value; } }
 
         protected byte reserved0 = 0;
-        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte ols_mode_idc;
-        public byte OlsModeIdc { get { return ols_mode_idc; } set { ols_mode_idc = value; } }
+        public byte OlsModeIdc { get { return this.ols_mode_idc; } set { this.ols_mode_idc = value; } }
 
         protected ushort num_operating_points;
-        public ushort NumOperatingPoints { get { return num_operating_points; } set { num_operating_points = value; } }
+        public ushort NumOperatingPoints { get { return this.num_operating_points; } set { this.num_operating_points = value; } }
 
         protected ushort output_layer_set_idx;
-        public ushort OutputLayerSetIdx { get { return output_layer_set_idx; } set { output_layer_set_idx = value; } }
+        public ushort OutputLayerSetIdx { get { return this.output_layer_set_idx; } set { this.output_layer_set_idx = value; } }
 
         protected byte ptl_idx;
-        public byte PtlIdx { get { return ptl_idx; } set { ptl_idx = value; } }
+        public byte PtlIdx { get { return this.ptl_idx; } set { this.ptl_idx = value; } }
 
         protected byte max_temporal_id;
-        public byte MaxTemporalId { get { return max_temporal_id; } set { max_temporal_id = value; } }
+        public byte MaxTemporalId { get { return this.max_temporal_id; } set { this.max_temporal_id = value; } }
 
         protected byte layer_count;
-        public byte LayerCount { get { return layer_count; } set { layer_count = value; } }
+        public byte LayerCount { get { return this.layer_count; } set { this.layer_count = value; } }
 
         protected byte layer_id;
-        public byte LayerId { get { return layer_id; } set { layer_id = value; } }
+        public byte LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
 
         protected bool is_outputlayer;
-        public bool IsOutputlayer { get { return is_outputlayer; } set { is_outputlayer = value; } }
+        public bool IsOutputlayer { get { return this.is_outputlayer; } set { this.is_outputlayer = value; } }
 
         protected bool reserved1 = false;
-        public bool Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public bool Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected byte reserved00 = 0;
-        public byte Reserved00 { get { return reserved00; } set { reserved00 = value; } }
+        public byte Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
 
         protected bool frame_rate_info_flag;
-        public bool FrameRateInfoFlag { get { return frame_rate_info_flag; } set { frame_rate_info_flag = value; } }
+        public bool FrameRateInfoFlag { get { return this.frame_rate_info_flag; } set { this.frame_rate_info_flag = value; } }
 
         protected bool bit_rate_info_flag;
-        public bool BitRateInfoFlag { get { return bit_rate_info_flag; } set { bit_rate_info_flag = value; } }
+        public bool BitRateInfoFlag { get { return this.bit_rate_info_flag; } set { this.bit_rate_info_flag = value; } }
 
         protected ushort avgFrameRate;
-        public ushort AvgFrameRate { get { return avgFrameRate; } set { avgFrameRate = value; } }
+        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
 
         protected byte reserved10 = 0;
-        public byte Reserved10 { get { return reserved10; } set { reserved10 = value; } }
+        public byte Reserved10 { get { return this.reserved10; } set { this.reserved10 = value; } }
 
         protected byte constantFrameRate;
-        public byte ConstantFrameRate { get { return constantFrameRate; } set { constantFrameRate = value; } }
+        public byte ConstantFrameRate { get { return this.constantFrameRate; } set { this.constantFrameRate = value; } }
 
         protected uint maxBitRate;
-        public uint MaxBitRate { get { return maxBitRate; } set { maxBitRate = value; } }
+        public uint MaxBitRate { get { return this.maxBitRate; } set { this.maxBitRate = value; } }
 
         protected uint avgBitRate;
-        public uint AvgBitRate { get { return avgBitRate; } set { avgBitRate = value; } }
+        public uint AvgBitRate { get { return this.avgBitRate; } set { this.avgBitRate = value; } }
 
         protected byte max_layer_count;
-        public byte MaxLayerCount { get { return max_layer_count; } set { max_layer_count = value; } }
+        public byte MaxLayerCount { get { return this.max_layer_count; } set { this.max_layer_count = value; } }
 
         protected byte layerID;
-        public byte LayerID { get { return layerID; } set { layerID = value; } }
+        public byte LayerID { get { return this.layerID; } set { this.layerID = value; } }
 
         protected byte num_direct_ref_layers;
-        public byte NumDirectRefLayers { get { return num_direct_ref_layers; } set { num_direct_ref_layers = value; } }
+        public byte NumDirectRefLayers { get { return this.num_direct_ref_layers; } set { this.num_direct_ref_layers = value; } }
 
         protected byte direct_ref_layerID;
-        public byte DirectRefLayerID { get { return direct_ref_layerID; } set { direct_ref_layerID = value; } }
+        public byte DirectRefLayerID { get { return this.direct_ref_layerID; } set { this.direct_ref_layerID = value; } }
 
         protected byte max_tid_il_ref_pics_plus1;
-        public byte MaxTidIlRefPicsPlus1 { get { return max_tid_il_ref_pics_plus1; } set { max_tid_il_ref_pics_plus1 = value; } }
+        public byte MaxTidIlRefPicsPlus1 { get { return this.max_tid_il_ref_pics_plus1; } set { this.max_tid_il_ref_pics_plus1 = value; } }
 
         public VvcOperatingPointsRecord()
         { }
@@ -3691,61 +3691,61 @@ namespace BoxGenerator2
 
 
         protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return configurationVersion; } set { configurationVersion = value; } }
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
 
         protected byte profile_idc;
-        public byte ProfileIdc { get { return profile_idc; } set { profile_idc = value; } }
+        public byte ProfileIdc { get { return this.profile_idc; } set { this.profile_idc = value; } }
 
         protected byte level_idc;
-        public byte LevelIdc { get { return level_idc; } set { level_idc = value; } }
+        public byte LevelIdc { get { return this.level_idc; } set { this.level_idc = value; } }
 
         protected uint toolset_idc;
-        public uint ToolsetIdc { get { return toolset_idc; } set { toolset_idc = value; } }
+        public uint ToolsetIdc { get { return this.toolset_idc; } set { this.toolset_idc = value; } }
 
         protected byte chroma_format_idc;
-        public byte ChromaFormatIdc { get { return chroma_format_idc; } set { chroma_format_idc = value; } }
+        public byte ChromaFormatIdc { get { return this.chroma_format_idc; } set { this.chroma_format_idc = value; } }
 
         protected byte bit_depth_luma_minus8;
-        public byte BitDepthLumaMinus8 { get { return bit_depth_luma_minus8; } set { bit_depth_luma_minus8 = value; } }
+        public byte BitDepthLumaMinus8 { get { return this.bit_depth_luma_minus8; } set { this.bit_depth_luma_minus8 = value; } }
 
         protected byte bit_depth_chroma_minus8;
-        public byte BitDepthChromaMinus8 { get { return bit_depth_chroma_minus8; } set { bit_depth_chroma_minus8 = value; } }
+        public byte BitDepthChromaMinus8 { get { return this.bit_depth_chroma_minus8; } set { this.bit_depth_chroma_minus8 = value; } }
 
         protected uint pic_width_in_luma_samples;
-        public uint PicWidthInLumaSamples { get { return pic_width_in_luma_samples; } set { pic_width_in_luma_samples = value; } }
+        public uint PicWidthInLumaSamples { get { return this.pic_width_in_luma_samples; } set { this.pic_width_in_luma_samples = value; } }
 
         protected uint pic_height_in_luma_samples;
-        public uint PicHeightInLumaSamples { get { return pic_height_in_luma_samples; } set { pic_height_in_luma_samples = value; } }
+        public uint PicHeightInLumaSamples { get { return this.pic_height_in_luma_samples; } set { this.pic_height_in_luma_samples = value; } }
 
         protected byte reserved = 0b00000;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected bool sps_in_stream;
-        public bool SpsInStream { get { return sps_in_stream; } set { sps_in_stream = value; } }
+        public bool SpsInStream { get { return this.sps_in_stream; } set { this.sps_in_stream = value; } }
 
         protected bool pps_in_stream;
-        public bool PpsInStream { get { return pps_in_stream; } set { pps_in_stream = value; } }
+        public bool PpsInStream { get { return this.pps_in_stream; } set { this.pps_in_stream = value; } }
 
         protected bool aps_in_stream;
-        public bool ApsInStream { get { return aps_in_stream; } set { aps_in_stream = value; } }
+        public bool ApsInStream { get { return this.aps_in_stream; } set { this.aps_in_stream = value; } }
 
         protected byte numOfArrays;
-        public byte NumOfArrays { get { return numOfArrays; } set { numOfArrays = value; } }
+        public byte NumOfArrays { get { return this.numOfArrays; } set { this.numOfArrays = value; } }
 
         protected byte reserved0 = 0b00;
-        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte NAL_unit_type;
-        public byte NALUnitType { get { return NAL_unit_type; } set { NAL_unit_type = value; } }
+        public byte NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
 
         protected ushort numNalus;
-        public ushort NumNalus { get { return numNalus; } set { numNalus = value; } }
+        public ushort NumNalus { get { return this.numNalus; } set { this.numNalus = value; } }
 
         protected ushort nalUnitLength;
-        public ushort NalUnitLength { get { return nalUnitLength; } set { nalUnitLength = value; } }
+        public ushort NalUnitLength { get { return this.nalUnitLength; } set { this.nalUnitLength = value; } }
 
         protected byte[] nalUnit;
-        public byte[] NalUnit { get { return nalUnit; } set { nalUnit = value; } }
+        public byte[] NalUnit { get { return this.nalUnit; } set { this.nalUnit = value; } }
 
         public EVCDecoderConfigurationRecord()
         { }
@@ -3895,97 +3895,97 @@ namespace BoxGenerator2
 
 
         protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return configurationVersion; } set { configurationVersion = value; } }
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
 
         protected byte general_profile_space;
-        public byte GeneralProfileSpace { get { return general_profile_space; } set { general_profile_space = value; } }
+        public byte GeneralProfileSpace { get { return this.general_profile_space; } set { this.general_profile_space = value; } }
 
         protected bool general_tier_flag;
-        public bool GeneralTierFlag { get { return general_tier_flag; } set { general_tier_flag = value; } }
+        public bool GeneralTierFlag { get { return this.general_tier_flag; } set { this.general_tier_flag = value; } }
 
         protected byte general_profile_idc;
-        public byte GeneralProfileIdc { get { return general_profile_idc; } set { general_profile_idc = value; } }
+        public byte GeneralProfileIdc { get { return this.general_profile_idc; } set { this.general_profile_idc = value; } }
 
         protected uint general_profile_compatibility_flags;
-        public uint GeneralProfileCompatibilityFlags { get { return general_profile_compatibility_flags; } set { general_profile_compatibility_flags = value; } }
+        public uint GeneralProfileCompatibilityFlags { get { return this.general_profile_compatibility_flags; } set { this.general_profile_compatibility_flags = value; } }
 
         protected ulong general_constraint_indicator_flags;
-        public ulong GeneralConstraintIndicatorFlags { get { return general_constraint_indicator_flags; } set { general_constraint_indicator_flags = value; } }
+        public ulong GeneralConstraintIndicatorFlags { get { return this.general_constraint_indicator_flags; } set { this.general_constraint_indicator_flags = value; } }
 
         protected byte general_level_idc;
-        public byte GeneralLevelIdc { get { return general_level_idc; } set { general_level_idc = value; } }
+        public byte GeneralLevelIdc { get { return this.general_level_idc; } set { this.general_level_idc = value; } }
 
         protected bool complete_representation;
-        public bool CompleteRepresentation { get { return complete_representation; } set { complete_representation = value; } }
+        public bool CompleteRepresentation { get { return this.complete_representation; } set { this.complete_representation = value; } }
 
         protected byte reserved = 0b111;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort min_spatial_segmentation_idc;
-        public ushort MinSpatialSegmentationIdc { get { return min_spatial_segmentation_idc; } set { min_spatial_segmentation_idc = value; } }
+        public ushort MinSpatialSegmentationIdc { get { return this.min_spatial_segmentation_idc; } set { this.min_spatial_segmentation_idc = value; } }
 
         protected byte reserved0 = 0b111111;
-        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte parallelismType;
-        public byte ParallelismType { get { return parallelismType; } set { parallelismType = value; } }
+        public byte ParallelismType { get { return this.parallelismType; } set { this.parallelismType = value; } }
 
         protected byte reserved1 = 0b111111;
-        public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected byte chromaFormat;
-        public byte ChromaFormat { get { return chromaFormat; } set { chromaFormat = value; } }
+        public byte ChromaFormat { get { return this.chromaFormat; } set { this.chromaFormat = value; } }
 
         protected byte reserved2 = 0b11111;
-        public byte Reserved2 { get { return reserved2; } set { reserved2 = value; } }
+        public byte Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
         protected byte bitDepthLumaMinus8;
-        public byte BitDepthLumaMinus8 { get { return bitDepthLumaMinus8; } set { bitDepthLumaMinus8 = value; } }
+        public byte BitDepthLumaMinus8 { get { return this.bitDepthLumaMinus8; } set { this.bitDepthLumaMinus8 = value; } }
 
         protected byte reserved3 = 0b11111;
-        public byte Reserved3 { get { return reserved3; } set { reserved3 = value; } }
+        public byte Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
 
         protected byte bitDepthChromaMinus8;
-        public byte BitDepthChromaMinus8 { get { return bitDepthChromaMinus8; } set { bitDepthChromaMinus8 = value; } }
+        public byte BitDepthChromaMinus8 { get { return this.bitDepthChromaMinus8; } set { this.bitDepthChromaMinus8 = value; } }
 
         protected ushort avgFrameRate;
-        public ushort AvgFrameRate { get { return avgFrameRate; } set { avgFrameRate = value; } }
+        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
 
         protected byte constantFrameRate;
-        public byte ConstantFrameRate { get { return constantFrameRate; } set { constantFrameRate = value; } }
+        public byte ConstantFrameRate { get { return this.constantFrameRate; } set { this.constantFrameRate = value; } }
 
         protected byte numTemporalLayers;
-        public byte NumTemporalLayers { get { return numTemporalLayers; } set { numTemporalLayers = value; } }
+        public byte NumTemporalLayers { get { return this.numTemporalLayers; } set { this.numTemporalLayers = value; } }
 
         protected bool temporalIdNested;
-        public bool TemporalIdNested { get { return temporalIdNested; } set { temporalIdNested = value; } }
+        public bool TemporalIdNested { get { return this.temporalIdNested; } set { this.temporalIdNested = value; } }
 
         protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return lengthSizeMinusOne; } set { lengthSizeMinusOne = value; } }
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
 
         protected byte numOfArrays;
-        public byte NumOfArrays { get { return numOfArrays; } set { numOfArrays = value; } }
+        public byte NumOfArrays { get { return this.numOfArrays; } set { this.numOfArrays = value; } }
 
         protected bool array_completeness;
-        public bool ArrayCompleteness { get { return array_completeness; } set { array_completeness = value; } }
+        public bool ArrayCompleteness { get { return this.array_completeness; } set { this.array_completeness = value; } }
 
         protected bool reserved4 = false;
-        public bool Reserved4 { get { return reserved4; } set { reserved4 = value; } }
+        public bool Reserved4 { get { return this.reserved4; } set { this.reserved4 = value; } }
 
         protected byte NAL_unit_type;
-        public byte NALUnitType { get { return NAL_unit_type; } set { NAL_unit_type = value; } }
+        public byte NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
 
         protected ushort numNalus;
-        public ushort NumNalus { get { return numNalus; } set { numNalus = value; } }
+        public ushort NumNalus { get { return this.numNalus; } set { this.numNalus = value; } }
 
         protected ushort nalUnitLength;
-        public ushort NalUnitLength { get { return nalUnitLength; } set { nalUnitLength = value; } }
+        public ushort NalUnitLength { get { return this.nalUnitLength; } set { this.nalUnitLength = value; } }
 
         protected byte[] nalUnit;
-        public byte[] NalUnit { get { return nalUnit; } set { nalUnit = value; } }
+        public byte[] NalUnit { get { return this.nalUnit; } set { this.nalUnit = value; } }
 
         protected ushort operationPointIdx;
-        public ushort OperationPointIdx { get { return operationPointIdx; } set { operationPointIdx = value; } }
+        public ushort OperationPointIdx { get { return this.operationPointIdx; } set { this.operationPointIdx = value; } }
 
         public LHEVCDecoderConfigurationRecord()
         { }
@@ -4137,7 +4137,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rssr";
 
         protected uint SSRC;
-        public uint _SSRC { get { return SSRC; } set { SSRC = value; } }
+        public uint _SSRC { get { return this.SSRC; } set { this.SSRC = value; } }
 
         public ReceivedSsrcBox()
         { }
@@ -4180,10 +4180,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tssy";
 
         protected byte reserved;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte timestamp_sync;
-        public byte TimestampSync { get { return timestamp_sync; } set { timestamp_sync = value; } }
+        public byte TimestampSync { get { return this.timestamp_sync; } set { this.timestamp_sync = value; } }
 
         public timestampsynchrony()
         { }
@@ -4229,7 +4229,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tims";
 
         protected uint timescale;
-        public uint Timescale { get { return timescale; } set { timescale = value; } }
+        public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }
 
         public timescaleentry()
         { }
@@ -4272,7 +4272,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tims";
 
         protected int offset;
-        public int Offset { get { return offset; } set { offset = value; } }
+        public int Offset { get { return this.offset; } set { this.offset = value; } }
 
         public timeoffset()
         { }
@@ -4314,7 +4314,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tims";
 
         protected int offset;
-        public int Offset { get { return offset; } set { offset = value; } }
+        public int Offset { get { return this.offset; } set { this.offset = value; } }
 
         public sequenceoffset()
         { }
@@ -4355,7 +4355,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "trpy";
 
         protected ulong bytessent;
-        public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
+        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
         public hintBytesSent()
         { }
@@ -4396,7 +4396,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "trpy";
 
         protected ulong packetssent;
-        public ulong Packetssent { get { return packetssent; } set { packetssent = value; } }
+        public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
 
         public hintPacketsSent()
         { }
@@ -4438,10 +4438,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "maxr";
 
         protected uint period;  //  in milliseconds
-        public uint Period { get { return period; } set { period = value; } }
+        public uint Period { get { return this.period; } set { this.period = value; } }
 
         protected uint bytes;
-        public uint Bytes { get { return bytes; } set { bytes = value; } }
+        public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
 
         public hintmaxrate()
         { }
@@ -4488,7 +4488,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "dmed";
 
         protected ulong bytessent;
-        public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
+        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
         public hintmediaBytesSent()
         { }
@@ -4529,7 +4529,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "dmed";
 
         protected ulong bytessent;
-        public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
+        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
         public hintimmediateBytesSent()
         { }
@@ -4570,7 +4570,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "dmed";
 
         protected ulong bytessent;
-        public ulong Bytessent { get { return bytessent; } set { bytessent = value; } }
+        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
         public hintrepeatedBytesSent()
         { }
@@ -4611,7 +4611,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tmin";
 
         protected int time;
-        public int Time { get { return time; } set { time = value; } }
+        public int Time { get { return this.time; } set { this.time = value; } }
 
         public hintminrelativetime()
         { }
@@ -4652,7 +4652,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tmin";
 
         protected int time;
-        public int Time { get { return time; } set { time = value; } }
+        public int Time { get { return this.time; } set { this.time = value; } }
 
         public hintmaxrelativetime()
         { }
@@ -4693,7 +4693,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "pmax";
 
         protected uint bytes;
-        public uint Bytes { get { return bytes; } set { bytes = value; } }
+        public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
 
         public hintlargestpacket()
         { }
@@ -4734,7 +4734,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "pmax";
 
         protected uint time;
-        public uint Time { get { return time; } set { time = value; } }
+        public uint Time { get { return this.time; } set { this.time = value; } }
 
         public hintlongestpacket()
         { }
@@ -4777,13 +4777,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "payt";
 
         protected uint payloadID;  //  payload ID used in RTP packets
-        public uint PayloadID { get { return payloadID; } set { payloadID = value; } }
+        public uint PayloadID { get { return this.payloadID; } set { this.payloadID = value; } }
 
         protected byte count;
-        public byte Count { get { return count; } set { count = value; } }
+        public byte Count { get { return this.count; } set { this.count = value; } }
 
         protected byte[] rtpmap_string;
-        public byte[] RtpmapString { get { return rtpmap_string; } set { rtpmap_string = value; } }
+        public byte[] RtpmapString { get { return this.rtpmap_string; } set { this.rtpmap_string = value; } }
 
         public hintpayloadID()
         { }
@@ -4837,22 +4837,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stvi";
 
         protected uint reserved = 0;
-        public uint Reserved { get { return reserved; } set { reserved = value; } }
+        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte single_view_allowed;
-        public byte SingleViewAllowed { get { return single_view_allowed; } set { single_view_allowed = value; } }
+        public byte SingleViewAllowed { get { return this.single_view_allowed; } set { this.single_view_allowed = value; } }
 
         protected uint stereo_scheme;
-        public uint StereoScheme { get { return stereo_scheme; } set { stereo_scheme = value; } }
+        public uint StereoScheme { get { return this.stereo_scheme; } set { this.stereo_scheme = value; } }
 
         protected uint length;
-        public uint Length { get { return length; } set { length = value; } }
+        public uint Length { get { return this.length; } set { this.length = value; } }
 
         protected byte[] stereo_indication_type;
-        public byte[] StereoIndicationType { get { return stereo_indication_type; } set { stereo_indication_type = value; } }
+        public byte[] StereoIndicationType { get { return this.stereo_indication_type; } set { this.stereo_indication_type = value; } }
 
         protected Box[] any_box;  //  optional
-        public Box[] AnyBox { get { return any_box; } set { any_box = value; } }
+        public Box[] AnyBox { get { return this.any_box; } set { this.any_box = value; } }
 
         public StereoVideoBox()
         { }
@@ -4909,7 +4909,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "elng";
 
         protected string extended_language;
-        public string ExtendedLanguage { get { return extended_language; } set { extended_language = value; } }
+        public string ExtendedLanguage { get { return this.extended_language; } set { this.extended_language = value; } }
 
         public ExtendedLanguageBox()
         { }
@@ -4953,13 +4953,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "btrt";
 
         protected uint bufferSizeDB;
-        public uint BufferSizeDB { get { return bufferSizeDB; } set { bufferSizeDB = value; } }
+        public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
 
         protected uint maxBitrate;
-        public uint MaxBitrate { get { return maxBitrate; } set { maxBitrate = value; } }
+        public uint MaxBitrate { get { return this.maxBitrate; } set { this.maxBitrate = value; } }
 
         protected uint avgBitrate;
-        public uint AvgBitrate { get { return avgBitrate; } set { avgBitrate = value; } }
+        public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
 
         public BitRateBox()
         { }
@@ -5008,10 +5008,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "pasp";
 
         protected uint hSpacing;
-        public uint HSpacing { get { return hSpacing; } set { hSpacing = value; } }
+        public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
 
         protected uint vSpacing;
-        public uint VSpacing { get { return vSpacing; } set { vSpacing = value; } }
+        public uint VSpacing { get { return this.vSpacing; } set { this.vSpacing = value; } }
 
         public PixelAspectRatioBox()
         { }
@@ -5069,28 +5069,28 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "clap";
 
         protected uint cleanApertureWidthN;
-        public uint CleanApertureWidthN { get { return cleanApertureWidthN; } set { cleanApertureWidthN = value; } }
+        public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
 
         protected uint cleanApertureWidthD;
-        public uint CleanApertureWidthD { get { return cleanApertureWidthD; } set { cleanApertureWidthD = value; } }
+        public uint CleanApertureWidthD { get { return this.cleanApertureWidthD; } set { this.cleanApertureWidthD = value; } }
 
         protected uint cleanApertureHeightN;
-        public uint CleanApertureHeightN { get { return cleanApertureHeightN; } set { cleanApertureHeightN = value; } }
+        public uint CleanApertureHeightN { get { return this.cleanApertureHeightN; } set { this.cleanApertureHeightN = value; } }
 
         protected uint cleanApertureHeightD;
-        public uint CleanApertureHeightD { get { return cleanApertureHeightD; } set { cleanApertureHeightD = value; } }
+        public uint CleanApertureHeightD { get { return this.cleanApertureHeightD; } set { this.cleanApertureHeightD = value; } }
 
         protected uint horizOffN;
-        public uint HorizOffN { get { return horizOffN; } set { horizOffN = value; } }
+        public uint HorizOffN { get { return this.horizOffN; } set { this.horizOffN = value; } }
 
         protected uint horizOffD;
-        public uint HorizOffD { get { return horizOffD; } set { horizOffD = value; } }
+        public uint HorizOffD { get { return this.horizOffD; } set { this.horizOffD = value; } }
 
         protected uint vertOffN;
-        public uint VertOffN { get { return vertOffN; } set { vertOffN = value; } }
+        public uint VertOffN { get { return this.vertOffN; } set { this.vertOffN = value; } }
 
         protected uint vertOffD;
-        public uint VertOffD { get { return vertOffD; } set { vertOffD = value; } }
+        public uint VertOffD { get { return this.vertOffD; } set { this.vertOffD = value; } }
 
         public CleanApertureBox()
         { }
@@ -5171,40 +5171,40 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "cclv";
 
         protected bool reserved1 = false;  //  ccv_cancel_flag
-        public bool Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public bool Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected bool reserved2 = false;  //  ccv_persistence_flag
-        public bool Reserved2 { get { return reserved2; } set { reserved2 = value; } }
+        public bool Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
         protected bool ccv_primaries_present_flag;
-        public bool CcvPrimariesPresentFlag { get { return ccv_primaries_present_flag; } set { ccv_primaries_present_flag = value; } }
+        public bool CcvPrimariesPresentFlag { get { return this.ccv_primaries_present_flag; } set { this.ccv_primaries_present_flag = value; } }
 
         protected bool ccv_min_luminance_value_present_flag;
-        public bool CcvMinLuminanceValuePresentFlag { get { return ccv_min_luminance_value_present_flag; } set { ccv_min_luminance_value_present_flag = value; } }
+        public bool CcvMinLuminanceValuePresentFlag { get { return this.ccv_min_luminance_value_present_flag; } set { this.ccv_min_luminance_value_present_flag = value; } }
 
         protected bool ccv_max_luminance_value_present_flag;
-        public bool CcvMaxLuminanceValuePresentFlag { get { return ccv_max_luminance_value_present_flag; } set { ccv_max_luminance_value_present_flag = value; } }
+        public bool CcvMaxLuminanceValuePresentFlag { get { return this.ccv_max_luminance_value_present_flag; } set { this.ccv_max_luminance_value_present_flag = value; } }
 
         protected bool ccv_avg_luminance_value_present_flag;
-        public bool CcvAvgLuminanceValuePresentFlag { get { return ccv_avg_luminance_value_present_flag; } set { ccv_avg_luminance_value_present_flag = value; } }
+        public bool CcvAvgLuminanceValuePresentFlag { get { return this.ccv_avg_luminance_value_present_flag; } set { this.ccv_avg_luminance_value_present_flag = value; } }
 
         protected byte ccv_reserved_zero_2bits = 0;
-        public byte CcvReservedZero2bits { get { return ccv_reserved_zero_2bits; } set { ccv_reserved_zero_2bits = value; } }
+        public byte CcvReservedZero2bits { get { return this.ccv_reserved_zero_2bits; } set { this.ccv_reserved_zero_2bits = value; } }
 
         protected int[] ccv_primaries_x;
-        public int[] CcvPrimariesX { get { return ccv_primaries_x; } set { ccv_primaries_x = value; } }
+        public int[] CcvPrimariesX { get { return this.ccv_primaries_x; } set { this.ccv_primaries_x = value; } }
 
         protected int[] ccv_primaries_y;
-        public int[] CcvPrimariesY { get { return ccv_primaries_y; } set { ccv_primaries_y = value; } }
+        public int[] CcvPrimariesY { get { return this.ccv_primaries_y; } set { this.ccv_primaries_y = value; } }
 
         protected uint ccv_min_luminance_value;
-        public uint CcvMinLuminanceValue { get { return ccv_min_luminance_value; } set { ccv_min_luminance_value = value; } }
+        public uint CcvMinLuminanceValue { get { return this.ccv_min_luminance_value; } set { this.ccv_min_luminance_value = value; } }
 
         protected uint ccv_max_luminance_value;
-        public uint CcvMaxLuminanceValue { get { return ccv_max_luminance_value; } set { ccv_max_luminance_value = value; } }
+        public uint CcvMaxLuminanceValue { get { return this.ccv_max_luminance_value; } set { this.ccv_max_luminance_value = value; } }
 
         protected uint ccv_avg_luminance_value;
-        public uint CcvAvgLuminanceValue { get { return ccv_avg_luminance_value; } set { ccv_avg_luminance_value = value; } }
+        public uint CcvAvgLuminanceValue { get { return this.ccv_avg_luminance_value; } set { this.ccv_avg_luminance_value = value; } }
 
         public ContentColourVolumeBox()
         { }
@@ -5355,28 +5355,28 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "colr";
 
         protected uint colour_type;
-        public uint ColourType { get { return colour_type; } set { colour_type = value; } }
+        public uint ColourType { get { return this.colour_type; } set { this.colour_type = value; } }
 
         protected ushort colour_primaries;
-        public ushort ColourPrimaries { get { return colour_primaries; } set { colour_primaries = value; } }
+        public ushort ColourPrimaries { get { return this.colour_primaries; } set { this.colour_primaries = value; } }
 
         protected ushort transfer_characteristics;
-        public ushort TransferCharacteristics { get { return transfer_characteristics; } set { transfer_characteristics = value; } }
+        public ushort TransferCharacteristics { get { return this.transfer_characteristics; } set { this.transfer_characteristics = value; } }
 
         protected ushort matrix_coefficients;
-        public ushort MatrixCoefficients { get { return matrix_coefficients; } set { matrix_coefficients = value; } }
+        public ushort MatrixCoefficients { get { return this.matrix_coefficients; } set { this.matrix_coefficients = value; } }
 
         protected bool full_range_flag;
-        public bool FullRangeFlag { get { return full_range_flag; } set { full_range_flag = value; } }
+        public bool FullRangeFlag { get { return this.full_range_flag; } set { this.full_range_flag = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ICC_profile ICC_profile;  //  restricted ICC profile
-        public ICC_profile ICCProfile { get { return ICC_profile; } set { ICC_profile = value; } }
+        public ICC_profile ICCProfile { get { return this.ICC_profile; } set { this.ICC_profile = value; } }
 
         protected ICC_profile ICC_profile0;  //  unrestricted ICC profile
-        public ICC_profile ICCProfile0 { get { return ICC_profile0; } set { ICC_profile0 = value; } }
+        public ICC_profile ICCProfile0 { get { return this.ICC_profile0; } set { this.ICC_profile0 = value; } }
 
         public ColourInformationBox()
         { }
@@ -5476,10 +5476,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "clli";
 
         protected ushort max_content_light_level;
-        public ushort MaxContentLightLevel { get { return max_content_light_level; } set { max_content_light_level = value; } }
+        public ushort MaxContentLightLevel { get { return this.max_content_light_level; } set { this.max_content_light_level = value; } }
 
         protected ushort max_pic_average_light_level;
-        public ushort MaxPicAverageLightLevel { get { return max_pic_average_light_level; } set { max_pic_average_light_level = value; } }
+        public ushort MaxPicAverageLightLevel { get { return this.max_pic_average_light_level; } set { this.max_pic_average_light_level = value; } }
 
         public ContentLightLevelBox()
         { }
@@ -5531,22 +5531,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mdcv";
 
         protected ushort display_primaries_x;
-        public ushort DisplayPrimariesX { get { return display_primaries_x; } set { display_primaries_x = value; } }
+        public ushort DisplayPrimariesX { get { return this.display_primaries_x; } set { this.display_primaries_x = value; } }
 
         protected ushort display_primaries_y;
-        public ushort DisplayPrimariesY { get { return display_primaries_y; } set { display_primaries_y = value; } }
+        public ushort DisplayPrimariesY { get { return this.display_primaries_y; } set { this.display_primaries_y = value; } }
 
         protected ushort white_point_x;
-        public ushort WhitePointX { get { return white_point_x; } set { white_point_x = value; } }
+        public ushort WhitePointX { get { return this.white_point_x; } set { this.white_point_x = value; } }
 
         protected ushort white_point_y;
-        public ushort WhitePointY { get { return white_point_y; } set { white_point_y = value; } }
+        public ushort WhitePointY { get { return this.white_point_y; } set { this.white_point_y = value; } }
 
         protected uint max_display_mastering_luminance;
-        public uint MaxDisplayMasteringLuminance { get { return max_display_mastering_luminance; } set { max_display_mastering_luminance = value; } }
+        public uint MaxDisplayMasteringLuminance { get { return this.max_display_mastering_luminance; } set { this.max_display_mastering_luminance = value; } }
 
         protected uint min_display_mastering_luminance;
-        public uint MinDisplayMasteringLuminance { get { return min_display_mastering_luminance; } set { min_display_mastering_luminance = value; } }
+        public uint MinDisplayMasteringLuminance { get { return this.min_display_mastering_luminance; } set { this.min_display_mastering_luminance = value; } }
 
         public MasteringDisplayColourVolumeBox()
         { }
@@ -5616,10 +5616,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "scrb";
 
         protected SchemeTypeBox scheme_type_box;
-        public SchemeTypeBox SchemeTypeBox { get { return scheme_type_box; } set { scheme_type_box = value; } }
+        public SchemeTypeBox SchemeTypeBox { get { return this.scheme_type_box; } set { this.scheme_type_box = value; } }
 
         protected SchemeInformationBox info;  //  optional
-        public SchemeInformationBox Info { get { return info; } set { info = value; } }
+        public SchemeInformationBox Info { get { return this.info; } set { this.info = value; } }
 
         public ScrambleSchemeInfoBox()
         { }
@@ -5712,61 +5712,61 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "chnl";
 
         protected byte stream_structure;
-        public byte StreamStructure { get { return stream_structure; } set { stream_structure = value; } }
+        public byte StreamStructure { get { return this.stream_structure; } set { this.stream_structure = value; } }
 
         protected byte definedLayout;
-        public byte DefinedLayout { get { return definedLayout; } set { definedLayout = value; } }
+        public byte DefinedLayout { get { return this.definedLayout; } set { this.definedLayout = value; } }
 
         protected byte speaker_position;
-        public byte SpeakerPosition { get { return speaker_position; } set { speaker_position = value; } }
+        public byte SpeakerPosition { get { return this.speaker_position; } set { this.speaker_position = value; } }
 
         protected short azimuth;
-        public short Azimuth { get { return azimuth; } set { azimuth = value; } }
+        public short Azimuth { get { return this.azimuth; } set { this.azimuth = value; } }
 
         protected sbyte elevation;
-        public sbyte Elevation { get { return elevation; } set { elevation = value; } }
+        public sbyte Elevation { get { return this.elevation; } set { this.elevation = value; } }
 
         protected ulong omittedChannelsMap;  //  a ‘1’ bit indicates ‘not in this track’
-        public ulong OmittedChannelsMap { get { return omittedChannelsMap; } set { omittedChannelsMap = value; } }
+        public ulong OmittedChannelsMap { get { return this.omittedChannelsMap; } set { this.omittedChannelsMap = value; } }
 
         protected byte object_count;
-        public byte ObjectCount { get { return object_count; } set { object_count = value; } }
+        public byte ObjectCount { get { return this.object_count; } set { this.object_count = value; } }
 
         protected byte stream_structure0;
-        public byte StreamStructure0 { get { return stream_structure0; } set { stream_structure0 = value; } }
+        public byte StreamStructure0 { get { return this.stream_structure0; } set { this.stream_structure0 = value; } }
 
         protected byte format_ordering;
-        public byte FormatOrdering { get { return format_ordering; } set { format_ordering = value; } }
+        public byte FormatOrdering { get { return this.format_ordering; } set { this.format_ordering = value; } }
 
         protected byte baseChannelCount;
-        public byte BaseChannelCount { get { return baseChannelCount; } set { baseChannelCount = value; } }
+        public byte BaseChannelCount { get { return this.baseChannelCount; } set { this.baseChannelCount = value; } }
 
         protected byte definedLayout0;
-        public byte DefinedLayout0 { get { return definedLayout0; } set { definedLayout0 = value; } }
+        public byte DefinedLayout0 { get { return this.definedLayout0; } set { this.definedLayout0 = value; } }
 
         protected byte layout_channel_count;
-        public byte LayoutChannelCount { get { return layout_channel_count; } set { layout_channel_count = value; } }
+        public byte LayoutChannelCount { get { return this.layout_channel_count; } set { this.layout_channel_count = value; } }
 
         protected byte speaker_position0;
-        public byte SpeakerPosition0 { get { return speaker_position0; } set { speaker_position0 = value; } }
+        public byte SpeakerPosition0 { get { return this.speaker_position0; } set { this.speaker_position0 = value; } }
 
         protected short azimuth0;
-        public short Azimuth0 { get { return azimuth0; } set { azimuth0 = value; } }
+        public short Azimuth0 { get { return this.azimuth0; } set { this.azimuth0 = value; } }
 
         protected sbyte elevation0;
-        public sbyte Elevation0 { get { return elevation0; } set { elevation0 = value; } }
+        public sbyte Elevation0 { get { return this.elevation0; } set { this.elevation0 = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte channel_order_definition;
-        public byte ChannelOrderDefinition { get { return channel_order_definition; } set { channel_order_definition = value; } }
+        public byte ChannelOrderDefinition { get { return this.channel_order_definition; } set { this.channel_order_definition = value; } }
 
         protected bool omitted_channels_present;
-        public bool OmittedChannelsPresent { get { return omitted_channels_present; } set { omitted_channels_present = value; } }
+        public bool OmittedChannelsPresent { get { return this.omitted_channels_present; } set { this.omitted_channels_present = value; } }
 
         protected ulong omittedChannelsMap0;  //  a ‘1’ bit indicates ‘not in this track’
-        public ulong OmittedChannelsMap0 { get { return omittedChannelsMap0; } set { omittedChannelsMap0 = value; } }
+        public ulong OmittedChannelsMap0 { get { return this.omittedChannelsMap0; } set { this.omittedChannelsMap0 = value; } }
 
         public ChannelLayout()
         { }
@@ -6087,40 +6087,40 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "dmix";
 
         protected bool reserved = false;
-        public bool Reserved { get { return reserved; } set { reserved = value; } }
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte downmix_instructions_count;
-        public byte DownmixInstructionsCount { get { return downmix_instructions_count; } set { downmix_instructions_count = value; } }
+        public byte DownmixInstructionsCount { get { return this.downmix_instructions_count; } set { this.downmix_instructions_count = value; } }
 
         protected int downmix_instructions_count0 = 1;
-        public int DownmixInstructionsCount0 { get { return downmix_instructions_count0; } set { downmix_instructions_count0 = value; } }
+        public int DownmixInstructionsCount0 { get { return this.downmix_instructions_count0; } set { this.downmix_instructions_count0 = value; } }
 
         protected byte targetLayout;
-        public byte TargetLayout { get { return targetLayout; } set { targetLayout = value; } }
+        public byte TargetLayout { get { return this.targetLayout; } set { this.targetLayout = value; } }
 
         protected bool reserved0 = false;
-        public bool Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte targetChannelCount;
-        public byte TargetChannelCount { get { return targetChannelCount; } set { targetChannelCount = value; } }
+        public byte TargetChannelCount { get { return this.targetChannelCount; } set { this.targetChannelCount = value; } }
 
         protected bool in_stream;
-        public bool InStream { get { return in_stream; } set { in_stream = value; } }
+        public bool InStream { get { return this.in_stream; } set { this.in_stream = value; } }
 
         protected byte downmix_ID;
-        public byte DownmixID { get { return downmix_ID; } set { downmix_ID = value; } }
+        public byte DownmixID { get { return this.downmix_ID; } set { this.downmix_ID = value; } }
 
         protected byte bs_downmix_offset;
-        public byte BsDownmixOffset { get { return bs_downmix_offset; } set { bs_downmix_offset = value; } }
+        public byte BsDownmixOffset { get { return this.bs_downmix_offset; } set { this.bs_downmix_offset = value; } }
 
         protected byte bs_downmix_coefficient_v1;
-        public byte BsDownmixCoefficientV1 { get { return bs_downmix_coefficient_v1; } set { bs_downmix_coefficient_v1 = value; } }
+        public byte BsDownmixCoefficientV1 { get { return this.bs_downmix_coefficient_v1; } set { this.bs_downmix_coefficient_v1 = value; } }
 
         protected byte[] reserved00 = [];  //  byte align
-        public byte[] Reserved00 { get { return reserved00; } set { reserved00 = value; } }
+        public byte[] Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
 
         protected byte bs_downmix_coefficient;
-        public byte BsDownmixCoefficient { get { return bs_downmix_coefficient; } set { bs_downmix_coefficient = value; } }
+        public byte BsDownmixCoefficient { get { return this.bs_downmix_coefficient; } set { this.bs_downmix_coefficient = value; } }
 
         public DownMixInstructions()
         { }
@@ -6330,7 +6330,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "srat";
 
         protected uint sampling_rate;
-        public uint SamplingRate { get { return sampling_rate; } set { sampling_rate = value; } }
+        public uint SamplingRate { get { return this.sampling_rate; } set { this.sampling_rate = value; } }
 
         public SamplingRateBox()
         { }
@@ -6372,7 +6372,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "txtC";
 
         protected string text_config;
-        public string TextConfig { get { return text_config; } set { text_config = value; } }
+        public string TextConfig { get { return this.text_config; } set { this.text_config = value; } }
 
         public TextConfigBox()
         { }
@@ -6415,7 +6415,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "uriI";
 
         protected byte[] uri_initialization_data;
-        public byte[] UriInitializationData { get { return uri_initialization_data; } set { uri_initialization_data = value; } }
+        public byte[] UriInitializationData { get { return this.uri_initialization_data; } set { this.uri_initialization_data = value; } }
 
         public URIInitBox()
         { }
@@ -6460,13 +6460,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "cprt";
 
         protected bool pad = false;
-        public bool Pad { get { return pad; } set { pad = value; } }
+        public bool Pad { get { return this.pad; } set { this.pad = value; } }
 
         protected byte[] language;  //  ISO-639-2/T language code
-        public byte[] Language { get { return language; } set { language = value; } }
+        public byte[] Language { get { return this.language; } set { this.language = value; } }
 
         protected string notice;
-        public string Notice { get { return notice; } set { notice = value; } }
+        public string Notice { get { return this.notice; } set { this.notice = value; } }
 
         public CopyrightBox()
         { }
@@ -6515,10 +6515,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "kind";
 
         protected string schemeURI;
-        public string SchemeURI { get { return schemeURI; } set { schemeURI = value; } }
+        public string SchemeURI { get { return this.schemeURI; } set { this.schemeURI = value; } }
 
         protected string value;
-        public string Value { get { return value; } set { value = value; } }
+        public string Value { get { return this.value; } set { this.value = value; } }
 
         public KindBox()
         { }
@@ -6565,10 +6565,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tsel";
 
         protected int switch_group = 0;
-        public int SwitchGroup { get { return switch_group; } set { switch_group = value; } }
+        public int SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
 
         protected uint[] attribute_list;  //  to end of the box
-        public uint[] AttributeList { get { return attribute_list; } set { attribute_list = value; } }
+        public uint[] AttributeList { get { return this.attribute_list; } set { this.attribute_list = value; } }
 
         public TrackSelectionBox()
         { }
@@ -6690,7 +6690,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "hnti";
 
         protected byte[] sdptext;
-        public byte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
+        public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
 
         public rtptracksdphintinformation()
         { }
@@ -6775,10 +6775,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rtp ";
 
         protected uint descriptionformat = IsoReaderWriter.FromFourCC("sdp ");
-        public uint Descriptionformat { get { return descriptionformat; } set { descriptionformat = value; } }
+        public uint Descriptionformat { get { return this.descriptionformat; } set { this.descriptionformat = value; } }
 
         protected byte[] sdptext;
-        public byte[] Sdptext { get { return sdptext; } set { sdptext = value; } }
+        public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
 
         public rtpmoviehintinformation()
         { }
@@ -6867,10 +6867,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ludt";
 
         protected TrackLoudnessInfo[] loudness;  //  not more than one AlbumLoudnessInfo box with version>=1 is allowed
-        public TrackLoudnessInfo[] Loudness { get { return loudness; } set { loudness = value; } }
+        public TrackLoudnessInfo[] Loudness { get { return this.loudness; } set { this.loudness = value; } }
 
         protected AlbumLoudnessInfo[] albumLoudness;
-        public AlbumLoudnessInfo[] AlbumLoudness { get { return albumLoudness; } set { albumLoudness = value; } }
+        public AlbumLoudnessInfo[] AlbumLoudness { get { return this.albumLoudness; } set { this.albumLoudness = value; } }
 
         public LoudnessBox()
         { }
@@ -6990,7 +6990,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "url ";
 
         protected string location;
-        public string Location { get { return location; } set { location = value; } }
+        public string Location { get { return this.location; } set { this.location = value; } }
 
         public DataEntryUrlBox()
         { }
@@ -7034,10 +7034,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "urn ";
 
         protected string name;
-        public string Name { get { return name; } set { name = value; } }
+        public string Name { get { return this.name; } set { this.name = value; } }
 
         protected string location;
-        public string Location { get { return location; } set { location = value; } }
+        public string Location { get { return this.location; } set { this.location = value; } }
 
         public DataEntryUrnBox()
         { }
@@ -7083,7 +7083,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "imdt";
 
         protected uint imda_ref_identifier;
-        public uint ImdaRefIdentifier { get { return imda_ref_identifier; } set { imda_ref_identifier = value; } }
+        public uint ImdaRefIdentifier { get { return this.imda_ref_identifier; } set { this.imda_ref_identifier = value; } }
 
         public DataEntryImdaBox()
         { }
@@ -7165,7 +7165,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ipco";
 
         protected Box[] properties;  //  boxes derived from
-        public Box[] Properties { get { return properties; } set { properties = value; } }
+        public Box[] Properties { get { return this.properties; } set { this.properties = value; } }
 
         public ItemPropertyContainerBox()
         { }
@@ -7232,25 +7232,25 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ipma";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected ushort item_ID;
-        public ushort ItemID { get { return item_ID; } set { item_ID = value; } }
+        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected uint item_ID0;
-        public uint ItemID0 { get { return item_ID0; } set { item_ID0 = value; } }
+        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
 
         protected byte association_count;
-        public byte AssociationCount { get { return association_count; } set { association_count = value; } }
+        public byte AssociationCount { get { return this.association_count; } set { this.association_count = value; } }
 
         protected bool essential;
-        public bool Essential { get { return essential; } set { essential = value; } }
+        public bool Essential { get { return this.essential; } set { this.essential = value; } }
 
         protected ushort property_index;
-        public ushort PropertyIndex { get { return property_index; } set { property_index = value; } }
+        public ushort PropertyIndex { get { return this.property_index; } set { this.property_index = value; } }
 
         protected byte property_index0;
-        public byte PropertyIndex0 { get { return property_index0; } set { property_index0 = value; } }
+        public byte PropertyIndex0 { get { return this.property_index0; } set { this.property_index0 = value; } }
 
         public ItemPropertyAssociationBox()
         { }
@@ -7384,10 +7384,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "iprp";
 
         protected ItemPropertyContainerBox property_container;
-        public ItemPropertyContainerBox PropertyContainer { get { return property_container; } set { property_container = value; } }
+        public ItemPropertyContainerBox PropertyContainer { get { return this.property_container; } set { this.property_container = value; } }
 
         protected ItemPropertyAssociationBox[] association;
-        public ItemPropertyAssociationBox[] Association { get { return association; } set { association = value; } }
+        public ItemPropertyAssociationBox[] Association { get { return this.association; } set { this.association = value; } }
 
         public ItemPropertiesBox()
         { }
@@ -7444,16 +7444,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "assp";
 
         protected int min_initial_alt_startup_offset;
-        public int MinInitialAltStartupOffset { get { return min_initial_alt_startup_offset; } set { min_initial_alt_startup_offset = value; } }
+        public int MinInitialAltStartupOffset { get { return this.min_initial_alt_startup_offset; } set { this.min_initial_alt_startup_offset = value; } }
 
         protected uint num_entries;
-        public uint NumEntries { get { return num_entries; } set { num_entries = value; } }
+        public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
 
         protected uint grouping_type_parameter;
-        public uint GroupingTypeParameter { get { return grouping_type_parameter; } set { grouping_type_parameter = value; } }
+        public uint GroupingTypeParameter { get { return this.grouping_type_parameter; } set { this.grouping_type_parameter = value; } }
 
         protected int min_initial_alt_startup_offset0;
-        public int MinInitialAltStartupOffset0 { get { return min_initial_alt_startup_offset0; } set { min_initial_alt_startup_offset0 = value; } }
+        public int MinInitialAltStartupOffset0 { get { return this.min_initial_alt_startup_offset0; } set { this.min_initial_alt_startup_offset0 = value; } }
 
         public AlternativeStartupSequencePropertiesBox()
         { }
@@ -7541,7 +7541,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "bxml";
 
         protected byte[] data;  //  to end of box
-        public byte[] Data { get { return data; } set { data = value; } }
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public BinaryXMLBox()
         { }
@@ -7583,7 +7583,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "cinf";
 
         protected OriginalFormatBox original_format;
-        public OriginalFormatBox OriginalFormat { get { return original_format; } set { original_format = value; } }
+        public OriginalFormatBox OriginalFormat { get { return this.original_format; } set { this.original_format = value; } }
 
         public CompleteTrackInfoBox()
         { }
@@ -7629,10 +7629,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "co64";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected ulong chunk_offset;
-        public ulong ChunkOffset { get { return chunk_offset; } set { chunk_offset = value; } }
+        public ulong ChunkOffset { get { return this.chunk_offset; } set { this.chunk_offset = value; } }
 
         public ChunkLargeOffsetBox()
         { }
@@ -7708,22 +7708,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "csgp";
 
         protected uint grouping_type;
-        public uint GroupingType { get { return grouping_type; } set { grouping_type = value; } }
+        public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
 
         protected uint grouping_type_parameter;
-        public uint GroupingTypeParameter { get { return grouping_type_parameter; } set { grouping_type_parameter = value; } }
+        public uint GroupingTypeParameter { get { return this.grouping_type_parameter; } set { this.grouping_type_parameter = value; } }
 
         protected uint pattern_count;
-        public uint PatternCount { get { return pattern_count; } set { pattern_count = value; } }
+        public uint PatternCount { get { return this.pattern_count; } set { this.pattern_count = value; } }
 
         protected byte[] pattern_length;
-        public byte[] PatternLength { get { return pattern_length; } set { pattern_length = value; } }
+        public byte[] PatternLength { get { return this.pattern_length; } set { this.pattern_length = value; } }
 
         protected byte[] sample_count;
-        public byte[] SampleCount { get { return sample_count; } set { sample_count = value; } }
+        public byte[] SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
         protected byte[][] sample_group_description_index;  //  whose msb might indicate fragment_local or global
-        public byte[][] SampleGroupDescriptionIndex { get { return sample_group_description_index; } set { sample_group_description_index = value; } }
+        public byte[][] SampleGroupDescriptionIndex { get { return this.sample_group_description_index; } set { this.sample_group_description_index = value; } }
 
         public CompactSampleToGroupBox()
         { }
@@ -7858,34 +7858,34 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "cslg";
 
         protected int compositionToDTSShift;
-        public int CompositionToDTSShift { get { return compositionToDTSShift; } set { compositionToDTSShift = value; } }
+        public int CompositionToDTSShift { get { return this.compositionToDTSShift; } set { this.compositionToDTSShift = value; } }
 
         protected int leastDecodeToDisplayDelta;
-        public int LeastDecodeToDisplayDelta { get { return leastDecodeToDisplayDelta; } set { leastDecodeToDisplayDelta = value; } }
+        public int LeastDecodeToDisplayDelta { get { return this.leastDecodeToDisplayDelta; } set { this.leastDecodeToDisplayDelta = value; } }
 
         protected int greatestDecodeToDisplayDelta;
-        public int GreatestDecodeToDisplayDelta { get { return greatestDecodeToDisplayDelta; } set { greatestDecodeToDisplayDelta = value; } }
+        public int GreatestDecodeToDisplayDelta { get { return this.greatestDecodeToDisplayDelta; } set { this.greatestDecodeToDisplayDelta = value; } }
 
         protected int compositionStartTime;
-        public int CompositionStartTime { get { return compositionStartTime; } set { compositionStartTime = value; } }
+        public int CompositionStartTime { get { return this.compositionStartTime; } set { this.compositionStartTime = value; } }
 
         protected int compositionEndTime;
-        public int CompositionEndTime { get { return compositionEndTime; } set { compositionEndTime = value; } }
+        public int CompositionEndTime { get { return this.compositionEndTime; } set { this.compositionEndTime = value; } }
 
         protected long compositionToDTSShift0;
-        public long CompositionToDTSShift0 { get { return compositionToDTSShift0; } set { compositionToDTSShift0 = value; } }
+        public long CompositionToDTSShift0 { get { return this.compositionToDTSShift0; } set { this.compositionToDTSShift0 = value; } }
 
         protected long leastDecodeToDisplayDelta0;
-        public long LeastDecodeToDisplayDelta0 { get { return leastDecodeToDisplayDelta0; } set { leastDecodeToDisplayDelta0 = value; } }
+        public long LeastDecodeToDisplayDelta0 { get { return this.leastDecodeToDisplayDelta0; } set { this.leastDecodeToDisplayDelta0 = value; } }
 
         protected long greatestDecodeToDisplayDelta0;
-        public long GreatestDecodeToDisplayDelta0 { get { return greatestDecodeToDisplayDelta0; } set { greatestDecodeToDisplayDelta0 = value; } }
+        public long GreatestDecodeToDisplayDelta0 { get { return this.greatestDecodeToDisplayDelta0; } set { this.greatestDecodeToDisplayDelta0 = value; } }
 
         protected long compositionStartTime0;
-        public long CompositionStartTime0 { get { return compositionStartTime0; } set { compositionStartTime0 = value; } }
+        public long CompositionStartTime0 { get { return this.compositionStartTime0; } set { this.compositionStartTime0 = value; } }
 
         protected long compositionEndTime0;
-        public long CompositionEndTime0 { get { return compositionEndTime0; } set { compositionEndTime0 = value; } }
+        public long CompositionEndTime0 { get { return this.compositionEndTime0; } set { this.compositionEndTime0 = value; } }
 
         public CompositionToDecodeBox()
         { }
@@ -7992,19 +7992,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ctts";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint sample_count;
-        public uint SampleCount { get { return sample_count; } set { sample_count = value; } }
+        public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
         protected uint sample_offset;
-        public uint SampleOffset { get { return sample_offset; } set { sample_offset = value; } }
+        public uint SampleOffset { get { return this.sample_offset; } set { this.sample_offset = value; } }
 
         protected uint sample_count0;
-        public uint SampleCount0 { get { return sample_count0; } set { sample_count0 = value; } }
+        public uint SampleCount0 { get { return this.sample_count0; } set { this.sample_count0 = value; } }
 
         protected int sample_offset0;
-        public int SampleOffset0 { get { return sample_offset0; } set { sample_offset0 = value; } }
+        public int SampleOffset0 { get { return this.sample_offset0; } set { this.sample_offset0 = value; } }
 
         public CompositionOffsetBox()
         { }
@@ -8151,10 +8151,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "dref";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected DataEntryBaseBox data_entry;
-        public DataEntryBaseBox DataEntry { get { return data_entry; } set { data_entry = value; } }
+        public DataEntryBaseBox DataEntry { get { return this.data_entry; } set { this.data_entry = value; } }
 
         public DataReferenceBox()
         { }
@@ -8263,25 +8263,25 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "elst";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected ulong edit_duration;
-        public ulong EditDuration { get { return edit_duration; } set { edit_duration = value; } }
+        public ulong EditDuration { get { return this.edit_duration; } set { this.edit_duration = value; } }
 
         protected long media_time;
-        public long MediaTime { get { return media_time; } set { media_time = value; } }
+        public long MediaTime { get { return this.media_time; } set { this.media_time = value; } }
 
         protected uint edit_duration0;
-        public uint EditDuration0 { get { return edit_duration0; } set { edit_duration0 = value; } }
+        public uint EditDuration0 { get { return this.edit_duration0; } set { this.edit_duration0 = value; } }
 
         protected int media_time0;
-        public int MediaTime0 { get { return media_time0; } set { media_time0 = value; } }
+        public int MediaTime0 { get { return this.media_time0; } set { this.media_time0 = value; } }
 
         protected short media_rate_integer;
-        public short MediaRateInteger { get { return media_rate_integer; } set { media_rate_integer = value; } }
+        public short MediaRateInteger { get { return this.media_rate_integer; } set { this.media_rate_integer = value; } }
 
         protected short media_rate_fraction;
-        public short MediaRateFraction { get { return media_rate_fraction; } set { media_rate_fraction = value; } }
+        public short MediaRateFraction { get { return this.media_rate_fraction; } set { this.media_rate_fraction = value; } }
 
         public EditListBox()
         { }
@@ -8380,7 +8380,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "etyp";
 
         protected TypeCombinationBox[] compatible_combinations;  //  to end of the box
-        public TypeCombinationBox[] CompatibleCombinations { get { return compatible_combinations; } set { compatible_combinations = value; } }
+        public TypeCombinationBox[] CompatibleCombinations { get { return this.compatible_combinations; } set { this.compatible_combinations = value; } }
 
         public ExtendedTypeBox()
         { }
@@ -8431,22 +8431,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "fdel";
 
         protected string content_location;
-        public string ContentLocation { get { return content_location; } set { content_location = value; } }
+        public string ContentLocation { get { return this.content_location; } set { this.content_location = value; } }
 
         protected string content_MD5;
-        public string ContentMD5 { get { return content_MD5; } set { content_MD5 = value; } }
+        public string ContentMD5 { get { return this.content_MD5; } set { this.content_MD5 = value; } }
 
         protected ulong content_length;
-        public ulong ContentLength { get { return content_length; } set { content_length = value; } }
+        public ulong ContentLength { get { return this.content_length; } set { this.content_length = value; } }
 
         protected ulong transfer_length;
-        public ulong TransferLength { get { return transfer_length; } set { transfer_length = value; } }
+        public ulong TransferLength { get { return this.transfer_length; } set { this.transfer_length = value; } }
 
         protected byte entry_count;
-        public byte EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public byte EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint group_id;
-        public uint GroupId { get { return group_id; } set { group_id = value; } }
+        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
 
         public FDItemInfoExtension()
         { }
@@ -8528,19 +8528,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "fecr";
 
         protected ushort entry_count;
-        public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint entry_count0;
-        public uint EntryCount0 { get { return entry_count0; } set { entry_count0 = value; } }
+        public uint EntryCount0 { get { return this.entry_count0; } set { this.entry_count0 = value; } }
 
         protected ushort item_ID;
-        public ushort ItemID { get { return item_ID; } set { item_ID = value; } }
+        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected uint item_ID0;
-        public uint ItemID0 { get { return item_ID0; } set { item_ID0 = value; } }
+        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
 
         protected uint symbol_count;
-        public uint SymbolCount { get { return symbol_count; } set { symbol_count = value; } }
+        public uint SymbolCount { get { return this.symbol_count; } set { this.symbol_count = value; } }
 
         public FECReservoirBox()
         { }
@@ -8657,13 +8657,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "fiin";
 
         protected FilePartitionBox blocks_and_symbols;
-        public FilePartitionBox BlocksAndSymbols { get { return blocks_and_symbols; } set { blocks_and_symbols = value; } }
+        public FilePartitionBox BlocksAndSymbols { get { return this.blocks_and_symbols; } set { this.blocks_and_symbols = value; } }
 
         protected FECReservoirBox FEC_symbol_locations;  // optional
-        public FECReservoirBox FECSymbolLocations { get { return FEC_symbol_locations; } set { FEC_symbol_locations = value; } }
+        public FECReservoirBox FECSymbolLocations { get { return this.FEC_symbol_locations; } set { this.FEC_symbol_locations = value; } }
 
         protected FileReservoirBox File_symbol_locations;  // optional
-        public FileReservoirBox FileSymbolLocations { get { return File_symbol_locations; } set { File_symbol_locations = value; } }
+        public FileReservoirBox FileSymbolLocations { get { return this.File_symbol_locations; } set { this.File_symbol_locations = value; } }
 
         public PartitionEntry()
         { }
@@ -8718,16 +8718,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "fiin";
 
         protected ushort entry_count;
-        public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected PartitionEntry[] partition_entries;
-        public PartitionEntry[] PartitionEntries { get { return partition_entries; } set { partition_entries = value; } }
+        public PartitionEntry[] PartitionEntries { get { return this.partition_entries; } set { this.partition_entries = value; } }
 
         protected FDSessionGroupBox session_info;  // optional
-        public FDSessionGroupBox SessionInfo { get { return session_info; } set { session_info = value; } }
+        public FDSessionGroupBox SessionInfo { get { return this.session_info; } set { this.session_info = value; } }
 
         protected GroupIdToNameBox group_id_to_name;  // optional
-        public GroupIdToNameBox GroupIdToName { get { return group_id_to_name; } set { group_id_to_name = value; } }
+        public GroupIdToNameBox GroupIdToName { get { return this.group_id_to_name; } set { this.group_id_to_name = value; } }
 
         public FDItemInformationBox()
         { }
@@ -8794,19 +8794,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "fire";
 
         protected ushort entry_count;
-        public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint entry_count0;
-        public uint EntryCount0 { get { return entry_count0; } set { entry_count0 = value; } }
+        public uint EntryCount0 { get { return this.entry_count0; } set { this.entry_count0 = value; } }
 
         protected ushort item_ID;
-        public ushort ItemID { get { return item_ID; } set { item_ID = value; } }
+        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected uint item_ID0;
-        public uint ItemID0 { get { return item_ID0; } set { item_ID0 = value; } }
+        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
 
         protected uint symbol_count;
-        public uint SymbolCount { get { return symbol_count; } set { symbol_count = value; } }
+        public uint SymbolCount { get { return this.symbol_count; } set { this.symbol_count = value; } }
 
         public FileReservoirBox()
         { }
@@ -8942,46 +8942,46 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "fpar";
 
         protected ushort item_ID;
-        public ushort ItemID { get { return item_ID; } set { item_ID = value; } }
+        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected uint item_ID0;
-        public uint ItemID0 { get { return item_ID0; } set { item_ID0 = value; } }
+        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
 
         protected ushort packet_payload_size;
-        public ushort PacketPayloadSize { get { return packet_payload_size; } set { packet_payload_size = value; } }
+        public ushort PacketPayloadSize { get { return this.packet_payload_size; } set { this.packet_payload_size = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte FEC_encoding_ID;
-        public byte FECEncodingID { get { return FEC_encoding_ID; } set { FEC_encoding_ID = value; } }
+        public byte FECEncodingID { get { return this.FEC_encoding_ID; } set { this.FEC_encoding_ID = value; } }
 
         protected ushort FEC_instance_ID;
-        public ushort FECInstanceID { get { return FEC_instance_ID; } set { FEC_instance_ID = value; } }
+        public ushort FECInstanceID { get { return this.FEC_instance_ID; } set { this.FEC_instance_ID = value; } }
 
         protected ushort max_source_block_length;
-        public ushort MaxSourceBlockLength { get { return max_source_block_length; } set { max_source_block_length = value; } }
+        public ushort MaxSourceBlockLength { get { return this.max_source_block_length; } set { this.max_source_block_length = value; } }
 
         protected ushort encoding_symbol_length;
-        public ushort EncodingSymbolLength { get { return encoding_symbol_length; } set { encoding_symbol_length = value; } }
+        public ushort EncodingSymbolLength { get { return this.encoding_symbol_length; } set { this.encoding_symbol_length = value; } }
 
         protected ushort max_number_of_encoding_symbols;
-        public ushort MaxNumberOfEncodingSymbols { get { return max_number_of_encoding_symbols; } set { max_number_of_encoding_symbols = value; } }
+        public ushort MaxNumberOfEncodingSymbols { get { return this.max_number_of_encoding_symbols; } set { this.max_number_of_encoding_symbols = value; } }
 
         protected string scheme_specific_info;
-        public string SchemeSpecificInfo { get { return scheme_specific_info; } set { scheme_specific_info = value; } }
+        public string SchemeSpecificInfo { get { return this.scheme_specific_info; } set { this.scheme_specific_info = value; } }
 
         protected ushort entry_count;
-        public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint entry_count0;
-        public uint EntryCount0 { get { return entry_count0; } set { entry_count0 = value; } }
+        public uint EntryCount0 { get { return this.entry_count0; } set { this.entry_count0 = value; } }
 
         protected ushort block_count;
-        public ushort BlockCount { get { return block_count; } set { block_count = value; } }
+        public ushort BlockCount { get { return this.block_count; } set { this.block_count = value; } }
 
         protected uint block_size;
-        public uint BlockSize { get { return block_size; } set { block_size = value; } }
+        public uint BlockSize { get { return this.block_size; } set { this.block_size = value; } }
 
         public FilePartitionBox()
         { }
@@ -9122,7 +9122,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "free";
 
         protected byte[] data;
-        public byte[] Data { get { return data; } set { data = value; } }
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public FreeSpaceBox()
         { }
@@ -9167,7 +9167,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "frma";
 
         protected uint data_format; // = codingname
-        public uint DataFormat { get { return data_format; } set { data_format = value; } }
+        public uint DataFormat { get { return this.data_format; } set { this.data_format = value; } }
 
         public OriginalFormatBox()
         { }
@@ -9219,13 +9219,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ftyp";
 
         protected uint major_brand;
-        public uint MajorBrand { get { return major_brand; } set { major_brand = value; } }
+        public uint MajorBrand { get { return this.major_brand; } set { this.major_brand = value; } }
 
         protected uint minor_version;
-        public uint MinorVersion { get { return minor_version; } set { minor_version = value; } }
+        public uint MinorVersion { get { return this.minor_version; } set { this.minor_version = value; } }
 
         protected uint[] compatible_brands;  //  to end of the box
-        public uint[] CompatibleBrands { get { return compatible_brands; } set { compatible_brands = value; } }
+        public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
         public FileTypeBox()
         { }
@@ -9278,13 +9278,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "gitn";
 
         protected ushort entry_count;
-        public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint group_ID;
-        public uint GroupID { get { return group_ID; } set { group_ID = value; } }
+        public uint GroupID { get { return this.group_ID; } set { this.group_ID = value; } }
 
         protected string group_name;
-        public string GroupName { get { return group_name; } set { group_name = value; } }
+        public string GroupName { get { return this.group_name; } set { this.group_name = value; } }
 
         public GroupIdToNameBox()
         { }
@@ -9385,16 +9385,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "hdlr";
 
         protected uint pre_defined = 0;
-        public uint PreDefined { get { return pre_defined; } set { pre_defined = value; } }
+        public uint PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
 
         protected uint handler_type;
-        public uint HandlerType { get { return handler_type; } set { handler_type = value; } }
+        public uint HandlerType { get { return this.handler_type; } set { this.handler_type = value; } }
 
         protected uint[] reserved = [];
-        public uint[] Reserved { get { return reserved; } set { reserved = value; } }
+        public uint[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected string name;
-        public string Name { get { return name; } set { name = value; } }
+        public string Name { get { return this.name; } set { this.name = value; } }
 
         public HandlerBox()
         { }
@@ -9450,19 +9450,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "hmhd";
 
         protected ushort maxPDUsize;
-        public ushort MaxPDUsize { get { return maxPDUsize; } set { maxPDUsize = value; } }
+        public ushort MaxPDUsize { get { return this.maxPDUsize; } set { this.maxPDUsize = value; } }
 
         protected ushort avgPDUsize;
-        public ushort AvgPDUsize { get { return avgPDUsize; } set { avgPDUsize = value; } }
+        public ushort AvgPDUsize { get { return this.avgPDUsize; } set { this.avgPDUsize = value; } }
 
         protected uint maxbitrate;
-        public uint Maxbitrate { get { return maxbitrate; } set { maxbitrate = value; } }
+        public uint Maxbitrate { get { return this.maxbitrate; } set { this.maxbitrate = value; } }
 
         protected uint avgbitrate;
-        public uint Avgbitrate { get { return avgbitrate; } set { avgbitrate = value; } }
+        public uint Avgbitrate { get { return this.avgbitrate; } set { this.avgbitrate = value; } }
 
         protected uint reserved = 0;
-        public uint Reserved { get { return reserved; } set { reserved = value; } }
+        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         public HintMediaHeaderBox()
         { }
@@ -9516,7 +9516,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "idat";
 
         protected byte[] data;
-        public byte[] Data { get { return data; } set { data = value; } }
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public ItemDataBox()
         { }
@@ -9564,13 +9564,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "iinf";
 
         protected ushort entry_count;
-        public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint entry_count0;
-        public uint EntryCount0 { get { return entry_count0; } set { entry_count0 = value; } }
+        public uint EntryCount0 { get { return this.entry_count0; } set { this.entry_count0 = value; } }
 
         protected ItemInfoEntry[] item_infos;
-        public ItemInfoEntry[] ItemInfos { get { return item_infos; } set { item_infos = value; } }
+        public ItemInfoEntry[] ItemInfos { get { return this.item_infos; } set { this.item_infos = value; } }
 
         public ItemInfoBox()
         { }
@@ -9678,55 +9678,55 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "iloc";
 
         protected byte offset_size;
-        public byte OffsetSize { get { return offset_size; } set { offset_size = value; } }
+        public byte OffsetSize { get { return this.offset_size; } set { this.offset_size = value; } }
 
         protected byte length_size;
-        public byte LengthSize { get { return length_size; } set { length_size = value; } }
+        public byte LengthSize { get { return this.length_size; } set { this.length_size = value; } }
 
         protected byte base_offset_size;
-        public byte BaseOffsetSize { get { return base_offset_size; } set { base_offset_size = value; } }
+        public byte BaseOffsetSize { get { return this.base_offset_size; } set { this.base_offset_size = value; } }
 
         protected byte index_size;
-        public byte IndexSize { get { return index_size; } set { index_size = value; } }
+        public byte IndexSize { get { return this.index_size; } set { this.index_size = value; } }
 
         protected byte reserved;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort item_count;
-        public ushort ItemCount { get { return item_count; } set { item_count = value; } }
+        public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
 
         protected uint item_count0;
-        public uint ItemCount0 { get { return item_count0; } set { item_count0 = value; } }
+        public uint ItemCount0 { get { return this.item_count0; } set { this.item_count0 = value; } }
 
         protected ushort item_ID;
-        public ushort ItemID { get { return item_ID; } set { item_ID = value; } }
+        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected uint item_ID0;
-        public uint ItemID0 { get { return item_ID0; } set { item_ID0 = value; } }
+        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
 
         protected ushort reserved0 = 0;
-        public ushort Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public ushort Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte construction_method;
-        public byte ConstructionMethod { get { return construction_method; } set { construction_method = value; } }
+        public byte ConstructionMethod { get { return this.construction_method; } set { this.construction_method = value; } }
 
         protected ushort data_reference_index;
-        public ushort DataReferenceIndex { get { return data_reference_index; } set { data_reference_index = value; } }
+        public ushort DataReferenceIndex { get { return this.data_reference_index; } set { this.data_reference_index = value; } }
 
         protected byte[] base_offset;
-        public byte[] BaseOffset { get { return base_offset; } set { base_offset = value; } }
+        public byte[] BaseOffset { get { return this.base_offset; } set { this.base_offset = value; } }
 
         protected ushort extent_count;
-        public ushort ExtentCount { get { return extent_count; } set { extent_count = value; } }
+        public ushort ExtentCount { get { return this.extent_count; } set { this.extent_count = value; } }
 
         protected byte[] item_reference_index;
-        public byte[] ItemReferenceIndex { get { return item_reference_index; } set { item_reference_index = value; } }
+        public byte[] ItemReferenceIndex { get { return this.item_reference_index; } set { this.item_reference_index = value; } }
 
         protected byte[] extent_offset;
-        public byte[] ExtentOffset { get { return extent_offset; } set { extent_offset = value; } }
+        public byte[] ExtentOffset { get { return this.extent_offset; } set { this.extent_offset = value; } }
 
         protected byte[] extent_length;
-        public byte[] ExtentLength { get { return extent_length; } set { extent_length = value; } }
+        public byte[] ExtentLength { get { return this.extent_length; } set { this.extent_length = value; } }
 
         public ItemLocationBox()
         { }
@@ -9937,10 +9937,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "imda";
 
         protected uint imda_identifier;
-        public uint ImdaIdentifier { get { return imda_identifier; } set { imda_identifier = value; } }
+        public uint ImdaIdentifier { get { return this.imda_identifier; } set { this.imda_identifier = value; } }
 
         protected byte[] data;  //  until the end of the box
-        public byte[] Data { get { return data; } set { data = value; } }
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public IdentifiedMediaDataBox()
         { }
@@ -10012,49 +10012,49 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "infe";
 
         protected ushort item_ID;
-        public ushort ItemID { get { return item_ID; } set { item_ID = value; } }
+        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected ushort item_protection_index;
-        public ushort ItemProtectionIndex { get { return item_protection_index; } set { item_protection_index = value; } }
+        public ushort ItemProtectionIndex { get { return this.item_protection_index; } set { this.item_protection_index = value; } }
 
         protected string item_name;
-        public string ItemName { get { return item_name; } set { item_name = value; } }
+        public string ItemName { get { return this.item_name; } set { this.item_name = value; } }
 
         protected string content_type;
-        public string ContentType { get { return content_type; } set { content_type = value; } }
+        public string ContentType { get { return this.content_type; } set { this.content_type = value; } }
 
         protected string content_encoding;  // optional
-        public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
+        public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
         protected uint extension_type;  // optional
-        public uint ExtensionType { get { return extension_type; } set { extension_type = value; } }
+        public uint ExtensionType { get { return this.extension_type; } set { this.extension_type = value; } }
 
         protected ItemInfoExtension ItemInfoExtension;  // optional
-        public ItemInfoExtension _ItemInfoExtension { get { return ItemInfoExtension; } set { ItemInfoExtension = value; } }
+        public ItemInfoExtension _ItemInfoExtension { get { return this.ItemInfoExtension; } set { this.ItemInfoExtension = value; } }
 
         protected ushort item_ID0;
-        public ushort ItemID0 { get { return item_ID0; } set { item_ID0 = value; } }
+        public ushort ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
 
         protected uint item_ID00;
-        public uint ItemID00 { get { return item_ID00; } set { item_ID00 = value; } }
+        public uint ItemID00 { get { return this.item_ID00; } set { this.item_ID00 = value; } }
 
         protected ushort item_protection_index0;
-        public ushort ItemProtectionIndex0 { get { return item_protection_index0; } set { item_protection_index0 = value; } }
+        public ushort ItemProtectionIndex0 { get { return this.item_protection_index0; } set { this.item_protection_index0 = value; } }
 
         protected uint item_type;
-        public uint ItemType { get { return item_type; } set { item_type = value; } }
+        public uint ItemType { get { return this.item_type; } set { this.item_type = value; } }
 
         protected string item_name0;
-        public string ItemName0 { get { return item_name0; } set { item_name0 = value; } }
+        public string ItemName0 { get { return this.item_name0; } set { this.item_name0 = value; } }
 
         protected string content_type0;
-        public string ContentType0 { get { return content_type0; } set { content_type0 = value; } }
+        public string ContentType0 { get { return this.content_type0; } set { this.content_type0 = value; } }
 
         protected string content_encoding0;  // optional
-        public string ContentEncoding0 { get { return content_encoding0; } set { content_encoding0 = value; } }
+        public string ContentEncoding0 { get { return this.content_encoding0; } set { this.content_encoding0 = value; } }
 
         protected string item_uri_type;
-        public string ItemUriType { get { return item_uri_type; } set { item_uri_type = value; } }
+        public string ItemUriType { get { return this.item_uri_type; } set { this.item_uri_type = value; } }
 
         public ItemInfoEntry()
         { }
@@ -10229,10 +10229,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ipro";
 
         protected ushort protection_count;
-        public ushort ProtectionCount { get { return protection_count; } set { protection_count = value; } }
+        public ushort ProtectionCount { get { return this.protection_count; } set { this.protection_count = value; } }
 
         protected ProtectionSchemeInfoBox protection_information;
-        public ProtectionSchemeInfoBox ProtectionInformation { get { return protection_information; } set { protection_information = value; } }
+        public ProtectionSchemeInfoBox ProtectionInformation { get { return this.protection_information; } set { this.protection_information = value; } }
 
         public ItemProtectionBox()
         { }
@@ -10296,10 +10296,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "iref";
 
         protected SingleItemTypeReferenceBox[] references;
-        public SingleItemTypeReferenceBox[] References { get { return references; } set { references = value; } }
+        public SingleItemTypeReferenceBox[] References { get { return this.references; } set { this.references = value; } }
 
         protected SingleItemTypeReferenceBoxLarge[] references0;
-        public SingleItemTypeReferenceBoxLarge[] References0 { get { return references0; } set { references0 = value; } }
+        public SingleItemTypeReferenceBoxLarge[] References0 { get { return this.references0; } set { this.references0 = value; } }
 
         public ItemReferenceBox()
         { }
@@ -10392,28 +10392,28 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "leva";
 
         protected byte level_count;
-        public byte LevelCount { get { return level_count; } set { level_count = value; } }
+        public byte LevelCount { get { return this.level_count; } set { this.level_count = value; } }
 
         protected uint track_ID;
-        public uint TrackID { get { return track_ID; } set { track_ID = value; } }
+        public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
 
         protected bool padding_flag;
-        public bool PaddingFlag { get { return padding_flag; } set { padding_flag = value; } }
+        public bool PaddingFlag { get { return this.padding_flag; } set { this.padding_flag = value; } }
 
         protected byte assignment_type;
-        public byte AssignmentType { get { return assignment_type; } set { assignment_type = value; } }
+        public byte AssignmentType { get { return this.assignment_type; } set { this.assignment_type = value; } }
 
         protected uint grouping_type;
-        public uint GroupingType { get { return grouping_type; } set { grouping_type = value; } }
+        public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
 
         protected uint grouping_type0;
-        public uint GroupingType0 { get { return grouping_type0; } set { grouping_type0 = value; } }
+        public uint GroupingType0 { get { return this.grouping_type0; } set { this.grouping_type0 = value; } }
 
         protected uint grouping_type_parameter;
-        public uint GroupingTypeParameter { get { return grouping_type_parameter; } set { grouping_type_parameter = value; } }
+        public uint GroupingTypeParameter { get { return this.grouping_type_parameter; } set { this.grouping_type_parameter = value; } }
 
         protected uint sub_track_ID;
-        public uint SubTrackID { get { return sub_track_ID; } set { sub_track_ID = value; } }
+        public uint SubTrackID { get { return this.sub_track_ID; } set { this.sub_track_ID = value; } }
 
         public LevelAssignmentBox()
         { }
@@ -10557,7 +10557,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mdat";
 
         protected byte[] data;
-        public byte[] Data { get { return data; } set { data = value; } }
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public MediaDataBox()
         { }
@@ -10612,37 +10612,37 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mdhd";
 
         protected ulong creation_time;
-        public ulong CreationTime { get { return creation_time; } set { creation_time = value; } }
+        public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
 
         protected ulong modification_time;
-        public ulong ModificationTime { get { return modification_time; } set { modification_time = value; } }
+        public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }
 
         protected uint timescale;
-        public uint Timescale { get { return timescale; } set { timescale = value; } }
+        public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }
 
         protected ulong duration;
-        public ulong Duration { get { return duration; } set { duration = value; } }
+        public ulong Duration { get { return this.duration; } set { this.duration = value; } }
 
         protected uint creation_time0;
-        public uint CreationTime0 { get { return creation_time0; } set { creation_time0 = value; } }
+        public uint CreationTime0 { get { return this.creation_time0; } set { this.creation_time0 = value; } }
 
         protected uint modification_time0;
-        public uint ModificationTime0 { get { return modification_time0; } set { modification_time0 = value; } }
+        public uint ModificationTime0 { get { return this.modification_time0; } set { this.modification_time0 = value; } }
 
         protected uint timescale0;
-        public uint Timescale0 { get { return timescale0; } set { timescale0 = value; } }
+        public uint Timescale0 { get { return this.timescale0; } set { this.timescale0 = value; } }
 
         protected uint duration0;
-        public uint Duration0 { get { return duration0; } set { duration0 = value; } }
+        public uint Duration0 { get { return this.duration0; } set { this.duration0 = value; } }
 
         protected bool pad = false;
-        public bool Pad { get { return pad; } set { pad = value; } }
+        public bool Pad { get { return this.pad; } set { this.pad = value; } }
 
         protected byte[] language;  //  ISO-639-2/T language code
-        public byte[] Language { get { return language; } set { language = value; } }
+        public byte[] Language { get { return this.language; } set { this.language = value; } }
 
         protected ushort pre_defined = 0;
-        public ushort PreDefined { get { return pre_defined; } set { pre_defined = value; } }
+        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
 
         public MediaHeaderBox()
         { }
@@ -10783,10 +10783,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mehd";
 
         protected ulong fragment_duration;
-        public ulong FragmentDuration { get { return fragment_duration; } set { fragment_duration = value; } }
+        public ulong FragmentDuration { get { return this.fragment_duration; } set { this.fragment_duration = value; } }
 
         protected uint fragment_duration0;
-        public uint FragmentDuration0 { get { return fragment_duration0; } set { fragment_duration0 = value; } }
+        public uint FragmentDuration0 { get { return this.fragment_duration0; } set { this.fragment_duration0 = value; } }
 
         public MovieExtendsHeaderBox()
         { }
@@ -10868,34 +10868,34 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "meta";
 
         protected HandlerBox theHandler;
-        public HandlerBox TheHandler { get { return theHandler; } set { theHandler = value; } }
+        public HandlerBox TheHandler { get { return this.theHandler; } set { this.theHandler = value; } }
 
         protected PrimaryItemBox primary_resource;  //  optional
-        public PrimaryItemBox PrimaryResource { get { return primary_resource; } set { primary_resource = value; } }
+        public PrimaryItemBox PrimaryResource { get { return this.primary_resource; } set { this.primary_resource = value; } }
 
         protected DataInformationBox file_locations;  //  optional
-        public DataInformationBox FileLocations { get { return file_locations; } set { file_locations = value; } }
+        public DataInformationBox FileLocations { get { return this.file_locations; } set { this.file_locations = value; } }
 
         protected ItemLocationBox item_locations;  //  optional
-        public ItemLocationBox ItemLocations { get { return item_locations; } set { item_locations = value; } }
+        public ItemLocationBox ItemLocations { get { return this.item_locations; } set { this.item_locations = value; } }
 
         protected ItemProtectionBox protections;  //  optional
-        public ItemProtectionBox Protections { get { return protections; } set { protections = value; } }
+        public ItemProtectionBox Protections { get { return this.protections; } set { this.protections = value; } }
 
         protected ItemInfoBox item_infos;  //  optional
-        public ItemInfoBox ItemInfos { get { return item_infos; } set { item_infos = value; } }
+        public ItemInfoBox ItemInfos { get { return this.item_infos; } set { this.item_infos = value; } }
 
         protected IPMPControlBox IPMP_control;  //  optional
-        public IPMPControlBox IPMPControl { get { return IPMP_control; } set { IPMP_control = value; } }
+        public IPMPControlBox IPMPControl { get { return this.IPMP_control; } set { this.IPMP_control = value; } }
 
         protected ItemReferenceBox item_refs;  //  optional
-        public ItemReferenceBox ItemRefs { get { return item_refs; } set { item_refs = value; } }
+        public ItemReferenceBox ItemRefs { get { return this.item_refs; } set { this.item_refs = value; } }
 
         protected ItemDataBox item_data;  //  optional
-        public ItemDataBox ItemData { get { return item_data; } set { item_data = value; } }
+        public ItemDataBox ItemData { get { return this.item_data; } set { this.item_data = value; } }
 
         protected Box[] other_boxes;  //  optional
-        public Box[] OtherBoxes { get { return other_boxes; } set { other_boxes = value; } }
+        public Box[] OtherBoxes { get { return this.other_boxes; } set { this.other_boxes = value; } }
 
         public MetaBox()
         { }
@@ -10968,7 +10968,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mfhd";
 
         protected uint sequence_number;
-        public uint SequenceNumber { get { return sequence_number; } set { sequence_number = value; } }
+        public uint SequenceNumber { get { return this.sequence_number; } set { this.sequence_number = value; } }
 
         public MovieFragmentHeaderBox()
         { }
@@ -11051,7 +11051,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mfro";
 
         protected uint parent_size;
-        public uint ParentSize { get { return parent_size; } set { parent_size = value; } }
+        public uint ParentSize { get { return this.parent_size; } set { this.parent_size = value; } }
 
         public MovieFragmentRandomAccessOffsetBox()
         { }
@@ -11266,50 +11266,50 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mvhd";
 
         protected ulong creation_time;
-        public ulong CreationTime { get { return creation_time; } set { creation_time = value; } }
+        public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
 
         protected ulong modification_time;
-        public ulong ModificationTime { get { return modification_time; } set { modification_time = value; } }
+        public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }
 
         protected uint timescale;
-        public uint Timescale { get { return timescale; } set { timescale = value; } }
+        public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }
 
         protected ulong duration;
-        public ulong Duration { get { return duration; } set { duration = value; } }
+        public ulong Duration { get { return this.duration; } set { this.duration = value; } }
 
         protected uint creation_time0;
-        public uint CreationTime0 { get { return creation_time0; } set { creation_time0 = value; } }
+        public uint CreationTime0 { get { return this.creation_time0; } set { this.creation_time0 = value; } }
 
         protected uint modification_time0;
-        public uint ModificationTime0 { get { return modification_time0; } set { modification_time0 = value; } }
+        public uint ModificationTime0 { get { return this.modification_time0; } set { this.modification_time0 = value; } }
 
         protected uint timescale0;
-        public uint Timescale0 { get { return timescale0; } set { timescale0 = value; } }
+        public uint Timescale0 { get { return this.timescale0; } set { this.timescale0 = value; } }
 
         protected uint duration0;
-        public uint Duration0 { get { return duration0; } set { duration0 = value; } }
+        public uint Duration0 { get { return this.duration0; } set { this.duration0 = value; } }
 
         protected int rate = 0x00010000;  //  typically 1.0
-        public int Rate { get { return rate; } set { rate = value; } }
+        public int Rate { get { return this.rate; } set { this.rate = value; } }
 
         protected short volume = 0x0100;  //  typically, full volume
-        public short Volume { get { return volume; } set { volume = value; } }
+        public short Volume { get { return this.volume; } set { this.volume = value; } }
 
         protected ushort reserved = 0;
-        public ushort Reserved { get { return reserved; } set { reserved = value; } }
+        public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected uint[] reserved0 = [];
-        public uint[] Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public uint[] Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected uint[] matrix =
             { 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };  //  Unity matrix
-        public uint[] Matrix { get { return matrix; } set { matrix = value; } }
+        public uint[] Matrix { get { return this.matrix; } set { this.matrix = value; } }
 
         protected uint[] pre_defined = [];
-        public uint[] PreDefined { get { return pre_defined; } set { pre_defined = value; } }
+        public uint[] PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
 
         protected uint next_track_ID;
-        public uint NextTrackID { get { return next_track_ID; } set { next_track_ID = value; } }
+        public uint NextTrackID { get { return this.next_track_ID; } set { this.next_track_ID = value; } }
 
         public MovieHeaderBox()
         { }
@@ -11501,19 +11501,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "padb";
 
         protected uint sample_count;
-        public uint SampleCount { get { return sample_count; } set { sample_count = value; } }
+        public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
         protected bool reserved = false;
-        public bool Reserved { get { return reserved; } set { reserved = value; } }
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte pad1;
-        public byte Pad1 { get { return pad1; } set { pad1 = value; } }
+        public byte Pad1 { get { return this.pad1; } set { this.pad1 = value; } }
 
         protected bool reserved0 = false;
-        public bool Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte pad2;
-        public byte Pad2 { get { return pad2; } set { pad2 = value; } }
+        public byte Pad2 { get { return this.pad2; } set { this.pad2 = value; } }
 
         public PaddingBitsBox()
         { }
@@ -11586,10 +11586,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "pdin";
 
         protected uint rate;
-        public uint Rate { get { return rate; } set { rate = value; } }
+        public uint Rate { get { return this.rate; } set { this.rate = value; } }
 
         protected uint initial_delay;
-        public uint InitialDelay { get { return initial_delay; } set { initial_delay = value; } }
+        public uint InitialDelay { get { return this.initial_delay; } set { this.initial_delay = value; } }
 
         public ProgressiveDownloadInfoBox()
         { }
@@ -11654,10 +11654,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "pitm";
 
         protected ushort item_ID;
-        public ushort ItemID { get { return item_ID; } set { item_ID = value; } }
+        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected uint item_ID0;
-        public uint ItemID0 { get { return item_ID0; } set { item_ID0 = value; } }
+        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
 
         public PrimaryItemBox()
         { }
@@ -11733,16 +11733,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "prft";
 
         protected uint reference_track_ID;
-        public uint ReferenceTrackID { get { return reference_track_ID; } set { reference_track_ID = value; } }
+        public uint ReferenceTrackID { get { return this.reference_track_ID; } set { this.reference_track_ID = value; } }
 
         protected ulong ntp_timestamp;
-        public ulong NtpTimestamp { get { return ntp_timestamp; } set { ntp_timestamp = value; } }
+        public ulong NtpTimestamp { get { return this.ntp_timestamp; } set { this.ntp_timestamp = value; } }
 
         protected uint media_time;
-        public uint MediaTime { get { return media_time; } set { media_time = value; } }
+        public uint MediaTime { get { return this.media_time; } set { this.media_time = value; } }
 
         protected ulong media_time0;
-        public ulong MediaTime0 { get { return media_time0; } set { media_time0 = value; } }
+        public ulong MediaTime0 { get { return this.media_time0; } set { this.media_time0 = value; } }
 
         public ProducerReferenceTimeBox()
         { }
@@ -11819,13 +11819,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rinf";
 
         protected OriginalFormatBox original_format;
-        public OriginalFormatBox OriginalFormat { get { return original_format; } set { original_format = value; } }
+        public OriginalFormatBox OriginalFormat { get { return this.original_format; } set { this.original_format = value; } }
 
         protected SchemeTypeBox scheme_type_box;
-        public SchemeTypeBox SchemeTypeBox { get { return scheme_type_box; } set { scheme_type_box = value; } }
+        public SchemeTypeBox SchemeTypeBox { get { return this.scheme_type_box; } set { this.scheme_type_box = value; } }
 
         protected SchemeInformationBox info;  //  optional
-        public SchemeInformationBox Info { get { return info; } set { info = value; } }
+        public SchemeInformationBox Info { get { return this.info; } set { this.info = value; } }
 
         public RestrictedSchemeInfoBox()
         { }
@@ -11888,19 +11888,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "saio";
 
         protected uint aux_info_type;
-        public uint AuxInfoType { get { return aux_info_type; } set { aux_info_type = value; } }
+        public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
 
         protected uint aux_info_type_parameter;
-        public uint AuxInfoTypeParameter { get { return aux_info_type_parameter; } set { aux_info_type_parameter = value; } }
+        public uint AuxInfoTypeParameter { get { return this.aux_info_type_parameter; } set { this.aux_info_type_parameter = value; } }
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint[] offset;
-        public uint[] Offset { get { return offset; } set { offset = value; } }
+        public uint[] Offset { get { return this.offset; } set { this.offset = value; } }
 
         protected ulong[] offset0;
-        public ulong[] Offset0 { get { return offset0; } set { offset0 = value; } }
+        public ulong[] Offset0 { get { return this.offset0; } set { this.offset0 = value; } }
 
         public SampleAuxiliaryInformationOffsetsBox()
         { }
@@ -12000,19 +12000,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "saiz";
 
         protected uint aux_info_type;
-        public uint AuxInfoType { get { return aux_info_type; } set { aux_info_type = value; } }
+        public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
 
         protected uint aux_info_type_parameter;
-        public uint AuxInfoTypeParameter { get { return aux_info_type_parameter; } set { aux_info_type_parameter = value; } }
+        public uint AuxInfoTypeParameter { get { return this.aux_info_type_parameter; } set { this.aux_info_type_parameter = value; } }
 
         protected byte default_sample_info_size;
-        public byte DefaultSampleInfoSize { get { return default_sample_info_size; } set { default_sample_info_size = value; } }
+        public byte DefaultSampleInfoSize { get { return this.default_sample_info_size; } set { this.default_sample_info_size = value; } }
 
         protected uint sample_count;
-        public uint SampleCount { get { return sample_count; } set { sample_count = value; } }
+        public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
         protected byte[] sample_info_size;
-        public byte[] SampleInfoSize { get { return sample_info_size; } set { sample_info_size = value; } }
+        public byte[] SampleInfoSize { get { return this.sample_info_size; } set { this.sample_info_size = value; } }
 
         public SampleAuxiliaryInformationSizesBox()
         { }
@@ -12101,19 +12101,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "sbgp";
 
         protected uint grouping_type;
-        public uint GroupingType { get { return grouping_type; } set { grouping_type = value; } }
+        public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
 
         protected uint grouping_type_parameter;
-        public uint GroupingTypeParameter { get { return grouping_type_parameter; } set { grouping_type_parameter = value; } }
+        public uint GroupingTypeParameter { get { return this.grouping_type_parameter; } set { this.grouping_type_parameter = value; } }
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint sample_count;
-        public uint SampleCount { get { return sample_count; } set { sample_count = value; } }
+        public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
         protected uint group_description_index;
-        public uint GroupDescriptionIndex { get { return group_description_index; } set { group_description_index = value; } }
+        public uint GroupDescriptionIndex { get { return this.group_description_index; } set { this.group_description_index = value; } }
 
         public SampleToGroupBox()
         { }
@@ -12191,7 +12191,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "schi";
 
         protected Box[] scheme_specific_data;
-        public Box[] SchemeSpecificData { get { return scheme_specific_data; } set { scheme_specific_data = value; } }
+        public Box[] SchemeSpecificData { get { return this.scheme_specific_data; } set { this.scheme_specific_data = value; } }
 
         public SchemeInformationBox()
         { }
@@ -12240,13 +12240,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "schm";
 
         protected uint scheme_type;  //  4CC identifying the scheme
-        public uint SchemeType { get { return scheme_type; } set { scheme_type = value; } }
+        public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
 
         protected uint scheme_version;  //  scheme version
-        public uint SchemeVersion { get { return scheme_version; } set { scheme_version = value; } }
+        public uint SchemeVersion { get { return this.scheme_version; } set { this.scheme_version = value; } }
 
         protected string scheme_uri;  //  browser uri
-        public string SchemeUri { get { return scheme_uri; } set { scheme_uri = value; } }
+        public string SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
 
         public SchemeTypeBox()
         { }
@@ -12311,13 +12311,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "csch";
 
         protected uint scheme_type;  //  4CC identifying the scheme
-        public uint SchemeType { get { return scheme_type; } set { scheme_type = value; } }
+        public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
 
         protected uint scheme_version;  //  scheme version 
-        public uint SchemeVersion { get { return scheme_version; } set { scheme_version = value; } }
+        public uint SchemeVersion { get { return this.scheme_version; } set { this.scheme_version = value; } }
 
         protected string scheme_uri;  //  browser uri
-        public string SchemeUri { get { return scheme_uri; } set { scheme_uri = value; } }
+        public string SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
 
         public CompatibleSchemeTypeBox()
         { }
@@ -12386,16 +12386,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "sdtp";
 
         protected byte is_leading;
-        public byte IsLeading { get { return is_leading; } set { is_leading = value; } }
+        public byte IsLeading { get { return this.is_leading; } set { this.is_leading = value; } }
 
         protected byte sample_depends_on;
-        public byte SampleDependsOn { get { return sample_depends_on; } set { sample_depends_on = value; } }
+        public byte SampleDependsOn { get { return this.sample_depends_on; } set { this.sample_depends_on = value; } }
 
         protected byte sample_is_depended_on;
-        public byte SampleIsDependedOn { get { return sample_is_depended_on; } set { sample_is_depended_on = value; } }
+        public byte SampleIsDependedOn { get { return this.sample_is_depended_on; } set { this.sample_is_depended_on = value; } }
 
         protected byte sample_has_redundancy;
-        public byte SampleHasRedundancy { get { return sample_has_redundancy; } set { sample_has_redundancy = value; } }
+        public byte SampleHasRedundancy { get { return this.sample_has_redundancy; } set { this.sample_has_redundancy = value; } }
 
         public SampleDependencyTypeBox()
         { }
@@ -12474,19 +12474,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "segr";
 
         protected ushort num_session_groups;
-        public ushort NumSessionGroups { get { return num_session_groups; } set { num_session_groups = value; } }
+        public ushort NumSessionGroups { get { return this.num_session_groups; } set { this.num_session_groups = value; } }
 
         protected byte entry_count;
-        public byte EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public byte EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint group_ID;
-        public uint GroupID { get { return group_ID; } set { group_ID = value; } }
+        public uint GroupID { get { return this.group_ID; } set { this.group_ID = value; } }
 
         protected ushort num_channels_in_session_group;
-        public ushort NumChannelsInSessionGroup { get { return num_channels_in_session_group; } set { num_channels_in_session_group = value; } }
+        public ushort NumChannelsInSessionGroup { get { return this.num_channels_in_session_group; } set { this.num_channels_in_session_group = value; } }
 
         protected uint hint_track_ID;
-        public uint HintTrackID { get { return hint_track_ID; } set { hint_track_ID = value; } }
+        public uint HintTrackID { get { return this.hint_track_ID; } set { this.hint_track_ID = value; } }
 
         public FDSessionGroupBox()
         { }
@@ -12589,22 +12589,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "sgpd";
 
         protected uint grouping_type;
-        public uint GroupingType { get { return grouping_type; } set { grouping_type = value; } }
+        public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
 
         protected uint default_length;
-        public uint DefaultLength { get { return default_length; } set { default_length = value; } }
+        public uint DefaultLength { get { return this.default_length; } set { this.default_length = value; } }
 
         protected uint default_group_description_index;
-        public uint DefaultGroupDescriptionIndex { get { return default_group_description_index; } set { default_group_description_index = value; } }
+        public uint DefaultGroupDescriptionIndex { get { return this.default_group_description_index; } set { this.default_group_description_index = value; } }
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint description_length;
-        public uint DescriptionLength { get { return description_length; } set { description_length = value; } }
+        public uint DescriptionLength { get { return this.description_length; } set { this.description_length = value; } }
 
         protected SampleGroupDescriptionEntry SampleGroupDescriptionEntry;  //  an instance of a class derived from SampleGroupDescriptionEntry
-        public SampleGroupDescriptionEntry _SampleGroupDescriptionEntry { get { return SampleGroupDescriptionEntry; } set { SampleGroupDescriptionEntry = value; } }
+        public SampleGroupDescriptionEntry _SampleGroupDescriptionEntry { get { return this.SampleGroupDescriptionEntry; } set { this.SampleGroupDescriptionEntry = value; } }
 
         public SampleGroupDescriptionBox()
         { }
@@ -12769,13 +12769,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "sinf";
 
         protected OriginalFormatBox original_format;
-        public OriginalFormatBox OriginalFormat { get { return original_format; } set { original_format = value; } }
+        public OriginalFormatBox OriginalFormat { get { return this.original_format; } set { this.original_format = value; } }
 
         protected SchemeTypeBox scheme_type_box;  //  optional
-        public SchemeTypeBox SchemeTypeBox { get { return scheme_type_box; } set { scheme_type_box = value; } }
+        public SchemeTypeBox SchemeTypeBox { get { return this.scheme_type_box; } set { this.scheme_type_box = value; } }
 
         protected SchemeInformationBox info;  //  optional
-        public SchemeInformationBox Info { get { return info; } set { info = value; } }
+        public SchemeInformationBox Info { get { return this.info; } set { this.info = value; } }
 
         public ProtectionSchemeInfoBox()
         { }
@@ -12828,10 +12828,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "smhd";
 
         protected short balance = 0;
-        public short Balance { get { return balance; } set { balance = value; } }
+        public short Balance { get { return this.balance; } set { this.balance = value; } }
 
         protected ushort reserved = 0;
-        public ushort Reserved { get { return reserved; } set { reserved = value; } }
+        public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         public SoundMediaHeaderBox()
         { }
@@ -12881,22 +12881,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "srpp";
 
         protected uint encryption_algorithm_rtp;
-        public uint EncryptionAlgorithmRtp { get { return encryption_algorithm_rtp; } set { encryption_algorithm_rtp = value; } }
+        public uint EncryptionAlgorithmRtp { get { return this.encryption_algorithm_rtp; } set { this.encryption_algorithm_rtp = value; } }
 
         protected uint encryption_algorithm_rtcp;
-        public uint EncryptionAlgorithmRtcp { get { return encryption_algorithm_rtcp; } set { encryption_algorithm_rtcp = value; } }
+        public uint EncryptionAlgorithmRtcp { get { return this.encryption_algorithm_rtcp; } set { this.encryption_algorithm_rtcp = value; } }
 
         protected uint integrity_algorithm_rtp;
-        public uint IntegrityAlgorithmRtp { get { return integrity_algorithm_rtp; } set { integrity_algorithm_rtp = value; } }
+        public uint IntegrityAlgorithmRtp { get { return this.integrity_algorithm_rtp; } set { this.integrity_algorithm_rtp = value; } }
 
         protected uint integrity_algorithm_rtcp;
-        public uint IntegrityAlgorithmRtcp { get { return integrity_algorithm_rtcp; } set { integrity_algorithm_rtcp = value; } }
+        public uint IntegrityAlgorithmRtcp { get { return this.integrity_algorithm_rtcp; } set { this.integrity_algorithm_rtcp = value; } }
 
         protected SchemeTypeBox scheme_type_box;
-        public SchemeTypeBox SchemeTypeBox { get { return scheme_type_box; } set { scheme_type_box = value; } }
+        public SchemeTypeBox SchemeTypeBox { get { return this.scheme_type_box; } set { this.scheme_type_box = value; } }
 
         protected SchemeInformationBox info;
-        public SchemeInformationBox Info { get { return info; } set { info = value; } }
+        public SchemeInformationBox Info { get { return this.info; } set { this.info = value; } }
 
         public SRTPProcessBox()
         { }
@@ -13031,10 +13031,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stco";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint chunk_offset;
-        public uint ChunkOffset { get { return chunk_offset; } set { chunk_offset = value; } }
+        public uint ChunkOffset { get { return this.chunk_offset; } set { this.chunk_offset = value; } }
 
         public ChunkOffsetBox()
         { }
@@ -13095,7 +13095,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stdp";
 
         protected ushort priority;
-        public ushort Priority { get { return priority; } set { priority = value; } }
+        public ushort Priority { get { return this.priority; } set { this.priority = value; } }
 
         public DegradationPriorityBox()
         { }
@@ -13236,16 +13236,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stri";
 
         protected short switch_group = 0;
-        public short SwitchGroup { get { return switch_group; } set { switch_group = value; } }
+        public short SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
 
         protected short alternate_group = 0;
-        public short AlternateGroup { get { return alternate_group; } set { alternate_group = value; } }
+        public short AlternateGroup { get { return this.alternate_group; } set { this.alternate_group = value; } }
 
         protected uint sub_track_ID = 0;
-        public uint SubTrackID { get { return sub_track_ID; } set { sub_track_ID = value; } }
+        public uint SubTrackID { get { return this.sub_track_ID; } set { this.sub_track_ID = value; } }
 
         protected uint[] attribute_list;  //  to the end of the box
-        public uint[] AttributeList { get { return attribute_list; } set { attribute_list = value; } }
+        public uint[] AttributeList { get { return this.attribute_list; } set { this.attribute_list = value; } }
 
         public SubTrackInformationBox()
         { }
@@ -13302,16 +13302,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stsc";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint first_chunk;
-        public uint FirstChunk { get { return first_chunk; } set { first_chunk = value; } }
+        public uint FirstChunk { get { return this.first_chunk; } set { this.first_chunk = value; } }
 
         protected uint samples_per_chunk;
-        public uint SamplesPerChunk { get { return samples_per_chunk; } set { samples_per_chunk = value; } }
+        public uint SamplesPerChunk { get { return this.samples_per_chunk; } set { this.samples_per_chunk = value; } }
 
         protected uint sample_description_index;
-        public uint SampleDescriptionIndex { get { return sample_description_index; } set { sample_description_index = value; } }
+        public uint SampleDescriptionIndex { get { return this.sample_description_index; } set { this.sample_description_index = value; } }
 
         public SampleToChunkBox()
         { }
@@ -13376,10 +13376,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stsd";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected SampleEntry SampleEntry;  //  an instance of a class derived from SampleEntry
-        public SampleEntry _SampleEntry { get { return SampleEntry; } set { SampleEntry = value; } }
+        public SampleEntry _SampleEntry { get { return this.SampleEntry; } set { this.SampleEntry = value; } }
 
         public SampleDescriptionBox()
         { }
@@ -13446,13 +13446,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stsg";
 
         protected uint grouping_type;
-        public uint GroupingType { get { return grouping_type; } set { grouping_type = value; } }
+        public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
 
         protected ushort item_count;
-        public ushort ItemCount { get { return item_count; } set { item_count = value; } }
+        public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
 
         protected uint group_description_index;
-        public uint GroupDescriptionIndex { get { return group_description_index; } set { group_description_index = value; } }
+        public uint GroupDescriptionIndex { get { return this.group_description_index; } set { this.group_description_index = value; } }
 
         public SubTrackSampleGroupBox()
         { }
@@ -13518,13 +13518,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stsh";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint shadowed_sample_number;
-        public uint ShadowedSampleNumber { get { return shadowed_sample_number; } set { shadowed_sample_number = value; } }
+        public uint ShadowedSampleNumber { get { return this.shadowed_sample_number; } set { this.shadowed_sample_number = value; } }
 
         protected uint sync_sample_number;
-        public uint SyncSampleNumber { get { return sync_sample_number; } set { sync_sample_number = value; } }
+        public uint SyncSampleNumber { get { return this.sync_sample_number; } set { this.sync_sample_number = value; } }
 
         public ShadowSyncSampleBox()
         { }
@@ -13592,10 +13592,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stss";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint sample_number;
-        public uint SampleNumber { get { return sample_number; } set { sample_number = value; } }
+        public uint SampleNumber { get { return this.sample_number; } set { this.sample_number = value; } }
 
         public SyncSampleBox()
         { }
@@ -13661,13 +13661,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stsz";
 
         protected uint sample_size;
-        public uint SampleSize { get { return sample_size; } set { sample_size = value; } }
+        public uint SampleSize { get { return this.sample_size; } set { this.sample_size = value; } }
 
         protected uint sample_count;
-        public uint SampleCount { get { return sample_count; } set { sample_count = value; } }
+        public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
         protected uint entry_size;
-        public uint EntrySize { get { return entry_size; } set { entry_size = value; } }
+        public uint EntrySize { get { return this.entry_size; } set { this.entry_size = value; } }
 
         public SampleSizeBox()
         { }
@@ -13745,13 +13745,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stts";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint sample_count;
-        public uint SampleCount { get { return sample_count; } set { sample_count = value; } }
+        public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
         protected uint sample_delta;
-        public uint SampleDelta { get { return sample_delta; } set { sample_delta = value; } }
+        public uint SampleDelta { get { return this.sample_delta; } set { this.sample_delta = value; } }
 
         public TimeToSampleBox()
         { }
@@ -13855,16 +13855,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stz2";
 
         protected uint reserved = 0;
-        public uint Reserved { get { return reserved; } set { reserved = value; } }
+        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte field_size;
-        public byte FieldSize { get { return field_size; } set { field_size = value; } }
+        public byte FieldSize { get { return this.field_size; } set { this.field_size = value; } }
 
         protected uint sample_count;
-        public uint SampleCount { get { return sample_count; } set { sample_count = value; } }
+        public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
         protected byte[] entry_size;
-        public byte[] EntrySize { get { return entry_size; } set { entry_size = value; } }
+        public byte[] EntrySize { get { return this.entry_size; } set { this.entry_size = value; } }
 
         public CompactSampleSizeBox()
         { }
@@ -13948,28 +13948,28 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "subs";
 
         protected uint entry_count;
-        public uint EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected uint sample_delta;
-        public uint SampleDelta { get { return sample_delta; } set { sample_delta = value; } }
+        public uint SampleDelta { get { return this.sample_delta; } set { this.sample_delta = value; } }
 
         protected ushort subsample_count;
-        public ushort SubsampleCount { get { return subsample_count; } set { subsample_count = value; } }
+        public ushort SubsampleCount { get { return this.subsample_count; } set { this.subsample_count = value; } }
 
         protected uint subsample_size;
-        public uint SubsampleSize { get { return subsample_size; } set { subsample_size = value; } }
+        public uint SubsampleSize { get { return this.subsample_size; } set { this.subsample_size = value; } }
 
         protected ushort subsample_size0;
-        public ushort SubsampleSize0 { get { return subsample_size0; } set { subsample_size0 = value; } }
+        public ushort SubsampleSize0 { get { return this.subsample_size0; } set { this.subsample_size0 = value; } }
 
         protected byte subsample_priority;
-        public byte SubsamplePriority { get { return subsample_priority; } set { subsample_priority = value; } }
+        public byte SubsamplePriority { get { return this.subsample_priority; } set { this.subsample_priority = value; } }
 
         protected byte discardable;
-        public byte Discardable { get { return discardable; } set { discardable = value; } }
+        public byte Discardable { get { return this.discardable; } set { this.discardable = value; } }
 
         protected uint codec_specific_parameters;
-        public uint CodecSpecificParameters { get { return codec_specific_parameters; } set { codec_specific_parameters = value; } }
+        public uint CodecSpecificParameters { get { return this.codec_specific_parameters; } set { this.codec_specific_parameters = value; } }
 
         public SubSampleInformationBox()
         { }
@@ -14100,10 +14100,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tfdt";
 
         protected ulong baseMediaDecodeTime;
-        public ulong BaseMediaDecodeTime { get { return baseMediaDecodeTime; } set { baseMediaDecodeTime = value; } }
+        public ulong BaseMediaDecodeTime { get { return this.baseMediaDecodeTime; } set { this.baseMediaDecodeTime = value; } }
 
         protected uint baseMediaDecodeTime0;
-        public uint BaseMediaDecodeTime0 { get { return baseMediaDecodeTime0; } set { baseMediaDecodeTime0 = value; } }
+        public uint BaseMediaDecodeTime0 { get { return this.baseMediaDecodeTime0; } set { this.baseMediaDecodeTime0 = value; } }
 
         public TrackFragmentBaseMediaDecodeTimeBox()
         { }
@@ -14183,22 +14183,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tfhd";
 
         protected uint track_ID;  //  all the following are optional fields
-        public uint TrackID { get { return track_ID; } set { track_ID = value; } }
+        public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
 
         protected ulong base_data_offset;
-        public ulong BaseDataOffset { get { return base_data_offset; } set { base_data_offset = value; } }
+        public ulong BaseDataOffset { get { return this.base_data_offset; } set { this.base_data_offset = value; } }
 
         protected uint sample_description_index;
-        public uint SampleDescriptionIndex { get { return sample_description_index; } set { sample_description_index = value; } }
+        public uint SampleDescriptionIndex { get { return this.sample_description_index; } set { this.sample_description_index = value; } }
 
         protected uint default_sample_duration;
-        public uint DefaultSampleDuration { get { return default_sample_duration; } set { default_sample_duration = value; } }
+        public uint DefaultSampleDuration { get { return this.default_sample_duration; } set { this.default_sample_duration = value; } }
 
         protected uint default_sample_size;
-        public uint DefaultSampleSize { get { return default_sample_size; } set { default_sample_size = value; } }
+        public uint DefaultSampleSize { get { return this.default_sample_size; } set { this.default_sample_size = value; } }
 
         protected uint default_sample_flags;
-        public uint DefaultSampleFlags { get { return default_sample_flags; } set { default_sample_flags = value; } }
+        public uint DefaultSampleFlags { get { return this.default_sample_flags; } set { this.default_sample_flags = value; } }
 
         public TrackFragmentHeaderBox()
         { }
@@ -14276,43 +14276,43 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tfra";
 
         protected uint track_ID;
-        public uint TrackID { get { return track_ID; } set { track_ID = value; } }
+        public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
 
         protected uint reserved = 0;
-        public uint Reserved { get { return reserved; } set { reserved = value; } }
+        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte length_size_of_traf_num;
-        public byte LengthSizeOfTrafNum { get { return length_size_of_traf_num; } set { length_size_of_traf_num = value; } }
+        public byte LengthSizeOfTrafNum { get { return this.length_size_of_traf_num; } set { this.length_size_of_traf_num = value; } }
 
         protected byte length_size_of_trun_num;
-        public byte LengthSizeOfTrunNum { get { return length_size_of_trun_num; } set { length_size_of_trun_num = value; } }
+        public byte LengthSizeOfTrunNum { get { return this.length_size_of_trun_num; } set { this.length_size_of_trun_num = value; } }
 
         protected byte length_size_of_sample_num;
-        public byte LengthSizeOfSampleNum { get { return length_size_of_sample_num; } set { length_size_of_sample_num = value; } }
+        public byte LengthSizeOfSampleNum { get { return this.length_size_of_sample_num; } set { this.length_size_of_sample_num = value; } }
 
         protected uint number_of_entry;
-        public uint NumberOfEntry { get { return number_of_entry; } set { number_of_entry = value; } }
+        public uint NumberOfEntry { get { return this.number_of_entry; } set { this.number_of_entry = value; } }
 
         protected ulong time;
-        public ulong Time { get { return time; } set { time = value; } }
+        public ulong Time { get { return this.time; } set { this.time = value; } }
 
         protected ulong moof_offset;
-        public ulong MoofOffset { get { return moof_offset; } set { moof_offset = value; } }
+        public ulong MoofOffset { get { return this.moof_offset; } set { this.moof_offset = value; } }
 
         protected uint time0;
-        public uint Time0 { get { return time0; } set { time0 = value; } }
+        public uint Time0 { get { return this.time0; } set { this.time0 = value; } }
 
         protected uint moof_offset0;
-        public uint MoofOffset0 { get { return moof_offset0; } set { moof_offset0 = value; } }
+        public uint MoofOffset0 { get { return this.moof_offset0; } set { this.moof_offset0 = value; } }
 
         protected byte[] traf_number;
-        public byte[] TrafNumber { get { return traf_number; } set { traf_number = value; } }
+        public byte[] TrafNumber { get { return this.traf_number; } set { this.traf_number = value; } }
 
         protected byte[] trun_number;
-        public byte[] TrunNumber { get { return trun_number; } set { trun_number = value; } }
+        public byte[] TrunNumber { get { return this.trun_number; } set { this.trun_number = value; } }
 
         protected byte[] sample_delta;
-        public byte[] SampleDelta { get { return sample_delta; } set { sample_delta = value; } }
+        public byte[] SampleDelta { get { return this.sample_delta; } set { this.sample_delta = value; } }
 
         public TrackFragmentRandomAccessBox()
         { }
@@ -14449,59 +14449,59 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tkhd";
 
         protected ulong creation_time;
-        public ulong CreationTime { get { return creation_time; } set { creation_time = value; } }
+        public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
 
         protected ulong modification_time;
-        public ulong ModificationTime { get { return modification_time; } set { modification_time = value; } }
+        public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }
 
         protected uint track_ID;
-        public uint TrackID { get { return track_ID; } set { track_ID = value; } }
+        public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
 
         protected uint reserved = 0;
-        public uint Reserved { get { return reserved; } set { reserved = value; } }
+        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ulong duration;
-        public ulong Duration { get { return duration; } set { duration = value; } }
+        public ulong Duration { get { return this.duration; } set { this.duration = value; } }
 
         protected uint creation_time0;
-        public uint CreationTime0 { get { return creation_time0; } set { creation_time0 = value; } }
+        public uint CreationTime0 { get { return this.creation_time0; } set { this.creation_time0 = value; } }
 
         protected uint modification_time0;
-        public uint ModificationTime0 { get { return modification_time0; } set { modification_time0 = value; } }
+        public uint ModificationTime0 { get { return this.modification_time0; } set { this.modification_time0 = value; } }
 
         protected uint track_ID0;
-        public uint TrackID0 { get { return track_ID0; } set { track_ID0 = value; } }
+        public uint TrackID0 { get { return this.track_ID0; } set { this.track_ID0 = value; } }
 
         protected uint reserved0 = 0;
-        public uint Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public uint Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected uint duration0;
-        public uint Duration0 { get { return duration0; } set { duration0 = value; } }
+        public uint Duration0 { get { return this.duration0; } set { this.duration0 = value; } }
 
         protected uint[] reserved1 = [];
-        public uint[] Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public uint[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected short layer = 0;
-        public short Layer { get { return layer; } set { layer = value; } }
+        public short Layer { get { return this.layer; } set { this.layer = value; } }
 
         protected short alternate_group = 0;
-        public short AlternateGroup { get { return alternate_group; } set { alternate_group = value; } }
+        public short AlternateGroup { get { return this.alternate_group; } set { this.alternate_group = value; } }
 
         protected short volume = 0; // = { default samplerate of media}<<16;
-        public short Volume { get { return volume; } set { volume = value; } }
+        public short Volume { get { return this.volume; } set { this.volume = value; } }
 
         protected ushort reserved2 = 0;
-        public ushort Reserved2 { get { return reserved2; } set { reserved2 = value; } }
+        public ushort Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
         protected uint[] matrix =
             { 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };  //  unity matrix
-        public uint[] Matrix { get { return matrix; } set { matrix = value; } }
+        public uint[] Matrix { get { return this.matrix; } set { this.matrix = value; } }
 
         protected uint width;
-        public uint Width { get { return width; } set { width = value; } }
+        public uint Width { get { return this.width; } set { this.width = value; } }
 
         protected uint height;
-        public uint Height { get { return height; } set { height = value; } }
+        public uint Height { get { return this.height; } set { this.height = value; } }
 
         public TrackHeaderBox()
         { }
@@ -14697,7 +14697,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tref";
 
         protected TrackReferenceTypeBox[] TrackReferenceTypeBox;
-        public TrackReferenceTypeBox[] _TrackReferenceTypeBox { get { return TrackReferenceTypeBox; } set { TrackReferenceTypeBox = value; } }
+        public TrackReferenceTypeBox[] _TrackReferenceTypeBox { get { return this.TrackReferenceTypeBox; } set { this.TrackReferenceTypeBox = value; } }
 
         public TrackReferenceBox()
         { }
@@ -14743,7 +14743,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "trep";
 
         protected uint track_ID;  //  Any number of boxes may follow
-        public uint TrackID { get { return track_ID; } set { track_ID = value; } }
+        public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
 
         public TrackExtensionPropertiesBox()
         { }
@@ -14792,19 +14792,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "trex";
 
         protected uint track_ID;
-        public uint TrackID { get { return track_ID; } set { track_ID = value; } }
+        public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
 
         protected uint default_sample_description_index;
-        public uint DefaultSampleDescriptionIndex { get { return default_sample_description_index; } set { default_sample_description_index = value; } }
+        public uint DefaultSampleDescriptionIndex { get { return this.default_sample_description_index; } set { this.default_sample_description_index = value; } }
 
         protected uint default_sample_duration;
-        public uint DefaultSampleDuration { get { return default_sample_duration; } set { default_sample_duration = value; } }
+        public uint DefaultSampleDuration { get { return this.default_sample_duration; } set { this.default_sample_duration = value; } }
 
         protected uint default_sample_size;
-        public uint DefaultSampleSize { get { return default_sample_size; } set { default_sample_size = value; } }
+        public uint DefaultSampleSize { get { return this.default_sample_size; } set { this.default_sample_size = value; } }
 
         protected uint default_sample_flags;
-        public uint DefaultSampleFlags { get { return default_sample_flags; } set { default_sample_flags = value; } }
+        public uint DefaultSampleFlags { get { return this.default_sample_flags; } set { this.default_sample_flags = value; } }
 
         public TrackExtendsBox()
         { }
@@ -14911,13 +14911,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "trun";
 
         protected uint sample_count;  //  the following are optional fields
-        public uint SampleCount { get { return sample_count; } set { sample_count = value; } }
+        public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
         protected int data_offset;
-        public int DataOffset { get { return data_offset; } set { data_offset = value; } }
+        public int DataOffset { get { return this.data_offset; } set { this.data_offset = value; } }
 
         protected uint first_sample_flags;  //  all fields in the following array are optional
-        public uint FirstSampleFlags { get { return first_sample_flags; } set { first_sample_flags = value; } }
+        public uint FirstSampleFlags { get { return this.first_sample_flags; } set { this.first_sample_flags = value; } }
 
         public TrackRunBox()
         { }
@@ -15006,7 +15006,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tyco";
 
         protected uint[] compatible_brands;  //  to end of the box
-        public uint[] CompatibleBrands { get { return compatible_brands; } set { compatible_brands = value; } }
+        public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
         public TypeCombinationBox()
         { }
@@ -15097,16 +15097,16 @@ namespace BoxGenerator2
 
 
         protected uint size;
-        public uint Size { get { return size; } set { size = value; } }
+        public uint Size { get { return this.size; } set { this.size = value; } }
 
         protected uint type; // = boxtype
-        public uint Type { get { return type; } set { type = value; } }
+        public uint Type { get { return this.type; } set { this.type = value; } }
 
         protected ulong largesize;
-        public ulong Largesize { get { return largesize; } set { largesize = value; } }
+        public ulong Largesize { get { return this.largesize; } set { this.largesize = value; } }
 
         protected byte[] usertype; // = extended_type
-        public byte[] Usertype { get { return usertype; } set { usertype = value; } }
+        public byte[] Usertype { get { return this.usertype; } set { this.usertype = value; } }
 
         public BoxHeader()
         { }
@@ -15194,10 +15194,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vmhd";
 
         protected ushort graphicsmode = 0;  //  copy, see below
-        public ushort Graphicsmode { get { return graphicsmode; } set { graphicsmode = value; } }
+        public ushort Graphicsmode { get { return this.graphicsmode; } set { this.graphicsmode = value; } }
 
         protected ushort[] opcolor = { 0, 0, 0 };
-        public ushort[] Opcolor { get { return opcolor; } set { opcolor = value; } }
+        public ushort[] Opcolor { get { return this.opcolor; } set { this.opcolor = value; } }
 
         public VideoMediaHeaderBox()
         { }
@@ -15243,7 +15243,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "xml ";
 
         protected string xml;
-        public string Xml { get { return xml; } set { xml = value; } }
+        public string Xml { get { return this.xml; } set { this.xml = value; } }
 
         public XMLBox()
         { }
@@ -15287,13 +15287,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "amve";
 
         protected uint ambient_illuminance;
-        public uint AmbientIlluminance { get { return ambient_illuminance; } set { ambient_illuminance = value; } }
+        public uint AmbientIlluminance { get { return this.ambient_illuminance; } set { this.ambient_illuminance = value; } }
 
         protected ushort ambient_light_x;
-        public ushort AmbientLightX { get { return ambient_light_x; } set { ambient_light_x = value; } }
+        public ushort AmbientLightX { get { return this.ambient_light_x; } set { this.ambient_light_x = value; } }
 
         protected ushort ambient_light_y;
-        public ushort AmbientLightY { get { return ambient_light_y; } set { ambient_light_y = value; } }
+        public ushort AmbientLightY { get { return this.ambient_light_y; } set { this.ambient_light_y = value; } }
 
         public AmbientViewingEnvironmentBox()
         { }
@@ -15341,7 +15341,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "keys";
 
         protected MetaDataKeyBox[] MetaDataKeyBox;
-        public MetaDataKeyBox[] _MetaDataKeyBox { get { return MetaDataKeyBox; } set { MetaDataKeyBox = value; } }
+        public MetaDataKeyBox[] _MetaDataKeyBox { get { return this.MetaDataKeyBox; } set { this.MetaDataKeyBox = value; } }
 
         public MetaDataKeyTableBox()
         { }
@@ -15383,7 +15383,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "uri ";
 
         protected string theURI;
-        public string TheURI { get { return theURI; } set { theURI = value; } }
+        public string TheURI { get { return this.theURI; } set { this.theURI = value; } }
 
         public URIBox()
         { }
@@ -15438,28 +15438,28 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "iroi";
 
         protected byte iroi_type;
-        public byte IroiType { get { return iroi_type; } set { iroi_type = value; } }
+        public byte IroiType { get { return this.iroi_type; } set { this.iroi_type = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte grid_roi_mb_width;
-        public byte GridRoiMbWidth { get { return grid_roi_mb_width; } set { grid_roi_mb_width = value; } }
+        public byte GridRoiMbWidth { get { return this.grid_roi_mb_width; } set { this.grid_roi_mb_width = value; } }
 
         protected byte grid_roi_mb_height;
-        public byte GridRoiMbHeight { get { return grid_roi_mb_height; } set { grid_roi_mb_height = value; } }
+        public byte GridRoiMbHeight { get { return this.grid_roi_mb_height; } set { this.grid_roi_mb_height = value; } }
 
         protected uint num_roi;
-        public uint NumRoi { get { return num_roi; } set { num_roi = value; } }
+        public uint NumRoi { get { return this.num_roi; } set { this.num_roi = value; } }
 
         protected uint top_left_mb;
-        public uint TopLeftMb { get { return top_left_mb; } set { top_left_mb = value; } }
+        public uint TopLeftMb { get { return this.top_left_mb; } set { this.top_left_mb = value; } }
 
         protected byte roi_mb_width;
-        public byte RoiMbWidth { get { return roi_mb_width; } set { roi_mb_width = value; } }
+        public byte RoiMbWidth { get { return this.roi_mb_width; } set { this.roi_mb_width = value; } }
 
         protected byte roi_mb_height;
-        public byte RoiMbHeight { get { return roi_mb_height; } set { roi_mb_height = value; } }
+        public byte RoiMbHeight { get { return this.roi_mb_height; } set { this.roi_mb_height = value; } }
 
         public IroiInfoBox()
         { }
@@ -15560,10 +15560,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ldep";
 
         protected ushort entry_count;
-        public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected ushort dependencyTierId;
-        public ushort DependencyTierId { get { return dependencyTierId; } set { dependencyTierId = value; } }
+        public ushort DependencyTierId { get { return this.dependencyTierId; } set { this.dependencyTierId = value; } }
 
         public TierDependencyBox()
         { }
@@ -15627,28 +15627,28 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "svdr";
 
         protected byte min_dependency_id;
-        public byte MinDependencyId { get { return min_dependency_id; } set { min_dependency_id = value; } }
+        public byte MinDependencyId { get { return this.min_dependency_id; } set { this.min_dependency_id = value; } }
 
         protected byte min_temporal_id;
-        public byte MinTemporalId { get { return min_temporal_id; } set { min_temporal_id = value; } }
+        public byte MinTemporalId { get { return this.min_temporal_id; } set { this.min_temporal_id = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte min_quality_id;
-        public byte MinQualityId { get { return min_quality_id; } set { min_quality_id = value; } }
+        public byte MinQualityId { get { return this.min_quality_id; } set { this.min_quality_id = value; } }
 
         protected byte max_dependency_id;
-        public byte MaxDependencyId { get { return max_dependency_id; } set { max_dependency_id = value; } }
+        public byte MaxDependencyId { get { return this.max_dependency_id; } set { this.max_dependency_id = value; } }
 
         protected byte max_temporal_id;
-        public byte MaxTemporalId { get { return max_temporal_id; } set { max_temporal_id = value; } }
+        public byte MaxTemporalId { get { return this.max_temporal_id; } set { this.max_temporal_id = value; } }
 
         protected byte reserved0 = 0;
-        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte max_quality_id;
-        public byte MaxQualityId { get { return max_quality_id; } set { max_quality_id = value; } }
+        public byte MaxQualityId { get { return this.max_quality_id; } set { this.max_quality_id = value; } }
 
         public SVCDependencyRangeBox()
         { }
@@ -15716,16 +15716,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "svip";
 
         protected byte sps_id_count;
-        public byte SpsIdCount { get { return sps_id_count; } set { sps_id_count = value; } }
+        public byte SpsIdCount { get { return this.sps_id_count; } set { this.sps_id_count = value; } }
 
         protected byte SPS_index;
-        public byte SPSIndex { get { return SPS_index; } set { SPS_index = value; } }
+        public byte SPSIndex { get { return this.SPS_index; } set { this.SPS_index = value; } }
 
         protected byte pps_id_count;
-        public byte PpsIdCount { get { return pps_id_count; } set { pps_id_count = value; } }
+        public byte PpsIdCount { get { return this.pps_id_count; } set { this.pps_id_count = value; } }
 
         protected byte PPS_index;
-        public byte PPSIndex { get { return PPS_index; } set { PPS_index = value; } }
+        public byte PPSIndex { get { return this.PPS_index; } set { this.PPS_index = value; } }
 
         public InitialParameterSetBox()
         { }
@@ -15803,16 +15803,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "svpr";
 
         protected byte reserved1 = 0;
-        public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected byte min_priorityId;
-        public byte MinPriorityId { get { return min_priorityId; } set { min_priorityId = value; } }
+        public byte MinPriorityId { get { return this.min_priorityId; } set { this.min_priorityId = value; } }
 
         protected byte reserved2 = 0;
-        public byte Reserved2 { get { return reserved2; } set { reserved2 = value; } }
+        public byte Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
         protected byte max_priorityId;
-        public byte MaxPriorityId { get { return max_priorityId; } set { max_priorityId = value; } }
+        public byte MaxPriorityId { get { return this.max_priorityId; } set { this.max_priorityId = value; } }
 
         public PriorityRangeBox()
         { }
@@ -15876,34 +15876,34 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tran";
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte conversion_idc;
-        public byte ConversionIdc { get { return conversion_idc; } set { conversion_idc = value; } }
+        public byte ConversionIdc { get { return this.conversion_idc; } set { this.conversion_idc = value; } }
 
         protected bool cavlc_info_present_flag;
-        public bool CavlcInfoPresentFlag { get { return cavlc_info_present_flag; } set { cavlc_info_present_flag = value; } }
+        public bool CavlcInfoPresentFlag { get { return this.cavlc_info_present_flag; } set { this.cavlc_info_present_flag = value; } }
 
         protected bool cabac_info_present_flag;
-        public bool CabacInfoPresentFlag { get { return cabac_info_present_flag; } set { cabac_info_present_flag = value; } }
+        public bool CabacInfoPresentFlag { get { return this.cabac_info_present_flag; } set { this.cabac_info_present_flag = value; } }
 
         protected uint cavlc_profile_level_idc;
-        public uint CavlcProfileLevelIdc { get { return cavlc_profile_level_idc; } set { cavlc_profile_level_idc = value; } }
+        public uint CavlcProfileLevelIdc { get { return this.cavlc_profile_level_idc; } set { this.cavlc_profile_level_idc = value; } }
 
         protected uint cavlc_max_bitrate;
-        public uint CavlcMaxBitrate { get { return cavlc_max_bitrate; } set { cavlc_max_bitrate = value; } }
+        public uint CavlcMaxBitrate { get { return this.cavlc_max_bitrate; } set { this.cavlc_max_bitrate = value; } }
 
         protected uint cavlc_avg_bitrate;
-        public uint CavlcAvgBitrate { get { return cavlc_avg_bitrate; } set { cavlc_avg_bitrate = value; } }
+        public uint CavlcAvgBitrate { get { return this.cavlc_avg_bitrate; } set { this.cavlc_avg_bitrate = value; } }
 
         protected uint cabac_profile_level_idc;
-        public uint CabacProfileLevelIdc { get { return cabac_profile_level_idc; } set { cabac_profile_level_idc = value; } }
+        public uint CabacProfileLevelIdc { get { return this.cabac_profile_level_idc; } set { this.cabac_profile_level_idc = value; } }
 
         protected uint cabac_max_bitrate;
-        public uint CabacMaxBitrate { get { return cabac_max_bitrate; } set { cabac_max_bitrate = value; } }
+        public uint CabacMaxBitrate { get { return this.cabac_max_bitrate; } set { this.cabac_max_bitrate = value; } }
 
         protected uint cabac_avg_bitrate;
-        public uint CabacAvgBitrate { get { return cabac_avg_bitrate; } set { cabac_avg_bitrate = value; } }
+        public uint CabacAvgBitrate { get { return this.cabac_avg_bitrate; } set { this.cabac_avg_bitrate = value; } }
 
         public TranscodingInfoBox()
         { }
@@ -16004,25 +16004,25 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rrgn";
 
         protected ushort base_region_tierID;
-        public ushort BaseRegionTierID { get { return base_region_tierID; } set { base_region_tierID = value; } }
+        public ushort BaseRegionTierID { get { return this.base_region_tierID; } set { this.base_region_tierID = value; } }
 
         protected bool dynamic_rect;
-        public bool DynamicRect { get { return dynamic_rect; } set { dynamic_rect = value; } }
+        public bool DynamicRect { get { return this.dynamic_rect; } set { this.dynamic_rect = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort horizontal_offset;
-        public ushort HorizontalOffset { get { return horizontal_offset; } set { horizontal_offset = value; } }
+        public ushort HorizontalOffset { get { return this.horizontal_offset; } set { this.horizontal_offset = value; } }
 
         protected ushort vertical_offset;
-        public ushort VerticalOffset { get { return vertical_offset; } set { vertical_offset = value; } }
+        public ushort VerticalOffset { get { return this.vertical_offset; } set { this.vertical_offset = value; } }
 
         protected ushort region_width;
-        public ushort RegionWidth { get { return region_width; } set { region_width = value; } }
+        public ushort RegionWidth { get { return this.region_width; } set { this.region_width = value; } }
 
         protected ushort region_height;
-        public ushort RegionHeight { get { return region_height; } set { region_height = value; } }
+        public ushort RegionHeight { get { return this.region_height; } set { this.region_height = value; } }
 
         public RectRegionBox()
         { }
@@ -16101,22 +16101,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "buff";
 
         protected ushort operating_point_count;
-        public ushort OperatingPointCount { get { return operating_point_count; } set { operating_point_count = value; } }
+        public ushort OperatingPointCount { get { return this.operating_point_count; } set { this.operating_point_count = value; } }
 
         protected uint byte_rate;
-        public uint ByteRate { get { return byte_rate; } set { byte_rate = value; } }
+        public uint ByteRate { get { return this.byte_rate; } set { this.byte_rate = value; } }
 
         protected uint cpb_size;
-        public uint CpbSize { get { return cpb_size; } set { cpb_size = value; } }
+        public uint CpbSize { get { return this.cpb_size; } set { this.cpb_size = value; } }
 
         protected uint dpb_size;
-        public uint DpbSize { get { return dpb_size; } set { dpb_size = value; } }
+        public uint DpbSize { get { return this.dpb_size; } set { this.dpb_size = value; } }
 
         protected uint init_cpb_delay;
-        public uint InitCpbDelay { get { return init_cpb_delay; } set { init_cpb_delay = value; } }
+        public uint InitCpbDelay { get { return this.init_cpb_delay; } set { this.init_cpb_delay = value; } }
 
         protected uint init_dpb_delay;
-        public uint InitDpbDelay { get { return init_dpb_delay; } set { init_dpb_delay = value; } }
+        public uint InitDpbDelay { get { return this.init_dpb_delay; } set { this.init_dpb_delay = value; } }
 
         public BufferingBox()
         { }
@@ -16191,16 +16191,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mstv";
 
         protected ushort item_count;
-        public ushort ItemCount { get { return item_count; } set { item_count = value; } }
+        public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
 
         protected ushort view_id;
-        public ushort ViewId { get { return view_id; } set { view_id = value; } }
+        public ushort ViewId { get { return this.view_id; } set { this.view_id = value; } }
 
         protected byte temporal_id;
-        public byte TemporalId { get { return temporal_id; } set { temporal_id = value; } }
+        public byte TemporalId { get { return this.temporal_id; } set { this.temporal_id = value; } }
 
         protected byte reserved;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         public MVCSubTrackViewBox()
         { }
@@ -16288,55 +16288,55 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mvcg";
 
         protected uint multiview_group_id;
-        public uint MultiviewGroupId { get { return multiview_group_id; } set { multiview_group_id = value; } }
+        public uint MultiviewGroupId { get { return this.multiview_group_id; } set { this.multiview_group_id = value; } }
 
         protected ushort num_entries;
-        public ushort NumEntries { get { return num_entries; } set { num_entries = value; } }
+        public ushort NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte entry_type;
-        public byte EntryType { get { return entry_type; } set { entry_type = value; } }
+        public byte EntryType { get { return this.entry_type; } set { this.entry_type = value; } }
 
         protected uint track_id;
-        public uint TrackId { get { return track_id; } set { track_id = value; } }
+        public uint TrackId { get { return this.track_id; } set { this.track_id = value; } }
 
         protected uint track_id0;
-        public uint TrackId0 { get { return track_id0; } set { track_id0 = value; } }
+        public uint TrackId0 { get { return this.track_id0; } set { this.track_id0 = value; } }
 
         protected ushort tier_id;
-        public ushort TierId { get { return tier_id; } set { tier_id = value; } }
+        public ushort TierId { get { return this.tier_id; } set { this.tier_id = value; } }
 
         protected byte reserved1 = 0;
-        public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected ushort output_view_id;
-        public ushort OutputViewId { get { return output_view_id; } set { output_view_id = value; } }
+        public ushort OutputViewId { get { return this.output_view_id; } set { this.output_view_id = value; } }
 
         protected byte reserved2 = 0;
-        public byte Reserved2 { get { return reserved2; } set { reserved2 = value; } }
+        public byte Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
         protected ushort start_view_id;
-        public ushort StartViewId { get { return start_view_id; } set { start_view_id = value; } }
+        public ushort StartViewId { get { return this.start_view_id; } set { this.start_view_id = value; } }
 
         protected ushort view_count;
-        public ushort ViewCount { get { return view_count; } set { view_count = value; } }
+        public ushort ViewCount { get { return this.view_count; } set { this.view_count = value; } }
 
         protected TierInfoBox subset_stream_info;  //  optional
-        public TierInfoBox SubsetStreamInfo { get { return subset_stream_info; } set { subset_stream_info = value; } }
+        public TierInfoBox SubsetStreamInfo { get { return this.subset_stream_info; } set { this.subset_stream_info = value; } }
 
         protected MultiviewRelationAttributeBox relation_attributes;  //  optional
-        public MultiviewRelationAttributeBox RelationAttributes { get { return relation_attributes; } set { relation_attributes = value; } }
+        public MultiviewRelationAttributeBox RelationAttributes { get { return this.relation_attributes; } set { this.relation_attributes = value; } }
 
         protected TierBitRateBox subset_stream_bit_rate;  //  optional
-        public TierBitRateBox SubsetStreamBitRate { get { return subset_stream_bit_rate; } set { subset_stream_bit_rate = value; } }
+        public TierBitRateBox SubsetStreamBitRate { get { return this.subset_stream_bit_rate; } set { this.subset_stream_bit_rate = value; } }
 
         protected BufferingBox subset_stream_buffering;  //  optional
-        public BufferingBox SubsetStreamBuffering { get { return subset_stream_buffering; } set { subset_stream_buffering = value; } }
+        public BufferingBox SubsetStreamBuffering { get { return this.subset_stream_buffering; } set { this.subset_stream_buffering = value; } }
 
         protected MultiviewSceneInfoBox multiview_scene_info;  //  optional
-        public MultiviewSceneInfoBox MultiviewSceneInfo { get { return multiview_scene_info; } set { multiview_scene_info = value; } }
+        public MultiviewSceneInfoBox MultiviewSceneInfo { get { return this.multiview_scene_info; } set { this.multiview_scene_info = value; } }
 
         public MultiviewGroupBox()
         { }
@@ -16542,37 +16542,37 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "3dpr";
 
         protected ushort depth_width;
-        public ushort DepthWidth { get { return depth_width; } set { depth_width = value; } }
+        public ushort DepthWidth { get { return this.depth_width; } set { this.depth_width = value; } }
 
         protected ushort depth_height;
-        public ushort DepthHeight { get { return depth_height; } set { depth_height = value; } }
+        public ushort DepthHeight { get { return this.depth_height; } set { this.depth_height = value; } }
 
         protected ushort depth_hor_mult_minus1;  //  optional
-        public ushort DepthHorMultMinus1 { get { return depth_hor_mult_minus1; } set { depth_hor_mult_minus1 = value; } }
+        public ushort DepthHorMultMinus1 { get { return this.depth_hor_mult_minus1; } set { this.depth_hor_mult_minus1 = value; } }
 
         protected ushort depth_ver_mult_minus1;  //  optional
-        public ushort DepthVerMultMinus1 { get { return depth_ver_mult_minus1; } set { depth_ver_mult_minus1 = value; } }
+        public ushort DepthVerMultMinus1 { get { return this.depth_ver_mult_minus1; } set { this.depth_ver_mult_minus1 = value; } }
 
         protected byte depth_hor_rsh;  //  optional
-        public byte DepthHorRsh { get { return depth_hor_rsh; } set { depth_hor_rsh = value; } }
+        public byte DepthHorRsh { get { return this.depth_hor_rsh; } set { this.depth_hor_rsh = value; } }
 
         protected byte depth_ver_rsh;  //  optional
-        public byte DepthVerRsh { get { return depth_ver_rsh; } set { depth_ver_rsh = value; } }
+        public byte DepthVerRsh { get { return this.depth_ver_rsh; } set { this.depth_ver_rsh = value; } }
 
         protected ushort grid_pos_num_views;  //  optional
-        public ushort GridPosNumViews { get { return grid_pos_num_views; } set { grid_pos_num_views = value; } }
+        public ushort GridPosNumViews { get { return this.grid_pos_num_views; } set { this.grid_pos_num_views = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort[] grid_pos_view_id;
-        public ushort[] GridPosViewId { get { return grid_pos_view_id; } set { grid_pos_view_id = value; } }
+        public ushort[] GridPosViewId { get { return this.grid_pos_view_id; } set { this.grid_pos_view_id = value; } }
 
         protected short[] grid_pos_x;
-        public short[] GridPosX { get { return grid_pos_x; } set { grid_pos_x = value; } }
+        public short[] GridPosX { get { return this.grid_pos_x; } set { this.grid_pos_x = value; } }
 
         protected short[] grid_pos_y;
-        public short[] GridPosY { get { return grid_pos_y; } set { grid_pos_y = value; } }
+        public short[] GridPosY { get { return this.grid_pos_y; } set { this.grid_pos_y = value; } }
 
         public MVDDepthResolutionBox()
         { }
@@ -16669,25 +16669,25 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mvra";
 
         protected ushort reserved1 = 0;
-        public ushort Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public ushort Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected ushort num_common_attributes;
-        public ushort NumCommonAttributes { get { return num_common_attributes; } set { num_common_attributes = value; } }
+        public ushort NumCommonAttributes { get { return this.num_common_attributes; } set { this.num_common_attributes = value; } }
 
         protected uint common_attribute;
-        public uint CommonAttribute { get { return common_attribute; } set { common_attribute = value; } }
+        public uint CommonAttribute { get { return this.common_attribute; } set { this.common_attribute = value; } }
 
         protected uint common_value;
-        public uint CommonValue { get { return common_value; } set { common_value = value; } }
+        public uint CommonValue { get { return this.common_value; } set { this.common_value = value; } }
 
         protected ushort reserved2 = 0;
-        public ushort Reserved2 { get { return reserved2; } set { reserved2 = value; } }
+        public ushort Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
         protected ushort num_differentiating_attributes;
-        public ushort NumDifferentiatingAttributes { get { return num_differentiating_attributes; } set { num_differentiating_attributes = value; } }
+        public ushort NumDifferentiatingAttributes { get { return this.num_differentiating_attributes; } set { this.num_differentiating_attributes = value; } }
 
         protected uint differentiating_attribute;
-        public uint DifferentiatingAttribute { get { return differentiating_attribute; } set { differentiating_attribute = value; } }
+        public uint DifferentiatingAttribute { get { return this.differentiating_attribute; } set { this.differentiating_attribute = value; } }
 
         public MultiviewRelationAttributeBox()
         { }
@@ -16777,10 +16777,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "sdep";
 
         protected ushort dependency_count;
-        public ushort DependencyCount { get { return dependency_count; } set { dependency_count = value; } }
+        public ushort DependencyCount { get { return this.dependency_count; } set { this.dependency_count = value; } }
 
         protected short relative_sample_number;
-        public short RelativeSampleNumber { get { return relative_sample_number; } set { relative_sample_number = value; } }
+        public short RelativeSampleNumber { get { return this.relative_sample_number; } set { this.relative_sample_number = value; } }
 
         public SampleDependencyBox()
         { }
@@ -16862,16 +16862,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "seii";
 
         protected ushort numRequiredSEIs;
-        public ushort NumRequiredSEIs { get { return numRequiredSEIs; } set { numRequiredSEIs = value; } }
+        public ushort NumRequiredSEIs { get { return this.numRequiredSEIs; } set { this.numRequiredSEIs = value; } }
 
         protected ushort requiredSEI_ID;
-        public ushort RequiredSEIID { get { return requiredSEI_ID; } set { requiredSEI_ID = value; } }
+        public ushort RequiredSEIID { get { return this.requiredSEI_ID; } set { this.requiredSEI_ID = value; } }
 
         protected ushort numNotRequiredSEIs;
-        public ushort NumNotRequiredSEIs { get { return numNotRequiredSEIs; } set { numNotRequiredSEIs = value; } }
+        public ushort NumNotRequiredSEIs { get { return this.numNotRequiredSEIs; } set { this.numNotRequiredSEIs = value; } }
 
         protected ushort notrequiredSEI_ID;
-        public ushort NotrequiredSEIID { get { return notrequiredSEI_ID; } set { notrequiredSEI_ID = value; } }
+        public ushort NotrequiredSEIID { get { return this.notrequiredSEI_ID; } set { this.notrequiredSEI_ID = value; } }
 
         public SeiInformationBox()
         { }
@@ -16957,31 +16957,31 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "sstl";
 
         protected ushort item_count;
-        public ushort ItemCount { get { return item_count; } set { item_count = value; } }
+        public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
 
         protected byte dependency_id;
-        public byte DependencyId { get { return dependency_id; } set { dependency_id = value; } }
+        public byte DependencyId { get { return this.dependency_id; } set { this.dependency_id = value; } }
 
         protected byte quality_id;
-        public byte QualityId { get { return quality_id; } set { quality_id = value; } }
+        public byte QualityId { get { return this.quality_id; } set { this.quality_id = value; } }
 
         protected byte temporal_id;
-        public byte TemporalId { get { return temporal_id; } set { temporal_id = value; } }
+        public byte TemporalId { get { return this.temporal_id; } set { this.temporal_id = value; } }
 
         protected byte priority_id;
-        public byte PriorityId { get { return priority_id; } set { priority_id = value; } }
+        public byte PriorityId { get { return this.priority_id; } set { this.priority_id = value; } }
 
         protected byte dependency_id_range;
-        public byte DependencyIdRange { get { return dependency_id_range; } set { dependency_id_range = value; } }
+        public byte DependencyIdRange { get { return this.dependency_id_range; } set { this.dependency_id_range = value; } }
 
         protected byte quality_id_range;
-        public byte QualityIdRange { get { return quality_id_range; } set { quality_id_range = value; } }
+        public byte QualityIdRange { get { return this.quality_id_range; } set { this.quality_id_range = value; } }
 
         protected byte temporal_id_range;
-        public byte TemporalIdRange { get { return temporal_id_range; } set { temporal_id_range = value; } }
+        public byte TemporalIdRange { get { return this.temporal_id_range; } set { this.temporal_id_range = value; } }
 
         protected byte priority_id_range;
-        public byte PriorityIdRange { get { return priority_id_range; } set { priority_id_range = value; } }
+        public byte PriorityIdRange { get { return this.priority_id_range; } set { this.priority_id_range = value; } }
 
         public SVCSubTrackLayerBox()
         { }
@@ -17063,10 +17063,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stmg";
 
         protected ushort item_count;
-        public ushort ItemCount { get { return item_count; } set { item_count = value; } }
+        public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
 
         protected uint MultiviewGroupId;
-        public uint _MultiviewGroupId { get { return MultiviewGroupId; } set { MultiviewGroupId = value; } }
+        public uint _MultiviewGroupId { get { return this.MultiviewGroupId; } set { this.MultiviewGroupId = value; } }
 
         public MVCSubTrackMultiviewGroupBox()
         { }
@@ -17127,10 +17127,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stti";
 
         protected ushort item_count;
-        public ushort ItemCount { get { return item_count; } set { item_count = value; } }
+        public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
 
         protected ushort tierID;
-        public ushort TierID { get { return tierID; } set { tierID = value; } }
+        public ushort TierID { get { return this.tierID; } set { this.tierID = value; } }
 
         public SubTrackTierBox()
         { }
@@ -17190,13 +17190,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "swtc";
 
         protected uint num_entries;
-        public uint NumEntries { get { return num_entries; } set { num_entries = value; } }
+        public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
 
         protected uint multiview_group_id;
-        public uint MultiviewGroupId { get { return multiview_group_id; } set { multiview_group_id = value; } }
+        public uint MultiviewGroupId { get { return this.multiview_group_id; } set { this.multiview_group_id = value; } }
 
         protected MultiviewRelationAttributeBox relation_attributes;
-        public MultiviewRelationAttributeBox RelationAttributes { get { return relation_attributes; } set { relation_attributes = value; } }
+        public MultiviewRelationAttributeBox RelationAttributes { get { return this.relation_attributes; } set { this.relation_attributes = value; } }
 
         public MultiviewGroupRelationBox()
         { }
@@ -17265,22 +17265,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tibr";
 
         protected uint baseBitRate;
-        public uint BaseBitRate { get { return baseBitRate; } set { baseBitRate = value; } }
+        public uint BaseBitRate { get { return this.baseBitRate; } set { this.baseBitRate = value; } }
 
         protected uint maxBitRate;
-        public uint MaxBitRate { get { return maxBitRate; } set { maxBitRate = value; } }
+        public uint MaxBitRate { get { return this.maxBitRate; } set { this.maxBitRate = value; } }
 
         protected uint avgBitRate;
-        public uint AvgBitRate { get { return avgBitRate; } set { avgBitRate = value; } }
+        public uint AvgBitRate { get { return this.avgBitRate; } set { this.avgBitRate = value; } }
 
         protected uint tierBaseBitRate;
-        public uint TierBaseBitRate { get { return tierBaseBitRate; } set { tierBaseBitRate = value; } }
+        public uint TierBaseBitRate { get { return this.tierBaseBitRate; } set { this.tierBaseBitRate = value; } }
 
         protected uint tierMaxBitRate;
-        public uint TierMaxBitRate { get { return tierMaxBitRate; } set { tierMaxBitRate = value; } }
+        public uint TierMaxBitRate { get { return this.tierMaxBitRate; } set { this.tierMaxBitRate = value; } }
 
         protected uint tierAvgBitRate;
-        public uint TierAvgBitRate { get { return tierAvgBitRate; } set { tierAvgBitRate = value; } }
+        public uint TierAvgBitRate { get { return this.tierAvgBitRate; } set { this.tierAvgBitRate = value; } }
 
         public TierBitRateBox()
         { }
@@ -17349,37 +17349,37 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tiri";
 
         protected ushort tierID;
-        public ushort TierID { get { return tierID; } set { tierID = value; } }
+        public ushort TierID { get { return this.tierID; } set { this.tierID = value; } }
 
         protected byte profileIndication;
-        public byte ProfileIndication { get { return profileIndication; } set { profileIndication = value; } }
+        public byte ProfileIndication { get { return this.profileIndication; } set { this.profileIndication = value; } }
 
         protected byte profile_compatibility;
-        public byte ProfileCompatibility { get { return profile_compatibility; } set { profile_compatibility = value; } }
+        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
 
         protected byte levelIndication;
-        public byte LevelIndication { get { return levelIndication; } set { levelIndication = value; } }
+        public byte LevelIndication { get { return this.levelIndication; } set { this.levelIndication = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort visualWidth;
-        public ushort VisualWidth { get { return visualWidth; } set { visualWidth = value; } }
+        public ushort VisualWidth { get { return this.visualWidth; } set { this.visualWidth = value; } }
 
         protected ushort visualHeight;
-        public ushort VisualHeight { get { return visualHeight; } set { visualHeight = value; } }
+        public ushort VisualHeight { get { return this.visualHeight; } set { this.visualHeight = value; } }
 
         protected byte discardable;
-        public byte Discardable { get { return discardable; } set { discardable = value; } }
+        public byte Discardable { get { return this.discardable; } set { this.discardable = value; } }
 
         protected byte constantFrameRate;
-        public byte ConstantFrameRate { get { return constantFrameRate; } set { constantFrameRate = value; } }
+        public byte ConstantFrameRate { get { return this.constantFrameRate; } set { this.constantFrameRate = value; } }
 
         protected byte reserved0 = 0;
-        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected ushort frameRate;
-        public ushort FrameRate { get { return frameRate; } set { frameRate = value; } }
+        public ushort FrameRate { get { return this.frameRate; } set { this.frameRate = value; } }
 
         public TierInfoBox()
         { }
@@ -17457,10 +17457,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tstb";
 
         protected ushort item_count;
-        public ushort ItemCount { get { return item_count; } set { item_count = value; } }
+        public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
 
         protected ushort tileGroupID;
-        public ushort TileGroupID { get { return tileGroupID; } set { tileGroupID = value; } }
+        public ushort TileGroupID { get { return this.tileGroupID; } set { this.tileGroupID = value; } }
 
         public TileSubTrackGroupBox()
         { }
@@ -17518,7 +17518,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vwdi";
 
         protected byte max_disparity;
-        public byte MaxDisparity { get { return max_disparity; } set { max_disparity = value; } }
+        public byte MaxDisparity { get { return this.max_disparity; } set { this.max_disparity = value; } }
 
         public MultiviewSceneInfoBox()
         { }
@@ -17561,10 +17561,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mvdC";
 
         protected MVDDecoderConfigurationRecord MVDConfig;
-        public MVDDecoderConfigurationRecord _MVDConfig { get { return MVDConfig; } set { MVDConfig = value; } }
+        public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
 
         protected MVDDepthResolutionBox mvdDepthRes;  // Optional
-        public MVDDepthResolutionBox MvdDepthRes { get { return mvdDepthRes; } set { mvdDepthRes = value; } }
+        public MVDDepthResolutionBox MvdDepthRes { get { return this.mvdDepthRes; } set { this.mvdDepthRes = value; } }
 
         public MVCDConfigurationBox()
         { }
@@ -17613,10 +17613,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "a3dC";
 
         protected MVDDecoderConfigurationRecord MVDConfig;
-        public MVDDecoderConfigurationRecord _MVDConfig { get { return MVDConfig; } set { MVDConfig = value; } }
+        public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
 
         protected MVDDepthResolutionBox mvdDepthRes;  // Optional
-        public MVDDepthResolutionBox MvdDepthRes { get { return mvdDepthRes; } set { mvdDepthRes = value; } }
+        public MVDDepthResolutionBox MvdDepthRes { get { return this.mvdDepthRes; } set { this.mvdDepthRes = value; } }
 
         public A3DConfigurationBox()
         { }
@@ -17685,55 +17685,55 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vwid";
 
         protected byte reserved6 = 0;
-        public byte Reserved6 { get { return reserved6; } set { reserved6 = value; } }
+        public byte Reserved6 { get { return this.reserved6; } set { this.reserved6 = value; } }
 
         protected byte min_temporal_id;
-        public byte MinTemporalId { get { return min_temporal_id; } set { min_temporal_id = value; } }
+        public byte MinTemporalId { get { return this.min_temporal_id; } set { this.min_temporal_id = value; } }
 
         protected byte max_temporal_id;
-        public byte MaxTemporalId { get { return max_temporal_id; } set { max_temporal_id = value; } }
+        public byte MaxTemporalId { get { return this.max_temporal_id; } set { this.max_temporal_id = value; } }
 
         protected ushort num_views;
-        public ushort NumViews { get { return num_views; } set { num_views = value; } }
+        public ushort NumViews { get { return this.num_views; } set { this.num_views = value; } }
 
         protected byte reserved1 = 0;
-        public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected ushort[] view_id;
-        public ushort[] ViewId { get { return view_id; } set { view_id = value; } }
+        public ushort[] ViewId { get { return this.view_id; } set { this.view_id = value; } }
 
         protected byte reserved2 = 0;
-        public byte Reserved2 { get { return reserved2; } set { reserved2 = value; } }
+        public byte Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
         protected ushort view_order_index;
-        public ushort ViewOrderIndex { get { return view_order_index; } set { view_order_index = value; } }
+        public ushort ViewOrderIndex { get { return this.view_order_index; } set { this.view_order_index = value; } }
 
         protected bool[] texture_in_stream;
-        public bool[] TextureInStream { get { return texture_in_stream; } set { texture_in_stream = value; } }
+        public bool[] TextureInStream { get { return this.texture_in_stream; } set { this.texture_in_stream = value; } }
 
         protected bool[] texture_in_track;
-        public bool[] TextureInTrack { get { return texture_in_track; } set { texture_in_track = value; } }
+        public bool[] TextureInTrack { get { return this.texture_in_track; } set { this.texture_in_track = value; } }
 
         protected bool[] depth_in_stream;
-        public bool[] DepthInStream { get { return depth_in_stream; } set { depth_in_stream = value; } }
+        public bool[] DepthInStream { get { return this.depth_in_stream; } set { this.depth_in_stream = value; } }
 
         protected bool[] depth_in_track;
-        public bool[] DepthInTrack { get { return depth_in_track; } set { depth_in_track = value; } }
+        public bool[] DepthInTrack { get { return this.depth_in_track; } set { this.depth_in_track = value; } }
 
         protected byte base_view_type;
-        public byte BaseViewType { get { return base_view_type; } set { base_view_type = value; } }
+        public byte BaseViewType { get { return this.base_view_type; } set { this.base_view_type = value; } }
 
         protected ushort num_ref_views;
-        public ushort NumRefViews { get { return num_ref_views; } set { num_ref_views = value; } }
+        public ushort NumRefViews { get { return this.num_ref_views; } set { this.num_ref_views = value; } }
 
         protected byte reserved5 = 0;
-        public byte Reserved5 { get { return reserved5; } set { reserved5 = value; } }
+        public byte Reserved5 { get { return this.reserved5; } set { this.reserved5 = value; } }
 
         protected byte[][] dependent_component_idc;
-        public byte[][] DependentComponentIdc { get { return dependent_component_idc; } set { dependent_component_idc = value; } }
+        public byte[][] DependentComponentIdc { get { return this.dependent_component_idc; } set { this.dependent_component_idc = value; } }
 
         protected ushort[][] ref_view_id;
-        public ushort[][] RefViewId { get { return ref_view_id; } set { ref_view_id = value; } }
+        public ushort[][] RefViewId { get { return this.ref_view_id; } set { this.ref_view_id = value; } }
 
         public ViewIdentifierBox()
         { }
@@ -17847,7 +17847,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mvcC";
 
         protected MVCDecoderConfigurationRecord MVCConfig;
-        public MVCDecoderConfigurationRecord _MVCConfig { get { return MVCConfig; } set { MVCConfig = value; } }
+        public MVCDecoderConfigurationRecord _MVCConfig { get { return this.MVCConfig; } set { this.MVCConfig = value; } }
 
         public MVCConfigurationBox()
         { }
@@ -17889,7 +17889,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "avcC";
 
         protected AVCDecoderConfigurationRecord AVCConfig;
-        public AVCDecoderConfigurationRecord _AVCConfig { get { return AVCConfig; } set { AVCConfig = value; } }
+        public AVCDecoderConfigurationRecord _AVCConfig { get { return this.AVCConfig; } set { this.AVCConfig = value; } }
 
         public AVCConfigurationBox()
         { }
@@ -17931,7 +17931,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "hvcC";
 
         protected HEVCDecoderConfigurationRecord HEVCConfig;
-        public HEVCDecoderConfigurationRecord _HEVCConfig { get { return HEVCConfig; } set { HEVCConfig = value; } }
+        public HEVCDecoderConfigurationRecord _HEVCConfig { get { return this.HEVCConfig; } set { this.HEVCConfig = value; } }
 
         public HEVCConfigurationBox()
         { }
@@ -17973,7 +17973,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "lhvC";
 
         protected LHEVCDecoderConfigurationRecord LHEVCConfig;
-        public LHEVCDecoderConfigurationRecord _LHEVCConfig { get { return LHEVCConfig; } set { LHEVCConfig = value; } }
+        public LHEVCDecoderConfigurationRecord _LHEVCConfig { get { return this.LHEVCConfig; } set { this.LHEVCConfig = value; } }
 
         public LHEVCConfigurationBox()
         { }
@@ -18015,7 +18015,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "m4ds";
 
         protected Descriptor[] Descr;
-        public Descriptor[] _Descr { get { return Descr; } set { Descr = value; } }
+        public Descriptor[] _Descr { get { return this.Descr; } set { this.Descr = value; } }
 
         public MPEG4ExtensionDescriptorsBox()
         { }
@@ -18057,7 +18057,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "svcC";
 
         protected SVCDecoderConfigurationRecord SVCConfig;
-        public SVCDecoderConfigurationRecord _SVCConfig { get { return SVCConfig; } set { SVCConfig = value; } }
+        public SVCDecoderConfigurationRecord _SVCConfig { get { return this.SVCConfig; } set { this.SVCConfig = value; } }
 
         public SVCConfigurationBox()
         { }
@@ -18100,7 +18100,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "seib";
 
         protected byte[] scalinfosei;
-        public byte[] Scalinfosei { get { return scalinfosei; } set { scalinfosei = value; } }
+        public byte[] Scalinfosei { get { return this.scalinfosei; } set { this.scalinfosei = value; } }
 
         public ScalabilityInformationSEIBox()
         { }
@@ -18144,10 +18144,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "svcP";
 
         protected byte method_count;
-        public byte MethodCount { get { return method_count; } set { method_count = value; } }
+        public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
 
         protected string[] PriorityAssignmentURI;
-        public string[] _PriorityAssignmentURI { get { return PriorityAssignmentURI; } set { PriorityAssignmentURI = value; } }
+        public string[] _PriorityAssignmentURI { get { return this.PriorityAssignmentURI; } set { this.PriorityAssignmentURI = value; } }
 
         public SVCPriorityAssignmentBox()
         { }
@@ -18193,7 +18193,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vsib";
 
         protected byte[] mvcscalinfosei;
-        public byte[] Mvcscalinfosei { get { return mvcscalinfosei; } set { mvcscalinfosei = value; } }
+        public byte[] Mvcscalinfosei { get { return this.mvcscalinfosei; } set { this.mvcscalinfosei = value; } }
 
         public ViewScalabilityInformationSEIBox()
         { }
@@ -18236,7 +18236,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "3sib";
 
         protected byte[] mvdscalinfosei;
-        public byte[] Mvdscalinfosei { get { return mvdscalinfosei; } set { mvdscalinfosei = value; } }
+        public byte[] Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
 
         public MVDScalabilityInformationSEIBox()
         { }
@@ -18280,10 +18280,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mvcP";
 
         protected byte method_count;
-        public byte MethodCount { get { return method_count; } set { method_count = value; } }
+        public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
 
         protected string[] PriorityAssignmentURI;
-        public string[] _PriorityAssignmentURI { get { return PriorityAssignmentURI; } set { PriorityAssignmentURI = value; } }
+        public string[] _PriorityAssignmentURI { get { return this.PriorityAssignmentURI; } set { this.PriorityAssignmentURI = value; } }
 
         public MVCViewPriorityAssignmentBox()
         { }
@@ -18328,7 +18328,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "hvtC";
 
         protected HEVCTileTierLevelConfigurationRecord HEVCTileTierLevelConfig;
-        public HEVCTileTierLevelConfigurationRecord _HEVCTileTierLevelConfig { get { return HEVCTileTierLevelConfig; } set { HEVCTileTierLevelConfig = value; } }
+        public HEVCTileTierLevelConfigurationRecord _HEVCTileTierLevelConfig { get { return this.HEVCTileTierLevelConfig; } set { this.HEVCTileTierLevelConfig = value; } }
 
         public HEVCTileConfigurationBox()
         { }
@@ -18370,7 +18370,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "evcC";
 
         protected EVCDecoderConfigurationRecord EVCConfig;
-        public EVCDecoderConfigurationRecord _EVCConfig { get { return EVCConfig; } set { EVCConfig = value; } }
+        public EVCDecoderConfigurationRecord _EVCConfig { get { return this.EVCConfig; } set { this.EVCConfig = value; } }
 
         public EVCConfigurationBox()
         { }
@@ -18418,19 +18418,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "qlif";
 
         protected byte pr_layer_num;
-        public byte PrLayerNum { get { return pr_layer_num; } set { pr_layer_num = value; } }
+        public byte PrLayerNum { get { return this.pr_layer_num; } set { this.pr_layer_num = value; } }
 
         protected byte pr_layer;
-        public byte PrLayer { get { return pr_layer; } set { pr_layer = value; } }
+        public byte PrLayer { get { return this.pr_layer; } set { this.pr_layer = value; } }
 
         protected uint profile_level_idc;
-        public uint ProfileLevelIdc { get { return profile_level_idc; } set { profile_level_idc = value; } }
+        public uint ProfileLevelIdc { get { return this.profile_level_idc; } set { this.profile_level_idc = value; } }
 
         protected uint max_bitrate;
-        public uint MaxBitrate { get { return max_bitrate; } set { max_bitrate = value; } }
+        public uint MaxBitrate { get { return this.max_bitrate; } set { this.max_bitrate = value; } }
 
         protected uint avg_bitrate;
-        public uint AvgBitrate { get { return avg_bitrate; } set { avg_bitrate = value; } }
+        public uint AvgBitrate { get { return this.avg_bitrate; } set { this.avg_bitrate = value; } }
 
         public SVCPriorityLayerInfoBox()
         { }
@@ -18496,7 +18496,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vvcC";
 
         protected VvcDecoderConfigurationRecord VvcConfig;
-        public VvcDecoderConfigurationRecord _VvcConfig { get { return VvcConfig; } set { VvcConfig = value; } }
+        public VvcDecoderConfigurationRecord _VvcConfig { get { return this.VvcConfig; } set { this.VvcConfig = value; } }
 
         public VvcConfigurationBox()
         { }
@@ -18539,10 +18539,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vvnC";
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte LengthSizeMinusOne;
-        public byte _LengthSizeMinusOne { get { return LengthSizeMinusOne; } set { LengthSizeMinusOne = value; } }
+        public byte _LengthSizeMinusOne { get { return this.LengthSizeMinusOne; } set { this.LengthSizeMinusOne = value; } }
 
         public VvcNALUConfigBox()
         { }
@@ -18599,25 +18599,25 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "dhec";
 
         protected uint num_entries;
-        public uint NumEntries { get { return num_entries; } set { num_entries = value; } }
+        public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
 
         protected byte constructor_type;
-        public byte ConstructorType { get { return constructor_type; } set { constructor_type = value; } }
+        public byte ConstructorType { get { return this.constructor_type; } set { this.constructor_type = value; } }
 
         protected byte flags;
-        public byte Flags { get { return flags; } set { flags = value; } }
+        public byte Flags { get { return this.flags; } set { this.flags = value; } }
 
         protected SampleConstructor SampleConstructor;
-        public SampleConstructor _SampleConstructor { get { return SampleConstructor; } set { SampleConstructor = value; } }
+        public SampleConstructor _SampleConstructor { get { return this.SampleConstructor; } set { this.SampleConstructor = value; } }
 
         protected InlineConstructor InlineConstructor;
-        public InlineConstructor _InlineConstructor { get { return InlineConstructor; } set { InlineConstructor = value; } }
+        public InlineConstructor _InlineConstructor { get { return this.InlineConstructor; } set { this.InlineConstructor = value; } }
 
         protected SampleConstructorFromTrackGroup SampleConstructorFromTrackGroup;
-        public SampleConstructorFromTrackGroup _SampleConstructorFromTrackGroup { get { return SampleConstructorFromTrackGroup; } set { SampleConstructorFromTrackGroup = value; } }
+        public SampleConstructorFromTrackGroup _SampleConstructorFromTrackGroup { get { return this.SampleConstructorFromTrackGroup; } set { this.SampleConstructorFromTrackGroup = value; } }
 
         protected NALUStartInlineConstructor NALUStartInlineConstructor;
-        public NALUStartInlineConstructor _NALUStartInlineConstructor { get { return NALUStartInlineConstructor; } set { NALUStartInlineConstructor = value; } }
+        public NALUStartInlineConstructor _NALUStartInlineConstructor { get { return this.NALUStartInlineConstructor; } set { this.NALUStartInlineConstructor = value; } }
 
         public DefaultHevcExtractorConstructorBox()
         { }
@@ -18746,22 +18746,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "svmC";
 
         protected byte sample_statement_type;
-        public byte SampleStatementType { get { return sample_statement_type; } set { sample_statement_type = value; } }
+        public byte SampleStatementType { get { return this.sample_statement_type; } set { this.sample_statement_type = value; } }
 
         protected byte default_statement_type;
-        public byte DefaultStatementType { get { return default_statement_type; } set { default_statement_type = value; } }
+        public byte DefaultStatementType { get { return this.default_statement_type; } set { this.default_statement_type = value; } }
 
         protected byte default_statement_length;
-        public byte DefaultStatementLength { get { return default_statement_length; } set { default_statement_length = value; } }
+        public byte DefaultStatementLength { get { return this.default_statement_length; } set { this.default_statement_length = value; } }
 
         protected byte entry_count;
-        public byte EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public byte EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected byte statement_type;  //  from the user extension ranges
-        public byte StatementType { get { return statement_type; } set { statement_type = value; } }
+        public byte StatementType { get { return this.statement_type; } set { this.statement_type = value; } }
 
         protected string statement_namespace;
-        public string StatementNamespace { get { return statement_namespace; } set { statement_namespace = value; } }
+        public string StatementNamespace { get { return this.statement_namespace; } set { this.statement_namespace = value; } }
 
         public SVCMetadataSampleConfigBox()
         { }
@@ -18836,7 +18836,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "evsC";
 
         protected EVCSliceComponentTrackConfigurationRecord config;
-        public EVCSliceComponentTrackConfigurationRecord Config { get { return config; } set { config = value; } }
+        public EVCSliceComponentTrackConfigurationRecord Config { get { return this.config; } set { this.config = value; } }
 
         public EVCSliceComponentTrackConfigurationBox()
         { }
@@ -18878,7 +18878,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vttC";
 
         protected string config;
-        public string Config { get { return config; } set { config = value; } }
+        public string Config { get { return this.config; } set { this.config = value; } }
 
         public WebVTTConfigurationBox()
         { }
@@ -18920,7 +18920,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vlab";
 
         protected string source_label;
-        public string SourceLabel { get { return source_label; } set { source_label = value; } }
+        public string SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
 
         public WebVTTSourceLabelBox()
         { }
@@ -18964,13 +18964,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "wvtt";
 
         protected WebVTTConfigurationBox config;
-        public WebVTTConfigurationBox Config { get { return config; } set { config = value; } }
+        public WebVTTConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         protected WebVTTSourceLabelBox label;  //  recommended
-        public WebVTTSourceLabelBox Label { get { return label; } set { label = value; } }
+        public WebVTTSourceLabelBox Label { get { return this.label; } set { this.label = value; } }
 
         protected MPEG4BitRateBox MPEG4BitRateBox;  //  optional
-        public MPEG4BitRateBox _MPEG4BitRateBox { get { return MPEG4BitRateBox; } set { MPEG4BitRateBox = value; } }
+        public MPEG4BitRateBox _MPEG4BitRateBox { get { return this.MPEG4BitRateBox; } set { this.MPEG4BitRateBox = value; } }
 
         public WVTTSampleEntry()
         { }
@@ -19022,7 +19022,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "auxi";
 
         protected string aux_track_type;
-        public string AuxTrackType { get { return aux_track_type; } set { aux_track_type = value; } }
+        public string AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
 
         public AuxiliaryTypeInfoBox()
         { }
@@ -19067,16 +19067,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ccst";
 
         protected bool all_ref_pics_intra;
-        public bool AllRefPicsIntra { get { return all_ref_pics_intra; } set { all_ref_pics_intra = value; } }
+        public bool AllRefPicsIntra { get { return this.all_ref_pics_intra; } set { this.all_ref_pics_intra = value; } }
 
         protected bool intra_pred_used;
-        public bool IntraPredUsed { get { return intra_pred_used; } set { intra_pred_used = value; } }
+        public bool IntraPredUsed { get { return this.intra_pred_used; } set { this.intra_pred_used = value; } }
 
         protected byte max_ref_per_pic;
-        public byte MaxRefPerPic { get { return max_ref_per_pic; } set { max_ref_per_pic = value; } }
+        public byte MaxRefPerPic { get { return this.max_ref_per_pic; } set { this.max_ref_per_pic = value; } }
 
         protected uint reserved;
-        public uint Reserved { get { return reserved; } set { reserved = value; } }
+        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         public CodingConstraintsBox()
         { }
@@ -19138,22 +19138,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "md5i";
 
         protected byte[] input_MD5;
-        public byte[] InputMD5 { get { return input_MD5; } set { input_MD5 = value; } }
+        public byte[] InputMD5 { get { return this.input_MD5; } set { this.input_MD5 = value; } }
 
         protected uint input_4cc;
-        public uint Input4cc { get { return input_4cc; } set { input_4cc = value; } }
+        public uint Input4cc { get { return this.input_4cc; } set { this.input_4cc = value; } }
 
         protected uint grouping_type;
-        public uint GroupingType { get { return grouping_type; } set { grouping_type = value; } }
+        public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
 
         protected uint grouping_type_parameter;
-        public uint GroupingTypeParameter { get { return grouping_type_parameter; } set { grouping_type_parameter = value; } }
+        public uint GroupingTypeParameter { get { return this.grouping_type_parameter; } set { this.grouping_type_parameter = value; } }
 
         protected uint num_entries;
-        public uint NumEntries { get { return num_entries; } set { num_entries = value; } }
+        public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
 
         protected uint[] group_description_index;
-        public uint[] GroupDescriptionIndex { get { return group_description_index; } set { group_description_index = value; } }
+        public uint[] GroupDescriptionIndex { get { return this.group_description_index; } set { this.group_description_index = value; } }
 
         public MD5IntegrityBox()
         { }
@@ -19265,52 +19265,52 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "enca";
 
         protected uint[] reserved = [];
-        public uint[] Reserved { get { return reserved; } set { reserved = value; } }
+        public uint[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort channelcount;
-        public ushort Channelcount { get { return channelcount; } set { channelcount = value; } }
+        public ushort Channelcount { get { return this.channelcount; } set { this.channelcount = value; } }
 
         protected ushort samplesize = 16;
-        public ushort Samplesize { get { return samplesize; } set { samplesize = value; } }
+        public ushort Samplesize { get { return this.samplesize; } set { this.samplesize = value; } }
 
         protected ushort pre_defined = 0;
-        public ushort PreDefined { get { return pre_defined; } set { pre_defined = value; } }
+        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
 
         protected ushort reserved0 = 0;
-        public ushort Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public ushort Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected uint samplerate = 0; // = {if track_is_audio 0x0100 else 0}; //  optional boxes follow
-        public uint Samplerate { get { return samplerate; } set { samplerate = value; } }
+        public uint Samplerate { get { return this.samplerate; } set { this.samplerate = value; } }
 
         protected Box Box;  //  further boxes as needed
-        public Box _Box { get { return Box; } set { Box = value; } }
+        public Box _Box { get { return this.Box; } set { this.Box = value; } }
 
         protected ChannelLayout ChannelLayout;
-        public ChannelLayout _ChannelLayout { get { return ChannelLayout; } set { ChannelLayout = value; } }
+        public ChannelLayout _ChannelLayout { get { return this.ChannelLayout; } set { this.ChannelLayout = value; } }
 
         protected DownMixInstructions[] DownMixInstructions;
-        public DownMixInstructions[] _DownMixInstructions { get { return DownMixInstructions; } set { DownMixInstructions = value; } }
+        public DownMixInstructions[] _DownMixInstructions { get { return this.DownMixInstructions; } set { this.DownMixInstructions = value; } }
 
         protected DRCCoefficientsBasic[] DRCCoefficientsBasic;
-        public DRCCoefficientsBasic[] _DRCCoefficientsBasic { get { return DRCCoefficientsBasic; } set { DRCCoefficientsBasic = value; } }
+        public DRCCoefficientsBasic[] _DRCCoefficientsBasic { get { return this.DRCCoefficientsBasic; } set { this.DRCCoefficientsBasic = value; } }
 
         protected DRCInstructionsBasic[] DRCInstructionsBasic;
-        public DRCInstructionsBasic[] _DRCInstructionsBasic { get { return DRCInstructionsBasic; } set { DRCInstructionsBasic = value; } }
+        public DRCInstructionsBasic[] _DRCInstructionsBasic { get { return this.DRCInstructionsBasic; } set { this.DRCInstructionsBasic = value; } }
 
         protected DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC;
-        public DRCCoefficientsUniDRC[] _DRCCoefficientsUniDRC { get { return DRCCoefficientsUniDRC; } set { DRCCoefficientsUniDRC = value; } }
+        public DRCCoefficientsUniDRC[] _DRCCoefficientsUniDRC { get { return this.DRCCoefficientsUniDRC; } set { this.DRCCoefficientsUniDRC = value; } }
 
         protected DRCInstructionsUniDRC[] DRCInstructionsUniDRC;  //  we permit only one DRC Extension box:
-        public DRCInstructionsUniDRC[] _DRCInstructionsUniDRC { get { return DRCInstructionsUniDRC; } set { DRCInstructionsUniDRC = value; } }
+        public DRCInstructionsUniDRC[] _DRCInstructionsUniDRC { get { return this.DRCInstructionsUniDRC; } set { this.DRCInstructionsUniDRC = value; } }
 
         protected UniDrcConfigExtension UniDrcConfigExtension;  //  optional boxes follow
-        public UniDrcConfigExtension _UniDrcConfigExtension { get { return UniDrcConfigExtension; } set { UniDrcConfigExtension = value; } }
+        public UniDrcConfigExtension _UniDrcConfigExtension { get { return this.UniDrcConfigExtension; } set { this.UniDrcConfigExtension = value; } }
 
         protected SamplingRateBox SamplingRateBox;
-        public SamplingRateBox _SamplingRateBox { get { return SamplingRateBox; } set { SamplingRateBox = value; } }
+        public SamplingRateBox _SamplingRateBox { get { return this.SamplingRateBox; } set { this.SamplingRateBox = value; } }
 
         protected ChannelLayout ChannelLayout0;
-        public ChannelLayout _ChannelLayout0 { get { return ChannelLayout0; } set { ChannelLayout0 = value; } }
+        public ChannelLayout _ChannelLayout0 { get { return this.ChannelLayout0; } set { this.ChannelLayout0 = value; } }
 
         public AudioSampleEntry()
         { }
@@ -19420,55 +19420,55 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "enca";
 
         protected ushort entry_version;  //  shall be 1, 
-        public ushort EntryVersion { get { return entry_version; } set { entry_version = value; } }
+        public ushort EntryVersion { get { return this.entry_version; } set { this.entry_version = value; } }
 
         protected ushort[] reserved = [];
-        public ushort[] Reserved { get { return reserved; } set { reserved = value; } }
+        public ushort[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort channelcount;  //  shall be correct
-        public ushort Channelcount { get { return channelcount; } set { channelcount = value; } }
+        public ushort Channelcount { get { return this.channelcount; } set { this.channelcount = value; } }
 
         protected ushort samplesize = 16;
-        public ushort Samplesize { get { return samplesize; } set { samplesize = value; } }
+        public ushort Samplesize { get { return this.samplesize; } set { this.samplesize = value; } }
 
         protected ushort pre_defined = 0;
-        public ushort PreDefined { get { return pre_defined; } set { pre_defined = value; } }
+        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
 
         protected ushort reserved0 = 0;
-        public ushort Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public ushort Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected uint samplerate = 1 << 16;  //  optional boxes follow
-        public uint Samplerate { get { return samplerate; } set { samplerate = value; } }
+        public uint Samplerate { get { return this.samplerate; } set { this.samplerate = value; } }
 
         protected SamplingRateBox SamplingRateBox;
-        public SamplingRateBox _SamplingRateBox { get { return SamplingRateBox; } set { SamplingRateBox = value; } }
+        public SamplingRateBox _SamplingRateBox { get { return this.SamplingRateBox; } set { this.SamplingRateBox = value; } }
 
         protected Box Box;  //  further boxes as needed
-        public Box _Box { get { return Box; } set { Box = value; } }
+        public Box _Box { get { return this.Box; } set { this.Box = value; } }
 
         protected ChannelLayout ChannelLayout;
-        public ChannelLayout _ChannelLayout { get { return ChannelLayout; } set { ChannelLayout = value; } }
+        public ChannelLayout _ChannelLayout { get { return this.ChannelLayout; } set { this.ChannelLayout = value; } }
 
         protected DownMixInstructions[] DownMixInstructions;
-        public DownMixInstructions[] _DownMixInstructions { get { return DownMixInstructions; } set { DownMixInstructions = value; } }
+        public DownMixInstructions[] _DownMixInstructions { get { return this.DownMixInstructions; } set { this.DownMixInstructions = value; } }
 
         protected DRCCoefficientsBasic[] DRCCoefficientsBasic;
-        public DRCCoefficientsBasic[] _DRCCoefficientsBasic { get { return DRCCoefficientsBasic; } set { DRCCoefficientsBasic = value; } }
+        public DRCCoefficientsBasic[] _DRCCoefficientsBasic { get { return this.DRCCoefficientsBasic; } set { this.DRCCoefficientsBasic = value; } }
 
         protected DRCInstructionsBasic[] DRCInstructionsBasic;
-        public DRCInstructionsBasic[] _DRCInstructionsBasic { get { return DRCInstructionsBasic; } set { DRCInstructionsBasic = value; } }
+        public DRCInstructionsBasic[] _DRCInstructionsBasic { get { return this.DRCInstructionsBasic; } set { this.DRCInstructionsBasic = value; } }
 
         protected DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC;
-        public DRCCoefficientsUniDRC[] _DRCCoefficientsUniDRC { get { return DRCCoefficientsUniDRC; } set { DRCCoefficientsUniDRC = value; } }
+        public DRCCoefficientsUniDRC[] _DRCCoefficientsUniDRC { get { return this.DRCCoefficientsUniDRC; } set { this.DRCCoefficientsUniDRC = value; } }
 
         protected DRCInstructionsUniDRC[] DRCInstructionsUniDRC;  //  we permit only one DRC Extension box:
-        public DRCInstructionsUniDRC[] _DRCInstructionsUniDRC { get { return DRCInstructionsUniDRC; } set { DRCInstructionsUniDRC = value; } }
+        public DRCInstructionsUniDRC[] _DRCInstructionsUniDRC { get { return this.DRCInstructionsUniDRC; } set { this.DRCInstructionsUniDRC = value; } }
 
         protected UniDrcConfigExtension UniDrcConfigExtension;  //  optional boxes follow
-        public UniDrcConfigExtension _UniDrcConfigExtension { get { return UniDrcConfigExtension; } set { UniDrcConfigExtension = value; } }
+        public UniDrcConfigExtension _UniDrcConfigExtension { get { return this.UniDrcConfigExtension; } set { this.UniDrcConfigExtension = value; } }
 
         protected ChannelLayout ChannelLayout0;
-        public ChannelLayout _ChannelLayout0 { get { return ChannelLayout0; } set { ChannelLayout0 = value; } }
+        public ChannelLayout _ChannelLayout0 { get { return this.ChannelLayout0; } set { this.ChannelLayout0 = value; } }
 
         public AudioSampleEntryV1()
         { }
@@ -19723,13 +19723,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "metx";
 
         protected string content_encoding;  //  optional
-        public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
+        public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
         protected string ns;
-        public string Ns { get { return ns; } set { ns = value; } }
+        public string Ns { get { return this.ns; } set { this.ns = value; } }
 
         protected string schema_location;  //  optional
-        public string SchemaLocation { get { return schema_location; } set { schema_location = value; } }
+        public string SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
 
         public XMLMetaDataSampleEntry()
         { }
@@ -19779,13 +19779,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mett";
 
         protected string content_encoding;  //  optional
-        public string ContentEncoding { get { return content_encoding; } set { content_encoding = value; } }
+        public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
         protected string mime_format;
-        public string MimeFormat { get { return mime_format; } set { mime_format = value; } }
+        public string MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
 
         protected TextConfigBox TextConfigBox;  //  optional
-        public TextConfigBox _TextConfigBox { get { return TextConfigBox; } set { TextConfigBox = value; } }
+        public TextConfigBox _TextConfigBox { get { return this.TextConfigBox; } set { this.TextConfigBox = value; } }
 
         public TextMetaDataSampleEntry()
         { }
@@ -19837,10 +19837,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "urim";
 
         protected URIBox the_label;
-        public URIBox TheLabel { get { return the_label; } set { the_label = value; } }
+        public URIBox TheLabel { get { return this.the_label; } set { this.the_label = value; } }
 
         protected URIInitBox init;  //  optional
-        public URIInitBox Init { get { return init; } set { init = value; } }
+        public URIInitBox Init { get { return this.init; } set { this.init = value; } }
 
         public URIMetaSampleEntry()
         { }
@@ -19890,10 +19890,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mebx";
 
         protected MetaDataKeyTableBox MetaDataKeyTableBox;  //  mandatory
-        public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return MetaDataKeyTableBox; } set { MetaDataKeyTableBox = value; } }
+        public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return this.MetaDataKeyTableBox; } set { this.MetaDataKeyTableBox = value; } }
 
         protected BitRateBox BitRateBox;  //  optional
-        public BitRateBox _BitRateBox { get { return BitRateBox; } set { BitRateBox = value; } }
+        public BitRateBox _BitRateBox { get { return this.BitRateBox; } set { this.BitRateBox = value; } }
 
         public BoxedMetaDataSampleEntry()
         { }
@@ -19944,16 +19944,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "fdp ";
 
         protected ushort hinttrackversion = 1;
-        public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
+        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
 
         protected ushort highestcompatibleversion = 1;
-        public ushort Highestcompatibleversion { get { return highestcompatibleversion; } set { highestcompatibleversion = value; } }
+        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
 
         protected ushort partition_entry_ID;
-        public ushort PartitionEntryID { get { return partition_entry_ID; } set { partition_entry_ID = value; } }
+        public ushort PartitionEntryID { get { return this.partition_entry_ID; } set { this.partition_entry_ID = value; } }
 
         protected ushort FEC_overhead;
-        public ushort FECOverhead { get { return FEC_overhead; } set { FEC_overhead = value; } }
+        public ushort FECOverhead { get { return this.FEC_overhead; } set { this.FEC_overhead = value; } }
 
         public FDHintSampleEntry()
         { }
@@ -20008,10 +20008,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "icpv";
 
         protected CompleteTrackInfoBox CompleteTrackInfoBox;
-        public CompleteTrackInfoBox _CompleteTrackInfoBox { get { return CompleteTrackInfoBox; } set { CompleteTrackInfoBox = value; } }
+        public CompleteTrackInfoBox _CompleteTrackInfoBox { get { return this.CompleteTrackInfoBox; } set { this.CompleteTrackInfoBox = value; } }
 
         protected AVCConfigurationBox config;
-        public AVCConfigurationBox Config { get { return config; } set { config = value; } }
+        public AVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         public IncompleteAVCSampleEntry()
         { }
@@ -20060,7 +20060,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "pm2t";
 
         protected ProtectionSchemeInfoBox SchemeInformation;
-        public ProtectionSchemeInfoBox _SchemeInformation { get { return SchemeInformation; } set { SchemeInformation = value; } }
+        public ProtectionSchemeInfoBox _SchemeInformation { get { return this.SchemeInformation; } set { this.SchemeInformation = value; } }
 
         public ProtectedMPEG2TransportStreamSampleEntry()
         { }
@@ -20103,7 +20103,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "prtp";
 
         protected ProtectionSchemeInfoBox SchemeInformation;
-        public ProtectionSchemeInfoBox _SchemeInformation { get { return SchemeInformation; } set { SchemeInformation = value; } }
+        public ProtectionSchemeInfoBox _SchemeInformation { get { return this.SchemeInformation; } set { this.SchemeInformation = value; } }
 
         public ProtectedRtpReceptionHintSampleEntry()
         { }
@@ -20181,13 +20181,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rrtp";
 
         protected ushort hinttrackversion = 1;
-        public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
+        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
 
         protected ushort highestcompatibleversion = 1;
-        public ushort Highestcompatibleversion { get { return highestcompatibleversion; } set { highestcompatibleversion = value; } }
+        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
 
         protected uint maxpacketsize;
-        public uint Maxpacketsize { get { return maxpacketsize; } set { maxpacketsize = value; } }
+        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
         public ReceivedRtpHintSampleEntry()
         { }
@@ -20240,13 +20240,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rsrp";
 
         protected ushort hinttrackversion = 1;
-        public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
+        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
 
         protected ushort highestcompatibleversion = 1;
-        public ushort Highestcompatibleversion { get { return highestcompatibleversion; } set { highestcompatibleversion = value; } }
+        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
 
         protected uint maxpacketsize;
-        public uint Maxpacketsize { get { return maxpacketsize; } set { maxpacketsize = value; } }
+        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
         public ReceivedSrtpHintSampleEntry()
         { }
@@ -20365,13 +20365,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "srtp";
 
         protected ushort hinttrackversion = 1;
-        public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
+        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
 
         protected ushort highestcompatibleversion = 1;
-        public ushort Highestcompatibleversion { get { return highestcompatibleversion; } set { highestcompatibleversion = value; } }
+        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
 
         protected uint maxpacketsize;
-        public uint Maxpacketsize { get { return maxpacketsize; } set { maxpacketsize = value; } }
+        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
         public SrtpHintSampleEntry()
         { }
@@ -20423,7 +20423,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "encp";
 
         protected Box[] otherboxes;
-        public Box[] Otherboxes { get { return otherboxes; } set { otherboxes = value; } }
+        public Box[] Otherboxes { get { return this.otherboxes; } set { this.otherboxes = value; } }
 
         public HapticSampleEntry()
         { }
@@ -20467,7 +20467,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "enc3";
 
         protected byte[] compressorname;  //  other boxes from derived specifications
-        public byte[] Compressorname { get { return compressorname; } set { compressorname = value; } }
+        public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
 
         public VolumetricVisualSampleEntry()
         { }
@@ -20523,46 +20523,46 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "resv";
 
         protected ushort pre_defined = 0;
-        public ushort PreDefined { get { return pre_defined; } set { pre_defined = value; } }
+        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
 
         protected ushort reserved = 0;
-        public ushort Reserved { get { return reserved; } set { reserved = value; } }
+        public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected uint[] pre_defined0 = [];
-        public uint[] PreDefined0 { get { return pre_defined0; } set { pre_defined0 = value; } }
+        public uint[] PreDefined0 { get { return this.pre_defined0; } set { this.pre_defined0 = value; } }
 
         protected ushort width;
-        public ushort Width { get { return width; } set { width = value; } }
+        public ushort Width { get { return this.width; } set { this.width = value; } }
 
         protected ushort height;
-        public ushort Height { get { return height; } set { height = value; } }
+        public ushort Height { get { return this.height; } set { this.height = value; } }
 
         protected uint horizresolution = 0x00480000;  //  72 dpi
-        public uint Horizresolution { get { return horizresolution; } set { horizresolution = value; } }
+        public uint Horizresolution { get { return this.horizresolution; } set { this.horizresolution = value; } }
 
         protected uint vertresolution = 0x00480000;  //  72 dpi
-        public uint Vertresolution { get { return vertresolution; } set { vertresolution = value; } }
+        public uint Vertresolution { get { return this.vertresolution; } set { this.vertresolution = value; } }
 
         protected uint reserved0 = 0;
-        public uint Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public uint Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected ushort frame_count = 1;
-        public ushort FrameCount { get { return frame_count; } set { frame_count = value; } }
+        public ushort FrameCount { get { return this.frame_count; } set { this.frame_count = value; } }
 
         protected byte[] compressorname;
-        public byte[] Compressorname { get { return compressorname; } set { compressorname = value; } }
+        public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
 
         protected ushort depth = 0x0018;
-        public ushort Depth { get { return depth; } set { depth = value; } }
+        public ushort Depth { get { return this.depth; } set { this.depth = value; } }
 
         protected short pre_defined1 = -1;  //  other boxes from derived specifications
-        public short PreDefined1 { get { return pre_defined1; } set { pre_defined1 = value; } }
+        public short PreDefined1 { get { return this.pre_defined1; } set { this.pre_defined1 = value; } }
 
         protected CleanApertureBox clap;  //  optional
-        public CleanApertureBox Clap { get { return clap; } set { clap = value; } }
+        public CleanApertureBox Clap { get { return this.clap; } set { this.clap = value; } }
 
         protected PixelAspectRatioBox pasp;  //  optional
-        public PixelAspectRatioBox Pasp { get { return pasp; } set { pasp = value; } }
+        public PixelAspectRatioBox Pasp { get { return this.pasp; } set { this.pasp = value; } }
 
         public VisualSampleEntry()
         { }
@@ -20648,13 +20648,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rtp ";
 
         protected ushort hinttrackversion = 1;
-        public ushort Hinttrackversion { get { return hinttrackversion; } set { hinttrackversion = value; } }
+        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
 
         protected ushort highestcompatibleversion = 1;
-        public ushort Highestcompatibleversion { get { return highestcompatibleversion; } set { highestcompatibleversion = value; } }
+        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
 
         protected uint maxpacketsize;
-        public uint Maxpacketsize { get { return maxpacketsize; } set { maxpacketsize = value; } }
+        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
         public RtpHintSampleEntry()
         { }
@@ -20710,13 +20710,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "altr";
 
         protected uint group_id;
-        public uint GroupId { get { return group_id; } set { group_id = value; } }
+        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
 
         protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return num_entities_in_group; } set { num_entities_in_group = value; } }
+        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
 
         protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return entity_id; } set { entity_id = value; } }
+        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
 
         public EntityToGroupBox()
         { }
@@ -20817,13 +20817,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "fdel";
 
         protected ushort from_item_ID;
-        public ushort FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
+        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
 
         protected ushort reference_count;
-        public ushort ReferenceCount { get { return reference_count; } set { reference_count = value; } }
+        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
 
         protected ushort to_item_ID;
-        public ushort ToItemID { get { return to_item_ID; } set { to_item_ID = value; } }
+        public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
 
         public SingleItemTypeReferenceBox()
         { }
@@ -20887,13 +20887,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "fdel";
 
         protected uint from_item_ID;
-        public uint FromItemID { get { return from_item_ID; } set { from_item_ID = value; } }
+        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
 
         protected ushort reference_count;
-        public ushort ReferenceCount { get { return reference_count; } set { reference_count = value; } }
+        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
 
         protected uint to_item_ID;
-        public uint ToItemID { get { return to_item_ID; } set { to_item_ID = value; } }
+        public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
 
         public SingleItemTypeReferenceBoxLarge()
         { }
@@ -20963,19 +20963,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "alst";
 
         protected ushort roll_count;
-        public ushort RollCount { get { return roll_count; } set { roll_count = value; } }
+        public ushort RollCount { get { return this.roll_count; } set { this.roll_count = value; } }
 
         protected ushort first_output_sample;
-        public ushort FirstOutputSample { get { return first_output_sample; } set { first_output_sample = value; } }
+        public ushort FirstOutputSample { get { return this.first_output_sample; } set { this.first_output_sample = value; } }
 
         protected uint[] sample_offset;
-        public uint[] SampleOffset { get { return sample_offset; } set { sample_offset = value; } }
+        public uint[] SampleOffset { get { return this.sample_offset; } set { this.sample_offset = value; } }
 
         protected ushort[] num_output_samples;
-        public ushort[] NumOutputSamples { get { return num_output_samples; } set { num_output_samples = value; } }
+        public ushort[] NumOutputSamples { get { return this.num_output_samples; } set { this.num_output_samples = value; } }
 
         protected ushort[] num_total_samples;
-        public ushort[] NumTotalSamples { get { return num_total_samples; } set { num_total_samples = value; } }
+        public ushort[] NumTotalSamples { get { return this.num_total_samples; } set { this.num_total_samples = value; } }
 
         public AlternativeStartupEntry()
         { }
@@ -21064,10 +21064,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "drap";
 
         protected byte DRAP_type;
-        public byte DRAPType { get { return DRAP_type; } set { DRAP_type = value; } }
+        public byte DRAPType { get { return this.DRAP_type; } set { this.DRAP_type = value; } }
 
         protected uint reserved = 0;
-        public uint Reserved { get { return reserved; } set { reserved = value; } }
+        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         public VisualDRAPEntry()
         { }
@@ -21113,7 +21113,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "prol";
 
         protected short roll_distance;
-        public short RollDistance { get { return roll_distance; } set { roll_distance = value; } }
+        public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
 
         public AudioPreRollEntry()
         { }
@@ -21157,10 +21157,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rap ";
 
         protected bool num_leading_samples_known;
-        public bool NumLeadingSamplesKnown { get { return num_leading_samples_known; } set { num_leading_samples_known = value; } }
+        public bool NumLeadingSamplesKnown { get { return this.num_leading_samples_known; } set { this.num_leading_samples_known = value; } }
 
         protected byte num_leading_samples;
-        public byte NumLeadingSamples { get { return num_leading_samples; } set { num_leading_samples = value; } }
+        public byte NumLeadingSamples { get { return this.num_leading_samples; } set { this.num_leading_samples = value; } }
 
         public VisualRandomAccessEntry()
         { }
@@ -21217,25 +21217,25 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rash";
 
         protected ushort operation_point_count;
-        public ushort OperationPointCount { get { return operation_point_count; } set { operation_point_count = value; } }
+        public ushort OperationPointCount { get { return this.operation_point_count; } set { this.operation_point_count = value; } }
 
         protected ushort target_rate_share;
-        public ushort TargetRateShare { get { return target_rate_share; } set { target_rate_share = value; } }
+        public ushort TargetRateShare { get { return this.target_rate_share; } set { this.target_rate_share = value; } }
 
         protected uint available_bitrate;
-        public uint AvailableBitrate { get { return available_bitrate; } set { available_bitrate = value; } }
+        public uint AvailableBitrate { get { return this.available_bitrate; } set { this.available_bitrate = value; } }
 
         protected ushort target_rate_share0;
-        public ushort TargetRateShare0 { get { return target_rate_share0; } set { target_rate_share0 = value; } }
+        public ushort TargetRateShare0 { get { return this.target_rate_share0; } set { this.target_rate_share0 = value; } }
 
         protected uint maximum_bitrate;
-        public uint MaximumBitrate { get { return maximum_bitrate; } set { maximum_bitrate = value; } }
+        public uint MaximumBitrate { get { return this.maximum_bitrate; } set { this.maximum_bitrate = value; } }
 
         protected uint minimum_bitrate;
-        public uint MinimumBitrate { get { return minimum_bitrate; } set { minimum_bitrate = value; } }
+        public uint MinimumBitrate { get { return this.minimum_bitrate; } set { this.minimum_bitrate = value; } }
 
         protected byte discard_priority;
-        public byte DiscardPriority { get { return discard_priority; } set { discard_priority = value; } }
+        public byte DiscardPriority { get { return this.discard_priority; } set { this.discard_priority = value; } }
 
         public RateShareEntry()
         { }
@@ -21332,7 +21332,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "roll";
 
         protected short roll_distance;
-        public short RollDistance { get { return roll_distance; } set { roll_distance = value; } }
+        public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
 
         public AudioRollRecoveryEntry()
         { }
@@ -21377,13 +21377,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "sap ";
 
         protected bool dependent_flag;
-        public bool DependentFlag { get { return dependent_flag; } set { dependent_flag = value; } }
+        public bool DependentFlag { get { return this.dependent_flag; } set { this.dependent_flag = value; } }
 
         protected byte reserved;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte SAP_type;
-        public byte SAPType { get { return SAP_type; } set { SAP_type = value; } }
+        public byte SAPType { get { return this.SAP_type; } set { this.SAP_type = value; } }
 
         public SAPEntry()
         { }
@@ -21436,13 +21436,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stmi";
 
         protected uint meta_box_handler_type;
-        public uint MetaBoxHandlerType { get { return meta_box_handler_type; } set { meta_box_handler_type = value; } }
+        public uint MetaBoxHandlerType { get { return this.meta_box_handler_type; } set { this.meta_box_handler_type = value; } }
 
         protected uint num_items;
-        public uint NumItems { get { return num_items; } set { num_items = value; } }
+        public uint NumItems { get { return this.num_items; } set { this.num_items = value; } }
 
         protected uint[] item_id;
-        public uint[] ItemId { get { return item_id; } set { item_id = value; } }
+        public uint[] ItemId { get { return this.item_id; } set { this.item_id = value; } }
 
         public SampleToMetadataItemEntry()
         { }
@@ -21504,10 +21504,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tele";
 
         protected bool level_independently_decodable;
-        public bool LevelIndependentlyDecodable { get { return level_independently_decodable; } set { level_independently_decodable = value; } }
+        public bool LevelIndependentlyDecodable { get { return this.level_independently_decodable; } set { this.level_independently_decodable = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         public TemporalLevelEntry()
         { }
@@ -21553,10 +21553,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "pasr";
 
         protected uint hSpacing;
-        public uint HSpacing { get { return hSpacing; } set { hSpacing = value; } }
+        public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
 
         protected uint vSpacing;
-        public uint VSpacing { get { return vSpacing; } set { vSpacing = value; } }
+        public uint VSpacing { get { return this.vSpacing; } set { this.vSpacing = value; } }
 
         public PixelAspectRatioEntry()
         { }
@@ -21614,28 +21614,28 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "casg";
 
         protected uint cleanApertureWidthN;
-        public uint CleanApertureWidthN { get { return cleanApertureWidthN; } set { cleanApertureWidthN = value; } }
+        public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
 
         protected uint cleanApertureWidthD;
-        public uint CleanApertureWidthD { get { return cleanApertureWidthD; } set { cleanApertureWidthD = value; } }
+        public uint CleanApertureWidthD { get { return this.cleanApertureWidthD; } set { this.cleanApertureWidthD = value; } }
 
         protected uint cleanApertureHeightN;
-        public uint CleanApertureHeightN { get { return cleanApertureHeightN; } set { cleanApertureHeightN = value; } }
+        public uint CleanApertureHeightN { get { return this.cleanApertureHeightN; } set { this.cleanApertureHeightN = value; } }
 
         protected uint cleanApertureHeightD;
-        public uint CleanApertureHeightD { get { return cleanApertureHeightD; } set { cleanApertureHeightD = value; } }
+        public uint CleanApertureHeightD { get { return this.cleanApertureHeightD; } set { this.cleanApertureHeightD = value; } }
 
         protected uint horizOffN;
-        public uint HorizOffN { get { return horizOffN; } set { horizOffN = value; } }
+        public uint HorizOffN { get { return this.horizOffN; } set { this.horizOffN = value; } }
 
         protected uint horizOffD;
-        public uint HorizOffD { get { return horizOffD; } set { horizOffD = value; } }
+        public uint HorizOffD { get { return this.horizOffD; } set { this.horizOffD = value; } }
 
         protected uint vertOffN;
-        public uint VertOffN { get { return vertOffN; } set { vertOffN = value; } }
+        public uint VertOffN { get { return this.vertOffN; } set { this.vertOffN = value; } }
 
         protected uint vertOffD;
-        public uint VertOffD { get { return vertOffD; } set { vertOffD = value; } }
+        public uint VertOffD { get { return this.vertOffD; } set { this.vertOffD = value; } }
 
         public CleanApertureEntry()
         { }
@@ -21701,7 +21701,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "msrc";
 
         protected uint track_group_id;  //  the remaining data may be specified 
-        public uint TrackGroupId { get { return track_group_id; } set { track_group_id = value; } }
+        public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
         public TrackGroupTypeBox()
         { }
@@ -21748,10 +21748,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ster";
 
         protected bool left_view_flag;
-        public bool LeftViewFlag { get { return left_view_flag; } set { left_view_flag = value; } }
+        public bool LeftViewFlag { get { return this.left_view_flag; } set { this.left_view_flag = value; } }
 
         protected uint reserved;
-        public uint Reserved { get { return reserved; } set { reserved = value; } }
+        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         public StereoVideoGroupBox()
         { }
@@ -21796,7 +21796,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "auxl";
 
         protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return track_IDs; } set { track_IDs = value; } }
+        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
 
         public TrackReferenceTypeBox()
         { }
@@ -21839,10 +21839,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "hvc1";
 
         protected HEVCConfigurationBox config;
-        public HEVCConfigurationBox Config { get { return config; } set { config = value; } }
+        public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return descr; } set { descr = value; } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
         public HEVCSampleEntry()
         { }
@@ -21890,7 +21890,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "hvc1";
 
         protected LHEVCConfigurationBox lhvcconfig;
-        public LHEVCConfigurationBox Lhvcconfig { get { return lhvcconfig; } set { lhvcconfig = value; } }
+        public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
 
         public HEVCLHVCSampleEntry()
         { }
@@ -21936,10 +21936,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "lhv1";
 
         protected LHEVCConfigurationBox lhvcconfig;
-        public LHEVCConfigurationBox Lhvcconfig { get { return lhvcconfig; } set { lhvcconfig = value; } }
+        public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
 
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return descr; } set { descr = value; } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
         public LHEVCSampleEntry()
         { }
@@ -21987,7 +21987,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "avcp";
 
         protected AVCConfigurationBox config;
-        public AVCConfigurationBox Config { get { return config; } set { config = value; } }
+        public AVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         public AVCParameterSampleEntry()
         { }
@@ -22033,10 +22033,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "avc1";
 
         protected AVCConfigurationBox config;
-        public AVCConfigurationBox Config { get { return config; } set { config = value; } }
+        public AVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return descr; } set { descr = value; } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
         public AVCSampleEntry()
         { }
@@ -22092,31 +22092,31 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "avc1";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
-        public ViewScalabilityInformationSEIBox Scalability { get { return scalability; } set { scalability = value; } }
+        public ViewScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
 
         protected ViewIdentifierBox view_identifiers;  //  optional
-        public ViewIdentifierBox ViewIdentifiers { get { return view_identifiers; } set { view_identifiers = value; } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.view_identifiers; } set { this.view_identifiers = value; } }
 
         protected MVCConfigurationBox mvcconfig;  //  optional
-        public MVCConfigurationBox Mvcconfig { get { return mvcconfig; } set { mvcconfig = value; } }
+        public MVCConfigurationBox Mvcconfig { get { return this.mvcconfig; } set { this.mvcconfig = value; } }
 
         protected MVCViewPriorityAssignmentBox view_priority_method;  //  optional
-        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return view_priority_method; } set { view_priority_method = value; } }
+        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return this.view_priority_method; } set { this.view_priority_method = value; } }
 
         protected IntrinsicCameraParametersBox intrinsic_camera_params;  //  optional
-        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return intrinsic_camera_params; } set { intrinsic_camera_params = value; } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.intrinsic_camera_params; } set { this.intrinsic_camera_params = value; } }
 
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
-        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return extrinsic_camera_params; } set { extrinsic_camera_params = value; } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
         protected MVCDConfigurationBox mvcdconfig;  //  optional
-        public MVCDConfigurationBox Mvcdconfig { get { return mvcdconfig; } set { mvcdconfig = value; } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
 
         protected MVDScalabilityInformationSEIBox mvdscalinfosei;  //  optional
-        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return mvdscalinfosei; } set { mvdscalinfosei = value; } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
 
         protected A3DConfigurationBox a3dconfig;  //  optional
-        public A3DConfigurationBox A3dconfig { get { return a3dconfig; } set { a3dconfig = value; } }
+        public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
         public AVCMVCSampleEntry()
         { }
@@ -22186,10 +22186,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "avc2";
 
         protected AVCConfigurationBox config;
-        public AVCConfigurationBox Config { get { return config; } set { config = value; } }
+        public AVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return descr; } set { descr = value; } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
         public AVC2SampleEntry()
         { }
@@ -22245,31 +22245,31 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "avc2";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
-        public ViewScalabilityInformationSEIBox Scalability { get { return scalability; } set { scalability = value; } }
+        public ViewScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
 
         protected ViewIdentifierBox view_identifiers;  //  optional
-        public ViewIdentifierBox ViewIdentifiers { get { return view_identifiers; } set { view_identifiers = value; } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.view_identifiers; } set { this.view_identifiers = value; } }
 
         protected MVCConfigurationBox mvcconfig;  //  optional
-        public MVCConfigurationBox Mvcconfig { get { return mvcconfig; } set { mvcconfig = value; } }
+        public MVCConfigurationBox Mvcconfig { get { return this.mvcconfig; } set { this.mvcconfig = value; } }
 
         protected MVCViewPriorityAssignmentBox view_priority_method;  //  optional
-        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return view_priority_method; } set { view_priority_method = value; } }
+        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return this.view_priority_method; } set { this.view_priority_method = value; } }
 
         protected IntrinsicCameraParametersBox intrinsic_camera_params;  //  optional
-        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return intrinsic_camera_params; } set { intrinsic_camera_params = value; } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.intrinsic_camera_params; } set { this.intrinsic_camera_params = value; } }
 
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
-        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return extrinsic_camera_params; } set { extrinsic_camera_params = value; } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
         protected MVCDConfigurationBox mvcdconfig;  //  optional
-        public MVCDConfigurationBox Mvcdconfig { get { return mvcdconfig; } set { mvcdconfig = value; } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
 
         protected MVDScalabilityInformationSEIBox mvdscalinfosei;  //  optional
-        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return mvdscalinfosei; } set { mvdscalinfosei = value; } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
 
         protected A3DConfigurationBox a3dconfig;  //  optional
-        public A3DConfigurationBox A3dconfig { get { return a3dconfig; } set { a3dconfig = value; } }
+        public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
         public AVC2MVCSampleEntry()
         { }
@@ -22347,34 +22347,34 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mvc1";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
-        public MVCConfigurationBox Mvcconfig { get { return mvcconfig; } set { mvcconfig = value; } }
+        public MVCConfigurationBox Mvcconfig { get { return this.mvcconfig; } set { this.mvcconfig = value; } }
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
-        public ViewScalabilityInformationSEIBox Scalability { get { return scalability; } set { scalability = value; } }
+        public ViewScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
 
         protected ViewIdentifierBox view_identifiers;  //  mandatory
-        public ViewIdentifierBox ViewIdentifiers { get { return view_identifiers; } set { view_identifiers = value; } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.view_identifiers; } set { this.view_identifiers = value; } }
 
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return descr; } set { descr = value; } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
         protected MVCViewPriorityAssignmentBox view_priority_method;  //  optional
-        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return view_priority_method; } set { view_priority_method = value; } }
+        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return this.view_priority_method; } set { this.view_priority_method = value; } }
 
         protected IntrinsicCameraParametersBox intrinsic_camera_params;  //  optional
-        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return intrinsic_camera_params; } set { intrinsic_camera_params = value; } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.intrinsic_camera_params; } set { this.intrinsic_camera_params = value; } }
 
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
-        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return extrinsic_camera_params; } set { extrinsic_camera_params = value; } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
         protected MVCDConfigurationBox mvcdconfig;  //  optional
-        public MVCDConfigurationBox Mvcdconfig { get { return mvcdconfig; } set { mvcdconfig = value; } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
 
         protected MVDScalabilityInformationSEIBox mvdscalinfosei;  //  optional
-        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return mvdscalinfosei; } set { mvdscalinfosei = value; } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
 
         protected A3DConfigurationBox a3dconfig;  //  optional
-        public A3DConfigurationBox A3dconfig { get { return a3dconfig; } set { a3dconfig = value; } }
+        public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
         public MVCSampleEntry()
         { }
@@ -22452,25 +22452,25 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mvd1";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
-        public MVCDConfigurationBox Mvcdconfig { get { return mvcdconfig; } set { mvcdconfig = value; } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
 
         protected MVDScalabilityInformationSEIBox mvdscalinfosei;  //  optional
-        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return mvdscalinfosei; } set { mvdscalinfosei = value; } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
 
         protected ViewIdentifierBox view_identifiers;  //  mandatory
-        public ViewIdentifierBox ViewIdentifiers { get { return view_identifiers; } set { view_identifiers = value; } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.view_identifiers; } set { this.view_identifiers = value; } }
 
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return descr; } set { descr = value; } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
         protected IntrinsicCameraParametersBox intrinsic_camera_params;  //  optional
-        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return intrinsic_camera_params; } set { intrinsic_camera_params = value; } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.intrinsic_camera_params; } set { this.intrinsic_camera_params = value; } }
 
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
-        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return extrinsic_camera_params; } set { extrinsic_camera_params = value; } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
         protected A3DConfigurationBox a3dconfig;  //  optional
-        public A3DConfigurationBox A3dconfig { get { return a3dconfig; } set { a3dconfig = value; } }
+        public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
         public MVCDSampleEntry()
         { }
@@ -22538,22 +22538,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "a3d1";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
-        public A3DConfigurationBox A3dconfig { get { return a3dconfig; } set { a3dconfig = value; } }
+        public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
         protected MVDScalabilityInformationSEIBox mvdscalinfosei;  //  optional
-        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return mvdscalinfosei; } set { mvdscalinfosei = value; } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
 
         protected ViewIdentifierBox view_identifiers;  //  mandatory
-        public ViewIdentifierBox ViewIdentifiers { get { return view_identifiers; } set { view_identifiers = value; } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.view_identifiers; } set { this.view_identifiers = value; } }
 
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return descr; } set { descr = value; } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
         protected IntrinsicCameraParametersBox intrinsic_camera_params;  //  optional
-        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return intrinsic_camera_params; } set { intrinsic_camera_params = value; } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.intrinsic_camera_params; } set { this.intrinsic_camera_params = value; } }
 
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
-        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return extrinsic_camera_params; } set { extrinsic_camera_params = value; } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
         public A3DSampleEntry()
         { }
@@ -22615,13 +22615,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "avc1";
 
         protected SVCConfigurationBox svcconfig;  //  optional
-        public SVCConfigurationBox Svcconfig { get { return svcconfig; } set { svcconfig = value; } }
+        public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
 
         protected ScalabilityInformationSEIBox scalability;  //  optional
-        public ScalabilityInformationSEIBox Scalability { get { return scalability; } set { scalability = value; } }
+        public ScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
 
         protected SVCPriorityAssignmentBox method;  //  optional
-        public SVCPriorityAssignmentBox Method { get { return method; } set { method = value; } }
+        public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
 
         public AVCSVCSampleEntry()
         { }
@@ -22674,13 +22674,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "avc2";
 
         protected SVCConfigurationBox svcconfig;  //  optional
-        public SVCConfigurationBox Svcconfig { get { return svcconfig; } set { svcconfig = value; } }
+        public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
 
         protected ScalabilityInformationSEIBox scalability;  //  optional
-        public ScalabilityInformationSEIBox Scalability { get { return scalability; } set { scalability = value; } }
+        public ScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
 
         protected SVCPriorityAssignmentBox method;  //  optional
-        public SVCPriorityAssignmentBox Method { get { return method; } set { method = value; } }
+        public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
 
         public AVC2SVCSampleEntry()
         { }
@@ -22735,16 +22735,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "svc1";
 
         protected SVCConfigurationBox svcconfig;
-        public SVCConfigurationBox Svcconfig { get { return svcconfig; } set { svcconfig = value; } }
+        public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
 
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return descr; } set { descr = value; } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
         protected ScalabilityInformationSEIBox scalability;  //  optional
-        public ScalabilityInformationSEIBox Scalability { get { return scalability; } set { scalability = value; } }
+        public ScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
 
         protected SVCPriorityAssignmentBox method;  //  optional
-        public SVCPriorityAssignmentBox Method { get { return method; } set { method = value; } }
+        public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
 
         public SVCSampleEntry()
         { }
@@ -22798,7 +22798,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "hvt1";
 
         protected HEVCTileConfigurationBox config;  //  optional
-        public HEVCTileConfigurationBox Config { get { return config; } set { config = value; } }
+        public HEVCTileConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         public HEVCTileSampleEntry()
         { }
@@ -22878,7 +22878,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "hvt3";
 
         protected HEVCTileConfigurationBox config;  //  optional 
-        public HEVCTileConfigurationBox Config { get { return config; } set { config = value; } }
+        public HEVCTileConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         public HEVCTileSSHInfoSampleEntry()
         { }
@@ -22923,7 +22923,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "hvt2";
 
         protected HEVCTileConfigurationBox config;  //  optional
-        public HEVCTileConfigurationBox Config { get { return config; } set { config = value; } }
+        public HEVCTileConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         public HEVCSliceSegmentDataSampleEntry()
         { }
@@ -22969,10 +22969,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vvc1";
 
         protected VvcConfigurationBox config;
-        public VvcConfigurationBox Config { get { return config; } set { config = value; } }
+        public VvcConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return descr; } set { descr = value; } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
         public VvcSampleEntry()
         { }
@@ -23020,7 +23020,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vvs1";
 
         protected VvcNALUConfigBox config;
-        public VvcNALUConfigBox Config { get { return config; } set { config = value; } }
+        public VvcNALUConfigBox Config { get { return this.config; } set { this.config = value; } }
 
         public VvcSubpicSampleEntry()
         { }
@@ -23065,7 +23065,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vvcN";
 
         protected VvcNALUConfigBox config;
-        public VvcNALUConfigBox Config { get { return config; } set { config = value; } }
+        public VvcNALUConfigBox Config { get { return this.config; } set { this.config = value; } }
 
         public VvcNonVCLSampleEntry()
         { }
@@ -23111,10 +23111,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "evc1";
 
         protected EVCConfigurationBox config;
-        public EVCConfigurationBox Config { get { return config; } set { config = value; } }
+        public EVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return descr; } set { descr = value; } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
         public EVCSampleEntry()
         { }
@@ -23165,13 +23165,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "svcM";
 
         protected SVCMetadataSampleConfigBox config;
-        public SVCMetadataSampleConfigBox Config { get { return config; } set { config = value; } }
+        public SVCMetadataSampleConfigBox Config { get { return this.config; } set { this.config = value; } }
 
         protected SVCPriorityAssignmentBox methods;  //  optional
-        public SVCPriorityAssignmentBox Methods { get { return methods; } set { methods = value; } }
+        public SVCPriorityAssignmentBox Methods { get { return this.methods; } set { this.methods = value; } }
 
         protected SVCPriorityLayerInfoBox priorities;  //  optional
-        public SVCPriorityLayerInfoBox Priorities { get { return priorities; } set { priorities = value; } }
+        public SVCPriorityLayerInfoBox Priorities { get { return this.priorities; } set { this.priorities = value; } }
 
         public SVCMetaDataSampleEntry()
         { }
@@ -23223,7 +23223,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "evs1";
 
         protected EVCSliceComponentTrackConfigurationBox config;
-        public EVCSliceComponentTrackConfigurationBox Config { get { return config; } set { config = value; } }
+        public EVCSliceComponentTrackConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
         public EVCSliceComponentTrackSampleEntry()
         { }
@@ -23275,22 +23275,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "acgl";
 
         protected bool level_is_present_flag;
-        public bool LevelIsPresentFlag { get { return level_is_present_flag; } set { level_is_present_flag = value; } }
+        public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }
 
         protected bool level_is_static_flag;
-        public bool LevelIsStaticFlag { get { return level_is_static_flag; } set { level_is_static_flag = value; } }
+        public bool LevelIsStaticFlag { get { return this.level_is_static_flag; } set { this.level_is_static_flag = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte level_idc;
-        public byte LevelIdc { get { return level_idc; } set { level_idc = value; } }
+        public byte LevelIdc { get { return this.level_idc; } set { this.level_idc = value; } }
 
         protected uint level_info_entity_idx;
-        public uint LevelInfoEntityIdx { get { return level_info_entity_idx; } set { level_info_entity_idx = value; } }
+        public uint LevelInfoEntityIdx { get { return this.level_info_entity_idx; } set { this.level_info_entity_idx = value; } }
 
         protected ushort num_active_tracks;
-        public ushort NumActiveTracks { get { return num_active_tracks; } set { num_active_tracks = value; } }
+        public ushort NumActiveTracks { get { return this.num_active_tracks; } set { this.num_active_tracks = value; } }
 
         public SubpicCommonGroupBox()
         { }
@@ -23384,28 +23384,28 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "amgl";
 
         protected bool level_is_present_flag;
-        public bool LevelIsPresentFlag { get { return level_is_present_flag; } set { level_is_present_flag = value; } }
+        public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }
 
         protected bool level_is_static_flag;
-        public bool LevelIsStaticFlag { get { return level_is_static_flag; } set { level_is_static_flag = value; } }
+        public bool LevelIsStaticFlag { get { return this.level_is_static_flag; } set { this.level_is_static_flag = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte level_idc;
-        public byte LevelIdc { get { return level_idc; } set { level_idc = value; } }
+        public byte LevelIdc { get { return this.level_idc; } set { this.level_idc = value; } }
 
         protected uint level_info_entity_idx;
-        public uint LevelInfoEntityIdx { get { return level_info_entity_idx; } set { level_info_entity_idx = value; } }
+        public uint LevelInfoEntityIdx { get { return this.level_info_entity_idx; } set { this.level_info_entity_idx = value; } }
 
         protected ushort num_subgroup_ids;
-        public ushort NumSubgroupIds { get { return num_subgroup_ids; } set { num_subgroup_ids = value; } }
+        public ushort NumSubgroupIds { get { return this.num_subgroup_ids; } set { this.num_subgroup_ids = value; } }
 
         protected uint[] track_subgroup_id;
-        public uint[] TrackSubgroupId { get { return track_subgroup_id; } set { track_subgroup_id = value; } }
+        public uint[] TrackSubgroupId { get { return this.track_subgroup_id; } set { this.track_subgroup_id = value; } }
 
         protected ushort[] num_active_tracks;
-        public ushort[] NumActiveTracks { get { return num_active_tracks; } set { num_active_tracks = value; } }
+        public ushort[] NumActiveTracks { get { return this.num_active_tracks; } set { this.num_active_tracks = value; } }
 
         public SubpicMultipleGroupsBox()
         { }
@@ -23569,103 +23569,103 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "opeg";
 
         protected byte num_profile_tier_level_minus1;
-        public byte NumProfileTierLevelMinus1 { get { return num_profile_tier_level_minus1; } set { num_profile_tier_level_minus1 = value; } }
+        public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }
 
         protected VvcPTLRecord[] opeg_ptl;
-        public VvcPTLRecord[] OpegPtl { get { return opeg_ptl; } set { opeg_ptl = value; } }
+        public VvcPTLRecord[] OpegPtl { get { return this.opeg_ptl; } set { this.opeg_ptl = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected bool incomplete_operating_points_flag;
-        public bool IncompleteOperatingPointsFlag { get { return incomplete_operating_points_flag; } set { incomplete_operating_points_flag = value; } }
+        public bool IncompleteOperatingPointsFlag { get { return this.incomplete_operating_points_flag; } set { this.incomplete_operating_points_flag = value; } }
 
         protected ushort num_olss;
-        public ushort NumOlss { get { return num_olss; } set { num_olss = value; } }
+        public ushort NumOlss { get { return this.num_olss; } set { this.num_olss = value; } }
 
         protected byte[] ptl_idx;
-        public byte[] PtlIdx { get { return ptl_idx; } set { ptl_idx = value; } }
+        public byte[] PtlIdx { get { return this.ptl_idx; } set { this.ptl_idx = value; } }
 
         protected ushort[] ols_idx;
-        public ushort[] OlsIdx { get { return ols_idx; } set { ols_idx = value; } }
+        public ushort[] OlsIdx { get { return this.ols_idx; } set { this.ols_idx = value; } }
 
         protected byte[] layer_count;
-        public byte[] LayerCount { get { return layer_count; } set { layer_count = value; } }
+        public byte[] LayerCount { get { return this.layer_count; } set { this.layer_count = value; } }
 
         protected bool reserved0 = false;
-        public bool Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected bool[] layer_info_present_flag;
-        public bool[] LayerInfoPresentFlag { get { return layer_info_present_flag; } set { layer_info_present_flag = value; } }
+        public bool[] LayerInfoPresentFlag { get { return this.layer_info_present_flag; } set { this.layer_info_present_flag = value; } }
 
         protected byte[][] layer_id;
-        public byte[][] LayerId { get { return layer_id; } set { layer_id = value; } }
+        public byte[][] LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
 
         protected byte[][] is_output_layer;
-        public byte[][] IsOutputLayer { get { return is_output_layer; } set { is_output_layer = value; } }
+        public byte[][] IsOutputLayer { get { return this.is_output_layer; } set { this.is_output_layer = value; } }
 
         protected bool reserved00 = false;
-        public bool Reserved00 { get { return reserved00; } set { reserved00 = value; } }
+        public bool Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
 
         protected byte reserved1 = 0;
-        public byte Reserved1 { get { return reserved1; } set { reserved1 = value; } }
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
         protected ushort num_operating_points;
-        public ushort NumOperatingPoints { get { return num_operating_points; } set { num_operating_points = value; } }
+        public ushort NumOperatingPoints { get { return this.num_operating_points; } set { this.num_operating_points = value; } }
 
         protected ushort ols_loop_entry_idx;
-        public ushort OlsLoopEntryIdx { get { return ols_loop_entry_idx; } set { ols_loop_entry_idx = value; } }
+        public ushort OlsLoopEntryIdx { get { return this.ols_loop_entry_idx; } set { this.ols_loop_entry_idx = value; } }
 
         protected byte max_temporal_id;
-        public byte MaxTemporalId { get { return max_temporal_id; } set { max_temporal_id = value; } }
+        public byte MaxTemporalId { get { return this.max_temporal_id; } set { this.max_temporal_id = value; } }
 
         protected bool frame_rate_info_flag;
-        public bool FrameRateInfoFlag { get { return frame_rate_info_flag; } set { frame_rate_info_flag = value; } }
+        public bool FrameRateInfoFlag { get { return this.frame_rate_info_flag; } set { this.frame_rate_info_flag = value; } }
 
         protected bool bit_rate_info_flag;
-        public bool BitRateInfoFlag { get { return bit_rate_info_flag; } set { bit_rate_info_flag = value; } }
+        public bool BitRateInfoFlag { get { return this.bit_rate_info_flag; } set { this.bit_rate_info_flag = value; } }
 
         protected byte op_availability_idc;
-        public byte OpAvailabilityIdc { get { return op_availability_idc; } set { op_availability_idc = value; } }
+        public byte OpAvailabilityIdc { get { return this.op_availability_idc; } set { this.op_availability_idc = value; } }
 
         protected byte reserved2 = 0;
-        public byte Reserved2 { get { return reserved2; } set { reserved2 = value; } }
+        public byte Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
         protected byte reserved01 = 0;
-        public byte Reserved01 { get { return reserved01; } set { reserved01 = value; } }
+        public byte Reserved01 { get { return this.reserved01; } set { this.reserved01 = value; } }
 
         protected byte chroma_format_idc;
-        public byte ChromaFormatIdc { get { return chroma_format_idc; } set { chroma_format_idc = value; } }
+        public byte ChromaFormatIdc { get { return this.chroma_format_idc; } set { this.chroma_format_idc = value; } }
 
         protected byte bit_depth_minus8;
-        public byte BitDepthMinus8 { get { return bit_depth_minus8; } set { bit_depth_minus8 = value; } }
+        public byte BitDepthMinus8 { get { return this.bit_depth_minus8; } set { this.bit_depth_minus8 = value; } }
 
         protected ushort max_picture_width;
-        public ushort MaxPictureWidth { get { return max_picture_width; } set { max_picture_width = value; } }
+        public ushort MaxPictureWidth { get { return this.max_picture_width; } set { this.max_picture_width = value; } }
 
         protected ushort max_picture_height;
-        public ushort MaxPictureHeight { get { return max_picture_height; } set { max_picture_height = value; } }
+        public ushort MaxPictureHeight { get { return this.max_picture_height; } set { this.max_picture_height = value; } }
 
         protected ushort avg_frame_rate;
-        public ushort AvgFrameRate { get { return avg_frame_rate; } set { avg_frame_rate = value; } }
+        public ushort AvgFrameRate { get { return this.avg_frame_rate; } set { this.avg_frame_rate = value; } }
 
         protected byte reserved10 = 0;
-        public byte Reserved10 { get { return reserved10; } set { reserved10 = value; } }
+        public byte Reserved10 { get { return this.reserved10; } set { this.reserved10 = value; } }
 
         protected byte constant_frame_rate;
-        public byte ConstantFrameRate { get { return constant_frame_rate; } set { constant_frame_rate = value; } }
+        public byte ConstantFrameRate { get { return this.constant_frame_rate; } set { this.constant_frame_rate = value; } }
 
         protected uint max_bit_rate;
-        public uint MaxBitRate { get { return max_bit_rate; } set { max_bit_rate = value; } }
+        public uint MaxBitRate { get { return this.max_bit_rate; } set { this.max_bit_rate = value; } }
 
         protected uint avg_bit_rate;
-        public uint AvgBitRate { get { return avg_bit_rate; } set { avg_bit_rate = value; } }
+        public uint AvgBitRate { get { return this.avg_bit_rate; } set { this.avg_bit_rate = value; } }
 
         protected byte entity_count;
-        public byte EntityCount { get { return entity_count; } set { entity_count = value; } }
+        public byte EntityCount { get { return this.entity_count; } set { this.entity_count = value; } }
 
         protected byte entity_idx;
-        public byte EntityIdx { get { return entity_idx; } set { entity_idx = value; } }
+        public byte EntityIdx { get { return this.entity_idx; } set { this.entity_idx = value; } }
 
         public OperatingPointGroupBox()
         { }
@@ -23925,7 +23925,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "swtk";
 
         protected ushort[] track_switch_hierarchy_id;
-        public ushort[] TrackSwitchHierarchyId { get { return track_switch_hierarchy_id; } set { track_switch_hierarchy_id = value; } }
+        public ushort[] TrackSwitchHierarchyId { get { return this.track_switch_hierarchy_id; } set { this.track_switch_hierarchy_id = value; } }
 
         public SwitchableTracks()
         { }
@@ -23980,7 +23980,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "aud ";
 
         protected uint audNalUnit;
-        public uint AudNalUnit { get { return audNalUnit; } set { audNalUnit = value; } }
+        public uint AudNalUnit { get { return this.audNalUnit; } set { this.audNalUnit = value; } }
 
         public AUDSampleEntry()
         { }
@@ -24027,19 +24027,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "avll";
 
         protected byte layerNumber;
-        public byte LayerNumber { get { return layerNumber; } set { layerNumber = value; } }
+        public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected bool accurateStatisticsFlag;
-        public bool AccurateStatisticsFlag { get { return accurateStatisticsFlag; } set { accurateStatisticsFlag = value; } }
+        public bool AccurateStatisticsFlag { get { return this.accurateStatisticsFlag; } set { this.accurateStatisticsFlag = value; } }
 
         protected ushort avgBitRate;
-        public ushort AvgBitRate { get { return avgBitRate; } set { avgBitRate = value; } }
+        public ushort AvgBitRate { get { return this.avgBitRate; } set { this.avgBitRate = value; } }
 
         protected ushort avgFrameRate;
-        public ushort AvgFrameRate { get { return avgFrameRate; } set { avgFrameRate = value; } }
+        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
 
         public AVCLayerEntry()
         { }
@@ -24094,10 +24094,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "dcfi";
 
         protected ushort dci_nal_unit_length;
-        public ushort DciNalUnitLength { get { return dci_nal_unit_length; } set { dci_nal_unit_length = value; } }
+        public ushort DciNalUnitLength { get { return this.dci_nal_unit_length; } set { this.dci_nal_unit_length = value; } }
 
         protected byte[] dci_nal_unit;
-        public byte[] DciNalUnit { get { return dci_nal_unit; } set { dci_nal_unit = value; } }
+        public byte[] DciNalUnit { get { return this.dci_nal_unit; } set { this.dci_nal_unit = value; } }
 
         public DecodingCapabilityInformation()
         { }
@@ -24146,13 +24146,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "dtrt";
 
         protected byte tierCount;
-        public byte TierCount { get { return tierCount; } set { tierCount = value; } }
+        public byte TierCount { get { return this.tierCount; } set { this.tierCount = value; } }
 
         protected ushort tierID;
-        public ushort TierID { get { return tierID; } set { tierID = value; } }
+        public ushort TierID { get { return this.tierID; } set { this.tierID = value; } }
 
         protected short delta;
-        public short Delta { get { return delta; } set { delta = value; } }
+        public short Delta { get { return this.delta; } set { this.delta = value; } }
 
         public DecodeRetimingEntry()
         { }
@@ -24213,7 +24213,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "eob ";
 
         protected ushort eobNalUnit;
-        public ushort EobNalUnit { get { return eobNalUnit; } set { eobNalUnit = value; } }
+        public ushort EobNalUnit { get { return this.eobNalUnit; } set { this.eobNalUnit = value; } }
 
         public EndOfBitstreamSampleEntry()
         { }
@@ -24258,10 +24258,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "eos ";
 
         protected byte num_eos_nal_unit_minus1;
-        public byte NumEosNalUnitMinus1 { get { return num_eos_nal_unit_minus1; } set { num_eos_nal_unit_minus1 = value; } }
+        public byte NumEosNalUnitMinus1 { get { return this.num_eos_nal_unit_minus1; } set { this.num_eos_nal_unit_minus1 = value; } }
 
         protected ushort[] eosNalUnit;
-        public ushort[] EosNalUnit { get { return eosNalUnit; } set { eosNalUnit = value; } }
+        public ushort[] EosNalUnit { get { return this.eosNalUnit; } set { this.eosNalUnit = value; } }
 
         public EndOfSequenceSampleEntry()
         { }
@@ -24322,16 +24322,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "lbli";
 
         protected bool reserved = true;
-        public bool Reserved { get { return reserved; } set { reserved = value; } }
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected bool bl_irap_pic_flag;
-        public bool BlIrapPicFlag { get { return bl_irap_pic_flag; } set { bl_irap_pic_flag = value; } }
+        public bool BlIrapPicFlag { get { return this.bl_irap_pic_flag; } set { this.bl_irap_pic_flag = value; } }
 
         protected byte bl_irap_nal_unit_type;
-        public byte BlIrapNalUnitType { get { return bl_irap_nal_unit_type; } set { bl_irap_nal_unit_type = value; } }
+        public byte BlIrapNalUnitType { get { return this.bl_irap_nal_unit_type; } set { this.bl_irap_nal_unit_type = value; } }
 
         protected sbyte sample_offset;
-        public sbyte SampleOffset { get { return sample_offset; } set { sample_offset = value; } }
+        public sbyte SampleOffset { get { return this.sample_offset; } set { this.sample_offset = value; } }
 
         public LhvcExternalBaseLayerInfo()
         { }
@@ -24393,34 +24393,34 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "linf";
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte num_layers_in_track;
-        public byte NumLayersInTrack { get { return num_layers_in_track; } set { num_layers_in_track = value; } }
+        public byte NumLayersInTrack { get { return this.num_layers_in_track; } set { this.num_layers_in_track = value; } }
 
         protected byte reserved0 = 0;
-        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected bool irap_gdr_pics_in_layer_only_flag;
-        public bool IrapGdrPicsInLayerOnlyFlag { get { return irap_gdr_pics_in_layer_only_flag; } set { irap_gdr_pics_in_layer_only_flag = value; } }
+        public bool IrapGdrPicsInLayerOnlyFlag { get { return this.irap_gdr_pics_in_layer_only_flag; } set { this.irap_gdr_pics_in_layer_only_flag = value; } }
 
         protected bool completeness_flag;
-        public bool CompletenessFlag { get { return completeness_flag; } set { completeness_flag = value; } }
+        public bool CompletenessFlag { get { return this.completeness_flag; } set { this.completeness_flag = value; } }
 
         protected byte layer_id;
-        public byte LayerId { get { return layer_id; } set { layer_id = value; } }
+        public byte LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
 
         protected byte min_TemporalId;
-        public byte MinTemporalId { get { return min_TemporalId; } set { min_TemporalId = value; } }
+        public byte MinTemporalId { get { return this.min_TemporalId; } set { this.min_TemporalId = value; } }
 
         protected byte max_TemporalId;
-        public byte MaxTemporalId { get { return max_TemporalId; } set { max_TemporalId = value; } }
+        public byte MaxTemporalId { get { return this.max_TemporalId; } set { this.max_TemporalId = value; } }
 
         protected bool reserved00 = false;
-        public bool Reserved00 { get { return reserved00; } set { reserved00 = value; } }
+        public bool Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
 
         protected byte sub_layer_presence_flags;
-        public byte SubLayerPresenceFlags { get { return sub_layer_presence_flags; } set { sub_layer_presence_flags = value; } }
+        public byte SubLayerPresenceFlags { get { return this.sub_layer_presence_flags; } set { this.sub_layer_presence_flags = value; } }
 
         public LayerInfoGroupEntry()
         { }
@@ -24508,19 +24508,19 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "minp";
 
         protected ushort num_mix_nalu_pic_idx;
-        public ushort NumMixNaluPicIdx { get { return num_mix_nalu_pic_idx; } set { num_mix_nalu_pic_idx = value; } }
+        public ushort NumMixNaluPicIdx { get { return this.num_mix_nalu_pic_idx; } set { this.num_mix_nalu_pic_idx = value; } }
 
         protected ushort[] mix_subp_track_idx1;
-        public ushort[] MixSubpTrackIdx1 { get { return mix_subp_track_idx1; } set { mix_subp_track_idx1 = value; } }
+        public ushort[] MixSubpTrackIdx1 { get { return this.mix_subp_track_idx1; } set { this.mix_subp_track_idx1 = value; } }
 
         protected ushort[] mix_subp_track_idx2;
-        public ushort[] MixSubpTrackIdx2 { get { return mix_subp_track_idx2; } set { mix_subp_track_idx2 = value; } }
+        public ushort[] MixSubpTrackIdx2 { get { return this.mix_subp_track_idx2; } set { this.mix_subp_track_idx2 = value; } }
 
         protected ushort pps_mix_nalu_types_in_pic_bit_pos;
-        public ushort PpsMixNaluTypesInPicBitPos { get { return pps_mix_nalu_types_in_pic_bit_pos; } set { pps_mix_nalu_types_in_pic_bit_pos = value; } }
+        public ushort PpsMixNaluTypesInPicBitPos { get { return this.pps_mix_nalu_types_in_pic_bit_pos; } set { this.pps_mix_nalu_types_in_pic_bit_pos = value; } }
 
         protected byte pps_id;
-        public byte PpsId { get { return pps_id; } set { pps_id = value; } }
+        public byte PpsId { get { return this.pps_id; } set { this.pps_id = value; } }
 
         public VvcMixedNALUnitTypePicEntry()
         { }
@@ -24606,49 +24606,49 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mvif";
 
         protected byte groupID;
-        public byte GroupID { get { return groupID; } set { groupID = value; } }
+        public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
         protected byte primary_groupID;
-        public byte PrimaryGroupID { get { return primary_groupID; } set { primary_groupID = value; } }
+        public byte PrimaryGroupID { get { return this.primary_groupID; } set { this.primary_groupID = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected bool is_tl_switching_point;
-        public bool IsTlSwitchingPoint { get { return is_tl_switching_point; } set { is_tl_switching_point = value; } }
+        public bool IsTlSwitchingPoint { get { return this.is_tl_switching_point; } set { this.is_tl_switching_point = value; } }
 
         protected byte reserved0 = 0;
-        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected byte tl_switching_distance;
-        public byte TlSwitchingDistance { get { return tl_switching_distance; } set { tl_switching_distance = value; } }
+        public byte TlSwitchingDistance { get { return this.tl_switching_distance; } set { this.tl_switching_distance = value; } }
 
         protected ViewIdentifierBox ViewIdentifierBox;  //  Mandatory
-        public ViewIdentifierBox _ViewIdentifierBox { get { return ViewIdentifierBox; } set { ViewIdentifierBox = value; } }
+        public ViewIdentifierBox _ViewIdentifierBox { get { return this.ViewIdentifierBox; } set { this.ViewIdentifierBox = value; } }
 
         protected TierInfoBox TierInfoBox;  //  Mandatory
-        public TierInfoBox _TierInfoBox { get { return TierInfoBox; } set { TierInfoBox = value; } }
+        public TierInfoBox _TierInfoBox { get { return this.TierInfoBox; } set { this.TierInfoBox = value; } }
 
         protected TierDependencyBox TierDependencyBox;  //  Mandatory
-        public TierDependencyBox _TierDependencyBox { get { return TierDependencyBox; } set { TierDependencyBox = value; } }
+        public TierDependencyBox _TierDependencyBox { get { return this.TierDependencyBox; } set { this.TierDependencyBox = value; } }
 
         protected PriorityRangeBox PriorityRangeBox;  //  Mandatory
-        public PriorityRangeBox _PriorityRangeBox { get { return PriorityRangeBox; } set { PriorityRangeBox = value; } }
+        public PriorityRangeBox _PriorityRangeBox { get { return this.PriorityRangeBox; } set { this.PriorityRangeBox = value; } }
 
         protected TierBitRateBox TierBitRateBox;  //  optional
-        public TierBitRateBox _TierBitRateBox { get { return TierBitRateBox; } set { TierBitRateBox = value; } }
+        public TierBitRateBox _TierBitRateBox { get { return this.TierBitRateBox; } set { this.TierBitRateBox = value; } }
 
         protected BufferingBox BufferingBox;  //  optional
-        public BufferingBox _BufferingBox { get { return BufferingBox; } set { BufferingBox = value; } }
+        public BufferingBox _BufferingBox { get { return this.BufferingBox; } set { this.BufferingBox = value; } }
 
         protected InitialParameterSetBox InitialParameterSetBox;  //  optional
-        public InitialParameterSetBox _InitialParameterSetBox { get { return InitialParameterSetBox; } set { InitialParameterSetBox = value; } }
+        public InitialParameterSetBox _InitialParameterSetBox { get { return this.InitialParameterSetBox; } set { this.InitialParameterSetBox = value; } }
 
         protected ProtectionSchemeInfoBox ProtectionSchemeInfoBox;  //  optional
-        public ProtectionSchemeInfoBox _ProtectionSchemeInfoBox { get { return ProtectionSchemeInfoBox; } set { ProtectionSchemeInfoBox = value; } }
+        public ProtectionSchemeInfoBox _ProtectionSchemeInfoBox { get { return this.ProtectionSchemeInfoBox; } set { this.ProtectionSchemeInfoBox = value; } }
 
         protected ViewPriorityBox ViewPriorityBox;  //  optional
-        public ViewPriorityBox _ViewPriorityBox { get { return ViewPriorityBox; } set { ViewPriorityBox = value; } }
+        public ViewPriorityBox _ViewPriorityBox { get { return this.ViewPriorityBox; } set { this.ViewPriorityBox = value; } }
 
         public MultiviewGroupEntry()
         { }
@@ -24767,28 +24767,28 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "nalm";
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected bool large_size;
-        public bool LargeSize { get { return large_size; } set { large_size = value; } }
+        public bool LargeSize { get { return this.large_size; } set { this.large_size = value; } }
 
         protected bool rle;
-        public bool Rle { get { return rle; } set { rle = value; } }
+        public bool Rle { get { return this.rle; } set { this.rle = value; } }
 
         protected ushort entry_count;
-        public ushort EntryCount { get { return entry_count; } set { entry_count = value; } }
+        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected byte entry_count0;
-        public byte EntryCount0 { get { return entry_count0; } set { entry_count0 = value; } }
+        public byte EntryCount0 { get { return this.entry_count0; } set { this.entry_count0 = value; } }
 
         protected ushort NALU_start_number;
-        public ushort NALUStartNumber { get { return NALU_start_number; } set { NALU_start_number = value; } }
+        public ushort NALUStartNumber { get { return this.NALU_start_number; } set { this.NALU_start_number = value; } }
 
         protected byte NALU_start_number0;
-        public byte NALUStartNumber0 { get { return NALU_start_number0; } set { NALU_start_number0 = value; } }
+        public byte NALUStartNumber0 { get { return this.NALU_start_number0; } set { this.NALU_start_number0 = value; } }
 
         protected ushort groupID;
-        public ushort GroupID { get { return groupID; } set { groupID = value; } }
+        public ushort GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
         public NALUMapEntry()
         { }
@@ -24923,7 +24923,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "oinf";
 
         protected OperatingPointsRecord oinf;
-        public OperatingPointsRecord Oinf { get { return oinf; } set { oinf = value; } }
+        public OperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
 
         public OperatingPointsInformation()
         { }
@@ -24967,7 +24967,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "opth";
 
         protected int delta_time;
-        public int DeltaTime { get { return delta_time; } set { delta_time = value; } }
+        public int DeltaTime { get { return this.delta_time; } set { this.delta_time = value; } }
 
         public OperatingPointDecodeTimeHint()
         { }
@@ -25011,10 +25011,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "pase";
 
         protected ushort ps_nalu_length;
-        public ushort PsNaluLength { get { return ps_nalu_length; } set { ps_nalu_length = value; } }
+        public ushort PsNaluLength { get { return this.ps_nalu_length; } set { this.ps_nalu_length = value; } }
 
         protected byte[] ps_nal_unit;
-        public byte[] PsNalUnit { get { return ps_nal_unit; } set { ps_nal_unit = value; } }
+        public byte[] PsNalUnit { get { return this.ps_nal_unit; } set { this.ps_nal_unit = value; } }
 
         public ParameterSetNALUEntry()
         { }
@@ -25063,16 +25063,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "pss1";
 
         protected bool sps_present;
-        public bool SpsPresent { get { return sps_present; } set { sps_present = value; } }
+        public bool SpsPresent { get { return this.sps_present; } set { this.sps_present = value; } }
 
         protected bool pps_present;
-        public bool PpsPresent { get { return pps_present; } set { pps_present = value; } }
+        public bool PpsPresent { get { return this.pps_present; } set { this.pps_present = value; } }
 
         protected bool aps_present;
-        public bool ApsPresent { get { return aps_present; } set { aps_present = value; } }
+        public bool ApsPresent { get { return this.aps_present; } set { this.aps_present = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         public PSSampleGroupEntry()
         { }
@@ -25137,31 +25137,31 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rror";
 
         protected bool subpic_id_info_flag;
-        public bool SubpicIdInfoFlag { get { return subpic_id_info_flag; } set { subpic_id_info_flag = value; } }
+        public bool SubpicIdInfoFlag { get { return this.subpic_id_info_flag; } set { this.subpic_id_info_flag = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected ushort num_alternate_region_set;
-        public ushort NumAlternateRegionSet { get { return num_alternate_region_set; } set { num_alternate_region_set = value; } }
+        public ushort NumAlternateRegionSet { get { return this.num_alternate_region_set; } set { this.num_alternate_region_set = value; } }
 
         protected ushort[] num_regions_in_set;
-        public ushort[] NumRegionsInSet { get { return num_regions_in_set; } set { num_regions_in_set = value; } }
+        public ushort[] NumRegionsInSet { get { return this.num_regions_in_set; } set { this.num_regions_in_set = value; } }
 
         protected ushort[] alternate_region_set_id;
-        public ushort[] AlternateRegionSetId { get { return alternate_region_set_id; } set { alternate_region_set_id = value; } }
+        public ushort[] AlternateRegionSetId { get { return this.alternate_region_set_id; } set { this.alternate_region_set_id = value; } }
 
         protected ushort[][] groupID;
-        public ushort[][] GroupID { get { return groupID; } set { groupID = value; } }
+        public ushort[][] GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
         protected ushort num_regions_minus1;
-        public ushort NumRegionsMinus1 { get { return num_regions_minus1; } set { num_regions_minus1 = value; } }
+        public ushort NumRegionsMinus1 { get { return this.num_regions_minus1; } set { this.num_regions_minus1 = value; } }
 
         protected ushort[] region_id;
-        public ushort[] RegionId { get { return region_id; } set { region_id = value; } }
+        public ushort[] RegionId { get { return this.region_id; } set { this.region_id = value; } }
 
         protected VVCSubpicIDRewritingInfomationStruct subpic_id_rewriting_info;
-        public VVCSubpicIDRewritingInfomationStruct SubpicIdRewritingInfo { get { return subpic_id_rewriting_info; } set { subpic_id_rewriting_info = value; } }
+        public VVCSubpicIDRewritingInfomationStruct SubpicIdRewritingInfo { get { return this.subpic_id_rewriting_info; } set { this.subpic_id_rewriting_info = value; } }
 
         public VvcRectRegionOrderEntry()
         { }
@@ -25300,64 +25300,64 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "scif";
 
         protected byte groupID;
-        public byte GroupID { get { return groupID; } set { groupID = value; } }
+        public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
         protected byte primary_groupID;
-        public byte PrimaryGroupID { get { return primary_groupID; } set { primary_groupID = value; } }
+        public byte PrimaryGroupID { get { return this.primary_groupID; } set { this.primary_groupID = value; } }
 
         protected bool is_tier_IDR;
-        public bool IsTierIDR { get { return is_tier_IDR; } set { is_tier_IDR = value; } }
+        public bool IsTierIDR { get { return this.is_tier_IDR; } set { this.is_tier_IDR = value; } }
 
         protected bool noInterLayerPredFlag;
-        public bool NoInterLayerPredFlag { get { return noInterLayerPredFlag; } set { noInterLayerPredFlag = value; } }
+        public bool NoInterLayerPredFlag { get { return this.noInterLayerPredFlag; } set { this.noInterLayerPredFlag = value; } }
 
         protected bool useRefBasePicFlag;
-        public bool UseRefBasePicFlag { get { return useRefBasePicFlag; } set { useRefBasePicFlag = value; } }
+        public bool UseRefBasePicFlag { get { return this.useRefBasePicFlag; } set { this.useRefBasePicFlag = value; } }
 
         protected bool storeBaseRepFlag;
-        public bool StoreBaseRepFlag { get { return storeBaseRepFlag; } set { storeBaseRepFlag = value; } }
+        public bool StoreBaseRepFlag { get { return this.storeBaseRepFlag; } set { this.storeBaseRepFlag = value; } }
 
         protected bool is_tl_switching_point;
-        public bool IsTlSwitchingPoint { get { return is_tl_switching_point; } set { is_tl_switching_point = value; } }
+        public bool IsTlSwitchingPoint { get { return this.is_tl_switching_point; } set { this.is_tl_switching_point = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte tl_switching_distance;
-        public byte TlSwitchingDistance { get { return tl_switching_distance; } set { tl_switching_distance = value; } }
+        public byte TlSwitchingDistance { get { return this.tl_switching_distance; } set { this.tl_switching_distance = value; } }
 
         protected TierInfoBox TierInfoBox;  //  Mandatory
-        public TierInfoBox _TierInfoBox { get { return TierInfoBox; } set { TierInfoBox = value; } }
+        public TierInfoBox _TierInfoBox { get { return this.TierInfoBox; } set { this.TierInfoBox = value; } }
 
         protected SVCDependencyRangeBox SVCDependencyRangeBox;  //  Mandatory
-        public SVCDependencyRangeBox _SVCDependencyRangeBox { get { return SVCDependencyRangeBox; } set { SVCDependencyRangeBox = value; } }
+        public SVCDependencyRangeBox _SVCDependencyRangeBox { get { return this.SVCDependencyRangeBox; } set { this.SVCDependencyRangeBox = value; } }
 
         protected PriorityRangeBox PriorityRangeBox;  //  Mandatory
-        public PriorityRangeBox _PriorityRangeBox { get { return PriorityRangeBox; } set { PriorityRangeBox = value; } }
+        public PriorityRangeBox _PriorityRangeBox { get { return this.PriorityRangeBox; } set { this.PriorityRangeBox = value; } }
 
         protected TierBitRateBox TierBitRateBox;  //  optional
-        public TierBitRateBox _TierBitRateBox { get { return TierBitRateBox; } set { TierBitRateBox = value; } }
+        public TierBitRateBox _TierBitRateBox { get { return this.TierBitRateBox; } set { this.TierBitRateBox = value; } }
 
         protected RectRegionBox RectRegionBox;  //  optional
-        public RectRegionBox _RectRegionBox { get { return RectRegionBox; } set { RectRegionBox = value; } }
+        public RectRegionBox _RectRegionBox { get { return this.RectRegionBox; } set { this.RectRegionBox = value; } }
 
         protected BufferingBox BufferingBox;  //  optional
-        public BufferingBox _BufferingBox { get { return BufferingBox; } set { BufferingBox = value; } }
+        public BufferingBox _BufferingBox { get { return this.BufferingBox; } set { this.BufferingBox = value; } }
 
         protected TierDependencyBox TierDependencyBox;  //  optional
-        public TierDependencyBox _TierDependencyBox { get { return TierDependencyBox; } set { TierDependencyBox = value; } }
+        public TierDependencyBox _TierDependencyBox { get { return this.TierDependencyBox; } set { this.TierDependencyBox = value; } }
 
         protected InitialParameterSetBox InitialParameterSetBox;  //  optional
-        public InitialParameterSetBox _InitialParameterSetBox { get { return InitialParameterSetBox; } set { InitialParameterSetBox = value; } }
+        public InitialParameterSetBox _InitialParameterSetBox { get { return this.InitialParameterSetBox; } set { this.InitialParameterSetBox = value; } }
 
         protected IroiInfoBox IroiInfoBox;  //  optional
-        public IroiInfoBox _IroiInfoBox { get { return IroiInfoBox; } set { IroiInfoBox = value; } }
+        public IroiInfoBox _IroiInfoBox { get { return this.IroiInfoBox; } set { this.IroiInfoBox = value; } }
 
         protected ProtectionSchemeInfoBox ProtectionSchemeInfoBox;  //  optional
-        public ProtectionSchemeInfoBox _ProtectionSchemeInfoBox { get { return ProtectionSchemeInfoBox; } set { ProtectionSchemeInfoBox = value; } }
+        public ProtectionSchemeInfoBox _ProtectionSchemeInfoBox { get { return this.ProtectionSchemeInfoBox; } set { this.ProtectionSchemeInfoBox = value; } }
 
         protected TranscodingInfoBox TranscodingInfoBox;  //  optional
-        public TranscodingInfoBox _TranscodingInfoBox { get { return TranscodingInfoBox; } set { TranscodingInfoBox = value; } }
+        public TranscodingInfoBox _TranscodingInfoBox { get { return this.TranscodingInfoBox; } set { this.TranscodingInfoBox = value; } }
 
         public ScalableGroupEntry()
         { }
@@ -25478,13 +25478,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "scnm";
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte NALU_count;
-        public byte NALUCount { get { return NALU_count; } set { NALU_count = value; } }
+        public byte NALUCount { get { return this.NALU_count; } set { this.NALU_count = value; } }
 
         protected byte groupID;
-        public byte GroupID { get { return groupID; } set { groupID = value; } }
+        public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
         public ScalableNALUMapEntry()
         { }
@@ -25554,22 +25554,22 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "spid";
 
         protected bool rect_region_flag;
-        public bool RectRegionFlag { get { return rect_region_flag; } set { rect_region_flag = value; } }
+        public bool RectRegionFlag { get { return this.rect_region_flag; } set { this.rect_region_flag = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected bool continuous_id_flag;
-        public bool ContinuousIdFlag { get { return continuous_id_flag; } set { continuous_id_flag = value; } }
+        public bool ContinuousIdFlag { get { return this.continuous_id_flag; } set { this.continuous_id_flag = value; } }
 
         protected ushort num_subpics_minus1;
-        public ushort NumSubpicsMinus1 { get { return num_subpics_minus1; } set { num_subpics_minus1 = value; } }
+        public ushort NumSubpicsMinus1 { get { return this.num_subpics_minus1; } set { this.num_subpics_minus1 = value; } }
 
         protected ushort[] subpic_id;
-        public ushort[] SubpicId { get { return subpic_id; } set { subpic_id = value; } }
+        public ushort[] SubpicId { get { return this.subpic_id; } set { this.subpic_id = value; } }
 
         protected ushort[] groupID;
-        public ushort[] GroupID { get { return groupID; } set { groupID = value; } }
+        public ushort[] GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
         public VvcSubpicIDEntry()
         { }
@@ -25663,7 +25663,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "spli";
 
         protected byte level_idc;
-        public byte LevelIdc { get { return level_idc; } set { level_idc = value; } }
+        public byte LevelIdc { get { return this.level_idc; } set { this.level_idc = value; } }
 
         public SubpicLevelInfoEntry()
         { }
@@ -25711,16 +25711,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "spor";
 
         protected bool subpic_id_info_flag;
-        public bool SubpicIdInfoFlag { get { return subpic_id_info_flag; } set { subpic_id_info_flag = value; } }
+        public bool SubpicIdInfoFlag { get { return this.subpic_id_info_flag; } set { this.subpic_id_info_flag = value; } }
 
         protected ushort num_subpic_ref_idx;
-        public ushort NumSubpicRefIdx { get { return num_subpic_ref_idx; } set { num_subpic_ref_idx = value; } }
+        public ushort NumSubpicRefIdx { get { return this.num_subpic_ref_idx; } set { this.num_subpic_ref_idx = value; } }
 
         protected ushort[] subp_track_ref_idx;
-        public ushort[] SubpTrackRefIdx { get { return subp_track_ref_idx; } set { subp_track_ref_idx = value; } }
+        public ushort[] SubpTrackRefIdx { get { return this.subp_track_ref_idx; } set { this.subp_track_ref_idx = value; } }
 
         protected VVCSubpicIDRewritingInfomationStruct subpic_id_rewriting_info;
-        public VVCSubpicIDRewritingInfomationStruct SubpicIdRewritingInfo { get { return subpic_id_rewriting_info; } set { subpic_id_rewriting_info = value; } }
+        public VVCSubpicIDRewritingInfomationStruct SubpicIdRewritingInfo { get { return this.subpic_id_rewriting_info; } set { this.subpic_id_rewriting_info = value; } }
 
         public VvcSubpicOrderEntry()
         { }
@@ -25834,13 +25834,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "sulm";
 
         protected uint groupID_info_4cc;
-        public uint GroupIDInfo4cc { get { return groupID_info_4cc; } set { groupID_info_4cc = value; } }
+        public uint GroupIDInfo4cc { get { return this.groupID_info_4cc; } set { this.groupID_info_4cc = value; } }
 
         protected ushort entry_count_minus1;
-        public ushort EntryCountMinus1 { get { return entry_count_minus1; } set { entry_count_minus1 = value; } }
+        public ushort EntryCountMinus1 { get { return this.entry_count_minus1; } set { this.entry_count_minus1 = value; } }
 
         protected ushort groupID;
-        public ushort GroupID { get { return groupID; } set { groupID = value; } }
+        public ushort GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
         public VvcSubpicLayoutMapEntry()
         { }
@@ -25902,10 +25902,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "sync";
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte NAL_unit_type;
-        public byte NALUnitType { get { return NAL_unit_type; } set { NAL_unit_type = value; } }
+        public byte NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
 
         public SyncSampleEntry()
         { }
@@ -25972,46 +25972,46 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "trif";
 
         protected ushort groupID;
-        public ushort GroupID { get { return groupID; } set { groupID = value; } }
+        public ushort GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
         protected bool rect_region_flag;
-        public bool RectRegionFlag { get { return rect_region_flag; } set { rect_region_flag = value; } }
+        public bool RectRegionFlag { get { return this.rect_region_flag; } set { this.rect_region_flag = value; } }
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte independent_idc;
-        public byte IndependentIdc { get { return independent_idc; } set { independent_idc = value; } }
+        public byte IndependentIdc { get { return this.independent_idc; } set { this.independent_idc = value; } }
 
         protected bool full_picture;
-        public bool FullPicture { get { return full_picture; } set { full_picture = value; } }
+        public bool FullPicture { get { return this.full_picture; } set { this.full_picture = value; } }
 
         protected bool filtering_disabled;
-        public bool FilteringDisabled { get { return filtering_disabled; } set { filtering_disabled = value; } }
+        public bool FilteringDisabled { get { return this.filtering_disabled; } set { this.filtering_disabled = value; } }
 
         protected bool has_dependency_list;
-        public bool HasDependencyList { get { return has_dependency_list; } set { has_dependency_list = value; } }
+        public bool HasDependencyList { get { return this.has_dependency_list; } set { this.has_dependency_list = value; } }
 
         protected byte reserved0 = 0;
-        public byte Reserved0 { get { return reserved0; } set { reserved0 = value; } }
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
         protected ushort horizontal_offset;
-        public ushort HorizontalOffset { get { return horizontal_offset; } set { horizontal_offset = value; } }
+        public ushort HorizontalOffset { get { return this.horizontal_offset; } set { this.horizontal_offset = value; } }
 
         protected ushort vertical_offset;
-        public ushort VerticalOffset { get { return vertical_offset; } set { vertical_offset = value; } }
+        public ushort VerticalOffset { get { return this.vertical_offset; } set { this.vertical_offset = value; } }
 
         protected ushort region_width;
-        public ushort RegionWidth { get { return region_width; } set { region_width = value; } }
+        public ushort RegionWidth { get { return this.region_width; } set { this.region_width = value; } }
 
         protected ushort region_height;
-        public ushort RegionHeight { get { return region_height; } set { region_height = value; } }
+        public ushort RegionHeight { get { return this.region_height; } set { this.region_height = value; } }
 
         protected ushort dependency_rect_region_count;
-        public ushort DependencyRectRegionCount { get { return dependency_rect_region_count; } set { dependency_rect_region_count = value; } }
+        public ushort DependencyRectRegionCount { get { return this.dependency_rect_region_count; } set { this.dependency_rect_region_count = value; } }
 
         protected ushort dependencyRectRegionGroupID;
-        public ushort DependencyRectRegionGroupID { get { return dependencyRectRegionGroupID; } set { dependencyRectRegionGroupID = value; } }
+        public ushort DependencyRectRegionGroupID { get { return this.dependencyRectRegionGroupID; } set { this.dependencyRectRegionGroupID = value; } }
 
         public RectangularRegionGroupEntry()
         { }
@@ -26199,37 +26199,37 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tscl";
 
         protected byte temporalLayerId;
-        public byte TemporalLayerId { get { return temporalLayerId; } set { temporalLayerId = value; } }
+        public byte TemporalLayerId { get { return this.temporalLayerId; } set { this.temporalLayerId = value; } }
 
         protected byte tlprofile_space;
-        public byte TlprofileSpace { get { return tlprofile_space; } set { tlprofile_space = value; } }
+        public byte TlprofileSpace { get { return this.tlprofile_space; } set { this.tlprofile_space = value; } }
 
         protected bool tltier_flag;
-        public bool TltierFlag { get { return tltier_flag; } set { tltier_flag = value; } }
+        public bool TltierFlag { get { return this.tltier_flag; } set { this.tltier_flag = value; } }
 
         protected byte tlprofile_idc;
-        public byte TlprofileIdc { get { return tlprofile_idc; } set { tlprofile_idc = value; } }
+        public byte TlprofileIdc { get { return this.tlprofile_idc; } set { this.tlprofile_idc = value; } }
 
         protected uint tlprofile_compatibility_flags;
-        public uint TlprofileCompatibilityFlags { get { return tlprofile_compatibility_flags; } set { tlprofile_compatibility_flags = value; } }
+        public uint TlprofileCompatibilityFlags { get { return this.tlprofile_compatibility_flags; } set { this.tlprofile_compatibility_flags = value; } }
 
         protected ulong tlconstraint_indicator_flags;
-        public ulong TlconstraintIndicatorFlags { get { return tlconstraint_indicator_flags; } set { tlconstraint_indicator_flags = value; } }
+        public ulong TlconstraintIndicatorFlags { get { return this.tlconstraint_indicator_flags; } set { this.tlconstraint_indicator_flags = value; } }
 
         protected byte tllevel_idc;
-        public byte TllevelIdc { get { return tllevel_idc; } set { tllevel_idc = value; } }
+        public byte TllevelIdc { get { return this.tllevel_idc; } set { this.tllevel_idc = value; } }
 
         protected ushort tlMaxBitRate;
-        public ushort TlMaxBitRate { get { return tlMaxBitRate; } set { tlMaxBitRate = value; } }
+        public ushort TlMaxBitRate { get { return this.tlMaxBitRate; } set { this.tlMaxBitRate = value; } }
 
         protected ushort tlAvgBitRate;
-        public ushort TlAvgBitRate { get { return tlAvgBitRate; } set { tlAvgBitRate = value; } }
+        public ushort TlAvgBitRate { get { return this.tlAvgBitRate; } set { this.tlAvgBitRate = value; } }
 
         protected byte tlConstantFrameRate;
-        public byte TlConstantFrameRate { get { return tlConstantFrameRate; } set { tlConstantFrameRate = value; } }
+        public byte TlConstantFrameRate { get { return this.tlConstantFrameRate; } set { this.tlConstantFrameRate = value; } }
 
         protected ushort tlAvgFrameRate;
-        public ushort TlAvgFrameRate { get { return tlAvgFrameRate; } set { tlAvgFrameRate = value; } }
+        public ushort TlAvgFrameRate { get { return this.tlAvgFrameRate; } set { this.tlAvgFrameRate = value; } }
 
         public TemporalLayerEntry()
         { }
@@ -26302,7 +26302,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vipr";
 
         protected ViewPriorityBox ViewPriorityBox;
-        public ViewPriorityBox _ViewPriorityBox { get { return ViewPriorityBox; } set { ViewPriorityBox = value; } }
+        public ViewPriorityBox _ViewPriorityBox { get { return this.ViewPriorityBox; } set { this.ViewPriorityBox = value; } }
 
         public ViewPriorityEntry()
         { }
@@ -26344,7 +26344,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "vopi";
 
         protected VvcOperatingPointsRecord oinf;
-        public VvcOperatingPointsRecord Oinf { get { return oinf; } set { oinf = value; } }
+        public VvcOperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
 
         public VvcOperatingPointsInformation()
         { }
@@ -26389,10 +26389,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "auxC";
 
         protected string aux_type;
-        public string AuxType { get { return aux_type; } set { aux_type = value; } }
+        public string AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
 
         protected byte[] aux_subtype;  //  until the end of the box, the semantics depend on the aux_type value
-        public byte[] AuxSubtype { get { return aux_subtype; } set { aux_subtype = value; } }
+        public byte[] AuxSubtype { get { return this.aux_subtype; } set { this.aux_subtype = value; } }
 
         public AuxiliaryTypeProperty()
         { }
@@ -26439,10 +26439,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "imir";
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected bool axis;
-        public bool Axis { get { return axis; } set { axis = value; } }
+        public bool Axis { get { return this.axis; } set { this.axis = value; } }
 
         public ImageMirror()
         { }
@@ -26489,10 +26489,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "irot";
 
         protected byte reserved = 0;
-        public byte Reserved { get { return reserved; } set { reserved = value; } }
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected byte angle;
-        public byte Angle { get { return angle; } set { angle = value; } }
+        public byte Angle { get { return this.angle; } set { this.angle = value; } }
 
         public ImageRotation()
         { }
@@ -26539,10 +26539,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ispe";
 
         protected uint image_width;
-        public uint ImageWidth { get { return image_width; } set { image_width = value; } }
+        public uint ImageWidth { get { return this.image_width; } set { this.image_width = value; } }
 
         protected uint image_height;
-        public uint ImageHeight { get { return image_height; } set { image_height = value; } }
+        public uint ImageHeight { get { return this.image_height; } set { this.image_height = value; } }
 
         public ImageSpatialExtentsProperty()
         { }
@@ -26587,7 +26587,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "jpgC";
 
         protected byte[] JPEGprefix;
-        public byte[] _JPEGprefix { get { return JPEGprefix; } set { JPEGprefix = value; } }
+        public byte[] _JPEGprefix { get { return this.JPEGprefix; } set { this.JPEGprefix = value; } }
 
         public JPEGConfigurationBox()
         { }
@@ -26630,7 +26630,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "lsel";
 
         protected ushort layer_id;
-        public ushort LayerId { get { return layer_id; } set { layer_id = value; } }
+        public ushort LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
 
         public LayerSelectorProperty()
         { }
@@ -26673,7 +26673,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "oinf";
 
         protected OperatingPointsRecord op_info;  //  specified in ISO/IEC 14496-15
-        public OperatingPointsRecord OpInfo { get { return op_info; } set { op_info = value; } }
+        public OperatingPointsRecord OpInfo { get { return this.op_info; } set { this.op_info = value; } }
 
         public OperatingPointsInformationProperty()
         { }
@@ -26719,10 +26719,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "pixi";
 
         protected byte num_channels;
-        public byte NumChannels { get { return num_channels; } set { num_channels = value; } }
+        public byte NumChannels { get { return this.num_channels; } set { this.num_channels = value; } }
 
         protected byte bits_per_channel;
-        public byte BitsPerChannel { get { return bits_per_channel; } set { bits_per_channel = value; } }
+        public byte BitsPerChannel { get { return this.bits_per_channel; } set { this.bits_per_channel = value; } }
 
         public PixelInformationProperty()
         { }
@@ -26782,10 +26782,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rloc";
 
         protected uint horizontal_offset;
-        public uint HorizontalOffset { get { return horizontal_offset; } set { horizontal_offset = value; } }
+        public uint HorizontalOffset { get { return this.horizontal_offset; } set { this.horizontal_offset = value; } }
 
         protected uint vertical_offset;
-        public uint VerticalOffset { get { return vertical_offset; } set { vertical_offset = value; } }
+        public uint VerticalOffset { get { return this.vertical_offset; } set { this.vertical_offset = value; } }
 
         public RelativeLocationProperty()
         { }
@@ -26831,7 +26831,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "tols";
 
         protected ushort target_ols_idx;
-        public ushort TargetOlsIdx { get { return target_ols_idx; } set { target_ols_idx = value; } }
+        public ushort TargetOlsIdx { get { return this.target_ols_idx; } set { this.target_ols_idx = value; } }
 
         public TargetOlsProperty()
         { }
@@ -26875,10 +26875,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "aebr";
 
         protected sbyte exposure_step;
-        public sbyte ExposureStep { get { return exposure_step; } set { exposure_step = value; } }
+        public sbyte ExposureStep { get { return this.exposure_step; } set { this.exposure_step = value; } }
 
         protected sbyte exposure_numerator;
-        public sbyte ExposureNumerator { get { return exposure_numerator; } set { exposure_numerator = value; } }
+        public sbyte ExposureNumerator { get { return this.exposure_numerator; } set { this.exposure_numerator = value; } }
 
         public AutoExposureBracketingEntry()
         { }
@@ -26925,10 +26925,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "afbr";
 
         protected sbyte flash_exposure_numerator;
-        public sbyte FlashExposureNumerator { get { return flash_exposure_numerator; } set { flash_exposure_numerator = value; } }
+        public sbyte FlashExposureNumerator { get { return this.flash_exposure_numerator; } set { this.flash_exposure_numerator = value; } }
 
         protected sbyte flash_exposure_denominator;
-        public sbyte FlashExposureDenominator { get { return flash_exposure_denominator; } set { flash_exposure_denominator = value; } }
+        public sbyte FlashExposureDenominator { get { return this.flash_exposure_denominator; } set { this.flash_exposure_denominator = value; } }
 
         public FlashExposureBracketingEntry()
         { }
@@ -26975,10 +26975,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "altt";
 
         protected string alt_text;
-        public string AltText { get { return alt_text; } set { alt_text = value; } }
+        public string AltText { get { return this.alt_text; } set { this.alt_text = value; } }
 
         protected string alt_lang;
-        public string AltLang { get { return alt_lang; } set { alt_lang = value; } }
+        public string AltLang { get { return this.alt_lang; } set { this.alt_lang = value; } }
 
         public AccessibilityTextProperty()
         { }
@@ -27024,7 +27024,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "crtt";
 
         protected ulong creation_time;
-        public ulong CreationTime { get { return creation_time; } set { creation_time = value; } }
+        public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
 
         public CreationTimeProperty()
         { }
@@ -27068,10 +27068,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "dobr";
 
         protected sbyte f_stop_numerator;
-        public sbyte FStopNumerator { get { return f_stop_numerator; } set { f_stop_numerator = value; } }
+        public sbyte FStopNumerator { get { return this.f_stop_numerator; } set { this.f_stop_numerator = value; } }
 
         protected sbyte f_stop_denominator;
-        public sbyte FStopDenominator { get { return f_stop_denominator; } set { f_stop_denominator = value; } }
+        public sbyte FStopDenominator { get { return this.f_stop_denominator; } set { this.f_stop_denominator = value; } }
 
         public DepthOfFieldBracketingEntry()
         { }
@@ -27118,10 +27118,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "fobr";
 
         protected ushort focus_distance_numerator;
-        public ushort FocusDistanceNumerator { get { return focus_distance_numerator; } set { focus_distance_numerator = value; } }
+        public ushort FocusDistanceNumerator { get { return this.focus_distance_numerator; } set { this.focus_distance_numerator = value; } }
 
         protected ushort focus_distance_denominator;
-        public ushort FocusDistanceDenominator { get { return focus_distance_denominator; } set { focus_distance_denominator = value; } }
+        public ushort FocusDistanceDenominator { get { return this.focus_distance_denominator; } set { this.focus_distance_denominator = value; } }
 
         public FocusBracketingEntry()
         { }
@@ -27170,16 +27170,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "iscl";
 
         protected ushort target_width_numerator;
-        public ushort TargetWidthNumerator { get { return target_width_numerator; } set { target_width_numerator = value; } }
+        public ushort TargetWidthNumerator { get { return this.target_width_numerator; } set { this.target_width_numerator = value; } }
 
         protected ushort target_width_denominator;
-        public ushort TargetWidthDenominator { get { return target_width_denominator; } set { target_width_denominator = value; } }
+        public ushort TargetWidthDenominator { get { return this.target_width_denominator; } set { this.target_width_denominator = value; } }
 
         protected ushort target_height_numerator;
-        public ushort TargetHeightNumerator { get { return target_height_numerator; } set { target_height_numerator = value; } }
+        public ushort TargetHeightNumerator { get { return this.target_height_numerator; } set { this.target_height_numerator = value; } }
 
         protected ushort target_height_denominator;
-        public ushort TargetHeightDenominator { get { return target_height_denominator; } set { target_height_denominator = value; } }
+        public ushort TargetHeightDenominator { get { return this.target_height_denominator; } set { this.target_height_denominator = value; } }
 
         public ImageScaling()
         { }
@@ -27231,7 +27231,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mdft";
 
         protected ulong modification_time;
-        public ulong ModificationTime { get { return modification_time; } set { modification_time = value; } }
+        public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }
 
         public ModificationTimeProperty()
         { }
@@ -27274,7 +27274,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "pano";
 
         protected ushort frame_number;
-        public ushort FrameNumber { get { return frame_number; } set { frame_number = value; } }
+        public ushort FrameNumber { get { return this.frame_number; } set { this.frame_number = value; } }
 
         public PanoramaEntry()
         { }
@@ -27320,10 +27320,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "rref";
 
         protected byte reference_type_count;
-        public byte ReferenceTypeCount { get { return reference_type_count; } set { reference_type_count = value; } }
+        public byte ReferenceTypeCount { get { return this.reference_type_count; } set { this.reference_type_count = value; } }
 
         protected uint[] reference_type;
-        public uint[] ReferenceType { get { return reference_type; } set { reference_type = value; } }
+        public uint[] ReferenceType { get { return this.reference_type; } set { this.reference_type = value; } }
 
         public RequiredReferenceTypesProperty()
         { }
@@ -27384,16 +27384,16 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "udes";
 
         protected string lang;
-        public string Lang { get { return lang; } set { lang = value; } }
+        public string Lang { get { return this.lang; } set { this.lang = value; } }
 
         protected string name;
-        public string Name { get { return name; } set { name = value; } }
+        public string Name { get { return this.name; } set { this.name = value; } }
 
         protected string description;
-        public string Description { get { return description; } set { description = value; } }
+        public string Description { get { return this.description; } set { this.description = value; } }
 
         protected string tags;
-        public string Tags { get { return tags; } set { tags = value; } }
+        public string Tags { get { return this.tags; } set { this.tags = value; } }
 
         public UserDescriptionProperty()
         { }
@@ -27446,10 +27446,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "wbbr";
 
         protected ushort blue_amber;
-        public ushort BlueAmber { get { return blue_amber; } set { blue_amber = value; } }
+        public ushort BlueAmber { get { return this.blue_amber; } set { this.blue_amber = value; } }
 
         protected sbyte green_magenta;
-        public sbyte GreenMagenta { get { return green_magenta; } set { green_magenta = value; } }
+        public sbyte GreenMagenta { get { return this.green_magenta; } set { this.green_magenta = value; } }
 
         public WhiteBalanceBracketingEntry()
         { }
@@ -27495,7 +27495,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "wipe";
 
         protected byte transition_direction;
-        public byte TransitionDirection { get { return transition_direction; } set { transition_direction = value; } }
+        public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
 
         public WipeTransitionEffectProperty()
         { }
@@ -27539,10 +27539,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "zoom";
 
         protected bool transition_direction;
-        public bool TransitionDirection { get { return transition_direction; } set { transition_direction = value; } }
+        public bool TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
 
         protected byte transition_shape;
-        public byte TransitionShape { get { return transition_shape; } set { transition_shape = value; } }
+        public byte TransitionShape { get { return this.transition_shape; } set { this.transition_shape = value; } }
 
         public ZoomTransitionEffectProperty()
         { }
@@ -27588,7 +27588,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "fade";
 
         protected byte transition_direction;
-        public byte TransitionDirection { get { return transition_direction; } set { transition_direction = value; } }
+        public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
 
         public FadeTransitionEffectProperty()
         { }
@@ -27631,7 +27631,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "splt";
 
         protected byte transition_direction;
-        public byte TransitionDirection { get { return transition_direction; } set { transition_direction = value; } }
+        public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
 
         public SplitTransitionEffectProperty()
         { }
@@ -27674,7 +27674,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "stpe";
 
         protected byte transition_period;
-        public byte TransitionPeriod { get { return transition_period; } set { transition_period = value; } }
+        public byte TransitionPeriod { get { return this.transition_period; } set { this.transition_period = value; } }
 
         public SuggestedTransitionPeriodProperty()
         { }
@@ -27717,7 +27717,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "ssld";
 
         protected ushort duration;
-        public ushort Duration { get { return duration; } set { duration = value; } }
+        public ushort Duration { get { return this.duration; } set { this.duration = value; } }
 
         public SuggestedTimeDisplayDurationProperty()
         { }
@@ -27760,7 +27760,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "mskC";
 
         protected byte bits_per_pixel;
-        public byte BitsPerPixel { get { return bits_per_pixel; } set { bits_per_pixel = value; } }
+        public byte BitsPerPixel { get { return this.bits_per_pixel; } set { this.bits_per_pixel = value; } }
 
         public MaskConfigurationProperty()
         { }
@@ -27803,7 +27803,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "spid";
 
         protected VvcSubpicIDEntry sid_info;  //  specified in ISO/IEC 14496-15
-        public VvcSubpicIDEntry SidInfo { get { return sid_info; } set { sid_info = value; } }
+        public VvcSubpicIDEntry SidInfo { get { return this.sid_info; } set { this.sid_info = value; } }
 
         public VvcSubpicIDProperty()
         { }
@@ -27846,7 +27846,7 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "spor";
 
         protected VvcSubpicOrderEntry sor_info;  //  specified in ISO/IEC 14496-15
-        public VvcSubpicOrderEntry SorInfo { get { return sor_info; } set { sor_info = value; } }
+        public VvcSubpicOrderEntry SorInfo { get { return this.sor_info; } set { this.sor_info = value; } }
 
         public VvcSubpicOrderProperty()
         { }
@@ -27890,10 +27890,10 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "eqiv";
 
         protected short time_offset;
-        public short TimeOffset { get { return time_offset; } set { time_offset = value; } }
+        public short TimeOffset { get { return this.time_offset; } set { this.time_offset = value; } }
 
         protected ushort timescale_multiplier;
-        public ushort TimescaleMultiplier { get { return timescale_multiplier; } set { timescale_multiplier = value; } }
+        public ushort TimescaleMultiplier { get { return this.timescale_multiplier; } set { this.timescale_multiplier = value; } }
 
         public VisualEquivalenceEntry()
         { }
@@ -27943,13 +27943,13 @@ namespace BoxGenerator2
         public override string FourCC { get; set; } = "refs";
 
         protected uint sample_id;
-        public uint SampleId { get { return sample_id; } set { sample_id = value; } }
+        public uint SampleId { get { return this.sample_id; } set { this.sample_id = value; } }
 
         protected byte num_direct_reference_samples;
-        public byte NumDirectReferenceSamples { get { return num_direct_reference_samples; } set { num_direct_reference_samples = value; } }
+        public byte NumDirectReferenceSamples { get { return this.num_direct_reference_samples; } set { this.num_direct_reference_samples = value; } }
 
         protected uint direct_reference_sample_id;
-        public uint DirectReferenceSampleId { get { return direct_reference_sample_id; } set { direct_reference_sample_id = value; } }
+        public uint DirectReferenceSampleId { get { return this.direct_reference_sample_id; } set { this.direct_reference_sample_id = value; } }
 
         public DirectReferenceSamplesList()
         { }

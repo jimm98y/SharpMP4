@@ -967,7 +967,7 @@ namespace BoxGenerator2
                     propertyName = "_" + name;
 
                 return $"\r\n\tprotected {tt} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
-                 $"\tpublic {tt} {propertyName} {{ get {{ return {name}; }} set {{ {name} = value; }} }}";
+                 $"\tpublic {tt} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
             }
         }
         else
