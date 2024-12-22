@@ -212,6 +212,8 @@ partial class Program
             Try(String("int i,j")), // WORKAROUND
             Try(String("int i")), // WORKAROUND
             Try(String("int size = 4")), // WORKAROUND
+            Try(String("sizeOfInstance = sizeOfInstance<<7 | sizeByte")), // WORKAROUND
+            Try(String("int sizeOfInstance = 0")), // WORKAROUND
             Try(String("unsigned int(64)")),
             Try(String("unsigned int(48)")),
             Try(String("template int(32)[9]")),
@@ -294,12 +296,14 @@ partial class Program
             Try(String("bit(8*sequenceParameterSetExtLength)")),
             Try(String("unsigned int(8*num_bytes_constraint_info - 2)")),
             Try(String("bit(8*nal_unit_length)")),
+            Try(String("bit(timeStampLength)")),
             Try(String("utf8string")),
             Try(String("utfstring")),
             Try(String("utf8list")),
             Try(String("boxstring")),
             Try(String("string")),
             Try(String("bit(32)[6]")),
+            Try(String("bit(32)")),
             Try(String("uint(32)")),
             Try(String("uint(16)")),
             Try(String("uint(64)")),
@@ -423,7 +427,22 @@ partial class Program
             Try(String("j=1")), // WORKAROUND
             Try(String("j++")), // WORKAROUND
             Try(String("subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")), // WORKAROUND
-            Try(String("totalPatternLength = 0")) // WORKAROUND
+            Try(String("totalPatternLength = 0")), // WORKAROUND
+            // descriptors
+            Try(String("DecoderConfigDescriptor")),
+            Try(String("SLConfigDescriptor")),
+            Try(String("IPI_DescrPointer")),
+            Try(String("IP_IdentificationDataSet")),
+            Try(String("IP_IdentificationDataSet")),
+            Try(String("IPMP_DescriptorPointer")),
+            Try(String("LanguageDescriptor")),
+            Try(String("QoS_Descriptor")),
+            Try(String("RegistrationDescriptor")),
+            Try(String("ExtensionDescriptor")),
+            Try(String("ProfileLevelIndicationIndexDescriptor")),
+            Try(String("DecoderSpecificInfo")),
+            Try(String("QoS_Qualifier")),
+            Try(String("double(32)"))
             )
         .Labelled("field type");
 
@@ -461,7 +480,8 @@ partial class Program
                 Try(String("if")), 
                 Try(String("else")),
                 Try(String("do")),
-                Try(String("for"))
+                Try(String("for")),
+                Try(String("while"))
                 ).Before(SkipWhitespaces),
             Try(Parentheses).Optional(),
             SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
@@ -508,8 +528,28 @@ partial class Program
 
     public static Parser<char, string> DescriptorTag =>
        OneOf(
-           Try(String("tag=0")),
-           Try(String("tag=DecSpecificInfoTag"))
+           Try(String("tag=DecSpecificInfoTag")),
+           Try(String("tag=ES_DescrTag")),
+           Try(String("tag=SLConfigDescrTag")),
+           Try(String("tag=DecoderConfigDescrTag")),
+           Try(String("ProfileLevelIndicationIndexDescrTag")),
+           Try(String("tag=IPI_DescrPointerTag")),
+           Try(String("tag=ContentIdentDescrTag..SupplContentIdentDescrTag")),
+           Try(String("tag=IPMP_DescrPointerTag")),
+           Try(String("tag=LanguageDescrTag")),
+           Try(String("tag=QoS_DescrTag")),
+           Try(String("tag=0x01..0xff")),
+           Try(String("tag=0x01")),
+           Try(String("tag=0x02")),
+           Try(String("tag=0x03")),
+           Try(String("tag=0x04")),
+           Try(String("tag=0x41")),
+           Try(String("tag=0x42")),
+           Try(String("tag=0x43")),
+           Try(String("tag=RegistrationDescrTag")),
+           Try(String("tag=ExtDescrTagStartRange..ExtDescrTagEndRange")),
+           Try(String("tag=OCIDescrTagStartRange..OCIDescrTagEndRange")),
+           Try(String("tag=0"))
            ).Labelled("descriptor tag");
 
     public static Parser<char, PseudoExtendedClass> ExtendedClass => Map((extendedBoxName, oldBoxType, boxType, parameters, descriptorTag) => new PseudoExtendedClass(extendedBoxName, oldBoxType, boxType, parameters, descriptorTag),
@@ -758,7 +798,7 @@ namespace BoxGenerator2
             cls += "\r\n" + "boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);";
         }
 
-        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && b.Extended.BoxName != "BaseDescriptor")
+        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrEmpty(b.FourCC))
         {
             cls += "\r\n" + "boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);";
         }
@@ -946,9 +986,9 @@ namespace BoxGenerator2
                 }
                 else if (tt == "bool" && !string.IsNullOrEmpty(value))
                 {
-                    if (value == "= 0")
+                    if (value == "= 0" || value == "=0")
                         value = "= false";
-                    else if (value == "= 1")
+                    else if (value == "= 1" || value == "=1")
                         value = "= true";
                     else
                         Debug.WriteLine($"Unsupported bool value: {value}");
@@ -1040,8 +1080,9 @@ namespace BoxGenerator2
         string typedef = "";
         string value = (field as PseudoField)?.Value;
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
-            value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]" && value != "[0 .. 255]" &&
-            value != "[ sample_count ]" && value != "[method_count]")
+            value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]" 
+            && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" && 
+            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]")
         {
             typedef = value;
         }
@@ -1276,12 +1317,14 @@ namespace BoxGenerator2
             { "bit(8*sequenceParameterSetExtLength)", "IsoReaderWriter.ReadBytes(stream, sequenceParameterSetExtLength, " },
             { "unsigned int(8*num_bytes_constraint_info - 2)", "IsoReaderWriter.ReadBytes(stream, (ulong)(num_bytes_constraint_info - 2), " },
             { "bit(8*nal_unit_length)", "IsoReaderWriter.ReadBytes(stream, nal_unit_length, " },
+            { "bit(timeStampLength)", "IsoReaderWriter.ReadBytes(stream, timeStampLength, " },
             { "utf8string", "IsoReaderWriter.ReadString(stream, " },
             { "utfstring", "IsoReaderWriter.ReadString(stream, " },
             { "utf8list", "IsoReaderWriter.ReadString(stream, " },
             { "boxstring", "IsoReaderWriter.ReadString(stream, " },
             { "string", "IsoReaderWriter.ReadString(stream, " },
             { "bit(32)[6]", "IsoReaderWriter.ReadUInt32Array(stream, 6, " },
+            { "bit(32)", "IsoReaderWriter.ReadUInt32(stream, " },
             { "uint(32)", "IsoReaderWriter.ReadUInt32(stream, " },
             { "uint(16)", "IsoReaderWriter.ReadUInt16(stream, " },
             { "uint(64)", "IsoReaderWriter.ReadUInt64(stream, " },
@@ -1451,6 +1494,22 @@ namespace BoxGenerator2
             { "AlbumLoudnessInfo[]", "IsoReaderWriter.ReadBox(stream, " },
             { "VvcPTLRecord(num_sublayers)", "IsoReaderWriter.ReadClass(stream, num_sublayers," },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "IsoReaderWriter.ReadClass(stream, " },
+            // descriptors
+            { "DecoderConfigDescriptor", "IsoReaderWriter.ReadClass(stream, " },
+            { "SLConfigDescriptor", "IsoReaderWriter.ReadClass(stream, " },
+            { "IPI_DescrPointer[0 .. 1]", "IsoReaderWriter.ReadClass(stream, " },
+            { "IP_IdentificationDataSet[0 .. 255]", "IsoReaderWriter.ReadClass(stream, " },
+            { "IPMP_DescriptorPointer[0 .. 255]", "IsoReaderWriter.ReadClass(stream, " },
+            { "LanguageDescriptor[0 .. 255]", "IsoReaderWriter.ReadClass(stream, " },
+            { "QoS_Descriptor[0 .. 1]", "IsoReaderWriter.ReadClass(stream, " },
+            { "RegistrationDescriptor[0 .. 1]", "IsoReaderWriter.ReadClass(stream, " },
+            { "ExtensionDescriptor[0 .. 255]", "IsoReaderWriter.ReadClass(stream, " },
+            { "ProfileLevelIndicationIndexDescriptor[0..255]", "IsoReaderWriter.ReadClass(stream, " },
+            { "DecoderSpecificInfo[0 .. 1]", "IsoReaderWriter.ReadClass(stream, " },
+            { "bit(8)[URLlength]", "IsoReaderWriter.ReadBytes(stream, URLlength, " },
+            { "bit(8)[sizeOfInstance-4]", "IsoReaderWriter.ReadBytes(stream, (ulong)(sizeOfInstance - 4), " },
+            { "double(32)", "IsoReaderWriter.ReadDouble32(stream, " },
+            { "QoS_Qualifier[]", "IsoReaderWriter.ReadClass(stream, " },
         };
         return map[type];
     }
@@ -1555,12 +1614,14 @@ namespace BoxGenerator2
             { "bit(8*sequenceParameterSetExtLength)", "(ulong)sequenceParameterSetExtLength * 8" },
             { "unsigned int(8*num_bytes_constraint_info - 2)", "(ulong)(num_bytes_constraint_info - 2)" },
             { "bit(8*nal_unit_length)", "(ulong)nal_unit_length * 8" },
+            { "bit(timeStampLength)", "(ulong)timeStampLength" },
             { "utf8string", "(ulong)value.Length * 8" },
             { "utfstring", "(ulong)value.Length * 8" },
             { "utf8list", "(ulong)value.Length * 8" },
             { "boxstring", "(ulong)value.Length * 8" },
             { "string", "(ulong)value.Length * 8" },
             { "bit(32)[6]", "6 * 32" },
+            { "bit(32)", "32" },
             { "uint(32)", "32" },
             { "uint(16)", "16" },
             { "uint(64)", "64" },
@@ -1729,6 +1790,22 @@ namespace BoxGenerator2
             { "AlbumLoudnessInfo[]", "IsoReaderWriter.CalculateSize(value)" },
             { "VvcPTLRecord(num_sublayers)", "IsoReaderWriter.CalculateClassSize(value)" },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "IsoReaderWriter.CalculateClassSize(value)" },
+            // descriptors
+            { "DecoderConfigDescriptor", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "SLConfigDescriptor", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "IPI_DescrPointer[0 .. 1]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "IP_IdentificationDataSet[0 .. 255]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "IPMP_DescriptorPointer[0 .. 255]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "LanguageDescriptor[0 .. 255]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "QoS_Descriptor[0 .. 1]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "RegistrationDescriptor[0 .. 1]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "ExtensionDescriptor[0 .. 255]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "ProfileLevelIndicationIndexDescriptor[0..255]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "DecoderSpecificInfo[0 .. 1]", "IsoReaderWriter.CalculateClassSize(value)" },
+            { "bit(8)[URLlength]", "(ulong)(URLlength * 8)" },
+            { "bit(8)[sizeOfInstance-4]", "(ulong)(sizeOfInstance - 4)" },
+            { "double(32)", "32" },
+            { "QoS_Qualifier[]", "IsoReaderWriter.CalculateClassSize(value)" },
        };
         return map[type];
     }
@@ -1833,12 +1910,14 @@ namespace BoxGenerator2
             { "bit(8*sequenceParameterSetExtLength)", "IsoReaderWriter.WriteBytes(stream, sequenceParameterSetExtLength, " },
             { "unsigned int(8*num_bytes_constraint_info - 2)", "IsoReaderWriter.WriteBytes(stream, (ulong)(num_bytes_constraint_info - 2), " },
             { "bit(8*nal_unit_length)", "IsoReaderWriter.WriteBytes(stream, nal_unit_length, " },
+            { "bit(timeStampLength)", "IsoReaderWriter.WriteBytes(stream, timeStampLength, " },
             { "utf8string", "IsoReaderWriter.WriteString(stream, " },
             { "utfstring", "IsoReaderWriter.WriteString(stream, " },
             { "utf8list", "IsoReaderWriter.WriteString(stream, " },
             { "boxstring", "IsoReaderWriter.WriteString(stream, " },
             { "string", "IsoReaderWriter.WriteString(stream, " },
             { "bit(32)[6]", "IsoReaderWriter.WriteUInt32Array(stream, 6, " },
+            { "bit(32)", "IsoReaderWriter.WriteUInt32(stream, " },
             { "uint(32)", "IsoReaderWriter.WriteUInt32(stream, " },
             { "uint(16)", "IsoReaderWriter.WriteUInt16(stream, " },
             { "uint(64)", "IsoReaderWriter.WriteUInt64(stream, " },
@@ -2007,6 +2086,22 @@ namespace BoxGenerator2
             { "AlbumLoudnessInfo[]", "IsoReaderWriter.WriteBox(stream, " },
             { "VvcPTLRecord(num_sublayers)", "IsoReaderWriter.WriteClass(stream, num_sublayers, " },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "IsoReaderWriter.WriteClass(stream, " },
+            // descriptors
+            { "DecoderConfigDescriptor", "IsoReaderWriter.WriteClass(stream, " },
+            { "SLConfigDescriptor", "IsoReaderWriter.WriteClass(stream, " },
+            { "IPI_DescrPointer[0 .. 1]", "IsoReaderWriter.WriteClass(stream, " },
+            { "IP_IdentificationDataSet[0 .. 255]", "IsoReaderWriter.WriteClass(stream, " },
+            { "IPMP_DescriptorPointer[0 .. 255]", "IsoReaderWriter.WriteClass(stream, " },
+            { "LanguageDescriptor[0 .. 255]", "IsoReaderWriter.WriteClass(stream, " },
+            { "QoS_Descriptor[0 .. 1]", "IsoReaderWriter.WriteClass(stream, " },
+            { "RegistrationDescriptor[0 .. 1]", "IsoReaderWriter.WriteClass(stream, " },
+            { "ExtensionDescriptor[0 .. 255]", "IsoReaderWriter.WriteClass(stream, " },
+            { "ProfileLevelIndicationIndexDescriptor[0..255]", "IsoReaderWriter.WriteClass(stream, " },
+            { "DecoderSpecificInfo[0 .. 1]", "IsoReaderWriter.WriteClass(stream, " },
+            { "bit(8)[URLlength]", "IsoReaderWriter.WriteBytes(stream, URLlength, " },
+            { "bit(8)[sizeOfInstance-4]", "IsoReaderWriter.WriteBytes(stream, (ulong)(sizeOfInstance - 4), " },
+            { "double(32)", "IsoReaderWriter.WriteDouble32(stream, " },
+            { "QoS_Qualifier[]", "IsoReaderWriter.WriteClass(stream, " },
         };
         return map[type];
     }
@@ -2023,7 +2118,9 @@ namespace BoxGenerator2
             "j=1",
             "j++",
             "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8",
-            "totalPatternLength = 0"
+            "totalPatternLength = 0",
+            "sizeOfInstance = sizeOfInstance<<7 | sizeByte",
+            "int sizeOfInstance = 0"
         };
         return map.Contains(type);
     }
@@ -2126,12 +2223,14 @@ namespace BoxGenerator2
             { "bit(8*sequenceParameterSetExtLength)", "byte[]" },
             { "unsigned int(8*num_bytes_constraint_info - 2)", "byte[]" },
             { "bit(8*nal_unit_length)", "byte[]" },
+            { "bit(timeStampLength)", "byte[]" },
             { "utf8string", "string" },
             { "utfstring", "string" },
             { "utf8list", "string" },
             { "boxstring", "string" },
             { "string", "string" },
             { "bit(32)[6]", "uint[]" },
+            { "bit(32)", "uint" },
             { "uint(32)", "uint" },
             { "uint(16)", "ushort" },
             { "uint(64)", "ulong" },
@@ -2302,6 +2401,22 @@ namespace BoxGenerator2
             { "AlbumLoudnessInfo[]", "AlbumLoudnessInfo[]" },
             { "VvcPTLRecord(num_sublayers)", "VvcPTLRecord[]" },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "VvcPTLRecord[]" },
+            // descriptors
+            { "DecoderConfigDescriptor", "DecoderConfigDescriptor" },
+            { "SLConfigDescriptor", "SLConfigDescriptor" },
+            { "IPI_DescrPointer[0 .. 1]", "IPI_DescrPointer" },
+            { "IP_IdentificationDataSet[0 .. 255]", "IP_IdentificationDataSet[]" },
+            { "IPMP_DescriptorPointer[0 .. 255]", "IPMP_DescriptorPointer[]" },
+            { "LanguageDescriptor[0 .. 255]", "LanguageDescriptor" },
+            { "QoS_Descriptor[0 .. 1]", "QoS_Descriptor" },
+            { "RegistrationDescriptor[0 .. 1]", "RegistrationDescriptor" },
+            { "ExtensionDescriptor[0 .. 255]", "ExtensionDescriptor[]" },
+            { "ProfileLevelIndicationIndexDescriptor[0..255]", "ProfileLevelIndicationIndexDescriptor[]" },
+            { "DecoderSpecificInfo[0 .. 1]", "DecoderSpecificInfo[]" },
+            { "bit(8)[URLlength]", "byte[]" },
+            { "bit(8)[sizeOfInstance-4]", "byte[]" },
+            { "double(32)", "double" },
+            { "QoS_Qualifier[]", "QoS_Qualifier[]" },
         };
         return map[type];
     }

@@ -7,13 +7,984 @@ namespace BoxGenerator2
     /*
     abstract aligned(8) expandable(228-1) class BaseDescriptor : bit(8) tag=0 {
      // empty. To be filled by classes extending this class.
+     int sizeOfInstance = 0;
+     bit(1) nextByte;
+     bit(7) sizeOfInstance;
+     while(nextByte) {
+     bit(1) nextByte;
+     bit(7) sizeByte;
+     sizeOfInstance = sizeOfInstance<<7 | sizeByte;
      }
+    }
     */
     public class BaseDescriptor
     {
 
 
+        protected bool nextByte;
+        public bool NextByte { get { return this.nextByte; } set { this.nextByte = value; } }
+
+        protected byte sizeOfInstance;
+        public byte SizeOfInstance { get { return this.sizeOfInstance; } set { this.sizeOfInstance = value; } }
+
+        protected bool nextByte0;
+        public bool NextByte0 { get { return this.nextByte0; } set { this.nextByte0 = value; } }
+
+        protected byte sizeByte;
+        public byte SizeByte { get { return this.sizeByte; } set { this.sizeByte = value; } }
+
         public BaseDescriptor()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            int sizeOfInstance = 0;
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.nextByte);
+            boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.sizeOfInstance);
+
+            while (nextByte)
+            {
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.nextByte0);
+                boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.sizeByte);
+                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            int sizeOfInstance = 0;
+            boxSize += IsoReaderWriter.WriteBit(stream, this.nextByte);
+            boxSize += IsoReaderWriter.WriteBits(stream, 7, this.sizeOfInstance);
+
+            while (nextByte)
+            {
+                boxSize += IsoReaderWriter.WriteBit(stream, this.nextByte0);
+                boxSize += IsoReaderWriter.WriteBits(stream, 7, this.sizeByte);
+                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            int sizeOfInstance = 0;
+            boxSize += 1; // nextByte
+            boxSize += 7; // sizeOfInstance
+
+            while (nextByte)
+            {
+                boxSize += 1; // nextByte0
+                boxSize += 7; // sizeByte
+                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag
+     {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public class DecoderSpecificInfo : BaseDescriptor
+    {
+
+
+        public DecoderSpecificInfo()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ES_Descriptor extends BaseDescriptor : bit(8) tag=ES_DescrTag {
+     bit(16) ES_ID;
+     bit(1) streamDependenceFlag;
+     bit(1) URL_Flag;
+     bit(1) OCRstreamFlag;
+     bit(5) streamPriority;
+     if (streamDependenceFlag)
+     bit(16) dependsOn_ES_ID;
+     if (URL_Flag) {
+     bit(8) URLlength;
+     bit(8) URLstring[URLlength];
+     }
+     if (OCRstreamFlag)
+     bit(16) OCR_ES_Id;
+     DecoderConfigDescriptor decConfigDescr;
+     SLConfigDescriptor slConfigDescr;
+     IPI_DescrPointer ipiPtr[0 .. 1];
+     IP_IdentificationDataSet ipIDS[0 .. 255];
+     IPMP_DescriptorPointer ipmpDescrPtr[0 .. 255];
+     LanguageDescriptor langDescr[0 .. 255];
+     QoS_Descriptor qosDescr[0 .. 1];
+     RegistrationDescriptor regDescr[0 .. 1];
+     ExtensionDescriptor extDescr[0 .. 255];
+     }
+    */
+    public class ES_Descriptor : BaseDescriptor
+    {
+
+
+        protected ushort ES_ID;
+        public ushort ESID { get { return this.ES_ID; } set { this.ES_ID = value; } }
+
+        protected bool streamDependenceFlag;
+        public bool StreamDependenceFlag { get { return this.streamDependenceFlag; } set { this.streamDependenceFlag = value; } }
+
+        protected bool URL_Flag;
+        public bool URLFlag { get { return this.URL_Flag; } set { this.URL_Flag = value; } }
+
+        protected bool OCRstreamFlag;
+        public bool _OCRstreamFlag { get { return this.OCRstreamFlag; } set { this.OCRstreamFlag = value; } }
+
+        protected byte streamPriority;
+        public byte StreamPriority { get { return this.streamPriority; } set { this.streamPriority = value; } }
+
+        protected ushort dependsOn_ES_ID;
+        public ushort DependsOnESID { get { return this.dependsOn_ES_ID; } set { this.dependsOn_ES_ID = value; } }
+
+        protected byte URLlength;
+        public byte _URLlength { get { return this.URLlength; } set { this.URLlength = value; } }
+
+        protected byte[] URLstring;
+        public byte[] _URLstring { get { return this.URLstring; } set { this.URLstring = value; } }
+
+        protected ushort OCR_ES_Id;
+        public ushort OCRESId { get { return this.OCR_ES_Id; } set { this.OCR_ES_Id = value; } }
+
+        protected DecoderConfigDescriptor decConfigDescr;
+        public DecoderConfigDescriptor DecConfigDescr { get { return this.decConfigDescr; } set { this.decConfigDescr = value; } }
+
+        protected SLConfigDescriptor slConfigDescr;
+        public SLConfigDescriptor SlConfigDescr { get { return this.slConfigDescr; } set { this.slConfigDescr = value; } }
+
+        protected IPI_DescrPointer ipiPtr;
+        public IPI_DescrPointer IpiPtr { get { return this.ipiPtr; } set { this.ipiPtr = value; } }
+
+        protected IP_IdentificationDataSet[] ipIDS;
+        public IP_IdentificationDataSet[] IpIDS { get { return this.ipIDS; } set { this.ipIDS = value; } }
+
+        protected IPMP_DescriptorPointer[] ipmpDescrPtr;
+        public IPMP_DescriptorPointer[] IpmpDescrPtr { get { return this.ipmpDescrPtr; } set { this.ipmpDescrPtr = value; } }
+
+        protected LanguageDescriptor langDescr;
+        public LanguageDescriptor LangDescr { get { return this.langDescr; } set { this.langDescr = value; } }
+
+        protected QoS_Descriptor qosDescr;
+        public QoS_Descriptor QosDescr { get { return this.qosDescr; } set { this.qosDescr = value; } }
+
+        protected RegistrationDescriptor regDescr;
+        public RegistrationDescriptor RegDescr { get { return this.regDescr; } set { this.regDescr = value; } }
+
+        protected ExtensionDescriptor[] extDescr;
+        public ExtensionDescriptor[] ExtDescr { get { return this.extDescr; } set { this.extDescr = value; } }
+
+        public ES_Descriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt16(stream, out this.ES_ID);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.streamDependenceFlag);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.URL_Flag);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.OCRstreamFlag);
+            boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.streamPriority);
+
+            if (streamDependenceFlag)
+            {
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.dependsOn_ES_ID);
+            }
+
+            if (URL_Flag)
+            {
+                boxSize += IsoReaderWriter.ReadUInt8(stream, out this.URLlength);
+                boxSize += IsoReaderWriter.ReadBytes(stream, URLlength, out this.URLstring);
+            }
+
+            if (OCRstreamFlag)
+            {
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.OCR_ES_Id);
+            }
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.decConfigDescr);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.slConfigDescr);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.ipiPtr);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.ipIDS);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.ipmpDescrPtr);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.langDescr);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.qosDescr);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.regDescr);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.extDescr);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.ES_ID);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.streamDependenceFlag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.URL_Flag);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.OCRstreamFlag);
+            boxSize += IsoReaderWriter.WriteBits(stream, 5, this.streamPriority);
+
+            if (streamDependenceFlag)
+            {
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.dependsOn_ES_ID);
+            }
+
+            if (URL_Flag)
+            {
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.URLlength);
+                boxSize += IsoReaderWriter.WriteBytes(stream, URLlength, this.URLstring);
+            }
+
+            if (OCRstreamFlag)
+            {
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.OCR_ES_Id);
+            }
+            boxSize += IsoReaderWriter.WriteClass(stream, this.decConfigDescr);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.slConfigDescr);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.ipiPtr);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.ipIDS);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.ipmpDescrPtr);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.langDescr);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.qosDescr);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.regDescr);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.extDescr);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // ES_ID
+            boxSize += 1; // streamDependenceFlag
+            boxSize += 1; // URL_Flag
+            boxSize += 1; // OCRstreamFlag
+            boxSize += 5; // streamPriority
+
+            if (streamDependenceFlag)
+            {
+                boxSize += 16; // dependsOn_ES_ID
+            }
+
+            if (URL_Flag)
+            {
+                boxSize += 8; // URLlength
+                boxSize += (ulong)(URLlength * 8); // URLstring
+            }
+
+            if (OCRstreamFlag)
+            {
+                boxSize += 16; // OCR_ES_Id
+            }
+            boxSize += IsoReaderWriter.CalculateClassSize(decConfigDescr); // decConfigDescr
+            boxSize += IsoReaderWriter.CalculateClassSize(slConfigDescr); // slConfigDescr
+            boxSize += IsoReaderWriter.CalculateClassSize(ipiPtr); // ipiPtr
+            boxSize += IsoReaderWriter.CalculateClassSize(ipIDS); // ipIDS
+            boxSize += IsoReaderWriter.CalculateClassSize(ipmpDescrPtr); // ipmpDescrPtr
+            boxSize += IsoReaderWriter.CalculateClassSize(langDescr); // langDescr
+            boxSize += IsoReaderWriter.CalculateClassSize(qosDescr); // qosDescr
+            boxSize += IsoReaderWriter.CalculateClassSize(regDescr); // regDescr
+            boxSize += IsoReaderWriter.CalculateClassSize(extDescr); // extDescr
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class SLConfigDescriptor extends BaseDescriptor : bit(8) tag=SLConfigDescrTag {
+     bit(8) predefined;
+     if (predefined==0) {
+     bit(1) useAccessUnitStartFlag;
+     bit(1) useAccessUnitEndFlag;
+     bit(1) useRandomAccessPointFlag;
+     bit(1) hasRandomAccessUnitsOnlyFlag;
+     bit(1) usePaddingFlag;
+     bit(1) useTimeStampsFlag;
+     bit(1) useIdleFlag;
+     bit(1) durationFlag;
+     bit(32) timeStampResolution;
+     bit(32) OCRResolution;
+     bit(8) timeStampLength; // must be <= 64
+     bit(8) OCRLength; // must be <= 64
+     bit(8) AU_Length; // must be <= 32
+     bit(8) instantBitrateLength;
+     bit(4) degradationPriorityLength;
+     bit(5) AU_seqNumLength; // must be <= 16
+     bit(5) packetSeqNumLength; // must be <= 16
+     bit(2) reserved=0b11;
+     }
+     if (durationFlag) {
+     bit(32) timeScale;
+     bit(16) accessUnitDuration;
+     bit(16) compositionUnitDuration;
+     }
+     if (!useTimeStampsFlag) {
+     bit(timeStampLength) startDecodingTimeStamp;
+     bit(timeStampLength) startCompositionTimeStamp;
+     }
+     }
+    */
+    public class SLConfigDescriptor : BaseDescriptor
+    {
+
+
+        protected byte predefined;
+        public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
+
+        protected bool useAccessUnitStartFlag;
+        public bool UseAccessUnitStartFlag { get { return this.useAccessUnitStartFlag; } set { this.useAccessUnitStartFlag = value; } }
+
+        protected bool useAccessUnitEndFlag;
+        public bool UseAccessUnitEndFlag { get { return this.useAccessUnitEndFlag; } set { this.useAccessUnitEndFlag = value; } }
+
+        protected bool useRandomAccessPointFlag;
+        public bool UseRandomAccessPointFlag { get { return this.useRandomAccessPointFlag; } set { this.useRandomAccessPointFlag = value; } }
+
+        protected bool hasRandomAccessUnitsOnlyFlag;
+        public bool HasRandomAccessUnitsOnlyFlag { get { return this.hasRandomAccessUnitsOnlyFlag; } set { this.hasRandomAccessUnitsOnlyFlag = value; } }
+
+        protected bool usePaddingFlag;
+        public bool UsePaddingFlag { get { return this.usePaddingFlag; } set { this.usePaddingFlag = value; } }
+
+        protected bool useTimeStampsFlag;
+        public bool UseTimeStampsFlag { get { return this.useTimeStampsFlag; } set { this.useTimeStampsFlag = value; } }
+
+        protected bool useIdleFlag;
+        public bool UseIdleFlag { get { return this.useIdleFlag; } set { this.useIdleFlag = value; } }
+
+        protected bool durationFlag;
+        public bool DurationFlag { get { return this.durationFlag; } set { this.durationFlag = value; } }
+
+        protected uint timeStampResolution;
+        public uint TimeStampResolution { get { return this.timeStampResolution; } set { this.timeStampResolution = value; } }
+
+        protected uint OCRResolution;
+        public uint _OCRResolution { get { return this.OCRResolution; } set { this.OCRResolution = value; } }
+
+        protected byte timeStampLength;  //  must be <= 64
+        public byte TimeStampLength { get { return this.timeStampLength; } set { this.timeStampLength = value; } }
+
+        protected byte OCRLength;  //  must be <= 64
+        public byte _OCRLength { get { return this.OCRLength; } set { this.OCRLength = value; } }
+
+        protected byte AU_Length;  //  must be <= 32
+        public byte AULength { get { return this.AU_Length; } set { this.AU_Length = value; } }
+
+        protected byte instantBitrateLength;
+        public byte InstantBitrateLength { get { return this.instantBitrateLength; } set { this.instantBitrateLength = value; } }
+
+        protected byte degradationPriorityLength;
+        public byte DegradationPriorityLength { get { return this.degradationPriorityLength; } set { this.degradationPriorityLength = value; } }
+
+        protected byte AU_seqNumLength;  //  must be <= 16
+        public byte AUSeqNumLength { get { return this.AU_seqNumLength; } set { this.AU_seqNumLength = value; } }
+
+        protected byte packetSeqNumLength;  //  must be <= 16
+        public byte PacketSeqNumLength { get { return this.packetSeqNumLength; } set { this.packetSeqNumLength = value; } }
+
+        protected byte reserved = 0b11;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected uint timeScale;
+        public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
+
+        protected ushort accessUnitDuration;
+        public ushort AccessUnitDuration { get { return this.accessUnitDuration; } set { this.accessUnitDuration = value; } }
+
+        protected ushort compositionUnitDuration;
+        public ushort CompositionUnitDuration { get { return this.compositionUnitDuration; } set { this.compositionUnitDuration = value; } }
+
+        protected byte[] startDecodingTimeStamp;
+        public byte[] StartDecodingTimeStamp { get { return this.startDecodingTimeStamp; } set { this.startDecodingTimeStamp = value; } }
+
+        protected byte[] startCompositionTimeStamp;
+        public byte[] StartCompositionTimeStamp { get { return this.startCompositionTimeStamp; } set { this.startCompositionTimeStamp = value; } }
+
+        public SLConfigDescriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.predefined);
+
+            if (predefined == 0)
+            {
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.useAccessUnitStartFlag);
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.useAccessUnitEndFlag);
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.useRandomAccessPointFlag);
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.hasRandomAccessUnitsOnlyFlag);
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.usePaddingFlag);
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.useTimeStampsFlag);
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.useIdleFlag);
+                boxSize += IsoReaderWriter.ReadBit(stream, out this.durationFlag);
+                boxSize += IsoReaderWriter.ReadUInt32(stream, out this.timeStampResolution);
+                boxSize += IsoReaderWriter.ReadUInt32(stream, out this.OCRResolution);
+                boxSize += IsoReaderWriter.ReadUInt8(stream, out this.timeStampLength); // must be <= 64
+                boxSize += IsoReaderWriter.ReadUInt8(stream, out this.OCRLength); // must be <= 64
+                boxSize += IsoReaderWriter.ReadUInt8(stream, out this.AU_Length); // must be <= 32
+                boxSize += IsoReaderWriter.ReadUInt8(stream, out this.instantBitrateLength);
+                boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.degradationPriorityLength);
+                boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.AU_seqNumLength); // must be <= 16
+                boxSize += IsoReaderWriter.ReadBits(stream, 5, out this.packetSeqNumLength); // must be <= 16
+                boxSize += IsoReaderWriter.ReadBits(stream, 2, out this.reserved);
+            }
+
+            if (durationFlag)
+            {
+                boxSize += IsoReaderWriter.ReadUInt32(stream, out this.timeScale);
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.accessUnitDuration);
+                boxSize += IsoReaderWriter.ReadUInt16(stream, out this.compositionUnitDuration);
+            }
+
+            if (!useTimeStampsFlag)
+            {
+                boxSize += IsoReaderWriter.ReadBytes(stream, timeStampLength, out this.startDecodingTimeStamp);
+                boxSize += IsoReaderWriter.ReadBytes(stream, timeStampLength, out this.startCompositionTimeStamp);
+            }
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.predefined);
+
+            if (predefined == 0)
+            {
+                boxSize += IsoReaderWriter.WriteBit(stream, this.useAccessUnitStartFlag);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.useAccessUnitEndFlag);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.useRandomAccessPointFlag);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.hasRandomAccessUnitsOnlyFlag);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.usePaddingFlag);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.useTimeStampsFlag);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.useIdleFlag);
+                boxSize += IsoReaderWriter.WriteBit(stream, this.durationFlag);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.timeStampResolution);
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.OCRResolution);
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.timeStampLength); // must be <= 64
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.OCRLength); // must be <= 64
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.AU_Length); // must be <= 32
+                boxSize += IsoReaderWriter.WriteUInt8(stream, this.instantBitrateLength);
+                boxSize += IsoReaderWriter.WriteBits(stream, 4, this.degradationPriorityLength);
+                boxSize += IsoReaderWriter.WriteBits(stream, 5, this.AU_seqNumLength); // must be <= 16
+                boxSize += IsoReaderWriter.WriteBits(stream, 5, this.packetSeqNumLength); // must be <= 16
+                boxSize += IsoReaderWriter.WriteBits(stream, 2, this.reserved);
+            }
+
+            if (durationFlag)
+            {
+                boxSize += IsoReaderWriter.WriteUInt32(stream, this.timeScale);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.accessUnitDuration);
+                boxSize += IsoReaderWriter.WriteUInt16(stream, this.compositionUnitDuration);
+            }
+
+            if (!useTimeStampsFlag)
+            {
+                boxSize += IsoReaderWriter.WriteBytes(stream, timeStampLength, this.startDecodingTimeStamp);
+                boxSize += IsoReaderWriter.WriteBytes(stream, timeStampLength, this.startCompositionTimeStamp);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // predefined
+
+            if (predefined == 0)
+            {
+                boxSize += 1; // useAccessUnitStartFlag
+                boxSize += 1; // useAccessUnitEndFlag
+                boxSize += 1; // useRandomAccessPointFlag
+                boxSize += 1; // hasRandomAccessUnitsOnlyFlag
+                boxSize += 1; // usePaddingFlag
+                boxSize += 1; // useTimeStampsFlag
+                boxSize += 1; // useIdleFlag
+                boxSize += 1; // durationFlag
+                boxSize += 32; // timeStampResolution
+                boxSize += 32; // OCRResolution
+                boxSize += 8; // timeStampLength
+                boxSize += 8; // OCRLength
+                boxSize += 8; // AU_Length
+                boxSize += 8; // instantBitrateLength
+                boxSize += 4; // degradationPriorityLength
+                boxSize += 5; // AU_seqNumLength
+                boxSize += 5; // packetSeqNumLength
+                boxSize += 2; // reserved
+            }
+
+            if (durationFlag)
+            {
+                boxSize += 32; // timeScale
+                boxSize += 16; // accessUnitDuration
+                boxSize += 16; // compositionUnitDuration
+            }
+
+            if (!useTimeStampsFlag)
+            {
+                boxSize += (ulong)timeStampLength; // startDecodingTimeStamp
+                boxSize += (ulong)timeStampLength; // startCompositionTimeStamp
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class DecoderConfigDescriptor extends BaseDescriptor : bit(8) tag=DecoderConfigDescrTag {
+     bit(8) objectTypeIndication;
+     bit(6) streamType;
+     bit(1) upStream;
+     const bit(1) reserved=1;
+     bit(24) bufferSizeDB;
+     bit(32) maxBitrate;
+     bit(32) avgBitrate;
+     DecoderSpecificInfo decSpecificInfo[0 .. 1];
+     ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
+     }
+    */
+    public class DecoderConfigDescriptor : BaseDescriptor
+    {
+
+
+        protected byte objectTypeIndication;
+        public byte ObjectTypeIndication { get { return this.objectTypeIndication; } set { this.objectTypeIndication = value; } }
+
+        protected byte streamType;
+        public byte StreamType { get { return this.streamType; } set { this.streamType = value; } }
+
+        protected bool upStream;
+        public bool UpStream { get { return this.upStream; } set { this.upStream = value; } }
+
+        protected bool reserved = true;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected uint bufferSizeDB;
+        public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
+
+        protected uint maxBitrate;
+        public uint MaxBitrate { get { return this.maxBitrate; } set { this.maxBitrate = value; } }
+
+        protected uint avgBitrate;
+        public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
+
+        protected DecoderSpecificInfo[] decSpecificInfo;
+        public DecoderSpecificInfo[] DecSpecificInfo { get { return this.decSpecificInfo; } set { this.decSpecificInfo = value; } }
+
+        protected ProfileLevelIndicationIndexDescriptor[] profileLevelIndicationIndexDescr;
+        public ProfileLevelIndicationIndexDescriptor[] ProfileLevelIndicationIndexDescr { get { return this.profileLevelIndicationIndexDescr; } set { this.profileLevelIndicationIndexDescr = value; } }
+
+        public DecoderConfigDescriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.objectTypeIndication);
+            boxSize += IsoReaderWriter.ReadBits(stream, 6, out this.streamType);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.upStream);
+            boxSize += IsoReaderWriter.ReadBit(stream, out this.reserved);
+            boxSize += IsoReaderWriter.ReadBits(stream, 24, out this.bufferSizeDB);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.maxBitrate);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.avgBitrate);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.decSpecificInfo);
+            boxSize += IsoReaderWriter.ReadClass(stream, out this.profileLevelIndicationIndexDescr);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.objectTypeIndication);
+            boxSize += IsoReaderWriter.WriteBits(stream, 6, this.streamType);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.upStream);
+            boxSize += IsoReaderWriter.WriteBit(stream, this.reserved);
+            boxSize += IsoReaderWriter.WriteBits(stream, 24, this.bufferSizeDB);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.maxBitrate);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.avgBitrate);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.decSpecificInfo);
+            boxSize += IsoReaderWriter.WriteClass(stream, this.profileLevelIndicationIndexDescr);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // objectTypeIndication
+            boxSize += 6; // streamType
+            boxSize += 1; // upStream
+            boxSize += 1; // reserved
+            boxSize += 24; // bufferSizeDB
+            boxSize += 32; // maxBitrate
+            boxSize += 32; // avgBitrate
+            boxSize += IsoReaderWriter.CalculateClassSize(decSpecificInfo); // decSpecificInfo
+            boxSize += IsoReaderWriter.CalculateClassSize(profileLevelIndicationIndexDescr); // profileLevelIndicationIndexDescr
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ProfileLevelIndicationIndexDescriptor () extends BaseDescriptor
+     : bit(8) ProfileLevelIndicationIndexDescrTag {
+     bit(8) profileLevelIndicationIndex;
+     }
+    */
+    public class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
+    {
+
+
+        protected byte profileLevelIndicationIndex;
+        public byte ProfileLevelIndicationIndex { get { return this.profileLevelIndicationIndex; } set { this.profileLevelIndicationIndex = value; } }
+
+        public ProfileLevelIndicationIndexDescriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.profileLevelIndicationIndex);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.profileLevelIndicationIndex);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // profileLevelIndicationIndex
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class IPI_DescrPointer extends BaseDescriptor : bit(8) tag=IPI_DescrPointerTag {
+     bit(16) IPI_ES_Id;
+     }
+    */
+    public class IPI_DescrPointer : BaseDescriptor
+    {
+
+
+        protected ushort IPI_ES_Id;
+        public ushort IPIESId { get { return this.IPI_ES_Id; } set { this.IPI_ES_Id = value; } }
+
+        public IPI_DescrPointer()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt16(stream, out this.IPI_ES_Id);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt16(stream, this.IPI_ES_Id);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // IPI_ES_Id
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class IP_IdentificationDataSet extends BaseDescriptor
+     : bit(8) tag=ContentIdentDescrTag..SupplContentIdentDescrTag
+     {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public class IP_IdentificationDataSet : BaseDescriptor
+    {
+
+
+        public IP_IdentificationDataSet()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class IPMP_DescriptorPointer extends BaseDescriptor : bit(8) tag=IPMP_DescrPointerTag {
+     bit(8) IPMP_DescriptorID;
+     }
+    */
+    public class IPMP_DescriptorPointer : BaseDescriptor
+    {
+
+
+        protected byte IPMP_DescriptorID;
+        public byte IPMPDescriptorID { get { return this.IPMP_DescriptorID; } set { this.IPMP_DescriptorID = value; } }
+
+        public IPMP_DescriptorPointer()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.IPMP_DescriptorID);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.IPMP_DescriptorID);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // IPMP_DescriptorID
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class OCI_Descriptor extends BaseDescriptor : bit(8) tag=OCIDescrTagStartRange..OCIDescrTagEndRange
+    {
+     // empty. To be filled by classes extending this class.
+    }
+    */
+    public class OCI_Descriptor : BaseDescriptor
+    {
+
+
+        public OCI_Descriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class LanguageDescriptor extends OCI_Descriptor : bit(8) tag=LanguageDescrTag {
+     bit(24) languageCode;
+     }
+    */
+    public class LanguageDescriptor : OCI_Descriptor
+    {
+
+
+        protected uint languageCode;
+        public uint LanguageCode { get { return this.languageCode; } set { this.languageCode = value; } }
+
+        public LanguageDescriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadBits(stream, 24, out this.languageCode);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteBits(stream, 24, this.languageCode);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 24; // languageCode
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class QoS_Descriptor extends BaseDescriptor : bit(8) tag=QoS_DescrTag {
+     bit(8) predefined;
+     if (predefined==0) {
+     QoS_Qualifier qualifiers[];
+     }
+     }
+    */
+    public class QoS_Descriptor : BaseDescriptor
+    {
+
+
+        protected byte predefined;
+        public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
+
+        protected QoS_Qualifier[] qualifiers;
+        public QoS_Qualifier[] Qualifiers { get { return this.qualifiers; } set { this.qualifiers = value; } }
+
+        public QoS_Descriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt8(stream, out this.predefined);
+
+            if (predefined == 0)
+            {
+                boxSize += IsoReaderWriter.ReadClass(stream, out this.qualifiers);
+            }
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt8(stream, this.predefined);
+
+            if (predefined == 0)
+            {
+                boxSize += IsoReaderWriter.WriteClass(stream, this.qualifiers);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // predefined
+
+            if (predefined == 0)
+            {
+                boxSize += IsoReaderWriter.CalculateClassSize(qualifiers); // qualifiers
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract aligned(8) expandable(228-1) class QoS_Qualifier : bit(8) tag=0x01..0xff {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public class QoS_Qualifier
+    {
+
+
+        public QoS_Qualifier()
         { }
 
         public async virtual Task<ulong> ReadAsync(Stream stream)
@@ -40,16 +1011,350 @@ namespace BoxGenerator2
 
 
     /*
-    abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag
-     {
-     // empty. To be filled by classes extending this class.
+     class QoS_Qualifier_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x01 {
+     unsigned int(32) MAX_DELAY;
      }
     */
-    public class DecoderSpecificInfo : BaseDescriptor
+    public class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
     {
 
 
-        public DecoderSpecificInfo()
+        protected uint MAX_DELAY;
+        public uint MAXDELAY { get { return this.MAX_DELAY; } set { this.MAX_DELAY = value; } }
+
+        public QoS_Qualifier_MAX_DELAY()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.MAX_DELAY);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.MAX_DELAY);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_DELAY
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_PREF_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x02 {
+     unsigned int(32) PREF_MAX_DELAY;
+     }
+    */
+    public class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
+    {
+
+
+        protected uint PREF_MAX_DELAY;
+        public uint PREFMAXDELAY { get { return this.PREF_MAX_DELAY; } set { this.PREF_MAX_DELAY = value; } }
+
+        public QoS_Qualifier_PREF_MAX_DELAY()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.PREF_MAX_DELAY);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.PREF_MAX_DELAY);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // PREF_MAX_DELAY
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_LOSS_PROB extends QoS_Qualifier : bit(8) tag=0x03 {
+     double(32) LOSS_PROB;
+     }
+    */
+    public class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
+    {
+
+
+        protected double LOSS_PROB;
+        public double LOSSPROB { get { return this.LOSS_PROB; } set { this.LOSS_PROB = value; } }
+
+        public QoS_Qualifier_LOSS_PROB()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadDouble32(stream, out this.LOSS_PROB);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteDouble32(stream, this.LOSS_PROB);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // LOSS_PROB
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_MAX_GAP_LOSS extends QoS_Qualifier : bit(8) tag=0x04 {
+     unsigned int(32) MAX_GAP_LOSS;
+     }
+    */
+    public class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
+    {
+
+
+        protected uint MAX_GAP_LOSS;
+        public uint MAXGAPLOSS { get { return this.MAX_GAP_LOSS; } set { this.MAX_GAP_LOSS = value; } }
+
+        public QoS_Qualifier_MAX_GAP_LOSS()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.MAX_GAP_LOSS);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.MAX_GAP_LOSS);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_GAP_LOSS
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_MAX_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x41 {
+     unsigned int(32) MAX_AU_SIZE;
+     }
+    */
+    public class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
+    {
+
+
+        protected uint MAX_AU_SIZE;
+        public uint MAXAUSIZE { get { return this.MAX_AU_SIZE; } set { this.MAX_AU_SIZE = value; } }
+
+        public QoS_Qualifier_MAX_AU_SIZE()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.MAX_AU_SIZE);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.MAX_AU_SIZE);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_AU_SIZE
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_AVG_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x42 {
+     unsigned int(32) AVG_AU_SIZE;
+     }
+    */
+    public class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
+    {
+
+
+        protected uint AVG_AU_SIZE;
+        public uint AVGAUSIZE { get { return this.AVG_AU_SIZE; } set { this.AVG_AU_SIZE = value; } }
+
+        public QoS_Qualifier_AVG_AU_SIZE()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.AVG_AU_SIZE);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.AVG_AU_SIZE);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // AVG_AU_SIZE
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_MAX_AU_RATE extends QoS_Qualifier : bit(8) tag=0x43 {
+     unsigned int(32) MAX_AU_RATE;
+     }
+    */
+    public class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
+    {
+
+
+        protected uint MAX_AU_RATE;
+        public uint MAXAURATE { get { return this.MAX_AU_RATE; } set { this.MAX_AU_RATE = value; } }
+
+        public QoS_Qualifier_MAX_AU_RATE()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.MAX_AU_RATE);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.MAX_AU_RATE);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_AU_RATE
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class RegistrationDescriptor extends BaseDescriptor : bit(8) tag=RegistrationDescrTag {
+     bit(32) formatIdentifier;
+     bit(8) additionalIdentificationInfo[sizeOfInstance-4];
+     }
+    */
+    public class RegistrationDescriptor : BaseDescriptor
+    {
+
+
+        protected uint formatIdentifier;
+        public uint FormatIdentifier { get { return this.formatIdentifier; } set { this.formatIdentifier = value; } }
+
+        protected byte[] additionalIdentificationInfo;
+        public byte[] AdditionalIdentificationInfo { get { return this.additionalIdentificationInfo; } set { this.additionalIdentificationInfo = value; } }
+
+        public RegistrationDescriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += IsoReaderWriter.ReadUInt32(stream, out this.formatIdentifier);
+            boxSize += IsoReaderWriter.ReadBytes(stream, (ulong)(sizeOfInstance - 4), out this.additionalIdentificationInfo);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += IsoReaderWriter.WriteUInt32(stream, this.formatIdentifier);
+            boxSize += IsoReaderWriter.WriteBytes(stream, (ulong)(sizeOfInstance - 4), this.additionalIdentificationInfo);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // formatIdentifier
+            boxSize += (ulong)(sizeOfInstance - 4); // additionalIdentificationInfo
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class ExtensionDescriptor extends BaseDescriptor : bit(8) tag=ExtDescrTagStartRange..ExtDescrTagEndRange {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public class ExtensionDescriptor : BaseDescriptor
+    {
+
+
+        public ExtensionDescriptor()
         { }
 
         public async override Task<ulong> ReadAsync(Stream stream)
@@ -146,7 +1451,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -184,7 +1488,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -222,7 +1525,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -260,7 +1562,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -298,7 +1599,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -335,7 +1635,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -371,7 +1670,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -427,7 +1725,6 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.schema_location); // optional 
             if (boxSize < size) boxSize += IsoReaderWriter.ReadString(stream, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
             boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -490,7 +1787,6 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadString(stream, out this.mime_format);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox); // optional 
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.TextConfigBox); // optional 
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -601,7 +1897,6 @@ namespace BoxGenerator2
                 boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.measurement_system);
                 boxSize += IsoReaderWriter.ReadBits(stream, 4, out this.reliability);
             }
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -705,7 +2000,6 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadBits(stream, 1, out this.precomputed_only_flag);
             boxSize += IsoReaderWriter.ReadBits(stream, 7, out this.reserved);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.additionaldata);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -755,7 +2049,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -790,7 +2083,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -848,7 +2140,6 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadString(stream, out this.mime_format);
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.BitRateBox); // optional 
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.TextConfigBox); // optional 
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -890,7 +2181,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -924,7 +2214,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -974,7 +2263,6 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.major_brand);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.minor_version);
             boxSize += IsoReaderWriter.ReadUInt32Array(stream, out this.compatible_brands); // to end of the box
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1040,7 +2328,6 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.MetaDataLocaleBox); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.MetaDataSetupBox); // optional
             if (boxSize < size) boxSize += IsoReaderWriter.ReadBox(stream, out this.MetaDataExtensionsBox); // optional
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1096,7 +2383,6 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.key_namespace);
             boxSize += IsoReaderWriter.ReadUInt8Array(stream, out this.key_value);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1141,7 +2427,6 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadString(stream, out this.locale_string);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1180,7 +2465,6 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             /*  'init' instead? */
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1223,7 +2507,6 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadBox(stream, out this.extensions);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1266,7 +2549,6 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.inlineKeyValueBoxesPresent);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1343,7 +2625,6 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1574,7 +2855,6 @@ namespace BoxGenerator2
             }
             boxSize += IsoReaderWriter.ReadUInt8(stream, out this.numReferences);
             boxSize += IsoReaderWriter.ReadClass(stream, numReferences, out this.dependency);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 
@@ -1662,7 +2942,6 @@ namespace BoxGenerator2
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.bufferSizeDB);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.maxBitrate);
             boxSize += IsoReaderWriter.ReadUInt32(stream, out this.avgBitrate);
-            boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);
             return boxSize;
         }
 

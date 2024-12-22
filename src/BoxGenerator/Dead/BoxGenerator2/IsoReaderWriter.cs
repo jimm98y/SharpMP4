@@ -376,4 +376,14 @@ internal class IsoReaderWriter
 
         return 0;
     }
+
+    internal static ulong WriteDouble32(Stream stream, double value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong ReadDouble32(Stream stream, out double value)
+    {
+        throw new NotImplementedException();
+    }
 }
