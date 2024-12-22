@@ -52,12 +52,14 @@ public class PseudoExtendedClass : PseudoCode
     public string BoxType { get; }
     public IList<(string Name, string Value)> Parameters { get; }
     public string BoxName { get; }
+    public string DescriptorTag { get; }
 
     public PseudoExtendedClass(
         Maybe<string> boxName,
         Maybe<string> oldType,
         Maybe<string> boxType,
-        Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> parameters)
+        Maybe<Maybe<IEnumerable<(string Name, Maybe<string> Value)>>> parameters,
+        Maybe<string> descriptorTag)
     {
         OldType = oldType.GetValueOrDefault();
         BoxType = boxType.GetValueOrDefault();
@@ -70,6 +72,7 @@ public class PseudoExtendedClass : PseudoCode
                 Parameters = null;
         }
         BoxName = boxName.GetValueOrDefault();
+        DescriptorTag = descriptorTag.GetValueOrDefault();
     }
 }
 
@@ -500,12 +503,18 @@ partial class Program
             Try(String("('vvcb', version, flags)")),
             Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)")),
             Try(String("(unsigned int(32) grouping_type)")),
-            Try(String("(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)"))
+            Try(String("(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)"))            
             ).Labelled("class type");
 
-    public static Parser<char, PseudoExtendedClass> ExtendedClass => Map((extendedBoxName, oldBoxType, boxType, parameters) => new PseudoExtendedClass(extendedBoxName, oldBoxType, boxType, parameters),
+    public static Parser<char, string> DescriptorTag =>
+       OneOf(
+           Try(String("tag=0")),
+           Try(String("tag=DecSpecificInfoTag"))
+           ).Labelled("descriptor tag");
+
+    public static Parser<char, PseudoExtendedClass> ExtendedClass => Map((extendedBoxName, oldBoxType, boxType, parameters, descriptorTag) => new PseudoExtendedClass(extendedBoxName, oldBoxType, boxType, parameters, descriptorTag),
             SkipWhitespaces.Then(Try(String("extends")).Optional()).Then(SkipWhitespaces).Then(Try(BoxName).Optional()),
-            SkipWhitespaces.Then(Char('(')).Then(Try(OldBoxType).Optional()),
+            SkipWhitespaces.Then(Try(Char('(')).Optional()).Then(Try(OldBoxType).Optional()),
             SkipWhitespaces.Then(
                     Try(String("'avc2' or 'avc4'")).Or(
                     Try(String("'svc1' or 'svc2'"))).Or(
@@ -513,13 +522,14 @@ partial class Program
                     Try(String("'evs1' or 'evs2'"))).Or(
                     Try(String("'avc1' or 'avc3'"))).Or(
                     Try(BoxType)).Optional()),
-            SkipWhitespaces.Then(Try(Char(',')).Optional()).Then(Try(Parameters).Optional()).Before(Char(')')).Before(SkipWhitespaces).Optional()
+            SkipWhitespaces.Then(Try(Char(',')).Optional()).Then(Try(Parameters).Optional()).Before(Try(Char(')')).Optional()).Before(SkipWhitespaces).Optional(),
+            SkipWhitespaces.Then(Try(Char(':').Then(SkipWhitespaces).Then(String("bit(8)")).Then(SkipWhitespaces).Then(DescriptorTag).Before(SkipWhitespaces))).Optional()
         );
 
     public static Parser<char, PseudoClass> Box =>
         Map((comment, alignment, boxName, classType, extended, fields, endComment) => new PseudoClass(comment, alignment, boxName, classType, extended, fields, endComment),
             SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
-            Try(String("aligned(8)")).Optional(),
+            SkipWhitespaces.Then(Try(String("abstract")).Optional()).Then(SkipWhitespaces).Then(Try(String("aligned(8)")).Optional()).Before(SkipWhitespaces).Before(Try(String("expandable(228-1)")).Optional()),
             SkipWhitespaces.Then(Try(String("abstract")).Optional()).Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
             SkipWhitespaces.Then(Try(ClassType).Optional()),
             SkipWhitespaces.Then(Try(ExtendedClass).Optional()),
@@ -533,6 +543,8 @@ partial class Program
     static void Main(string[] args)
     {
         string[] files = {
+            "14496-1-added.json",
+            "14496-3-added.json",
             "14496-12-added.json",
             "14496-15-added.json",
             "14496-12-boxes.json",
@@ -718,7 +730,7 @@ namespace BoxGenerator2
 
         cls += "\r\n{\r\n";
 
-        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.FourCC))
+        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.FourCC))
         {
             cls += $"\tpublic override string FourCC {{ get; set; }} = \"{b.FourCC}\";";
         }
@@ -746,7 +758,7 @@ namespace BoxGenerator2
             cls += "\r\n" + "boxSize += IsoReaderWriter.ReadBoxChildren(stream, boxSize, this);";
         }
 
-        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
+        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && b.Extended.BoxName != "BaseDescriptor")
         {
             cls += "\r\n" + "boxSize += IsoReaderWriter.ReadSkip(stream, size, boxSize);";
         }

@@ -5,6 +5,80 @@ using System.Threading.Tasks;
 namespace BoxGenerator2
 {
     /*
+    abstract aligned(8) expandable(228-1) class BaseDescriptor : bit(8) tag=0 {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public class BaseDescriptor
+    {
+
+
+        public BaseDescriptor()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag
+     {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public class DecoderSpecificInfo : BaseDescriptor
+    {
+
+
+        public DecoderSpecificInfo()
+        { }
+
+        public async override Task<ulong> ReadAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(Stream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
     aligned(8) class FullBox(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)
     extends Box(boxtype) { 
     unsigned int(8) version = v;

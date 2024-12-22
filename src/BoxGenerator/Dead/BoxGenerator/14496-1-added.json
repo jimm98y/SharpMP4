@@ -1,0 +1,16 @@
+﻿{
+  "name": "Descriptors",
+  "description": "Descriptors",
+  "entries": [
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "abstract aligned(8) expandable(228-1) class BaseDescriptor : bit(8) tag=0 {\r\n // empty. To be filled by classes extending this class.\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag\r\n {\r\n // empty. To be filled by classes extending this class.\r\n }"
+    }
+  ]
+}

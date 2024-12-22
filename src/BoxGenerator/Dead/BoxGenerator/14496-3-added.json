@@ -1,0 +1,11 @@
+﻿{
+  "name": "Descriptors",
+  "description": "Descriptors",
+  "entries": [
+    {
+      "containers": [ "*" ],
+      "type": "Descriptor",
+      "syntax": ""
+    }
+  ]
+}
