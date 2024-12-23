@@ -1,4 +1,4 @@
-﻿class AudioSpecificConfig extends DecoderConfigDescriptor() {
+﻿AudioSpecificConfig() {
   audioObjectType = GetAudioObjectType();
   bslbf(4) samplingFrequencyIndex;
   if(samplingFrequencyIndex == 0xf ) {
