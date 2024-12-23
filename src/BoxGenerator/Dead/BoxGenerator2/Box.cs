@@ -15,12 +15,12 @@ namespace BoxGenerator2
         protected List<Box> children = null;
         public List<Box> Children { get; set; }
 
-        public async virtual Task<ulong> ReadAsync(Stream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             throw new NotImplementedException();
         }
 
-        public async virtual Task<ulong> WriteAsync(Stream stream)
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             throw new NotImplementedException();
         }
