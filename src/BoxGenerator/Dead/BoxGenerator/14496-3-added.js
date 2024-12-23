@@ -1,5 +1,5 @@
-﻿AudioSpecificConfig() {
-  audioObjectType = GetAudioObjectType();
+﻿class AudioSpecificConfig() {
+  GetAudioObjectType() audioObjectType;
   bslbf(4) samplingFrequencyIndex;
   if(samplingFrequencyIndex == 0xf ) {
     uimsbf(24) samplingFrequency;
@@ -8,8 +8,7 @@
   sbrPresentFlag = -1;
   psPresentFlag = -1;
 
-  if (audioObjectType == 5 ||
-    audioObjectType == 29) {
+  if (audioObjectType == 5 || audioObjectType == 29) {
     extensionAudioObjectType = 5;
     sbrPresentFlag = 1;
     if (audioObjectType == 29) {
@@ -18,9 +17,9 @@
     uimsbf(4) extensionSamplingFrequencyIndex;
     if (extensionSamplingFrequencyIndex == 0xf)
       uimsbf(24) extensionSamplingFrequency;
-    uimsbf(4) audioObjectType = GetAudioObjectType();
+    GetAudioObjectType() audioObjectType;
     if (audioObjectType == 22)
-      extensionChannelConfiguration;
+      uimsbf(4) extensionChannelConfiguration;
   }
   else {
     extensionAudioObjectType = 0;
@@ -90,13 +89,14 @@
       break;
     case 39:
       ELDSpecificConfig(channelConfiguration);
-      break:
+      break;
     case 40:
     case 41:
       SymbolicMusicSpecificConfig();
       break;
     default:
-    /* reserved */
+      /* reserved */
+      break;
   }
   switch (audioObjectType) {
     case 17:
@@ -120,11 +120,12 @@
           /* tbd */
         }
       }
+      break;
   }
   if (extensionAudioObjectType != 5 && bits_to_decode() >= 16) {
     bslbf(11) syncExtensionType;
     if (syncExtensionType == 0x2b7) {
-      extensionAudioObjectType = GetAudioObjectType();
+      GetAudioObjectType() extensionAudioObjectType;
       if (extensionAudioObjectType == 5) {
         uimsbf(1) sbrPresentFlag;
         if (sbrPresentFlag == 1) {
@@ -154,7 +155,7 @@
   }   
 }
 
-uimsbf(5) GetAudioObjectType()
+class GetAudioObjectType()
 {
   uimsbf(5) audioObjectType;
   if (audioObjectType == 31) {
@@ -164,9 +165,7 @@ uimsbf(5) GetAudioObjectType()
   return audioObjectType;
 }
 
-GASpecificConfig(samplingFrequencyIndex,
-  channelConfiguration,
-  audioObjectType)
+class GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType)
 {
   bslbf(1) frameLengthFlag;
   bslbf(1) dependsOnCoreCoder;
@@ -199,7 +198,7 @@ GASpecificConfig(samplingFrequencyIndex,
   }
 }
 
-program_config_element()
+class program_config_element()
 {
   uimsbf(4) element_instance_tag;
   uimsbf(2) object_type;
@@ -247,7 +246,7 @@ program_config_element()
     uimsbf(8) comment_field_data[i];
 }
 
-CelpSpecificConfig(uint(4) samplingFrequencyIndex)
+class CelpSpecificConfig(samplingFrequencyIndex)
 {
   uimsbf(1) isBaseLayer;
   if (isBaseLayer) {
@@ -264,7 +263,7 @@ CelpSpecificConfig(uint(4) samplingFrequencyIndex)
   }
 }
 
-CelpHeader(samplingFrequencyIndex)
+class CelpHeader(samplingFrequencyIndex)
 {
   uimsbf(1) ExcitationMode;
   uimsbf(1) SampleRateMode;
@@ -279,19 +278,19 @@ CelpHeader(samplingFrequencyIndex)
   }
 }
 
-CelpBWSenhHeader()
+class CelpBWSenhHeader()
 {
   uimsbf(2) BWS_configuration;
 }
 
-HvxcSpecificConfig() {
+class HvxcSpecificConfig() {
   uimsbf(1) isBaseLayer;
   if (isBaseLayer) {
-    HVXCconfig()
+    HVXCconfig();
   }
 }
 
-HVXCconfig()
+class HVXCconfig()
 {
   uimsbf(1) HVXCvarMode;
   uimsbf(2) HVXCrateMode;
@@ -301,11 +300,11 @@ HVXCconfig()
   }
 }
 
-TTSSpecificConfig() {
-  TTS_Sequence()
+class TTSSpecificConfig() {
+    TTS_Sequence();
 }
 
-TTS_Sequence()
+class TTS_Sequence()
 {
   uimsbf(5) TTS_Sequence_ID;
   uimsbf(18) Language_Code;
@@ -318,7 +317,7 @@ TTS_Sequence()
   bslbf(1) Trick_Mode_Enable;
 }
 
-ErrorResilientCelpSpecificConfig(uint(4) samplingFrequencyIndex)
+class ErrorResilientCelpSpecificConfig(samplingFrequencyIndex)
 {
   uimsbf(1) isBaseLayer;
   if (isBaseLayer) {
@@ -335,7 +334,7 @@ ErrorResilientCelpSpecificConfig(uint(4) samplingFrequencyIndex)
   }
 }
 
-ER_SC_CelpHeader(samplingFrequencyIndex)
+class ER_SC_CelpHeader(samplingFrequencyIndex)
 {
   uimsbf(1) ExcitationMode;
   uimsbf(1) SampleRateMode;
@@ -351,14 +350,14 @@ ER_SC_CelpHeader(samplingFrequencyIndex)
   }
 }
 
-ErrorResilientHvxcSpecificConfig() {
+class ErrorResilientHvxcSpecificConfig() {
   uimsbf(1) isBaseLayer;
   if (isBaseLayer) {
     ErHVXCconfig();
   }
 }
 
-ErHVXCconfig()
+class ErHVXCconfig()
 {
   uimsbf(1) HVXCvarMode;
   uimsbf(2) HVXCrateMode;
@@ -368,7 +367,7 @@ ErHVXCconfig()
   }
 }
 
-ParametricSpecificConfig()
+class ParametricSpecificConfig()
 {
   uimsbf(1) isBaseLayer;
   if (isBaseLayer) {
@@ -379,7 +378,7 @@ ParametricSpecificConfig()
   }
 }
 
-PARAconfig()
+class PARAconfig()
 {
   uimsbf(2) PARAmode;
   if (PARAmode != 1) {
@@ -394,7 +393,7 @@ PARAconfig()
   }
 }
 
-HILNconfig()
+class HILNconfig()
 {
   uimsbf(1) HILNquantMode;
   uimsbf(8) HILNmaxNumLine;
@@ -403,7 +402,7 @@ HILNconfig()
   uimsbf(2) HILNcontMode;
 }
 
-HILNenexConfig()
+class HILNenexConfig()
 {
   uimsbf(1) HILNenhaLayer;
   if (HILNenhaLayer) {
@@ -411,7 +410,7 @@ HILNenexConfig()
   }
 }
 
-SSCSpecificConfig(channelConfiguration)
+class SSCSpecificConfig(channelConfiguration)
 {
   uimsbf(2) decoder_level;
   uimsbf(4) update_rate;
@@ -424,18 +423,18 @@ SSCSpecificConfig(channelConfiguration)
   }
 }
 
-MPEG_1_2_SpecificConfig()
+class MPEG_1_2_SpecificConfig()
 {
   bslbf(1) extension;
 }
 
-DSTSpecificConfig(channelConfiguration) {
-  UiMsbf(1) DSDDST_Coded;
-  UiMsbf(14) N_Channels;
-  UiMsbf(1) reserved;
+class DSTSpecificConfig(channelConfiguration) {
+  uimsbf(1) DSDDST_Coded;
+  uimsbf(14) N_Channels;
+  uimsbf(1) reserved;
 }
 
-ALSSpecificConfig()
+class ALSSpecificConfig()
 {
   uimsbf(32) als_id;
   uimsbf(32) samp_freq;
@@ -489,7 +488,7 @@ ALSSpecificConfig()
   }
 }
 
-SLSSpecificConfig(samplingFrequencyIndex,
+class SLSSpecificConfig(samplingFrequencyIndex,
   channelConfiguration,
   audioObjectType)
 {
@@ -503,7 +502,7 @@ SLSSpecificConfig(samplingFrequencyIndex,
   }
 }
 
-ELDSpecificConfig(channelConfiguration)
+class ELDSpecificConfig(channelConfiguration)
 {
   bslbf(1) frameLengthFlag;
   bslbf(1) aacSectionDataResilienceFlag;
@@ -521,25 +520,26 @@ ELDSpecificConfig(channelConfiguration)
     uimsbf(4) eldExtLen;
     len = eldExtLen;
     if (eldExtLen == 15) {
-      eldExtLenAdd;
+      uimsbf(8) eldExtLenAdd;
       len += eldExtLenAdd;
     }
     if (eldExtLenAdd == 255) {
-      eldExtLenAddAdd;
+      uimsbf(16) eldExtLenAddAdd;
       len += eldExtLenAddAdd;
     }
     switch (eldExtType) {
       /* add future eld extension configs here */
       default:
+        int cnt;
         for (cnt = 0; cnt < len; cnt++) {
-          other_byte;
+           uimsbf(8) other_byte;
         }
         break;
     }
   }
 }
 
-ld_sbr_header(channelConfiguration)
+class ld_sbr_header(channelConfiguration)
 {
   switch (channelConfiguration) {
     case 1:
@@ -566,7 +566,7 @@ ld_sbr_header(channelConfiguration)
   }
 }
 
-sbr_header()
+class sbr_header()
 {
   uimsbf(1) bs_amp_res;
   uimsbf(4) bs_start_freq;
@@ -590,7 +590,7 @@ sbr_header()
   }
 }
 
-ErrorProtectionSpecificConfig()
+class ErrorProtectionSpecificConfig()
 {
   uimsbf(8) number_of_predefined_set;
   uimsbf(2) interleave_type;
@@ -643,165 +643,3 @@ ErrorProtectionSpecificConfig()
     uimsbf(5) header_crclen;
   }
 }
-
-class StructuredAudioSpecificConfig {  // the bitstream header  
-  bit(1) more_data = 1;
-  while(more_data) {  // shall have at least one chunk 
-    bit(3) chunk_type;
-    switch (chunk_type) {
-      case 0b000: orc_file orc; break;
-      case 0b001: score_file score; break;
-      case 0b010: midi_file SMF; break;
-      case 0b011: sample samp; break;
-      case 0b100: sbf sample_bank; break;
-      case 0b101: symtable sym; break;
-    }
-    bit(1) more_data;
-  }
-}
-
-/********************************* 
-    orchestra file definitions 
-***********************************/
-class orch_token {              // a token in an orchestra 
-  int done; 
-  unsigned int(8) token;         // see standard token table, Annex 5.A 
-  switch(token) { 
-  case 0xF0 :                   // a symbol 
-    symbol sym;                 // the symbol name 
-    break;      
-  case 0xF1 :                   // a constant value 
-    float(32) val;              // the floating-point value 
-    break; 
-  case 0xF2 :
-      // a constant int value 
-    unsigned int(32) val;       // the integer value 
-    break; 
-  case 0xF3 :                   // a string constant  
-    int(8) length; 
-    unsigned int(8) str[length]; // strings no more than 255 chars 
-    break; 
-  case 0xF4 :                   // a one-byte constant 
-    int(8) val;
-    break; 
-  case 0xFF : // end of orch 
-    done = 1;
-    break;
-  }
-}
-class orc_file {                // a whole orch file 
-  unsigned int(16) length; 
-  orch_token data[length];
-}
-
-/********************************* 
-      score file definitions 
-***********************************/
-class instr_event {            // a note-on event 
-  bit(1) has_label;
-  if(has_label) 
-    symbol label; 
-  symbol iname_sym;            // the instrument name 
-  float(32) dur;               // note duration 
-  unsigned int(8) num_pf;
-  float(32) pf[num_pf];        // all the pfields (no more than 255) 
-}
-class control_event {          // a control event 
-  bit(1) has_label;
-  if(has_label) 
-    symbol label; 
-  symbol varsym;               // the controller name 
-  float(32) value;             // the new value 
-}
-class table_event { 
-  symbol tname;       // the name of the table 
-  bit(1) destroy;     // a table destructor 
-  if (!destroy) { 
-    token tgen;         // a core wavetable generator 
-    bit(1) refers_to_sample;
-    if (refers_to_sample) 
-      symbol table_sym;          // the name of the sample 
-    unsigned int(16) num_pf;     // the number of pfields 
-    if (tgen == 0x7D) {
-    // concat 
-    float(32) size; 
-    symbol ft[num_pf - 1];
-  } else {
-    float(32) pf[num_pf];
-  }
-  // when coding sample generator, leave a blank array slot 
-  // for "which" parameter, to maintain alignment for "skip" parameter 
- } 
-}
-
-class end_event {
-  // fixed at nothing 
-}
-class tempo_event {  // a tempo event 
-  float(32) tempo;
-}
-class score_line {
-  bit(1) has_time;
-  if(has_time) {
-    bit(1) use_if_late;
-    float(32) time;              // the event time 
-  }
-  bit(1) high_priority;
-  bit(3) type;
-  switch(type) { 
-    case 0b000 : instr_event inst; break; 
-    case 0b001 : control_event control; break; 
-    case 0b010 : table_event table; break; 
-    case 0b100 : end_event end; break; 
-    case 0b101 : tempo_event tempo; break;
-  }
-}
-class score_file { 
-  unsigned int(20) num_lines;  // a whole score file 
-  score_line lines[num_lines];
-}
-
-/********************************* 
-         MIDI definitions 
-***********************************/
-class midi_event { 
-  unsigned int(24) length        
-  unsigned int(8) data[length];
-}
-class midi_file { 
-  unsigned int(32) length; 
-  unsigned int(8) data[length];
-}
-
-/********************************** 
-  sample data 
-************************************/
-class sample {
-  /* note that 'sample' can be used for any big chunk of data 
-     that needs to get into a wavetable */ 
-  symbol sample_name_sym; 
-  unsigned int(24) length;  // length in samples  
-  bit(1) has_srate;
-  if (has_srate) 
-    unsigned int(17) srate; // sampling rate (needs to go to 96 KHz) 
-  bit(1) has_loop;
-  if (has_loop) { 
-    unsigned int(24) loopstart; // loop points in samples 
-    unsigned int(24) loopend;
-  }
-  bit(1) has_base;
-  if (has_base)
-    float(32) basecps;         // base freq in Hz 
-  bit(1) float_sample;
-  if (float_sample) {
-    float(32) float_sample_data[length]; // data as floats ... 
-  }
-  else {
-    int(16) sample_data[length]; // ... or as ints 
-  } 
-}
-
-class sbf {
-  int(32) length;
-  int(8) data[length];
-} 

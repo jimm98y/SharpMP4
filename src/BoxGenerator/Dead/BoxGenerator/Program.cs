@@ -443,7 +443,82 @@ partial class Program
             Try(String("ProfileLevelIndicationIndexDescriptor")),
             Try(String("DecoderSpecificInfo")),
             Try(String("QoS_Qualifier")),
-            Try(String("double(32)"))
+            Try(String("double(32)")),
+            Try(String("GetAudioObjectType()")),
+            Try(String("bslbf(header_size * 8)")),
+            Try(String("bslbf(trailer_size * 8)")),
+            Try(String("bslbf(aux_size * 8)")),
+            Try(String("bslbf(11)")),
+            Try(String("bslbf(5)")),
+            Try(String("bslbf(4)")),
+            Try(String("bslbf(1)")),
+            Try(String("uimsbf(32)")),
+            Try(String("uimsbf(24)")),
+            Try(String("uimsbf(18)")),
+            Try(String("uimsbf(16)")),
+            Try(String("uimsbf(14)")),
+            Try(String("uimsbf(12)")),
+            Try(String("uimsbf(10)")),
+            Try(String("uimsbf(8)")),
+            Try(String("uimsbf(7)")),
+            Try(String("uimsbf(6)")),
+            Try(String("uimsbf(5)")),
+            Try(String("uimsbf(4)")),
+            Try(String("uimsbf(3)")),
+            Try(String("uimsbf(2)")),
+            Try(String("uimsbf(1)")),
+            Try(String("sbrPresentFlag = -1")), // WORKAROUND
+            Try(String("psPresentFlag = -1")), // WORKAROUND
+            Try(String("extensionAudioObjectType = 0")), // WORKAROUND
+            Try(String("extensionAudioObjectType = 5")), // WORKAROUND
+            Try(String("sbrPresentFlag = 1")), // WORKAROUND
+            Try(String("psPresentFlag = 1")), // WORKAROUND
+            Try(String("case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()")),
+            Try(String("case 8:\r\n      CelpSpecificConfig()")),
+            Try(String("case 9:\r\n      HvxcSpecificConfig()")),
+            Try(String("case 12:\r\n      TTSSpecificConfig()")),
+            Try(String("case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      StructuredAudioSpecificConfig()")),
+            Try(String("case 24:\r\n      ErrorResilientCelpSpecificConfig()")),
+            Try(String("case 25:\r\n      ErrorResilientHvxcSpecificConfig()")),
+            Try(String("case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()")),
+            Try(String("case 28:\r\n      SSCSpecificConfig()")),
+            Try(String("case 30:\r\n      uimsbf(1)")),
+            Try(String("SpatialSpecificConfig()")),
+            Try(String("case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()")),
+            Try(String("case 35:\r\n      DSTSpecificConfig()")),
+            Try(String("case 36:\r\n      bslbf(5)")),
+            Try(String("ALSSpecificConfig()")),
+            Try(String("case 37:\r\n    case 38:\r\n      SLSSpecificConfig()")),
+            Try(String("case 39:\r\n      ELDSpecificConfig(channelConfiguration)")),
+            Try(String("case 40:\r\n    case 41:\r\n      SymbolicMusicSpecificConfig()")),
+            Try(String("default:\r\n      /* reserved */\r\n      break")),
+            Try(String("case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      bslbf(2)")),
+            Try(String("ErrorProtectionSpecificConfig()")),
+            Try(String("break")),
+            Try(String("audioObjectType = 32 + audioObjectTypeExt")),
+            Try(String("return audioObjectType")),
+            Try(String("program_config_element()")),
+            Try(String("byte_alignment()")),
+            Try(String("CelpHeader(samplingFrequencyIndex)")),
+            Try(String("CelpBWSenhHeader()")),
+            Try(String("HVXCconfig()")),
+            Try(String("TTS_Sequence()")),
+            Try(String("ER_SC_CelpHeader(samplingFrequencyIndex)")),
+            Try(String("ErHVXCconfig()")),
+            Try(String("PARAconfig()")),
+            Try(String("HILNenexConfig()")),
+            Try(String("HILNconfig()")),
+            Try(String("ld_sbr_header(channelConfiguration)")),
+            Try(String("len = eldExtLen")),
+            Try(String("len += eldExtLenAddAdd")),
+            Try(String("len += eldExtLenAdd")),
+            Try(String("default:\r\n        int cnt")),
+            Try(String("case 1:\r\n    case 2:\r\n      numSbrHeader = 1")),
+            Try(String("case 3:\r\n      numSbrHeader = 2")),
+            Try(String("case 4:\r\n    case 5:\r\n    case 6:\r\n      numSbrHeader = 3")),
+            Try(String("case 7:\r\n      numSbrHeader = 4")),
+            Try(String("default:\r\n      numSbrHeader = 0")),
+            Try(String("sbr_header()"))
             )
         .Labelled("field type");
 
@@ -482,7 +557,8 @@ partial class Program
                 Try(String("else")),
                 Try(String("do")),
                 Try(String("for")),
-                Try(String("while"))
+                Try(String("while")),
+                Try(String("switch"))
                 ).Before(SkipWhitespaces),
             Try(Parentheses).Optional(),
             SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
@@ -584,10 +660,13 @@ partial class Program
 
     static void Main(string[] args)
     {
-        string[] files = {
+        //var jds = File.ReadAllText("14496-3-added.js");
+        //var test = Boxes.ParseOrThrow(jds);
+
+        string[] jsonFiles = {
             "Opus.json",
             "14496-1-added.json",
-            //"14496-3-added.json",
+            "14496-3-added.json",
             "14496-12-added.json",
             "14496-15-added.json",
             "14496-12-boxes.json",
@@ -619,7 +698,7 @@ partial class Program
         List<PseudoClass> duplicates = new List<PseudoClass>();
         List<string> containers = new List<string>();
 
-        foreach (var file in files)
+        foreach (var file in jsonFiles)
         {
             using (var json = File.OpenRead(file))
             using (JsonDocument document = JsonDocument.Parse(json, new JsonDocumentOptions()))
@@ -1146,12 +1225,16 @@ namespace BoxGenerator2
             }
         }
 
+        string boxSize = "boxSize += ";
+        if (m.StartsWith("case")) // workaround for missing case support
+            boxSize = "";
+
         if (methodType == MethodType.Read)
-            return $"{spacing}{optional}boxSize += {m} out this.{name}{typedef}); {fieldComment}";
+            return $"{spacing}{optional}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
         else if(methodType == MethodType.Write)
-            return $"{spacing}{optional}boxSize += {m} this.{name}{typedef}); {fieldComment}";
+            return $"{spacing}{optional}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
         else
-            return $"{spacing}{optional}boxSize += {m.Replace("value", name)}; // {name}";
+            return $"{spacing}{optional}{boxSize}{m.Replace("value", name)}; // {name}";
     }
 
     private static string BuildComment(PseudoComment comment, int level, MethodType methodType)
@@ -1212,6 +1295,12 @@ namespace BoxGenerator2
                 condition = condition.Replace("channelStructured", "1");
             if (condition.Contains("objectStructured"))
                 condition = condition.Replace("objectStructured", "2");
+        }
+
+        if (!string.IsNullOrEmpty(condition))
+        {
+            if (condition.Contains("audioObjectType") && !condition.Contains("audioObjectType == 31"))
+                condition = condition.Replace("audioObjectType", "audioObjectType.AudioObjectType");
         }
 
         condition = FixFourCC(condition);
@@ -1552,6 +1641,78 @@ namespace BoxGenerator2
             { "bit(8)[sizeOfInstance-4]", "stream.ReadBytes((ulong)(sizeOfInstance - 4), " },
             { "double(32)", "stream.ReadDouble32(" },
             { "QoS_Qualifier[]", "stream.ReadClass(" },
+            { "GetAudioObjectType()", "stream.ReadClass(" },
+            { "bslbf(header_size * 8)[]", "stream.ReadBslbf(header_size * 8, " },
+            { "bslbf(trailer_size * 8)[]", "stream.ReadBslbf(trailer_size * 8, " },
+            { "bslbf(aux_size * 8)[]", "stream.ReadBslbf(aux_size * 8, " },
+            { "bslbf(11)", "stream.ReadBslbf(11, " },
+            { "bslbf(5)", "stream.ReadBslbf(5, " },
+            { "bslbf(4)", "stream.ReadBslbf(4, " },
+            { "bslbf(1)", "stream.ReadBslbf(1, " },
+            { "uimsbf(32)", "stream.ReadUimsbf(32, " },
+            { "uimsbf(24)", "stream.ReadUimsbf(24, " },
+            { "uimsbf(18)", "stream.ReadUimsbf(18, " },
+            { "uimsbf(16)", "stream.ReadUimsbf(16, " },
+            { "uimsbf(14)", "stream.ReadUimsbf(14, " },
+            { "uimsbf(12)", "stream.ReadUimsbf(12, " },
+            { "uimsbf(10)", "stream.ReadUimsbf(10, " },
+            { "uimsbf(8)", "stream.ReadUimsbf(8, " },
+            { "uimsbf(7)", "stream.ReadUimsbf(7, " },
+            { "uimsbf(6)", "stream.ReadUimsbf(6, " },
+            { "uimsbf(5)", "stream.ReadUimsbf(5, " },
+            { "uimsbf(4)", "stream.ReadUimsbf(4, " },
+            { "uimsbf(3)", "stream.ReadUimsbf(3, " },
+            { "uimsbf(2)", "stream.ReadUimsbf(2, " },
+            { "uimsbf(1)", "stream.ReadUimsbf(1, " },
+            { "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()", "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      boxSize += stream.ReadClass(" },
+            { "case 8:\r\n      CelpSpecificConfig()", "case 8:\r\n      boxSize += stream.ReadClass(" },
+            { "case 9:\r\n      HvxcSpecificConfig()", "case 9:\r\n      boxSize += stream.ReadClass(" },
+            { "case 12:\r\n      TTSSpecificConfig()", "case 12:\r\n      boxSize += stream.ReadClass(" },
+            { "case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      StructuredAudioSpecificConfig()", "case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      boxSize += stream.ReadClass(" },
+            { "case 24:\r\n      ErrorResilientCelpSpecificConfig()", "case 24:\r\n      boxSize += stream.ReadClass(" },
+            { "case 25:\r\n      ErrorResilientHvxcSpecificConfig()", "case 25:\r\n      boxSize += stream.ReadClass(" },
+            { "case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()", "case 26:\r\n    case 27:\r\n      boxSize += stream.ReadClass(" },
+            { "case 28:\r\n      SSCSpecificConfig()", "case 28:\r\n      boxSize += stream.ReadClass(" },
+            { "case 30:\r\n      uimsbf(1)", "case 30:\r\n      boxSize += stream.ReadUimsbf(1, " },
+            { "case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()", "case 32:\r\n    case 33:\r\n    case 34:\r\n      boxSize += stream.ReadClass(" },
+            { "case 35:\r\n      DSTSpecificConfig()", "case 35:\r\n      boxSize += stream.ReadClass(" },
+            { "case 36:\r\n      bslbf(5)", "case 36:\r\n      boxSize += stream.ReadBslbf(5, " },
+            { "case 37:\r\n    case 38:\r\n      SLSSpecificConfig()", "case 37:\r\n    case 38:\r\n      boxSize += stream.ReadClass(" },
+            { "case 39:\r\n      ELDSpecificConfig(channelConfiguration)", "case 39:\r\n      boxSize += stream.ReadClass(" },
+            { "case 40:\r\n    case 41:\r\n      SymbolicMusicSpecificConfig()", "case 40:\r\n    case 41:\r\n      boxSize += stream.ReadClass(" },
+            { "case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      bslbf(2)", "case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      boxSize += stream.ReadBslbf(2, " },
+            { "SpatialSpecificConfig", "stream.ReadClass(" },
+            { "ALSSpecificConfig", "stream.ReadClass(" },
+            { "ErrorProtectionSpecificConfig", "stream.ReadClass(" },
+            { "program_config_element", "stream.ReadClass(" },
+            { "byte_alignment", "stream.ReadClass(" },
+            { "CelpHeader(samplingFrequencyIndex)", "stream.ReadClass(" },
+            { "CelpBWSenhHeader", "stream.ReadClass(" },
+            { "HVXCconfig", "stream.ReadClass(" },
+            { "TTS_Sequence", "stream.ReadClass(" },
+            { "ER_SC_CelpHeader(samplingFrequencyIndex)", "stream.ReadClass(" },
+            { "ErHVXCconfig", "stream.ReadClass(" },
+            { "PARAconfig", "stream.ReadClass(" },
+            { "HILNenexConfig", "stream.ReadClass(" },
+            { "HILNconfig", "stream.ReadClass(" },
+            { "ld_sbr_header", "stream.ReadClass(" },
+            { "sbr_header", "stream.ReadClass(" },
+            { "uimsbf(1)[i]", "stream.ReadUimsbf(1, " },
+            { "uimsbf(8)[i]", "stream.ReadUimsbf(8, " },
+            { "bslbf(1)[i]", "stream.ReadBslbf(1, " },
+            { "uimsbf(4)[i]", "stream.ReadUimsbf(4, " },
+            { "uimsbf(1)[c]", "stream.ReadUimsbf(1, " },
+            { "uimsbf(32)[f]", "stream.ReadUimsbf(32, " },
+            { "CelpHeader", "stream.ReadClass(" },
+            { "ER_SC_CelpHeader", "stream.ReadClass(" },
+            { "uimsbf(6)[i]", "stream.ReadUimsbf(6, " },
+            { "uimsbf(1)[i][j]", "stream.ReadUimsbf(1, " },
+            { "uimsbf(2)[i][j]", "stream.ReadUimsbf(2, " },
+            { "uimsbf(4)[i][j]", "stream.ReadUimsbf(4, " },
+            { "uimsbf(16)[i][j]", "stream.ReadUimsbf(16, " },
+            { "uimsbf(7)[i][j]", "stream.ReadUimsbf(7, " },
+            { "uimsbf(5)[i][j]", "stream.ReadUimsbf(5, " },
+            { "uimsbf(6)[i][j]", "stream.ReadUimsbf(6, " },
         };
         return map[type];
     }
@@ -1851,6 +2012,79 @@ namespace BoxGenerator2
             { "bit(8)[sizeOfInstance-4]", "(ulong)(sizeOfInstance - 4)" },
             { "double(32)", "32" },
             { "QoS_Qualifier[]", "IsoStream.CalculateClassSize(value)" },
+
+            { "GetAudioObjectType()", "IsoStream.CalculateClassSize(value)" },
+            { "bslbf(header_size * 8)[]", "header_size * 8" },
+            { "bslbf(trailer_size * 8)[]", "trailer_size * 8" },
+            { "bslbf(aux_size * 8)[]", "aux_size * 8" },
+            { "bslbf(11)", "11" },
+            { "bslbf(5)", "5" },
+            { "bslbf(4)", "4" },
+            { "bslbf(1)", "1" },
+            { "uimsbf(32)", "32" },
+            { "uimsbf(24)", "24" },
+            { "uimsbf(18)", "18" },
+            { "uimsbf(16)", "16" },
+            { "uimsbf(14)", "14" },
+            { "uimsbf(12)", "12" },
+            { "uimsbf(10)", "10" },
+            { "uimsbf(8)", "8" },
+            { "uimsbf(7)", "7" },
+            { "uimsbf(6)", "6" },
+            { "uimsbf(5)", "5" },
+            { "uimsbf(4)", "4" },
+            { "uimsbf(3)", "3" },
+            { "uimsbf(2)", "2" },
+            { "uimsbf(1)", "1" },
+            { "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()", "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n     boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 8:\r\n      CelpSpecificConfig()", "case 8:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 9:\r\n      HvxcSpecificConfig()", "case 9:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 12:\r\n      TTSSpecificConfig()", "case 12:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      StructuredAudioSpecificConfig()", "case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 24:\r\n      ErrorResilientCelpSpecificConfig()", "case 24:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 25:\r\n      ErrorResilientHvxcSpecificConfig()", "case 25:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()", "case 26:\r\n    case 27:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 28:\r\n      SSCSpecificConfig()", "case 28:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 30:\r\n      uimsbf(1)", "boxSize += 1" },
+            { "case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()", "case 32:\r\n    case 33:\r\n    case 34:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 35:\r\n      DSTSpecificConfig()", "case 35:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 36:\r\n      bslbf(5)", "boxSize += 5" },
+            { "case 37:\r\n    case 38:\r\n      SLSSpecificConfig()", "case 37:\r\n    case 38:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 39:\r\n      ELDSpecificConfig(channelConfiguration)", "case 39:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 40:\r\n    case 41:\r\n      SymbolicMusicSpecificConfig()", "case 40:\r\n    case 41:\r\n      boxSize += IsoStream.CalculateClassSize(value)" },
+            { "case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      bslbf(2)", "case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n     boxSize +=  2" },
+            { "SpatialSpecificConfig", "IsoStream.CalculateClassSize(value)" },
+            { "ALSSpecificConfig", "IsoStream.CalculateClassSize(value)" },
+            { "ErrorProtectionSpecificConfig", "IsoStream.CalculateClassSize(value)" },
+            { "program_config_element", "IsoStream.CalculateClassSize(value)" },
+            { "byte_alignment", "IsoStream.CalculateClassSize(value)" },
+            { "CelpHeader(samplingFrequencyIndex)", "IsoStream.CalculateClassSize(value)" },
+            { "CelpBWSenhHeader", "IsoStream.CalculateClassSize(value)" },
+            { "HVXCconfig", "IsoStream.CalculateClassSize(value)" },
+            { "TTS_Sequence", "IsoStream.CalculateClassSize(value)" },
+            { "ER_SC_CelpHeader(samplingFrequencyIndex)", "IsoStream.CalculateClassSize(value)" },
+            { "ErHVXCconfig", "IsoStream.CalculateClassSize(value)" },
+            { "PARAconfig", "IsoStream.CalculateClassSize(value)" },
+            { "HILNenexConfig", "IsoStream.CalculateClassSize(value)" },
+            { "HILNconfig", "IsoStream.CalculateClassSize(value)" },
+            { "ld_sbr_header", "IsoStream.CalculateClassSize(value)" },
+            { "sbr_header", "IsoStream.CalculateClassSize(value)" },
+            { "uimsbf(1)[i]", "1" },
+            { "uimsbf(8)[i]", "8" },
+            { "bslbf(1)[i]", "1" },
+            { "uimsbf(4)[i]", "4" },
+            { "uimsbf(1)[c]", "1" },
+            { "uimsbf(32)[f]", "32" },
+            { "CelpHeader", "IsoStream.CalculateClassSize(value)" },
+            { "ER_SC_CelpHeader", "IsoStream.CalculateClassSize(value)" },
+            { "uimsbf(6)[i]", "6" },
+            { "uimsbf(1)[i][j]", "1" },
+            { "uimsbf(2)[i][j]", "2" },
+            { "uimsbf(4)[i][j]", "4" },
+            { "uimsbf(16)[i][j]", "16" },
+            { "uimsbf(7)[i][j]", "7" },
+            { "uimsbf(5)[i][j]", "5" },
+            { "uimsbf(6)[i][j]", "6" },
        };
         return map[type];
     }
@@ -2150,6 +2384,78 @@ namespace BoxGenerator2
             { "bit(8)[sizeOfInstance-4]", "stream.WriteBytes((ulong)(sizeOfInstance - 4), " },
             { "double(32)", "stream.WriteDouble32(" },
             { "QoS_Qualifier[]", "stream.WriteClass(" },
+            { "GetAudioObjectType()", "stream.WriteClass(" },
+            { "bslbf(header_size * 8)[]", "stream.WriteBslbf(header_size * 8, " },
+            { "bslbf(trailer_size * 8)[]", "stream.WriteBslbf(trailer_size * 8, " },
+            { "bslbf(aux_size * 8)[]", "stream.WriteBslbf(aux_size * 8, " },
+            { "bslbf(11)", "stream.WriteBslbf(11, " },
+            { "bslbf(5)", "stream.WriteBslbf(5, " },
+            { "bslbf(4)", "stream.WriteBslbf(4, " },
+            { "bslbf(1)", "stream.WriteBslbf(1, " },
+            { "uimsbf(32)", "stream.WriteUimsbf(32, " },
+            { "uimsbf(24)", "stream.WriteUimsbf(24, " },
+            { "uimsbf(18)", "stream.WriteUimsbf(18, " },
+            { "uimsbf(16)", "stream.WriteUimsbf(16, " },
+            { "uimsbf(14)", "stream.WriteUimsbf(14, " },
+            { "uimsbf(12)", "stream.WriteUimsbf(12, " },
+            { "uimsbf(10)", "stream.WriteUimsbf(10, " },
+            { "uimsbf(8)", "stream.WriteUimsbf(8, " },
+            { "uimsbf(7)", "stream.WriteUimsbf(7, " },
+            { "uimsbf(6)", "stream.WriteUimsbf(6, " },
+            { "uimsbf(5)", "stream.WriteUimsbf(5, " },
+            { "uimsbf(4)", "stream.WriteUimsbf(4, " },
+            { "uimsbf(3)", "stream.WriteUimsbf(3, " },
+            { "uimsbf(2)", "stream.WriteUimsbf(2, " },
+            { "uimsbf(1)", "stream.WriteUimsbf(1, " },
+            { "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()", "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      boxSize += stream.WriteClass(" },
+            { "case 8:\r\n      CelpSpecificConfig()", "case 8:\r\n      boxSize += stream.WriteClass(" },
+            { "case 9:\r\n      HvxcSpecificConfig()", "case 9:\r\n      boxSize += stream.WriteClass(" },
+            { "case 12:\r\n      TTSSpecificConfig()", "case 12:\r\n      boxSize += stream.WriteClass(" },
+            { "case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      StructuredAudioSpecificConfig()", "case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      boxSize += stream.WriteClass(" },
+            { "case 24:\r\n      ErrorResilientCelpSpecificConfig()", "case 24:\r\n      boxSize += stream.WriteClass(" },
+            { "case 25:\r\n      ErrorResilientHvxcSpecificConfig()", "case 25:\r\n      boxSize += stream.WriteClass(" },
+            { "case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()", "case 26:\r\n    case 27:\r\n      boxSize += stream.WriteClass(" },
+            { "case 28:\r\n      SSCSpecificConfig()", "case 28:\r\n      boxSize += stream.WriteClass(" },
+            { "case 30:\r\n      uimsbf(1)", "case 30:\r\n      boxSize += stream.WriteUimsbf(1, " },
+            { "case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()", "case 32:\r\n    case 33:\r\n    case 34:\r\n      boxSize += stream.WriteClass(" },
+            { "case 35:\r\n      DSTSpecificConfig()", "case 35:\r\n      boxSize += stream.WriteClass(" },
+            { "case 36:\r\n      bslbf(5)", "case 36:\r\n      boxSize += stream.WriteBslbf(5, " },
+            { "case 37:\r\n    case 38:\r\n      SLSSpecificConfig()", "case 37:\r\n    case 38:\r\n      boxSize += stream.WriteClass(" },
+            { "case 39:\r\n      ELDSpecificConfig(channelConfiguration)", "case 39:\r\n      boxSize += stream.WriteClass(" },
+            { "case 40:\r\n    case 41:\r\n      SymbolicMusicSpecificConfig()", "case 40:\r\n    case 41:\r\n      boxSize += stream.WriteClass(" },
+            { "case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      bslbf(2)", "case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      boxSize += stream.WriteBslbf(2, " },
+            { "SpatialSpecificConfig", "stream.WriteClass(" },
+            { "ALSSpecificConfig", "stream.WriteClass(" },
+            { "ErrorProtectionSpecificConfig", "stream.WriteClass(" },
+            { "program_config_element", "stream.WriteClass(" },
+            { "byte_alignment", "stream.WriteClass(" },
+            { "CelpHeader(samplingFrequencyIndex)", "stream.WriteClass(" },
+            { "CelpBWSenhHeader", "stream.WriteClass(" },
+            { "HVXCconfig", "stream.WriteClass(" },
+            { "TTS_Sequence", "stream.WriteClass(" },
+            { "ER_SC_CelpHeader(samplingFrequencyIndex)", "stream.WriteClass(" },
+            { "ErHVXCconfig", "stream.WriteClass(" },
+            { "PARAconfig", "stream.WriteClass(" },
+            { "HILNenexConfig", "stream.WriteClass(" },
+            { "HILNconfig", "stream.WriteClass(" },
+            { "ld_sbr_header", "stream.WriteClass(" },
+            { "sbr_header", "stream.WriteClass(" },
+            { "uimsbf(1)[i]", "stream.WriteUimsbf(1, " },
+            { "uimsbf(8)[i]", "stream.WriteUimsbf(8, " },
+            { "bslbf(1)[i]", "stream.WriteBslbf(1, " },
+            { "uimsbf(4)[i]", "stream.WriteUimsbf(4, " },
+            { "uimsbf(1)[c]", "stream.WriteUimsbf(1, " },
+            { "uimsbf(32)[f]", "stream.WriteUimsbf(32, " },
+            { "CelpHeader", "stream.WriteClass(" },
+            { "ER_SC_CelpHeader", "stream.WriteClass(" },
+            { "uimsbf(6)[i]", "stream.WriteUimsbf(6, " },
+            { "uimsbf(1)[i][j]", "stream.WriteUimsbf(1, " },
+            { "uimsbf(2)[i][j]", "stream.WriteUimsbf(2, " },
+            { "uimsbf(4)[i][j]", "stream.WriteUimsbf(4, " },
+            { "uimsbf(16)[i][j]", "stream.WriteUimsbf(16, " },
+            { "uimsbf(7)[i][j]", "stream.WriteUimsbf(7, " },
+            { "uimsbf(5)[i][j]", "stream.WriteUimsbf(5, " },
+            { "uimsbf(6)[i][j]", "stream.WriteUimsbf(6, " },
         };
         return map[type];
     }
@@ -2168,7 +2474,32 @@ namespace BoxGenerator2
             "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8",
             "totalPatternLength = 0",
             "sizeOfInstance = sizeOfInstance<<7 | sizeByte",
-            "int sizeOfInstance = 0"
+            "int sizeOfInstance = 0",
+            "sbrPresentFlag = -1", // WORKAROUND
+            "psPresentFlag = -1", // WORKAROUND
+            "extensionAudioObjectType = 0", // WORKAROUND
+            "extensionAudioObjectType = 5", // WORKAROUND
+            "sbrPresentFlag = 1", // WORKAROUND
+            "psPresentFlag = 1", // WORKAROUND
+            "sbrPresentFlag = -1",
+            "psPresentFlag = -1",
+            "extensionAudioObjectType = 0",
+            "extensionAudioObjectType = 5",
+            "sbrPresentFlag = 1",
+            "psPresentFlag = 1",
+            "audioObjectType = 32 + audioObjectTypeExt",
+            "return audioObjectType",
+            "break",
+            "len = eldExtLen",
+            "len += eldExtLenAddAdd",
+            "len += eldExtLenAdd",
+            "default:\r\n      /* reserved */\r\n      break",
+            "default:\r\n        int cnt",
+            "case 1:\r\n    case 2:\r\n      numSbrHeader = 1",
+            "case 3:\r\n      numSbrHeader = 2",
+            "case 4:\r\n    case 5:\r\n    case 6:\r\n      numSbrHeader = 3",
+            "case 7:\r\n      numSbrHeader = 4",
+            "default:\r\n      numSbrHeader = 0",
         };
         return map.Contains(type);
     }
@@ -2468,7 +2799,79 @@ namespace BoxGenerator2
             { "bit(8)[sizeOfInstance-4]", "byte[]" },
             { "double(32)", "double" },
             { "QoS_Qualifier[]", "QoS_Qualifier[]" },
-        };
+            { "bslbf(header_size * 8)[]", "byte[]" },
+            { "bslbf(trailer_size * 8)[]", "byte[]" },
+            { "bslbf(aux_size * 8)[]", "byte[]" },
+            { "bslbf(11)", "ushort" },
+            { "bslbf(5)", "byte" },
+            { "bslbf(4)", "byte" },
+            { "bslbf(1)", "byte" },
+            { "uimsbf(32)", "uint" },
+            { "uimsbf(24)", "uint" },
+            { "uimsbf(18)", "uint" },
+            { "uimsbf(16)", "ushort" },
+            { "uimsbf(14)", "ushort" },
+            { "uimsbf(12)", "ushort" },
+            { "uimsbf(10)", "ushort" },
+            { "uimsbf(8)", "byte" },
+            { "uimsbf(7)", "byte" },
+            { "uimsbf(6)", "byte" },
+            { "uimsbf(5)", "byte" },
+            { "uimsbf(4)", "byte" },
+            { "uimsbf(3)", "byte" },
+            { "uimsbf(2)", "byte" },
+            { "uimsbf(1)", "sbyte" },
+            { "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()", "GASpecificConfig" },
+            { "case 8:\r\n      CelpSpecificConfig()", "CelpSpecificConfig" },
+            { "case 9:\r\n      HvxcSpecificConfig()", "HvxcSpecificConfig" },
+            { "case 12:\r\n      TTSSpecificConfig()", "TTSSpecificConfig" },
+            { "case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      StructuredAudioSpecificConfig()", "StructuredAudioSpecificConfig" },
+            { "case 24:\r\n      ErrorResilientCelpSpecificConfig()", "ErrorResilientCelpSpecificConfig" },
+            { "case 25:\r\n      ErrorResilientHvxcSpecificConfig()", "ErrorResilientHvxcSpecificConfig" },
+            { "case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()", "ParametricSpecificConfig" },
+            { "case 28:\r\n      SSCSpecificConfig()", "SSCSpecificConfig" },
+            { "case 30:\r\n      uimsbf(1)", "sbyte" },
+            { "case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()", "MPEG_1_2_SpecificConfig" },
+            { "case 35:\r\n      DSTSpecificConfig()", "DSTSpecificConfig" },
+            { "case 36:\r\n      bslbf(5)", "byte" },
+            { "case 37:\r\n    case 38:\r\n      SLSSpecificConfig()", "SLSSpecificConfig" },
+            { "case 39:\r\n      ELDSpecificConfig(channelConfiguration)", "ELDSpecificConfig" },
+            { "case 40:\r\n    case 41:\r\n      SymbolicMusicSpecificConfig()", "SymbolicMusicSpecificConfig" },
+            { "case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      bslbf(2)", "byte" },
+            { "GetAudioObjectType()", "GetAudioObjectType" },
+            { "SpatialSpecificConfig", "SpatialSpecificConfig" },
+            { "ALSSpecificConfig", "ALSSpecificConfig" },
+            { "ErrorProtectionSpecificConfig", "ErrorProtectionSpecificConfig" },
+            { "program_config_element", "program_config_element" },
+            { "byte_alignment", "byte_alignment" },
+            { "CelpHeader(samplingFrequencyIndex)", "CelpHeader" },
+            { "CelpBWSenhHeader", "CelpBWSenhHeader" },
+            { "HVXCconfig", "HVXCconfig" },
+            { "TTS_Sequence", "TTS_Sequence" },
+            { "ER_SC_CelpHeader(samplingFrequencyIndex)", "ER_SC_CelpHeader" },
+            { "ErHVXCconfig", "ErHVXCconfig" },
+            { "PARAconfig", "PARAconfig" },
+            { "HILNenexConfig", "HILNenexConfig" },
+            { "HILNconfig", "HILNconfig" },
+            { "ld_sbr_header", "ld_sbr_header" },
+            { "sbr_header", "sbr_header" },
+            { "uimsbf(1)[i]", "sbyte[]" },
+            { "uimsbf(8)[i]", "byte[]" },
+            { "bslbf(1)[i]", "byte[]" },
+            { "uimsbf(4)[i]", "byte[]" },
+            { "uimsbf(1)[c]", "sbyte[]" },
+            { "uimsbf(32)[f]", "uint[]" },
+            { "uimsbf(6)[i]", "byte[]" },
+            { "uimsbf(1)[i][j]", "sbyte[][]" },
+            { "uimsbf(2)[i][j]", "byte[][]" },
+            { "uimsbf(4)[i][j]", "byte[][]" },
+            { "uimsbf(16)[i][j]", "ushort[][]" },
+            { "uimsbf(7)[i][j]", "byte[][]" },
+            { "uimsbf(5)[i][j]", "byte[][]" },
+            { "uimsbf(6)[i][j]", "byte[][]" },
+            { "CelpHeader", "CelpHeader" },
+            { "ER_SC_CelpHeader", "ER_SC_CelpHeader" },
+       };
         return map[type];
     }
 
@@ -2494,6 +2897,8 @@ public static class StringExtensions
 
     public static string ToCapital(this string source)
     {
+        if (string.IsNullOrEmpty(source) || source.Length < 2)
+            return source;
         return string.Format("{0}{1}", char.ToUpper(source[0]), source.Substring(1));
     }
 }

@@ -398,4 +398,64 @@ public class IsoStream
     {
         throw new NotImplementedException();
     }
+
+    internal ulong ReadBslbf(ulong count, out uint value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteBslbf(ulong count, out uint value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong ReadBslbf(ulong count, out byte value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteBslbf(ulong count, byte value)
+    {
+        throw new NotImplementedException();
+    }
+    
+    internal ulong ReadUimsbf(ulong count, out byte value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteUimsbf(ulong count, byte value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong ReadUimsbf(ulong count, out sbyte value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteUimsbf(ulong count, sbyte value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong ReadUimsbf(ulong count, out ushort value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteUimsbf(ulong count, ushort value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong ReadUimsbf(ulong count, out uint value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteUimsbf(ulong count, uint value)
+    {
+        throw new NotImplementedException();
+    }
 }

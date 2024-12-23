@@ -1,7 +1,6 @@
 ﻿namespace BoxGenerator2
 {
-    public class AudioSpecificConfig : DecoderConfigDescriptor
-    {
-        
-    }
+    public class SymbolicMusicSpecificConfig { }
+    public class SpatialSpecificConfig { }
+    public class StructuredAudioSpecificConfig { }
 }
