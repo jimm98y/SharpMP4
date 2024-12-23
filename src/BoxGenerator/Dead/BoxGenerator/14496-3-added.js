@@ -459,8 +459,8 @@ class ALSSpecificConfig()
   uimsbf(1) chan_config;
   uimsbf(1) chan_sort;
   uimsbf(1) crc_enabled;
-  uimsbf(1) RLSLMS
-  uimsbf(5) reserved
+  uimsbf(1) RLSLMS;
+  uimsbf(5) reserved;
   uimsbf(1) aux_data_enabled;
   if (chan_config) {
     uimsbf(16) chan_config_info;
@@ -516,7 +516,8 @@ class ELDSpecificConfig(channelConfiguration)
     ld_sbr_header(channelConfiguration);
   }
 
-  while (bslbf(4) eldExtType != ELDEXT_TERM) {
+  bslbf(4) eldExtType;
+  while (eldExtType != ELDEXT_TERM) {
     uimsbf(4) eldExtLen;
     len = eldExtLen;
     if (eldExtLen == 15) {
@@ -536,6 +537,7 @@ class ELDSpecificConfig(channelConfiguration)
         }
         break;
     }
+    bslbf(4) eldExtType;
   }
 }
 

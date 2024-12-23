@@ -993,6 +993,10 @@ namespace BoxGenerator2
         {
             cls += "\r\n\t\tulong OutputChannelCount = 0; // TODO: pass through ctor\r\n";
         }
+        else if(box.BoxName == "ld_sbr_header")
+        {
+            cls += "\r\n\t\tulong numSbrHeader = 0;\r\n";
+        }
 
         return cls;
     }
