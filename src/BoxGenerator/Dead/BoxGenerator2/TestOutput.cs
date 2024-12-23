@@ -5,6 +5,207 @@ using System.Threading.Tasks;
 namespace BoxGenerator2
 {
     /*
+    class OpusSampleEntry() extends AudioSampleEntry ('Opus'){
+     OpusSpecificBox();
+     }
+    */
+    public class OpusSampleEntry : AudioSampleEntry
+    {
+        public override string FourCC { get; set; } = "Opus";
+
+        protected OpusSpecificBox OpusSpecificBox;
+        public OpusSpecificBox _OpusSpecificBox { get { return this.OpusSpecificBox; } set { this.OpusSpecificBox = value; } }
+
+        public OpusSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadBox(out this.OpusSpecificBox);
+            boxSize += stream.ReadSkip(size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteBox(this.OpusSpecificBox);
+            boxSize += stream.Flush();
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateSize(OpusSpecificBox); // OpusSpecificBox
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ChannelMappingTable (unsigned int(8) OutputChannelCount){
+     unsigned int(8) StreamCount;
+     unsigned int(8) CoupledCount;
+     unsigned int(8 * OutputChannelCount) ChannelMapping;
+     }
+
+    */
+    public class ChannelMappingTable
+    {
+
+
+        protected byte StreamCount;
+        public byte _StreamCount { get { return this.StreamCount; } set { this.StreamCount = value; } }
+
+        protected byte CoupledCount;
+        public byte _CoupledCount { get { return this.CoupledCount; } set { this.CoupledCount = value; } }
+
+        protected byte[] ChannelMapping;
+        public byte[] _ChannelMapping { get { return this.ChannelMapping; } set { this.ChannelMapping = value; } }
+
+        public ChannelMappingTable()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            ulong OutputChannelCount = 0; // TODO: pass through ctor
+
+            boxSize += stream.ReadUInt8(out this.StreamCount);
+            boxSize += stream.ReadUInt8(out this.CoupledCount);
+            boxSize += stream.ReadBytes(OutputChannelCount, out this.ChannelMapping);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            ulong OutputChannelCount = 0; // TODO: pass through ctor
+
+            boxSize += stream.WriteUInt8(this.StreamCount);
+            boxSize += stream.WriteUInt8(this.CoupledCount);
+            boxSize += stream.WriteBytes(OutputChannelCount, this.ChannelMapping);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            ulong OutputChannelCount = 0; // TODO: pass through ctor
+
+            boxSize += 8; // StreamCount
+            boxSize += 8; // CoupledCount
+            boxSize += (ulong)(OutputChannelCount * 8); // ChannelMapping
+            return boxSize;
+        }
+    }
+
+
+    /*
+     aligned(8) class OpusSpecificBox extends Box('dOps'){
+     unsigned int(8) Version;
+     unsigned int(8) OutputChannelCount;
+     unsigned int(16) PreSkip;
+     unsigned int(32) InputSampleRate;
+     signed int(16) OutputGain;
+     unsigned int(8) ChannelMappingFamily;
+     if (ChannelMappingFamily != 0) {
+     ChannelMappingTable(OutputChannelCount);
+     }
+     }
+    */
+    public class OpusSpecificBox : Box
+    {
+        public override string FourCC { get; set; } = "dOps";
+
+        protected byte Version;
+        public byte _Version { get { return this.Version; } set { this.Version = value; } }
+
+        protected byte OutputChannelCount;
+        public byte _OutputChannelCount { get { return this.OutputChannelCount; } set { this.OutputChannelCount = value; } }
+
+        protected ushort PreSkip;
+        public ushort _PreSkip { get { return this.PreSkip; } set { this.PreSkip = value; } }
+
+        protected uint InputSampleRate;
+        public uint _InputSampleRate { get { return this.InputSampleRate; } set { this.InputSampleRate = value; } }
+
+        protected short OutputGain;
+        public short _OutputGain { get { return this.OutputGain; } set { this.OutputGain = value; } }
+
+        protected byte ChannelMappingFamily;
+        public byte _ChannelMappingFamily { get { return this.ChannelMappingFamily; } set { this.ChannelMappingFamily = value; } }
+
+        protected ChannelMappingTable ChannelMappingTable;
+        public ChannelMappingTable _ChannelMappingTable { get { return this.ChannelMappingTable; } set { this.ChannelMappingTable = value; } }
+
+        public OpusSpecificBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt8(out this.Version);
+            boxSize += stream.ReadUInt8(out this.OutputChannelCount);
+            boxSize += stream.ReadUInt16(out this.PreSkip);
+            boxSize += stream.ReadUInt32(out this.InputSampleRate);
+            boxSize += stream.ReadInt16(out this.OutputGain);
+            boxSize += stream.ReadUInt8(out this.ChannelMappingFamily);
+
+            if (ChannelMappingFamily != 0)
+            {
+                boxSize += stream.ReadClass(out this.ChannelMappingTable);
+            }
+            boxSize += stream.ReadSkip(size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8(this.Version);
+            boxSize += stream.WriteUInt8(this.OutputChannelCount);
+            boxSize += stream.WriteUInt16(this.PreSkip);
+            boxSize += stream.WriteUInt32(this.InputSampleRate);
+            boxSize += stream.WriteInt16(this.OutputGain);
+            boxSize += stream.WriteUInt8(this.ChannelMappingFamily);
+
+            if (ChannelMappingFamily != 0)
+            {
+                boxSize += stream.WriteClass(this.ChannelMappingTable);
+            }
+            boxSize += stream.Flush();
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // Version
+            boxSize += 8; // OutputChannelCount
+            boxSize += 16; // PreSkip
+            boxSize += 32; // InputSampleRate
+            boxSize += 16; // OutputGain
+            boxSize += 8; // ChannelMappingFamily
+
+            if (ChannelMappingFamily != 0)
+            {
+                boxSize += IsoStream.CalculateClassSize(ChannelMappingTable); // ChannelMappingTable
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
     abstract aligned(8) expandable(228-1) class BaseDescriptor : bit(8) tag=0 {
      // empty. To be filled by classes extending this class.
      int sizeOfInstance = 0;

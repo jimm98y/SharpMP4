@@ -214,6 +214,7 @@ partial class Program
             Try(String("int size = 4")), // WORKAROUND
             Try(String("sizeOfInstance = sizeOfInstance<<7 | sizeByte")), // WORKAROUND
             Try(String("int sizeOfInstance = 0")), // WORKAROUND
+            Try(String("unsigned int(8 * OutputChannelCount)")),
             Try(String("unsigned int(64)")),
             Try(String("unsigned int(48)")),
             Try(String("template int(32)[9]")),
@@ -523,7 +524,8 @@ partial class Program
             Try(String("('vvcb', version, flags)")),
             Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)")),
             Try(String("(unsigned int(32) grouping_type)")),
-            Try(String("(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)"))            
+            Try(String("(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)")),            
+            Try(String("(unsigned int(8) OutputChannelCount)"))            
             ).Labelled("class type");
 
     public static Parser<char, string> DescriptorTag =>
@@ -583,6 +585,7 @@ partial class Program
     static void Main(string[] args)
     {
         string[] files = {
+            "Opus.json",
             "14496-1-added.json",
             //"14496-3-added.json",
             "14496-12-added.json",
@@ -906,6 +909,10 @@ namespace BoxGenerator2
             cls += "\r\n";
             cls += "\t\tconst int OPI_NUT = 12;\r\n";
             cls += "\t\tconst int DCI_NUT = 13;\r\n";
+        }
+        else if(box.BoxName == "ChannelMappingTable")
+        {
+            cls += "\r\n\t\tulong OutputChannelCount = 0; // TODO: pass through ctor\r\n";
         }
 
         return cls;
@@ -1526,6 +1533,9 @@ namespace BoxGenerator2
             { "AlbumLoudnessInfo[]", "stream.ReadBox(" },
             { "VvcPTLRecord(num_sublayers)", "stream.ReadClass(num_sublayers," },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "stream.ReadClass(" },
+            { "OpusSpecificBox", "stream.ReadBox(" },
+            { "unsigned int(8 * OutputChannelCount)", "stream.ReadBytes(OutputChannelCount, " },
+            { "ChannelMappingTable", "stream.ReadClass(" },
             // descriptors
             { "DecoderConfigDescriptor", "stream.ReadClass(" },
             { "SLConfigDescriptor", "stream.ReadClass(" },
@@ -1822,6 +1832,9 @@ namespace BoxGenerator2
             { "AlbumLoudnessInfo[]", "IsoStream.CalculateSize(value)" },
             { "VvcPTLRecord(num_sublayers)", "IsoStream.CalculateClassSize(value)" },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "IsoStream.CalculateClassSize(value)" },
+            { "OpusSpecificBox", "IsoStream.CalculateSize(value)" },
+            { "unsigned int(8 * OutputChannelCount)", "(ulong)(OutputChannelCount * 8)" },
+            { "ChannelMappingTable", "IsoStream.CalculateClassSize(value)" },
             // descriptors
             { "DecoderConfigDescriptor", "IsoStream.CalculateClassSize(value)" },
             { "SLConfigDescriptor", "IsoStream.CalculateClassSize(value)" },
@@ -2118,6 +2131,9 @@ namespace BoxGenerator2
             { "AlbumLoudnessInfo[]", "stream.WriteBox(" },
             { "VvcPTLRecord(num_sublayers)", "stream.WriteClass(num_sublayers, " },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "stream.WriteClass(" },
+            { "OpusSpecificBox", "stream.WriteBox(" },
+            { "unsigned int(8 * OutputChannelCount)", "stream.WriteBytes(OutputChannelCount, " },
+            { "ChannelMappingTable", "stream.WriteClass(" },
             // descriptors
             { "DecoderConfigDescriptor", "stream.WriteClass(" },
             { "SLConfigDescriptor", "stream.WriteClass(" },
@@ -2433,6 +2449,9 @@ namespace BoxGenerator2
             { "AlbumLoudnessInfo[]", "AlbumLoudnessInfo[]" },
             { "VvcPTLRecord(num_sublayers)", "VvcPTLRecord[]" },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "VvcPTLRecord[]" },
+            { "OpusSpecificBox", "OpusSpecificBox" },
+            { "unsigned int(8 * OutputChannelCount)", "byte[]" },
+            { "ChannelMappingTable", "ChannelMappingTable" },
             // descriptors
             { "DecoderConfigDescriptor", "DecoderConfigDescriptor" },
             { "SLConfigDescriptor", "SLConfigDescriptor" },
