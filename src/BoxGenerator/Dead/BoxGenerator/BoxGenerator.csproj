@@ -12,7 +12,7 @@
     <Content Include="14496-1-added.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="14496-3-added.json">
+    <Content Include="14496-3-added.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="14496-15-added.json">

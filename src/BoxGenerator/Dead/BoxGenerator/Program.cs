@@ -584,7 +584,7 @@ partial class Program
     {
         string[] files = {
             "14496-1-added.json",
-            "14496-3-added.json",
+            //"14496-3-added.json",
             "14496-12-added.json",
             "14496-15-added.json",
             "14496-12-boxes.json",
