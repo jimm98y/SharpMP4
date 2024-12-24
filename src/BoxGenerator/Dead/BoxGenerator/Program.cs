@@ -906,10 +906,10 @@ namespace BoxGenerator2
             cls += "\r\n" + "boxSize += stream.ReadBoxChildren(boxSize, this);";
         }
 
-        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrEmpty(b.FourCC))
-        {
-            cls += "\r\n" + "boxSize += stream.ReadSkip(size, boxSize);";
-        }
+        //if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrEmpty(b.FourCC))
+        //{
+        //    cls += "\r\n" + "boxSize += stream.ReadSkip(size, boxSize);";
+        //}
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
@@ -929,10 +929,10 @@ namespace BoxGenerator2
             cls += "\r\n" + "boxSize += stream.WriteBoxChildren(this);";
         }
 
-        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrEmpty(b.FourCC))
-        {
-            cls += "\r\n" + "boxSize += stream.Flush();";
-        }
+        //if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrEmpty(b.FourCC))
+        //{
+        //    cls += "\r\n" + "boxSize += stream.Flush();";
+        //}
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
@@ -946,10 +946,10 @@ namespace BoxGenerator2
             cls += "\r\n" + BuildMethodCode(field, 2, MethodType.Size);
         }
 
-        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName))
-        {
-            cls += "\r\n" + "boxSize += IsoStream.CalculateSize(children);";
-        }
+        //if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName))
+        //{
+        //    cls += "\r\n" + "boxSize += IsoStream.CalculateSize(children);";
+        //}
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
