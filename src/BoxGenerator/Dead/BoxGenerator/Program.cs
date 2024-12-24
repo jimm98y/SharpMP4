@@ -1025,6 +1025,16 @@ namespace BoxGenerator2
             cls += "\r\n\t\tconst bool MPE = false;\r\n";
         }
 
+        if(box.BoxName == "GASpecificConfig")
+        {
+            cls += "\r\n\t\tGetAudioObjectType audioObjectType = null; // TODO: pass through ctor\r\n";
+        }
+        
+        if(box.BoxName == "GASpecificConfig" || box.BoxName == "SLSSpecificConfig")
+        {
+            cls += "\r\n\t\tbyte channelConfiguration = 0; // TODO: pass through ctor\r\n";
+        }
+
         return cls;
     }
 
@@ -1222,6 +1232,16 @@ namespace BoxGenerator2
                 return "uint totalPatternLength = 0;";
             else if (tt == "audioObjectType = 32 + audioObjectTypeExt")
                 return "audioObjectType = (byte)(32 + audioObjectTypeExt);";
+            else if (tt == "sbrPresentFlag = -1")
+                return "sbrPresentFlag = false;";
+            else if (tt == "psPresentFlag = -1")
+                return "psPresentFlag = false;";
+            else if (tt == "sbrPresentFlag = 1")
+                return "sbrPresentFlag = true;";
+            else if (tt == "psPresentFlag = 1")
+                return "psPresentFlag = true;";
+            else if (tt.Contains("extensionAudioObjectType"))
+                return tt.Replace("extensionAudioObjectType", "extensionAudioObjectType.AudioObjectType") + ";";
             else
                 return $"{tt};";
         }
@@ -1350,6 +1370,9 @@ namespace BoxGenerator2
         {
             if (condition.Contains("audioObjectType") && !condition.Contains("audioObjectType == 31"))
                 condition = condition.Replace("audioObjectType", "audioObjectType.AudioObjectType");
+            
+            if (condition.Contains("extensionAudioObjectType"))
+                condition = condition.Replace("extensionAudioObjectType", "extensionAudioObjectType.AudioObjectType");
 
             if (condition.Contains("bits_to_decode()"))
                 condition = condition.Replace("bits_to_decode()", "IsoStream.BitsToDecode()");

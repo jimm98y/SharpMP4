@@ -1885,17 +1885,17 @@ namespace BoxGenerator2
                 boxSize += stream.ReadUimsbf(24, out this.samplingFrequency);
             }
             boxSize += stream.ReadBslbf(4, out this.channelConfiguration);
-            sbrPresentFlag = -1;
-            psPresentFlag = -1;
+            sbrPresentFlag = false;
+            psPresentFlag = false;
 
             if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
             {
-                extensionAudioObjectType = 5;
-                sbrPresentFlag = 1;
+                extensionAudioObjectType.AudioObjectType = 5;
+                sbrPresentFlag = true;
 
                 if (audioObjectType.AudioObjectType == 29)
                 {
-                    psPresentFlag = 1;
+                    psPresentFlag = true;
                 }
                 boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex);
 
@@ -1913,7 +1913,7 @@ namespace BoxGenerator2
 
             else
             {
-                extensionAudioObjectType = 0;
+                extensionAudioObjectType.AudioObjectType = 0;
             }
 
             switch (audioObjectType.AudioObjectType)
@@ -2024,7 +2024,7 @@ namespace BoxGenerator2
                     break;
             }
 
-            if (extensionAudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
+            if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
             {
                 boxSize += stream.ReadBslbf(11, out this.syncExtensionType);
 
@@ -2032,7 +2032,7 @@ namespace BoxGenerator2
                 {
                     boxSize += stream.ReadClass(out this.extensionAudioObjectType);
 
-                    if (extensionAudioObjectType == 5)
+                    if (extensionAudioObjectType.AudioObjectType == 5)
                     {
                         boxSize += stream.ReadUimsbf(out this.sbrPresentFlag);
 
@@ -2057,7 +2057,7 @@ namespace BoxGenerator2
                         }
                     }
 
-                    if (extensionAudioObjectType == 22)
+                    if (extensionAudioObjectType.AudioObjectType == 22)
                     {
                         boxSize += stream.ReadUimsbf(out this.sbrPresentFlag0);
 
@@ -2088,17 +2088,17 @@ namespace BoxGenerator2
                 boxSize += stream.WriteUimsbf(24, this.samplingFrequency);
             }
             boxSize += stream.WriteBslbf(4, this.channelConfiguration);
-            sbrPresentFlag = -1;
-            psPresentFlag = -1;
+            sbrPresentFlag = false;
+            psPresentFlag = false;
 
             if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
             {
-                extensionAudioObjectType = 5;
-                sbrPresentFlag = 1;
+                extensionAudioObjectType.AudioObjectType = 5;
+                sbrPresentFlag = true;
 
                 if (audioObjectType.AudioObjectType == 29)
                 {
-                    psPresentFlag = 1;
+                    psPresentFlag = true;
                 }
                 boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex);
 
@@ -2116,7 +2116,7 @@ namespace BoxGenerator2
 
             else
             {
-                extensionAudioObjectType = 0;
+                extensionAudioObjectType.AudioObjectType = 0;
             }
 
             switch (audioObjectType.AudioObjectType)
@@ -2227,7 +2227,7 @@ namespace BoxGenerator2
                     break;
             }
 
-            if (extensionAudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
+            if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
             {
                 boxSize += stream.WriteBslbf(11, this.syncExtensionType);
 
@@ -2235,7 +2235,7 @@ namespace BoxGenerator2
                 {
                     boxSize += stream.WriteClass(this.extensionAudioObjectType);
 
-                    if (extensionAudioObjectType == 5)
+                    if (extensionAudioObjectType.AudioObjectType == 5)
                     {
                         boxSize += stream.WriteUimsbf(this.sbrPresentFlag);
 
@@ -2260,7 +2260,7 @@ namespace BoxGenerator2
                         }
                     }
 
-                    if (extensionAudioObjectType == 22)
+                    if (extensionAudioObjectType.AudioObjectType == 22)
                     {
                         boxSize += stream.WriteUimsbf(this.sbrPresentFlag0);
 
@@ -2291,17 +2291,17 @@ namespace BoxGenerator2
                 boxSize += 24; // samplingFrequency
             }
             boxSize += 4; // channelConfiguration
-            sbrPresentFlag = -1;
-            psPresentFlag = -1;
+            sbrPresentFlag = false;
+            psPresentFlag = false;
 
             if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
             {
-                extensionAudioObjectType = 5;
-                sbrPresentFlag = 1;
+                extensionAudioObjectType.AudioObjectType = 5;
+                sbrPresentFlag = true;
 
                 if (audioObjectType.AudioObjectType == 29)
                 {
-                    psPresentFlag = 1;
+                    psPresentFlag = true;
                 }
                 boxSize += 4; // extensionSamplingFrequencyIndex
 
@@ -2319,7 +2319,7 @@ namespace BoxGenerator2
 
             else
             {
-                extensionAudioObjectType = 0;
+                extensionAudioObjectType.AudioObjectType = 0;
             }
 
             switch (audioObjectType.AudioObjectType)
@@ -2428,7 +2428,7 @@ namespace BoxGenerator2
                     break;
             }
 
-            if (extensionAudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
+            if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
             {
                 boxSize += 11; // syncExtensionType
 
@@ -2436,7 +2436,7 @@ namespace BoxGenerator2
                 {
                     boxSize += IsoStream.CalculateClassSize(extensionAudioObjectType); // extensionAudioObjectType
 
-                    if (extensionAudioObjectType == 5)
+                    if (extensionAudioObjectType.AudioObjectType == 5)
                     {
                         boxSize += 1; // sbrPresentFlag
 
@@ -2461,7 +2461,7 @@ namespace BoxGenerator2
                         }
                     }
 
-                    if (extensionAudioObjectType == 22)
+                    if (extensionAudioObjectType.AudioObjectType == 22)
                     {
                         boxSize += 1; // sbrPresentFlag0
 
@@ -2633,6 +2633,10 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            GetAudioObjectType audioObjectType = null; // TODO: pass through ctor
+
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
             boxSize += stream.ReadBslbf(out this.frameLengthFlag);
             boxSize += stream.ReadBslbf(out this.dependsOnCoreCoder);
 
@@ -2681,6 +2685,10 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            GetAudioObjectType audioObjectType = null; // TODO: pass through ctor
+
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
             boxSize += stream.WriteBslbf(this.frameLengthFlag);
             boxSize += stream.WriteBslbf(this.dependsOnCoreCoder);
 
@@ -2729,6 +2737,10 @@ namespace BoxGenerator2
         public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
+            GetAudioObjectType audioObjectType = null; // TODO: pass through ctor
+
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
             boxSize += 1; // frameLengthFlag
             boxSize += 1; // dependsOnCoreCoder
 
@@ -5034,6 +5046,8 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
             boxSize += stream.ReadUimsbf(3, out this.pcmWordLength);
             boxSize += stream.ReadUimsbf(out this.aac_core_present);
             boxSize += stream.ReadUimsbf(out this.lle_main_stream);
@@ -5050,6 +5064,8 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
             boxSize += stream.WriteUimsbf(3, this.pcmWordLength);
             boxSize += stream.WriteUimsbf(this.aac_core_present);
             boxSize += stream.WriteUimsbf(this.lle_main_stream);
@@ -5066,6 +5082,8 @@ namespace BoxGenerator2
         public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
             boxSize += 3; // pcmWordLength
             boxSize += 1; // aac_core_present
             boxSize += 1; // lle_main_stream
