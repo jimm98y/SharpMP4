@@ -1021,8 +1021,8 @@ namespace BoxGenerator2
 
         if(box.BoxName == "CelpHeader" || box.BoxName == "ER_SC_CelpHeader")
         {
-            cls += "\r\n\t\tconst byte RPE = 1;\r\n";
-            cls += "\r\n\t\tconst byte MPE = 0;\r\n";
+            cls += "\r\n\t\tconst bool RPE = true;\r\n";
+            cls += "\r\n\t\tconst bool MPE = false;\r\n";
         }
 
         return cls;
@@ -1316,12 +1316,28 @@ namespace BoxGenerator2
                 condition.Contains("omitted_channels_present") ||
                 condition.Contains("in_stream") ||
                 condition.Contains("dynamic_rect") ||
+                condition.Contains("rate_escape") ||
+                condition.Contains("length_escape") ||
+                condition.Contains("crclen_escape") ||
+                condition.Contains("class_reordered_output") ||
+                condition.Contains("header_protection") ||
+                condition.Contains("sbrPresentFlag") ||
+                condition.Contains("mono_mixdown_present") ||
+                condition.Contains("stereo_mixdown_present") ||
+                condition.Contains("matrix_mixdown_idx_present") ||
                 condition.Contains("level_is_static_flag"))
             {
                 condition = condition
                     .Replace("==0", "== false").Replace("==1", "== true")
-                    .Replace("== 0", "== false").Replace("== 1", "== true");
+                    .Replace("== 0", "== false").Replace("== 1", "== true")
+                    .Replace("!= 1", "!= true").Replace("!= 0", "!= false")
+                    .Replace("!=1", "!=true").Replace("!=0", "!=false");
             }
+
+            if(condition.Contains("!channelConfiguration"))
+            {
+                condition = condition.Replace("!channelConfiguration", "channelConfiguration == 0");
+            }    
 
             // other fixes - taken from ISO_IEC_14496-12_2015 comments
             if (condition.Contains("channelStructured"))
@@ -1699,7 +1715,7 @@ namespace BoxGenerator2
             { "uimsbf(4)", "stream.ReadUimsbf(4, " },
             { "uimsbf(3)", "stream.ReadUimsbf(3, " },
             { "uimsbf(2)", "stream.ReadUimsbf(2, " },
-            { "uimsbf(1)", "stream.ReadUimsbf(1, " },
+            { "uimsbf(1)", "stream.ReadUimsbf(" },
             { "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()", "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      boxSize += stream.ReadClass(" },
             { "case 8:\r\n      CelpSpecificConfig()", "case 8:\r\n      boxSize += stream.ReadClass(" },
             { "case 9:\r\n      HvxcSpecificConfig()", "case 9:\r\n      boxSize += stream.ReadClass(" },
@@ -1709,7 +1725,7 @@ namespace BoxGenerator2
             { "case 25:\r\n      ErrorResilientHvxcSpecificConfig()", "case 25:\r\n      boxSize += stream.ReadClass(" },
             { "case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()", "case 26:\r\n    case 27:\r\n      boxSize += stream.ReadClass(" },
             { "case 28:\r\n      SSCSpecificConfig()", "case 28:\r\n      boxSize += stream.ReadClass(" },
-            { "case 30:\r\n      uimsbf(1)", "case 30:\r\n      boxSize += stream.ReadUimsbf(1, " },
+            { "case 30:\r\n      uimsbf(1)", "case 30:\r\n      boxSize += stream.ReadUimsbf(" },
             { "case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()", "case 32:\r\n    case 33:\r\n    case 34:\r\n      boxSize += stream.ReadClass(" },
             { "case 35:\r\n      DSTSpecificConfig()", "case 35:\r\n      boxSize += stream.ReadClass(" },
             { "case 36:\r\n      bslbf(5)", "case 36:\r\n      boxSize += stream.ReadBslbf(5, " },
@@ -1733,16 +1749,16 @@ namespace BoxGenerator2
             { "HILNconfig", "stream.ReadClass(" },
             { "ld_sbr_header", "stream.ReadClass(" },
             { "sbr_header", "stream.ReadClass(" },
-            { "uimsbf(1)[i]", "stream.ReadUimsbf(1, " },
+            { "uimsbf(1)[i]", "stream.ReadUimsbf(" },
             { "uimsbf(8)[i]", "stream.ReadUimsbf(8, " },
             { "bslbf(1)[i]", "stream.ReadBslbf(1, " },
             { "uimsbf(4)[i]", "stream.ReadUimsbf(4, " },
-            { "uimsbf(1)[c]", "stream.ReadUimsbf(1, " },
+            { "uimsbf(1)[c]", "stream.ReadUimsbf(" },
             { "uimsbf(32)[f]", "stream.ReadUimsbf(32, " },
             { "CelpHeader", "stream.ReadClass(" },
             { "ER_SC_CelpHeader", "stream.ReadClass(" },
             { "uimsbf(6)[i]", "stream.ReadUimsbf(6, " },
-            { "uimsbf(1)[i][j]", "stream.ReadUimsbf(1, " },
+            { "uimsbf(1)[i][j]", "stream.ReadUimsbf(" },
             { "uimsbf(2)[i][j]", "stream.ReadUimsbf(2, " },
             { "uimsbf(4)[i][j]", "stream.ReadUimsbf(4, " },
             { "uimsbf(16)[i][j]", "stream.ReadUimsbf(16, " },
@@ -2442,7 +2458,7 @@ namespace BoxGenerator2
             { "uimsbf(4)", "stream.WriteUimsbf(4, " },
             { "uimsbf(3)", "stream.WriteUimsbf(3, " },
             { "uimsbf(2)", "stream.WriteUimsbf(2, " },
-            { "uimsbf(1)", "stream.WriteUimsbf(1, " },
+            { "uimsbf(1)", "stream.WriteUimsbf(" },
             { "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()", "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      boxSize += stream.WriteClass(" },
             { "case 8:\r\n      CelpSpecificConfig()", "case 8:\r\n      boxSize += stream.WriteClass(" },
             { "case 9:\r\n      HvxcSpecificConfig()", "case 9:\r\n      boxSize += stream.WriteClass(" },
@@ -2452,7 +2468,7 @@ namespace BoxGenerator2
             { "case 25:\r\n      ErrorResilientHvxcSpecificConfig()", "case 25:\r\n      boxSize += stream.WriteClass(" },
             { "case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()", "case 26:\r\n    case 27:\r\n      boxSize += stream.WriteClass(" },
             { "case 28:\r\n      SSCSpecificConfig()", "case 28:\r\n      boxSize += stream.WriteClass(" },
-            { "case 30:\r\n      uimsbf(1)", "case 30:\r\n      boxSize += stream.WriteUimsbf(1, " },
+            { "case 30:\r\n      uimsbf(1)", "case 30:\r\n      boxSize += stream.WriteUimsbf(" },
             { "case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()", "case 32:\r\n    case 33:\r\n    case 34:\r\n      boxSize += stream.WriteClass(" },
             { "case 35:\r\n      DSTSpecificConfig()", "case 35:\r\n      boxSize += stream.WriteClass(" },
             { "case 36:\r\n      bslbf(5)", "case 36:\r\n      boxSize += stream.WriteBslbf(5, " },
@@ -2476,16 +2492,16 @@ namespace BoxGenerator2
             { "HILNconfig", "stream.WriteClass(" },
             { "ld_sbr_header", "stream.WriteClass(" },
             { "sbr_header", "stream.WriteClass(" },
-            { "uimsbf(1)[i]", "stream.WriteUimsbf(1, " },
+            { "uimsbf(1)[i]", "stream.WriteUimsbf(" },
             { "uimsbf(8)[i]", "stream.WriteUimsbf(8, " },
             { "bslbf(1)[i]", "stream.WriteBslbf(1, " },
             { "uimsbf(4)[i]", "stream.WriteUimsbf(4, " },
-            { "uimsbf(1)[c]", "stream.WriteUimsbf(1, " },
+            { "uimsbf(1)[c]", "stream.WriteUimsbf(" },
             { "uimsbf(32)[f]", "stream.WriteUimsbf(32, " },
             { "CelpHeader", "stream.WriteClass(" },
             { "ER_SC_CelpHeader", "stream.WriteClass(" },
             { "uimsbf(6)[i]", "stream.WriteUimsbf(6, " },
-            { "uimsbf(1)[i][j]", "stream.WriteUimsbf(1, " },
+            { "uimsbf(1)[i][j]", "stream.WriteUimsbf(" },
             { "uimsbf(2)[i][j]", "stream.WriteUimsbf(2, " },
             { "uimsbf(4)[i][j]", "stream.WriteUimsbf(4, " },
             { "uimsbf(16)[i][j]", "stream.WriteUimsbf(16, " },
@@ -2856,7 +2872,7 @@ namespace BoxGenerator2
             { "uimsbf(4)", "byte" },
             { "uimsbf(3)", "byte" },
             { "uimsbf(2)", "byte" },
-            { "uimsbf(1)", "sbyte" },
+            { "uimsbf(1)", "bool" },
             { "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()", "GASpecificConfig" },
             { "case 8:\r\n      CelpSpecificConfig()", "CelpSpecificConfig" },
             { "case 9:\r\n      HvxcSpecificConfig()", "HvxcSpecificConfig" },
@@ -2866,7 +2882,7 @@ namespace BoxGenerator2
             { "case 25:\r\n      ErrorResilientHvxcSpecificConfig()", "ErrorResilientHvxcSpecificConfig" },
             { "case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()", "ParametricSpecificConfig" },
             { "case 28:\r\n      SSCSpecificConfig()", "SSCSpecificConfig" },
-            { "case 30:\r\n      uimsbf(1)", "sbyte" },
+            { "case 30:\r\n      uimsbf(1)", "bool" },
             { "case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()", "MPEG_1_2_SpecificConfig" },
             { "case 35:\r\n      DSTSpecificConfig()", "DSTSpecificConfig" },
             { "case 36:\r\n      bslbf(5)", "byte" },
@@ -2891,14 +2907,14 @@ namespace BoxGenerator2
             { "HILNconfig", "HILNconfig" },
             { "ld_sbr_header", "ld_sbr_header" },
             { "sbr_header", "sbr_header" },
-            { "uimsbf(1)[i]", "sbyte[]" },
+            { "uimsbf(1)[i]", "bool[]" },
             { "uimsbf(8)[i]", "byte[]" },
             { "bslbf(1)[i]", "byte[]" },
             { "uimsbf(4)[i]", "byte[]" },
-            { "uimsbf(1)[c]", "sbyte[]" },
+            { "uimsbf(1)[c]", "bool[]" },
             { "uimsbf(32)[f]", "uint[]" },
             { "uimsbf(6)[i]", "byte[]" },
-            { "uimsbf(1)[i][j]", "sbyte[][]" },
+            { "uimsbf(1)[i][j]", "bool[][]" },
             { "uimsbf(2)[i][j]", "byte[][]" },
             { "uimsbf(4)[i][j]", "byte[][]" },
             { "uimsbf(16)[i][j]", "ushort[][]" },

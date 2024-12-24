@@ -1802,8 +1802,8 @@ namespace BoxGenerator2
         protected SSCSpecificConfig SSCSpecificConfig;
         public SSCSpecificConfig _SSCSpecificConfig { get { return this.SSCSpecificConfig; } set { this.SSCSpecificConfig = value; } }
 
-        protected sbyte sacPayloadEmbedding;
-        public sbyte SacPayloadEmbedding { get { return this.sacPayloadEmbedding; } set { this.sacPayloadEmbedding = value; } }
+        protected bool sacPayloadEmbedding;
+        public bool SacPayloadEmbedding { get { return this.sacPayloadEmbedding; } set { this.sacPayloadEmbedding = value; } }
 
         protected SpatialSpecificConfig SpatialSpecificConfig;
         public SpatialSpecificConfig _SpatialSpecificConfig { get { return this.SpatialSpecificConfig; } set { this.SpatialSpecificConfig = value; } }
@@ -1844,8 +1844,8 @@ namespace BoxGenerator2
         protected GetAudioObjectType extensionAudioObjectType;
         public GetAudioObjectType ExtensionAudioObjectType { get { return this.extensionAudioObjectType; } set { this.extensionAudioObjectType = value; } }
 
-        protected sbyte sbrPresentFlag;
-        public sbyte SbrPresentFlag { get { return this.sbrPresentFlag; } set { this.sbrPresentFlag = value; } }
+        protected bool sbrPresentFlag;
+        public bool SbrPresentFlag { get { return this.sbrPresentFlag; } set { this.sbrPresentFlag = value; } }
 
         protected byte extensionSamplingFrequencyIndex0;
         public byte ExtensionSamplingFrequencyIndex0 { get { return this.extensionSamplingFrequencyIndex0; } set { this.extensionSamplingFrequencyIndex0 = value; } }
@@ -1856,11 +1856,11 @@ namespace BoxGenerator2
         protected ushort syncExtensionType0;
         public ushort SyncExtensionType0 { get { return this.syncExtensionType0; } set { this.syncExtensionType0 = value; } }
 
-        protected sbyte psPresentFlag;
-        public sbyte PsPresentFlag { get { return this.psPresentFlag; } set { this.psPresentFlag = value; } }
+        protected bool psPresentFlag;
+        public bool PsPresentFlag { get { return this.psPresentFlag; } set { this.psPresentFlag = value; } }
 
-        protected sbyte sbrPresentFlag0;
-        public sbyte SbrPresentFlag0 { get { return this.sbrPresentFlag0; } set { this.sbrPresentFlag0 = value; } }
+        protected bool sbrPresentFlag0;
+        public bool SbrPresentFlag0 { get { return this.sbrPresentFlag0; } set { this.sbrPresentFlag0 = value; } }
 
         protected byte extensionSamplingFrequencyIndex00;
         public byte ExtensionSamplingFrequencyIndex00 { get { return this.extensionSamplingFrequencyIndex00; } set { this.extensionSamplingFrequencyIndex00 = value; } }
@@ -1961,7 +1961,7 @@ namespace BoxGenerator2
                     boxSize += stream.ReadClass(out this.SSCSpecificConfig);
                     break;
                 case 30:
-                    boxSize += stream.ReadUimsbf(1, out this.sacPayloadEmbedding);
+                    boxSize += stream.ReadUimsbf(out this.sacPayloadEmbedding);
                     boxSize += stream.ReadClass(out this.SpatialSpecificConfig);
                     break;
                 case 32:
@@ -2034,9 +2034,9 @@ namespace BoxGenerator2
 
                     if (extensionAudioObjectType == 5)
                     {
-                        boxSize += stream.ReadUimsbf(1, out this.sbrPresentFlag);
+                        boxSize += stream.ReadUimsbf(out this.sbrPresentFlag);
 
-                        if (sbrPresentFlag == 1)
+                        if (sbrPresentFlag == true)
                         {
                             boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex0);
 
@@ -2051,7 +2051,7 @@ namespace BoxGenerator2
 
                                 if (syncExtensionType == 0x548)
                                 {
-                                    boxSize += stream.ReadUimsbf(1, out this.psPresentFlag);
+                                    boxSize += stream.ReadUimsbf(out this.psPresentFlag);
                                 }
                             }
                         }
@@ -2059,9 +2059,9 @@ namespace BoxGenerator2
 
                     if (extensionAudioObjectType == 22)
                     {
-                        boxSize += stream.ReadUimsbf(1, out this.sbrPresentFlag0);
+                        boxSize += stream.ReadUimsbf(out this.sbrPresentFlag0);
 
-                        if (sbrPresentFlag == 1)
+                        if (sbrPresentFlag == true)
                         {
                             boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex00);
 
@@ -2164,7 +2164,7 @@ namespace BoxGenerator2
                     boxSize += stream.WriteClass(this.SSCSpecificConfig);
                     break;
                 case 30:
-                    boxSize += stream.WriteUimsbf(1, this.sacPayloadEmbedding);
+                    boxSize += stream.WriteUimsbf(this.sacPayloadEmbedding);
                     boxSize += stream.WriteClass(this.SpatialSpecificConfig);
                     break;
                 case 32:
@@ -2237,9 +2237,9 @@ namespace BoxGenerator2
 
                     if (extensionAudioObjectType == 5)
                     {
-                        boxSize += stream.WriteUimsbf(1, this.sbrPresentFlag);
+                        boxSize += stream.WriteUimsbf(this.sbrPresentFlag);
 
-                        if (sbrPresentFlag == 1)
+                        if (sbrPresentFlag == true)
                         {
                             boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex0);
 
@@ -2254,7 +2254,7 @@ namespace BoxGenerator2
 
                                 if (syncExtensionType == 0x548)
                                 {
-                                    boxSize += stream.WriteUimsbf(1, this.psPresentFlag);
+                                    boxSize += stream.WriteUimsbf(this.psPresentFlag);
                                 }
                             }
                         }
@@ -2262,9 +2262,9 @@ namespace BoxGenerator2
 
                     if (extensionAudioObjectType == 22)
                     {
-                        boxSize += stream.WriteUimsbf(1, this.sbrPresentFlag0);
+                        boxSize += stream.WriteUimsbf(this.sbrPresentFlag0);
 
-                        if (sbrPresentFlag == 1)
+                        if (sbrPresentFlag == true)
                         {
                             boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex00);
 
@@ -2440,7 +2440,7 @@ namespace BoxGenerator2
                     {
                         boxSize += 1; // sbrPresentFlag
 
-                        if (sbrPresentFlag == 1)
+                        if (sbrPresentFlag == true)
                         {
                             boxSize += 4; // extensionSamplingFrequencyIndex0
 
@@ -2465,7 +2465,7 @@ namespace BoxGenerator2
                     {
                         boxSize += 1; // sbrPresentFlag0
 
-                        if (sbrPresentFlag == 1)
+                        if (sbrPresentFlag == true)
                         {
                             boxSize += 4; // extensionSamplingFrequencyIndex00
 
@@ -2642,7 +2642,7 @@ namespace BoxGenerator2
             }
             boxSize += stream.ReadBslbf(out this.extensionFlag);
 
-            if (!channelConfiguration)
+            if (channelConfiguration == 0)
             {
                 boxSize += stream.ReadClass(out this.program_config_element);
             }
@@ -2690,7 +2690,7 @@ namespace BoxGenerator2
             }
             boxSize += stream.WriteBslbf(this.extensionFlag);
 
-            if (!channelConfiguration)
+            if (channelConfiguration == 0)
             {
                 boxSize += stream.WriteClass(this.program_config_element);
             }
@@ -2738,7 +2738,7 @@ namespace BoxGenerator2
             }
             boxSize += 1; // extensionFlag
 
-            if (!channelConfiguration)
+            if (channelConfiguration == 0)
             {
                 boxSize += IsoStream.CalculateClassSize(program_config_element); // program_config_element
             }
@@ -2857,26 +2857,26 @@ namespace BoxGenerator2
         protected byte num_valid_cc_elements;
         public byte NumValidCcElements { get { return this.num_valid_cc_elements; } set { this.num_valid_cc_elements = value; } }
 
-        protected sbyte mono_mixdown_present;
-        public sbyte MonoMixdownPresent { get { return this.mono_mixdown_present; } set { this.mono_mixdown_present = value; } }
+        protected bool mono_mixdown_present;
+        public bool MonoMixdownPresent { get { return this.mono_mixdown_present; } set { this.mono_mixdown_present = value; } }
 
         protected byte mono_mixdown_element_number;
         public byte MonoMixdownElementNumber { get { return this.mono_mixdown_element_number; } set { this.mono_mixdown_element_number = value; } }
 
-        protected sbyte stereo_mixdown_present;
-        public sbyte StereoMixdownPresent { get { return this.stereo_mixdown_present; } set { this.stereo_mixdown_present = value; } }
+        protected bool stereo_mixdown_present;
+        public bool StereoMixdownPresent { get { return this.stereo_mixdown_present; } set { this.stereo_mixdown_present = value; } }
 
         protected byte stereo_mixdown_element_number;
         public byte StereoMixdownElementNumber { get { return this.stereo_mixdown_element_number; } set { this.stereo_mixdown_element_number = value; } }
 
-        protected sbyte matrix_mixdown_idx_present;
-        public sbyte MatrixMixdownIdxPresent { get { return this.matrix_mixdown_idx_present; } set { this.matrix_mixdown_idx_present = value; } }
+        protected bool matrix_mixdown_idx_present;
+        public bool MatrixMixdownIdxPresent { get { return this.matrix_mixdown_idx_present; } set { this.matrix_mixdown_idx_present = value; } }
 
         protected byte matrix_mixdown_idx;
         public byte MatrixMixdownIdx { get { return this.matrix_mixdown_idx; } set { this.matrix_mixdown_idx = value; } }
 
-        protected sbyte pseudo_surround_enable;
-        public sbyte PseudoSurroundEnable { get { return this.pseudo_surround_enable; } set { this.pseudo_surround_enable = value; } }
+        protected bool pseudo_surround_enable;
+        public bool PseudoSurroundEnable { get { return this.pseudo_surround_enable; } set { this.pseudo_surround_enable = value; } }
 
         protected byte[] front_element_is_cpe;
         public byte[] FrontElementIsCpe { get { return this.front_element_is_cpe; } set { this.front_element_is_cpe = value; } }
@@ -2902,8 +2902,8 @@ namespace BoxGenerator2
         protected byte[] assoc_data_element_tag_select;
         public byte[] AssocDataElementTagSelect { get { return this.assoc_data_element_tag_select; } set { this.assoc_data_element_tag_select = value; } }
 
-        protected sbyte[] cc_element_is_ind_sw;
-        public sbyte[] CcElementIsIndSw { get { return this.cc_element_is_ind_sw; } set { this.cc_element_is_ind_sw = value; } }
+        protected bool[] cc_element_is_ind_sw;
+        public bool[] CcElementIsIndSw { get { return this.cc_element_is_ind_sw; } set { this.cc_element_is_ind_sw = value; } }
 
         protected byte[] valid_cc_element_tag_select;
         public byte[] ValidCcElementTagSelect { get { return this.valid_cc_element_tag_select; } set { this.valid_cc_element_tag_select = value; } }
@@ -2932,24 +2932,24 @@ namespace BoxGenerator2
             boxSize += stream.ReadUimsbf(2, out this.num_lfe_channel_elements);
             boxSize += stream.ReadUimsbf(3, out this.num_assoc_data_elements);
             boxSize += stream.ReadUimsbf(4, out this.num_valid_cc_elements);
-            boxSize += stream.ReadUimsbf(1, out this.mono_mixdown_present);
+            boxSize += stream.ReadUimsbf(out this.mono_mixdown_present);
 
-            if (mono_mixdown_present == 1)
+            if (mono_mixdown_present == true)
             {
                 boxSize += stream.ReadUimsbf(4, out this.mono_mixdown_element_number);
             }
-            boxSize += stream.ReadUimsbf(1, out this.stereo_mixdown_present);
+            boxSize += stream.ReadUimsbf(out this.stereo_mixdown_present);
 
-            if (stereo_mixdown_present == 1)
+            if (stereo_mixdown_present == true)
             {
                 boxSize += stream.ReadUimsbf(4, out this.stereo_mixdown_element_number);
             }
-            boxSize += stream.ReadUimsbf(1, out this.matrix_mixdown_idx_present);
+            boxSize += stream.ReadUimsbf(out this.matrix_mixdown_idx_present);
 
-            if (matrix_mixdown_idx_present == 1)
+            if (matrix_mixdown_idx_present == true)
             {
                 boxSize += stream.ReadUimsbf(2, out this.matrix_mixdown_idx);
-                boxSize += stream.ReadUimsbf(1, out this.pseudo_surround_enable);
+                boxSize += stream.ReadUimsbf(out this.pseudo_surround_enable);
             }
 
             for (int i = 0; i < num_front_channel_elements; i++)
@@ -2982,7 +2982,7 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_valid_cc_elements; i++)
             {
-                boxSize += stream.ReadUimsbf(1, out this.cc_element_is_ind_sw[i]);
+                boxSize += stream.ReadUimsbf(out this.cc_element_is_ind_sw[i]);
                 boxSize += stream.ReadUimsbf(4, out this.valid_cc_element_tag_select[i]);
             }
             boxSize += stream.ReadByteAlignment(out this.byte_alignment); // Note 1 
@@ -3007,24 +3007,24 @@ namespace BoxGenerator2
             boxSize += stream.WriteUimsbf(2, this.num_lfe_channel_elements);
             boxSize += stream.WriteUimsbf(3, this.num_assoc_data_elements);
             boxSize += stream.WriteUimsbf(4, this.num_valid_cc_elements);
-            boxSize += stream.WriteUimsbf(1, this.mono_mixdown_present);
+            boxSize += stream.WriteUimsbf(this.mono_mixdown_present);
 
-            if (mono_mixdown_present == 1)
+            if (mono_mixdown_present == true)
             {
                 boxSize += stream.WriteUimsbf(4, this.mono_mixdown_element_number);
             }
-            boxSize += stream.WriteUimsbf(1, this.stereo_mixdown_present);
+            boxSize += stream.WriteUimsbf(this.stereo_mixdown_present);
 
-            if (stereo_mixdown_present == 1)
+            if (stereo_mixdown_present == true)
             {
                 boxSize += stream.WriteUimsbf(4, this.stereo_mixdown_element_number);
             }
-            boxSize += stream.WriteUimsbf(1, this.matrix_mixdown_idx_present);
+            boxSize += stream.WriteUimsbf(this.matrix_mixdown_idx_present);
 
-            if (matrix_mixdown_idx_present == 1)
+            if (matrix_mixdown_idx_present == true)
             {
                 boxSize += stream.WriteUimsbf(2, this.matrix_mixdown_idx);
-                boxSize += stream.WriteUimsbf(1, this.pseudo_surround_enable);
+                boxSize += stream.WriteUimsbf(this.pseudo_surround_enable);
             }
 
             for (int i = 0; i < num_front_channel_elements; i++)
@@ -3057,7 +3057,7 @@ namespace BoxGenerator2
 
             for (int i = 0; i < num_valid_cc_elements; i++)
             {
-                boxSize += stream.WriteUimsbf(1, this.cc_element_is_ind_sw[i]);
+                boxSize += stream.WriteUimsbf(this.cc_element_is_ind_sw[i]);
                 boxSize += stream.WriteUimsbf(4, this.valid_cc_element_tag_select[i]);
             }
             boxSize += stream.WriteByteAlignment(this.byte_alignment); // Note 1 
@@ -3084,19 +3084,19 @@ namespace BoxGenerator2
             boxSize += 4; // num_valid_cc_elements
             boxSize += 1; // mono_mixdown_present
 
-            if (mono_mixdown_present == 1)
+            if (mono_mixdown_present == true)
             {
                 boxSize += 4; // mono_mixdown_element_number
             }
             boxSize += 1; // stereo_mixdown_present
 
-            if (stereo_mixdown_present == 1)
+            if (stereo_mixdown_present == true)
             {
                 boxSize += 4; // stereo_mixdown_element_number
             }
             boxSize += 1; // matrix_mixdown_idx_present
 
-            if (matrix_mixdown_idx_present == 1)
+            if (matrix_mixdown_idx_present == true)
             {
                 boxSize += 2; // matrix_mixdown_idx
                 boxSize += 1; // pseudo_surround_enable
@@ -3170,14 +3170,14 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte isBaseLayer;
-        public sbyte IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
+        protected bool isBaseLayer;
+        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
 
         protected CelpHeader CelpHeader;
         public CelpHeader _CelpHeader { get { return this.CelpHeader; } set { this.CelpHeader = value; } }
 
-        protected sbyte isBWSLayer;
-        public sbyte IsBWSLayer { get { return this.isBWSLayer; } set { this.isBWSLayer = value; } }
+        protected bool isBWSLayer;
+        public bool IsBWSLayer { get { return this.isBWSLayer; } set { this.isBWSLayer = value; } }
 
         protected CelpBWSenhHeader CelpBWSenhHeader;
         public CelpBWSenhHeader _CelpBWSenhHeader { get { return this.CelpBWSenhHeader; } set { this.CelpBWSenhHeader = value; } }
@@ -3191,7 +3191,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(1, out this.isBaseLayer);
+            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
 
             if (isBaseLayer)
             {
@@ -3200,7 +3200,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUimsbf(1, out this.isBWSLayer);
+                boxSize += stream.ReadUimsbf(out this.isBWSLayer);
 
                 if (isBWSLayer)
                 {
@@ -3218,7 +3218,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(1, this.isBaseLayer);
+            boxSize += stream.WriteUimsbf(this.isBaseLayer);
 
             if (isBaseLayer)
             {
@@ -3227,7 +3227,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUimsbf(1, this.isBWSLayer);
+                boxSize += stream.WriteUimsbf(this.isBWSLayer);
 
                 if (isBWSLayer)
                 {
@@ -3292,14 +3292,14 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte ExcitationMode;
-        public sbyte _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
+        protected bool ExcitationMode;
+        public bool _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
 
-        protected sbyte SampleRateMode;
-        public sbyte _SampleRateMode { get { return this.SampleRateMode; } set { this.SampleRateMode = value; } }
+        protected bool SampleRateMode;
+        public bool _SampleRateMode { get { return this.SampleRateMode; } set { this.SampleRateMode = value; } }
 
-        protected sbyte FineRateControl;
-        public sbyte _FineRateControl { get { return this.FineRateControl; } set { this.FineRateControl = value; } }
+        protected bool FineRateControl;
+        public bool _FineRateControl { get { return this.FineRateControl; } set { this.FineRateControl = value; } }
 
         protected byte RPE_Configuration;
         public byte RPEConfiguration { get { return this.RPE_Configuration; } set { this.RPE_Configuration = value; } }
@@ -3310,8 +3310,8 @@ namespace BoxGenerator2
         protected byte NumEnhLayers;
         public byte _NumEnhLayers { get { return this.NumEnhLayers; } set { this.NumEnhLayers = value; } }
 
-        protected sbyte BandwidthScalabilityMode;
-        public sbyte _BandwidthScalabilityMode { get { return this.BandwidthScalabilityMode; } set { this.BandwidthScalabilityMode = value; } }
+        protected bool BandwidthScalabilityMode;
+        public bool _BandwidthScalabilityMode { get { return this.BandwidthScalabilityMode; } set { this.BandwidthScalabilityMode = value; } }
 
         public CelpHeader()
         { }
@@ -3319,13 +3319,13 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            const byte RPE = 1;
+            const bool RPE = true;
 
-            const byte MPE = 0;
+            const bool MPE = false;
 
-            boxSize += stream.ReadUimsbf(1, out this.ExcitationMode);
-            boxSize += stream.ReadUimsbf(1, out this.SampleRateMode);
-            boxSize += stream.ReadUimsbf(1, out this.FineRateControl);
+            boxSize += stream.ReadUimsbf(out this.ExcitationMode);
+            boxSize += stream.ReadUimsbf(out this.SampleRateMode);
+            boxSize += stream.ReadUimsbf(out this.FineRateControl);
 
             if (ExcitationMode == RPE)
             {
@@ -3336,7 +3336,7 @@ namespace BoxGenerator2
             {
                 boxSize += stream.ReadUimsbf(5, out this.MPE_Configuration);
                 boxSize += stream.ReadUimsbf(2, out this.NumEnhLayers);
-                boxSize += stream.ReadUimsbf(1, out this.BandwidthScalabilityMode);
+                boxSize += stream.ReadUimsbf(out this.BandwidthScalabilityMode);
             }
             return boxSize;
         }
@@ -3344,13 +3344,13 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            const byte RPE = 1;
+            const bool RPE = true;
 
-            const byte MPE = 0;
+            const bool MPE = false;
 
-            boxSize += stream.WriteUimsbf(1, this.ExcitationMode);
-            boxSize += stream.WriteUimsbf(1, this.SampleRateMode);
-            boxSize += stream.WriteUimsbf(1, this.FineRateControl);
+            boxSize += stream.WriteUimsbf(this.ExcitationMode);
+            boxSize += stream.WriteUimsbf(this.SampleRateMode);
+            boxSize += stream.WriteUimsbf(this.FineRateControl);
 
             if (ExcitationMode == RPE)
             {
@@ -3361,7 +3361,7 @@ namespace BoxGenerator2
             {
                 boxSize += stream.WriteUimsbf(5, this.MPE_Configuration);
                 boxSize += stream.WriteUimsbf(2, this.NumEnhLayers);
-                boxSize += stream.WriteUimsbf(1, this.BandwidthScalabilityMode);
+                boxSize += stream.WriteUimsbf(this.BandwidthScalabilityMode);
             }
             return boxSize;
         }
@@ -3369,9 +3369,9 @@ namespace BoxGenerator2
         public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
-            const byte RPE = 1;
+            const bool RPE = true;
 
-            const byte MPE = 0;
+            const bool MPE = false;
 
             boxSize += 1; // ExcitationMode
             boxSize += 1; // SampleRateMode
@@ -3446,8 +3446,8 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte isBaseLayer;
-        public sbyte IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
+        protected bool isBaseLayer;
+        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
 
         protected HVXCconfig HVXCconfig;
         public HVXCconfig _HVXCconfig { get { return this.HVXCconfig; } set { this.HVXCconfig = value; } }
@@ -3458,7 +3458,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(1, out this.isBaseLayer);
+            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
 
             if (isBaseLayer)
             {
@@ -3470,7 +3470,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(1, this.isBaseLayer);
+            boxSize += stream.WriteUimsbf(this.isBaseLayer);
 
             if (isBaseLayer)
             {
@@ -3509,14 +3509,14 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte HVXCvarMode;
-        public sbyte _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
+        protected bool HVXCvarMode;
+        public bool _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
 
         protected byte HVXCrateMode;
         public byte _HVXCrateMode { get { return this.HVXCrateMode; } set { this.HVXCrateMode = value; } }
 
-        protected sbyte extensionFlag;
-        public sbyte ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
+        protected bool extensionFlag;
+        public bool ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
 
         public HVXCconfig()
         { }
@@ -3524,9 +3524,9 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(1, out this.HVXCvarMode);
+            boxSize += stream.ReadUimsbf(out this.HVXCvarMode);
             boxSize += stream.ReadUimsbf(2, out this.HVXCrateMode);
-            boxSize += stream.ReadUimsbf(1, out this.extensionFlag);
+            boxSize += stream.ReadUimsbf(out this.extensionFlag);
 
             if (extensionFlag)
             {
@@ -3538,9 +3538,9 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(1, this.HVXCvarMode);
+            boxSize += stream.WriteUimsbf(this.HVXCvarMode);
             boxSize += stream.WriteUimsbf(2, this.HVXCrateMode);
-            boxSize += stream.WriteUimsbf(1, this.extensionFlag);
+            boxSize += stream.WriteUimsbf(this.extensionFlag);
 
             if (extensionFlag)
             {
@@ -3723,14 +3723,14 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte isBaseLayer;
-        public sbyte IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
+        protected bool isBaseLayer;
+        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
 
         protected ER_SC_CelpHeader ER_SC_CelpHeader;
         public ER_SC_CelpHeader ERSCCelpHeader { get { return this.ER_SC_CelpHeader; } set { this.ER_SC_CelpHeader = value; } }
 
-        protected sbyte isBWSLayer;
-        public sbyte IsBWSLayer { get { return this.isBWSLayer; } set { this.isBWSLayer = value; } }
+        protected bool isBWSLayer;
+        public bool IsBWSLayer { get { return this.isBWSLayer; } set { this.isBWSLayer = value; } }
 
         protected CelpBWSenhHeader CelpBWSenhHeader;
         public CelpBWSenhHeader _CelpBWSenhHeader { get { return this.CelpBWSenhHeader; } set { this.CelpBWSenhHeader = value; } }
@@ -3744,7 +3744,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(1, out this.isBaseLayer);
+            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
 
             if (isBaseLayer)
             {
@@ -3753,7 +3753,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUimsbf(1, out this.isBWSLayer);
+                boxSize += stream.ReadUimsbf(out this.isBWSLayer);
 
                 if (isBWSLayer)
                 {
@@ -3771,7 +3771,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(1, this.isBaseLayer);
+            boxSize += stream.WriteUimsbf(this.isBaseLayer);
 
             if (isBaseLayer)
             {
@@ -3780,7 +3780,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUimsbf(1, this.isBWSLayer);
+                boxSize += stream.WriteUimsbf(this.isBWSLayer);
 
                 if (isBWSLayer)
                 {
@@ -3846,17 +3846,17 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte ExcitationMode;
-        public sbyte _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
+        protected bool ExcitationMode;
+        public bool _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
 
-        protected sbyte SampleRateMode;
-        public sbyte _SampleRateMode { get { return this.SampleRateMode; } set { this.SampleRateMode = value; } }
+        protected bool SampleRateMode;
+        public bool _SampleRateMode { get { return this.SampleRateMode; } set { this.SampleRateMode = value; } }
 
-        protected sbyte FineRateControl;
-        public sbyte _FineRateControl { get { return this.FineRateControl; } set { this.FineRateControl = value; } }
+        protected bool FineRateControl;
+        public bool _FineRateControl { get { return this.FineRateControl; } set { this.FineRateControl = value; } }
 
-        protected sbyte SilenceCompression;
-        public sbyte _SilenceCompression { get { return this.SilenceCompression; } set { this.SilenceCompression = value; } }
+        protected bool SilenceCompression;
+        public bool _SilenceCompression { get { return this.SilenceCompression; } set { this.SilenceCompression = value; } }
 
         protected byte RPE_Configuration;
         public byte RPEConfiguration { get { return this.RPE_Configuration; } set { this.RPE_Configuration = value; } }
@@ -3867,8 +3867,8 @@ namespace BoxGenerator2
         protected byte NumEnhLayers;
         public byte _NumEnhLayers { get { return this.NumEnhLayers; } set { this.NumEnhLayers = value; } }
 
-        protected sbyte BandwidthScalabilityMode;
-        public sbyte _BandwidthScalabilityMode { get { return this.BandwidthScalabilityMode; } set { this.BandwidthScalabilityMode = value; } }
+        protected bool BandwidthScalabilityMode;
+        public bool _BandwidthScalabilityMode { get { return this.BandwidthScalabilityMode; } set { this.BandwidthScalabilityMode = value; } }
 
         public ER_SC_CelpHeader()
         { }
@@ -3876,14 +3876,14 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            const byte RPE = 1;
+            const bool RPE = true;
 
-            const byte MPE = 0;
+            const bool MPE = false;
 
-            boxSize += stream.ReadUimsbf(1, out this.ExcitationMode);
-            boxSize += stream.ReadUimsbf(1, out this.SampleRateMode);
-            boxSize += stream.ReadUimsbf(1, out this.FineRateControl);
-            boxSize += stream.ReadUimsbf(1, out this.SilenceCompression);
+            boxSize += stream.ReadUimsbf(out this.ExcitationMode);
+            boxSize += stream.ReadUimsbf(out this.SampleRateMode);
+            boxSize += stream.ReadUimsbf(out this.FineRateControl);
+            boxSize += stream.ReadUimsbf(out this.SilenceCompression);
 
             if (ExcitationMode == RPE)
             {
@@ -3894,7 +3894,7 @@ namespace BoxGenerator2
             {
                 boxSize += stream.ReadUimsbf(5, out this.MPE_Configuration);
                 boxSize += stream.ReadUimsbf(2, out this.NumEnhLayers);
-                boxSize += stream.ReadUimsbf(1, out this.BandwidthScalabilityMode);
+                boxSize += stream.ReadUimsbf(out this.BandwidthScalabilityMode);
             }
             return boxSize;
         }
@@ -3902,14 +3902,14 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            const byte RPE = 1;
+            const bool RPE = true;
 
-            const byte MPE = 0;
+            const bool MPE = false;
 
-            boxSize += stream.WriteUimsbf(1, this.ExcitationMode);
-            boxSize += stream.WriteUimsbf(1, this.SampleRateMode);
-            boxSize += stream.WriteUimsbf(1, this.FineRateControl);
-            boxSize += stream.WriteUimsbf(1, this.SilenceCompression);
+            boxSize += stream.WriteUimsbf(this.ExcitationMode);
+            boxSize += stream.WriteUimsbf(this.SampleRateMode);
+            boxSize += stream.WriteUimsbf(this.FineRateControl);
+            boxSize += stream.WriteUimsbf(this.SilenceCompression);
 
             if (ExcitationMode == RPE)
             {
@@ -3920,7 +3920,7 @@ namespace BoxGenerator2
             {
                 boxSize += stream.WriteUimsbf(5, this.MPE_Configuration);
                 boxSize += stream.WriteUimsbf(2, this.NumEnhLayers);
-                boxSize += stream.WriteUimsbf(1, this.BandwidthScalabilityMode);
+                boxSize += stream.WriteUimsbf(this.BandwidthScalabilityMode);
             }
             return boxSize;
         }
@@ -3928,9 +3928,9 @@ namespace BoxGenerator2
         public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
-            const byte RPE = 1;
+            const bool RPE = true;
 
-            const byte MPE = 0;
+            const bool MPE = false;
 
             boxSize += 1; // ExcitationMode
             boxSize += 1; // SampleRateMode
@@ -3966,8 +3966,8 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte isBaseLayer;
-        public sbyte IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
+        protected bool isBaseLayer;
+        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
 
         protected ErHVXCconfig ErHVXCconfig;
         public ErHVXCconfig _ErHVXCconfig { get { return this.ErHVXCconfig; } set { this.ErHVXCconfig = value; } }
@@ -3978,7 +3978,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(1, out this.isBaseLayer);
+            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
 
             if (isBaseLayer)
             {
@@ -3990,7 +3990,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(1, this.isBaseLayer);
+            boxSize += stream.WriteUimsbf(this.isBaseLayer);
 
             if (isBaseLayer)
             {
@@ -4029,17 +4029,17 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte HVXCvarMode;
-        public sbyte _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
+        protected bool HVXCvarMode;
+        public bool _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
 
         protected byte HVXCrateMode;
         public byte _HVXCrateMode { get { return this.HVXCrateMode; } set { this.HVXCrateMode = value; } }
 
-        protected sbyte extensionFlag;
-        public sbyte ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
+        protected bool extensionFlag;
+        public bool ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
 
-        protected sbyte var_ScalableFlag;
-        public sbyte VarScalableFlag { get { return this.var_ScalableFlag; } set { this.var_ScalableFlag = value; } }
+        protected bool var_ScalableFlag;
+        public bool VarScalableFlag { get { return this.var_ScalableFlag; } set { this.var_ScalableFlag = value; } }
 
         public ErHVXCconfig()
         { }
@@ -4047,13 +4047,13 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(1, out this.HVXCvarMode);
+            boxSize += stream.ReadUimsbf(out this.HVXCvarMode);
             boxSize += stream.ReadUimsbf(2, out this.HVXCrateMode);
-            boxSize += stream.ReadUimsbf(1, out this.extensionFlag);
+            boxSize += stream.ReadUimsbf(out this.extensionFlag);
 
             if (extensionFlag)
             {
-                boxSize += stream.ReadUimsbf(1, out this.var_ScalableFlag);
+                boxSize += stream.ReadUimsbf(out this.var_ScalableFlag);
             }
             return boxSize;
         }
@@ -4061,13 +4061,13 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(1, this.HVXCvarMode);
+            boxSize += stream.WriteUimsbf(this.HVXCvarMode);
             boxSize += stream.WriteUimsbf(2, this.HVXCrateMode);
-            boxSize += stream.WriteUimsbf(1, this.extensionFlag);
+            boxSize += stream.WriteUimsbf(this.extensionFlag);
 
             if (extensionFlag)
             {
-                boxSize += stream.WriteUimsbf(1, this.var_ScalableFlag);
+                boxSize += stream.WriteUimsbf(this.var_ScalableFlag);
             }
             return boxSize;
         }
@@ -4105,8 +4105,8 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte isBaseLayer;
-        public sbyte IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
+        protected bool isBaseLayer;
+        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
 
         protected PARAconfig PARAconfig;
         public PARAconfig _PARAconfig { get { return this.PARAconfig; } set { this.PARAconfig = value; } }
@@ -4120,7 +4120,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(1, out this.isBaseLayer);
+            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
 
             if (isBaseLayer)
             {
@@ -4137,7 +4137,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(1, this.isBaseLayer);
+            boxSize += stream.WriteUimsbf(this.isBaseLayer);
 
             if (isBaseLayer)
             {
@@ -4200,8 +4200,8 @@ namespace BoxGenerator2
         protected HILNconfig HILNconfig;
         public HILNconfig _HILNconfig { get { return this.HILNconfig; } set { this.HILNconfig = value; } }
 
-        protected sbyte PARAextensionFlag;
-        public sbyte _PARAextensionFlag { get { return this.PARAextensionFlag; } set { this.PARAextensionFlag = value; } }
+        protected bool PARAextensionFlag;
+        public bool _PARAextensionFlag { get { return this.PARAextensionFlag; } set { this.PARAextensionFlag = value; } }
 
         public PARAconfig()
         { }
@@ -4220,7 +4220,7 @@ namespace BoxGenerator2
             {
                 boxSize += stream.ReadClass(out this.HILNconfig);
             }
-            boxSize += stream.ReadUimsbf(1, out this.PARAextensionFlag);
+            boxSize += stream.ReadUimsbf(out this.PARAextensionFlag);
 
             if (PARAextensionFlag)
             {
@@ -4243,7 +4243,7 @@ namespace BoxGenerator2
             {
                 boxSize += stream.WriteClass(this.HILNconfig);
             }
-            boxSize += stream.WriteUimsbf(1, this.PARAextensionFlag);
+            boxSize += stream.WriteUimsbf(this.PARAextensionFlag);
 
             if (PARAextensionFlag)
             {
@@ -4292,8 +4292,8 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte HILNquantMode;
-        public sbyte _HILNquantMode { get { return this.HILNquantMode; } set { this.HILNquantMode = value; } }
+        protected bool HILNquantMode;
+        public bool _HILNquantMode { get { return this.HILNquantMode; } set { this.HILNquantMode = value; } }
 
         protected byte HILNmaxNumLine;
         public byte _HILNmaxNumLine { get { return this.HILNmaxNumLine; } set { this.HILNmaxNumLine = value; } }
@@ -4313,7 +4313,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(1, out this.HILNquantMode);
+            boxSize += stream.ReadUimsbf(out this.HILNquantMode);
             boxSize += stream.ReadUimsbf(8, out this.HILNmaxNumLine);
             boxSize += stream.ReadUimsbf(4, out this.HILNsampleRateCode);
             boxSize += stream.ReadUimsbf(12, out this.HILNframeLength);
@@ -4324,7 +4324,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(1, this.HILNquantMode);
+            boxSize += stream.WriteUimsbf(this.HILNquantMode);
             boxSize += stream.WriteUimsbf(8, this.HILNmaxNumLine);
             boxSize += stream.WriteUimsbf(4, this.HILNsampleRateCode);
             boxSize += stream.WriteUimsbf(12, this.HILNframeLength);
@@ -4359,8 +4359,8 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte HILNenhaLayer;
-        public sbyte _HILNenhaLayer { get { return this.HILNenhaLayer; } set { this.HILNenhaLayer = value; } }
+        protected bool HILNenhaLayer;
+        public bool _HILNenhaLayer { get { return this.HILNenhaLayer; } set { this.HILNenhaLayer = value; } }
 
         protected byte HILNenhaQuantMode;
         public byte _HILNenhaQuantMode { get { return this.HILNenhaQuantMode; } set { this.HILNenhaQuantMode = value; } }
@@ -4371,7 +4371,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(1, out this.HILNenhaLayer);
+            boxSize += stream.ReadUimsbf(out this.HILNenhaLayer);
 
             if (HILNenhaLayer)
             {
@@ -4383,7 +4383,7 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(1, this.HILNenhaLayer);
+            boxSize += stream.WriteUimsbf(this.HILNenhaLayer);
 
             if (HILNenhaLayer)
             {
@@ -4560,14 +4560,14 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte DSDDST_Coded;
-        public sbyte DSDDSTCoded { get { return this.DSDDST_Coded; } set { this.DSDDST_Coded = value; } }
+        protected bool DSDDST_Coded;
+        public bool DSDDSTCoded { get { return this.DSDDST_Coded; } set { this.DSDDST_Coded = value; } }
 
         protected ushort N_Channels;
         public ushort NChannels { get { return this.N_Channels; } set { this.N_Channels = value; } }
 
-        protected sbyte reserved;
-        public sbyte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         public DSTSpecificConfig()
         { }
@@ -4575,18 +4575,18 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(1, out this.DSDDST_Coded);
+            boxSize += stream.ReadUimsbf(out this.DSDDST_Coded);
             boxSize += stream.ReadUimsbf(14, out this.N_Channels);
-            boxSize += stream.ReadUimsbf(1, out this.reserved);
+            boxSize += stream.ReadUimsbf(out this.reserved);
             return boxSize;
         }
 
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(1, this.DSDDST_Coded);
+            boxSize += stream.WriteUimsbf(this.DSDDST_Coded);
             boxSize += stream.WriteUimsbf(14, this.N_Channels);
-            boxSize += stream.WriteUimsbf(1, this.reserved);
+            boxSize += stream.WriteUimsbf(this.reserved);
             return boxSize;
         }
 
@@ -4679,11 +4679,11 @@ namespace BoxGenerator2
         protected byte resolution;
         public byte Resolution { get { return this.resolution; } set { this.resolution = value; } }
 
-        protected sbyte floating;
-        public sbyte Floating { get { return this.floating; } set { this.floating = value; } }
+        protected bool floating;
+        public bool Floating { get { return this.floating; } set { this.floating = value; } }
 
-        protected sbyte msb_first;
-        public sbyte MsbFirst { get { return this.msb_first; } set { this.msb_first = value; } }
+        protected bool msb_first;
+        public bool MsbFirst { get { return this.msb_first; } set { this.msb_first = value; } }
 
         protected ushort frame_length;
         public ushort FrameLength { get { return this.frame_length; } set { this.frame_length = value; } }
@@ -4694,14 +4694,14 @@ namespace BoxGenerator2
         protected byte ra_flag;
         public byte RaFlag { get { return this.ra_flag; } set { this.ra_flag = value; } }
 
-        protected sbyte adapt_order;
-        public sbyte AdaptOrder { get { return this.adapt_order; } set { this.adapt_order = value; } }
+        protected bool adapt_order;
+        public bool AdaptOrder { get { return this.adapt_order; } set { this.adapt_order = value; } }
 
         protected byte coef_table;
         public byte CoefTable { get { return this.coef_table; } set { this.coef_table = value; } }
 
-        protected sbyte long_term_prediction;
-        public sbyte LongTermPrediction { get { return this.long_term_prediction; } set { this.long_term_prediction = value; } }
+        protected bool long_term_prediction;
+        public bool LongTermPrediction { get { return this.long_term_prediction; } set { this.long_term_prediction = value; } }
 
         protected ushort max_order;
         public ushort MaxOrder { get { return this.max_order; } set { this.max_order = value; } }
@@ -4709,41 +4709,41 @@ namespace BoxGenerator2
         protected byte block_switching;
         public byte BlockSwitching { get { return this.block_switching; } set { this.block_switching = value; } }
 
-        protected sbyte bgmc_mode;
-        public sbyte BgmcMode { get { return this.bgmc_mode; } set { this.bgmc_mode = value; } }
+        protected bool bgmc_mode;
+        public bool BgmcMode { get { return this.bgmc_mode; } set { this.bgmc_mode = value; } }
 
-        protected sbyte sb_part;
-        public sbyte SbPart { get { return this.sb_part; } set { this.sb_part = value; } }
+        protected bool sb_part;
+        public bool SbPart { get { return this.sb_part; } set { this.sb_part = value; } }
 
-        protected sbyte joint_stereo;
-        public sbyte JointStereo { get { return this.joint_stereo; } set { this.joint_stereo = value; } }
+        protected bool joint_stereo;
+        public bool JointStereo { get { return this.joint_stereo; } set { this.joint_stereo = value; } }
 
-        protected sbyte mc_coding;
-        public sbyte McCoding { get { return this.mc_coding; } set { this.mc_coding = value; } }
+        protected bool mc_coding;
+        public bool McCoding { get { return this.mc_coding; } set { this.mc_coding = value; } }
 
-        protected sbyte chan_config;
-        public sbyte ChanConfig { get { return this.chan_config; } set { this.chan_config = value; } }
+        protected bool chan_config;
+        public bool ChanConfig { get { return this.chan_config; } set { this.chan_config = value; } }
 
-        protected sbyte chan_sort;
-        public sbyte ChanSort { get { return this.chan_sort; } set { this.chan_sort = value; } }
+        protected bool chan_sort;
+        public bool ChanSort { get { return this.chan_sort; } set { this.chan_sort = value; } }
 
-        protected sbyte crc_enabled;
-        public sbyte CrcEnabled { get { return this.crc_enabled; } set { this.crc_enabled = value; } }
+        protected bool crc_enabled;
+        public bool CrcEnabled { get { return this.crc_enabled; } set { this.crc_enabled = value; } }
 
-        protected sbyte RLSLMS;
-        public sbyte _RLSLMS { get { return this.RLSLMS; } set { this.RLSLMS = value; } }
+        protected bool RLSLMS;
+        public bool _RLSLMS { get { return this.RLSLMS; } set { this.RLSLMS = value; } }
 
         protected byte reserved;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        protected sbyte aux_data_enabled;
-        public sbyte AuxDataEnabled { get { return this.aux_data_enabled; } set { this.aux_data_enabled = value; } }
+        protected bool aux_data_enabled;
+        public bool AuxDataEnabled { get { return this.aux_data_enabled; } set { this.aux_data_enabled = value; } }
 
         protected ushort chan_config_info;
         public ushort ChanConfigInfo { get { return this.chan_config_info; } set { this.chan_config_info = value; } }
 
-        protected sbyte[] chan_pos;  //  1..16 uimsbf 
-        public sbyte[] ChanPos { get { return this.chan_pos; } set { this.chan_pos = value; } }
+        protected bool[] chan_pos;  //  1..16 uimsbf 
+        public bool[] ChanPos { get { return this.chan_pos; } set { this.chan_pos = value; } }
 
         protected bool byte_align;  //  TODO: 0..7 bslbf 
         public bool ByteAlign { get { return this.byte_align; } set { this.byte_align = value; } }
@@ -4784,26 +4784,26 @@ namespace BoxGenerator2
             boxSize += stream.ReadUimsbf(16, out this.channels);
             boxSize += stream.ReadUimsbf(3, out this.file_type);
             boxSize += stream.ReadUimsbf(3, out this.resolution);
-            boxSize += stream.ReadUimsbf(1, out this.floating);
-            boxSize += stream.ReadUimsbf(1, out this.msb_first);
+            boxSize += stream.ReadUimsbf(out this.floating);
+            boxSize += stream.ReadUimsbf(out this.msb_first);
             boxSize += stream.ReadUimsbf(16, out this.frame_length);
             boxSize += stream.ReadUimsbf(8, out this.random_access);
             boxSize += stream.ReadUimsbf(2, out this.ra_flag);
-            boxSize += stream.ReadUimsbf(1, out this.adapt_order);
+            boxSize += stream.ReadUimsbf(out this.adapt_order);
             boxSize += stream.ReadUimsbf(2, out this.coef_table);
-            boxSize += stream.ReadUimsbf(1, out this.long_term_prediction);
+            boxSize += stream.ReadUimsbf(out this.long_term_prediction);
             boxSize += stream.ReadUimsbf(10, out this.max_order);
             boxSize += stream.ReadUimsbf(2, out this.block_switching);
-            boxSize += stream.ReadUimsbf(1, out this.bgmc_mode);
-            boxSize += stream.ReadUimsbf(1, out this.sb_part);
-            boxSize += stream.ReadUimsbf(1, out this.joint_stereo);
-            boxSize += stream.ReadUimsbf(1, out this.mc_coding);
-            boxSize += stream.ReadUimsbf(1, out this.chan_config);
-            boxSize += stream.ReadUimsbf(1, out this.chan_sort);
-            boxSize += stream.ReadUimsbf(1, out this.crc_enabled);
-            boxSize += stream.ReadUimsbf(1, out this.RLSLMS);
+            boxSize += stream.ReadUimsbf(out this.bgmc_mode);
+            boxSize += stream.ReadUimsbf(out this.sb_part);
+            boxSize += stream.ReadUimsbf(out this.joint_stereo);
+            boxSize += stream.ReadUimsbf(out this.mc_coding);
+            boxSize += stream.ReadUimsbf(out this.chan_config);
+            boxSize += stream.ReadUimsbf(out this.chan_sort);
+            boxSize += stream.ReadUimsbf(out this.crc_enabled);
+            boxSize += stream.ReadUimsbf(out this.RLSLMS);
             boxSize += stream.ReadUimsbf(5, out this.reserved);
-            boxSize += stream.ReadUimsbf(1, out this.aux_data_enabled);
+            boxSize += stream.ReadUimsbf(out this.aux_data_enabled);
 
             if (chan_config)
             {
@@ -4815,7 +4815,7 @@ namespace BoxGenerator2
 
                 for (int c = 0; c <= channels; c++)
                 {
-                    boxSize += stream.ReadUimsbf(1, out this.chan_pos[c]); // 1..16 uimsbf 
+                    boxSize += stream.ReadUimsbf(out this.chan_pos[c]); // 1..16 uimsbf 
                 }
             }
             boxSize += stream.ReadBslbf(out this.byte_align); // TODO: 0..7 bslbf 
@@ -4855,26 +4855,26 @@ namespace BoxGenerator2
             boxSize += stream.WriteUimsbf(16, this.channels);
             boxSize += stream.WriteUimsbf(3, this.file_type);
             boxSize += stream.WriteUimsbf(3, this.resolution);
-            boxSize += stream.WriteUimsbf(1, this.floating);
-            boxSize += stream.WriteUimsbf(1, this.msb_first);
+            boxSize += stream.WriteUimsbf(this.floating);
+            boxSize += stream.WriteUimsbf(this.msb_first);
             boxSize += stream.WriteUimsbf(16, this.frame_length);
             boxSize += stream.WriteUimsbf(8, this.random_access);
             boxSize += stream.WriteUimsbf(2, this.ra_flag);
-            boxSize += stream.WriteUimsbf(1, this.adapt_order);
+            boxSize += stream.WriteUimsbf(this.adapt_order);
             boxSize += stream.WriteUimsbf(2, this.coef_table);
-            boxSize += stream.WriteUimsbf(1, this.long_term_prediction);
+            boxSize += stream.WriteUimsbf(this.long_term_prediction);
             boxSize += stream.WriteUimsbf(10, this.max_order);
             boxSize += stream.WriteUimsbf(2, this.block_switching);
-            boxSize += stream.WriteUimsbf(1, this.bgmc_mode);
-            boxSize += stream.WriteUimsbf(1, this.sb_part);
-            boxSize += stream.WriteUimsbf(1, this.joint_stereo);
-            boxSize += stream.WriteUimsbf(1, this.mc_coding);
-            boxSize += stream.WriteUimsbf(1, this.chan_config);
-            boxSize += stream.WriteUimsbf(1, this.chan_sort);
-            boxSize += stream.WriteUimsbf(1, this.crc_enabled);
-            boxSize += stream.WriteUimsbf(1, this.RLSLMS);
+            boxSize += stream.WriteUimsbf(this.bgmc_mode);
+            boxSize += stream.WriteUimsbf(this.sb_part);
+            boxSize += stream.WriteUimsbf(this.joint_stereo);
+            boxSize += stream.WriteUimsbf(this.mc_coding);
+            boxSize += stream.WriteUimsbf(this.chan_config);
+            boxSize += stream.WriteUimsbf(this.chan_sort);
+            boxSize += stream.WriteUimsbf(this.crc_enabled);
+            boxSize += stream.WriteUimsbf(this.RLSLMS);
             boxSize += stream.WriteUimsbf(5, this.reserved);
-            boxSize += stream.WriteUimsbf(1, this.aux_data_enabled);
+            boxSize += stream.WriteUimsbf(this.aux_data_enabled);
 
             if (chan_config)
             {
@@ -4886,7 +4886,7 @@ namespace BoxGenerator2
 
                 for (int c = 0; c <= channels; c++)
                 {
-                    boxSize += stream.WriteUimsbf(1, this.chan_pos[c]); // 1..16 uimsbf 
+                    boxSize += stream.WriteUimsbf(this.chan_pos[c]); // 1..16 uimsbf 
                 }
             }
             boxSize += stream.WriteBslbf(this.byte_align); // TODO: 0..7 bslbf 
@@ -5013,14 +5013,14 @@ namespace BoxGenerator2
         protected byte pcmWordLength;
         public byte PcmWordLength { get { return this.pcmWordLength; } set { this.pcmWordLength = value; } }
 
-        protected sbyte aac_core_present;
-        public sbyte AacCorePresent { get { return this.aac_core_present; } set { this.aac_core_present = value; } }
+        protected bool aac_core_present;
+        public bool AacCorePresent { get { return this.aac_core_present; } set { this.aac_core_present = value; } }
 
-        protected sbyte lle_main_stream;
-        public sbyte LleMainStream { get { return this.lle_main_stream; } set { this.lle_main_stream = value; } }
+        protected bool lle_main_stream;
+        public bool LleMainStream { get { return this.lle_main_stream; } set { this.lle_main_stream = value; } }
 
-        protected sbyte reserved_bit;
-        public sbyte ReservedBit { get { return this.reserved_bit; } set { this.reserved_bit = value; } }
+        protected bool reserved_bit;
+        public bool ReservedBit { get { return this.reserved_bit; } set { this.reserved_bit = value; } }
 
         protected byte frameLength;
         public byte FrameLength { get { return this.frameLength; } set { this.frameLength = value; } }
@@ -5035,12 +5035,12 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(3, out this.pcmWordLength);
-            boxSize += stream.ReadUimsbf(1, out this.aac_core_present);
-            boxSize += stream.ReadUimsbf(1, out this.lle_main_stream);
-            boxSize += stream.ReadUimsbf(1, out this.reserved_bit);
+            boxSize += stream.ReadUimsbf(out this.aac_core_present);
+            boxSize += stream.ReadUimsbf(out this.lle_main_stream);
+            boxSize += stream.ReadUimsbf(out this.reserved_bit);
             boxSize += stream.ReadUimsbf(3, out this.frameLength);
 
-            if (!channelConfiguration)
+            if (channelConfiguration == 0)
             {
                 boxSize += stream.ReadClass(out this.program_config_element);
             }
@@ -5051,12 +5051,12 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += stream.WriteUimsbf(3, this.pcmWordLength);
-            boxSize += stream.WriteUimsbf(1, this.aac_core_present);
-            boxSize += stream.WriteUimsbf(1, this.lle_main_stream);
-            boxSize += stream.WriteUimsbf(1, this.reserved_bit);
+            boxSize += stream.WriteUimsbf(this.aac_core_present);
+            boxSize += stream.WriteUimsbf(this.lle_main_stream);
+            boxSize += stream.WriteUimsbf(this.reserved_bit);
             boxSize += stream.WriteUimsbf(3, this.frameLength);
 
-            if (!channelConfiguration)
+            if (channelConfiguration == 0)
             {
                 boxSize += stream.WriteClass(this.program_config_element);
             }
@@ -5072,7 +5072,7 @@ namespace BoxGenerator2
             boxSize += 1; // reserved_bit
             boxSize += 3; // frameLength
 
-            if (!channelConfiguration)
+            if (channelConfiguration == 0)
             {
                 boxSize += IsoStream.CalculateClassSize(program_config_element); // program_config_element
             }
@@ -5523,8 +5523,8 @@ namespace BoxGenerator2
     {
 
 
-        protected sbyte bs_amp_res;
-        public sbyte BsAmpRes { get { return this.bs_amp_res; } set { this.bs_amp_res = value; } }
+        protected bool bs_amp_res;
+        public bool BsAmpRes { get { return this.bs_amp_res; } set { this.bs_amp_res = value; } }
 
         protected byte bs_start_freq;
         public byte BsStartFreq { get { return this.bs_start_freq; } set { this.bs_start_freq = value; } }
@@ -5538,17 +5538,17 @@ namespace BoxGenerator2
         protected byte bs_reserved;
         public byte BsReserved { get { return this.bs_reserved; } set { this.bs_reserved = value; } }
 
-        protected sbyte bs_header_extra_1;
-        public sbyte BsHeaderExtra1 { get { return this.bs_header_extra_1; } set { this.bs_header_extra_1 = value; } }
+        protected bool bs_header_extra_1;
+        public bool BsHeaderExtra1 { get { return this.bs_header_extra_1; } set { this.bs_header_extra_1 = value; } }
 
-        protected sbyte bs_header_extra_2;
-        public sbyte BsHeaderExtra2 { get { return this.bs_header_extra_2; } set { this.bs_header_extra_2 = value; } }
+        protected bool bs_header_extra_2;
+        public bool BsHeaderExtra2 { get { return this.bs_header_extra_2; } set { this.bs_header_extra_2 = value; } }
 
         protected byte bs_freq_scale;
         public byte BsFreqScale { get { return this.bs_freq_scale; } set { this.bs_freq_scale = value; } }
 
-        protected sbyte bs_alter_scale;
-        public sbyte BsAlterScale { get { return this.bs_alter_scale; } set { this.bs_alter_scale = value; } }
+        protected bool bs_alter_scale;
+        public bool BsAlterScale { get { return this.bs_alter_scale; } set { this.bs_alter_scale = value; } }
 
         protected byte bs_noise_bands;
         public byte BsNoiseBands { get { return this.bs_noise_bands; } set { this.bs_noise_bands = value; } }
@@ -5559,11 +5559,11 @@ namespace BoxGenerator2
         protected byte bs_limiter_gains;
         public byte BsLimiterGains { get { return this.bs_limiter_gains; } set { this.bs_limiter_gains = value; } }
 
-        protected sbyte bs_interpol_freq;
-        public sbyte BsInterpolFreq { get { return this.bs_interpol_freq; } set { this.bs_interpol_freq = value; } }
+        protected bool bs_interpol_freq;
+        public bool BsInterpolFreq { get { return this.bs_interpol_freq; } set { this.bs_interpol_freq = value; } }
 
-        protected sbyte bs_smoothing_mode;
-        public sbyte BsSmoothingMode { get { return this.bs_smoothing_mode; } set { this.bs_smoothing_mode = value; } }
+        protected bool bs_smoothing_mode;
+        public bool BsSmoothingMode { get { return this.bs_smoothing_mode; } set { this.bs_smoothing_mode = value; } }
 
         public sbr_header()
         { }
@@ -5571,18 +5571,18 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(1, out this.bs_amp_res);
+            boxSize += stream.ReadUimsbf(out this.bs_amp_res);
             boxSize += stream.ReadUimsbf(4, out this.bs_start_freq);
             boxSize += stream.ReadUimsbf(4, out this.bs_stop_freq);
             boxSize += stream.ReadUimsbf(3, out this.bs_xover_band);
             boxSize += stream.ReadUimsbf(2, out this.bs_reserved);
-            boxSize += stream.ReadUimsbf(1, out this.bs_header_extra_1);
-            boxSize += stream.ReadUimsbf(1, out this.bs_header_extra_2);
+            boxSize += stream.ReadUimsbf(out this.bs_header_extra_1);
+            boxSize += stream.ReadUimsbf(out this.bs_header_extra_2);
 
             if (bs_header_extra_1)
             {
                 boxSize += stream.ReadUimsbf(2, out this.bs_freq_scale);
-                boxSize += stream.ReadUimsbf(1, out this.bs_alter_scale);
+                boxSize += stream.ReadUimsbf(out this.bs_alter_scale);
                 boxSize += stream.ReadUimsbf(2, out this.bs_noise_bands);
             }
 
@@ -5590,8 +5590,8 @@ namespace BoxGenerator2
             {
                 boxSize += stream.ReadUimsbf(2, out this.bs_limiter_bands);
                 boxSize += stream.ReadUimsbf(2, out this.bs_limiter_gains);
-                boxSize += stream.ReadUimsbf(1, out this.bs_interpol_freq);
-                boxSize += stream.ReadUimsbf(1, out this.bs_smoothing_mode);
+                boxSize += stream.ReadUimsbf(out this.bs_interpol_freq);
+                boxSize += stream.ReadUimsbf(out this.bs_smoothing_mode);
             }
             return boxSize;
         }
@@ -5599,18 +5599,18 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(1, this.bs_amp_res);
+            boxSize += stream.WriteUimsbf(this.bs_amp_res);
             boxSize += stream.WriteUimsbf(4, this.bs_start_freq);
             boxSize += stream.WriteUimsbf(4, this.bs_stop_freq);
             boxSize += stream.WriteUimsbf(3, this.bs_xover_band);
             boxSize += stream.WriteUimsbf(2, this.bs_reserved);
-            boxSize += stream.WriteUimsbf(1, this.bs_header_extra_1);
-            boxSize += stream.WriteUimsbf(1, this.bs_header_extra_2);
+            boxSize += stream.WriteUimsbf(this.bs_header_extra_1);
+            boxSize += stream.WriteUimsbf(this.bs_header_extra_2);
 
             if (bs_header_extra_1)
             {
                 boxSize += stream.WriteUimsbf(2, this.bs_freq_scale);
-                boxSize += stream.WriteUimsbf(1, this.bs_alter_scale);
+                boxSize += stream.WriteUimsbf(this.bs_alter_scale);
                 boxSize += stream.WriteUimsbf(2, this.bs_noise_bands);
             }
 
@@ -5618,8 +5618,8 @@ namespace BoxGenerator2
             {
                 boxSize += stream.WriteUimsbf(2, this.bs_limiter_bands);
                 boxSize += stream.WriteUimsbf(2, this.bs_limiter_gains);
-                boxSize += stream.WriteUimsbf(1, this.bs_interpol_freq);
-                boxSize += stream.WriteUimsbf(1, this.bs_smoothing_mode);
+                boxSize += stream.WriteUimsbf(this.bs_interpol_freq);
+                boxSize += stream.WriteUimsbf(this.bs_smoothing_mode);
             }
             return boxSize;
         }
@@ -5728,29 +5728,29 @@ namespace BoxGenerator2
         protected byte[] number_of_class;
         public byte[] NumberOfClass { get { return this.number_of_class; } set { this.number_of_class = value; } }
 
-        protected sbyte[][] length_escape;
-        public sbyte[][] LengthEscape { get { return this.length_escape; } set { this.length_escape = value; } }
+        protected bool[][] length_escape;
+        public bool[][] LengthEscape { get { return this.length_escape; } set { this.length_escape = value; } }
 
-        protected sbyte[][] rate_escape;
-        public sbyte[][] RateEscape { get { return this.rate_escape; } set { this.rate_escape = value; } }
+        protected bool[][] rate_escape;
+        public bool[][] RateEscape { get { return this.rate_escape; } set { this.rate_escape = value; } }
 
-        protected sbyte[][] crclen_escape;
-        public sbyte[][] CrclenEscape { get { return this.crclen_escape; } set { this.crclen_escape = value; } }
+        protected bool[][] crclen_escape;
+        public bool[][] CrclenEscape { get { return this.crclen_escape; } set { this.crclen_escape = value; } }
 
-        protected sbyte[][] concatenate_flag;
-        public sbyte[][] ConcatenateFlag { get { return this.concatenate_flag; } set { this.concatenate_flag = value; } }
+        protected bool[][] concatenate_flag;
+        public bool[][] ConcatenateFlag { get { return this.concatenate_flag; } set { this.concatenate_flag = value; } }
 
         protected byte[][] fec_type;
         public byte[][] FecType { get { return this.fec_type; } set { this.fec_type = value; } }
 
-        protected sbyte[][] termination_switch;
-        public sbyte[][] TerminationSwitch { get { return this.termination_switch; } set { this.termination_switch = value; } }
+        protected bool[][] termination_switch;
+        public bool[][] TerminationSwitch { get { return this.termination_switch; } set { this.termination_switch = value; } }
 
         protected byte[][] interleave_switch;
         public byte[][] InterleaveSwitch { get { return this.interleave_switch; } set { this.interleave_switch = value; } }
 
-        protected sbyte class_optional;
-        public sbyte ClassOptional { get { return this.class_optional; } set { this.class_optional = value; } }
+        protected bool class_optional;
+        public bool ClassOptional { get { return this.class_optional; } set { this.class_optional = value; } }
 
         protected byte[][] number_of_bits_for_length;
         public byte[][] NumberOfBitsForLength { get { return this.number_of_bits_for_length; } set { this.number_of_bits_for_length = value; } }
@@ -5767,14 +5767,14 @@ namespace BoxGenerator2
         protected byte[][] class_crclen;
         public byte[][] ClassCrclen { get { return this.class_crclen; } set { this.class_crclen = value; } }
 
-        protected sbyte class_reordered_output;
-        public sbyte ClassReorderedOutput { get { return this.class_reordered_output; } set { this.class_reordered_output = value; } }
+        protected bool class_reordered_output;
+        public bool ClassReorderedOutput { get { return this.class_reordered_output; } set { this.class_reordered_output = value; } }
 
         protected byte[][] class_output_order;
         public byte[][] ClassOutputOrder { get { return this.class_output_order; } set { this.class_output_order = value; } }
 
-        protected sbyte header_protection;
-        public sbyte HeaderProtection { get { return this.header_protection; } set { this.header_protection = value; } }
+        protected bool header_protection;
+        public bool HeaderProtection { get { return this.header_protection; } set { this.header_protection = value; } }
 
         protected byte header_rate;
         public byte HeaderRate { get { return this.header_rate; } set { this.header_rate = value; } }
@@ -5799,28 +5799,28 @@ namespace BoxGenerator2
 
                 for (int j = 0; j < number_of_class[i]; j++)
                 {
-                    boxSize += stream.ReadUimsbf(1, out this.length_escape[i][j]);
-                    boxSize += stream.ReadUimsbf(1, out this.rate_escape[i][j]);
-                    boxSize += stream.ReadUimsbf(1, out this.crclen_escape[i][j]);
+                    boxSize += stream.ReadUimsbf(out this.length_escape[i][j]);
+                    boxSize += stream.ReadUimsbf(out this.rate_escape[i][j]);
+                    boxSize += stream.ReadUimsbf(out this.crclen_escape[i][j]);
 
                     if (number_of_concatenated_frame != 1)
                     {
-                        boxSize += stream.ReadUimsbf(1, out this.concatenate_flag[i][j]);
+                        boxSize += stream.ReadUimsbf(out this.concatenate_flag[i][j]);
                     }
                     boxSize += stream.ReadUimsbf(2, out this.fec_type[i][j]);
 
                     if (fec_type[i][j] == 0)
                     {
-                        boxSize += stream.ReadUimsbf(1, out this.termination_switch[i][j]);
+                        boxSize += stream.ReadUimsbf(out this.termination_switch[i][j]);
                     }
 
                     if (interleave_type == 2)
                     {
                         boxSize += stream.ReadUimsbf(2, out this.interleave_switch[i][j]);
                     }
-                    boxSize += stream.ReadUimsbf(1, out this.class_optional);
+                    boxSize += stream.ReadUimsbf(out this.class_optional);
 
-                    if (length_escape[i][j] == 1)
+                    if (length_escape[i][j] == true)
                     {
                         /*  ESC  */
                         boxSize += stream.ReadUimsbf(4, out this.number_of_bits_for_length[i][j]);
@@ -5831,7 +5831,7 @@ namespace BoxGenerator2
                         boxSize += stream.ReadUimsbf(16, out this.class_length[i][j]);
                     }
 
-                    if (rate_escape[i][j] != 1)
+                    if (rate_escape[i][j] != true)
                     {
                         /*  not ESC  */
 
@@ -5846,15 +5846,15 @@ namespace BoxGenerator2
                         }
                     }
 
-                    if (crclen_escape[i][j] != 1)
+                    if (crclen_escape[i][j] != true)
                     {
                         /*  not ESC  */
                         boxSize += stream.ReadUimsbf(5, out this.class_crclen[i][j]);
                     }
                 }
-                boxSize += stream.ReadUimsbf(1, out this.class_reordered_output);
+                boxSize += stream.ReadUimsbf(out this.class_reordered_output);
 
-                if (class_reordered_output == 1)
+                if (class_reordered_output == true)
                 {
 
                     for (int j = 0; j < number_of_class[i]; j++)
@@ -5863,9 +5863,9 @@ namespace BoxGenerator2
                     }
                 }
             }
-            boxSize += stream.ReadUimsbf(1, out this.header_protection);
+            boxSize += stream.ReadUimsbf(out this.header_protection);
 
-            if (header_protection == 1)
+            if (header_protection == true)
             {
                 boxSize += stream.ReadUimsbf(5, out this.header_rate);
                 boxSize += stream.ReadUimsbf(5, out this.header_crclen);
@@ -5887,28 +5887,28 @@ namespace BoxGenerator2
 
                 for (int j = 0; j < number_of_class[i]; j++)
                 {
-                    boxSize += stream.WriteUimsbf(1, this.length_escape[i][j]);
-                    boxSize += stream.WriteUimsbf(1, this.rate_escape[i][j]);
-                    boxSize += stream.WriteUimsbf(1, this.crclen_escape[i][j]);
+                    boxSize += stream.WriteUimsbf(this.length_escape[i][j]);
+                    boxSize += stream.WriteUimsbf(this.rate_escape[i][j]);
+                    boxSize += stream.WriteUimsbf(this.crclen_escape[i][j]);
 
                     if (number_of_concatenated_frame != 1)
                     {
-                        boxSize += stream.WriteUimsbf(1, this.concatenate_flag[i][j]);
+                        boxSize += stream.WriteUimsbf(this.concatenate_flag[i][j]);
                     }
                     boxSize += stream.WriteUimsbf(2, this.fec_type[i][j]);
 
                     if (fec_type[i][j] == 0)
                     {
-                        boxSize += stream.WriteUimsbf(1, this.termination_switch[i][j]);
+                        boxSize += stream.WriteUimsbf(this.termination_switch[i][j]);
                     }
 
                     if (interleave_type == 2)
                     {
                         boxSize += stream.WriteUimsbf(2, this.interleave_switch[i][j]);
                     }
-                    boxSize += stream.WriteUimsbf(1, this.class_optional);
+                    boxSize += stream.WriteUimsbf(this.class_optional);
 
-                    if (length_escape[i][j] == 1)
+                    if (length_escape[i][j] == true)
                     {
                         /*  ESC  */
                         boxSize += stream.WriteUimsbf(4, this.number_of_bits_for_length[i][j]);
@@ -5919,7 +5919,7 @@ namespace BoxGenerator2
                         boxSize += stream.WriteUimsbf(16, this.class_length[i][j]);
                     }
 
-                    if (rate_escape[i][j] != 1)
+                    if (rate_escape[i][j] != true)
                     {
                         /*  not ESC  */
 
@@ -5934,15 +5934,15 @@ namespace BoxGenerator2
                         }
                     }
 
-                    if (crclen_escape[i][j] != 1)
+                    if (crclen_escape[i][j] != true)
                     {
                         /*  not ESC  */
                         boxSize += stream.WriteUimsbf(5, this.class_crclen[i][j]);
                     }
                 }
-                boxSize += stream.WriteUimsbf(1, this.class_reordered_output);
+                boxSize += stream.WriteUimsbf(this.class_reordered_output);
 
-                if (class_reordered_output == 1)
+                if (class_reordered_output == true)
                 {
 
                     for (int j = 0; j < number_of_class[i]; j++)
@@ -5951,9 +5951,9 @@ namespace BoxGenerator2
                     }
                 }
             }
-            boxSize += stream.WriteUimsbf(1, this.header_protection);
+            boxSize += stream.WriteUimsbf(this.header_protection);
 
-            if (header_protection == 1)
+            if (header_protection == true)
             {
                 boxSize += stream.WriteUimsbf(5, this.header_rate);
                 boxSize += stream.WriteUimsbf(5, this.header_crclen);
@@ -5996,7 +5996,7 @@ namespace BoxGenerator2
                     }
                     boxSize += 1; // class_optional
 
-                    if (length_escape[i][j] == 1)
+                    if (length_escape[i][j] == true)
                     {
                         /*  ESC  */
                         boxSize += 4; // number_of_bits_for_length
@@ -6007,7 +6007,7 @@ namespace BoxGenerator2
                         boxSize += 16; // class_length
                     }
 
-                    if (rate_escape[i][j] != 1)
+                    if (rate_escape[i][j] != true)
                     {
                         /*  not ESC  */
 
@@ -6022,7 +6022,7 @@ namespace BoxGenerator2
                         }
                     }
 
-                    if (crclen_escape[i][j] != 1)
+                    if (crclen_escape[i][j] != true)
                     {
                         /*  not ESC  */
                         boxSize += 5; // class_crclen
@@ -6030,7 +6030,7 @@ namespace BoxGenerator2
                 }
                 boxSize += 1; // class_reordered_output
 
-                if (class_reordered_output == 1)
+                if (class_reordered_output == true)
                 {
 
                     for (int j = 0; j < number_of_class[i]; j++)
@@ -6041,7 +6041,7 @@ namespace BoxGenerator2
             }
             boxSize += 1; // header_protection
 
-            if (header_protection == 1)
+            if (header_protection == true)
             {
                 boxSize += 5; // header_rate
                 boxSize += 5; // header_crclen
