@@ -664,9 +664,6 @@ partial class Program
         //var test = Boxes.ParseOrThrow(jds);
 
         string[] jsonFiles = {
-            "Opus.json",
-            "14496-1-added.json",
-            "14496-3-added.json",
             "14496-12-added.json",
             "14496-15-added.json",
             "14496-12-boxes.json",
@@ -689,6 +686,9 @@ partial class Program
             "23008-12-item-properties.json",
             "23008-12-item-references.json",
             "23008-12-sample-groups.json",
+            "14496-1-added.json",
+            "14496-3-added.json",
+            "Opus.json",
         };
         int success = 0;
         int duplicated = 0;

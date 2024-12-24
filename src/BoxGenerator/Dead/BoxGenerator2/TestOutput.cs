@@ -4,6071 +4,6 @@ using System.Threading.Tasks;
 namespace BoxGenerator2
 {
     /*
-    class OpusSampleEntry() extends AudioSampleEntry ('Opus'){
-     OpusSpecificBox();
-     }
-    */
-    public class OpusSampleEntry : AudioSampleEntry
-    {
-        public override string FourCC { get; set; } = "Opus";
-
-        protected OpusSpecificBox OpusSpecificBox;
-        public OpusSpecificBox _OpusSpecificBox { get { return this.OpusSpecificBox; } set { this.OpusSpecificBox = value; } }
-
-        public OpusSampleEntry()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.OpusSpecificBox);
-            boxSize += stream.ReadSkip(size, boxSize);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.OpusSpecificBox);
-            boxSize += stream.Flush();
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(OpusSpecificBox); // OpusSpecificBox
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ChannelMappingTable (unsigned int(8) OutputChannelCount){
-     unsigned int(8) StreamCount;
-     unsigned int(8) CoupledCount;
-     unsigned int(8 * OutputChannelCount) ChannelMapping;
-     }
-
-    */
-    public class ChannelMappingTable
-    {
-
-
-        protected byte StreamCount;
-        public byte _StreamCount { get { return this.StreamCount; } set { this.StreamCount = value; } }
-
-        protected byte CoupledCount;
-        public byte _CoupledCount { get { return this.CoupledCount; } set { this.CoupledCount = value; } }
-
-        protected byte[] ChannelMapping;
-        public byte[] _ChannelMapping { get { return this.ChannelMapping; } set { this.ChannelMapping = value; } }
-
-        public ChannelMappingTable()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            ulong OutputChannelCount = 0; // TODO: pass through ctor
-
-            boxSize += stream.ReadUInt8(out this.StreamCount);
-            boxSize += stream.ReadUInt8(out this.CoupledCount);
-            boxSize += stream.ReadBytes(OutputChannelCount, out this.ChannelMapping);
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            ulong OutputChannelCount = 0; // TODO: pass through ctor
-
-            boxSize += stream.WriteUInt8(this.StreamCount);
-            boxSize += stream.WriteUInt8(this.CoupledCount);
-            boxSize += stream.WriteBytes(OutputChannelCount, this.ChannelMapping);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            ulong OutputChannelCount = 0; // TODO: pass through ctor
-
-            boxSize += 8; // StreamCount
-            boxSize += 8; // CoupledCount
-            boxSize += (ulong)(OutputChannelCount * 8); // ChannelMapping
-            return boxSize;
-        }
-    }
-
-
-    /*
-     aligned(8) class OpusSpecificBox extends Box('dOps'){
-     unsigned int(8) Version;
-     unsigned int(8) OutputChannelCount;
-     unsigned int(16) PreSkip;
-     unsigned int(32) InputSampleRate;
-     signed int(16) OutputGain;
-     unsigned int(8) ChannelMappingFamily;
-     if (ChannelMappingFamily != 0) {
-     ChannelMappingTable(OutputChannelCount);
-     }
-     }
-    */
-    public class OpusSpecificBox : Box
-    {
-        public override string FourCC { get; set; } = "dOps";
-
-        protected byte Version;
-        public byte _Version { get { return this.Version; } set { this.Version = value; } }
-
-        protected byte OutputChannelCount;
-        public byte _OutputChannelCount { get { return this.OutputChannelCount; } set { this.OutputChannelCount = value; } }
-
-        protected ushort PreSkip;
-        public ushort _PreSkip { get { return this.PreSkip; } set { this.PreSkip = value; } }
-
-        protected uint InputSampleRate;
-        public uint _InputSampleRate { get { return this.InputSampleRate; } set { this.InputSampleRate = value; } }
-
-        protected short OutputGain;
-        public short _OutputGain { get { return this.OutputGain; } set { this.OutputGain = value; } }
-
-        protected byte ChannelMappingFamily;
-        public byte _ChannelMappingFamily { get { return this.ChannelMappingFamily; } set { this.ChannelMappingFamily = value; } }
-
-        protected ChannelMappingTable ChannelMappingTable;
-        public ChannelMappingTable _ChannelMappingTable { get { return this.ChannelMappingTable; } set { this.ChannelMappingTable = value; } }
-
-        public OpusSpecificBox()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8(out this.Version);
-            boxSize += stream.ReadUInt8(out this.OutputChannelCount);
-            boxSize += stream.ReadUInt16(out this.PreSkip);
-            boxSize += stream.ReadUInt32(out this.InputSampleRate);
-            boxSize += stream.ReadInt16(out this.OutputGain);
-            boxSize += stream.ReadUInt8(out this.ChannelMappingFamily);
-
-            if (ChannelMappingFamily != 0)
-            {
-                boxSize += stream.ReadClass(out this.ChannelMappingTable);
-            }
-            boxSize += stream.ReadSkip(size, boxSize);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8(this.Version);
-            boxSize += stream.WriteUInt8(this.OutputChannelCount);
-            boxSize += stream.WriteUInt16(this.PreSkip);
-            boxSize += stream.WriteUInt32(this.InputSampleRate);
-            boxSize += stream.WriteInt16(this.OutputGain);
-            boxSize += stream.WriteUInt8(this.ChannelMappingFamily);
-
-            if (ChannelMappingFamily != 0)
-            {
-                boxSize += stream.WriteClass(this.ChannelMappingTable);
-            }
-            boxSize += stream.Flush();
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // Version
-            boxSize += 8; // OutputChannelCount
-            boxSize += 16; // PreSkip
-            boxSize += 32; // InputSampleRate
-            boxSize += 16; // OutputGain
-            boxSize += 8; // ChannelMappingFamily
-
-            if (ChannelMappingFamily != 0)
-            {
-                boxSize += IsoStream.CalculateClassSize(ChannelMappingTable); // ChannelMappingTable
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract aligned(8) expandable(228-1) class BaseDescriptor : bit(8) tag=0 {
-     // empty. To be filled by classes extending this class.
-     int sizeOfInstance = 0;
-     bit(1) nextByte;
-     bit(7) sizeOfInstance;
-     while(nextByte) {
-     bit(1) nextByte;
-     bit(7) sizeByte;
-     sizeOfInstance = sizeOfInstance<<7 | sizeByte;
-     }
-    }
-    */
-    public class BaseDescriptor
-    {
-        public byte Tag { get; set; } = 0;
-
-        protected bool nextByte;
-        public bool NextByte { get { return this.nextByte; } set { this.nextByte = value; } }
-
-        protected byte sizeOfInstance;
-        public byte SizeOfInstance { get { return this.sizeOfInstance; } set { this.sizeOfInstance = value; } }
-
-        protected bool nextByte0;
-        public bool NextByte0 { get { return this.nextByte0; } set { this.nextByte0 = value; } }
-
-        protected byte sizeByte;
-        public byte SizeByte { get { return this.sizeByte; } set { this.sizeByte = value; } }
-
-        public BaseDescriptor()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            int sizeOfInstance = 0;
-            boxSize += stream.ReadBit(out this.nextByte);
-            boxSize += stream.ReadBits(7, out this.sizeOfInstance);
-
-            while (nextByte)
-            {
-                boxSize += stream.ReadBit(out this.nextByte0);
-                boxSize += stream.ReadBits(7, out this.sizeByte);
-                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            int sizeOfInstance = 0;
-            boxSize += stream.WriteBit(this.nextByte);
-            boxSize += stream.WriteBits(7, this.sizeOfInstance);
-
-            while (nextByte)
-            {
-                boxSize += stream.WriteBit(this.nextByte0);
-                boxSize += stream.WriteBits(7, this.sizeByte);
-                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            int sizeOfInstance = 0;
-            boxSize += 1; // nextByte
-            boxSize += 7; // sizeOfInstance
-
-            while (nextByte)
-            {
-                boxSize += 1; // nextByte0
-                boxSize += 7; // sizeByte
-                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag
-     {
-     // empty. To be filled by classes extending this class.
-     }
-    */
-    public class DecoderSpecificInfo : BaseDescriptor
-    {
-        public byte Tag { get; set; } = DescriptorTags.DecSpecificInfoTag;
-
-        public DecoderSpecificInfo()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ES_Descriptor extends BaseDescriptor : bit(8) tag=ES_DescrTag {
-     bit(16) ES_ID;
-     bit(1) streamDependenceFlag;
-     bit(1) URL_Flag;
-     bit(1) OCRstreamFlag;
-     bit(5) streamPriority;
-     if (streamDependenceFlag)
-     bit(16) dependsOn_ES_ID;
-     if (URL_Flag) {
-     bit(8) URLlength;
-     bit(8) URLstring[URLlength];
-     }
-     if (OCRstreamFlag)
-     bit(16) OCR_ES_Id;
-     DecoderConfigDescriptor decConfigDescr;
-     SLConfigDescriptor slConfigDescr;
-     IPI_DescrPointer ipiPtr[0 .. 1];
-     IP_IdentificationDataSet ipIDS[0 .. 255];
-     IPMP_DescriptorPointer ipmpDescrPtr[0 .. 255];
-     LanguageDescriptor langDescr[0 .. 255];
-     QoS_Descriptor qosDescr[0 .. 1];
-     RegistrationDescriptor regDescr[0 .. 1];
-     ExtensionDescriptor extDescr[0 .. 255];
-     }
-    */
-    public class ES_Descriptor : BaseDescriptor
-    {
-        public byte Tag { get; set; } = DescriptorTags.ES_DescrTag;
-
-        protected ushort ES_ID;
-        public ushort ESID { get { return this.ES_ID; } set { this.ES_ID = value; } }
-
-        protected bool streamDependenceFlag;
-        public bool StreamDependenceFlag { get { return this.streamDependenceFlag; } set { this.streamDependenceFlag = value; } }
-
-        protected bool URL_Flag;
-        public bool URLFlag { get { return this.URL_Flag; } set { this.URL_Flag = value; } }
-
-        protected bool OCRstreamFlag;
-        public bool _OCRstreamFlag { get { return this.OCRstreamFlag; } set { this.OCRstreamFlag = value; } }
-
-        protected byte streamPriority;
-        public byte StreamPriority { get { return this.streamPriority; } set { this.streamPriority = value; } }
-
-        protected ushort dependsOn_ES_ID;
-        public ushort DependsOnESID { get { return this.dependsOn_ES_ID; } set { this.dependsOn_ES_ID = value; } }
-
-        protected byte URLlength;
-        public byte _URLlength { get { return this.URLlength; } set { this.URLlength = value; } }
-
-        protected byte[] URLstring;
-        public byte[] _URLstring { get { return this.URLstring; } set { this.URLstring = value; } }
-
-        protected ushort OCR_ES_Id;
-        public ushort OCRESId { get { return this.OCR_ES_Id; } set { this.OCR_ES_Id = value; } }
-
-        protected DecoderConfigDescriptor decConfigDescr;
-        public DecoderConfigDescriptor DecConfigDescr { get { return this.decConfigDescr; } set { this.decConfigDescr = value; } }
-
-        protected SLConfigDescriptor slConfigDescr;
-        public SLConfigDescriptor SlConfigDescr { get { return this.slConfigDescr; } set { this.slConfigDescr = value; } }
-
-        protected IPI_DescrPointer ipiPtr;
-        public IPI_DescrPointer IpiPtr { get { return this.ipiPtr; } set { this.ipiPtr = value; } }
-
-        protected IP_IdentificationDataSet[] ipIDS;
-        public IP_IdentificationDataSet[] IpIDS { get { return this.ipIDS; } set { this.ipIDS = value; } }
-
-        protected IPMP_DescriptorPointer[] ipmpDescrPtr;
-        public IPMP_DescriptorPointer[] IpmpDescrPtr { get { return this.ipmpDescrPtr; } set { this.ipmpDescrPtr = value; } }
-
-        protected LanguageDescriptor langDescr;
-        public LanguageDescriptor LangDescr { get { return this.langDescr; } set { this.langDescr = value; } }
-
-        protected QoS_Descriptor qosDescr;
-        public QoS_Descriptor QosDescr { get { return this.qosDescr; } set { this.qosDescr = value; } }
-
-        protected RegistrationDescriptor regDescr;
-        public RegistrationDescriptor RegDescr { get { return this.regDescr; } set { this.regDescr = value; } }
-
-        protected ExtensionDescriptor[] extDescr;
-        public ExtensionDescriptor[] ExtDescr { get { return this.extDescr; } set { this.extDescr = value; } }
-
-        public ES_Descriptor()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.ES_ID);
-            boxSize += stream.ReadBit(out this.streamDependenceFlag);
-            boxSize += stream.ReadBit(out this.URL_Flag);
-            boxSize += stream.ReadBit(out this.OCRstreamFlag);
-            boxSize += stream.ReadBits(5, out this.streamPriority);
-
-            if (streamDependenceFlag)
-            {
-                boxSize += stream.ReadUInt16(out this.dependsOn_ES_ID);
-            }
-
-            if (URL_Flag)
-            {
-                boxSize += stream.ReadUInt8(out this.URLlength);
-                boxSize += stream.ReadBytes(URLlength, out this.URLstring);
-            }
-
-            if (OCRstreamFlag)
-            {
-                boxSize += stream.ReadUInt16(out this.OCR_ES_Id);
-            }
-            boxSize += stream.ReadClass(out this.decConfigDescr);
-            boxSize += stream.ReadClass(out this.slConfigDescr);
-            boxSize += stream.ReadClass(out this.ipiPtr);
-            boxSize += stream.ReadClass(out this.ipIDS);
-            boxSize += stream.ReadClass(out this.ipmpDescrPtr);
-            boxSize += stream.ReadClass(out this.langDescr);
-            boxSize += stream.ReadClass(out this.qosDescr);
-            boxSize += stream.ReadClass(out this.regDescr);
-            boxSize += stream.ReadClass(out this.extDescr);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.ES_ID);
-            boxSize += stream.WriteBit(this.streamDependenceFlag);
-            boxSize += stream.WriteBit(this.URL_Flag);
-            boxSize += stream.WriteBit(this.OCRstreamFlag);
-            boxSize += stream.WriteBits(5, this.streamPriority);
-
-            if (streamDependenceFlag)
-            {
-                boxSize += stream.WriteUInt16(this.dependsOn_ES_ID);
-            }
-
-            if (URL_Flag)
-            {
-                boxSize += stream.WriteUInt8(this.URLlength);
-                boxSize += stream.WriteBytes(URLlength, this.URLstring);
-            }
-
-            if (OCRstreamFlag)
-            {
-                boxSize += stream.WriteUInt16(this.OCR_ES_Id);
-            }
-            boxSize += stream.WriteClass(this.decConfigDescr);
-            boxSize += stream.WriteClass(this.slConfigDescr);
-            boxSize += stream.WriteClass(this.ipiPtr);
-            boxSize += stream.WriteClass(this.ipIDS);
-            boxSize += stream.WriteClass(this.ipmpDescrPtr);
-            boxSize += stream.WriteClass(this.langDescr);
-            boxSize += stream.WriteClass(this.qosDescr);
-            boxSize += stream.WriteClass(this.regDescr);
-            boxSize += stream.WriteClass(this.extDescr);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // ES_ID
-            boxSize += 1; // streamDependenceFlag
-            boxSize += 1; // URL_Flag
-            boxSize += 1; // OCRstreamFlag
-            boxSize += 5; // streamPriority
-
-            if (streamDependenceFlag)
-            {
-                boxSize += 16; // dependsOn_ES_ID
-            }
-
-            if (URL_Flag)
-            {
-                boxSize += 8; // URLlength
-                boxSize += (ulong)(URLlength * 8); // URLstring
-            }
-
-            if (OCRstreamFlag)
-            {
-                boxSize += 16; // OCR_ES_Id
-            }
-            boxSize += IsoStream.CalculateClassSize(decConfigDescr); // decConfigDescr
-            boxSize += IsoStream.CalculateClassSize(slConfigDescr); // slConfigDescr
-            boxSize += IsoStream.CalculateClassSize(ipiPtr); // ipiPtr
-            boxSize += IsoStream.CalculateClassSize(ipIDS); // ipIDS
-            boxSize += IsoStream.CalculateClassSize(ipmpDescrPtr); // ipmpDescrPtr
-            boxSize += IsoStream.CalculateClassSize(langDescr); // langDescr
-            boxSize += IsoStream.CalculateClassSize(qosDescr); // qosDescr
-            boxSize += IsoStream.CalculateClassSize(regDescr); // regDescr
-            boxSize += IsoStream.CalculateClassSize(extDescr); // extDescr
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class SLConfigDescriptor extends BaseDescriptor : bit(8) tag=SLConfigDescrTag {
-     bit(8) predefined;
-     if (predefined==0) {
-     bit(1) useAccessUnitStartFlag;
-     bit(1) useAccessUnitEndFlag;
-     bit(1) useRandomAccessPointFlag;
-     bit(1) hasRandomAccessUnitsOnlyFlag;
-     bit(1) usePaddingFlag;
-     bit(1) useTimeStampsFlag;
-     bit(1) useIdleFlag;
-     bit(1) durationFlag;
-     bit(32) timeStampResolution;
-     bit(32) OCRResolution;
-     bit(8) timeStampLength; // must be <= 64
-     bit(8) OCRLength; // must be <= 64
-     bit(8) AU_Length; // must be <= 32
-     bit(8) instantBitrateLength;
-     bit(4) degradationPriorityLength;
-     bit(5) AU_seqNumLength; // must be <= 16
-     bit(5) packetSeqNumLength; // must be <= 16
-     bit(2) reserved=0b11;
-     }
-     if (durationFlag) {
-     bit(32) timeScale;
-     bit(16) accessUnitDuration;
-     bit(16) compositionUnitDuration;
-     }
-     if (!useTimeStampsFlag) {
-     bit(timeStampLength) startDecodingTimeStamp;
-     bit(timeStampLength) startCompositionTimeStamp;
-     }
-     }
-    */
-    public class SLConfigDescriptor : BaseDescriptor
-    {
-        public byte Tag { get; set; } = DescriptorTags.SLConfigDescrTag;
-
-        protected byte predefined;
-        public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
-
-        protected bool useAccessUnitStartFlag;
-        public bool UseAccessUnitStartFlag { get { return this.useAccessUnitStartFlag; } set { this.useAccessUnitStartFlag = value; } }
-
-        protected bool useAccessUnitEndFlag;
-        public bool UseAccessUnitEndFlag { get { return this.useAccessUnitEndFlag; } set { this.useAccessUnitEndFlag = value; } }
-
-        protected bool useRandomAccessPointFlag;
-        public bool UseRandomAccessPointFlag { get { return this.useRandomAccessPointFlag; } set { this.useRandomAccessPointFlag = value; } }
-
-        protected bool hasRandomAccessUnitsOnlyFlag;
-        public bool HasRandomAccessUnitsOnlyFlag { get { return this.hasRandomAccessUnitsOnlyFlag; } set { this.hasRandomAccessUnitsOnlyFlag = value; } }
-
-        protected bool usePaddingFlag;
-        public bool UsePaddingFlag { get { return this.usePaddingFlag; } set { this.usePaddingFlag = value; } }
-
-        protected bool useTimeStampsFlag;
-        public bool UseTimeStampsFlag { get { return this.useTimeStampsFlag; } set { this.useTimeStampsFlag = value; } }
-
-        protected bool useIdleFlag;
-        public bool UseIdleFlag { get { return this.useIdleFlag; } set { this.useIdleFlag = value; } }
-
-        protected bool durationFlag;
-        public bool DurationFlag { get { return this.durationFlag; } set { this.durationFlag = value; } }
-
-        protected uint timeStampResolution;
-        public uint TimeStampResolution { get { return this.timeStampResolution; } set { this.timeStampResolution = value; } }
-
-        protected uint OCRResolution;
-        public uint _OCRResolution { get { return this.OCRResolution; } set { this.OCRResolution = value; } }
-
-        protected byte timeStampLength;  //  must be <= 64
-        public byte TimeStampLength { get { return this.timeStampLength; } set { this.timeStampLength = value; } }
-
-        protected byte OCRLength;  //  must be <= 64
-        public byte _OCRLength { get { return this.OCRLength; } set { this.OCRLength = value; } }
-
-        protected byte AU_Length;  //  must be <= 32
-        public byte AULength { get { return this.AU_Length; } set { this.AU_Length = value; } }
-
-        protected byte instantBitrateLength;
-        public byte InstantBitrateLength { get { return this.instantBitrateLength; } set { this.instantBitrateLength = value; } }
-
-        protected byte degradationPriorityLength;
-        public byte DegradationPriorityLength { get { return this.degradationPriorityLength; } set { this.degradationPriorityLength = value; } }
-
-        protected byte AU_seqNumLength;  //  must be <= 16
-        public byte AUSeqNumLength { get { return this.AU_seqNumLength; } set { this.AU_seqNumLength = value; } }
-
-        protected byte packetSeqNumLength;  //  must be <= 16
-        public byte PacketSeqNumLength { get { return this.packetSeqNumLength; } set { this.packetSeqNumLength = value; } }
-
-        protected byte reserved = 0b11;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected uint timeScale;
-        public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
-
-        protected ushort accessUnitDuration;
-        public ushort AccessUnitDuration { get { return this.accessUnitDuration; } set { this.accessUnitDuration = value; } }
-
-        protected ushort compositionUnitDuration;
-        public ushort CompositionUnitDuration { get { return this.compositionUnitDuration; } set { this.compositionUnitDuration = value; } }
-
-        protected byte[] startDecodingTimeStamp;
-        public byte[] StartDecodingTimeStamp { get { return this.startDecodingTimeStamp; } set { this.startDecodingTimeStamp = value; } }
-
-        protected byte[] startCompositionTimeStamp;
-        public byte[] StartCompositionTimeStamp { get { return this.startCompositionTimeStamp; } set { this.startCompositionTimeStamp = value; } }
-
-        public SLConfigDescriptor()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8(out this.predefined);
-
-            if (predefined == 0)
-            {
-                boxSize += stream.ReadBit(out this.useAccessUnitStartFlag);
-                boxSize += stream.ReadBit(out this.useAccessUnitEndFlag);
-                boxSize += stream.ReadBit(out this.useRandomAccessPointFlag);
-                boxSize += stream.ReadBit(out this.hasRandomAccessUnitsOnlyFlag);
-                boxSize += stream.ReadBit(out this.usePaddingFlag);
-                boxSize += stream.ReadBit(out this.useTimeStampsFlag);
-                boxSize += stream.ReadBit(out this.useIdleFlag);
-                boxSize += stream.ReadBit(out this.durationFlag);
-                boxSize += stream.ReadUInt32(out this.timeStampResolution);
-                boxSize += stream.ReadUInt32(out this.OCRResolution);
-                boxSize += stream.ReadUInt8(out this.timeStampLength); // must be <= 64
-                boxSize += stream.ReadUInt8(out this.OCRLength); // must be <= 64
-                boxSize += stream.ReadUInt8(out this.AU_Length); // must be <= 32
-                boxSize += stream.ReadUInt8(out this.instantBitrateLength);
-                boxSize += stream.ReadBits(4, out this.degradationPriorityLength);
-                boxSize += stream.ReadBits(5, out this.AU_seqNumLength); // must be <= 16
-                boxSize += stream.ReadBits(5, out this.packetSeqNumLength); // must be <= 16
-                boxSize += stream.ReadBits(2, out this.reserved);
-            }
-
-            if (durationFlag)
-            {
-                boxSize += stream.ReadUInt32(out this.timeScale);
-                boxSize += stream.ReadUInt16(out this.accessUnitDuration);
-                boxSize += stream.ReadUInt16(out this.compositionUnitDuration);
-            }
-
-            if (!useTimeStampsFlag)
-            {
-                boxSize += stream.ReadBytes(timeStampLength, out this.startDecodingTimeStamp);
-                boxSize += stream.ReadBytes(timeStampLength, out this.startCompositionTimeStamp);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8(this.predefined);
-
-            if (predefined == 0)
-            {
-                boxSize += stream.WriteBit(this.useAccessUnitStartFlag);
-                boxSize += stream.WriteBit(this.useAccessUnitEndFlag);
-                boxSize += stream.WriteBit(this.useRandomAccessPointFlag);
-                boxSize += stream.WriteBit(this.hasRandomAccessUnitsOnlyFlag);
-                boxSize += stream.WriteBit(this.usePaddingFlag);
-                boxSize += stream.WriteBit(this.useTimeStampsFlag);
-                boxSize += stream.WriteBit(this.useIdleFlag);
-                boxSize += stream.WriteBit(this.durationFlag);
-                boxSize += stream.WriteUInt32(this.timeStampResolution);
-                boxSize += stream.WriteUInt32(this.OCRResolution);
-                boxSize += stream.WriteUInt8(this.timeStampLength); // must be <= 64
-                boxSize += stream.WriteUInt8(this.OCRLength); // must be <= 64
-                boxSize += stream.WriteUInt8(this.AU_Length); // must be <= 32
-                boxSize += stream.WriteUInt8(this.instantBitrateLength);
-                boxSize += stream.WriteBits(4, this.degradationPriorityLength);
-                boxSize += stream.WriteBits(5, this.AU_seqNumLength); // must be <= 16
-                boxSize += stream.WriteBits(5, this.packetSeqNumLength); // must be <= 16
-                boxSize += stream.WriteBits(2, this.reserved);
-            }
-
-            if (durationFlag)
-            {
-                boxSize += stream.WriteUInt32(this.timeScale);
-                boxSize += stream.WriteUInt16(this.accessUnitDuration);
-                boxSize += stream.WriteUInt16(this.compositionUnitDuration);
-            }
-
-            if (!useTimeStampsFlag)
-            {
-                boxSize += stream.WriteBytes(timeStampLength, this.startDecodingTimeStamp);
-                boxSize += stream.WriteBytes(timeStampLength, this.startCompositionTimeStamp);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // predefined
-
-            if (predefined == 0)
-            {
-                boxSize += 1; // useAccessUnitStartFlag
-                boxSize += 1; // useAccessUnitEndFlag
-                boxSize += 1; // useRandomAccessPointFlag
-                boxSize += 1; // hasRandomAccessUnitsOnlyFlag
-                boxSize += 1; // usePaddingFlag
-                boxSize += 1; // useTimeStampsFlag
-                boxSize += 1; // useIdleFlag
-                boxSize += 1; // durationFlag
-                boxSize += 32; // timeStampResolution
-                boxSize += 32; // OCRResolution
-                boxSize += 8; // timeStampLength
-                boxSize += 8; // OCRLength
-                boxSize += 8; // AU_Length
-                boxSize += 8; // instantBitrateLength
-                boxSize += 4; // degradationPriorityLength
-                boxSize += 5; // AU_seqNumLength
-                boxSize += 5; // packetSeqNumLength
-                boxSize += 2; // reserved
-            }
-
-            if (durationFlag)
-            {
-                boxSize += 32; // timeScale
-                boxSize += 16; // accessUnitDuration
-                boxSize += 16; // compositionUnitDuration
-            }
-
-            if (!useTimeStampsFlag)
-            {
-                boxSize += (ulong)timeStampLength; // startDecodingTimeStamp
-                boxSize += (ulong)timeStampLength; // startCompositionTimeStamp
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class DecoderConfigDescriptor extends BaseDescriptor : bit(8) tag=DecoderConfigDescrTag {
-     bit(8) objectTypeIndication;
-     bit(6) streamType;
-     bit(1) upStream;
-     const bit(1) reserved=1;
-     bit(24) bufferSizeDB;
-     bit(32) maxBitrate;
-     bit(32) avgBitrate;
-     DecoderSpecificInfo decSpecificInfo[0 .. 1];
-     ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
-     }
-    */
-    public class DecoderConfigDescriptor : BaseDescriptor
-    {
-        public byte Tag { get; set; } = DescriptorTags.DecoderConfigDescrTag;
-
-        protected byte objectTypeIndication;
-        public byte ObjectTypeIndication { get { return this.objectTypeIndication; } set { this.objectTypeIndication = value; } }
-
-        protected byte streamType;
-        public byte StreamType { get { return this.streamType; } set { this.streamType = value; } }
-
-        protected bool upStream;
-        public bool UpStream { get { return this.upStream; } set { this.upStream = value; } }
-
-        protected bool reserved = true;
-        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected uint bufferSizeDB;
-        public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
-
-        protected uint maxBitrate;
-        public uint MaxBitrate { get { return this.maxBitrate; } set { this.maxBitrate = value; } }
-
-        protected uint avgBitrate;
-        public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
-
-        protected DecoderSpecificInfo[] decSpecificInfo;
-        public DecoderSpecificInfo[] DecSpecificInfo { get { return this.decSpecificInfo; } set { this.decSpecificInfo = value; } }
-
-        protected ProfileLevelIndicationIndexDescriptor[] profileLevelIndicationIndexDescr;
-        public ProfileLevelIndicationIndexDescriptor[] ProfileLevelIndicationIndexDescr { get { return this.profileLevelIndicationIndexDescr; } set { this.profileLevelIndicationIndexDescr = value; } }
-
-        public DecoderConfigDescriptor()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8(out this.objectTypeIndication);
-            boxSize += stream.ReadBits(6, out this.streamType);
-            boxSize += stream.ReadBit(out this.upStream);
-            boxSize += stream.ReadBit(out this.reserved);
-            boxSize += stream.ReadBits(24, out this.bufferSizeDB);
-            boxSize += stream.ReadUInt32(out this.maxBitrate);
-            boxSize += stream.ReadUInt32(out this.avgBitrate);
-            boxSize += stream.ReadClass(out this.decSpecificInfo);
-            boxSize += stream.ReadClass(out this.profileLevelIndicationIndexDescr);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8(this.objectTypeIndication);
-            boxSize += stream.WriteBits(6, this.streamType);
-            boxSize += stream.WriteBit(this.upStream);
-            boxSize += stream.WriteBit(this.reserved);
-            boxSize += stream.WriteBits(24, this.bufferSizeDB);
-            boxSize += stream.WriteUInt32(this.maxBitrate);
-            boxSize += stream.WriteUInt32(this.avgBitrate);
-            boxSize += stream.WriteClass(this.decSpecificInfo);
-            boxSize += stream.WriteClass(this.profileLevelIndicationIndexDescr);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // objectTypeIndication
-            boxSize += 6; // streamType
-            boxSize += 1; // upStream
-            boxSize += 1; // reserved
-            boxSize += 24; // bufferSizeDB
-            boxSize += 32; // maxBitrate
-            boxSize += 32; // avgBitrate
-            boxSize += IsoStream.CalculateClassSize(decSpecificInfo); // decSpecificInfo
-            boxSize += IsoStream.CalculateClassSize(profileLevelIndicationIndexDescr); // profileLevelIndicationIndexDescr
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ProfileLevelIndicationIndexDescriptor () extends BaseDescriptor
-     : bit(8) ProfileLevelIndicationIndexDescrTag {
-     bit(8) profileLevelIndicationIndex;
-     }
-    */
-    public class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
-    {
-        public byte Tag { get; set; } = DescriptorTags.ProfileLevelIndicationIndexDescrTag;
-
-        protected byte profileLevelIndicationIndex;
-        public byte ProfileLevelIndicationIndex { get { return this.profileLevelIndicationIndex; } set { this.profileLevelIndicationIndex = value; } }
-
-        public ProfileLevelIndicationIndexDescriptor()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8(out this.profileLevelIndicationIndex);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8(this.profileLevelIndicationIndex);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // profileLevelIndicationIndex
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class IPI_DescrPointer extends BaseDescriptor : bit(8) tag=IPI_DescrPointerTag {
-     bit(16) IPI_ES_Id;
-     }
-    */
-    public class IPI_DescrPointer : BaseDescriptor
-    {
-        public byte Tag { get; set; } = DescriptorTags.IPI_DescrPointerTag;
-
-        protected ushort IPI_ES_Id;
-        public ushort IPIESId { get { return this.IPI_ES_Id; } set { this.IPI_ES_Id = value; } }
-
-        public IPI_DescrPointer()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.IPI_ES_Id);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.IPI_ES_Id);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // IPI_ES_Id
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract class IP_IdentificationDataSet extends BaseDescriptor
-     : bit(8) tag=ContentIdentDescrTag..SupplContentIdentDescrTag
-     {
-     // empty. To be filled by classes extending this class.
-     }
-    */
-    public class IP_IdentificationDataSet : BaseDescriptor
-    {
-        public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
-        public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag;
-
-        public IP_IdentificationDataSet()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class IPMP_DescriptorPointer extends BaseDescriptor : bit(8) tag=IPMP_DescrPointerTag {
-     bit(8) IPMP_DescriptorID;
-     }
-    */
-    public class IPMP_DescriptorPointer : BaseDescriptor
-    {
-        public byte Tag { get; set; } = DescriptorTags.IPMP_DescrPointerTag;
-
-        protected byte IPMP_DescriptorID;
-        public byte IPMPDescriptorID { get { return this.IPMP_DescriptorID; } set { this.IPMP_DescriptorID = value; } }
-
-        public IPMP_DescriptorPointer()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8(out this.IPMP_DescriptorID);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8(this.IPMP_DescriptorID);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // IPMP_DescriptorID
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract class OCI_Descriptor extends BaseDescriptor : bit(8) tag=OCIDescrTagStartRange..OCIDescrTagEndRange
-    {
-     // empty. To be filled by classes extending this class.
-    }
-    */
-    public class OCI_Descriptor : BaseDescriptor
-    {
-        public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
-        public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange;
-
-        public OCI_Descriptor()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class LanguageDescriptor extends OCI_Descriptor : bit(8) tag=LanguageDescrTag {
-     bit(24) languageCode;
-     }
-    */
-    public class LanguageDescriptor : OCI_Descriptor
-    {
-        public byte Tag { get; set; } = DescriptorTags.LanguageDescrTag;
-
-        protected uint languageCode;
-        public uint LanguageCode { get { return this.languageCode; } set { this.languageCode = value; } }
-
-        public LanguageDescriptor()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBits(24, out this.languageCode);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBits(24, this.languageCode);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 24; // languageCode
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class QoS_Descriptor extends BaseDescriptor : bit(8) tag=QoS_DescrTag {
-     bit(8) predefined;
-     if (predefined==0) {
-     QoS_Qualifier qualifiers[];
-     }
-     }
-    */
-    public class QoS_Descriptor : BaseDescriptor
-    {
-        public byte Tag { get; set; } = DescriptorTags.QoS_DescrTag;
-
-        protected byte predefined;
-        public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
-
-        protected QoS_Qualifier[] qualifiers;
-        public QoS_Qualifier[] Qualifiers { get { return this.qualifiers; } set { this.qualifiers = value; } }
-
-        public QoS_Descriptor()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8(out this.predefined);
-
-            if (predefined == 0)
-            {
-                boxSize += stream.ReadClass(out this.qualifiers);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8(this.predefined);
-
-            if (predefined == 0)
-            {
-                boxSize += stream.WriteClass(this.qualifiers);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // predefined
-
-            if (predefined == 0)
-            {
-                boxSize += IsoStream.CalculateClassSize(qualifiers); // qualifiers
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract aligned(8) expandable(228-1) class QoS_Qualifier : bit(8) tag=0x01..0xff {
-     // empty. To be filled by classes extending this class.
-     }
-    */
-    public class QoS_Qualifier
-    {
-        public byte TagMin { get; set; } = 0x01;
-        public byte TagMax { get; set; } = 0xff;
-
-        public QoS_Qualifier()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-    }
-
-
-    /*
-     class QoS_Qualifier_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x01 {
-     unsigned int(32) MAX_DELAY;
-     }
-    */
-    public class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
-    {
-        public byte Tag { get; set; } = 0x01;
-
-        protected uint MAX_DELAY;
-        public uint MAXDELAY { get { return this.MAX_DELAY; } set { this.MAX_DELAY = value; } }
-
-        public QoS_Qualifier_MAX_DELAY()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.MAX_DELAY);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.MAX_DELAY);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // MAX_DELAY
-            return boxSize;
-        }
-    }
-
-
-    /*
-     class QoS_Qualifier_PREF_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x02 {
-     unsigned int(32) PREF_MAX_DELAY;
-     }
-    */
-    public class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
-    {
-        public byte Tag { get; set; } = 0x02;
-
-        protected uint PREF_MAX_DELAY;
-        public uint PREFMAXDELAY { get { return this.PREF_MAX_DELAY; } set { this.PREF_MAX_DELAY = value; } }
-
-        public QoS_Qualifier_PREF_MAX_DELAY()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.PREF_MAX_DELAY);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.PREF_MAX_DELAY);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // PREF_MAX_DELAY
-            return boxSize;
-        }
-    }
-
-
-    /*
-     class QoS_Qualifier_LOSS_PROB extends QoS_Qualifier : bit(8) tag=0x03 {
-     double(32) LOSS_PROB;
-     }
-    */
-    public class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
-    {
-        public byte Tag { get; set; } = 0x03;
-
-        protected double LOSS_PROB;
-        public double LOSSPROB { get { return this.LOSS_PROB; } set { this.LOSS_PROB = value; } }
-
-        public QoS_Qualifier_LOSS_PROB()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadDouble32(out this.LOSS_PROB);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteDouble32(this.LOSS_PROB);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // LOSS_PROB
-            return boxSize;
-        }
-    }
-
-
-    /*
-     class QoS_Qualifier_MAX_GAP_LOSS extends QoS_Qualifier : bit(8) tag=0x04 {
-     unsigned int(32) MAX_GAP_LOSS;
-     }
-    */
-    public class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
-    {
-        public byte Tag { get; set; } = 0x04;
-
-        protected uint MAX_GAP_LOSS;
-        public uint MAXGAPLOSS { get { return this.MAX_GAP_LOSS; } set { this.MAX_GAP_LOSS = value; } }
-
-        public QoS_Qualifier_MAX_GAP_LOSS()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.MAX_GAP_LOSS);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.MAX_GAP_LOSS);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // MAX_GAP_LOSS
-            return boxSize;
-        }
-    }
-
-
-    /*
-     class QoS_Qualifier_MAX_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x41 {
-     unsigned int(32) MAX_AU_SIZE;
-     }
-    */
-    public class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
-    {
-        public byte Tag { get; set; } = 0x41;
-
-        protected uint MAX_AU_SIZE;
-        public uint MAXAUSIZE { get { return this.MAX_AU_SIZE; } set { this.MAX_AU_SIZE = value; } }
-
-        public QoS_Qualifier_MAX_AU_SIZE()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.MAX_AU_SIZE);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.MAX_AU_SIZE);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // MAX_AU_SIZE
-            return boxSize;
-        }
-    }
-
-
-    /*
-     class QoS_Qualifier_AVG_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x42 {
-     unsigned int(32) AVG_AU_SIZE;
-     }
-    */
-    public class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
-    {
-        public byte Tag { get; set; } = 0x42;
-
-        protected uint AVG_AU_SIZE;
-        public uint AVGAUSIZE { get { return this.AVG_AU_SIZE; } set { this.AVG_AU_SIZE = value; } }
-
-        public QoS_Qualifier_AVG_AU_SIZE()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.AVG_AU_SIZE);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.AVG_AU_SIZE);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // AVG_AU_SIZE
-            return boxSize;
-        }
-    }
-
-
-    /*
-     class QoS_Qualifier_MAX_AU_RATE extends QoS_Qualifier : bit(8) tag=0x43 {
-     unsigned int(32) MAX_AU_RATE;
-     }
-    */
-    public class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
-    {
-        public byte Tag { get; set; } = 0x43;
-
-        protected uint MAX_AU_RATE;
-        public uint MAXAURATE { get { return this.MAX_AU_RATE; } set { this.MAX_AU_RATE = value; } }
-
-        public QoS_Qualifier_MAX_AU_RATE()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.MAX_AU_RATE);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.MAX_AU_RATE);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // MAX_AU_RATE
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class RegistrationDescriptor extends BaseDescriptor : bit(8) tag=RegistrationDescrTag {
-     bit(32) formatIdentifier;
-     bit(8) additionalIdentificationInfo[sizeOfInstance-4];
-     }
-    */
-    public class RegistrationDescriptor : BaseDescriptor
-    {
-        public byte Tag { get; set; } = DescriptorTags.RegistrationDescrTag;
-
-        protected uint formatIdentifier;
-        public uint FormatIdentifier { get { return this.formatIdentifier; } set { this.formatIdentifier = value; } }
-
-        protected byte[] additionalIdentificationInfo;
-        public byte[] AdditionalIdentificationInfo { get { return this.additionalIdentificationInfo; } set { this.additionalIdentificationInfo = value; } }
-
-        public RegistrationDescriptor()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.formatIdentifier);
-            boxSize += stream.ReadBytes((ulong)(sizeOfInstance - 4), out this.additionalIdentificationInfo);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.formatIdentifier);
-            boxSize += stream.WriteBytes((ulong)(sizeOfInstance - 4), this.additionalIdentificationInfo);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // formatIdentifier
-            boxSize += (ulong)(sizeOfInstance - 4); // additionalIdentificationInfo
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract class ExtensionDescriptor extends BaseDescriptor : bit(8) tag=ExtDescrTagStartRange..ExtDescrTagEndRange {
-     // empty. To be filled by classes extending this class.
-     }
-    */
-    public class ExtensionDescriptor : BaseDescriptor
-    {
-        public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
-        public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange;
-
-        public ExtensionDescriptor()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AudioSpecificConfig() {
-      GetAudioObjectType() audioObjectType;
-      bslbf(4) samplingFrequencyIndex;
-      if(samplingFrequencyIndex == 0xf ) {
-        uimsbf(24) samplingFrequency;
-      }
-      bslbf(4) channelConfiguration;
-      sbrPresentFlag = -1;
-      psPresentFlag = -1;
-
-      if (audioObjectType == 5 || audioObjectType == 29) {
-        extensionAudioObjectType = 5;
-        sbrPresentFlag = 1;
-        if (audioObjectType == 29) {
-          psPresentFlag = 1;
-        }
-        uimsbf(4) extensionSamplingFrequencyIndex;
-        if (extensionSamplingFrequencyIndex == 0xf)
-          uimsbf(24) extensionSamplingFrequency;
-        GetAudioObjectType() audioObjectType;
-        if (audioObjectType == 22)
-          uimsbf(4) extensionChannelConfiguration;
-      }
-      else {
-        extensionAudioObjectType = 0;
-      }
-      switch (audioObjectType) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 6:
-        case 7:
-        case 17:
-        case 19:
-        case 20:
-        case 21:
-        case 22:
-        case 23:
-          GASpecificConfig();
-          break;
-        case 8:
-          CelpSpecificConfig();
-          break;
-        case 9:
-          HvxcSpecificConfig();
-          break;
-        case 12:
-          TTSSpecificConfig();
-          break;
-        case 13:
-        case 14:
-        case 15:
-        case 16:
-          StructuredAudioSpecificConfig();
-          break;
-        case 24:
-          ErrorResilientCelpSpecificConfig();
-          break;
-        case 25:
-          ErrorResilientHvxcSpecificConfig();
-          break;
-        case 26:
-        case 27:
-          ParametricSpecificConfig();
-          break;
-        case 28:
-          SSCSpecificConfig();
-          break;
-        case 30:
-          uimsbf(1) sacPayloadEmbedding;
-          SpatialSpecificConfig();
-          break;
-        case 32:
-        case 33:
-        case 34:
-          MPEG_1_2_SpecificConfig();
-          break;
-        case 35:
-          DSTSpecificConfig();
-          break;
-        case 36:
-          bslbf(5) fillBits;
-          ALSSpecificConfig();
-          break;
-        case 37:
-        case 38:
-          SLSSpecificConfig();
-          break;
-        case 39:
-          ELDSpecificConfig(channelConfiguration);
-          break;
-        case 40:
-        case 41:
-          SymbolicMusicSpecificConfig();
-          break;
-        default:
-          /* reserved *//*
-          break;
-      }
-      switch (audioObjectType) {
-        case 17:
-        case 19:
-        case 20:
-        case 21:
-        case 22:
-        case 23:
-        case 24:
-        case 25:
-        case 26:
-        case 27:
-        case 39:
-          bslbf(2) epConfig;
-          if (epConfig == 2 || epConfig == 3) {
-            ErrorProtectionSpecificConfig();
-          }
-          if (epConfig == 3) {
-            bslbf(1) directMapping;
-            if (!directMapping) {
-              /* tbd *//*
-            }
-          }
-          break;
-      }
-      if (extensionAudioObjectType != 5 && bits_to_decode() >= 16) {
-        bslbf(11) syncExtensionType;
-        if (syncExtensionType == 0x2b7) {
-          GetAudioObjectType() extensionAudioObjectType;
-          if (extensionAudioObjectType == 5) {
-            uimsbf(1) sbrPresentFlag;
-            if (sbrPresentFlag == 1) {
-              uimsbf(4) extensionSamplingFrequencyIndex;
-              if (extensionSamplingFrequencyIndex == 0xf) {
-                uimsbf(24) extensionSamplingFrequency;
-              }
-              if (bits_to_decode() >= 12) {
-                bslbf(11) syncExtensionType;
-                if (syncExtensionType == 0x548) {
-                  uimsbf(1) psPresentFlag;
-                }
-              }
-            }
-          }
-          if (extensionAudioObjectType == 22) {
-            uimsbf(1) sbrPresentFlag;
-            if (sbrPresentFlag == 1) {
-              uimsbf(4) extensionSamplingFrequencyIndex;
-              if (extensionSamplingFrequencyIndex == 0xf) {
-                uimsbf(24) extensionSamplingFrequency;
-              }
-            }
-            uimsbf(4) extensionChannelConfiguration;
-          }
-        }
-      }   
-    }
-
-    */
-    public class AudioSpecificConfig
-    {
-
-
-        protected GetAudioObjectType audioObjectType;
-        public GetAudioObjectType AudioObjectType { get { return this.audioObjectType; } set { this.audioObjectType = value; } }
-
-        protected byte samplingFrequencyIndex;
-        public byte SamplingFrequencyIndex { get { return this.samplingFrequencyIndex; } set { this.samplingFrequencyIndex = value; } }
-
-        protected uint samplingFrequency;
-        public uint SamplingFrequency { get { return this.samplingFrequency; } set { this.samplingFrequency = value; } }
-
-        protected byte channelConfiguration;
-        public byte ChannelConfiguration { get { return this.channelConfiguration; } set { this.channelConfiguration = value; } }
-
-        protected byte extensionSamplingFrequencyIndex;
-        public byte ExtensionSamplingFrequencyIndex { get { return this.extensionSamplingFrequencyIndex; } set { this.extensionSamplingFrequencyIndex = value; } }
-
-        protected uint extensionSamplingFrequency;
-        public uint ExtensionSamplingFrequency { get { return this.extensionSamplingFrequency; } set { this.extensionSamplingFrequency = value; } }
-
-        protected GetAudioObjectType audioObjectType0;
-        public GetAudioObjectType AudioObjectType0 { get { return this.audioObjectType0; } set { this.audioObjectType0 = value; } }
-
-        protected byte extensionChannelConfiguration;
-        public byte ExtensionChannelConfiguration { get { return this.extensionChannelConfiguration; } set { this.extensionChannelConfiguration = value; } }
-
-        protected GASpecificConfig GASpecificConfig;
-        public GASpecificConfig _GASpecificConfig { get { return this.GASpecificConfig; } set { this.GASpecificConfig = value; } }
-
-        protected CelpSpecificConfig CelpSpecificConfig;
-        public CelpSpecificConfig _CelpSpecificConfig { get { return this.CelpSpecificConfig; } set { this.CelpSpecificConfig = value; } }
-
-        protected HvxcSpecificConfig HvxcSpecificConfig;
-        public HvxcSpecificConfig _HvxcSpecificConfig { get { return this.HvxcSpecificConfig; } set { this.HvxcSpecificConfig = value; } }
-
-        protected TTSSpecificConfig TTSSpecificConfig;
-        public TTSSpecificConfig _TTSSpecificConfig { get { return this.TTSSpecificConfig; } set { this.TTSSpecificConfig = value; } }
-
-        protected StructuredAudioSpecificConfig StructuredAudioSpecificConfig;
-        public StructuredAudioSpecificConfig _StructuredAudioSpecificConfig { get { return this.StructuredAudioSpecificConfig; } set { this.StructuredAudioSpecificConfig = value; } }
-
-        protected ErrorResilientCelpSpecificConfig ErrorResilientCelpSpecificConfig;
-        public ErrorResilientCelpSpecificConfig _ErrorResilientCelpSpecificConfig { get { return this.ErrorResilientCelpSpecificConfig; } set { this.ErrorResilientCelpSpecificConfig = value; } }
-
-        protected ErrorResilientHvxcSpecificConfig ErrorResilientHvxcSpecificConfig;
-        public ErrorResilientHvxcSpecificConfig _ErrorResilientHvxcSpecificConfig { get { return this.ErrorResilientHvxcSpecificConfig; } set { this.ErrorResilientHvxcSpecificConfig = value; } }
-
-        protected ParametricSpecificConfig ParametricSpecificConfig;
-        public ParametricSpecificConfig _ParametricSpecificConfig { get { return this.ParametricSpecificConfig; } set { this.ParametricSpecificConfig = value; } }
-
-        protected SSCSpecificConfig SSCSpecificConfig;
-        public SSCSpecificConfig _SSCSpecificConfig { get { return this.SSCSpecificConfig; } set { this.SSCSpecificConfig = value; } }
-
-        protected bool sacPayloadEmbedding;
-        public bool SacPayloadEmbedding { get { return this.sacPayloadEmbedding; } set { this.sacPayloadEmbedding = value; } }
-
-        protected SpatialSpecificConfig SpatialSpecificConfig;
-        public SpatialSpecificConfig _SpatialSpecificConfig { get { return this.SpatialSpecificConfig; } set { this.SpatialSpecificConfig = value; } }
-
-        protected MPEG_1_2_SpecificConfig MPEG_1_2_SpecificConfig;
-        public MPEG_1_2_SpecificConfig MPEG12SpecificConfig { get { return this.MPEG_1_2_SpecificConfig; } set { this.MPEG_1_2_SpecificConfig = value; } }
-
-        protected DSTSpecificConfig DSTSpecificConfig;
-        public DSTSpecificConfig _DSTSpecificConfig { get { return this.DSTSpecificConfig; } set { this.DSTSpecificConfig = value; } }
-
-        protected byte fillBits;
-        public byte FillBits { get { return this.fillBits; } set { this.fillBits = value; } }
-
-        protected ALSSpecificConfig ALSSpecificConfig;
-        public ALSSpecificConfig _ALSSpecificConfig { get { return this.ALSSpecificConfig; } set { this.ALSSpecificConfig = value; } }
-
-        protected SLSSpecificConfig SLSSpecificConfig;
-        public SLSSpecificConfig _SLSSpecificConfig { get { return this.SLSSpecificConfig; } set { this.SLSSpecificConfig = value; } }
-
-        protected ELDSpecificConfig ELDSpecificConfig;
-        public ELDSpecificConfig _ELDSpecificConfig { get { return this.ELDSpecificConfig; } set { this.ELDSpecificConfig = value; } }
-
-        protected SymbolicMusicSpecificConfig SymbolicMusicSpecificConfig;
-        public SymbolicMusicSpecificConfig _SymbolicMusicSpecificConfig { get { return this.SymbolicMusicSpecificConfig; } set { this.SymbolicMusicSpecificConfig = value; } }
-
-        protected byte epConfig;
-        public byte EpConfig { get { return this.epConfig; } set { this.epConfig = value; } }
-
-        protected ErrorProtectionSpecificConfig ErrorProtectionSpecificConfig;
-        public ErrorProtectionSpecificConfig _ErrorProtectionSpecificConfig { get { return this.ErrorProtectionSpecificConfig; } set { this.ErrorProtectionSpecificConfig = value; } }
-
-        protected bool directMapping;
-        public bool DirectMapping { get { return this.directMapping; } set { this.directMapping = value; } }
-
-        protected ushort syncExtensionType;
-        public ushort SyncExtensionType { get { return this.syncExtensionType; } set { this.syncExtensionType = value; } }
-
-        protected GetAudioObjectType extensionAudioObjectType;
-        public GetAudioObjectType ExtensionAudioObjectType { get { return this.extensionAudioObjectType; } set { this.extensionAudioObjectType = value; } }
-
-        protected bool sbrPresentFlag;
-        public bool SbrPresentFlag { get { return this.sbrPresentFlag; } set { this.sbrPresentFlag = value; } }
-
-        protected byte extensionSamplingFrequencyIndex0;
-        public byte ExtensionSamplingFrequencyIndex0 { get { return this.extensionSamplingFrequencyIndex0; } set { this.extensionSamplingFrequencyIndex0 = value; } }
-
-        protected uint extensionSamplingFrequency0;
-        public uint ExtensionSamplingFrequency0 { get { return this.extensionSamplingFrequency0; } set { this.extensionSamplingFrequency0 = value; } }
-
-        protected ushort syncExtensionType0;
-        public ushort SyncExtensionType0 { get { return this.syncExtensionType0; } set { this.syncExtensionType0 = value; } }
-
-        protected bool psPresentFlag;
-        public bool PsPresentFlag { get { return this.psPresentFlag; } set { this.psPresentFlag = value; } }
-
-        protected bool sbrPresentFlag0;
-        public bool SbrPresentFlag0 { get { return this.sbrPresentFlag0; } set { this.sbrPresentFlag0 = value; } }
-
-        protected byte extensionSamplingFrequencyIndex00;
-        public byte ExtensionSamplingFrequencyIndex00 { get { return this.extensionSamplingFrequencyIndex00; } set { this.extensionSamplingFrequencyIndex00 = value; } }
-
-        protected uint extensionSamplingFrequency00;
-        public uint ExtensionSamplingFrequency00 { get { return this.extensionSamplingFrequency00; } set { this.extensionSamplingFrequency00 = value; } }
-
-        protected byte extensionChannelConfiguration0;
-        public byte ExtensionChannelConfiguration0 { get { return this.extensionChannelConfiguration0; } set { this.extensionChannelConfiguration0 = value; } }
-
-        public AudioSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadClass(out this.audioObjectType);
-            boxSize += stream.ReadBslbf(4, out this.samplingFrequencyIndex);
-
-            if (samplingFrequencyIndex == 0xf)
-            {
-                boxSize += stream.ReadUimsbf(24, out this.samplingFrequency);
-            }
-            boxSize += stream.ReadBslbf(4, out this.channelConfiguration);
-            sbrPresentFlag = false;
-            psPresentFlag = false;
-
-            if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
-            {
-                extensionAudioObjectType.AudioObjectType = 5;
-                sbrPresentFlag = true;
-
-                if (audioObjectType.AudioObjectType == 29)
-                {
-                    psPresentFlag = true;
-                }
-                boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex);
-
-                if (extensionSamplingFrequencyIndex == 0xf)
-                {
-                    boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency);
-                }
-                boxSize += stream.ReadClass(out this.audioObjectType0);
-
-                if (audioObjectType.AudioObjectType == 22)
-                {
-                    boxSize += stream.ReadUimsbf(4, out this.extensionChannelConfiguration);
-                }
-            }
-
-            else
-            {
-                extensionAudioObjectType.AudioObjectType = 0;
-            }
-
-            switch (audioObjectType.AudioObjectType)
-            {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 6:
-                case 7:
-                case 17:
-                case 19:
-                case 20:
-                case 21:
-                case 22:
-                case 23:
-                    boxSize += stream.ReadClass(out this.GASpecificConfig);
-                    break;
-                case 8:
-                    boxSize += stream.ReadClass(out this.CelpSpecificConfig);
-                    break;
-                case 9:
-                    boxSize += stream.ReadClass(out this.HvxcSpecificConfig);
-                    break;
-                case 12:
-                    boxSize += stream.ReadClass(out this.TTSSpecificConfig);
-                    break;
-                case 13:
-                case 14:
-                case 15:
-                case 16:
-                    boxSize += stream.ReadClass(out this.StructuredAudioSpecificConfig);
-                    break;
-                case 24:
-                    boxSize += stream.ReadClass(out this.ErrorResilientCelpSpecificConfig);
-                    break;
-                case 25:
-                    boxSize += stream.ReadClass(out this.ErrorResilientHvxcSpecificConfig);
-                    break;
-                case 26:
-                case 27:
-                    boxSize += stream.ReadClass(out this.ParametricSpecificConfig);
-                    break;
-                case 28:
-                    boxSize += stream.ReadClass(out this.SSCSpecificConfig);
-                    break;
-                case 30:
-                    boxSize += stream.ReadUimsbf(out this.sacPayloadEmbedding);
-                    boxSize += stream.ReadClass(out this.SpatialSpecificConfig);
-                    break;
-                case 32:
-                case 33:
-                case 34:
-                    boxSize += stream.ReadClass(out this.MPEG_1_2_SpecificConfig);
-                    break;
-                case 35:
-                    boxSize += stream.ReadClass(out this.DSTSpecificConfig);
-                    break;
-                case 36:
-                    boxSize += stream.ReadBslbf(5, out this.fillBits);
-                    boxSize += stream.ReadClass(out this.ALSSpecificConfig);
-                    break;
-                case 37:
-                case 38:
-                    boxSize += stream.ReadClass(out this.SLSSpecificConfig);
-                    break;
-                case 39:
-                    boxSize += stream.ReadClass(out this.ELDSpecificConfig);
-                    break;
-                case 40:
-                case 41:
-                    boxSize += stream.ReadClass(out this.SymbolicMusicSpecificConfig);
-                    break;
-                default:
-                    /* reserved */
-                    break;
-            }
-
-            switch (audioObjectType.AudioObjectType)
-            {
-                case 17:
-                case 19:
-                case 20:
-                case 21:
-                case 22:
-                case 23:
-                case 24:
-                case 25:
-                case 26:
-                case 27:
-                case 39:
-                    boxSize += stream.ReadBslbf(2, out this.epConfig);
-
-                    if (epConfig == 2 || epConfig == 3)
-                    {
-                        boxSize += stream.ReadClass(out this.ErrorProtectionSpecificConfig);
-                    }
-
-                    if (epConfig == 3)
-                    {
-                        boxSize += stream.ReadBslbf(out this.directMapping);
-
-                        if (!directMapping)
-                        {
-                            /*  tbd  */
-                        }
-                    }
-                    break;
-            }
-
-            if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
-            {
-                boxSize += stream.ReadBslbf(11, out this.syncExtensionType);
-
-                if (syncExtensionType == 0x2b7)
-                {
-                    boxSize += stream.ReadClass(out this.extensionAudioObjectType);
-
-                    if (extensionAudioObjectType.AudioObjectType == 5)
-                    {
-                        boxSize += stream.ReadUimsbf(out this.sbrPresentFlag);
-
-                        if (sbrPresentFlag == true)
-                        {
-                            boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex0);
-
-                            if (extensionSamplingFrequencyIndex == 0xf)
-                            {
-                                boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency0);
-                            }
-
-                            if (IsoStream.BitsToDecode() >= 12)
-                            {
-                                boxSize += stream.ReadBslbf(11, out this.syncExtensionType0);
-
-                                if (syncExtensionType == 0x548)
-                                {
-                                    boxSize += stream.ReadUimsbf(out this.psPresentFlag);
-                                }
-                            }
-                        }
-                    }
-
-                    if (extensionAudioObjectType.AudioObjectType == 22)
-                    {
-                        boxSize += stream.ReadUimsbf(out this.sbrPresentFlag0);
-
-                        if (sbrPresentFlag == true)
-                        {
-                            boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex00);
-
-                            if (extensionSamplingFrequencyIndex == 0xf)
-                            {
-                                boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency00);
-                            }
-                        }
-                        boxSize += stream.ReadUimsbf(4, out this.extensionChannelConfiguration0);
-                    }
-                }
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteClass(this.audioObjectType);
-            boxSize += stream.WriteBslbf(4, this.samplingFrequencyIndex);
-
-            if (samplingFrequencyIndex == 0xf)
-            {
-                boxSize += stream.WriteUimsbf(24, this.samplingFrequency);
-            }
-            boxSize += stream.WriteBslbf(4, this.channelConfiguration);
-            sbrPresentFlag = false;
-            psPresentFlag = false;
-
-            if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
-            {
-                extensionAudioObjectType.AudioObjectType = 5;
-                sbrPresentFlag = true;
-
-                if (audioObjectType.AudioObjectType == 29)
-                {
-                    psPresentFlag = true;
-                }
-                boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex);
-
-                if (extensionSamplingFrequencyIndex == 0xf)
-                {
-                    boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency);
-                }
-                boxSize += stream.WriteClass(this.audioObjectType0);
-
-                if (audioObjectType.AudioObjectType == 22)
-                {
-                    boxSize += stream.WriteUimsbf(4, this.extensionChannelConfiguration);
-                }
-            }
-
-            else
-            {
-                extensionAudioObjectType.AudioObjectType = 0;
-            }
-
-            switch (audioObjectType.AudioObjectType)
-            {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 6:
-                case 7:
-                case 17:
-                case 19:
-                case 20:
-                case 21:
-                case 22:
-                case 23:
-                    boxSize += stream.WriteClass(this.GASpecificConfig);
-                    break;
-                case 8:
-                    boxSize += stream.WriteClass(this.CelpSpecificConfig);
-                    break;
-                case 9:
-                    boxSize += stream.WriteClass(this.HvxcSpecificConfig);
-                    break;
-                case 12:
-                    boxSize += stream.WriteClass(this.TTSSpecificConfig);
-                    break;
-                case 13:
-                case 14:
-                case 15:
-                case 16:
-                    boxSize += stream.WriteClass(this.StructuredAudioSpecificConfig);
-                    break;
-                case 24:
-                    boxSize += stream.WriteClass(this.ErrorResilientCelpSpecificConfig);
-                    break;
-                case 25:
-                    boxSize += stream.WriteClass(this.ErrorResilientHvxcSpecificConfig);
-                    break;
-                case 26:
-                case 27:
-                    boxSize += stream.WriteClass(this.ParametricSpecificConfig);
-                    break;
-                case 28:
-                    boxSize += stream.WriteClass(this.SSCSpecificConfig);
-                    break;
-                case 30:
-                    boxSize += stream.WriteUimsbf(this.sacPayloadEmbedding);
-                    boxSize += stream.WriteClass(this.SpatialSpecificConfig);
-                    break;
-                case 32:
-                case 33:
-                case 34:
-                    boxSize += stream.WriteClass(this.MPEG_1_2_SpecificConfig);
-                    break;
-                case 35:
-                    boxSize += stream.WriteClass(this.DSTSpecificConfig);
-                    break;
-                case 36:
-                    boxSize += stream.WriteBslbf(5, this.fillBits);
-                    boxSize += stream.WriteClass(this.ALSSpecificConfig);
-                    break;
-                case 37:
-                case 38:
-                    boxSize += stream.WriteClass(this.SLSSpecificConfig);
-                    break;
-                case 39:
-                    boxSize += stream.WriteClass(this.ELDSpecificConfig);
-                    break;
-                case 40:
-                case 41:
-                    boxSize += stream.WriteClass(this.SymbolicMusicSpecificConfig);
-                    break;
-                default:
-                    /* reserved */
-                    break;
-            }
-
-            switch (audioObjectType.AudioObjectType)
-            {
-                case 17:
-                case 19:
-                case 20:
-                case 21:
-                case 22:
-                case 23:
-                case 24:
-                case 25:
-                case 26:
-                case 27:
-                case 39:
-                    boxSize += stream.WriteBslbf(2, this.epConfig);
-
-                    if (epConfig == 2 || epConfig == 3)
-                    {
-                        boxSize += stream.WriteClass(this.ErrorProtectionSpecificConfig);
-                    }
-
-                    if (epConfig == 3)
-                    {
-                        boxSize += stream.WriteBslbf(this.directMapping);
-
-                        if (!directMapping)
-                        {
-                            /*  tbd  */
-                        }
-                    }
-                    break;
-            }
-
-            if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
-            {
-                boxSize += stream.WriteBslbf(11, this.syncExtensionType);
-
-                if (syncExtensionType == 0x2b7)
-                {
-                    boxSize += stream.WriteClass(this.extensionAudioObjectType);
-
-                    if (extensionAudioObjectType.AudioObjectType == 5)
-                    {
-                        boxSize += stream.WriteUimsbf(this.sbrPresentFlag);
-
-                        if (sbrPresentFlag == true)
-                        {
-                            boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex0);
-
-                            if (extensionSamplingFrequencyIndex == 0xf)
-                            {
-                                boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency0);
-                            }
-
-                            if (IsoStream.BitsToDecode() >= 12)
-                            {
-                                boxSize += stream.WriteBslbf(11, this.syncExtensionType0);
-
-                                if (syncExtensionType == 0x548)
-                                {
-                                    boxSize += stream.WriteUimsbf(this.psPresentFlag);
-                                }
-                            }
-                        }
-                    }
-
-                    if (extensionAudioObjectType.AudioObjectType == 22)
-                    {
-                        boxSize += stream.WriteUimsbf(this.sbrPresentFlag0);
-
-                        if (sbrPresentFlag == true)
-                        {
-                            boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex00);
-
-                            if (extensionSamplingFrequencyIndex == 0xf)
-                            {
-                                boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency00);
-                            }
-                        }
-                        boxSize += stream.WriteUimsbf(4, this.extensionChannelConfiguration0);
-                    }
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += IsoStream.CalculateClassSize(audioObjectType); // audioObjectType
-            boxSize += 4; // samplingFrequencyIndex
-
-            if (samplingFrequencyIndex == 0xf)
-            {
-                boxSize += 24; // samplingFrequency
-            }
-            boxSize += 4; // channelConfiguration
-            sbrPresentFlag = false;
-            psPresentFlag = false;
-
-            if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
-            {
-                extensionAudioObjectType.AudioObjectType = 5;
-                sbrPresentFlag = true;
-
-                if (audioObjectType.AudioObjectType == 29)
-                {
-                    psPresentFlag = true;
-                }
-                boxSize += 4; // extensionSamplingFrequencyIndex
-
-                if (extensionSamplingFrequencyIndex == 0xf)
-                {
-                    boxSize += 24; // extensionSamplingFrequency
-                }
-                boxSize += IsoStream.CalculateClassSize(audioObjectType0); // audioObjectType0
-
-                if (audioObjectType.AudioObjectType == 22)
-                {
-                    boxSize += 4; // extensionChannelConfiguration
-                }
-            }
-
-            else
-            {
-                extensionAudioObjectType.AudioObjectType = 0;
-            }
-
-            switch (audioObjectType.AudioObjectType)
-            {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 6:
-                case 7:
-                case 17:
-                case 19:
-                case 20:
-                case 21:
-                case 22:
-                case 23:
-                    boxSize += IsoStream.CalculateClassSize(GASpecificConfig); // GASpecificConfig
-                    break;
-                case 8:
-                    boxSize += IsoStream.CalculateClassSize(CelpSpecificConfig); // CelpSpecificConfig
-                    break;
-                case 9:
-                    boxSize += IsoStream.CalculateClassSize(HvxcSpecificConfig); // HvxcSpecificConfig
-                    break;
-                case 12:
-                    boxSize += IsoStream.CalculateClassSize(TTSSpecificConfig); // TTSSpecificConfig
-                    break;
-                case 13:
-                case 14:
-                case 15:
-                case 16:
-                    boxSize += IsoStream.CalculateClassSize(StructuredAudioSpecificConfig); // StructuredAudioSpecificConfig
-                    break;
-                case 24:
-                    boxSize += IsoStream.CalculateClassSize(ErrorResilientCelpSpecificConfig); // ErrorResilientCelpSpecificConfig
-                    break;
-                case 25:
-                    boxSize += IsoStream.CalculateClassSize(ErrorResilientHvxcSpecificConfig); // ErrorResilientHvxcSpecificConfig
-                    break;
-                case 26:
-                case 27:
-                    boxSize += IsoStream.CalculateClassSize(ParametricSpecificConfig); // ParametricSpecificConfig
-                    break;
-                case 28:
-                    boxSize += IsoStream.CalculateClassSize(SSCSpecificConfig); // SSCSpecificConfig
-                    break;
-                    boxSize += boxSize += 1; // sacPayloadEmbedding
-                    boxSize += IsoStream.CalculateClassSize(SpatialSpecificConfig); // SpatialSpecificConfig
-                    break;
-                case 32:
-                case 33:
-                case 34:
-                    boxSize += IsoStream.CalculateClassSize(MPEG_1_2_SpecificConfig); // MPEG_1_2_SpecificConfig
-                    break;
-                case 35:
-                    boxSize += IsoStream.CalculateClassSize(DSTSpecificConfig); // DSTSpecificConfig
-                    break;
-                    boxSize += boxSize += 5; // fillBits
-                    boxSize += IsoStream.CalculateClassSize(ALSSpecificConfig); // ALSSpecificConfig
-                    break;
-                case 37:
-                case 38:
-                    boxSize += IsoStream.CalculateClassSize(SLSSpecificConfig); // SLSSpecificConfig
-                    break;
-                case 39:
-                    boxSize += IsoStream.CalculateClassSize(ELDSpecificConfig); // ELDSpecificConfig
-                    break;
-                case 40:
-                case 41:
-                    boxSize += IsoStream.CalculateClassSize(SymbolicMusicSpecificConfig); // SymbolicMusicSpecificConfig
-                    break;
-                default:
-                    /* reserved */
-                    break;
-            }
-
-            switch (audioObjectType.AudioObjectType)
-            {
-                case 17:
-                case 19:
-                case 20:
-                case 21:
-                case 22:
-                case 23:
-                case 24:
-                case 25:
-                case 26:
-                case 27:
-                case 39:
-                    boxSize += 2; // epConfig
-
-                    if (epConfig == 2 || epConfig == 3)
-                    {
-                        boxSize += IsoStream.CalculateClassSize(ErrorProtectionSpecificConfig); // ErrorProtectionSpecificConfig
-                    }
-
-                    if (epConfig == 3)
-                    {
-                        boxSize += 1; // directMapping
-
-                        if (!directMapping)
-                        {
-                            /*  tbd  */
-                        }
-                    }
-                    break;
-            }
-
-            if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
-            {
-                boxSize += 11; // syncExtensionType
-
-                if (syncExtensionType == 0x2b7)
-                {
-                    boxSize += IsoStream.CalculateClassSize(extensionAudioObjectType); // extensionAudioObjectType
-
-                    if (extensionAudioObjectType.AudioObjectType == 5)
-                    {
-                        boxSize += 1; // sbrPresentFlag
-
-                        if (sbrPresentFlag == true)
-                        {
-                            boxSize += 4; // extensionSamplingFrequencyIndex0
-
-                            if (extensionSamplingFrequencyIndex == 0xf)
-                            {
-                                boxSize += 24; // extensionSamplingFrequency0
-                            }
-
-                            if (IsoStream.BitsToDecode() >= 12)
-                            {
-                                boxSize += 11; // syncExtensionType0
-
-                                if (syncExtensionType == 0x548)
-                                {
-                                    boxSize += 1; // psPresentFlag
-                                }
-                            }
-                        }
-                    }
-
-                    if (extensionAudioObjectType.AudioObjectType == 22)
-                    {
-                        boxSize += 1; // sbrPresentFlag0
-
-                        if (sbrPresentFlag == true)
-                        {
-                            boxSize += 4; // extensionSamplingFrequencyIndex00
-
-                            if (extensionSamplingFrequencyIndex == 0xf)
-                            {
-                                boxSize += 24; // extensionSamplingFrequency00
-                            }
-                        }
-                        boxSize += 4; // extensionChannelConfiguration0
-                    }
-                }
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class GetAudioObjectType()
-    {
-      uimsbf(5) audioObjectType;
-      if (audioObjectType == 31) {
-        uimsbf(6) audioObjectTypeExt;
-        audioObjectType = 32 + audioObjectTypeExt;
-      }
-      return audioObjectType;
-    }
-
-    */
-    public class GetAudioObjectType
-    {
-
-
-        protected byte audioObjectType;
-        public byte AudioObjectType { get { return this.audioObjectType; } set { this.audioObjectType = value; } }
-
-        protected byte audioObjectTypeExt;
-        public byte AudioObjectTypeExt { get { return this.audioObjectTypeExt; } set { this.audioObjectTypeExt = value; } }
-
-        public GetAudioObjectType()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(5, out this.audioObjectType);
-
-            if (audioObjectType == 31)
-            {
-                boxSize += stream.ReadUimsbf(6, out this.audioObjectTypeExt);
-                audioObjectType = (byte)(32 + audioObjectTypeExt);
-            }
-            return audioObjectType;
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(5, this.audioObjectType);
-
-            if (audioObjectType == 31)
-            {
-                boxSize += stream.WriteUimsbf(6, this.audioObjectTypeExt);
-                audioObjectType = (byte)(32 + audioObjectTypeExt);
-            }
-            return audioObjectType;
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 5; // audioObjectType
-
-            if (audioObjectType == 31)
-            {
-                boxSize += 6; // audioObjectTypeExt
-                audioObjectType = (byte)(32 + audioObjectTypeExt);
-            }
-            return audioObjectType;
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType)
-    {
-      bslbf(1) frameLengthFlag;
-      bslbf(1) dependsOnCoreCoder;
-      if (dependsOnCoreCoder) {
-        uimsbf(14) coreCoderDelay;
-      }
-      bslbf(1) extensionFlag;
-      if (!channelConfiguration) {
-        program_config_element();
-      }
-      if ((audioObjectType == 6) || (audioObjectType == 20)) {
-        uimsbf(3) layerNr;
-      }
-      if (extensionFlag) {
-        if (audioObjectType == 22) {
-          bslbf(5) numOfSubFrame;
-          bslbf(11) layer_length;
-        }
-        if (audioObjectType == 17 || audioObjectType == 19 ||
-          audioObjectType == 20 || audioObjectType == 23) {
-
-          bslbf(1) aacSectionDataResilienceFlag;
-          bslbf(1) aacScalefactorDataResilienceFlag;
-          bslbf(1) aacSpectralDataResilienceFlag;
-        }
-        bslbf(1) extensionFlag3;
-        if (extensionFlag3) {
-          /* tbd in version 3 *//*
-        }
-      }
-    }
-
-    */
-    public class GASpecificConfig
-    {
-
-
-        protected bool frameLengthFlag;
-        public bool FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
-
-        protected bool dependsOnCoreCoder;
-        public bool DependsOnCoreCoder { get { return this.dependsOnCoreCoder; } set { this.dependsOnCoreCoder = value; } }
-
-        protected ushort coreCoderDelay;
-        public ushort CoreCoderDelay { get { return this.coreCoderDelay; } set { this.coreCoderDelay = value; } }
-
-        protected bool extensionFlag;
-        public bool ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
-
-        protected program_config_element program_config_element;
-        public program_config_element ProgramConfigElement { get { return this.program_config_element; } set { this.program_config_element = value; } }
-
-        protected byte layerNr;
-        public byte LayerNr { get { return this.layerNr; } set { this.layerNr = value; } }
-
-        protected byte numOfSubFrame;
-        public byte NumOfSubFrame { get { return this.numOfSubFrame; } set { this.numOfSubFrame = value; } }
-
-        protected ushort layer_length;
-        public ushort LayerLength { get { return this.layer_length; } set { this.layer_length = value; } }
-
-        protected bool aacSectionDataResilienceFlag;
-        public bool AacSectionDataResilienceFlag { get { return this.aacSectionDataResilienceFlag; } set { this.aacSectionDataResilienceFlag = value; } }
-
-        protected bool aacScalefactorDataResilienceFlag;
-        public bool AacScalefactorDataResilienceFlag { get { return this.aacScalefactorDataResilienceFlag; } set { this.aacScalefactorDataResilienceFlag = value; } }
-
-        protected bool aacSpectralDataResilienceFlag;
-        public bool AacSpectralDataResilienceFlag { get { return this.aacSpectralDataResilienceFlag; } set { this.aacSpectralDataResilienceFlag = value; } }
-
-        protected bool extensionFlag3;
-        public bool ExtensionFlag3 { get { return this.extensionFlag3; } set { this.extensionFlag3 = value; } }
-
-        public GASpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            GetAudioObjectType audioObjectType = null; // TODO: pass through ctor
-
-            byte channelConfiguration = 0; // TODO: pass through ctor
-
-            boxSize += stream.ReadBslbf(out this.frameLengthFlag);
-            boxSize += stream.ReadBslbf(out this.dependsOnCoreCoder);
-
-            if (dependsOnCoreCoder)
-            {
-                boxSize += stream.ReadUimsbf(14, out this.coreCoderDelay);
-            }
-            boxSize += stream.ReadBslbf(out this.extensionFlag);
-
-            if (channelConfiguration == 0)
-            {
-                boxSize += stream.ReadClass(out this.program_config_element);
-            }
-
-            if ((audioObjectType.AudioObjectType == 6) || (audioObjectType.AudioObjectType == 20))
-            {
-                boxSize += stream.ReadUimsbf(3, out this.layerNr);
-            }
-
-            if (extensionFlag)
-            {
-
-                if (audioObjectType.AudioObjectType == 22)
-                {
-                    boxSize += stream.ReadBslbf(5, out this.numOfSubFrame);
-                    boxSize += stream.ReadBslbf(11, out this.layer_length);
-                }
-
-                if (audioObjectType.AudioObjectType == 17 || audioObjectType.AudioObjectType == 19 ||
-          audioObjectType.AudioObjectType == 20 || audioObjectType.AudioObjectType == 23)
-                {
-                    boxSize += stream.ReadBslbf(out this.aacSectionDataResilienceFlag);
-                    boxSize += stream.ReadBslbf(out this.aacScalefactorDataResilienceFlag);
-                    boxSize += stream.ReadBslbf(out this.aacSpectralDataResilienceFlag);
-                }
-                boxSize += stream.ReadBslbf(out this.extensionFlag3);
-
-                if (extensionFlag3)
-                {
-                    /*  tbd in version 3  */
-                }
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            GetAudioObjectType audioObjectType = null; // TODO: pass through ctor
-
-            byte channelConfiguration = 0; // TODO: pass through ctor
-
-            boxSize += stream.WriteBslbf(this.frameLengthFlag);
-            boxSize += stream.WriteBslbf(this.dependsOnCoreCoder);
-
-            if (dependsOnCoreCoder)
-            {
-                boxSize += stream.WriteUimsbf(14, this.coreCoderDelay);
-            }
-            boxSize += stream.WriteBslbf(this.extensionFlag);
-
-            if (channelConfiguration == 0)
-            {
-                boxSize += stream.WriteClass(this.program_config_element);
-            }
-
-            if ((audioObjectType.AudioObjectType == 6) || (audioObjectType.AudioObjectType == 20))
-            {
-                boxSize += stream.WriteUimsbf(3, this.layerNr);
-            }
-
-            if (extensionFlag)
-            {
-
-                if (audioObjectType.AudioObjectType == 22)
-                {
-                    boxSize += stream.WriteBslbf(5, this.numOfSubFrame);
-                    boxSize += stream.WriteBslbf(11, this.layer_length);
-                }
-
-                if (audioObjectType.AudioObjectType == 17 || audioObjectType.AudioObjectType == 19 ||
-          audioObjectType.AudioObjectType == 20 || audioObjectType.AudioObjectType == 23)
-                {
-                    boxSize += stream.WriteBslbf(this.aacSectionDataResilienceFlag);
-                    boxSize += stream.WriteBslbf(this.aacScalefactorDataResilienceFlag);
-                    boxSize += stream.WriteBslbf(this.aacSpectralDataResilienceFlag);
-                }
-                boxSize += stream.WriteBslbf(this.extensionFlag3);
-
-                if (extensionFlag3)
-                {
-                    /*  tbd in version 3  */
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            GetAudioObjectType audioObjectType = null; // TODO: pass through ctor
-
-            byte channelConfiguration = 0; // TODO: pass through ctor
-
-            boxSize += 1; // frameLengthFlag
-            boxSize += 1; // dependsOnCoreCoder
-
-            if (dependsOnCoreCoder)
-            {
-                boxSize += 14; // coreCoderDelay
-            }
-            boxSize += 1; // extensionFlag
-
-            if (channelConfiguration == 0)
-            {
-                boxSize += IsoStream.CalculateClassSize(program_config_element); // program_config_element
-            }
-
-            if ((audioObjectType.AudioObjectType == 6) || (audioObjectType.AudioObjectType == 20))
-            {
-                boxSize += 3; // layerNr
-            }
-
-            if (extensionFlag)
-            {
-
-                if (audioObjectType.AudioObjectType == 22)
-                {
-                    boxSize += 5; // numOfSubFrame
-                    boxSize += 11; // layer_length
-                }
-
-                if (audioObjectType.AudioObjectType == 17 || audioObjectType.AudioObjectType == 19 ||
-          audioObjectType.AudioObjectType == 20 || audioObjectType.AudioObjectType == 23)
-                {
-                    boxSize += 1; // aacSectionDataResilienceFlag
-                    boxSize += 1; // aacScalefactorDataResilienceFlag
-                    boxSize += 1; // aacSpectralDataResilienceFlag
-                }
-                boxSize += 1; // extensionFlag3
-
-                if (extensionFlag3)
-                {
-                    /*  tbd in version 3  */
-                }
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class program_config_element()
-    {
-      uimsbf(4) element_instance_tag;
-      uimsbf(2) object_type;
-      uimsbf(4) sampling_frequency_index;
-      uimsbf(4) num_front_channel_elements;
-      uimsbf(4) num_side_channel_elements;
-      uimsbf(4) num_back_channel_elements;
-      uimsbf(2) num_lfe_channel_elements;
-      uimsbf(3) num_assoc_data_elements;
-      uimsbf(4) num_valid_cc_elements;
-      uimsbf(1) mono_mixdown_present;
-      if (mono_mixdown_present == 1)
-        uimsbf(4) mono_mixdown_element_number;
-      uimsbf(1) stereo_mixdown_present;
-      if (stereo_mixdown_present == 1)
-        uimsbf(4) stereo_mixdown_element_number;
-      uimsbf(1) matrix_mixdown_idx_present;
-      if (matrix_mixdown_idx_present == 1) {
-        uimsbf(2) matrix_mixdown_idx;
-        uimsbf(1) pseudo_surround_enable;
-      }
-      for (i = 0; i < num_front_channel_elements; i++) {
-        bslbf(1) front_element_is_cpe[i];
-        uimsbf(4) front_element_tag_select[i];
-      }
-      for (i = 0; i < num_side_channel_elements; i++) {
-        bslbf(1) side_element_is_cpe[i];
-        uimsbf(4) side_element_tag_select[i];
-      }
-      for (i = 0; i < num_back_channel_elements; i++) {
-        bslbf(1) back_element_is_cpe[i];
-        uimsbf(4) back_element_tag_select[i];
-      }
-      for (i = 0; i < num_lfe_channel_elements; i++)
-        uimsbf(4) lfe_element_tag_select[i];
-      for (i = 0; i < num_assoc_data_elements; i++)
-        uimsbf(4) assoc_data_element_tag_select[i];
-      for (i = 0; i < num_valid_cc_elements; i++) {
-        uimsbf(1) cc_element_is_ind_sw[i];
-        uimsbf(4) valid_cc_element_tag_select[i];
-      }
-      byte_alignment();  // Note 1 
-      uimsbf(8) comment_field_bytes;
-      for (i = 0; i < comment_field_bytes; i++)
-        uimsbf(8) comment_field_data[i];
-    }
-
-    */
-    public class program_config_element
-    {
-
-
-        protected byte element_instance_tag;
-        public byte ElementInstanceTag { get { return this.element_instance_tag; } set { this.element_instance_tag = value; } }
-
-        protected byte object_type;
-        public byte ObjectType { get { return this.object_type; } set { this.object_type = value; } }
-
-        protected byte sampling_frequency_index;
-        public byte SamplingFrequencyIndex { get { return this.sampling_frequency_index; } set { this.sampling_frequency_index = value; } }
-
-        protected byte num_front_channel_elements;
-        public byte NumFrontChannelElements { get { return this.num_front_channel_elements; } set { this.num_front_channel_elements = value; } }
-
-        protected byte num_side_channel_elements;
-        public byte NumSideChannelElements { get { return this.num_side_channel_elements; } set { this.num_side_channel_elements = value; } }
-
-        protected byte num_back_channel_elements;
-        public byte NumBackChannelElements { get { return this.num_back_channel_elements; } set { this.num_back_channel_elements = value; } }
-
-        protected byte num_lfe_channel_elements;
-        public byte NumLfeChannelElements { get { return this.num_lfe_channel_elements; } set { this.num_lfe_channel_elements = value; } }
-
-        protected byte num_assoc_data_elements;
-        public byte NumAssocDataElements { get { return this.num_assoc_data_elements; } set { this.num_assoc_data_elements = value; } }
-
-        protected byte num_valid_cc_elements;
-        public byte NumValidCcElements { get { return this.num_valid_cc_elements; } set { this.num_valid_cc_elements = value; } }
-
-        protected bool mono_mixdown_present;
-        public bool MonoMixdownPresent { get { return this.mono_mixdown_present; } set { this.mono_mixdown_present = value; } }
-
-        protected byte mono_mixdown_element_number;
-        public byte MonoMixdownElementNumber { get { return this.mono_mixdown_element_number; } set { this.mono_mixdown_element_number = value; } }
-
-        protected bool stereo_mixdown_present;
-        public bool StereoMixdownPresent { get { return this.stereo_mixdown_present; } set { this.stereo_mixdown_present = value; } }
-
-        protected byte stereo_mixdown_element_number;
-        public byte StereoMixdownElementNumber { get { return this.stereo_mixdown_element_number; } set { this.stereo_mixdown_element_number = value; } }
-
-        protected bool matrix_mixdown_idx_present;
-        public bool MatrixMixdownIdxPresent { get { return this.matrix_mixdown_idx_present; } set { this.matrix_mixdown_idx_present = value; } }
-
-        protected byte matrix_mixdown_idx;
-        public byte MatrixMixdownIdx { get { return this.matrix_mixdown_idx; } set { this.matrix_mixdown_idx = value; } }
-
-        protected bool pseudo_surround_enable;
-        public bool PseudoSurroundEnable { get { return this.pseudo_surround_enable; } set { this.pseudo_surround_enable = value; } }
-
-        protected byte[] front_element_is_cpe;
-        public byte[] FrontElementIsCpe { get { return this.front_element_is_cpe; } set { this.front_element_is_cpe = value; } }
-
-        protected byte[] front_element_tag_select;
-        public byte[] FrontElementTagSelect { get { return this.front_element_tag_select; } set { this.front_element_tag_select = value; } }
-
-        protected byte[] side_element_is_cpe;
-        public byte[] SideElementIsCpe { get { return this.side_element_is_cpe; } set { this.side_element_is_cpe = value; } }
-
-        protected byte[] side_element_tag_select;
-        public byte[] SideElementTagSelect { get { return this.side_element_tag_select; } set { this.side_element_tag_select = value; } }
-
-        protected byte[] back_element_is_cpe;
-        public byte[] BackElementIsCpe { get { return this.back_element_is_cpe; } set { this.back_element_is_cpe = value; } }
-
-        protected byte[] back_element_tag_select;
-        public byte[] BackElementTagSelect { get { return this.back_element_tag_select; } set { this.back_element_tag_select = value; } }
-
-        protected byte[] lfe_element_tag_select;
-        public byte[] LfeElementTagSelect { get { return this.lfe_element_tag_select; } set { this.lfe_element_tag_select = value; } }
-
-        protected byte[] assoc_data_element_tag_select;
-        public byte[] AssocDataElementTagSelect { get { return this.assoc_data_element_tag_select; } set { this.assoc_data_element_tag_select = value; } }
-
-        protected bool[] cc_element_is_ind_sw;
-        public bool[] CcElementIsIndSw { get { return this.cc_element_is_ind_sw; } set { this.cc_element_is_ind_sw = value; } }
-
-        protected byte[] valid_cc_element_tag_select;
-        public byte[] ValidCcElementTagSelect { get { return this.valid_cc_element_tag_select; } set { this.valid_cc_element_tag_select = value; } }
-
-        protected byte byte_alignment;  //  Note 1 
-        public byte ByteAlignment { get { return this.byte_alignment; } set { this.byte_alignment = value; } }
-
-        protected byte comment_field_bytes;
-        public byte CommentFieldBytes { get { return this.comment_field_bytes; } set { this.comment_field_bytes = value; } }
-
-        protected byte[] comment_field_data;
-        public byte[] CommentFieldData { get { return this.comment_field_data; } set { this.comment_field_data = value; } }
-
-        public program_config_element()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(4, out this.element_instance_tag);
-            boxSize += stream.ReadUimsbf(2, out this.object_type);
-            boxSize += stream.ReadUimsbf(4, out this.sampling_frequency_index);
-            boxSize += stream.ReadUimsbf(4, out this.num_front_channel_elements);
-            boxSize += stream.ReadUimsbf(4, out this.num_side_channel_elements);
-            boxSize += stream.ReadUimsbf(4, out this.num_back_channel_elements);
-            boxSize += stream.ReadUimsbf(2, out this.num_lfe_channel_elements);
-            boxSize += stream.ReadUimsbf(3, out this.num_assoc_data_elements);
-            boxSize += stream.ReadUimsbf(4, out this.num_valid_cc_elements);
-            boxSize += stream.ReadUimsbf(out this.mono_mixdown_present);
-
-            if (mono_mixdown_present == true)
-            {
-                boxSize += stream.ReadUimsbf(4, out this.mono_mixdown_element_number);
-            }
-            boxSize += stream.ReadUimsbf(out this.stereo_mixdown_present);
-
-            if (stereo_mixdown_present == true)
-            {
-                boxSize += stream.ReadUimsbf(4, out this.stereo_mixdown_element_number);
-            }
-            boxSize += stream.ReadUimsbf(out this.matrix_mixdown_idx_present);
-
-            if (matrix_mixdown_idx_present == true)
-            {
-                boxSize += stream.ReadUimsbf(2, out this.matrix_mixdown_idx);
-                boxSize += stream.ReadUimsbf(out this.pseudo_surround_enable);
-            }
-
-            for (int i = 0; i < num_front_channel_elements; i++)
-            {
-                boxSize += stream.ReadBslbf(1, out this.front_element_is_cpe[i]);
-                boxSize += stream.ReadUimsbf(4, out this.front_element_tag_select[i]);
-            }
-
-            for (int i = 0; i < num_side_channel_elements; i++)
-            {
-                boxSize += stream.ReadBslbf(1, out this.side_element_is_cpe[i]);
-                boxSize += stream.ReadUimsbf(4, out this.side_element_tag_select[i]);
-            }
-
-            for (int i = 0; i < num_back_channel_elements; i++)
-            {
-                boxSize += stream.ReadBslbf(1, out this.back_element_is_cpe[i]);
-                boxSize += stream.ReadUimsbf(4, out this.back_element_tag_select[i]);
-            }
-
-            for (int i = 0; i < num_lfe_channel_elements; i++)
-            {
-                boxSize += stream.ReadUimsbf(4, out this.lfe_element_tag_select[i]);
-            }
-
-            for (int i = 0; i < num_assoc_data_elements; i++)
-            {
-                boxSize += stream.ReadUimsbf(4, out this.assoc_data_element_tag_select[i]);
-            }
-
-            for (int i = 0; i < num_valid_cc_elements; i++)
-            {
-                boxSize += stream.ReadUimsbf(out this.cc_element_is_ind_sw[i]);
-                boxSize += stream.ReadUimsbf(4, out this.valid_cc_element_tag_select[i]);
-            }
-            boxSize += stream.ReadByteAlignment(out this.byte_alignment); // Note 1 
-            boxSize += stream.ReadUimsbf(8, out this.comment_field_bytes);
-
-            for (int i = 0; i < comment_field_bytes; i++)
-            {
-                boxSize += stream.ReadUimsbf(8, out this.comment_field_data[i]);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(4, this.element_instance_tag);
-            boxSize += stream.WriteUimsbf(2, this.object_type);
-            boxSize += stream.WriteUimsbf(4, this.sampling_frequency_index);
-            boxSize += stream.WriteUimsbf(4, this.num_front_channel_elements);
-            boxSize += stream.WriteUimsbf(4, this.num_side_channel_elements);
-            boxSize += stream.WriteUimsbf(4, this.num_back_channel_elements);
-            boxSize += stream.WriteUimsbf(2, this.num_lfe_channel_elements);
-            boxSize += stream.WriteUimsbf(3, this.num_assoc_data_elements);
-            boxSize += stream.WriteUimsbf(4, this.num_valid_cc_elements);
-            boxSize += stream.WriteUimsbf(this.mono_mixdown_present);
-
-            if (mono_mixdown_present == true)
-            {
-                boxSize += stream.WriteUimsbf(4, this.mono_mixdown_element_number);
-            }
-            boxSize += stream.WriteUimsbf(this.stereo_mixdown_present);
-
-            if (stereo_mixdown_present == true)
-            {
-                boxSize += stream.WriteUimsbf(4, this.stereo_mixdown_element_number);
-            }
-            boxSize += stream.WriteUimsbf(this.matrix_mixdown_idx_present);
-
-            if (matrix_mixdown_idx_present == true)
-            {
-                boxSize += stream.WriteUimsbf(2, this.matrix_mixdown_idx);
-                boxSize += stream.WriteUimsbf(this.pseudo_surround_enable);
-            }
-
-            for (int i = 0; i < num_front_channel_elements; i++)
-            {
-                boxSize += stream.WriteBslbf(1, this.front_element_is_cpe[i]);
-                boxSize += stream.WriteUimsbf(4, this.front_element_tag_select[i]);
-            }
-
-            for (int i = 0; i < num_side_channel_elements; i++)
-            {
-                boxSize += stream.WriteBslbf(1, this.side_element_is_cpe[i]);
-                boxSize += stream.WriteUimsbf(4, this.side_element_tag_select[i]);
-            }
-
-            for (int i = 0; i < num_back_channel_elements; i++)
-            {
-                boxSize += stream.WriteBslbf(1, this.back_element_is_cpe[i]);
-                boxSize += stream.WriteUimsbf(4, this.back_element_tag_select[i]);
-            }
-
-            for (int i = 0; i < num_lfe_channel_elements; i++)
-            {
-                boxSize += stream.WriteUimsbf(4, this.lfe_element_tag_select[i]);
-            }
-
-            for (int i = 0; i < num_assoc_data_elements; i++)
-            {
-                boxSize += stream.WriteUimsbf(4, this.assoc_data_element_tag_select[i]);
-            }
-
-            for (int i = 0; i < num_valid_cc_elements; i++)
-            {
-                boxSize += stream.WriteUimsbf(this.cc_element_is_ind_sw[i]);
-                boxSize += stream.WriteUimsbf(4, this.valid_cc_element_tag_select[i]);
-            }
-            boxSize += stream.WriteByteAlignment(this.byte_alignment); // Note 1 
-            boxSize += stream.WriteUimsbf(8, this.comment_field_bytes);
-
-            for (int i = 0; i < comment_field_bytes; i++)
-            {
-                boxSize += stream.WriteUimsbf(8, this.comment_field_data[i]);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 4; // element_instance_tag
-            boxSize += 2; // object_type
-            boxSize += 4; // sampling_frequency_index
-            boxSize += 4; // num_front_channel_elements
-            boxSize += 4; // num_side_channel_elements
-            boxSize += 4; // num_back_channel_elements
-            boxSize += 2; // num_lfe_channel_elements
-            boxSize += 3; // num_assoc_data_elements
-            boxSize += 4; // num_valid_cc_elements
-            boxSize += 1; // mono_mixdown_present
-
-            if (mono_mixdown_present == true)
-            {
-                boxSize += 4; // mono_mixdown_element_number
-            }
-            boxSize += 1; // stereo_mixdown_present
-
-            if (stereo_mixdown_present == true)
-            {
-                boxSize += 4; // stereo_mixdown_element_number
-            }
-            boxSize += 1; // matrix_mixdown_idx_present
-
-            if (matrix_mixdown_idx_present == true)
-            {
-                boxSize += 2; // matrix_mixdown_idx
-                boxSize += 1; // pseudo_surround_enable
-            }
-
-            for (int i = 0; i < num_front_channel_elements; i++)
-            {
-                boxSize += 1; // front_element_is_cpe
-                boxSize += 4; // front_element_tag_select
-            }
-
-            for (int i = 0; i < num_side_channel_elements; i++)
-            {
-                boxSize += 1; // side_element_is_cpe
-                boxSize += 4; // side_element_tag_select
-            }
-
-            for (int i = 0; i < num_back_channel_elements; i++)
-            {
-                boxSize += 1; // back_element_is_cpe
-                boxSize += 4; // back_element_tag_select
-            }
-
-            for (int i = 0; i < num_lfe_channel_elements; i++)
-            {
-                boxSize += 4; // lfe_element_tag_select
-            }
-
-            for (int i = 0; i < num_assoc_data_elements; i++)
-            {
-                boxSize += 4; // assoc_data_element_tag_select
-            }
-
-            for (int i = 0; i < num_valid_cc_elements; i++)
-            {
-                boxSize += 1; // cc_element_is_ind_sw
-                boxSize += 4; // valid_cc_element_tag_select
-            }
-            boxSize += IsoStream.CalculateByteAlignmentSize(byte_alignment); // byte_alignment
-            boxSize += 8; // comment_field_bytes
-
-            for (int i = 0; i < comment_field_bytes; i++)
-            {
-                boxSize += 8; // comment_field_data
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class CelpSpecificConfig(samplingFrequencyIndex)
-    {
-      uimsbf(1) isBaseLayer;
-      if (isBaseLayer) {
-        CelpHeader(samplingFrequencyIndex);
-      }
-      else {
-        uimsbf(1) isBWSLayer;
-        if (isBWSLayer) {
-          CelpBWSenhHeader();
-        }
-        else {
-          uimsbf(2) CELPBRSid;
-        }
-      }
-    }
-
-    */
-    public class CelpSpecificConfig
-    {
-
-
-        protected bool isBaseLayer;
-        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
-
-        protected CelpHeader CelpHeader;
-        public CelpHeader _CelpHeader { get { return this.CelpHeader; } set { this.CelpHeader = value; } }
-
-        protected bool isBWSLayer;
-        public bool IsBWSLayer { get { return this.isBWSLayer; } set { this.isBWSLayer = value; } }
-
-        protected CelpBWSenhHeader CelpBWSenhHeader;
-        public CelpBWSenhHeader _CelpBWSenhHeader { get { return this.CelpBWSenhHeader; } set { this.CelpBWSenhHeader = value; } }
-
-        protected byte CELPBRSid;
-        public byte _CELPBRSid { get { return this.CELPBRSid; } set { this.CELPBRSid = value; } }
-
-        public CelpSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
-
-            if (isBaseLayer)
-            {
-                boxSize += stream.ReadClass(out this.CelpHeader);
-            }
-
-            else
-            {
-                boxSize += stream.ReadUimsbf(out this.isBWSLayer);
-
-                if (isBWSLayer)
-                {
-                    boxSize += stream.ReadClass(out this.CelpBWSenhHeader);
-                }
-
-                else
-                {
-                    boxSize += stream.ReadUimsbf(2, out this.CELPBRSid);
-                }
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(this.isBaseLayer);
-
-            if (isBaseLayer)
-            {
-                boxSize += stream.WriteClass(this.CelpHeader);
-            }
-
-            else
-            {
-                boxSize += stream.WriteUimsbf(this.isBWSLayer);
-
-                if (isBWSLayer)
-                {
-                    boxSize += stream.WriteClass(this.CelpBWSenhHeader);
-                }
-
-                else
-                {
-                    boxSize += stream.WriteUimsbf(2, this.CELPBRSid);
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // isBaseLayer
-
-            if (isBaseLayer)
-            {
-                boxSize += IsoStream.CalculateClassSize(CelpHeader); // CelpHeader
-            }
-
-            else
-            {
-                boxSize += 1; // isBWSLayer
-
-                if (isBWSLayer)
-                {
-                    boxSize += IsoStream.CalculateClassSize(CelpBWSenhHeader); // CelpBWSenhHeader
-                }
-
-                else
-                {
-                    boxSize += 2; // CELPBRSid
-                }
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class CelpHeader(samplingFrequencyIndex)
-    {
-      uimsbf(1) ExcitationMode;
-      uimsbf(1) SampleRateMode;
-      uimsbf(1) FineRateControl;
-      if (ExcitationMode == RPE) {
-        uimsbf(3) RPE_Configuration;
-      }
-      if (ExcitationMode == MPE) {
-        uimsbf(5) MPE_Configuration;
-        uimsbf(2) NumEnhLayers;
-        uimsbf(1) BandwidthScalabilityMode;
-      }
-    }
-
-    */
-    public class CelpHeader
-    {
-
-
-        protected bool ExcitationMode;
-        public bool _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
-
-        protected bool SampleRateMode;
-        public bool _SampleRateMode { get { return this.SampleRateMode; } set { this.SampleRateMode = value; } }
-
-        protected bool FineRateControl;
-        public bool _FineRateControl { get { return this.FineRateControl; } set { this.FineRateControl = value; } }
-
-        protected byte RPE_Configuration;
-        public byte RPEConfiguration { get { return this.RPE_Configuration; } set { this.RPE_Configuration = value; } }
-
-        protected byte MPE_Configuration;
-        public byte MPEConfiguration { get { return this.MPE_Configuration; } set { this.MPE_Configuration = value; } }
-
-        protected byte NumEnhLayers;
-        public byte _NumEnhLayers { get { return this.NumEnhLayers; } set { this.NumEnhLayers = value; } }
-
-        protected bool BandwidthScalabilityMode;
-        public bool _BandwidthScalabilityMode { get { return this.BandwidthScalabilityMode; } set { this.BandwidthScalabilityMode = value; } }
-
-        public CelpHeader()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            const bool RPE = true;
-
-            const bool MPE = false;
-
-            boxSize += stream.ReadUimsbf(out this.ExcitationMode);
-            boxSize += stream.ReadUimsbf(out this.SampleRateMode);
-            boxSize += stream.ReadUimsbf(out this.FineRateControl);
-
-            if (ExcitationMode == RPE)
-            {
-                boxSize += stream.ReadUimsbf(3, out this.RPE_Configuration);
-            }
-
-            if (ExcitationMode == MPE)
-            {
-                boxSize += stream.ReadUimsbf(5, out this.MPE_Configuration);
-                boxSize += stream.ReadUimsbf(2, out this.NumEnhLayers);
-                boxSize += stream.ReadUimsbf(out this.BandwidthScalabilityMode);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            const bool RPE = true;
-
-            const bool MPE = false;
-
-            boxSize += stream.WriteUimsbf(this.ExcitationMode);
-            boxSize += stream.WriteUimsbf(this.SampleRateMode);
-            boxSize += stream.WriteUimsbf(this.FineRateControl);
-
-            if (ExcitationMode == RPE)
-            {
-                boxSize += stream.WriteUimsbf(3, this.RPE_Configuration);
-            }
-
-            if (ExcitationMode == MPE)
-            {
-                boxSize += stream.WriteUimsbf(5, this.MPE_Configuration);
-                boxSize += stream.WriteUimsbf(2, this.NumEnhLayers);
-                boxSize += stream.WriteUimsbf(this.BandwidthScalabilityMode);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            const bool RPE = true;
-
-            const bool MPE = false;
-
-            boxSize += 1; // ExcitationMode
-            boxSize += 1; // SampleRateMode
-            boxSize += 1; // FineRateControl
-
-            if (ExcitationMode == RPE)
-            {
-                boxSize += 3; // RPE_Configuration
-            }
-
-            if (ExcitationMode == MPE)
-            {
-                boxSize += 5; // MPE_Configuration
-                boxSize += 2; // NumEnhLayers
-                boxSize += 1; // BandwidthScalabilityMode
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class CelpBWSenhHeader()
-    {
-      uimsbf(2) BWS_configuration;
-    }
-
-    */
-    public class CelpBWSenhHeader
-    {
-
-
-        protected byte BWS_configuration;
-        public byte BWSConfiguration { get { return this.BWS_configuration; } set { this.BWS_configuration = value; } }
-
-        public CelpBWSenhHeader()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(2, out this.BWS_configuration);
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(2, this.BWS_configuration);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 2; // BWS_configuration
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class HvxcSpecificConfig() {
-      uimsbf(1) isBaseLayer;
-      if (isBaseLayer) {
-        HVXCconfig();
-      }
-    }
-
-    */
-    public class HvxcSpecificConfig
-    {
-
-
-        protected bool isBaseLayer;
-        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
-
-        protected HVXCconfig HVXCconfig;
-        public HVXCconfig _HVXCconfig { get { return this.HVXCconfig; } set { this.HVXCconfig = value; } }
-
-        public HvxcSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
-
-            if (isBaseLayer)
-            {
-                boxSize += stream.ReadClass(out this.HVXCconfig);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(this.isBaseLayer);
-
-            if (isBaseLayer)
-            {
-                boxSize += stream.WriteClass(this.HVXCconfig);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // isBaseLayer
-
-            if (isBaseLayer)
-            {
-                boxSize += IsoStream.CalculateClassSize(HVXCconfig); // HVXCconfig
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class HVXCconfig()
-    {
-      uimsbf(1) HVXCvarMode;
-      uimsbf(2) HVXCrateMode;
-      uimsbf(1) extensionFlag;
-      if (extensionFlag) {
-        // to be defined in MPEG-4 Version 2
-      }
-    }
-
-    */
-    public class HVXCconfig
-    {
-
-
-        protected bool HVXCvarMode;
-        public bool _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
-
-        protected byte HVXCrateMode;
-        public byte _HVXCrateMode { get { return this.HVXCrateMode; } set { this.HVXCrateMode = value; } }
-
-        protected bool extensionFlag;
-        public bool ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
-
-        public HVXCconfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.HVXCvarMode);
-            boxSize += stream.ReadUimsbf(2, out this.HVXCrateMode);
-            boxSize += stream.ReadUimsbf(out this.extensionFlag);
-
-            if (extensionFlag)
-            {
-                /*  to be defined in MPEG-4 Version 2 */
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(this.HVXCvarMode);
-            boxSize += stream.WriteUimsbf(2, this.HVXCrateMode);
-            boxSize += stream.WriteUimsbf(this.extensionFlag);
-
-            if (extensionFlag)
-            {
-                /*  to be defined in MPEG-4 Version 2 */
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // HVXCvarMode
-            boxSize += 2; // HVXCrateMode
-            boxSize += 1; // extensionFlag
-
-            if (extensionFlag)
-            {
-                /*  to be defined in MPEG-4 Version 2 */
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class TTSSpecificConfig() {
-        TTS_Sequence();
-    }
-
-    */
-    public class TTSSpecificConfig
-    {
-
-
-        protected TTS_Sequence TTS_Sequence;
-        public TTS_Sequence TTSSequence { get { return this.TTS_Sequence; } set { this.TTS_Sequence = value; } }
-
-        public TTSSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadClass(out this.TTS_Sequence);
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteClass(this.TTS_Sequence);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += IsoStream.CalculateClassSize(TTS_Sequence); // TTS_Sequence
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class TTS_Sequence()
-    {
-      uimsbf(5) TTS_Sequence_ID;
-      uimsbf(18) Language_Code;
-      bslbf(1) Gender_Enable;
-      bslbf(1) Age_Enable;
-      bslbf(1) Speech_Rate_Enable;
-      bslbf(1) Prosody_Enable;
-      bslbf(1) Video_Enable;
-      bslbf(1) Lip_Shape_Enable;
-      bslbf(1) Trick_Mode_Enable;
-    }
-
-    */
-    public class TTS_Sequence
-    {
-
-
-        protected byte TTS_Sequence_ID;
-        public byte TTSSequenceID { get { return this.TTS_Sequence_ID; } set { this.TTS_Sequence_ID = value; } }
-
-        protected uint Language_Code;
-        public uint LanguageCode { get { return this.Language_Code; } set { this.Language_Code = value; } }
-
-        protected bool Gender_Enable;
-        public bool GenderEnable { get { return this.Gender_Enable; } set { this.Gender_Enable = value; } }
-
-        protected bool Age_Enable;
-        public bool AgeEnable { get { return this.Age_Enable; } set { this.Age_Enable = value; } }
-
-        protected bool Speech_Rate_Enable;
-        public bool SpeechRateEnable { get { return this.Speech_Rate_Enable; } set { this.Speech_Rate_Enable = value; } }
-
-        protected bool Prosody_Enable;
-        public bool ProsodyEnable { get { return this.Prosody_Enable; } set { this.Prosody_Enable = value; } }
-
-        protected bool Video_Enable;
-        public bool VideoEnable { get { return this.Video_Enable; } set { this.Video_Enable = value; } }
-
-        protected bool Lip_Shape_Enable;
-        public bool LipShapeEnable { get { return this.Lip_Shape_Enable; } set { this.Lip_Shape_Enable = value; } }
-
-        protected bool Trick_Mode_Enable;
-        public bool TrickModeEnable { get { return this.Trick_Mode_Enable; } set { this.Trick_Mode_Enable = value; } }
-
-        public TTS_Sequence()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(5, out this.TTS_Sequence_ID);
-            boxSize += stream.ReadUimsbf(18, out this.Language_Code);
-            boxSize += stream.ReadBslbf(out this.Gender_Enable);
-            boxSize += stream.ReadBslbf(out this.Age_Enable);
-            boxSize += stream.ReadBslbf(out this.Speech_Rate_Enable);
-            boxSize += stream.ReadBslbf(out this.Prosody_Enable);
-            boxSize += stream.ReadBslbf(out this.Video_Enable);
-            boxSize += stream.ReadBslbf(out this.Lip_Shape_Enable);
-            boxSize += stream.ReadBslbf(out this.Trick_Mode_Enable);
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(5, this.TTS_Sequence_ID);
-            boxSize += stream.WriteUimsbf(18, this.Language_Code);
-            boxSize += stream.WriteBslbf(this.Gender_Enable);
-            boxSize += stream.WriteBslbf(this.Age_Enable);
-            boxSize += stream.WriteBslbf(this.Speech_Rate_Enable);
-            boxSize += stream.WriteBslbf(this.Prosody_Enable);
-            boxSize += stream.WriteBslbf(this.Video_Enable);
-            boxSize += stream.WriteBslbf(this.Lip_Shape_Enable);
-            boxSize += stream.WriteBslbf(this.Trick_Mode_Enable);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 5; // TTS_Sequence_ID
-            boxSize += 18; // Language_Code
-            boxSize += 1; // Gender_Enable
-            boxSize += 1; // Age_Enable
-            boxSize += 1; // Speech_Rate_Enable
-            boxSize += 1; // Prosody_Enable
-            boxSize += 1; // Video_Enable
-            boxSize += 1; // Lip_Shape_Enable
-            boxSize += 1; // Trick_Mode_Enable
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ErrorResilientCelpSpecificConfig(samplingFrequencyIndex)
-    {
-      uimsbf(1) isBaseLayer;
-      if (isBaseLayer) {
-        ER_SC_CelpHeader(samplingFrequencyIndex);
-      }
-      else {
-        uimsbf(1) isBWSLayer;
-        if (isBWSLayer) {
-          CelpBWSenhHeader();
-        }
-        else {
-          uimsbf(2) CELPBRSid;
-        }
-      }
-    }
-
-    */
-    public class ErrorResilientCelpSpecificConfig
-    {
-
-
-        protected bool isBaseLayer;
-        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
-
-        protected ER_SC_CelpHeader ER_SC_CelpHeader;
-        public ER_SC_CelpHeader ERSCCelpHeader { get { return this.ER_SC_CelpHeader; } set { this.ER_SC_CelpHeader = value; } }
-
-        protected bool isBWSLayer;
-        public bool IsBWSLayer { get { return this.isBWSLayer; } set { this.isBWSLayer = value; } }
-
-        protected CelpBWSenhHeader CelpBWSenhHeader;
-        public CelpBWSenhHeader _CelpBWSenhHeader { get { return this.CelpBWSenhHeader; } set { this.CelpBWSenhHeader = value; } }
-
-        protected byte CELPBRSid;
-        public byte _CELPBRSid { get { return this.CELPBRSid; } set { this.CELPBRSid = value; } }
-
-        public ErrorResilientCelpSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
-
-            if (isBaseLayer)
-            {
-                boxSize += stream.ReadClass(out this.ER_SC_CelpHeader);
-            }
-
-            else
-            {
-                boxSize += stream.ReadUimsbf(out this.isBWSLayer);
-
-                if (isBWSLayer)
-                {
-                    boxSize += stream.ReadClass(out this.CelpBWSenhHeader);
-                }
-
-                else
-                {
-                    boxSize += stream.ReadUimsbf(2, out this.CELPBRSid);
-                }
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(this.isBaseLayer);
-
-            if (isBaseLayer)
-            {
-                boxSize += stream.WriteClass(this.ER_SC_CelpHeader);
-            }
-
-            else
-            {
-                boxSize += stream.WriteUimsbf(this.isBWSLayer);
-
-                if (isBWSLayer)
-                {
-                    boxSize += stream.WriteClass(this.CelpBWSenhHeader);
-                }
-
-                else
-                {
-                    boxSize += stream.WriteUimsbf(2, this.CELPBRSid);
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // isBaseLayer
-
-            if (isBaseLayer)
-            {
-                boxSize += IsoStream.CalculateClassSize(ER_SC_CelpHeader); // ER_SC_CelpHeader
-            }
-
-            else
-            {
-                boxSize += 1; // isBWSLayer
-
-                if (isBWSLayer)
-                {
-                    boxSize += IsoStream.CalculateClassSize(CelpBWSenhHeader); // CelpBWSenhHeader
-                }
-
-                else
-                {
-                    boxSize += 2; // CELPBRSid
-                }
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ER_SC_CelpHeader(samplingFrequencyIndex)
-    {
-      uimsbf(1) ExcitationMode;
-      uimsbf(1) SampleRateMode;
-      uimsbf(1) FineRateControl;
-      uimsbf(1) SilenceCompression;
-      if (ExcitationMode == RPE) {
-        uimsbf(3) RPE_Configuration;
-      }
-      if (ExcitationMode == MPE) {
-        uimsbf(5) MPE_Configuration;
-        uimsbf(2) NumEnhLayers;
-        uimsbf(1) BandwidthScalabilityMode;
-      }
-    }
-
-    */
-    public class ER_SC_CelpHeader
-    {
-
-
-        protected bool ExcitationMode;
-        public bool _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
-
-        protected bool SampleRateMode;
-        public bool _SampleRateMode { get { return this.SampleRateMode; } set { this.SampleRateMode = value; } }
-
-        protected bool FineRateControl;
-        public bool _FineRateControl { get { return this.FineRateControl; } set { this.FineRateControl = value; } }
-
-        protected bool SilenceCompression;
-        public bool _SilenceCompression { get { return this.SilenceCompression; } set { this.SilenceCompression = value; } }
-
-        protected byte RPE_Configuration;
-        public byte RPEConfiguration { get { return this.RPE_Configuration; } set { this.RPE_Configuration = value; } }
-
-        protected byte MPE_Configuration;
-        public byte MPEConfiguration { get { return this.MPE_Configuration; } set { this.MPE_Configuration = value; } }
-
-        protected byte NumEnhLayers;
-        public byte _NumEnhLayers { get { return this.NumEnhLayers; } set { this.NumEnhLayers = value; } }
-
-        protected bool BandwidthScalabilityMode;
-        public bool _BandwidthScalabilityMode { get { return this.BandwidthScalabilityMode; } set { this.BandwidthScalabilityMode = value; } }
-
-        public ER_SC_CelpHeader()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            const bool RPE = true;
-
-            const bool MPE = false;
-
-            boxSize += stream.ReadUimsbf(out this.ExcitationMode);
-            boxSize += stream.ReadUimsbf(out this.SampleRateMode);
-            boxSize += stream.ReadUimsbf(out this.FineRateControl);
-            boxSize += stream.ReadUimsbf(out this.SilenceCompression);
-
-            if (ExcitationMode == RPE)
-            {
-                boxSize += stream.ReadUimsbf(3, out this.RPE_Configuration);
-            }
-
-            if (ExcitationMode == MPE)
-            {
-                boxSize += stream.ReadUimsbf(5, out this.MPE_Configuration);
-                boxSize += stream.ReadUimsbf(2, out this.NumEnhLayers);
-                boxSize += stream.ReadUimsbf(out this.BandwidthScalabilityMode);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            const bool RPE = true;
-
-            const bool MPE = false;
-
-            boxSize += stream.WriteUimsbf(this.ExcitationMode);
-            boxSize += stream.WriteUimsbf(this.SampleRateMode);
-            boxSize += stream.WriteUimsbf(this.FineRateControl);
-            boxSize += stream.WriteUimsbf(this.SilenceCompression);
-
-            if (ExcitationMode == RPE)
-            {
-                boxSize += stream.WriteUimsbf(3, this.RPE_Configuration);
-            }
-
-            if (ExcitationMode == MPE)
-            {
-                boxSize += stream.WriteUimsbf(5, this.MPE_Configuration);
-                boxSize += stream.WriteUimsbf(2, this.NumEnhLayers);
-                boxSize += stream.WriteUimsbf(this.BandwidthScalabilityMode);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            const bool RPE = true;
-
-            const bool MPE = false;
-
-            boxSize += 1; // ExcitationMode
-            boxSize += 1; // SampleRateMode
-            boxSize += 1; // FineRateControl
-            boxSize += 1; // SilenceCompression
-
-            if (ExcitationMode == RPE)
-            {
-                boxSize += 3; // RPE_Configuration
-            }
-
-            if (ExcitationMode == MPE)
-            {
-                boxSize += 5; // MPE_Configuration
-                boxSize += 2; // NumEnhLayers
-                boxSize += 1; // BandwidthScalabilityMode
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ErrorResilientHvxcSpecificConfig() {
-      uimsbf(1) isBaseLayer;
-      if (isBaseLayer) {
-        ErHVXCconfig();
-      }
-    }
-
-    */
-    public class ErrorResilientHvxcSpecificConfig
-    {
-
-
-        protected bool isBaseLayer;
-        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
-
-        protected ErHVXCconfig ErHVXCconfig;
-        public ErHVXCconfig _ErHVXCconfig { get { return this.ErHVXCconfig; } set { this.ErHVXCconfig = value; } }
-
-        public ErrorResilientHvxcSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
-
-            if (isBaseLayer)
-            {
-                boxSize += stream.ReadClass(out this.ErHVXCconfig);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(this.isBaseLayer);
-
-            if (isBaseLayer)
-            {
-                boxSize += stream.WriteClass(this.ErHVXCconfig);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // isBaseLayer
-
-            if (isBaseLayer)
-            {
-                boxSize += IsoStream.CalculateClassSize(ErHVXCconfig); // ErHVXCconfig
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ErHVXCconfig()
-    {
-      uimsbf(1) HVXCvarMode;
-      uimsbf(2) HVXCrateMode;
-      uimsbf(1) extensionFlag;
-      if (extensionFlag) {
-        uimsbf(1) var_ScalableFlag;
-      }
-    }
-
-    */
-    public class ErHVXCconfig
-    {
-
-
-        protected bool HVXCvarMode;
-        public bool _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
-
-        protected byte HVXCrateMode;
-        public byte _HVXCrateMode { get { return this.HVXCrateMode; } set { this.HVXCrateMode = value; } }
-
-        protected bool extensionFlag;
-        public bool ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
-
-        protected bool var_ScalableFlag;
-        public bool VarScalableFlag { get { return this.var_ScalableFlag; } set { this.var_ScalableFlag = value; } }
-
-        public ErHVXCconfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.HVXCvarMode);
-            boxSize += stream.ReadUimsbf(2, out this.HVXCrateMode);
-            boxSize += stream.ReadUimsbf(out this.extensionFlag);
-
-            if (extensionFlag)
-            {
-                boxSize += stream.ReadUimsbf(out this.var_ScalableFlag);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(this.HVXCvarMode);
-            boxSize += stream.WriteUimsbf(2, this.HVXCrateMode);
-            boxSize += stream.WriteUimsbf(this.extensionFlag);
-
-            if (extensionFlag)
-            {
-                boxSize += stream.WriteUimsbf(this.var_ScalableFlag);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // HVXCvarMode
-            boxSize += 2; // HVXCrateMode
-            boxSize += 1; // extensionFlag
-
-            if (extensionFlag)
-            {
-                boxSize += 1; // var_ScalableFlag
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ParametricSpecificConfig()
-    {
-      uimsbf(1) isBaseLayer;
-      if (isBaseLayer) {
-        PARAconfig();
-      }
-      else {
-        HILNenexConfig();
-      }
-    }
-
-    */
-    public class ParametricSpecificConfig
-    {
-
-
-        protected bool isBaseLayer;
-        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
-
-        protected PARAconfig PARAconfig;
-        public PARAconfig _PARAconfig { get { return this.PARAconfig; } set { this.PARAconfig = value; } }
-
-        protected HILNenexConfig HILNenexConfig;
-        public HILNenexConfig _HILNenexConfig { get { return this.HILNenexConfig; } set { this.HILNenexConfig = value; } }
-
-        public ParametricSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
-
-            if (isBaseLayer)
-            {
-                boxSize += stream.ReadClass(out this.PARAconfig);
-            }
-
-            else
-            {
-                boxSize += stream.ReadClass(out this.HILNenexConfig);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(this.isBaseLayer);
-
-            if (isBaseLayer)
-            {
-                boxSize += stream.WriteClass(this.PARAconfig);
-            }
-
-            else
-            {
-                boxSize += stream.WriteClass(this.HILNenexConfig);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // isBaseLayer
-
-            if (isBaseLayer)
-            {
-                boxSize += IsoStream.CalculateClassSize(PARAconfig); // PARAconfig
-            }
-
-            else
-            {
-                boxSize += IsoStream.CalculateClassSize(HILNenexConfig); // HILNenexConfig
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class PARAconfig()
-    {
-      uimsbf(2) PARAmode;
-      if (PARAmode != 1) {
-        ErHVXCconfig();
-      }
-      if (PARAmode != 0) {
-        HILNconfig();
-      }
-      uimsbf(1) PARAextensionFlag;
-      if (PARAextensionFlag) {
-        /* to be defined in MPEG-4 Phase 3 *//*
-      }
-    }
-
-    */
-    public class PARAconfig
-    {
-
-
-        protected byte PARAmode;
-        public byte _PARAmode { get { return this.PARAmode; } set { this.PARAmode = value; } }
-
-        protected ErHVXCconfig ErHVXCconfig;
-        public ErHVXCconfig _ErHVXCconfig { get { return this.ErHVXCconfig; } set { this.ErHVXCconfig = value; } }
-
-        protected HILNconfig HILNconfig;
-        public HILNconfig _HILNconfig { get { return this.HILNconfig; } set { this.HILNconfig = value; } }
-
-        protected bool PARAextensionFlag;
-        public bool _PARAextensionFlag { get { return this.PARAextensionFlag; } set { this.PARAextensionFlag = value; } }
-
-        public PARAconfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(2, out this.PARAmode);
-
-            if (PARAmode != 1)
-            {
-                boxSize += stream.ReadClass(out this.ErHVXCconfig);
-            }
-
-            if (PARAmode != 0)
-            {
-                boxSize += stream.ReadClass(out this.HILNconfig);
-            }
-            boxSize += stream.ReadUimsbf(out this.PARAextensionFlag);
-
-            if (PARAextensionFlag)
-            {
-                /*  to be defined in MPEG-4 Phase 3  */
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(2, this.PARAmode);
-
-            if (PARAmode != 1)
-            {
-                boxSize += stream.WriteClass(this.ErHVXCconfig);
-            }
-
-            if (PARAmode != 0)
-            {
-                boxSize += stream.WriteClass(this.HILNconfig);
-            }
-            boxSize += stream.WriteUimsbf(this.PARAextensionFlag);
-
-            if (PARAextensionFlag)
-            {
-                /*  to be defined in MPEG-4 Phase 3  */
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 2; // PARAmode
-
-            if (PARAmode != 1)
-            {
-                boxSize += IsoStream.CalculateClassSize(ErHVXCconfig); // ErHVXCconfig
-            }
-
-            if (PARAmode != 0)
-            {
-                boxSize += IsoStream.CalculateClassSize(HILNconfig); // HILNconfig
-            }
-            boxSize += 1; // PARAextensionFlag
-
-            if (PARAextensionFlag)
-            {
-                /*  to be defined in MPEG-4 Phase 3  */
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class HILNconfig()
-    {
-      uimsbf(1) HILNquantMode;
-      uimsbf(8) HILNmaxNumLine;
-      uimsbf(4) HILNsampleRateCode;
-      uimsbf(12) HILNframeLength;
-      uimsbf(2) HILNcontMode;
-    }
-
-    */
-    public class HILNconfig
-    {
-
-
-        protected bool HILNquantMode;
-        public bool _HILNquantMode { get { return this.HILNquantMode; } set { this.HILNquantMode = value; } }
-
-        protected byte HILNmaxNumLine;
-        public byte _HILNmaxNumLine { get { return this.HILNmaxNumLine; } set { this.HILNmaxNumLine = value; } }
-
-        protected byte HILNsampleRateCode;
-        public byte _HILNsampleRateCode { get { return this.HILNsampleRateCode; } set { this.HILNsampleRateCode = value; } }
-
-        protected ushort HILNframeLength;
-        public ushort _HILNframeLength { get { return this.HILNframeLength; } set { this.HILNframeLength = value; } }
-
-        protected byte HILNcontMode;
-        public byte _HILNcontMode { get { return this.HILNcontMode; } set { this.HILNcontMode = value; } }
-
-        public HILNconfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.HILNquantMode);
-            boxSize += stream.ReadUimsbf(8, out this.HILNmaxNumLine);
-            boxSize += stream.ReadUimsbf(4, out this.HILNsampleRateCode);
-            boxSize += stream.ReadUimsbf(12, out this.HILNframeLength);
-            boxSize += stream.ReadUimsbf(2, out this.HILNcontMode);
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(this.HILNquantMode);
-            boxSize += stream.WriteUimsbf(8, this.HILNmaxNumLine);
-            boxSize += stream.WriteUimsbf(4, this.HILNsampleRateCode);
-            boxSize += stream.WriteUimsbf(12, this.HILNframeLength);
-            boxSize += stream.WriteUimsbf(2, this.HILNcontMode);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // HILNquantMode
-            boxSize += 8; // HILNmaxNumLine
-            boxSize += 4; // HILNsampleRateCode
-            boxSize += 12; // HILNframeLength
-            boxSize += 2; // HILNcontMode
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class HILNenexConfig()
-    {
-      uimsbf(1) HILNenhaLayer;
-      if (HILNenhaLayer) {
-        uimsbf(2) HILNenhaQuantMode;
-      }
-    }
-
-    */
-    public class HILNenexConfig
-    {
-
-
-        protected bool HILNenhaLayer;
-        public bool _HILNenhaLayer { get { return this.HILNenhaLayer; } set { this.HILNenhaLayer = value; } }
-
-        protected byte HILNenhaQuantMode;
-        public byte _HILNenhaQuantMode { get { return this.HILNenhaQuantMode; } set { this.HILNenhaQuantMode = value; } }
-
-        public HILNenexConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.HILNenhaLayer);
-
-            if (HILNenhaLayer)
-            {
-                boxSize += stream.ReadUimsbf(2, out this.HILNenhaQuantMode);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(this.HILNenhaLayer);
-
-            if (HILNenhaLayer)
-            {
-                boxSize += stream.WriteUimsbf(2, this.HILNenhaQuantMode);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // HILNenhaLayer
-
-            if (HILNenhaLayer)
-            {
-                boxSize += 2; // HILNenhaQuantMode
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class SSCSpecificConfig(channelConfiguration)
-    {
-      uimsbf(2) decoder_level;
-      uimsbf(4) update_rate;
-      uimsbf(2) synthesis_method;
-      if (channelConfiguration != 1) {
-        uimsbf(2) mode_ext;
-        if ((channelConfiguration == 2) && (mode_ext == 1)) {
-          uimsbf(2) reserved;
-        }
-      }
-    }
-
-    */
-    public class SSCSpecificConfig
-    {
-
-
-        protected byte decoder_level;
-        public byte DecoderLevel { get { return this.decoder_level; } set { this.decoder_level = value; } }
-
-        protected byte update_rate;
-        public byte UpdateRate { get { return this.update_rate; } set { this.update_rate = value; } }
-
-        protected byte synthesis_method;
-        public byte SynthesisMethod { get { return this.synthesis_method; } set { this.synthesis_method = value; } }
-
-        protected byte mode_ext;
-        public byte ModeExt { get { return this.mode_ext; } set { this.mode_ext = value; } }
-
-        protected byte reserved;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        public SSCSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            int channelConfiguration = 0; // TODO: pass through ctor
-
-            boxSize += stream.ReadUimsbf(2, out this.decoder_level);
-            boxSize += stream.ReadUimsbf(4, out this.update_rate);
-            boxSize += stream.ReadUimsbf(2, out this.synthesis_method);
-
-            if (channelConfiguration != 1)
-            {
-                boxSize += stream.ReadUimsbf(2, out this.mode_ext);
-
-                if ((channelConfiguration == 2) && (mode_ext == 1))
-                {
-                    boxSize += stream.ReadUimsbf(2, out this.reserved);
-                }
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            int channelConfiguration = 0; // TODO: pass through ctor
-
-            boxSize += stream.WriteUimsbf(2, this.decoder_level);
-            boxSize += stream.WriteUimsbf(4, this.update_rate);
-            boxSize += stream.WriteUimsbf(2, this.synthesis_method);
-
-            if (channelConfiguration != 1)
-            {
-                boxSize += stream.WriteUimsbf(2, this.mode_ext);
-
-                if ((channelConfiguration == 2) && (mode_ext == 1))
-                {
-                    boxSize += stream.WriteUimsbf(2, this.reserved);
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            int channelConfiguration = 0; // TODO: pass through ctor
-
-            boxSize += 2; // decoder_level
-            boxSize += 4; // update_rate
-            boxSize += 2; // synthesis_method
-
-            if (channelConfiguration != 1)
-            {
-                boxSize += 2; // mode_ext
-
-                if ((channelConfiguration == 2) && (mode_ext == 1))
-                {
-                    boxSize += 2; // reserved
-                }
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class MPEG_1_2_SpecificConfig()
-    {
-      bslbf(1) extension;
-    }
-
-    */
-    public class MPEG_1_2_SpecificConfig
-    {
-
-
-        protected bool extension;
-        public bool Extension { get { return this.extension; } set { this.extension = value; } }
-
-        public MPEG_1_2_SpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadBslbf(out this.extension);
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteBslbf(this.extension);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // extension
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class DSTSpecificConfig(channelConfiguration) {
-      uimsbf(1) DSDDST_Coded;
-      uimsbf(14) N_Channels;
-      uimsbf(1) reserved;
-    }
-
-    */
-    public class DSTSpecificConfig
-    {
-
-
-        protected bool DSDDST_Coded;
-        public bool DSDDSTCoded { get { return this.DSDDST_Coded; } set { this.DSDDST_Coded = value; } }
-
-        protected ushort N_Channels;
-        public ushort NChannels { get { return this.N_Channels; } set { this.N_Channels = value; } }
-
-        protected bool reserved;
-        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        public DSTSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.DSDDST_Coded);
-            boxSize += stream.ReadUimsbf(14, out this.N_Channels);
-            boxSize += stream.ReadUimsbf(out this.reserved);
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(this.DSDDST_Coded);
-            boxSize += stream.WriteUimsbf(14, this.N_Channels);
-            boxSize += stream.WriteUimsbf(this.reserved);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // DSDDST_Coded
-            boxSize += 14; // N_Channels
-            boxSize += 1; // reserved
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ALSSpecificConfig()
-    {
-      uimsbf(32) als_id;
-      uimsbf(32) samp_freq;
-      uimsbf(32) samples;
-      uimsbf(16) channels;
-      uimsbf(3) file_type;
-      uimsbf(3) resolution;
-      uimsbf(1) floating;
-      uimsbf(1) msb_first;
-      uimsbf(16) frame_length;
-      uimsbf(8) random_access;
-      uimsbf(2) ra_flag;
-      uimsbf(1) adapt_order;
-      uimsbf(2) coef_table;
-      uimsbf(1) long_term_prediction;
-      uimsbf(10) max_order;
-      uimsbf(2) block_switching;
-      uimsbf(1) bgmc_mode;
-      uimsbf(1) sb_part;
-      uimsbf(1) joint_stereo;
-      uimsbf(1) mc_coding;
-      uimsbf(1) chan_config;
-      uimsbf(1) chan_sort;
-      uimsbf(1) crc_enabled;
-      uimsbf(1) RLSLMS;
-      uimsbf(5) reserved;
-      uimsbf(1) aux_data_enabled;
-      if (chan_config) {
-        uimsbf(16) chan_config_info;
-      }
-      if (chan_sort) {
-        for (c = 0; c <= channels; c++)
-          uimsbf(1) chan_pos[c]; // 1..16 uimsbf 
-      }
-      bslbf(1) byte_align; // TODO: 0..7 bslbf 
-      uimsbf(32) header_size;
-      uimsbf(32) trailer_size;
-      bslbf(header_size * 8) orig_header[];
-      bslbf(trailer_size * 8) orig_trailer[];
-      if (crc_enabled) {
-        uimsbf(32) crc;
-      }
-      if ((ra_flag == 2) && (random_access > 0)) {
-        for (f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++) {
-          uimsbf(32) ra_unit_size[f];
-        }
-      }
-      if (aux_data_enabled) {
-        uimsbf(32) aux_size;
-        bslbf(aux_size * 8) aux_data[];
-      }
-    }
-
-    */
-    public class ALSSpecificConfig
-    {
-
-
-        protected uint als_id;
-        public uint AlsId { get { return this.als_id; } set { this.als_id = value; } }
-
-        protected uint samp_freq;
-        public uint SampFreq { get { return this.samp_freq; } set { this.samp_freq = value; } }
-
-        protected uint samples;
-        public uint Samples { get { return this.samples; } set { this.samples = value; } }
-
-        protected ushort channels;
-        public ushort Channels { get { return this.channels; } set { this.channels = value; } }
-
-        protected byte file_type;
-        public byte FileType { get { return this.file_type; } set { this.file_type = value; } }
-
-        protected byte resolution;
-        public byte Resolution { get { return this.resolution; } set { this.resolution = value; } }
-
-        protected bool floating;
-        public bool Floating { get { return this.floating; } set { this.floating = value; } }
-
-        protected bool msb_first;
-        public bool MsbFirst { get { return this.msb_first; } set { this.msb_first = value; } }
-
-        protected ushort frame_length;
-        public ushort FrameLength { get { return this.frame_length; } set { this.frame_length = value; } }
-
-        protected byte random_access;
-        public byte RandomAccess { get { return this.random_access; } set { this.random_access = value; } }
-
-        protected byte ra_flag;
-        public byte RaFlag { get { return this.ra_flag; } set { this.ra_flag = value; } }
-
-        protected bool adapt_order;
-        public bool AdaptOrder { get { return this.adapt_order; } set { this.adapt_order = value; } }
-
-        protected byte coef_table;
-        public byte CoefTable { get { return this.coef_table; } set { this.coef_table = value; } }
-
-        protected bool long_term_prediction;
-        public bool LongTermPrediction { get { return this.long_term_prediction; } set { this.long_term_prediction = value; } }
-
-        protected ushort max_order;
-        public ushort MaxOrder { get { return this.max_order; } set { this.max_order = value; } }
-
-        protected byte block_switching;
-        public byte BlockSwitching { get { return this.block_switching; } set { this.block_switching = value; } }
-
-        protected bool bgmc_mode;
-        public bool BgmcMode { get { return this.bgmc_mode; } set { this.bgmc_mode = value; } }
-
-        protected bool sb_part;
-        public bool SbPart { get { return this.sb_part; } set { this.sb_part = value; } }
-
-        protected bool joint_stereo;
-        public bool JointStereo { get { return this.joint_stereo; } set { this.joint_stereo = value; } }
-
-        protected bool mc_coding;
-        public bool McCoding { get { return this.mc_coding; } set { this.mc_coding = value; } }
-
-        protected bool chan_config;
-        public bool ChanConfig { get { return this.chan_config; } set { this.chan_config = value; } }
-
-        protected bool chan_sort;
-        public bool ChanSort { get { return this.chan_sort; } set { this.chan_sort = value; } }
-
-        protected bool crc_enabled;
-        public bool CrcEnabled { get { return this.crc_enabled; } set { this.crc_enabled = value; } }
-
-        protected bool RLSLMS;
-        public bool _RLSLMS { get { return this.RLSLMS; } set { this.RLSLMS = value; } }
-
-        protected byte reserved;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected bool aux_data_enabled;
-        public bool AuxDataEnabled { get { return this.aux_data_enabled; } set { this.aux_data_enabled = value; } }
-
-        protected ushort chan_config_info;
-        public ushort ChanConfigInfo { get { return this.chan_config_info; } set { this.chan_config_info = value; } }
-
-        protected bool[] chan_pos;  //  1..16 uimsbf 
-        public bool[] ChanPos { get { return this.chan_pos; } set { this.chan_pos = value; } }
-
-        protected bool byte_align;  //  TODO: 0..7 bslbf 
-        public bool ByteAlign { get { return this.byte_align; } set { this.byte_align = value; } }
-
-        protected uint header_size;
-        public uint HeaderSize { get { return this.header_size; } set { this.header_size = value; } }
-
-        protected uint trailer_size;
-        public uint TrailerSize { get { return this.trailer_size; } set { this.trailer_size = value; } }
-
-        protected byte[] orig_header;
-        public byte[] OrigHeader { get { return this.orig_header; } set { this.orig_header = value; } }
-
-        protected byte[] orig_trailer;
-        public byte[] OrigTrailer { get { return this.orig_trailer; } set { this.orig_trailer = value; } }
-
-        protected uint crc;
-        public uint Crc { get { return this.crc; } set { this.crc = value; } }
-
-        protected uint[] ra_unit_size;
-        public uint[] RaUnitSize { get { return this.ra_unit_size; } set { this.ra_unit_size = value; } }
-
-        protected uint aux_size;
-        public uint AuxSize { get { return this.aux_size; } set { this.aux_size = value; } }
-
-        protected byte[] aux_data;
-        public byte[] AuxData { get { return this.aux_data; } set { this.aux_data = value; } }
-
-        public ALSSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(32, out this.als_id);
-            boxSize += stream.ReadUimsbf(32, out this.samp_freq);
-            boxSize += stream.ReadUimsbf(32, out this.samples);
-            boxSize += stream.ReadUimsbf(16, out this.channels);
-            boxSize += stream.ReadUimsbf(3, out this.file_type);
-            boxSize += stream.ReadUimsbf(3, out this.resolution);
-            boxSize += stream.ReadUimsbf(out this.floating);
-            boxSize += stream.ReadUimsbf(out this.msb_first);
-            boxSize += stream.ReadUimsbf(16, out this.frame_length);
-            boxSize += stream.ReadUimsbf(8, out this.random_access);
-            boxSize += stream.ReadUimsbf(2, out this.ra_flag);
-            boxSize += stream.ReadUimsbf(out this.adapt_order);
-            boxSize += stream.ReadUimsbf(2, out this.coef_table);
-            boxSize += stream.ReadUimsbf(out this.long_term_prediction);
-            boxSize += stream.ReadUimsbf(10, out this.max_order);
-            boxSize += stream.ReadUimsbf(2, out this.block_switching);
-            boxSize += stream.ReadUimsbf(out this.bgmc_mode);
-            boxSize += stream.ReadUimsbf(out this.sb_part);
-            boxSize += stream.ReadUimsbf(out this.joint_stereo);
-            boxSize += stream.ReadUimsbf(out this.mc_coding);
-            boxSize += stream.ReadUimsbf(out this.chan_config);
-            boxSize += stream.ReadUimsbf(out this.chan_sort);
-            boxSize += stream.ReadUimsbf(out this.crc_enabled);
-            boxSize += stream.ReadUimsbf(out this.RLSLMS);
-            boxSize += stream.ReadUimsbf(5, out this.reserved);
-            boxSize += stream.ReadUimsbf(out this.aux_data_enabled);
-
-            if (chan_config)
-            {
-                boxSize += stream.ReadUimsbf(16, out this.chan_config_info);
-            }
-
-            if (chan_sort)
-            {
-
-                for (int c = 0; c <= channels; c++)
-                {
-                    boxSize += stream.ReadUimsbf(out this.chan_pos[c]); // 1..16 uimsbf 
-                }
-            }
-            boxSize += stream.ReadBslbf(out this.byte_align); // TODO: 0..7 bslbf 
-            boxSize += stream.ReadUimsbf(32, out this.header_size);
-            boxSize += stream.ReadUimsbf(32, out this.trailer_size);
-            boxSize += stream.ReadBslbf(header_size * 8, out this.orig_header);
-            boxSize += stream.ReadBslbf(trailer_size * 8, out this.orig_trailer);
-
-            if (crc_enabled)
-            {
-                boxSize += stream.ReadUimsbf(32, out this.crc);
-            }
-
-            if ((ra_flag == 2) && (random_access > 0))
-            {
-
-                for (int f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++)
-                {
-                    boxSize += stream.ReadUimsbf(32, out this.ra_unit_size[f]);
-                }
-            }
-
-            if (aux_data_enabled)
-            {
-                boxSize += stream.ReadUimsbf(32, out this.aux_size);
-                boxSize += stream.ReadBslbf(aux_size * 8, out this.aux_data);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(32, this.als_id);
-            boxSize += stream.WriteUimsbf(32, this.samp_freq);
-            boxSize += stream.WriteUimsbf(32, this.samples);
-            boxSize += stream.WriteUimsbf(16, this.channels);
-            boxSize += stream.WriteUimsbf(3, this.file_type);
-            boxSize += stream.WriteUimsbf(3, this.resolution);
-            boxSize += stream.WriteUimsbf(this.floating);
-            boxSize += stream.WriteUimsbf(this.msb_first);
-            boxSize += stream.WriteUimsbf(16, this.frame_length);
-            boxSize += stream.WriteUimsbf(8, this.random_access);
-            boxSize += stream.WriteUimsbf(2, this.ra_flag);
-            boxSize += stream.WriteUimsbf(this.adapt_order);
-            boxSize += stream.WriteUimsbf(2, this.coef_table);
-            boxSize += stream.WriteUimsbf(this.long_term_prediction);
-            boxSize += stream.WriteUimsbf(10, this.max_order);
-            boxSize += stream.WriteUimsbf(2, this.block_switching);
-            boxSize += stream.WriteUimsbf(this.bgmc_mode);
-            boxSize += stream.WriteUimsbf(this.sb_part);
-            boxSize += stream.WriteUimsbf(this.joint_stereo);
-            boxSize += stream.WriteUimsbf(this.mc_coding);
-            boxSize += stream.WriteUimsbf(this.chan_config);
-            boxSize += stream.WriteUimsbf(this.chan_sort);
-            boxSize += stream.WriteUimsbf(this.crc_enabled);
-            boxSize += stream.WriteUimsbf(this.RLSLMS);
-            boxSize += stream.WriteUimsbf(5, this.reserved);
-            boxSize += stream.WriteUimsbf(this.aux_data_enabled);
-
-            if (chan_config)
-            {
-                boxSize += stream.WriteUimsbf(16, this.chan_config_info);
-            }
-
-            if (chan_sort)
-            {
-
-                for (int c = 0; c <= channels; c++)
-                {
-                    boxSize += stream.WriteUimsbf(this.chan_pos[c]); // 1..16 uimsbf 
-                }
-            }
-            boxSize += stream.WriteBslbf(this.byte_align); // TODO: 0..7 bslbf 
-            boxSize += stream.WriteUimsbf(32, this.header_size);
-            boxSize += stream.WriteUimsbf(32, this.trailer_size);
-            boxSize += stream.WriteBslbf(header_size * 8, this.orig_header);
-            boxSize += stream.WriteBslbf(trailer_size * 8, this.orig_trailer);
-
-            if (crc_enabled)
-            {
-                boxSize += stream.WriteUimsbf(32, this.crc);
-            }
-
-            if ((ra_flag == 2) && (random_access > 0))
-            {
-
-                for (int f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++)
-                {
-                    boxSize += stream.WriteUimsbf(32, this.ra_unit_size[f]);
-                }
-            }
-
-            if (aux_data_enabled)
-            {
-                boxSize += stream.WriteUimsbf(32, this.aux_size);
-                boxSize += stream.WriteBslbf(aux_size * 8, this.aux_data);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 32; // als_id
-            boxSize += 32; // samp_freq
-            boxSize += 32; // samples
-            boxSize += 16; // channels
-            boxSize += 3; // file_type
-            boxSize += 3; // resolution
-            boxSize += 1; // floating
-            boxSize += 1; // msb_first
-            boxSize += 16; // frame_length
-            boxSize += 8; // random_access
-            boxSize += 2; // ra_flag
-            boxSize += 1; // adapt_order
-            boxSize += 2; // coef_table
-            boxSize += 1; // long_term_prediction
-            boxSize += 10; // max_order
-            boxSize += 2; // block_switching
-            boxSize += 1; // bgmc_mode
-            boxSize += 1; // sb_part
-            boxSize += 1; // joint_stereo
-            boxSize += 1; // mc_coding
-            boxSize += 1; // chan_config
-            boxSize += 1; // chan_sort
-            boxSize += 1; // crc_enabled
-            boxSize += 1; // RLSLMS
-            boxSize += 5; // reserved
-            boxSize += 1; // aux_data_enabled
-
-            if (chan_config)
-            {
-                boxSize += 16; // chan_config_info
-            }
-
-            if (chan_sort)
-            {
-
-                for (int c = 0; c <= channels; c++)
-                {
-                    boxSize += 1; // chan_pos
-                }
-            }
-            boxSize += 1; // byte_align
-            boxSize += 32; // header_size
-            boxSize += 32; // trailer_size
-            boxSize += header_size * 8; // orig_header
-            boxSize += trailer_size * 8; // orig_trailer
-
-            if (crc_enabled)
-            {
-                boxSize += 32; // crc
-            }
-
-            if ((ra_flag == 2) && (random_access > 0))
-            {
-
-                for (int f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++)
-                {
-                    boxSize += 32; // ra_unit_size
-                }
-            }
-
-            if (aux_data_enabled)
-            {
-                boxSize += 32; // aux_size
-                boxSize += aux_size * 8; // aux_data
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class SLSSpecificConfig(samplingFrequencyIndex,
-      channelConfiguration,
-      audioObjectType)
-    {
-      uimsbf(3) pcmWordLength;
-      uimsbf(1) aac_core_present;
-      uimsbf(1) lle_main_stream;
-      uimsbf(1) reserved_bit;
-      uimsbf(3) frameLength;
-      if (!channelConfiguration) {
-        program_config_element();
-      }
-    }
-
-    */
-    public class SLSSpecificConfig
-    {
-
-
-        protected byte pcmWordLength;
-        public byte PcmWordLength { get { return this.pcmWordLength; } set { this.pcmWordLength = value; } }
-
-        protected bool aac_core_present;
-        public bool AacCorePresent { get { return this.aac_core_present; } set { this.aac_core_present = value; } }
-
-        protected bool lle_main_stream;
-        public bool LleMainStream { get { return this.lle_main_stream; } set { this.lle_main_stream = value; } }
-
-        protected bool reserved_bit;
-        public bool ReservedBit { get { return this.reserved_bit; } set { this.reserved_bit = value; } }
-
-        protected byte frameLength;
-        public byte FrameLength { get { return this.frameLength; } set { this.frameLength = value; } }
-
-        protected program_config_element program_config_element;
-        public program_config_element ProgramConfigElement { get { return this.program_config_element; } set { this.program_config_element = value; } }
-
-        public SLSSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            byte channelConfiguration = 0; // TODO: pass through ctor
-
-            boxSize += stream.ReadUimsbf(3, out this.pcmWordLength);
-            boxSize += stream.ReadUimsbf(out this.aac_core_present);
-            boxSize += stream.ReadUimsbf(out this.lle_main_stream);
-            boxSize += stream.ReadUimsbf(out this.reserved_bit);
-            boxSize += stream.ReadUimsbf(3, out this.frameLength);
-
-            if (channelConfiguration == 0)
-            {
-                boxSize += stream.ReadClass(out this.program_config_element);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            byte channelConfiguration = 0; // TODO: pass through ctor
-
-            boxSize += stream.WriteUimsbf(3, this.pcmWordLength);
-            boxSize += stream.WriteUimsbf(this.aac_core_present);
-            boxSize += stream.WriteUimsbf(this.lle_main_stream);
-            boxSize += stream.WriteUimsbf(this.reserved_bit);
-            boxSize += stream.WriteUimsbf(3, this.frameLength);
-
-            if (channelConfiguration == 0)
-            {
-                boxSize += stream.WriteClass(this.program_config_element);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            byte channelConfiguration = 0; // TODO: pass through ctor
-
-            boxSize += 3; // pcmWordLength
-            boxSize += 1; // aac_core_present
-            boxSize += 1; // lle_main_stream
-            boxSize += 1; // reserved_bit
-            boxSize += 3; // frameLength
-
-            if (channelConfiguration == 0)
-            {
-                boxSize += IsoStream.CalculateClassSize(program_config_element); // program_config_element
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ELDSpecificConfig(channelConfiguration)
-    {
-      bslbf(1) frameLengthFlag;
-      bslbf(1) aacSectionDataResilienceFlag;
-      bslbf(1) aacScalefactorDataResilienceFlag;
-      bslbf(1) aacSpectralDataResilienceFlag;
-
-      bslbf(1) ldSbrPresentFlag;
-      if (ldSbrPresentFlag) {
-        bslbf(1) ldSbrSamplingRate;
-        bslbf(1) ldSbrCrcFlag;
-        ld_sbr_header(channelConfiguration);
-      }
-
-      bslbf(4) eldExtType;
-    while (eldExtType != ELDEXT_TERM) {
-        uimsbf(4) eldExtLen;
-        len = eldExtLen;
-        if (eldExtLen == 15) {
-          uimsbf(8) eldExtLenAdd;
-          len += eldExtLenAdd;
-        }
-        if (eldExtLenAdd == 255) {
-          uimsbf(16) eldExtLenAddAdd;
-          len += eldExtLenAddAdd;
-        }
-        switch (eldExtType) {
-          /* add future eld extension configs here *//*
-          default:
-            int cntt;
-            for (cnt = 0; cnt < len; cnt++) {
-               uimsbf(8) other_byte;
-            }
-            break;
-        }
-    bslbf(4) eldExtType;
-      }
-    }
-
-    */
-    public class ELDSpecificConfig
-    {
-
-
-        protected bool frameLengthFlag;
-        public bool FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
-
-        protected bool aacSectionDataResilienceFlag;
-        public bool AacSectionDataResilienceFlag { get { return this.aacSectionDataResilienceFlag; } set { this.aacSectionDataResilienceFlag = value; } }
-
-        protected bool aacScalefactorDataResilienceFlag;
-        public bool AacScalefactorDataResilienceFlag { get { return this.aacScalefactorDataResilienceFlag; } set { this.aacScalefactorDataResilienceFlag = value; } }
-
-        protected bool aacSpectralDataResilienceFlag;
-        public bool AacSpectralDataResilienceFlag { get { return this.aacSpectralDataResilienceFlag; } set { this.aacSpectralDataResilienceFlag = value; } }
-
-        protected bool ldSbrPresentFlag;
-        public bool LdSbrPresentFlag { get { return this.ldSbrPresentFlag; } set { this.ldSbrPresentFlag = value; } }
-
-        protected bool ldSbrSamplingRate;
-        public bool LdSbrSamplingRate { get { return this.ldSbrSamplingRate; } set { this.ldSbrSamplingRate = value; } }
-
-        protected bool ldSbrCrcFlag;
-        public bool LdSbrCrcFlag { get { return this.ldSbrCrcFlag; } set { this.ldSbrCrcFlag = value; } }
-
-        protected ld_sbr_header ld_sbr_header;
-        public ld_sbr_header LdSbrHeader { get { return this.ld_sbr_header; } set { this.ld_sbr_header = value; } }
-
-        protected byte eldExtType;
-        public byte EldExtType { get { return this.eldExtType; } set { this.eldExtType = value; } }
-
-        protected byte eldExtLen;
-        public byte EldExtLen { get { return this.eldExtLen; } set { this.eldExtLen = value; } }
-
-        protected byte eldExtLenAdd;
-        public byte EldExtLenAdd { get { return this.eldExtLenAdd; } set { this.eldExtLenAdd = value; } }
-
-        protected ushort eldExtLenAddAdd;
-        public ushort EldExtLenAddAdd { get { return this.eldExtLenAddAdd; } set { this.eldExtLenAddAdd = value; } }
-
-        protected byte other_byte;
-        public byte OtherByte { get { return this.other_byte; } set { this.other_byte = value; } }
-
-        protected byte eldExtType0;
-        public byte EldExtType0 { get { return this.eldExtType0; } set { this.eldExtType0 = value; } }
-
-        public ELDSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            int len = 0;
-
-            const byte ELDEXT_TERM = 0;
-
-            boxSize += stream.ReadBslbf(out this.frameLengthFlag);
-            boxSize += stream.ReadBslbf(out this.aacSectionDataResilienceFlag);
-            boxSize += stream.ReadBslbf(out this.aacScalefactorDataResilienceFlag);
-            boxSize += stream.ReadBslbf(out this.aacSpectralDataResilienceFlag);
-            boxSize += stream.ReadBslbf(out this.ldSbrPresentFlag);
-
-            if (ldSbrPresentFlag)
-            {
-                boxSize += stream.ReadBslbf(out this.ldSbrSamplingRate);
-                boxSize += stream.ReadBslbf(out this.ldSbrCrcFlag);
-                boxSize += stream.ReadClass(out this.ld_sbr_header);
-            }
-            boxSize += stream.ReadBslbf(4, out this.eldExtType);
-
-            while (eldExtType != ELDEXT_TERM)
-            {
-                boxSize += stream.ReadUimsbf(4, out this.eldExtLen);
-                len = eldExtLen;
-
-                if (eldExtLen == 15)
-                {
-                    boxSize += stream.ReadUimsbf(8, out this.eldExtLenAdd);
-                    len += eldExtLenAdd;
-                }
-
-                if (eldExtLenAdd == 255)
-                {
-                    boxSize += stream.ReadUimsbf(16, out this.eldExtLenAddAdd);
-                    len += eldExtLenAddAdd;
-                }
-
-                switch (eldExtType)
-                {
-                    /*  add future eld extension configs here  */
-                    default:
-                        int cntt;
-
-                        for (int cnt = 0; cnt < len; cnt++)
-                        {
-                            boxSize += stream.ReadUimsbf(8, out this.other_byte);
-                        }
-                        break;
-                }
-                boxSize += stream.ReadBslbf(4, out this.eldExtType0);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            int len = 0;
-
-            const byte ELDEXT_TERM = 0;
-
-            boxSize += stream.WriteBslbf(this.frameLengthFlag);
-            boxSize += stream.WriteBslbf(this.aacSectionDataResilienceFlag);
-            boxSize += stream.WriteBslbf(this.aacScalefactorDataResilienceFlag);
-            boxSize += stream.WriteBslbf(this.aacSpectralDataResilienceFlag);
-            boxSize += stream.WriteBslbf(this.ldSbrPresentFlag);
-
-            if (ldSbrPresentFlag)
-            {
-                boxSize += stream.WriteBslbf(this.ldSbrSamplingRate);
-                boxSize += stream.WriteBslbf(this.ldSbrCrcFlag);
-                boxSize += stream.WriteClass(this.ld_sbr_header);
-            }
-            boxSize += stream.WriteBslbf(4, this.eldExtType);
-
-            while (eldExtType != ELDEXT_TERM)
-            {
-                boxSize += stream.WriteUimsbf(4, this.eldExtLen);
-                len = eldExtLen;
-
-                if (eldExtLen == 15)
-                {
-                    boxSize += stream.WriteUimsbf(8, this.eldExtLenAdd);
-                    len += eldExtLenAdd;
-                }
-
-                if (eldExtLenAdd == 255)
-                {
-                    boxSize += stream.WriteUimsbf(16, this.eldExtLenAddAdd);
-                    len += eldExtLenAddAdd;
-                }
-
-                switch (eldExtType)
-                {
-                    /*  add future eld extension configs here  */
-                    default:
-                        int cntt;
-
-                        for (int cnt = 0; cnt < len; cnt++)
-                        {
-                            boxSize += stream.WriteUimsbf(8, this.other_byte);
-                        }
-                        break;
-                }
-                boxSize += stream.WriteBslbf(4, this.eldExtType0);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            int len = 0;
-
-            const byte ELDEXT_TERM = 0;
-
-            boxSize += 1; // frameLengthFlag
-            boxSize += 1; // aacSectionDataResilienceFlag
-            boxSize += 1; // aacScalefactorDataResilienceFlag
-            boxSize += 1; // aacSpectralDataResilienceFlag
-            boxSize += 1; // ldSbrPresentFlag
-
-            if (ldSbrPresentFlag)
-            {
-                boxSize += 1; // ldSbrSamplingRate
-                boxSize += 1; // ldSbrCrcFlag
-                boxSize += IsoStream.CalculateClassSize(ld_sbr_header); // ld_sbr_header
-            }
-            boxSize += 4; // eldExtType
-
-            while (eldExtType != ELDEXT_TERM)
-            {
-                boxSize += 4; // eldExtLen
-                len = eldExtLen;
-
-                if (eldExtLen == 15)
-                {
-                    boxSize += 8; // eldExtLenAdd
-                    len += eldExtLenAdd;
-                }
-
-                if (eldExtLenAdd == 255)
-                {
-                    boxSize += 16; // eldExtLenAddAdd
-                    len += eldExtLenAddAdd;
-                }
-
-                switch (eldExtType)
-                {
-                    /*  add future eld extension configs here  */
-                    default:
-                        int cntt;
-
-                        for (int cnt = 0; cnt < len; cnt++)
-                        {
-                            boxSize += 8; // other_byte
-                        }
-                        break;
-                }
-                boxSize += 4; // eldExtType0
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ld_sbr_header(channelConfiguration)
-    {
-      switch (channelConfiguration) {
-        case 1:
-        case 2:
-          numSbrHeader = 1;
-          break;
-        case 3:
-          numSbrHeader = 2;
-          break;
-        case 4:
-        case 5:
-        case 6:
-          numSbrHeader = 3;
-          break;
-        case 7:
-          numSbrHeader = 4;
-          break;
-        default:
-          numSbrHeader = 0;
-          break;
-      }
-      for (el = 0; el < numSbrHeader; el++) {
-        sbr_header();
-      }
-    }
-
-    */
-    public class ld_sbr_header
-    {
-
-
-        protected sbr_header sbr_header;
-        public sbr_header SbrHeader { get { return this.sbr_header; } set { this.sbr_header = value; } }
-
-        public ld_sbr_header()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            int numSbrHeader = 0;
-
-            int channelConfiguration = 0; // TODO: pass through ctor
-
-
-            switch (channelConfiguration)
-            {
-                case 1:
-                case 2:
-                    numSbrHeader = 1;
-                    break;
-                case 3:
-                    numSbrHeader = 2;
-                    break;
-                case 4:
-                case 5:
-                case 6:
-                    numSbrHeader = 3;
-                    break;
-                case 7:
-                    numSbrHeader = 4;
-                    break;
-                default:
-                    numSbrHeader = 0;
-                    break;
-            }
-
-            for (int el = 0; el < numSbrHeader; el++)
-            {
-                boxSize += stream.ReadClass(out this.sbr_header);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            int numSbrHeader = 0;
-
-            int channelConfiguration = 0; // TODO: pass through ctor
-
-
-            switch (channelConfiguration)
-            {
-                case 1:
-                case 2:
-                    numSbrHeader = 1;
-                    break;
-                case 3:
-                    numSbrHeader = 2;
-                    break;
-                case 4:
-                case 5:
-                case 6:
-                    numSbrHeader = 3;
-                    break;
-                case 7:
-                    numSbrHeader = 4;
-                    break;
-                default:
-                    numSbrHeader = 0;
-                    break;
-            }
-
-            for (int el = 0; el < numSbrHeader; el++)
-            {
-                boxSize += stream.WriteClass(this.sbr_header);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            int numSbrHeader = 0;
-
-            int channelConfiguration = 0; // TODO: pass through ctor
-
-
-            switch (channelConfiguration)
-            {
-                case 1:
-                case 2:
-                    numSbrHeader = 1;
-                    break;
-                case 3:
-                    numSbrHeader = 2;
-                    break;
-                case 4:
-                case 5:
-                case 6:
-                    numSbrHeader = 3;
-                    break;
-                case 7:
-                    numSbrHeader = 4;
-                    break;
-                default:
-                    numSbrHeader = 0;
-                    break;
-            }
-
-            for (int el = 0; el < numSbrHeader; el++)
-            {
-                boxSize += IsoStream.CalculateClassSize(sbr_header); // sbr_header
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ld_sbr_header(channelConfiguration)
-    {
-      switch (channelConfiguration) {
-        case 1:
-        case 2:
-          numSbrHeader = 1;
-          break;
-        case 3:
-          numSbrHeader = 2;
-          break;
-        case 4:
-        case 5:
-        case 6:
-          numSbrHeader = 3;
-          break;
-        case 7:
-          numSbrHeader = 4;
-          break;
-        default:
-          numSbrHeader = 0;
-          break;
-      }
-      for (el = 0; el < numSbrHeader; el++) {
-        sbr_header();
-      }
-    }
-
-    */
-    public class sbr_header
-    {
-
-
-        protected bool bs_amp_res;
-        public bool BsAmpRes { get { return this.bs_amp_res; } set { this.bs_amp_res = value; } }
-
-        protected byte bs_start_freq;
-        public byte BsStartFreq { get { return this.bs_start_freq; } set { this.bs_start_freq = value; } }
-
-        protected byte bs_stop_freq;
-        public byte BsStopFreq { get { return this.bs_stop_freq; } set { this.bs_stop_freq = value; } }
-
-        protected byte bs_xover_band;
-        public byte BsXoverBand { get { return this.bs_xover_band; } set { this.bs_xover_band = value; } }
-
-        protected byte bs_reserved;
-        public byte BsReserved { get { return this.bs_reserved; } set { this.bs_reserved = value; } }
-
-        protected bool bs_header_extra_1;
-        public bool BsHeaderExtra1 { get { return this.bs_header_extra_1; } set { this.bs_header_extra_1 = value; } }
-
-        protected bool bs_header_extra_2;
-        public bool BsHeaderExtra2 { get { return this.bs_header_extra_2; } set { this.bs_header_extra_2 = value; } }
-
-        protected byte bs_freq_scale;
-        public byte BsFreqScale { get { return this.bs_freq_scale; } set { this.bs_freq_scale = value; } }
-
-        protected bool bs_alter_scale;
-        public bool BsAlterScale { get { return this.bs_alter_scale; } set { this.bs_alter_scale = value; } }
-
-        protected byte bs_noise_bands;
-        public byte BsNoiseBands { get { return this.bs_noise_bands; } set { this.bs_noise_bands = value; } }
-
-        protected byte bs_limiter_bands;
-        public byte BsLimiterBands { get { return this.bs_limiter_bands; } set { this.bs_limiter_bands = value; } }
-
-        protected byte bs_limiter_gains;
-        public byte BsLimiterGains { get { return this.bs_limiter_gains; } set { this.bs_limiter_gains = value; } }
-
-        protected bool bs_interpol_freq;
-        public bool BsInterpolFreq { get { return this.bs_interpol_freq; } set { this.bs_interpol_freq = value; } }
-
-        protected bool bs_smoothing_mode;
-        public bool BsSmoothingMode { get { return this.bs_smoothing_mode; } set { this.bs_smoothing_mode = value; } }
-
-        public sbr_header()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.bs_amp_res);
-            boxSize += stream.ReadUimsbf(4, out this.bs_start_freq);
-            boxSize += stream.ReadUimsbf(4, out this.bs_stop_freq);
-            boxSize += stream.ReadUimsbf(3, out this.bs_xover_band);
-            boxSize += stream.ReadUimsbf(2, out this.bs_reserved);
-            boxSize += stream.ReadUimsbf(out this.bs_header_extra_1);
-            boxSize += stream.ReadUimsbf(out this.bs_header_extra_2);
-
-            if (bs_header_extra_1)
-            {
-                boxSize += stream.ReadUimsbf(2, out this.bs_freq_scale);
-                boxSize += stream.ReadUimsbf(out this.bs_alter_scale);
-                boxSize += stream.ReadUimsbf(2, out this.bs_noise_bands);
-            }
-
-            if (bs_header_extra_2)
-            {
-                boxSize += stream.ReadUimsbf(2, out this.bs_limiter_bands);
-                boxSize += stream.ReadUimsbf(2, out this.bs_limiter_gains);
-                boxSize += stream.ReadUimsbf(out this.bs_interpol_freq);
-                boxSize += stream.ReadUimsbf(out this.bs_smoothing_mode);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(this.bs_amp_res);
-            boxSize += stream.WriteUimsbf(4, this.bs_start_freq);
-            boxSize += stream.WriteUimsbf(4, this.bs_stop_freq);
-            boxSize += stream.WriteUimsbf(3, this.bs_xover_band);
-            boxSize += stream.WriteUimsbf(2, this.bs_reserved);
-            boxSize += stream.WriteUimsbf(this.bs_header_extra_1);
-            boxSize += stream.WriteUimsbf(this.bs_header_extra_2);
-
-            if (bs_header_extra_1)
-            {
-                boxSize += stream.WriteUimsbf(2, this.bs_freq_scale);
-                boxSize += stream.WriteUimsbf(this.bs_alter_scale);
-                boxSize += stream.WriteUimsbf(2, this.bs_noise_bands);
-            }
-
-            if (bs_header_extra_2)
-            {
-                boxSize += stream.WriteUimsbf(2, this.bs_limiter_bands);
-                boxSize += stream.WriteUimsbf(2, this.bs_limiter_gains);
-                boxSize += stream.WriteUimsbf(this.bs_interpol_freq);
-                boxSize += stream.WriteUimsbf(this.bs_smoothing_mode);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // bs_amp_res
-            boxSize += 4; // bs_start_freq
-            boxSize += 4; // bs_stop_freq
-            boxSize += 3; // bs_xover_band
-            boxSize += 2; // bs_reserved
-            boxSize += 1; // bs_header_extra_1
-            boxSize += 1; // bs_header_extra_2
-
-            if (bs_header_extra_1)
-            {
-                boxSize += 2; // bs_freq_scale
-                boxSize += 1; // bs_alter_scale
-                boxSize += 2; // bs_noise_bands
-            }
-
-            if (bs_header_extra_2)
-            {
-                boxSize += 2; // bs_limiter_bands
-                boxSize += 2; // bs_limiter_gains
-                boxSize += 1; // bs_interpol_freq
-                boxSize += 1; // bs_smoothing_mode
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ErrorProtectionSpecificConfig()
-    {
-      uimsbf(8) number_of_predefined_set;
-      uimsbf(2) interleave_type;
-      uimsbf(3) bit_stuffing;
-      uimsbf(3) number_of_concatenated_frame;
-      for (i = 0; i < number_of_predefined_set; i++) {
-        uimsbf(6) number_of_class[i];
-        for (j = 0; j < number_of_class[i]; j++) {
-          uimsbf(1) length_escape[i][j];
-          uimsbf(1) rate_escape[i][j];
-          uimsbf(1) crclen_escape[i][j];
-          if (number_of_concatenated_frame != 1) {
-            uimsbf(1) concatenate_flag[i][j];
-          }
-          uimsbf(2) fec_type[i][j];
-          if (fec_type[i][j] == 0) {
-            uimsbf(1) termination_switch[i][j];
-          }
-          if (interleave_type == 2) {
-            uimsbf(2) interleave_switch[i][j];
-          }
-          uimsbf(1) class_optional;
-          if (length_escape[i][j] == 1) { /* ESC *//*
-            uimsbf(4) number_of_bits_for_length[i][j];
-          }
-          else {
-            uimsbf(16) class_length[i][j];
-          }
-          if (rate_escape[i][j] != 1) { /* not ESC *//*
-            if (fec_type[i][j] != 0) {
-              uimsbf(7) class_rate[i][j];
-            } else {
-              uimsbf(5) class_rate[i][j];
-            }
-          }
-          if (crclen_escape[i][j] != 1) {  /* not ESC *//*
-            uimsbf(5) class_crclen[i][j];
-          }
-        }
-        uimsbf(1) class_reordered_output;
-        if (class_reordered_output == 1) {
-          for (j = 0; j < number_of_class[i]; j++) {
-            uimsbf(6) class_output_order[i][j];
-          }
-        }
-      }
-      uimsbf(1) header_protection;
-      if (header_protection == 1) {
-        uimsbf(5) header_rate;
-        uimsbf(5) header_crclen;
-      }
-    }
-    */
-    public class ErrorProtectionSpecificConfig
-    {
-
-
-        protected byte number_of_predefined_set;
-        public byte NumberOfPredefinedSet { get { return this.number_of_predefined_set; } set { this.number_of_predefined_set = value; } }
-
-        protected byte interleave_type;
-        public byte InterleaveType { get { return this.interleave_type; } set { this.interleave_type = value; } }
-
-        protected byte bit_stuffing;
-        public byte BitStuffing { get { return this.bit_stuffing; } set { this.bit_stuffing = value; } }
-
-        protected byte number_of_concatenated_frame;
-        public byte NumberOfConcatenatedFrame { get { return this.number_of_concatenated_frame; } set { this.number_of_concatenated_frame = value; } }
-
-        protected byte[] number_of_class;
-        public byte[] NumberOfClass { get { return this.number_of_class; } set { this.number_of_class = value; } }
-
-        protected bool[][] length_escape;
-        public bool[][] LengthEscape { get { return this.length_escape; } set { this.length_escape = value; } }
-
-        protected bool[][] rate_escape;
-        public bool[][] RateEscape { get { return this.rate_escape; } set { this.rate_escape = value; } }
-
-        protected bool[][] crclen_escape;
-        public bool[][] CrclenEscape { get { return this.crclen_escape; } set { this.crclen_escape = value; } }
-
-        protected bool[][] concatenate_flag;
-        public bool[][] ConcatenateFlag { get { return this.concatenate_flag; } set { this.concatenate_flag = value; } }
-
-        protected byte[][] fec_type;
-        public byte[][] FecType { get { return this.fec_type; } set { this.fec_type = value; } }
-
-        protected bool[][] termination_switch;
-        public bool[][] TerminationSwitch { get { return this.termination_switch; } set { this.termination_switch = value; } }
-
-        protected byte[][] interleave_switch;
-        public byte[][] InterleaveSwitch { get { return this.interleave_switch; } set { this.interleave_switch = value; } }
-
-        protected bool class_optional;
-        public bool ClassOptional { get { return this.class_optional; } set { this.class_optional = value; } }
-
-        protected byte[][] number_of_bits_for_length;
-        public byte[][] NumberOfBitsForLength { get { return this.number_of_bits_for_length; } set { this.number_of_bits_for_length = value; } }
-
-        protected ushort[][] class_length;
-        public ushort[][] ClassLength { get { return this.class_length; } set { this.class_length = value; } }
-
-        protected byte[][] class_rate;
-        public byte[][] ClassRate { get { return this.class_rate; } set { this.class_rate = value; } }
-
-        protected byte[][] class_rate0;
-        public byte[][] ClassRate0 { get { return this.class_rate0; } set { this.class_rate0 = value; } }
-
-        protected byte[][] class_crclen;
-        public byte[][] ClassCrclen { get { return this.class_crclen; } set { this.class_crclen = value; } }
-
-        protected bool class_reordered_output;
-        public bool ClassReorderedOutput { get { return this.class_reordered_output; } set { this.class_reordered_output = value; } }
-
-        protected byte[][] class_output_order;
-        public byte[][] ClassOutputOrder { get { return this.class_output_order; } set { this.class_output_order = value; } }
-
-        protected bool header_protection;
-        public bool HeaderProtection { get { return this.header_protection; } set { this.header_protection = value; } }
-
-        protected byte header_rate;
-        public byte HeaderRate { get { return this.header_rate; } set { this.header_rate = value; } }
-
-        protected byte header_crclen;
-        public byte HeaderCrclen { get { return this.header_crclen; } set { this.header_crclen = value; } }
-
-        public ErrorProtectionSpecificConfig()
-        { }
-
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(8, out this.number_of_predefined_set);
-            boxSize += stream.ReadUimsbf(2, out this.interleave_type);
-            boxSize += stream.ReadUimsbf(3, out this.bit_stuffing);
-            boxSize += stream.ReadUimsbf(3, out this.number_of_concatenated_frame);
-
-            for (int i = 0; i < number_of_predefined_set; i++)
-            {
-                boxSize += stream.ReadUimsbf(6, out this.number_of_class[i]);
-
-                for (int j = 0; j < number_of_class[i]; j++)
-                {
-                    boxSize += stream.ReadUimsbf(out this.length_escape[i][j]);
-                    boxSize += stream.ReadUimsbf(out this.rate_escape[i][j]);
-                    boxSize += stream.ReadUimsbf(out this.crclen_escape[i][j]);
-
-                    if (number_of_concatenated_frame != 1)
-                    {
-                        boxSize += stream.ReadUimsbf(out this.concatenate_flag[i][j]);
-                    }
-                    boxSize += stream.ReadUimsbf(2, out this.fec_type[i][j]);
-
-                    if (fec_type[i][j] == 0)
-                    {
-                        boxSize += stream.ReadUimsbf(out this.termination_switch[i][j]);
-                    }
-
-                    if (interleave_type == 2)
-                    {
-                        boxSize += stream.ReadUimsbf(2, out this.interleave_switch[i][j]);
-                    }
-                    boxSize += stream.ReadUimsbf(out this.class_optional);
-
-                    if (length_escape[i][j] == true)
-                    {
-                        /*  ESC  */
-                        boxSize += stream.ReadUimsbf(4, out this.number_of_bits_for_length[i][j]);
-                    }
-
-                    else
-                    {
-                        boxSize += stream.ReadUimsbf(16, out this.class_length[i][j]);
-                    }
-
-                    if (rate_escape[i][j] != true)
-                    {
-                        /*  not ESC  */
-
-                        if (fec_type[i][j] != 0)
-                        {
-                            boxSize += stream.ReadUimsbf(7, out this.class_rate[i][j]);
-                        }
-
-                        else
-                        {
-                            boxSize += stream.ReadUimsbf(5, out this.class_rate0[i][j]);
-                        }
-                    }
-
-                    if (crclen_escape[i][j] != true)
-                    {
-                        /*  not ESC  */
-                        boxSize += stream.ReadUimsbf(5, out this.class_crclen[i][j]);
-                    }
-                }
-                boxSize += stream.ReadUimsbf(out this.class_reordered_output);
-
-                if (class_reordered_output == true)
-                {
-
-                    for (int j = 0; j < number_of_class[i]; j++)
-                    {
-                        boxSize += stream.ReadUimsbf(6, out this.class_output_order[i][j]);
-                    }
-                }
-            }
-            boxSize += stream.ReadUimsbf(out this.header_protection);
-
-            if (header_protection == true)
-            {
-                boxSize += stream.ReadUimsbf(5, out this.header_rate);
-                boxSize += stream.ReadUimsbf(5, out this.header_crclen);
-            }
-            return boxSize;
-        }
-
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUimsbf(8, this.number_of_predefined_set);
-            boxSize += stream.WriteUimsbf(2, this.interleave_type);
-            boxSize += stream.WriteUimsbf(3, this.bit_stuffing);
-            boxSize += stream.WriteUimsbf(3, this.number_of_concatenated_frame);
-
-            for (int i = 0; i < number_of_predefined_set; i++)
-            {
-                boxSize += stream.WriteUimsbf(6, this.number_of_class[i]);
-
-                for (int j = 0; j < number_of_class[i]; j++)
-                {
-                    boxSize += stream.WriteUimsbf(this.length_escape[i][j]);
-                    boxSize += stream.WriteUimsbf(this.rate_escape[i][j]);
-                    boxSize += stream.WriteUimsbf(this.crclen_escape[i][j]);
-
-                    if (number_of_concatenated_frame != 1)
-                    {
-                        boxSize += stream.WriteUimsbf(this.concatenate_flag[i][j]);
-                    }
-                    boxSize += stream.WriteUimsbf(2, this.fec_type[i][j]);
-
-                    if (fec_type[i][j] == 0)
-                    {
-                        boxSize += stream.WriteUimsbf(this.termination_switch[i][j]);
-                    }
-
-                    if (interleave_type == 2)
-                    {
-                        boxSize += stream.WriteUimsbf(2, this.interleave_switch[i][j]);
-                    }
-                    boxSize += stream.WriteUimsbf(this.class_optional);
-
-                    if (length_escape[i][j] == true)
-                    {
-                        /*  ESC  */
-                        boxSize += stream.WriteUimsbf(4, this.number_of_bits_for_length[i][j]);
-                    }
-
-                    else
-                    {
-                        boxSize += stream.WriteUimsbf(16, this.class_length[i][j]);
-                    }
-
-                    if (rate_escape[i][j] != true)
-                    {
-                        /*  not ESC  */
-
-                        if (fec_type[i][j] != 0)
-                        {
-                            boxSize += stream.WriteUimsbf(7, this.class_rate[i][j]);
-                        }
-
-                        else
-                        {
-                            boxSize += stream.WriteUimsbf(5, this.class_rate0[i][j]);
-                        }
-                    }
-
-                    if (crclen_escape[i][j] != true)
-                    {
-                        /*  not ESC  */
-                        boxSize += stream.WriteUimsbf(5, this.class_crclen[i][j]);
-                    }
-                }
-                boxSize += stream.WriteUimsbf(this.class_reordered_output);
-
-                if (class_reordered_output == true)
-                {
-
-                    for (int j = 0; j < number_of_class[i]; j++)
-                    {
-                        boxSize += stream.WriteUimsbf(6, this.class_output_order[i][j]);
-                    }
-                }
-            }
-            boxSize += stream.WriteUimsbf(this.header_protection);
-
-            if (header_protection == true)
-            {
-                boxSize += stream.WriteUimsbf(5, this.header_rate);
-                boxSize += stream.WriteUimsbf(5, this.header_crclen);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 8; // number_of_predefined_set
-            boxSize += 2; // interleave_type
-            boxSize += 3; // bit_stuffing
-            boxSize += 3; // number_of_concatenated_frame
-
-            for (int i = 0; i < number_of_predefined_set; i++)
-            {
-                boxSize += 6; // number_of_class
-
-                for (int j = 0; j < number_of_class[i]; j++)
-                {
-                    boxSize += 1; // length_escape
-                    boxSize += 1; // rate_escape
-                    boxSize += 1; // crclen_escape
-
-                    if (number_of_concatenated_frame != 1)
-                    {
-                        boxSize += 1; // concatenate_flag
-                    }
-                    boxSize += 2; // fec_type
-
-                    if (fec_type[i][j] == 0)
-                    {
-                        boxSize += 1; // termination_switch
-                    }
-
-                    if (interleave_type == 2)
-                    {
-                        boxSize += 2; // interleave_switch
-                    }
-                    boxSize += 1; // class_optional
-
-                    if (length_escape[i][j] == true)
-                    {
-                        /*  ESC  */
-                        boxSize += 4; // number_of_bits_for_length
-                    }
-
-                    else
-                    {
-                        boxSize += 16; // class_length
-                    }
-
-                    if (rate_escape[i][j] != true)
-                    {
-                        /*  not ESC  */
-
-                        if (fec_type[i][j] != 0)
-                        {
-                            boxSize += 7; // class_rate
-                        }
-
-                        else
-                        {
-                            boxSize += 5; // class_rate0
-                        }
-                    }
-
-                    if (crclen_escape[i][j] != true)
-                    {
-                        /*  not ESC  */
-                        boxSize += 5; // class_crclen
-                    }
-                }
-                boxSize += 1; // class_reordered_output
-
-                if (class_reordered_output == true)
-                {
-
-                    for (int j = 0; j < number_of_class[i]; j++)
-                    {
-                        boxSize += 6; // class_output_order
-                    }
-                }
-            }
-            boxSize += 1; // header_protection
-
-            if (header_protection == true)
-            {
-                boxSize += 5; // header_rate
-                boxSize += 5; // header_crclen
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
     aligned(8) class FullBox(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)
     extends Box(boxtype) { 
     unsigned int(8) version = v;
@@ -42586,6 +36521,6071 @@ namespace BoxGenerator2
             for (int i = 0; i < num_direct_reference_samples; i++)
             {
                 boxSize += 32; // direct_reference_sample_id
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract aligned(8) expandable(228-1) class BaseDescriptor : bit(8) tag=0 {
+     // empty. To be filled by classes extending this class.
+     int sizeOfInstance = 0;
+     bit(1) nextByte;
+     bit(7) sizeOfInstance;
+     while(nextByte) {
+     bit(1) nextByte;
+     bit(7) sizeByte;
+     sizeOfInstance = sizeOfInstance<<7 | sizeByte;
+     }
+    }
+    */
+    public class BaseDescriptor
+    {
+        public byte Tag { get; set; } = 0;
+
+        protected bool nextByte;
+        public bool NextByte { get { return this.nextByte; } set { this.nextByte = value; } }
+
+        protected byte sizeOfInstance;
+        public byte SizeOfInstance { get { return this.sizeOfInstance; } set { this.sizeOfInstance = value; } }
+
+        protected bool nextByte0;
+        public bool NextByte0 { get { return this.nextByte0; } set { this.nextByte0 = value; } }
+
+        protected byte sizeByte;
+        public byte SizeByte { get { return this.sizeByte; } set { this.sizeByte = value; } }
+
+        public BaseDescriptor()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            int sizeOfInstance = 0;
+            boxSize += stream.ReadBit(out this.nextByte);
+            boxSize += stream.ReadBits(7, out this.sizeOfInstance);
+
+            while (nextByte)
+            {
+                boxSize += stream.ReadBit(out this.nextByte0);
+                boxSize += stream.ReadBits(7, out this.sizeByte);
+                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            int sizeOfInstance = 0;
+            boxSize += stream.WriteBit(this.nextByte);
+            boxSize += stream.WriteBits(7, this.sizeOfInstance);
+
+            while (nextByte)
+            {
+                boxSize += stream.WriteBit(this.nextByte0);
+                boxSize += stream.WriteBits(7, this.sizeByte);
+                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            int sizeOfInstance = 0;
+            boxSize += 1; // nextByte
+            boxSize += 7; // sizeOfInstance
+
+            while (nextByte)
+            {
+                boxSize += 1; // nextByte0
+                boxSize += 7; // sizeByte
+                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag
+     {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public class DecoderSpecificInfo : BaseDescriptor
+    {
+        public byte Tag { get; set; } = DescriptorTags.DecSpecificInfoTag;
+
+        public DecoderSpecificInfo()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ES_Descriptor extends BaseDescriptor : bit(8) tag=ES_DescrTag {
+     bit(16) ES_ID;
+     bit(1) streamDependenceFlag;
+     bit(1) URL_Flag;
+     bit(1) OCRstreamFlag;
+     bit(5) streamPriority;
+     if (streamDependenceFlag)
+     bit(16) dependsOn_ES_ID;
+     if (URL_Flag) {
+     bit(8) URLlength;
+     bit(8) URLstring[URLlength];
+     }
+     if (OCRstreamFlag)
+     bit(16) OCR_ES_Id;
+     DecoderConfigDescriptor decConfigDescr;
+     SLConfigDescriptor slConfigDescr;
+     IPI_DescrPointer ipiPtr[0 .. 1];
+     IP_IdentificationDataSet ipIDS[0 .. 255];
+     IPMP_DescriptorPointer ipmpDescrPtr[0 .. 255];
+     LanguageDescriptor langDescr[0 .. 255];
+     QoS_Descriptor qosDescr[0 .. 1];
+     RegistrationDescriptor regDescr[0 .. 1];
+     ExtensionDescriptor extDescr[0 .. 255];
+     }
+    */
+    public class ES_Descriptor : BaseDescriptor
+    {
+        public byte Tag { get; set; } = DescriptorTags.ES_DescrTag;
+
+        protected ushort ES_ID;
+        public ushort ESID { get { return this.ES_ID; } set { this.ES_ID = value; } }
+
+        protected bool streamDependenceFlag;
+        public bool StreamDependenceFlag { get { return this.streamDependenceFlag; } set { this.streamDependenceFlag = value; } }
+
+        protected bool URL_Flag;
+        public bool URLFlag { get { return this.URL_Flag; } set { this.URL_Flag = value; } }
+
+        protected bool OCRstreamFlag;
+        public bool _OCRstreamFlag { get { return this.OCRstreamFlag; } set { this.OCRstreamFlag = value; } }
+
+        protected byte streamPriority;
+        public byte StreamPriority { get { return this.streamPriority; } set { this.streamPriority = value; } }
+
+        protected ushort dependsOn_ES_ID;
+        public ushort DependsOnESID { get { return this.dependsOn_ES_ID; } set { this.dependsOn_ES_ID = value; } }
+
+        protected byte URLlength;
+        public byte _URLlength { get { return this.URLlength; } set { this.URLlength = value; } }
+
+        protected byte[] URLstring;
+        public byte[] _URLstring { get { return this.URLstring; } set { this.URLstring = value; } }
+
+        protected ushort OCR_ES_Id;
+        public ushort OCRESId { get { return this.OCR_ES_Id; } set { this.OCR_ES_Id = value; } }
+
+        protected DecoderConfigDescriptor decConfigDescr;
+        public DecoderConfigDescriptor DecConfigDescr { get { return this.decConfigDescr; } set { this.decConfigDescr = value; } }
+
+        protected SLConfigDescriptor slConfigDescr;
+        public SLConfigDescriptor SlConfigDescr { get { return this.slConfigDescr; } set { this.slConfigDescr = value; } }
+
+        protected IPI_DescrPointer ipiPtr;
+        public IPI_DescrPointer IpiPtr { get { return this.ipiPtr; } set { this.ipiPtr = value; } }
+
+        protected IP_IdentificationDataSet[] ipIDS;
+        public IP_IdentificationDataSet[] IpIDS { get { return this.ipIDS; } set { this.ipIDS = value; } }
+
+        protected IPMP_DescriptorPointer[] ipmpDescrPtr;
+        public IPMP_DescriptorPointer[] IpmpDescrPtr { get { return this.ipmpDescrPtr; } set { this.ipmpDescrPtr = value; } }
+
+        protected LanguageDescriptor langDescr;
+        public LanguageDescriptor LangDescr { get { return this.langDescr; } set { this.langDescr = value; } }
+
+        protected QoS_Descriptor qosDescr;
+        public QoS_Descriptor QosDescr { get { return this.qosDescr; } set { this.qosDescr = value; } }
+
+        protected RegistrationDescriptor regDescr;
+        public RegistrationDescriptor RegDescr { get { return this.regDescr; } set { this.regDescr = value; } }
+
+        protected ExtensionDescriptor[] extDescr;
+        public ExtensionDescriptor[] ExtDescr { get { return this.extDescr; } set { this.extDescr = value; } }
+
+        public ES_Descriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt16(out this.ES_ID);
+            boxSize += stream.ReadBit(out this.streamDependenceFlag);
+            boxSize += stream.ReadBit(out this.URL_Flag);
+            boxSize += stream.ReadBit(out this.OCRstreamFlag);
+            boxSize += stream.ReadBits(5, out this.streamPriority);
+
+            if (streamDependenceFlag)
+            {
+                boxSize += stream.ReadUInt16(out this.dependsOn_ES_ID);
+            }
+
+            if (URL_Flag)
+            {
+                boxSize += stream.ReadUInt8(out this.URLlength);
+                boxSize += stream.ReadBytes(URLlength, out this.URLstring);
+            }
+
+            if (OCRstreamFlag)
+            {
+                boxSize += stream.ReadUInt16(out this.OCR_ES_Id);
+            }
+            boxSize += stream.ReadClass(out this.decConfigDescr);
+            boxSize += stream.ReadClass(out this.slConfigDescr);
+            boxSize += stream.ReadClass(out this.ipiPtr);
+            boxSize += stream.ReadClass(out this.ipIDS);
+            boxSize += stream.ReadClass(out this.ipmpDescrPtr);
+            boxSize += stream.ReadClass(out this.langDescr);
+            boxSize += stream.ReadClass(out this.qosDescr);
+            boxSize += stream.ReadClass(out this.regDescr);
+            boxSize += stream.ReadClass(out this.extDescr);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt16(this.ES_ID);
+            boxSize += stream.WriteBit(this.streamDependenceFlag);
+            boxSize += stream.WriteBit(this.URL_Flag);
+            boxSize += stream.WriteBit(this.OCRstreamFlag);
+            boxSize += stream.WriteBits(5, this.streamPriority);
+
+            if (streamDependenceFlag)
+            {
+                boxSize += stream.WriteUInt16(this.dependsOn_ES_ID);
+            }
+
+            if (URL_Flag)
+            {
+                boxSize += stream.WriteUInt8(this.URLlength);
+                boxSize += stream.WriteBytes(URLlength, this.URLstring);
+            }
+
+            if (OCRstreamFlag)
+            {
+                boxSize += stream.WriteUInt16(this.OCR_ES_Id);
+            }
+            boxSize += stream.WriteClass(this.decConfigDescr);
+            boxSize += stream.WriteClass(this.slConfigDescr);
+            boxSize += stream.WriteClass(this.ipiPtr);
+            boxSize += stream.WriteClass(this.ipIDS);
+            boxSize += stream.WriteClass(this.ipmpDescrPtr);
+            boxSize += stream.WriteClass(this.langDescr);
+            boxSize += stream.WriteClass(this.qosDescr);
+            boxSize += stream.WriteClass(this.regDescr);
+            boxSize += stream.WriteClass(this.extDescr);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // ES_ID
+            boxSize += 1; // streamDependenceFlag
+            boxSize += 1; // URL_Flag
+            boxSize += 1; // OCRstreamFlag
+            boxSize += 5; // streamPriority
+
+            if (streamDependenceFlag)
+            {
+                boxSize += 16; // dependsOn_ES_ID
+            }
+
+            if (URL_Flag)
+            {
+                boxSize += 8; // URLlength
+                boxSize += (ulong)(URLlength * 8); // URLstring
+            }
+
+            if (OCRstreamFlag)
+            {
+                boxSize += 16; // OCR_ES_Id
+            }
+            boxSize += IsoStream.CalculateClassSize(decConfigDescr); // decConfigDescr
+            boxSize += IsoStream.CalculateClassSize(slConfigDescr); // slConfigDescr
+            boxSize += IsoStream.CalculateClassSize(ipiPtr); // ipiPtr
+            boxSize += IsoStream.CalculateClassSize(ipIDS); // ipIDS
+            boxSize += IsoStream.CalculateClassSize(ipmpDescrPtr); // ipmpDescrPtr
+            boxSize += IsoStream.CalculateClassSize(langDescr); // langDescr
+            boxSize += IsoStream.CalculateClassSize(qosDescr); // qosDescr
+            boxSize += IsoStream.CalculateClassSize(regDescr); // regDescr
+            boxSize += IsoStream.CalculateClassSize(extDescr); // extDescr
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class SLConfigDescriptor extends BaseDescriptor : bit(8) tag=SLConfigDescrTag {
+     bit(8) predefined;
+     if (predefined==0) {
+     bit(1) useAccessUnitStartFlag;
+     bit(1) useAccessUnitEndFlag;
+     bit(1) useRandomAccessPointFlag;
+     bit(1) hasRandomAccessUnitsOnlyFlag;
+     bit(1) usePaddingFlag;
+     bit(1) useTimeStampsFlag;
+     bit(1) useIdleFlag;
+     bit(1) durationFlag;
+     bit(32) timeStampResolution;
+     bit(32) OCRResolution;
+     bit(8) timeStampLength; // must be <= 64
+     bit(8) OCRLength; // must be <= 64
+     bit(8) AU_Length; // must be <= 32
+     bit(8) instantBitrateLength;
+     bit(4) degradationPriorityLength;
+     bit(5) AU_seqNumLength; // must be <= 16
+     bit(5) packetSeqNumLength; // must be <= 16
+     bit(2) reserved=0b11;
+     }
+     if (durationFlag) {
+     bit(32) timeScale;
+     bit(16) accessUnitDuration;
+     bit(16) compositionUnitDuration;
+     }
+     if (!useTimeStampsFlag) {
+     bit(timeStampLength) startDecodingTimeStamp;
+     bit(timeStampLength) startCompositionTimeStamp;
+     }
+     }
+    */
+    public class SLConfigDescriptor : BaseDescriptor
+    {
+        public byte Tag { get; set; } = DescriptorTags.SLConfigDescrTag;
+
+        protected byte predefined;
+        public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
+
+        protected bool useAccessUnitStartFlag;
+        public bool UseAccessUnitStartFlag { get { return this.useAccessUnitStartFlag; } set { this.useAccessUnitStartFlag = value; } }
+
+        protected bool useAccessUnitEndFlag;
+        public bool UseAccessUnitEndFlag { get { return this.useAccessUnitEndFlag; } set { this.useAccessUnitEndFlag = value; } }
+
+        protected bool useRandomAccessPointFlag;
+        public bool UseRandomAccessPointFlag { get { return this.useRandomAccessPointFlag; } set { this.useRandomAccessPointFlag = value; } }
+
+        protected bool hasRandomAccessUnitsOnlyFlag;
+        public bool HasRandomAccessUnitsOnlyFlag { get { return this.hasRandomAccessUnitsOnlyFlag; } set { this.hasRandomAccessUnitsOnlyFlag = value; } }
+
+        protected bool usePaddingFlag;
+        public bool UsePaddingFlag { get { return this.usePaddingFlag; } set { this.usePaddingFlag = value; } }
+
+        protected bool useTimeStampsFlag;
+        public bool UseTimeStampsFlag { get { return this.useTimeStampsFlag; } set { this.useTimeStampsFlag = value; } }
+
+        protected bool useIdleFlag;
+        public bool UseIdleFlag { get { return this.useIdleFlag; } set { this.useIdleFlag = value; } }
+
+        protected bool durationFlag;
+        public bool DurationFlag { get { return this.durationFlag; } set { this.durationFlag = value; } }
+
+        protected uint timeStampResolution;
+        public uint TimeStampResolution { get { return this.timeStampResolution; } set { this.timeStampResolution = value; } }
+
+        protected uint OCRResolution;
+        public uint _OCRResolution { get { return this.OCRResolution; } set { this.OCRResolution = value; } }
+
+        protected byte timeStampLength;  //  must be <= 64
+        public byte TimeStampLength { get { return this.timeStampLength; } set { this.timeStampLength = value; } }
+
+        protected byte OCRLength;  //  must be <= 64
+        public byte _OCRLength { get { return this.OCRLength; } set { this.OCRLength = value; } }
+
+        protected byte AU_Length;  //  must be <= 32
+        public byte AULength { get { return this.AU_Length; } set { this.AU_Length = value; } }
+
+        protected byte instantBitrateLength;
+        public byte InstantBitrateLength { get { return this.instantBitrateLength; } set { this.instantBitrateLength = value; } }
+
+        protected byte degradationPriorityLength;
+        public byte DegradationPriorityLength { get { return this.degradationPriorityLength; } set { this.degradationPriorityLength = value; } }
+
+        protected byte AU_seqNumLength;  //  must be <= 16
+        public byte AUSeqNumLength { get { return this.AU_seqNumLength; } set { this.AU_seqNumLength = value; } }
+
+        protected byte packetSeqNumLength;  //  must be <= 16
+        public byte PacketSeqNumLength { get { return this.packetSeqNumLength; } set { this.packetSeqNumLength = value; } }
+
+        protected byte reserved = 0b11;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected uint timeScale;
+        public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
+
+        protected ushort accessUnitDuration;
+        public ushort AccessUnitDuration { get { return this.accessUnitDuration; } set { this.accessUnitDuration = value; } }
+
+        protected ushort compositionUnitDuration;
+        public ushort CompositionUnitDuration { get { return this.compositionUnitDuration; } set { this.compositionUnitDuration = value; } }
+
+        protected byte[] startDecodingTimeStamp;
+        public byte[] StartDecodingTimeStamp { get { return this.startDecodingTimeStamp; } set { this.startDecodingTimeStamp = value; } }
+
+        protected byte[] startCompositionTimeStamp;
+        public byte[] StartCompositionTimeStamp { get { return this.startCompositionTimeStamp; } set { this.startCompositionTimeStamp = value; } }
+
+        public SLConfigDescriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt8(out this.predefined);
+
+            if (predefined == 0)
+            {
+                boxSize += stream.ReadBit(out this.useAccessUnitStartFlag);
+                boxSize += stream.ReadBit(out this.useAccessUnitEndFlag);
+                boxSize += stream.ReadBit(out this.useRandomAccessPointFlag);
+                boxSize += stream.ReadBit(out this.hasRandomAccessUnitsOnlyFlag);
+                boxSize += stream.ReadBit(out this.usePaddingFlag);
+                boxSize += stream.ReadBit(out this.useTimeStampsFlag);
+                boxSize += stream.ReadBit(out this.useIdleFlag);
+                boxSize += stream.ReadBit(out this.durationFlag);
+                boxSize += stream.ReadUInt32(out this.timeStampResolution);
+                boxSize += stream.ReadUInt32(out this.OCRResolution);
+                boxSize += stream.ReadUInt8(out this.timeStampLength); // must be <= 64
+                boxSize += stream.ReadUInt8(out this.OCRLength); // must be <= 64
+                boxSize += stream.ReadUInt8(out this.AU_Length); // must be <= 32
+                boxSize += stream.ReadUInt8(out this.instantBitrateLength);
+                boxSize += stream.ReadBits(4, out this.degradationPriorityLength);
+                boxSize += stream.ReadBits(5, out this.AU_seqNumLength); // must be <= 16
+                boxSize += stream.ReadBits(5, out this.packetSeqNumLength); // must be <= 16
+                boxSize += stream.ReadBits(2, out this.reserved);
+            }
+
+            if (durationFlag)
+            {
+                boxSize += stream.ReadUInt32(out this.timeScale);
+                boxSize += stream.ReadUInt16(out this.accessUnitDuration);
+                boxSize += stream.ReadUInt16(out this.compositionUnitDuration);
+            }
+
+            if (!useTimeStampsFlag)
+            {
+                boxSize += stream.ReadBytes(timeStampLength, out this.startDecodingTimeStamp);
+                boxSize += stream.ReadBytes(timeStampLength, out this.startCompositionTimeStamp);
+            }
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8(this.predefined);
+
+            if (predefined == 0)
+            {
+                boxSize += stream.WriteBit(this.useAccessUnitStartFlag);
+                boxSize += stream.WriteBit(this.useAccessUnitEndFlag);
+                boxSize += stream.WriteBit(this.useRandomAccessPointFlag);
+                boxSize += stream.WriteBit(this.hasRandomAccessUnitsOnlyFlag);
+                boxSize += stream.WriteBit(this.usePaddingFlag);
+                boxSize += stream.WriteBit(this.useTimeStampsFlag);
+                boxSize += stream.WriteBit(this.useIdleFlag);
+                boxSize += stream.WriteBit(this.durationFlag);
+                boxSize += stream.WriteUInt32(this.timeStampResolution);
+                boxSize += stream.WriteUInt32(this.OCRResolution);
+                boxSize += stream.WriteUInt8(this.timeStampLength); // must be <= 64
+                boxSize += stream.WriteUInt8(this.OCRLength); // must be <= 64
+                boxSize += stream.WriteUInt8(this.AU_Length); // must be <= 32
+                boxSize += stream.WriteUInt8(this.instantBitrateLength);
+                boxSize += stream.WriteBits(4, this.degradationPriorityLength);
+                boxSize += stream.WriteBits(5, this.AU_seqNumLength); // must be <= 16
+                boxSize += stream.WriteBits(5, this.packetSeqNumLength); // must be <= 16
+                boxSize += stream.WriteBits(2, this.reserved);
+            }
+
+            if (durationFlag)
+            {
+                boxSize += stream.WriteUInt32(this.timeScale);
+                boxSize += stream.WriteUInt16(this.accessUnitDuration);
+                boxSize += stream.WriteUInt16(this.compositionUnitDuration);
+            }
+
+            if (!useTimeStampsFlag)
+            {
+                boxSize += stream.WriteBytes(timeStampLength, this.startDecodingTimeStamp);
+                boxSize += stream.WriteBytes(timeStampLength, this.startCompositionTimeStamp);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // predefined
+
+            if (predefined == 0)
+            {
+                boxSize += 1; // useAccessUnitStartFlag
+                boxSize += 1; // useAccessUnitEndFlag
+                boxSize += 1; // useRandomAccessPointFlag
+                boxSize += 1; // hasRandomAccessUnitsOnlyFlag
+                boxSize += 1; // usePaddingFlag
+                boxSize += 1; // useTimeStampsFlag
+                boxSize += 1; // useIdleFlag
+                boxSize += 1; // durationFlag
+                boxSize += 32; // timeStampResolution
+                boxSize += 32; // OCRResolution
+                boxSize += 8; // timeStampLength
+                boxSize += 8; // OCRLength
+                boxSize += 8; // AU_Length
+                boxSize += 8; // instantBitrateLength
+                boxSize += 4; // degradationPriorityLength
+                boxSize += 5; // AU_seqNumLength
+                boxSize += 5; // packetSeqNumLength
+                boxSize += 2; // reserved
+            }
+
+            if (durationFlag)
+            {
+                boxSize += 32; // timeScale
+                boxSize += 16; // accessUnitDuration
+                boxSize += 16; // compositionUnitDuration
+            }
+
+            if (!useTimeStampsFlag)
+            {
+                boxSize += (ulong)timeStampLength; // startDecodingTimeStamp
+                boxSize += (ulong)timeStampLength; // startCompositionTimeStamp
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class DecoderConfigDescriptor extends BaseDescriptor : bit(8) tag=DecoderConfigDescrTag {
+     bit(8) objectTypeIndication;
+     bit(6) streamType;
+     bit(1) upStream;
+     const bit(1) reserved=1;
+     bit(24) bufferSizeDB;
+     bit(32) maxBitrate;
+     bit(32) avgBitrate;
+     DecoderSpecificInfo decSpecificInfo[0 .. 1];
+     ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
+     }
+    */
+    public class DecoderConfigDescriptor : BaseDescriptor
+    {
+        public byte Tag { get; set; } = DescriptorTags.DecoderConfigDescrTag;
+
+        protected byte objectTypeIndication;
+        public byte ObjectTypeIndication { get { return this.objectTypeIndication; } set { this.objectTypeIndication = value; } }
+
+        protected byte streamType;
+        public byte StreamType { get { return this.streamType; } set { this.streamType = value; } }
+
+        protected bool upStream;
+        public bool UpStream { get { return this.upStream; } set { this.upStream = value; } }
+
+        protected bool reserved = true;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected uint bufferSizeDB;
+        public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
+
+        protected uint maxBitrate;
+        public uint MaxBitrate { get { return this.maxBitrate; } set { this.maxBitrate = value; } }
+
+        protected uint avgBitrate;
+        public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
+
+        protected DecoderSpecificInfo[] decSpecificInfo;
+        public DecoderSpecificInfo[] DecSpecificInfo { get { return this.decSpecificInfo; } set { this.decSpecificInfo = value; } }
+
+        protected ProfileLevelIndicationIndexDescriptor[] profileLevelIndicationIndexDescr;
+        public ProfileLevelIndicationIndexDescriptor[] ProfileLevelIndicationIndexDescr { get { return this.profileLevelIndicationIndexDescr; } set { this.profileLevelIndicationIndexDescr = value; } }
+
+        public DecoderConfigDescriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt8(out this.objectTypeIndication);
+            boxSize += stream.ReadBits(6, out this.streamType);
+            boxSize += stream.ReadBit(out this.upStream);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadBits(24, out this.bufferSizeDB);
+            boxSize += stream.ReadUInt32(out this.maxBitrate);
+            boxSize += stream.ReadUInt32(out this.avgBitrate);
+            boxSize += stream.ReadClass(out this.decSpecificInfo);
+            boxSize += stream.ReadClass(out this.profileLevelIndicationIndexDescr);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8(this.objectTypeIndication);
+            boxSize += stream.WriteBits(6, this.streamType);
+            boxSize += stream.WriteBit(this.upStream);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteBits(24, this.bufferSizeDB);
+            boxSize += stream.WriteUInt32(this.maxBitrate);
+            boxSize += stream.WriteUInt32(this.avgBitrate);
+            boxSize += stream.WriteClass(this.decSpecificInfo);
+            boxSize += stream.WriteClass(this.profileLevelIndicationIndexDescr);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // objectTypeIndication
+            boxSize += 6; // streamType
+            boxSize += 1; // upStream
+            boxSize += 1; // reserved
+            boxSize += 24; // bufferSizeDB
+            boxSize += 32; // maxBitrate
+            boxSize += 32; // avgBitrate
+            boxSize += IsoStream.CalculateClassSize(decSpecificInfo); // decSpecificInfo
+            boxSize += IsoStream.CalculateClassSize(profileLevelIndicationIndexDescr); // profileLevelIndicationIndexDescr
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ProfileLevelIndicationIndexDescriptor () extends BaseDescriptor
+     : bit(8) ProfileLevelIndicationIndexDescrTag {
+     bit(8) profileLevelIndicationIndex;
+     }
+    */
+    public class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
+    {
+        public byte Tag { get; set; } = DescriptorTags.ProfileLevelIndicationIndexDescrTag;
+
+        protected byte profileLevelIndicationIndex;
+        public byte ProfileLevelIndicationIndex { get { return this.profileLevelIndicationIndex; } set { this.profileLevelIndicationIndex = value; } }
+
+        public ProfileLevelIndicationIndexDescriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt8(out this.profileLevelIndicationIndex);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8(this.profileLevelIndicationIndex);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // profileLevelIndicationIndex
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class IPI_DescrPointer extends BaseDescriptor : bit(8) tag=IPI_DescrPointerTag {
+     bit(16) IPI_ES_Id;
+     }
+    */
+    public class IPI_DescrPointer : BaseDescriptor
+    {
+        public byte Tag { get; set; } = DescriptorTags.IPI_DescrPointerTag;
+
+        protected ushort IPI_ES_Id;
+        public ushort IPIESId { get { return this.IPI_ES_Id; } set { this.IPI_ES_Id = value; } }
+
+        public IPI_DescrPointer()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt16(out this.IPI_ES_Id);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt16(this.IPI_ES_Id);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // IPI_ES_Id
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class IP_IdentificationDataSet extends BaseDescriptor
+     : bit(8) tag=ContentIdentDescrTag..SupplContentIdentDescrTag
+     {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public class IP_IdentificationDataSet : BaseDescriptor
+    {
+        public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
+        public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag;
+
+        public IP_IdentificationDataSet()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class IPMP_DescriptorPointer extends BaseDescriptor : bit(8) tag=IPMP_DescrPointerTag {
+     bit(8) IPMP_DescriptorID;
+     }
+    */
+    public class IPMP_DescriptorPointer : BaseDescriptor
+    {
+        public byte Tag { get; set; } = DescriptorTags.IPMP_DescrPointerTag;
+
+        protected byte IPMP_DescriptorID;
+        public byte IPMPDescriptorID { get { return this.IPMP_DescriptorID; } set { this.IPMP_DescriptorID = value; } }
+
+        public IPMP_DescriptorPointer()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt8(out this.IPMP_DescriptorID);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8(this.IPMP_DescriptorID);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // IPMP_DescriptorID
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class OCI_Descriptor extends BaseDescriptor : bit(8) tag=OCIDescrTagStartRange..OCIDescrTagEndRange
+    {
+     // empty. To be filled by classes extending this class.
+    }
+    */
+    public class OCI_Descriptor : BaseDescriptor
+    {
+        public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
+        public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange;
+
+        public OCI_Descriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class LanguageDescriptor extends OCI_Descriptor : bit(8) tag=LanguageDescrTag {
+     bit(24) languageCode;
+     }
+    */
+    public class LanguageDescriptor : OCI_Descriptor
+    {
+        public byte Tag { get; set; } = DescriptorTags.LanguageDescrTag;
+
+        protected uint languageCode;
+        public uint LanguageCode { get { return this.languageCode; } set { this.languageCode = value; } }
+
+        public LanguageDescriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadBits(24, out this.languageCode);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteBits(24, this.languageCode);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 24; // languageCode
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class QoS_Descriptor extends BaseDescriptor : bit(8) tag=QoS_DescrTag {
+     bit(8) predefined;
+     if (predefined==0) {
+     QoS_Qualifier qualifiers[];
+     }
+     }
+    */
+    public class QoS_Descriptor : BaseDescriptor
+    {
+        public byte Tag { get; set; } = DescriptorTags.QoS_DescrTag;
+
+        protected byte predefined;
+        public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
+
+        protected QoS_Qualifier[] qualifiers;
+        public QoS_Qualifier[] Qualifiers { get { return this.qualifiers; } set { this.qualifiers = value; } }
+
+        public QoS_Descriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt8(out this.predefined);
+
+            if (predefined == 0)
+            {
+                boxSize += stream.ReadClass(out this.qualifiers);
+            }
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8(this.predefined);
+
+            if (predefined == 0)
+            {
+                boxSize += stream.WriteClass(this.qualifiers);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // predefined
+
+            if (predefined == 0)
+            {
+                boxSize += IsoStream.CalculateClassSize(qualifiers); // qualifiers
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract aligned(8) expandable(228-1) class QoS_Qualifier : bit(8) tag=0x01..0xff {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public class QoS_Qualifier
+    {
+        public byte TagMin { get; set; } = 0x01;
+        public byte TagMax { get; set; } = 0xff;
+
+        public QoS_Qualifier()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x01 {
+     unsigned int(32) MAX_DELAY;
+     }
+    */
+    public class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
+    {
+        public byte Tag { get; set; } = 0x01;
+
+        protected uint MAX_DELAY;
+        public uint MAXDELAY { get { return this.MAX_DELAY; } set { this.MAX_DELAY = value; } }
+
+        public QoS_Qualifier_MAX_DELAY()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt32(out this.MAX_DELAY);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt32(this.MAX_DELAY);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_DELAY
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_PREF_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x02 {
+     unsigned int(32) PREF_MAX_DELAY;
+     }
+    */
+    public class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
+    {
+        public byte Tag { get; set; } = 0x02;
+
+        protected uint PREF_MAX_DELAY;
+        public uint PREFMAXDELAY { get { return this.PREF_MAX_DELAY; } set { this.PREF_MAX_DELAY = value; } }
+
+        public QoS_Qualifier_PREF_MAX_DELAY()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt32(out this.PREF_MAX_DELAY);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt32(this.PREF_MAX_DELAY);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // PREF_MAX_DELAY
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_LOSS_PROB extends QoS_Qualifier : bit(8) tag=0x03 {
+     double(32) LOSS_PROB;
+     }
+    */
+    public class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
+    {
+        public byte Tag { get; set; } = 0x03;
+
+        protected double LOSS_PROB;
+        public double LOSSPROB { get { return this.LOSS_PROB; } set { this.LOSS_PROB = value; } }
+
+        public QoS_Qualifier_LOSS_PROB()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadDouble32(out this.LOSS_PROB);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteDouble32(this.LOSS_PROB);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // LOSS_PROB
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_MAX_GAP_LOSS extends QoS_Qualifier : bit(8) tag=0x04 {
+     unsigned int(32) MAX_GAP_LOSS;
+     }
+    */
+    public class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
+    {
+        public byte Tag { get; set; } = 0x04;
+
+        protected uint MAX_GAP_LOSS;
+        public uint MAXGAPLOSS { get { return this.MAX_GAP_LOSS; } set { this.MAX_GAP_LOSS = value; } }
+
+        public QoS_Qualifier_MAX_GAP_LOSS()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt32(out this.MAX_GAP_LOSS);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt32(this.MAX_GAP_LOSS);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_GAP_LOSS
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_MAX_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x41 {
+     unsigned int(32) MAX_AU_SIZE;
+     }
+    */
+    public class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
+    {
+        public byte Tag { get; set; } = 0x41;
+
+        protected uint MAX_AU_SIZE;
+        public uint MAXAUSIZE { get { return this.MAX_AU_SIZE; } set { this.MAX_AU_SIZE = value; } }
+
+        public QoS_Qualifier_MAX_AU_SIZE()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt32(out this.MAX_AU_SIZE);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt32(this.MAX_AU_SIZE);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_AU_SIZE
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_AVG_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x42 {
+     unsigned int(32) AVG_AU_SIZE;
+     }
+    */
+    public class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
+    {
+        public byte Tag { get; set; } = 0x42;
+
+        protected uint AVG_AU_SIZE;
+        public uint AVGAUSIZE { get { return this.AVG_AU_SIZE; } set { this.AVG_AU_SIZE = value; } }
+
+        public QoS_Qualifier_AVG_AU_SIZE()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt32(out this.AVG_AU_SIZE);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt32(this.AVG_AU_SIZE);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // AVG_AU_SIZE
+            return boxSize;
+        }
+    }
+
+
+    /*
+     class QoS_Qualifier_MAX_AU_RATE extends QoS_Qualifier : bit(8) tag=0x43 {
+     unsigned int(32) MAX_AU_RATE;
+     }
+    */
+    public class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
+    {
+        public byte Tag { get; set; } = 0x43;
+
+        protected uint MAX_AU_RATE;
+        public uint MAXAURATE { get { return this.MAX_AU_RATE; } set { this.MAX_AU_RATE = value; } }
+
+        public QoS_Qualifier_MAX_AU_RATE()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt32(out this.MAX_AU_RATE);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt32(this.MAX_AU_RATE);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_AU_RATE
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class RegistrationDescriptor extends BaseDescriptor : bit(8) tag=RegistrationDescrTag {
+     bit(32) formatIdentifier;
+     bit(8) additionalIdentificationInfo[sizeOfInstance-4];
+     }
+    */
+    public class RegistrationDescriptor : BaseDescriptor
+    {
+        public byte Tag { get; set; } = DescriptorTags.RegistrationDescrTag;
+
+        protected uint formatIdentifier;
+        public uint FormatIdentifier { get { return this.formatIdentifier; } set { this.formatIdentifier = value; } }
+
+        protected byte[] additionalIdentificationInfo;
+        public byte[] AdditionalIdentificationInfo { get { return this.additionalIdentificationInfo; } set { this.additionalIdentificationInfo = value; } }
+
+        public RegistrationDescriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt32(out this.formatIdentifier);
+            boxSize += stream.ReadBytes((ulong)(sizeOfInstance - 4), out this.additionalIdentificationInfo);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt32(this.formatIdentifier);
+            boxSize += stream.WriteBytes((ulong)(sizeOfInstance - 4), this.additionalIdentificationInfo);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // formatIdentifier
+            boxSize += (ulong)(sizeOfInstance - 4); // additionalIdentificationInfo
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class ExtensionDescriptor extends BaseDescriptor : bit(8) tag=ExtDescrTagStartRange..ExtDescrTagEndRange {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public class ExtensionDescriptor : BaseDescriptor
+    {
+        public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
+        public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange;
+
+        public ExtensionDescriptor()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AudioSpecificConfig() {
+      GetAudioObjectType() audioObjectType;
+      bslbf(4) samplingFrequencyIndex;
+      if(samplingFrequencyIndex == 0xf ) {
+        uimsbf(24) samplingFrequency;
+      }
+      bslbf(4) channelConfiguration;
+      sbrPresentFlag = -1;
+      psPresentFlag = -1;
+
+      if (audioObjectType == 5 || audioObjectType == 29) {
+        extensionAudioObjectType = 5;
+        sbrPresentFlag = 1;
+        if (audioObjectType == 29) {
+          psPresentFlag = 1;
+        }
+        uimsbf(4) extensionSamplingFrequencyIndex;
+        if (extensionSamplingFrequencyIndex == 0xf)
+          uimsbf(24) extensionSamplingFrequency;
+        GetAudioObjectType() audioObjectType;
+        if (audioObjectType == 22)
+          uimsbf(4) extensionChannelConfiguration;
+      }
+      else {
+        extensionAudioObjectType = 0;
+      }
+      switch (audioObjectType) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 6:
+        case 7:
+        case 17:
+        case 19:
+        case 20:
+        case 21:
+        case 22:
+        case 23:
+          GASpecificConfig();
+          break;
+        case 8:
+          CelpSpecificConfig();
+          break;
+        case 9:
+          HvxcSpecificConfig();
+          break;
+        case 12:
+          TTSSpecificConfig();
+          break;
+        case 13:
+        case 14:
+        case 15:
+        case 16:
+          StructuredAudioSpecificConfig();
+          break;
+        case 24:
+          ErrorResilientCelpSpecificConfig();
+          break;
+        case 25:
+          ErrorResilientHvxcSpecificConfig();
+          break;
+        case 26:
+        case 27:
+          ParametricSpecificConfig();
+          break;
+        case 28:
+          SSCSpecificConfig();
+          break;
+        case 30:
+          uimsbf(1) sacPayloadEmbedding;
+          SpatialSpecificConfig();
+          break;
+        case 32:
+        case 33:
+        case 34:
+          MPEG_1_2_SpecificConfig();
+          break;
+        case 35:
+          DSTSpecificConfig();
+          break;
+        case 36:
+          bslbf(5) fillBits;
+          ALSSpecificConfig();
+          break;
+        case 37:
+        case 38:
+          SLSSpecificConfig();
+          break;
+        case 39:
+          ELDSpecificConfig(channelConfiguration);
+          break;
+        case 40:
+        case 41:
+          SymbolicMusicSpecificConfig();
+          break;
+        default:
+          /* reserved *//*
+          break;
+      }
+      switch (audioObjectType) {
+        case 17:
+        case 19:
+        case 20:
+        case 21:
+        case 22:
+        case 23:
+        case 24:
+        case 25:
+        case 26:
+        case 27:
+        case 39:
+          bslbf(2) epConfig;
+          if (epConfig == 2 || epConfig == 3) {
+            ErrorProtectionSpecificConfig();
+          }
+          if (epConfig == 3) {
+            bslbf(1) directMapping;
+            if (!directMapping) {
+              /* tbd *//*
+            }
+          }
+          break;
+      }
+      if (extensionAudioObjectType != 5 && bits_to_decode() >= 16) {
+        bslbf(11) syncExtensionType;
+        if (syncExtensionType == 0x2b7) {
+          GetAudioObjectType() extensionAudioObjectType;
+          if (extensionAudioObjectType == 5) {
+            uimsbf(1) sbrPresentFlag;
+            if (sbrPresentFlag == 1) {
+              uimsbf(4) extensionSamplingFrequencyIndex;
+              if (extensionSamplingFrequencyIndex == 0xf) {
+                uimsbf(24) extensionSamplingFrequency;
+              }
+              if (bits_to_decode() >= 12) {
+                bslbf(11) syncExtensionType;
+                if (syncExtensionType == 0x548) {
+                  uimsbf(1) psPresentFlag;
+                }
+              }
+            }
+          }
+          if (extensionAudioObjectType == 22) {
+            uimsbf(1) sbrPresentFlag;
+            if (sbrPresentFlag == 1) {
+              uimsbf(4) extensionSamplingFrequencyIndex;
+              if (extensionSamplingFrequencyIndex == 0xf) {
+                uimsbf(24) extensionSamplingFrequency;
+              }
+            }
+            uimsbf(4) extensionChannelConfiguration;
+          }
+        }
+      }   
+    }
+
+    */
+    public class AudioSpecificConfig
+    {
+
+
+        protected GetAudioObjectType audioObjectType;
+        public GetAudioObjectType AudioObjectType { get { return this.audioObjectType; } set { this.audioObjectType = value; } }
+
+        protected byte samplingFrequencyIndex;
+        public byte SamplingFrequencyIndex { get { return this.samplingFrequencyIndex; } set { this.samplingFrequencyIndex = value; } }
+
+        protected uint samplingFrequency;
+        public uint SamplingFrequency { get { return this.samplingFrequency; } set { this.samplingFrequency = value; } }
+
+        protected byte channelConfiguration;
+        public byte ChannelConfiguration { get { return this.channelConfiguration; } set { this.channelConfiguration = value; } }
+
+        protected byte extensionSamplingFrequencyIndex;
+        public byte ExtensionSamplingFrequencyIndex { get { return this.extensionSamplingFrequencyIndex; } set { this.extensionSamplingFrequencyIndex = value; } }
+
+        protected uint extensionSamplingFrequency;
+        public uint ExtensionSamplingFrequency { get { return this.extensionSamplingFrequency; } set { this.extensionSamplingFrequency = value; } }
+
+        protected GetAudioObjectType audioObjectType0;
+        public GetAudioObjectType AudioObjectType0 { get { return this.audioObjectType0; } set { this.audioObjectType0 = value; } }
+
+        protected byte extensionChannelConfiguration;
+        public byte ExtensionChannelConfiguration { get { return this.extensionChannelConfiguration; } set { this.extensionChannelConfiguration = value; } }
+
+        protected GASpecificConfig GASpecificConfig;
+        public GASpecificConfig _GASpecificConfig { get { return this.GASpecificConfig; } set { this.GASpecificConfig = value; } }
+
+        protected CelpSpecificConfig CelpSpecificConfig;
+        public CelpSpecificConfig _CelpSpecificConfig { get { return this.CelpSpecificConfig; } set { this.CelpSpecificConfig = value; } }
+
+        protected HvxcSpecificConfig HvxcSpecificConfig;
+        public HvxcSpecificConfig _HvxcSpecificConfig { get { return this.HvxcSpecificConfig; } set { this.HvxcSpecificConfig = value; } }
+
+        protected TTSSpecificConfig TTSSpecificConfig;
+        public TTSSpecificConfig _TTSSpecificConfig { get { return this.TTSSpecificConfig; } set { this.TTSSpecificConfig = value; } }
+
+        protected StructuredAudioSpecificConfig StructuredAudioSpecificConfig;
+        public StructuredAudioSpecificConfig _StructuredAudioSpecificConfig { get { return this.StructuredAudioSpecificConfig; } set { this.StructuredAudioSpecificConfig = value; } }
+
+        protected ErrorResilientCelpSpecificConfig ErrorResilientCelpSpecificConfig;
+        public ErrorResilientCelpSpecificConfig _ErrorResilientCelpSpecificConfig { get { return this.ErrorResilientCelpSpecificConfig; } set { this.ErrorResilientCelpSpecificConfig = value; } }
+
+        protected ErrorResilientHvxcSpecificConfig ErrorResilientHvxcSpecificConfig;
+        public ErrorResilientHvxcSpecificConfig _ErrorResilientHvxcSpecificConfig { get { return this.ErrorResilientHvxcSpecificConfig; } set { this.ErrorResilientHvxcSpecificConfig = value; } }
+
+        protected ParametricSpecificConfig ParametricSpecificConfig;
+        public ParametricSpecificConfig _ParametricSpecificConfig { get { return this.ParametricSpecificConfig; } set { this.ParametricSpecificConfig = value; } }
+
+        protected SSCSpecificConfig SSCSpecificConfig;
+        public SSCSpecificConfig _SSCSpecificConfig { get { return this.SSCSpecificConfig; } set { this.SSCSpecificConfig = value; } }
+
+        protected bool sacPayloadEmbedding;
+        public bool SacPayloadEmbedding { get { return this.sacPayloadEmbedding; } set { this.sacPayloadEmbedding = value; } }
+
+        protected SpatialSpecificConfig SpatialSpecificConfig;
+        public SpatialSpecificConfig _SpatialSpecificConfig { get { return this.SpatialSpecificConfig; } set { this.SpatialSpecificConfig = value; } }
+
+        protected MPEG_1_2_SpecificConfig MPEG_1_2_SpecificConfig;
+        public MPEG_1_2_SpecificConfig MPEG12SpecificConfig { get { return this.MPEG_1_2_SpecificConfig; } set { this.MPEG_1_2_SpecificConfig = value; } }
+
+        protected DSTSpecificConfig DSTSpecificConfig;
+        public DSTSpecificConfig _DSTSpecificConfig { get { return this.DSTSpecificConfig; } set { this.DSTSpecificConfig = value; } }
+
+        protected byte fillBits;
+        public byte FillBits { get { return this.fillBits; } set { this.fillBits = value; } }
+
+        protected ALSSpecificConfig ALSSpecificConfig;
+        public ALSSpecificConfig _ALSSpecificConfig { get { return this.ALSSpecificConfig; } set { this.ALSSpecificConfig = value; } }
+
+        protected SLSSpecificConfig SLSSpecificConfig;
+        public SLSSpecificConfig _SLSSpecificConfig { get { return this.SLSSpecificConfig; } set { this.SLSSpecificConfig = value; } }
+
+        protected ELDSpecificConfig ELDSpecificConfig;
+        public ELDSpecificConfig _ELDSpecificConfig { get { return this.ELDSpecificConfig; } set { this.ELDSpecificConfig = value; } }
+
+        protected SymbolicMusicSpecificConfig SymbolicMusicSpecificConfig;
+        public SymbolicMusicSpecificConfig _SymbolicMusicSpecificConfig { get { return this.SymbolicMusicSpecificConfig; } set { this.SymbolicMusicSpecificConfig = value; } }
+
+        protected byte epConfig;
+        public byte EpConfig { get { return this.epConfig; } set { this.epConfig = value; } }
+
+        protected ErrorProtectionSpecificConfig ErrorProtectionSpecificConfig;
+        public ErrorProtectionSpecificConfig _ErrorProtectionSpecificConfig { get { return this.ErrorProtectionSpecificConfig; } set { this.ErrorProtectionSpecificConfig = value; } }
+
+        protected bool directMapping;
+        public bool DirectMapping { get { return this.directMapping; } set { this.directMapping = value; } }
+
+        protected ushort syncExtensionType;
+        public ushort SyncExtensionType { get { return this.syncExtensionType; } set { this.syncExtensionType = value; } }
+
+        protected GetAudioObjectType extensionAudioObjectType;
+        public GetAudioObjectType ExtensionAudioObjectType { get { return this.extensionAudioObjectType; } set { this.extensionAudioObjectType = value; } }
+
+        protected bool sbrPresentFlag;
+        public bool SbrPresentFlag { get { return this.sbrPresentFlag; } set { this.sbrPresentFlag = value; } }
+
+        protected byte extensionSamplingFrequencyIndex0;
+        public byte ExtensionSamplingFrequencyIndex0 { get { return this.extensionSamplingFrequencyIndex0; } set { this.extensionSamplingFrequencyIndex0 = value; } }
+
+        protected uint extensionSamplingFrequency0;
+        public uint ExtensionSamplingFrequency0 { get { return this.extensionSamplingFrequency0; } set { this.extensionSamplingFrequency0 = value; } }
+
+        protected ushort syncExtensionType0;
+        public ushort SyncExtensionType0 { get { return this.syncExtensionType0; } set { this.syncExtensionType0 = value; } }
+
+        protected bool psPresentFlag;
+        public bool PsPresentFlag { get { return this.psPresentFlag; } set { this.psPresentFlag = value; } }
+
+        protected bool sbrPresentFlag0;
+        public bool SbrPresentFlag0 { get { return this.sbrPresentFlag0; } set { this.sbrPresentFlag0 = value; } }
+
+        protected byte extensionSamplingFrequencyIndex00;
+        public byte ExtensionSamplingFrequencyIndex00 { get { return this.extensionSamplingFrequencyIndex00; } set { this.extensionSamplingFrequencyIndex00 = value; } }
+
+        protected uint extensionSamplingFrequency00;
+        public uint ExtensionSamplingFrequency00 { get { return this.extensionSamplingFrequency00; } set { this.extensionSamplingFrequency00 = value; } }
+
+        protected byte extensionChannelConfiguration0;
+        public byte ExtensionChannelConfiguration0 { get { return this.extensionChannelConfiguration0; } set { this.extensionChannelConfiguration0 = value; } }
+
+        public AudioSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadClass(out this.audioObjectType);
+            boxSize += stream.ReadBslbf(4, out this.samplingFrequencyIndex);
+
+            if (samplingFrequencyIndex == 0xf)
+            {
+                boxSize += stream.ReadUimsbf(24, out this.samplingFrequency);
+            }
+            boxSize += stream.ReadBslbf(4, out this.channelConfiguration);
+            sbrPresentFlag = false;
+            psPresentFlag = false;
+
+            if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
+            {
+                extensionAudioObjectType.AudioObjectType = 5;
+                sbrPresentFlag = true;
+
+                if (audioObjectType.AudioObjectType == 29)
+                {
+                    psPresentFlag = true;
+                }
+                boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex);
+
+                if (extensionSamplingFrequencyIndex == 0xf)
+                {
+                    boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency);
+                }
+                boxSize += stream.ReadClass(out this.audioObjectType0);
+
+                if (audioObjectType.AudioObjectType == 22)
+                {
+                    boxSize += stream.ReadUimsbf(4, out this.extensionChannelConfiguration);
+                }
+            }
+
+            else
+            {
+                extensionAudioObjectType.AudioObjectType = 0;
+            }
+
+            switch (audioObjectType.AudioObjectType)
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 6:
+                case 7:
+                case 17:
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                    boxSize += stream.ReadClass(out this.GASpecificConfig);
+                    break;
+                case 8:
+                    boxSize += stream.ReadClass(out this.CelpSpecificConfig);
+                    break;
+                case 9:
+                    boxSize += stream.ReadClass(out this.HvxcSpecificConfig);
+                    break;
+                case 12:
+                    boxSize += stream.ReadClass(out this.TTSSpecificConfig);
+                    break;
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                    boxSize += stream.ReadClass(out this.StructuredAudioSpecificConfig);
+                    break;
+                case 24:
+                    boxSize += stream.ReadClass(out this.ErrorResilientCelpSpecificConfig);
+                    break;
+                case 25:
+                    boxSize += stream.ReadClass(out this.ErrorResilientHvxcSpecificConfig);
+                    break;
+                case 26:
+                case 27:
+                    boxSize += stream.ReadClass(out this.ParametricSpecificConfig);
+                    break;
+                case 28:
+                    boxSize += stream.ReadClass(out this.SSCSpecificConfig);
+                    break;
+                case 30:
+                    boxSize += stream.ReadUimsbf(out this.sacPayloadEmbedding);
+                    boxSize += stream.ReadClass(out this.SpatialSpecificConfig);
+                    break;
+                case 32:
+                case 33:
+                case 34:
+                    boxSize += stream.ReadClass(out this.MPEG_1_2_SpecificConfig);
+                    break;
+                case 35:
+                    boxSize += stream.ReadClass(out this.DSTSpecificConfig);
+                    break;
+                case 36:
+                    boxSize += stream.ReadBslbf(5, out this.fillBits);
+                    boxSize += stream.ReadClass(out this.ALSSpecificConfig);
+                    break;
+                case 37:
+                case 38:
+                    boxSize += stream.ReadClass(out this.SLSSpecificConfig);
+                    break;
+                case 39:
+                    boxSize += stream.ReadClass(out this.ELDSpecificConfig);
+                    break;
+                case 40:
+                case 41:
+                    boxSize += stream.ReadClass(out this.SymbolicMusicSpecificConfig);
+                    break;
+                default:
+                    /* reserved */
+                    break;
+            }
+
+            switch (audioObjectType.AudioObjectType)
+            {
+                case 17:
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                case 24:
+                case 25:
+                case 26:
+                case 27:
+                case 39:
+                    boxSize += stream.ReadBslbf(2, out this.epConfig);
+
+                    if (epConfig == 2 || epConfig == 3)
+                    {
+                        boxSize += stream.ReadClass(out this.ErrorProtectionSpecificConfig);
+                    }
+
+                    if (epConfig == 3)
+                    {
+                        boxSize += stream.ReadBslbf(out this.directMapping);
+
+                        if (!directMapping)
+                        {
+                            /*  tbd  */
+                        }
+                    }
+                    break;
+            }
+
+            if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
+            {
+                boxSize += stream.ReadBslbf(11, out this.syncExtensionType);
+
+                if (syncExtensionType == 0x2b7)
+                {
+                    boxSize += stream.ReadClass(out this.extensionAudioObjectType);
+
+                    if (extensionAudioObjectType.AudioObjectType == 5)
+                    {
+                        boxSize += stream.ReadUimsbf(out this.sbrPresentFlag);
+
+                        if (sbrPresentFlag == true)
+                        {
+                            boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex0);
+
+                            if (extensionSamplingFrequencyIndex == 0xf)
+                            {
+                                boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency0);
+                            }
+
+                            if (IsoStream.BitsToDecode() >= 12)
+                            {
+                                boxSize += stream.ReadBslbf(11, out this.syncExtensionType0);
+
+                                if (syncExtensionType == 0x548)
+                                {
+                                    boxSize += stream.ReadUimsbf(out this.psPresentFlag);
+                                }
+                            }
+                        }
+                    }
+
+                    if (extensionAudioObjectType.AudioObjectType == 22)
+                    {
+                        boxSize += stream.ReadUimsbf(out this.sbrPresentFlag0);
+
+                        if (sbrPresentFlag == true)
+                        {
+                            boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex00);
+
+                            if (extensionSamplingFrequencyIndex == 0xf)
+                            {
+                                boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency00);
+                            }
+                        }
+                        boxSize += stream.ReadUimsbf(4, out this.extensionChannelConfiguration0);
+                    }
+                }
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteClass(this.audioObjectType);
+            boxSize += stream.WriteBslbf(4, this.samplingFrequencyIndex);
+
+            if (samplingFrequencyIndex == 0xf)
+            {
+                boxSize += stream.WriteUimsbf(24, this.samplingFrequency);
+            }
+            boxSize += stream.WriteBslbf(4, this.channelConfiguration);
+            sbrPresentFlag = false;
+            psPresentFlag = false;
+
+            if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
+            {
+                extensionAudioObjectType.AudioObjectType = 5;
+                sbrPresentFlag = true;
+
+                if (audioObjectType.AudioObjectType == 29)
+                {
+                    psPresentFlag = true;
+                }
+                boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex);
+
+                if (extensionSamplingFrequencyIndex == 0xf)
+                {
+                    boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency);
+                }
+                boxSize += stream.WriteClass(this.audioObjectType0);
+
+                if (audioObjectType.AudioObjectType == 22)
+                {
+                    boxSize += stream.WriteUimsbf(4, this.extensionChannelConfiguration);
+                }
+            }
+
+            else
+            {
+                extensionAudioObjectType.AudioObjectType = 0;
+            }
+
+            switch (audioObjectType.AudioObjectType)
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 6:
+                case 7:
+                case 17:
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                    boxSize += stream.WriteClass(this.GASpecificConfig);
+                    break;
+                case 8:
+                    boxSize += stream.WriteClass(this.CelpSpecificConfig);
+                    break;
+                case 9:
+                    boxSize += stream.WriteClass(this.HvxcSpecificConfig);
+                    break;
+                case 12:
+                    boxSize += stream.WriteClass(this.TTSSpecificConfig);
+                    break;
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                    boxSize += stream.WriteClass(this.StructuredAudioSpecificConfig);
+                    break;
+                case 24:
+                    boxSize += stream.WriteClass(this.ErrorResilientCelpSpecificConfig);
+                    break;
+                case 25:
+                    boxSize += stream.WriteClass(this.ErrorResilientHvxcSpecificConfig);
+                    break;
+                case 26:
+                case 27:
+                    boxSize += stream.WriteClass(this.ParametricSpecificConfig);
+                    break;
+                case 28:
+                    boxSize += stream.WriteClass(this.SSCSpecificConfig);
+                    break;
+                case 30:
+                    boxSize += stream.WriteUimsbf(this.sacPayloadEmbedding);
+                    boxSize += stream.WriteClass(this.SpatialSpecificConfig);
+                    break;
+                case 32:
+                case 33:
+                case 34:
+                    boxSize += stream.WriteClass(this.MPEG_1_2_SpecificConfig);
+                    break;
+                case 35:
+                    boxSize += stream.WriteClass(this.DSTSpecificConfig);
+                    break;
+                case 36:
+                    boxSize += stream.WriteBslbf(5, this.fillBits);
+                    boxSize += stream.WriteClass(this.ALSSpecificConfig);
+                    break;
+                case 37:
+                case 38:
+                    boxSize += stream.WriteClass(this.SLSSpecificConfig);
+                    break;
+                case 39:
+                    boxSize += stream.WriteClass(this.ELDSpecificConfig);
+                    break;
+                case 40:
+                case 41:
+                    boxSize += stream.WriteClass(this.SymbolicMusicSpecificConfig);
+                    break;
+                default:
+                    /* reserved */
+                    break;
+            }
+
+            switch (audioObjectType.AudioObjectType)
+            {
+                case 17:
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                case 24:
+                case 25:
+                case 26:
+                case 27:
+                case 39:
+                    boxSize += stream.WriteBslbf(2, this.epConfig);
+
+                    if (epConfig == 2 || epConfig == 3)
+                    {
+                        boxSize += stream.WriteClass(this.ErrorProtectionSpecificConfig);
+                    }
+
+                    if (epConfig == 3)
+                    {
+                        boxSize += stream.WriteBslbf(this.directMapping);
+
+                        if (!directMapping)
+                        {
+                            /*  tbd  */
+                        }
+                    }
+                    break;
+            }
+
+            if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
+            {
+                boxSize += stream.WriteBslbf(11, this.syncExtensionType);
+
+                if (syncExtensionType == 0x2b7)
+                {
+                    boxSize += stream.WriteClass(this.extensionAudioObjectType);
+
+                    if (extensionAudioObjectType.AudioObjectType == 5)
+                    {
+                        boxSize += stream.WriteUimsbf(this.sbrPresentFlag);
+
+                        if (sbrPresentFlag == true)
+                        {
+                            boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex0);
+
+                            if (extensionSamplingFrequencyIndex == 0xf)
+                            {
+                                boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency0);
+                            }
+
+                            if (IsoStream.BitsToDecode() >= 12)
+                            {
+                                boxSize += stream.WriteBslbf(11, this.syncExtensionType0);
+
+                                if (syncExtensionType == 0x548)
+                                {
+                                    boxSize += stream.WriteUimsbf(this.psPresentFlag);
+                                }
+                            }
+                        }
+                    }
+
+                    if (extensionAudioObjectType.AudioObjectType == 22)
+                    {
+                        boxSize += stream.WriteUimsbf(this.sbrPresentFlag0);
+
+                        if (sbrPresentFlag == true)
+                        {
+                            boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex00);
+
+                            if (extensionSamplingFrequencyIndex == 0xf)
+                            {
+                                boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency00);
+                            }
+                        }
+                        boxSize += stream.WriteUimsbf(4, this.extensionChannelConfiguration0);
+                    }
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += IsoStream.CalculateClassSize(audioObjectType); // audioObjectType
+            boxSize += 4; // samplingFrequencyIndex
+
+            if (samplingFrequencyIndex == 0xf)
+            {
+                boxSize += 24; // samplingFrequency
+            }
+            boxSize += 4; // channelConfiguration
+            sbrPresentFlag = false;
+            psPresentFlag = false;
+
+            if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
+            {
+                extensionAudioObjectType.AudioObjectType = 5;
+                sbrPresentFlag = true;
+
+                if (audioObjectType.AudioObjectType == 29)
+                {
+                    psPresentFlag = true;
+                }
+                boxSize += 4; // extensionSamplingFrequencyIndex
+
+                if (extensionSamplingFrequencyIndex == 0xf)
+                {
+                    boxSize += 24; // extensionSamplingFrequency
+                }
+                boxSize += IsoStream.CalculateClassSize(audioObjectType0); // audioObjectType0
+
+                if (audioObjectType.AudioObjectType == 22)
+                {
+                    boxSize += 4; // extensionChannelConfiguration
+                }
+            }
+
+            else
+            {
+                extensionAudioObjectType.AudioObjectType = 0;
+            }
+
+            switch (audioObjectType.AudioObjectType)
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 6:
+                case 7:
+                case 17:
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                    boxSize += IsoStream.CalculateClassSize(GASpecificConfig); // GASpecificConfig
+                    break;
+                case 8:
+                    boxSize += IsoStream.CalculateClassSize(CelpSpecificConfig); // CelpSpecificConfig
+                    break;
+                case 9:
+                    boxSize += IsoStream.CalculateClassSize(HvxcSpecificConfig); // HvxcSpecificConfig
+                    break;
+                case 12:
+                    boxSize += IsoStream.CalculateClassSize(TTSSpecificConfig); // TTSSpecificConfig
+                    break;
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                    boxSize += IsoStream.CalculateClassSize(StructuredAudioSpecificConfig); // StructuredAudioSpecificConfig
+                    break;
+                case 24:
+                    boxSize += IsoStream.CalculateClassSize(ErrorResilientCelpSpecificConfig); // ErrorResilientCelpSpecificConfig
+                    break;
+                case 25:
+                    boxSize += IsoStream.CalculateClassSize(ErrorResilientHvxcSpecificConfig); // ErrorResilientHvxcSpecificConfig
+                    break;
+                case 26:
+                case 27:
+                    boxSize += IsoStream.CalculateClassSize(ParametricSpecificConfig); // ParametricSpecificConfig
+                    break;
+                case 28:
+                    boxSize += IsoStream.CalculateClassSize(SSCSpecificConfig); // SSCSpecificConfig
+                    break;
+                    boxSize += boxSize += 1; // sacPayloadEmbedding
+                    boxSize += IsoStream.CalculateClassSize(SpatialSpecificConfig); // SpatialSpecificConfig
+                    break;
+                case 32:
+                case 33:
+                case 34:
+                    boxSize += IsoStream.CalculateClassSize(MPEG_1_2_SpecificConfig); // MPEG_1_2_SpecificConfig
+                    break;
+                case 35:
+                    boxSize += IsoStream.CalculateClassSize(DSTSpecificConfig); // DSTSpecificConfig
+                    break;
+                    boxSize += boxSize += 5; // fillBits
+                    boxSize += IsoStream.CalculateClassSize(ALSSpecificConfig); // ALSSpecificConfig
+                    break;
+                case 37:
+                case 38:
+                    boxSize += IsoStream.CalculateClassSize(SLSSpecificConfig); // SLSSpecificConfig
+                    break;
+                case 39:
+                    boxSize += IsoStream.CalculateClassSize(ELDSpecificConfig); // ELDSpecificConfig
+                    break;
+                case 40:
+                case 41:
+                    boxSize += IsoStream.CalculateClassSize(SymbolicMusicSpecificConfig); // SymbolicMusicSpecificConfig
+                    break;
+                default:
+                    /* reserved */
+                    break;
+            }
+
+            switch (audioObjectType.AudioObjectType)
+            {
+                case 17:
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                case 24:
+                case 25:
+                case 26:
+                case 27:
+                case 39:
+                    boxSize += 2; // epConfig
+
+                    if (epConfig == 2 || epConfig == 3)
+                    {
+                        boxSize += IsoStream.CalculateClassSize(ErrorProtectionSpecificConfig); // ErrorProtectionSpecificConfig
+                    }
+
+                    if (epConfig == 3)
+                    {
+                        boxSize += 1; // directMapping
+
+                        if (!directMapping)
+                        {
+                            /*  tbd  */
+                        }
+                    }
+                    break;
+            }
+
+            if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
+            {
+                boxSize += 11; // syncExtensionType
+
+                if (syncExtensionType == 0x2b7)
+                {
+                    boxSize += IsoStream.CalculateClassSize(extensionAudioObjectType); // extensionAudioObjectType
+
+                    if (extensionAudioObjectType.AudioObjectType == 5)
+                    {
+                        boxSize += 1; // sbrPresentFlag
+
+                        if (sbrPresentFlag == true)
+                        {
+                            boxSize += 4; // extensionSamplingFrequencyIndex0
+
+                            if (extensionSamplingFrequencyIndex == 0xf)
+                            {
+                                boxSize += 24; // extensionSamplingFrequency0
+                            }
+
+                            if (IsoStream.BitsToDecode() >= 12)
+                            {
+                                boxSize += 11; // syncExtensionType0
+
+                                if (syncExtensionType == 0x548)
+                                {
+                                    boxSize += 1; // psPresentFlag
+                                }
+                            }
+                        }
+                    }
+
+                    if (extensionAudioObjectType.AudioObjectType == 22)
+                    {
+                        boxSize += 1; // sbrPresentFlag0
+
+                        if (sbrPresentFlag == true)
+                        {
+                            boxSize += 4; // extensionSamplingFrequencyIndex00
+
+                            if (extensionSamplingFrequencyIndex == 0xf)
+                            {
+                                boxSize += 24; // extensionSamplingFrequency00
+                            }
+                        }
+                        boxSize += 4; // extensionChannelConfiguration0
+                    }
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class GetAudioObjectType()
+    {
+      uimsbf(5) audioObjectType;
+      if (audioObjectType == 31) {
+        uimsbf(6) audioObjectTypeExt;
+        audioObjectType = 32 + audioObjectTypeExt;
+      }
+      return audioObjectType;
+    }
+
+    */
+    public class GetAudioObjectType
+    {
+
+
+        protected byte audioObjectType;
+        public byte AudioObjectType { get { return this.audioObjectType; } set { this.audioObjectType = value; } }
+
+        protected byte audioObjectTypeExt;
+        public byte AudioObjectTypeExt { get { return this.audioObjectTypeExt; } set { this.audioObjectTypeExt = value; } }
+
+        public GetAudioObjectType()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(5, out this.audioObjectType);
+
+            if (audioObjectType == 31)
+            {
+                boxSize += stream.ReadUimsbf(6, out this.audioObjectTypeExt);
+                audioObjectType = (byte)(32 + audioObjectTypeExt);
+            }
+            return audioObjectType;
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(5, this.audioObjectType);
+
+            if (audioObjectType == 31)
+            {
+                boxSize += stream.WriteUimsbf(6, this.audioObjectTypeExt);
+                audioObjectType = (byte)(32 + audioObjectTypeExt);
+            }
+            return audioObjectType;
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 5; // audioObjectType
+
+            if (audioObjectType == 31)
+            {
+                boxSize += 6; // audioObjectTypeExt
+                audioObjectType = (byte)(32 + audioObjectTypeExt);
+            }
+            return audioObjectType;
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType)
+    {
+      bslbf(1) frameLengthFlag;
+      bslbf(1) dependsOnCoreCoder;
+      if (dependsOnCoreCoder) {
+        uimsbf(14) coreCoderDelay;
+      }
+      bslbf(1) extensionFlag;
+      if (!channelConfiguration) {
+        program_config_element();
+      }
+      if ((audioObjectType == 6) || (audioObjectType == 20)) {
+        uimsbf(3) layerNr;
+      }
+      if (extensionFlag) {
+        if (audioObjectType == 22) {
+          bslbf(5) numOfSubFrame;
+          bslbf(11) layer_length;
+        }
+        if (audioObjectType == 17 || audioObjectType == 19 ||
+          audioObjectType == 20 || audioObjectType == 23) {
+
+          bslbf(1) aacSectionDataResilienceFlag;
+          bslbf(1) aacScalefactorDataResilienceFlag;
+          bslbf(1) aacSpectralDataResilienceFlag;
+        }
+        bslbf(1) extensionFlag3;
+        if (extensionFlag3) {
+          /* tbd in version 3 *//*
+        }
+      }
+    }
+
+    */
+    public class GASpecificConfig
+    {
+
+
+        protected bool frameLengthFlag;
+        public bool FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
+
+        protected bool dependsOnCoreCoder;
+        public bool DependsOnCoreCoder { get { return this.dependsOnCoreCoder; } set { this.dependsOnCoreCoder = value; } }
+
+        protected ushort coreCoderDelay;
+        public ushort CoreCoderDelay { get { return this.coreCoderDelay; } set { this.coreCoderDelay = value; } }
+
+        protected bool extensionFlag;
+        public bool ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
+
+        protected program_config_element program_config_element;
+        public program_config_element ProgramConfigElement { get { return this.program_config_element; } set { this.program_config_element = value; } }
+
+        protected byte layerNr;
+        public byte LayerNr { get { return this.layerNr; } set { this.layerNr = value; } }
+
+        protected byte numOfSubFrame;
+        public byte NumOfSubFrame { get { return this.numOfSubFrame; } set { this.numOfSubFrame = value; } }
+
+        protected ushort layer_length;
+        public ushort LayerLength { get { return this.layer_length; } set { this.layer_length = value; } }
+
+        protected bool aacSectionDataResilienceFlag;
+        public bool AacSectionDataResilienceFlag { get { return this.aacSectionDataResilienceFlag; } set { this.aacSectionDataResilienceFlag = value; } }
+
+        protected bool aacScalefactorDataResilienceFlag;
+        public bool AacScalefactorDataResilienceFlag { get { return this.aacScalefactorDataResilienceFlag; } set { this.aacScalefactorDataResilienceFlag = value; } }
+
+        protected bool aacSpectralDataResilienceFlag;
+        public bool AacSpectralDataResilienceFlag { get { return this.aacSpectralDataResilienceFlag; } set { this.aacSpectralDataResilienceFlag = value; } }
+
+        protected bool extensionFlag3;
+        public bool ExtensionFlag3 { get { return this.extensionFlag3; } set { this.extensionFlag3 = value; } }
+
+        public GASpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            GetAudioObjectType audioObjectType = null; // TODO: pass through ctor
+
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
+            boxSize += stream.ReadBslbf(out this.frameLengthFlag);
+            boxSize += stream.ReadBslbf(out this.dependsOnCoreCoder);
+
+            if (dependsOnCoreCoder)
+            {
+                boxSize += stream.ReadUimsbf(14, out this.coreCoderDelay);
+            }
+            boxSize += stream.ReadBslbf(out this.extensionFlag);
+
+            if (channelConfiguration == 0)
+            {
+                boxSize += stream.ReadClass(out this.program_config_element);
+            }
+
+            if ((audioObjectType.AudioObjectType == 6) || (audioObjectType.AudioObjectType == 20))
+            {
+                boxSize += stream.ReadUimsbf(3, out this.layerNr);
+            }
+
+            if (extensionFlag)
+            {
+
+                if (audioObjectType.AudioObjectType == 22)
+                {
+                    boxSize += stream.ReadBslbf(5, out this.numOfSubFrame);
+                    boxSize += stream.ReadBslbf(11, out this.layer_length);
+                }
+
+                if (audioObjectType.AudioObjectType == 17 || audioObjectType.AudioObjectType == 19 ||
+          audioObjectType.AudioObjectType == 20 || audioObjectType.AudioObjectType == 23)
+                {
+                    boxSize += stream.ReadBslbf(out this.aacSectionDataResilienceFlag);
+                    boxSize += stream.ReadBslbf(out this.aacScalefactorDataResilienceFlag);
+                    boxSize += stream.ReadBslbf(out this.aacSpectralDataResilienceFlag);
+                }
+                boxSize += stream.ReadBslbf(out this.extensionFlag3);
+
+                if (extensionFlag3)
+                {
+                    /*  tbd in version 3  */
+                }
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            GetAudioObjectType audioObjectType = null; // TODO: pass through ctor
+
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
+            boxSize += stream.WriteBslbf(this.frameLengthFlag);
+            boxSize += stream.WriteBslbf(this.dependsOnCoreCoder);
+
+            if (dependsOnCoreCoder)
+            {
+                boxSize += stream.WriteUimsbf(14, this.coreCoderDelay);
+            }
+            boxSize += stream.WriteBslbf(this.extensionFlag);
+
+            if (channelConfiguration == 0)
+            {
+                boxSize += stream.WriteClass(this.program_config_element);
+            }
+
+            if ((audioObjectType.AudioObjectType == 6) || (audioObjectType.AudioObjectType == 20))
+            {
+                boxSize += stream.WriteUimsbf(3, this.layerNr);
+            }
+
+            if (extensionFlag)
+            {
+
+                if (audioObjectType.AudioObjectType == 22)
+                {
+                    boxSize += stream.WriteBslbf(5, this.numOfSubFrame);
+                    boxSize += stream.WriteBslbf(11, this.layer_length);
+                }
+
+                if (audioObjectType.AudioObjectType == 17 || audioObjectType.AudioObjectType == 19 ||
+          audioObjectType.AudioObjectType == 20 || audioObjectType.AudioObjectType == 23)
+                {
+                    boxSize += stream.WriteBslbf(this.aacSectionDataResilienceFlag);
+                    boxSize += stream.WriteBslbf(this.aacScalefactorDataResilienceFlag);
+                    boxSize += stream.WriteBslbf(this.aacSpectralDataResilienceFlag);
+                }
+                boxSize += stream.WriteBslbf(this.extensionFlag3);
+
+                if (extensionFlag3)
+                {
+                    /*  tbd in version 3  */
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            GetAudioObjectType audioObjectType = null; // TODO: pass through ctor
+
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
+            boxSize += 1; // frameLengthFlag
+            boxSize += 1; // dependsOnCoreCoder
+
+            if (dependsOnCoreCoder)
+            {
+                boxSize += 14; // coreCoderDelay
+            }
+            boxSize += 1; // extensionFlag
+
+            if (channelConfiguration == 0)
+            {
+                boxSize += IsoStream.CalculateClassSize(program_config_element); // program_config_element
+            }
+
+            if ((audioObjectType.AudioObjectType == 6) || (audioObjectType.AudioObjectType == 20))
+            {
+                boxSize += 3; // layerNr
+            }
+
+            if (extensionFlag)
+            {
+
+                if (audioObjectType.AudioObjectType == 22)
+                {
+                    boxSize += 5; // numOfSubFrame
+                    boxSize += 11; // layer_length
+                }
+
+                if (audioObjectType.AudioObjectType == 17 || audioObjectType.AudioObjectType == 19 ||
+          audioObjectType.AudioObjectType == 20 || audioObjectType.AudioObjectType == 23)
+                {
+                    boxSize += 1; // aacSectionDataResilienceFlag
+                    boxSize += 1; // aacScalefactorDataResilienceFlag
+                    boxSize += 1; // aacSpectralDataResilienceFlag
+                }
+                boxSize += 1; // extensionFlag3
+
+                if (extensionFlag3)
+                {
+                    /*  tbd in version 3  */
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class program_config_element()
+    {
+      uimsbf(4) element_instance_tag;
+      uimsbf(2) object_type;
+      uimsbf(4) sampling_frequency_index;
+      uimsbf(4) num_front_channel_elements;
+      uimsbf(4) num_side_channel_elements;
+      uimsbf(4) num_back_channel_elements;
+      uimsbf(2) num_lfe_channel_elements;
+      uimsbf(3) num_assoc_data_elements;
+      uimsbf(4) num_valid_cc_elements;
+      uimsbf(1) mono_mixdown_present;
+      if (mono_mixdown_present == 1)
+        uimsbf(4) mono_mixdown_element_number;
+      uimsbf(1) stereo_mixdown_present;
+      if (stereo_mixdown_present == 1)
+        uimsbf(4) stereo_mixdown_element_number;
+      uimsbf(1) matrix_mixdown_idx_present;
+      if (matrix_mixdown_idx_present == 1) {
+        uimsbf(2) matrix_mixdown_idx;
+        uimsbf(1) pseudo_surround_enable;
+      }
+      for (i = 0; i < num_front_channel_elements; i++) {
+        bslbf(1) front_element_is_cpe[i];
+        uimsbf(4) front_element_tag_select[i];
+      }
+      for (i = 0; i < num_side_channel_elements; i++) {
+        bslbf(1) side_element_is_cpe[i];
+        uimsbf(4) side_element_tag_select[i];
+      }
+      for (i = 0; i < num_back_channel_elements; i++) {
+        bslbf(1) back_element_is_cpe[i];
+        uimsbf(4) back_element_tag_select[i];
+      }
+      for (i = 0; i < num_lfe_channel_elements; i++)
+        uimsbf(4) lfe_element_tag_select[i];
+      for (i = 0; i < num_assoc_data_elements; i++)
+        uimsbf(4) assoc_data_element_tag_select[i];
+      for (i = 0; i < num_valid_cc_elements; i++) {
+        uimsbf(1) cc_element_is_ind_sw[i];
+        uimsbf(4) valid_cc_element_tag_select[i];
+      }
+      byte_alignment();  // Note 1 
+      uimsbf(8) comment_field_bytes;
+      for (i = 0; i < comment_field_bytes; i++)
+        uimsbf(8) comment_field_data[i];
+    }
+
+    */
+    public class program_config_element
+    {
+
+
+        protected byte element_instance_tag;
+        public byte ElementInstanceTag { get { return this.element_instance_tag; } set { this.element_instance_tag = value; } }
+
+        protected byte object_type;
+        public byte ObjectType { get { return this.object_type; } set { this.object_type = value; } }
+
+        protected byte sampling_frequency_index;
+        public byte SamplingFrequencyIndex { get { return this.sampling_frequency_index; } set { this.sampling_frequency_index = value; } }
+
+        protected byte num_front_channel_elements;
+        public byte NumFrontChannelElements { get { return this.num_front_channel_elements; } set { this.num_front_channel_elements = value; } }
+
+        protected byte num_side_channel_elements;
+        public byte NumSideChannelElements { get { return this.num_side_channel_elements; } set { this.num_side_channel_elements = value; } }
+
+        protected byte num_back_channel_elements;
+        public byte NumBackChannelElements { get { return this.num_back_channel_elements; } set { this.num_back_channel_elements = value; } }
+
+        protected byte num_lfe_channel_elements;
+        public byte NumLfeChannelElements { get { return this.num_lfe_channel_elements; } set { this.num_lfe_channel_elements = value; } }
+
+        protected byte num_assoc_data_elements;
+        public byte NumAssocDataElements { get { return this.num_assoc_data_elements; } set { this.num_assoc_data_elements = value; } }
+
+        protected byte num_valid_cc_elements;
+        public byte NumValidCcElements { get { return this.num_valid_cc_elements; } set { this.num_valid_cc_elements = value; } }
+
+        protected bool mono_mixdown_present;
+        public bool MonoMixdownPresent { get { return this.mono_mixdown_present; } set { this.mono_mixdown_present = value; } }
+
+        protected byte mono_mixdown_element_number;
+        public byte MonoMixdownElementNumber { get { return this.mono_mixdown_element_number; } set { this.mono_mixdown_element_number = value; } }
+
+        protected bool stereo_mixdown_present;
+        public bool StereoMixdownPresent { get { return this.stereo_mixdown_present; } set { this.stereo_mixdown_present = value; } }
+
+        protected byte stereo_mixdown_element_number;
+        public byte StereoMixdownElementNumber { get { return this.stereo_mixdown_element_number; } set { this.stereo_mixdown_element_number = value; } }
+
+        protected bool matrix_mixdown_idx_present;
+        public bool MatrixMixdownIdxPresent { get { return this.matrix_mixdown_idx_present; } set { this.matrix_mixdown_idx_present = value; } }
+
+        protected byte matrix_mixdown_idx;
+        public byte MatrixMixdownIdx { get { return this.matrix_mixdown_idx; } set { this.matrix_mixdown_idx = value; } }
+
+        protected bool pseudo_surround_enable;
+        public bool PseudoSurroundEnable { get { return this.pseudo_surround_enable; } set { this.pseudo_surround_enable = value; } }
+
+        protected byte[] front_element_is_cpe;
+        public byte[] FrontElementIsCpe { get { return this.front_element_is_cpe; } set { this.front_element_is_cpe = value; } }
+
+        protected byte[] front_element_tag_select;
+        public byte[] FrontElementTagSelect { get { return this.front_element_tag_select; } set { this.front_element_tag_select = value; } }
+
+        protected byte[] side_element_is_cpe;
+        public byte[] SideElementIsCpe { get { return this.side_element_is_cpe; } set { this.side_element_is_cpe = value; } }
+
+        protected byte[] side_element_tag_select;
+        public byte[] SideElementTagSelect { get { return this.side_element_tag_select; } set { this.side_element_tag_select = value; } }
+
+        protected byte[] back_element_is_cpe;
+        public byte[] BackElementIsCpe { get { return this.back_element_is_cpe; } set { this.back_element_is_cpe = value; } }
+
+        protected byte[] back_element_tag_select;
+        public byte[] BackElementTagSelect { get { return this.back_element_tag_select; } set { this.back_element_tag_select = value; } }
+
+        protected byte[] lfe_element_tag_select;
+        public byte[] LfeElementTagSelect { get { return this.lfe_element_tag_select; } set { this.lfe_element_tag_select = value; } }
+
+        protected byte[] assoc_data_element_tag_select;
+        public byte[] AssocDataElementTagSelect { get { return this.assoc_data_element_tag_select; } set { this.assoc_data_element_tag_select = value; } }
+
+        protected bool[] cc_element_is_ind_sw;
+        public bool[] CcElementIsIndSw { get { return this.cc_element_is_ind_sw; } set { this.cc_element_is_ind_sw = value; } }
+
+        protected byte[] valid_cc_element_tag_select;
+        public byte[] ValidCcElementTagSelect { get { return this.valid_cc_element_tag_select; } set { this.valid_cc_element_tag_select = value; } }
+
+        protected byte byte_alignment;  //  Note 1 
+        public byte ByteAlignment { get { return this.byte_alignment; } set { this.byte_alignment = value; } }
+
+        protected byte comment_field_bytes;
+        public byte CommentFieldBytes { get { return this.comment_field_bytes; } set { this.comment_field_bytes = value; } }
+
+        protected byte[] comment_field_data;
+        public byte[] CommentFieldData { get { return this.comment_field_data; } set { this.comment_field_data = value; } }
+
+        public program_config_element()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(4, out this.element_instance_tag);
+            boxSize += stream.ReadUimsbf(2, out this.object_type);
+            boxSize += stream.ReadUimsbf(4, out this.sampling_frequency_index);
+            boxSize += stream.ReadUimsbf(4, out this.num_front_channel_elements);
+            boxSize += stream.ReadUimsbf(4, out this.num_side_channel_elements);
+            boxSize += stream.ReadUimsbf(4, out this.num_back_channel_elements);
+            boxSize += stream.ReadUimsbf(2, out this.num_lfe_channel_elements);
+            boxSize += stream.ReadUimsbf(3, out this.num_assoc_data_elements);
+            boxSize += stream.ReadUimsbf(4, out this.num_valid_cc_elements);
+            boxSize += stream.ReadUimsbf(out this.mono_mixdown_present);
+
+            if (mono_mixdown_present == true)
+            {
+                boxSize += stream.ReadUimsbf(4, out this.mono_mixdown_element_number);
+            }
+            boxSize += stream.ReadUimsbf(out this.stereo_mixdown_present);
+
+            if (stereo_mixdown_present == true)
+            {
+                boxSize += stream.ReadUimsbf(4, out this.stereo_mixdown_element_number);
+            }
+            boxSize += stream.ReadUimsbf(out this.matrix_mixdown_idx_present);
+
+            if (matrix_mixdown_idx_present == true)
+            {
+                boxSize += stream.ReadUimsbf(2, out this.matrix_mixdown_idx);
+                boxSize += stream.ReadUimsbf(out this.pseudo_surround_enable);
+            }
+
+            for (int i = 0; i < num_front_channel_elements; i++)
+            {
+                boxSize += stream.ReadBslbf(1, out this.front_element_is_cpe[i]);
+                boxSize += stream.ReadUimsbf(4, out this.front_element_tag_select[i]);
+            }
+
+            for (int i = 0; i < num_side_channel_elements; i++)
+            {
+                boxSize += stream.ReadBslbf(1, out this.side_element_is_cpe[i]);
+                boxSize += stream.ReadUimsbf(4, out this.side_element_tag_select[i]);
+            }
+
+            for (int i = 0; i < num_back_channel_elements; i++)
+            {
+                boxSize += stream.ReadBslbf(1, out this.back_element_is_cpe[i]);
+                boxSize += stream.ReadUimsbf(4, out this.back_element_tag_select[i]);
+            }
+
+            for (int i = 0; i < num_lfe_channel_elements; i++)
+            {
+                boxSize += stream.ReadUimsbf(4, out this.lfe_element_tag_select[i]);
+            }
+
+            for (int i = 0; i < num_assoc_data_elements; i++)
+            {
+                boxSize += stream.ReadUimsbf(4, out this.assoc_data_element_tag_select[i]);
+            }
+
+            for (int i = 0; i < num_valid_cc_elements; i++)
+            {
+                boxSize += stream.ReadUimsbf(out this.cc_element_is_ind_sw[i]);
+                boxSize += stream.ReadUimsbf(4, out this.valid_cc_element_tag_select[i]);
+            }
+            boxSize += stream.ReadByteAlignment(out this.byte_alignment); // Note 1 
+            boxSize += stream.ReadUimsbf(8, out this.comment_field_bytes);
+
+            for (int i = 0; i < comment_field_bytes; i++)
+            {
+                boxSize += stream.ReadUimsbf(8, out this.comment_field_data[i]);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(4, this.element_instance_tag);
+            boxSize += stream.WriteUimsbf(2, this.object_type);
+            boxSize += stream.WriteUimsbf(4, this.sampling_frequency_index);
+            boxSize += stream.WriteUimsbf(4, this.num_front_channel_elements);
+            boxSize += stream.WriteUimsbf(4, this.num_side_channel_elements);
+            boxSize += stream.WriteUimsbf(4, this.num_back_channel_elements);
+            boxSize += stream.WriteUimsbf(2, this.num_lfe_channel_elements);
+            boxSize += stream.WriteUimsbf(3, this.num_assoc_data_elements);
+            boxSize += stream.WriteUimsbf(4, this.num_valid_cc_elements);
+            boxSize += stream.WriteUimsbf(this.mono_mixdown_present);
+
+            if (mono_mixdown_present == true)
+            {
+                boxSize += stream.WriteUimsbf(4, this.mono_mixdown_element_number);
+            }
+            boxSize += stream.WriteUimsbf(this.stereo_mixdown_present);
+
+            if (stereo_mixdown_present == true)
+            {
+                boxSize += stream.WriteUimsbf(4, this.stereo_mixdown_element_number);
+            }
+            boxSize += stream.WriteUimsbf(this.matrix_mixdown_idx_present);
+
+            if (matrix_mixdown_idx_present == true)
+            {
+                boxSize += stream.WriteUimsbf(2, this.matrix_mixdown_idx);
+                boxSize += stream.WriteUimsbf(this.pseudo_surround_enable);
+            }
+
+            for (int i = 0; i < num_front_channel_elements; i++)
+            {
+                boxSize += stream.WriteBslbf(1, this.front_element_is_cpe[i]);
+                boxSize += stream.WriteUimsbf(4, this.front_element_tag_select[i]);
+            }
+
+            for (int i = 0; i < num_side_channel_elements; i++)
+            {
+                boxSize += stream.WriteBslbf(1, this.side_element_is_cpe[i]);
+                boxSize += stream.WriteUimsbf(4, this.side_element_tag_select[i]);
+            }
+
+            for (int i = 0; i < num_back_channel_elements; i++)
+            {
+                boxSize += stream.WriteBslbf(1, this.back_element_is_cpe[i]);
+                boxSize += stream.WriteUimsbf(4, this.back_element_tag_select[i]);
+            }
+
+            for (int i = 0; i < num_lfe_channel_elements; i++)
+            {
+                boxSize += stream.WriteUimsbf(4, this.lfe_element_tag_select[i]);
+            }
+
+            for (int i = 0; i < num_assoc_data_elements; i++)
+            {
+                boxSize += stream.WriteUimsbf(4, this.assoc_data_element_tag_select[i]);
+            }
+
+            for (int i = 0; i < num_valid_cc_elements; i++)
+            {
+                boxSize += stream.WriteUimsbf(this.cc_element_is_ind_sw[i]);
+                boxSize += stream.WriteUimsbf(4, this.valid_cc_element_tag_select[i]);
+            }
+            boxSize += stream.WriteByteAlignment(this.byte_alignment); // Note 1 
+            boxSize += stream.WriteUimsbf(8, this.comment_field_bytes);
+
+            for (int i = 0; i < comment_field_bytes; i++)
+            {
+                boxSize += stream.WriteUimsbf(8, this.comment_field_data[i]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 4; // element_instance_tag
+            boxSize += 2; // object_type
+            boxSize += 4; // sampling_frequency_index
+            boxSize += 4; // num_front_channel_elements
+            boxSize += 4; // num_side_channel_elements
+            boxSize += 4; // num_back_channel_elements
+            boxSize += 2; // num_lfe_channel_elements
+            boxSize += 3; // num_assoc_data_elements
+            boxSize += 4; // num_valid_cc_elements
+            boxSize += 1; // mono_mixdown_present
+
+            if (mono_mixdown_present == true)
+            {
+                boxSize += 4; // mono_mixdown_element_number
+            }
+            boxSize += 1; // stereo_mixdown_present
+
+            if (stereo_mixdown_present == true)
+            {
+                boxSize += 4; // stereo_mixdown_element_number
+            }
+            boxSize += 1; // matrix_mixdown_idx_present
+
+            if (matrix_mixdown_idx_present == true)
+            {
+                boxSize += 2; // matrix_mixdown_idx
+                boxSize += 1; // pseudo_surround_enable
+            }
+
+            for (int i = 0; i < num_front_channel_elements; i++)
+            {
+                boxSize += 1; // front_element_is_cpe
+                boxSize += 4; // front_element_tag_select
+            }
+
+            for (int i = 0; i < num_side_channel_elements; i++)
+            {
+                boxSize += 1; // side_element_is_cpe
+                boxSize += 4; // side_element_tag_select
+            }
+
+            for (int i = 0; i < num_back_channel_elements; i++)
+            {
+                boxSize += 1; // back_element_is_cpe
+                boxSize += 4; // back_element_tag_select
+            }
+
+            for (int i = 0; i < num_lfe_channel_elements; i++)
+            {
+                boxSize += 4; // lfe_element_tag_select
+            }
+
+            for (int i = 0; i < num_assoc_data_elements; i++)
+            {
+                boxSize += 4; // assoc_data_element_tag_select
+            }
+
+            for (int i = 0; i < num_valid_cc_elements; i++)
+            {
+                boxSize += 1; // cc_element_is_ind_sw
+                boxSize += 4; // valid_cc_element_tag_select
+            }
+            boxSize += IsoStream.CalculateByteAlignmentSize(byte_alignment); // byte_alignment
+            boxSize += 8; // comment_field_bytes
+
+            for (int i = 0; i < comment_field_bytes; i++)
+            {
+                boxSize += 8; // comment_field_data
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class CelpSpecificConfig(samplingFrequencyIndex)
+    {
+      uimsbf(1) isBaseLayer;
+      if (isBaseLayer) {
+        CelpHeader(samplingFrequencyIndex);
+      }
+      else {
+        uimsbf(1) isBWSLayer;
+        if (isBWSLayer) {
+          CelpBWSenhHeader();
+        }
+        else {
+          uimsbf(2) CELPBRSid;
+        }
+      }
+    }
+
+    */
+    public class CelpSpecificConfig
+    {
+
+
+        protected bool isBaseLayer;
+        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
+
+        protected CelpHeader CelpHeader;
+        public CelpHeader _CelpHeader { get { return this.CelpHeader; } set { this.CelpHeader = value; } }
+
+        protected bool isBWSLayer;
+        public bool IsBWSLayer { get { return this.isBWSLayer; } set { this.isBWSLayer = value; } }
+
+        protected CelpBWSenhHeader CelpBWSenhHeader;
+        public CelpBWSenhHeader _CelpBWSenhHeader { get { return this.CelpBWSenhHeader; } set { this.CelpBWSenhHeader = value; } }
+
+        protected byte CELPBRSid;
+        public byte _CELPBRSid { get { return this.CELPBRSid; } set { this.CELPBRSid = value; } }
+
+        public CelpSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
+
+            if (isBaseLayer)
+            {
+                boxSize += stream.ReadClass(out this.CelpHeader);
+            }
+
+            else
+            {
+                boxSize += stream.ReadUimsbf(out this.isBWSLayer);
+
+                if (isBWSLayer)
+                {
+                    boxSize += stream.ReadClass(out this.CelpBWSenhHeader);
+                }
+
+                else
+                {
+                    boxSize += stream.ReadUimsbf(2, out this.CELPBRSid);
+                }
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(this.isBaseLayer);
+
+            if (isBaseLayer)
+            {
+                boxSize += stream.WriteClass(this.CelpHeader);
+            }
+
+            else
+            {
+                boxSize += stream.WriteUimsbf(this.isBWSLayer);
+
+                if (isBWSLayer)
+                {
+                    boxSize += stream.WriteClass(this.CelpBWSenhHeader);
+                }
+
+                else
+                {
+                    boxSize += stream.WriteUimsbf(2, this.CELPBRSid);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // isBaseLayer
+
+            if (isBaseLayer)
+            {
+                boxSize += IsoStream.CalculateClassSize(CelpHeader); // CelpHeader
+            }
+
+            else
+            {
+                boxSize += 1; // isBWSLayer
+
+                if (isBWSLayer)
+                {
+                    boxSize += IsoStream.CalculateClassSize(CelpBWSenhHeader); // CelpBWSenhHeader
+                }
+
+                else
+                {
+                    boxSize += 2; // CELPBRSid
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class CelpHeader(samplingFrequencyIndex)
+    {
+      uimsbf(1) ExcitationMode;
+      uimsbf(1) SampleRateMode;
+      uimsbf(1) FineRateControl;
+      if (ExcitationMode == RPE) {
+        uimsbf(3) RPE_Configuration;
+      }
+      if (ExcitationMode == MPE) {
+        uimsbf(5) MPE_Configuration;
+        uimsbf(2) NumEnhLayers;
+        uimsbf(1) BandwidthScalabilityMode;
+      }
+    }
+
+    */
+    public class CelpHeader
+    {
+
+
+        protected bool ExcitationMode;
+        public bool _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
+
+        protected bool SampleRateMode;
+        public bool _SampleRateMode { get { return this.SampleRateMode; } set { this.SampleRateMode = value; } }
+
+        protected bool FineRateControl;
+        public bool _FineRateControl { get { return this.FineRateControl; } set { this.FineRateControl = value; } }
+
+        protected byte RPE_Configuration;
+        public byte RPEConfiguration { get { return this.RPE_Configuration; } set { this.RPE_Configuration = value; } }
+
+        protected byte MPE_Configuration;
+        public byte MPEConfiguration { get { return this.MPE_Configuration; } set { this.MPE_Configuration = value; } }
+
+        protected byte NumEnhLayers;
+        public byte _NumEnhLayers { get { return this.NumEnhLayers; } set { this.NumEnhLayers = value; } }
+
+        protected bool BandwidthScalabilityMode;
+        public bool _BandwidthScalabilityMode { get { return this.BandwidthScalabilityMode; } set { this.BandwidthScalabilityMode = value; } }
+
+        public CelpHeader()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            const bool RPE = true;
+
+            const bool MPE = false;
+
+            boxSize += stream.ReadUimsbf(out this.ExcitationMode);
+            boxSize += stream.ReadUimsbf(out this.SampleRateMode);
+            boxSize += stream.ReadUimsbf(out this.FineRateControl);
+
+            if (ExcitationMode == RPE)
+            {
+                boxSize += stream.ReadUimsbf(3, out this.RPE_Configuration);
+            }
+
+            if (ExcitationMode == MPE)
+            {
+                boxSize += stream.ReadUimsbf(5, out this.MPE_Configuration);
+                boxSize += stream.ReadUimsbf(2, out this.NumEnhLayers);
+                boxSize += stream.ReadUimsbf(out this.BandwidthScalabilityMode);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            const bool RPE = true;
+
+            const bool MPE = false;
+
+            boxSize += stream.WriteUimsbf(this.ExcitationMode);
+            boxSize += stream.WriteUimsbf(this.SampleRateMode);
+            boxSize += stream.WriteUimsbf(this.FineRateControl);
+
+            if (ExcitationMode == RPE)
+            {
+                boxSize += stream.WriteUimsbf(3, this.RPE_Configuration);
+            }
+
+            if (ExcitationMode == MPE)
+            {
+                boxSize += stream.WriteUimsbf(5, this.MPE_Configuration);
+                boxSize += stream.WriteUimsbf(2, this.NumEnhLayers);
+                boxSize += stream.WriteUimsbf(this.BandwidthScalabilityMode);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            const bool RPE = true;
+
+            const bool MPE = false;
+
+            boxSize += 1; // ExcitationMode
+            boxSize += 1; // SampleRateMode
+            boxSize += 1; // FineRateControl
+
+            if (ExcitationMode == RPE)
+            {
+                boxSize += 3; // RPE_Configuration
+            }
+
+            if (ExcitationMode == MPE)
+            {
+                boxSize += 5; // MPE_Configuration
+                boxSize += 2; // NumEnhLayers
+                boxSize += 1; // BandwidthScalabilityMode
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class CelpBWSenhHeader()
+    {
+      uimsbf(2) BWS_configuration;
+    }
+
+    */
+    public class CelpBWSenhHeader
+    {
+
+
+        protected byte BWS_configuration;
+        public byte BWSConfiguration { get { return this.BWS_configuration; } set { this.BWS_configuration = value; } }
+
+        public CelpBWSenhHeader()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(2, out this.BWS_configuration);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(2, this.BWS_configuration);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 2; // BWS_configuration
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HvxcSpecificConfig() {
+      uimsbf(1) isBaseLayer;
+      if (isBaseLayer) {
+        HVXCconfig();
+      }
+    }
+
+    */
+    public class HvxcSpecificConfig
+    {
+
+
+        protected bool isBaseLayer;
+        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
+
+        protected HVXCconfig HVXCconfig;
+        public HVXCconfig _HVXCconfig { get { return this.HVXCconfig; } set { this.HVXCconfig = value; } }
+
+        public HvxcSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
+
+            if (isBaseLayer)
+            {
+                boxSize += stream.ReadClass(out this.HVXCconfig);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(this.isBaseLayer);
+
+            if (isBaseLayer)
+            {
+                boxSize += stream.WriteClass(this.HVXCconfig);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // isBaseLayer
+
+            if (isBaseLayer)
+            {
+                boxSize += IsoStream.CalculateClassSize(HVXCconfig); // HVXCconfig
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HVXCconfig()
+    {
+      uimsbf(1) HVXCvarMode;
+      uimsbf(2) HVXCrateMode;
+      uimsbf(1) extensionFlag;
+      if (extensionFlag) {
+        // to be defined in MPEG-4 Version 2
+      }
+    }
+
+    */
+    public class HVXCconfig
+    {
+
+
+        protected bool HVXCvarMode;
+        public bool _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
+
+        protected byte HVXCrateMode;
+        public byte _HVXCrateMode { get { return this.HVXCrateMode; } set { this.HVXCrateMode = value; } }
+
+        protected bool extensionFlag;
+        public bool ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
+
+        public HVXCconfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(out this.HVXCvarMode);
+            boxSize += stream.ReadUimsbf(2, out this.HVXCrateMode);
+            boxSize += stream.ReadUimsbf(out this.extensionFlag);
+
+            if (extensionFlag)
+            {
+                /*  to be defined in MPEG-4 Version 2 */
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(this.HVXCvarMode);
+            boxSize += stream.WriteUimsbf(2, this.HVXCrateMode);
+            boxSize += stream.WriteUimsbf(this.extensionFlag);
+
+            if (extensionFlag)
+            {
+                /*  to be defined in MPEG-4 Version 2 */
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // HVXCvarMode
+            boxSize += 2; // HVXCrateMode
+            boxSize += 1; // extensionFlag
+
+            if (extensionFlag)
+            {
+                /*  to be defined in MPEG-4 Version 2 */
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class TTSSpecificConfig() {
+        TTS_Sequence();
+    }
+
+    */
+    public class TTSSpecificConfig
+    {
+
+
+        protected TTS_Sequence TTS_Sequence;
+        public TTS_Sequence TTSSequence { get { return this.TTS_Sequence; } set { this.TTS_Sequence = value; } }
+
+        public TTSSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadClass(out this.TTS_Sequence);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteClass(this.TTS_Sequence);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += IsoStream.CalculateClassSize(TTS_Sequence); // TTS_Sequence
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class TTS_Sequence()
+    {
+      uimsbf(5) TTS_Sequence_ID;
+      uimsbf(18) Language_Code;
+      bslbf(1) Gender_Enable;
+      bslbf(1) Age_Enable;
+      bslbf(1) Speech_Rate_Enable;
+      bslbf(1) Prosody_Enable;
+      bslbf(1) Video_Enable;
+      bslbf(1) Lip_Shape_Enable;
+      bslbf(1) Trick_Mode_Enable;
+    }
+
+    */
+    public class TTS_Sequence
+    {
+
+
+        protected byte TTS_Sequence_ID;
+        public byte TTSSequenceID { get { return this.TTS_Sequence_ID; } set { this.TTS_Sequence_ID = value; } }
+
+        protected uint Language_Code;
+        public uint LanguageCode { get { return this.Language_Code; } set { this.Language_Code = value; } }
+
+        protected bool Gender_Enable;
+        public bool GenderEnable { get { return this.Gender_Enable; } set { this.Gender_Enable = value; } }
+
+        protected bool Age_Enable;
+        public bool AgeEnable { get { return this.Age_Enable; } set { this.Age_Enable = value; } }
+
+        protected bool Speech_Rate_Enable;
+        public bool SpeechRateEnable { get { return this.Speech_Rate_Enable; } set { this.Speech_Rate_Enable = value; } }
+
+        protected bool Prosody_Enable;
+        public bool ProsodyEnable { get { return this.Prosody_Enable; } set { this.Prosody_Enable = value; } }
+
+        protected bool Video_Enable;
+        public bool VideoEnable { get { return this.Video_Enable; } set { this.Video_Enable = value; } }
+
+        protected bool Lip_Shape_Enable;
+        public bool LipShapeEnable { get { return this.Lip_Shape_Enable; } set { this.Lip_Shape_Enable = value; } }
+
+        protected bool Trick_Mode_Enable;
+        public bool TrickModeEnable { get { return this.Trick_Mode_Enable; } set { this.Trick_Mode_Enable = value; } }
+
+        public TTS_Sequence()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(5, out this.TTS_Sequence_ID);
+            boxSize += stream.ReadUimsbf(18, out this.Language_Code);
+            boxSize += stream.ReadBslbf(out this.Gender_Enable);
+            boxSize += stream.ReadBslbf(out this.Age_Enable);
+            boxSize += stream.ReadBslbf(out this.Speech_Rate_Enable);
+            boxSize += stream.ReadBslbf(out this.Prosody_Enable);
+            boxSize += stream.ReadBslbf(out this.Video_Enable);
+            boxSize += stream.ReadBslbf(out this.Lip_Shape_Enable);
+            boxSize += stream.ReadBslbf(out this.Trick_Mode_Enable);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(5, this.TTS_Sequence_ID);
+            boxSize += stream.WriteUimsbf(18, this.Language_Code);
+            boxSize += stream.WriteBslbf(this.Gender_Enable);
+            boxSize += stream.WriteBslbf(this.Age_Enable);
+            boxSize += stream.WriteBslbf(this.Speech_Rate_Enable);
+            boxSize += stream.WriteBslbf(this.Prosody_Enable);
+            boxSize += stream.WriteBslbf(this.Video_Enable);
+            boxSize += stream.WriteBslbf(this.Lip_Shape_Enable);
+            boxSize += stream.WriteBslbf(this.Trick_Mode_Enable);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 5; // TTS_Sequence_ID
+            boxSize += 18; // Language_Code
+            boxSize += 1; // Gender_Enable
+            boxSize += 1; // Age_Enable
+            boxSize += 1; // Speech_Rate_Enable
+            boxSize += 1; // Prosody_Enable
+            boxSize += 1; // Video_Enable
+            boxSize += 1; // Lip_Shape_Enable
+            boxSize += 1; // Trick_Mode_Enable
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ErrorResilientCelpSpecificConfig(samplingFrequencyIndex)
+    {
+      uimsbf(1) isBaseLayer;
+      if (isBaseLayer) {
+        ER_SC_CelpHeader(samplingFrequencyIndex);
+      }
+      else {
+        uimsbf(1) isBWSLayer;
+        if (isBWSLayer) {
+          CelpBWSenhHeader();
+        }
+        else {
+          uimsbf(2) CELPBRSid;
+        }
+      }
+    }
+
+    */
+    public class ErrorResilientCelpSpecificConfig
+    {
+
+
+        protected bool isBaseLayer;
+        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
+
+        protected ER_SC_CelpHeader ER_SC_CelpHeader;
+        public ER_SC_CelpHeader ERSCCelpHeader { get { return this.ER_SC_CelpHeader; } set { this.ER_SC_CelpHeader = value; } }
+
+        protected bool isBWSLayer;
+        public bool IsBWSLayer { get { return this.isBWSLayer; } set { this.isBWSLayer = value; } }
+
+        protected CelpBWSenhHeader CelpBWSenhHeader;
+        public CelpBWSenhHeader _CelpBWSenhHeader { get { return this.CelpBWSenhHeader; } set { this.CelpBWSenhHeader = value; } }
+
+        protected byte CELPBRSid;
+        public byte _CELPBRSid { get { return this.CELPBRSid; } set { this.CELPBRSid = value; } }
+
+        public ErrorResilientCelpSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
+
+            if (isBaseLayer)
+            {
+                boxSize += stream.ReadClass(out this.ER_SC_CelpHeader);
+            }
+
+            else
+            {
+                boxSize += stream.ReadUimsbf(out this.isBWSLayer);
+
+                if (isBWSLayer)
+                {
+                    boxSize += stream.ReadClass(out this.CelpBWSenhHeader);
+                }
+
+                else
+                {
+                    boxSize += stream.ReadUimsbf(2, out this.CELPBRSid);
+                }
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(this.isBaseLayer);
+
+            if (isBaseLayer)
+            {
+                boxSize += stream.WriteClass(this.ER_SC_CelpHeader);
+            }
+
+            else
+            {
+                boxSize += stream.WriteUimsbf(this.isBWSLayer);
+
+                if (isBWSLayer)
+                {
+                    boxSize += stream.WriteClass(this.CelpBWSenhHeader);
+                }
+
+                else
+                {
+                    boxSize += stream.WriteUimsbf(2, this.CELPBRSid);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // isBaseLayer
+
+            if (isBaseLayer)
+            {
+                boxSize += IsoStream.CalculateClassSize(ER_SC_CelpHeader); // ER_SC_CelpHeader
+            }
+
+            else
+            {
+                boxSize += 1; // isBWSLayer
+
+                if (isBWSLayer)
+                {
+                    boxSize += IsoStream.CalculateClassSize(CelpBWSenhHeader); // CelpBWSenhHeader
+                }
+
+                else
+                {
+                    boxSize += 2; // CELPBRSid
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ER_SC_CelpHeader(samplingFrequencyIndex)
+    {
+      uimsbf(1) ExcitationMode;
+      uimsbf(1) SampleRateMode;
+      uimsbf(1) FineRateControl;
+      uimsbf(1) SilenceCompression;
+      if (ExcitationMode == RPE) {
+        uimsbf(3) RPE_Configuration;
+      }
+      if (ExcitationMode == MPE) {
+        uimsbf(5) MPE_Configuration;
+        uimsbf(2) NumEnhLayers;
+        uimsbf(1) BandwidthScalabilityMode;
+      }
+    }
+
+    */
+    public class ER_SC_CelpHeader
+    {
+
+
+        protected bool ExcitationMode;
+        public bool _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
+
+        protected bool SampleRateMode;
+        public bool _SampleRateMode { get { return this.SampleRateMode; } set { this.SampleRateMode = value; } }
+
+        protected bool FineRateControl;
+        public bool _FineRateControl { get { return this.FineRateControl; } set { this.FineRateControl = value; } }
+
+        protected bool SilenceCompression;
+        public bool _SilenceCompression { get { return this.SilenceCompression; } set { this.SilenceCompression = value; } }
+
+        protected byte RPE_Configuration;
+        public byte RPEConfiguration { get { return this.RPE_Configuration; } set { this.RPE_Configuration = value; } }
+
+        protected byte MPE_Configuration;
+        public byte MPEConfiguration { get { return this.MPE_Configuration; } set { this.MPE_Configuration = value; } }
+
+        protected byte NumEnhLayers;
+        public byte _NumEnhLayers { get { return this.NumEnhLayers; } set { this.NumEnhLayers = value; } }
+
+        protected bool BandwidthScalabilityMode;
+        public bool _BandwidthScalabilityMode { get { return this.BandwidthScalabilityMode; } set { this.BandwidthScalabilityMode = value; } }
+
+        public ER_SC_CelpHeader()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            const bool RPE = true;
+
+            const bool MPE = false;
+
+            boxSize += stream.ReadUimsbf(out this.ExcitationMode);
+            boxSize += stream.ReadUimsbf(out this.SampleRateMode);
+            boxSize += stream.ReadUimsbf(out this.FineRateControl);
+            boxSize += stream.ReadUimsbf(out this.SilenceCompression);
+
+            if (ExcitationMode == RPE)
+            {
+                boxSize += stream.ReadUimsbf(3, out this.RPE_Configuration);
+            }
+
+            if (ExcitationMode == MPE)
+            {
+                boxSize += stream.ReadUimsbf(5, out this.MPE_Configuration);
+                boxSize += stream.ReadUimsbf(2, out this.NumEnhLayers);
+                boxSize += stream.ReadUimsbf(out this.BandwidthScalabilityMode);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            const bool RPE = true;
+
+            const bool MPE = false;
+
+            boxSize += stream.WriteUimsbf(this.ExcitationMode);
+            boxSize += stream.WriteUimsbf(this.SampleRateMode);
+            boxSize += stream.WriteUimsbf(this.FineRateControl);
+            boxSize += stream.WriteUimsbf(this.SilenceCompression);
+
+            if (ExcitationMode == RPE)
+            {
+                boxSize += stream.WriteUimsbf(3, this.RPE_Configuration);
+            }
+
+            if (ExcitationMode == MPE)
+            {
+                boxSize += stream.WriteUimsbf(5, this.MPE_Configuration);
+                boxSize += stream.WriteUimsbf(2, this.NumEnhLayers);
+                boxSize += stream.WriteUimsbf(this.BandwidthScalabilityMode);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            const bool RPE = true;
+
+            const bool MPE = false;
+
+            boxSize += 1; // ExcitationMode
+            boxSize += 1; // SampleRateMode
+            boxSize += 1; // FineRateControl
+            boxSize += 1; // SilenceCompression
+
+            if (ExcitationMode == RPE)
+            {
+                boxSize += 3; // RPE_Configuration
+            }
+
+            if (ExcitationMode == MPE)
+            {
+                boxSize += 5; // MPE_Configuration
+                boxSize += 2; // NumEnhLayers
+                boxSize += 1; // BandwidthScalabilityMode
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ErrorResilientHvxcSpecificConfig() {
+      uimsbf(1) isBaseLayer;
+      if (isBaseLayer) {
+        ErHVXCconfig();
+      }
+    }
+
+    */
+    public class ErrorResilientHvxcSpecificConfig
+    {
+
+
+        protected bool isBaseLayer;
+        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
+
+        protected ErHVXCconfig ErHVXCconfig;
+        public ErHVXCconfig _ErHVXCconfig { get { return this.ErHVXCconfig; } set { this.ErHVXCconfig = value; } }
+
+        public ErrorResilientHvxcSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
+
+            if (isBaseLayer)
+            {
+                boxSize += stream.ReadClass(out this.ErHVXCconfig);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(this.isBaseLayer);
+
+            if (isBaseLayer)
+            {
+                boxSize += stream.WriteClass(this.ErHVXCconfig);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // isBaseLayer
+
+            if (isBaseLayer)
+            {
+                boxSize += IsoStream.CalculateClassSize(ErHVXCconfig); // ErHVXCconfig
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ErHVXCconfig()
+    {
+      uimsbf(1) HVXCvarMode;
+      uimsbf(2) HVXCrateMode;
+      uimsbf(1) extensionFlag;
+      if (extensionFlag) {
+        uimsbf(1) var_ScalableFlag;
+      }
+    }
+
+    */
+    public class ErHVXCconfig
+    {
+
+
+        protected bool HVXCvarMode;
+        public bool _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
+
+        protected byte HVXCrateMode;
+        public byte _HVXCrateMode { get { return this.HVXCrateMode; } set { this.HVXCrateMode = value; } }
+
+        protected bool extensionFlag;
+        public bool ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
+
+        protected bool var_ScalableFlag;
+        public bool VarScalableFlag { get { return this.var_ScalableFlag; } set { this.var_ScalableFlag = value; } }
+
+        public ErHVXCconfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(out this.HVXCvarMode);
+            boxSize += stream.ReadUimsbf(2, out this.HVXCrateMode);
+            boxSize += stream.ReadUimsbf(out this.extensionFlag);
+
+            if (extensionFlag)
+            {
+                boxSize += stream.ReadUimsbf(out this.var_ScalableFlag);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(this.HVXCvarMode);
+            boxSize += stream.WriteUimsbf(2, this.HVXCrateMode);
+            boxSize += stream.WriteUimsbf(this.extensionFlag);
+
+            if (extensionFlag)
+            {
+                boxSize += stream.WriteUimsbf(this.var_ScalableFlag);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // HVXCvarMode
+            boxSize += 2; // HVXCrateMode
+            boxSize += 1; // extensionFlag
+
+            if (extensionFlag)
+            {
+                boxSize += 1; // var_ScalableFlag
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ParametricSpecificConfig()
+    {
+      uimsbf(1) isBaseLayer;
+      if (isBaseLayer) {
+        PARAconfig();
+      }
+      else {
+        HILNenexConfig();
+      }
+    }
+
+    */
+    public class ParametricSpecificConfig
+    {
+
+
+        protected bool isBaseLayer;
+        public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
+
+        protected PARAconfig PARAconfig;
+        public PARAconfig _PARAconfig { get { return this.PARAconfig; } set { this.PARAconfig = value; } }
+
+        protected HILNenexConfig HILNenexConfig;
+        public HILNenexConfig _HILNenexConfig { get { return this.HILNenexConfig; } set { this.HILNenexConfig = value; } }
+
+        public ParametricSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
+
+            if (isBaseLayer)
+            {
+                boxSize += stream.ReadClass(out this.PARAconfig);
+            }
+
+            else
+            {
+                boxSize += stream.ReadClass(out this.HILNenexConfig);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(this.isBaseLayer);
+
+            if (isBaseLayer)
+            {
+                boxSize += stream.WriteClass(this.PARAconfig);
+            }
+
+            else
+            {
+                boxSize += stream.WriteClass(this.HILNenexConfig);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // isBaseLayer
+
+            if (isBaseLayer)
+            {
+                boxSize += IsoStream.CalculateClassSize(PARAconfig); // PARAconfig
+            }
+
+            else
+            {
+                boxSize += IsoStream.CalculateClassSize(HILNenexConfig); // HILNenexConfig
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class PARAconfig()
+    {
+      uimsbf(2) PARAmode;
+      if (PARAmode != 1) {
+        ErHVXCconfig();
+      }
+      if (PARAmode != 0) {
+        HILNconfig();
+      }
+      uimsbf(1) PARAextensionFlag;
+      if (PARAextensionFlag) {
+        /* to be defined in MPEG-4 Phase 3 *//*
+      }
+    }
+
+    */
+    public class PARAconfig
+    {
+
+
+        protected byte PARAmode;
+        public byte _PARAmode { get { return this.PARAmode; } set { this.PARAmode = value; } }
+
+        protected ErHVXCconfig ErHVXCconfig;
+        public ErHVXCconfig _ErHVXCconfig { get { return this.ErHVXCconfig; } set { this.ErHVXCconfig = value; } }
+
+        protected HILNconfig HILNconfig;
+        public HILNconfig _HILNconfig { get { return this.HILNconfig; } set { this.HILNconfig = value; } }
+
+        protected bool PARAextensionFlag;
+        public bool _PARAextensionFlag { get { return this.PARAextensionFlag; } set { this.PARAextensionFlag = value; } }
+
+        public PARAconfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(2, out this.PARAmode);
+
+            if (PARAmode != 1)
+            {
+                boxSize += stream.ReadClass(out this.ErHVXCconfig);
+            }
+
+            if (PARAmode != 0)
+            {
+                boxSize += stream.ReadClass(out this.HILNconfig);
+            }
+            boxSize += stream.ReadUimsbf(out this.PARAextensionFlag);
+
+            if (PARAextensionFlag)
+            {
+                /*  to be defined in MPEG-4 Phase 3  */
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(2, this.PARAmode);
+
+            if (PARAmode != 1)
+            {
+                boxSize += stream.WriteClass(this.ErHVXCconfig);
+            }
+
+            if (PARAmode != 0)
+            {
+                boxSize += stream.WriteClass(this.HILNconfig);
+            }
+            boxSize += stream.WriteUimsbf(this.PARAextensionFlag);
+
+            if (PARAextensionFlag)
+            {
+                /*  to be defined in MPEG-4 Phase 3  */
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 2; // PARAmode
+
+            if (PARAmode != 1)
+            {
+                boxSize += IsoStream.CalculateClassSize(ErHVXCconfig); // ErHVXCconfig
+            }
+
+            if (PARAmode != 0)
+            {
+                boxSize += IsoStream.CalculateClassSize(HILNconfig); // HILNconfig
+            }
+            boxSize += 1; // PARAextensionFlag
+
+            if (PARAextensionFlag)
+            {
+                /*  to be defined in MPEG-4 Phase 3  */
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HILNconfig()
+    {
+      uimsbf(1) HILNquantMode;
+      uimsbf(8) HILNmaxNumLine;
+      uimsbf(4) HILNsampleRateCode;
+      uimsbf(12) HILNframeLength;
+      uimsbf(2) HILNcontMode;
+    }
+
+    */
+    public class HILNconfig
+    {
+
+
+        protected bool HILNquantMode;
+        public bool _HILNquantMode { get { return this.HILNquantMode; } set { this.HILNquantMode = value; } }
+
+        protected byte HILNmaxNumLine;
+        public byte _HILNmaxNumLine { get { return this.HILNmaxNumLine; } set { this.HILNmaxNumLine = value; } }
+
+        protected byte HILNsampleRateCode;
+        public byte _HILNsampleRateCode { get { return this.HILNsampleRateCode; } set { this.HILNsampleRateCode = value; } }
+
+        protected ushort HILNframeLength;
+        public ushort _HILNframeLength { get { return this.HILNframeLength; } set { this.HILNframeLength = value; } }
+
+        protected byte HILNcontMode;
+        public byte _HILNcontMode { get { return this.HILNcontMode; } set { this.HILNcontMode = value; } }
+
+        public HILNconfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(out this.HILNquantMode);
+            boxSize += stream.ReadUimsbf(8, out this.HILNmaxNumLine);
+            boxSize += stream.ReadUimsbf(4, out this.HILNsampleRateCode);
+            boxSize += stream.ReadUimsbf(12, out this.HILNframeLength);
+            boxSize += stream.ReadUimsbf(2, out this.HILNcontMode);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(this.HILNquantMode);
+            boxSize += stream.WriteUimsbf(8, this.HILNmaxNumLine);
+            boxSize += stream.WriteUimsbf(4, this.HILNsampleRateCode);
+            boxSize += stream.WriteUimsbf(12, this.HILNframeLength);
+            boxSize += stream.WriteUimsbf(2, this.HILNcontMode);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // HILNquantMode
+            boxSize += 8; // HILNmaxNumLine
+            boxSize += 4; // HILNsampleRateCode
+            boxSize += 12; // HILNframeLength
+            boxSize += 2; // HILNcontMode
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HILNenexConfig()
+    {
+      uimsbf(1) HILNenhaLayer;
+      if (HILNenhaLayer) {
+        uimsbf(2) HILNenhaQuantMode;
+      }
+    }
+
+    */
+    public class HILNenexConfig
+    {
+
+
+        protected bool HILNenhaLayer;
+        public bool _HILNenhaLayer { get { return this.HILNenhaLayer; } set { this.HILNenhaLayer = value; } }
+
+        protected byte HILNenhaQuantMode;
+        public byte _HILNenhaQuantMode { get { return this.HILNenhaQuantMode; } set { this.HILNenhaQuantMode = value; } }
+
+        public HILNenexConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(out this.HILNenhaLayer);
+
+            if (HILNenhaLayer)
+            {
+                boxSize += stream.ReadUimsbf(2, out this.HILNenhaQuantMode);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(this.HILNenhaLayer);
+
+            if (HILNenhaLayer)
+            {
+                boxSize += stream.WriteUimsbf(2, this.HILNenhaQuantMode);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // HILNenhaLayer
+
+            if (HILNenhaLayer)
+            {
+                boxSize += 2; // HILNenhaQuantMode
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class SSCSpecificConfig(channelConfiguration)
+    {
+      uimsbf(2) decoder_level;
+      uimsbf(4) update_rate;
+      uimsbf(2) synthesis_method;
+      if (channelConfiguration != 1) {
+        uimsbf(2) mode_ext;
+        if ((channelConfiguration == 2) && (mode_ext == 1)) {
+          uimsbf(2) reserved;
+        }
+      }
+    }
+
+    */
+    public class SSCSpecificConfig
+    {
+
+
+        protected byte decoder_level;
+        public byte DecoderLevel { get { return this.decoder_level; } set { this.decoder_level = value; } }
+
+        protected byte update_rate;
+        public byte UpdateRate { get { return this.update_rate; } set { this.update_rate = value; } }
+
+        protected byte synthesis_method;
+        public byte SynthesisMethod { get { return this.synthesis_method; } set { this.synthesis_method = value; } }
+
+        protected byte mode_ext;
+        public byte ModeExt { get { return this.mode_ext; } set { this.mode_ext = value; } }
+
+        protected byte reserved;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        public SSCSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            int channelConfiguration = 0; // TODO: pass through ctor
+
+            boxSize += stream.ReadUimsbf(2, out this.decoder_level);
+            boxSize += stream.ReadUimsbf(4, out this.update_rate);
+            boxSize += stream.ReadUimsbf(2, out this.synthesis_method);
+
+            if (channelConfiguration != 1)
+            {
+                boxSize += stream.ReadUimsbf(2, out this.mode_ext);
+
+                if ((channelConfiguration == 2) && (mode_ext == 1))
+                {
+                    boxSize += stream.ReadUimsbf(2, out this.reserved);
+                }
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            int channelConfiguration = 0; // TODO: pass through ctor
+
+            boxSize += stream.WriteUimsbf(2, this.decoder_level);
+            boxSize += stream.WriteUimsbf(4, this.update_rate);
+            boxSize += stream.WriteUimsbf(2, this.synthesis_method);
+
+            if (channelConfiguration != 1)
+            {
+                boxSize += stream.WriteUimsbf(2, this.mode_ext);
+
+                if ((channelConfiguration == 2) && (mode_ext == 1))
+                {
+                    boxSize += stream.WriteUimsbf(2, this.reserved);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            int channelConfiguration = 0; // TODO: pass through ctor
+
+            boxSize += 2; // decoder_level
+            boxSize += 4; // update_rate
+            boxSize += 2; // synthesis_method
+
+            if (channelConfiguration != 1)
+            {
+                boxSize += 2; // mode_ext
+
+                if ((channelConfiguration == 2) && (mode_ext == 1))
+                {
+                    boxSize += 2; // reserved
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MPEG_1_2_SpecificConfig()
+    {
+      bslbf(1) extension;
+    }
+
+    */
+    public class MPEG_1_2_SpecificConfig
+    {
+
+
+        protected bool extension;
+        public bool Extension { get { return this.extension; } set { this.extension = value; } }
+
+        public MPEG_1_2_SpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadBslbf(out this.extension);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteBslbf(this.extension);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // extension
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class DSTSpecificConfig(channelConfiguration) {
+      uimsbf(1) DSDDST_Coded;
+      uimsbf(14) N_Channels;
+      uimsbf(1) reserved;
+    }
+
+    */
+    public class DSTSpecificConfig
+    {
+
+
+        protected bool DSDDST_Coded;
+        public bool DSDDSTCoded { get { return this.DSDDST_Coded; } set { this.DSDDST_Coded = value; } }
+
+        protected ushort N_Channels;
+        public ushort NChannels { get { return this.N_Channels; } set { this.N_Channels = value; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        public DSTSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(out this.DSDDST_Coded);
+            boxSize += stream.ReadUimsbf(14, out this.N_Channels);
+            boxSize += stream.ReadUimsbf(out this.reserved);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(this.DSDDST_Coded);
+            boxSize += stream.WriteUimsbf(14, this.N_Channels);
+            boxSize += stream.WriteUimsbf(this.reserved);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // DSDDST_Coded
+            boxSize += 14; // N_Channels
+            boxSize += 1; // reserved
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ALSSpecificConfig()
+    {
+      uimsbf(32) als_id;
+      uimsbf(32) samp_freq;
+      uimsbf(32) samples;
+      uimsbf(16) channels;
+      uimsbf(3) file_type;
+      uimsbf(3) resolution;
+      uimsbf(1) floating;
+      uimsbf(1) msb_first;
+      uimsbf(16) frame_length;
+      uimsbf(8) random_access;
+      uimsbf(2) ra_flag;
+      uimsbf(1) adapt_order;
+      uimsbf(2) coef_table;
+      uimsbf(1) long_term_prediction;
+      uimsbf(10) max_order;
+      uimsbf(2) block_switching;
+      uimsbf(1) bgmc_mode;
+      uimsbf(1) sb_part;
+      uimsbf(1) joint_stereo;
+      uimsbf(1) mc_coding;
+      uimsbf(1) chan_config;
+      uimsbf(1) chan_sort;
+      uimsbf(1) crc_enabled;
+      uimsbf(1) RLSLMS;
+      uimsbf(5) reserved;
+      uimsbf(1) aux_data_enabled;
+      if (chan_config) {
+        uimsbf(16) chan_config_info;
+      }
+      if (chan_sort) {
+        for (c = 0; c <= channels; c++)
+          uimsbf(1) chan_pos[c]; // 1..16 uimsbf 
+      }
+      bslbf(1) byte_align; // TODO: 0..7 bslbf 
+      uimsbf(32) header_size;
+      uimsbf(32) trailer_size;
+      bslbf(header_size * 8) orig_header[];
+      bslbf(trailer_size * 8) orig_trailer[];
+      if (crc_enabled) {
+        uimsbf(32) crc;
+      }
+      if ((ra_flag == 2) && (random_access > 0)) {
+        for (f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++) {
+          uimsbf(32) ra_unit_size[f];
+        }
+      }
+      if (aux_data_enabled) {
+        uimsbf(32) aux_size;
+        bslbf(aux_size * 8) aux_data[];
+      }
+    }
+
+    */
+    public class ALSSpecificConfig
+    {
+
+
+        protected uint als_id;
+        public uint AlsId { get { return this.als_id; } set { this.als_id = value; } }
+
+        protected uint samp_freq;
+        public uint SampFreq { get { return this.samp_freq; } set { this.samp_freq = value; } }
+
+        protected uint samples;
+        public uint Samples { get { return this.samples; } set { this.samples = value; } }
+
+        protected ushort channels;
+        public ushort Channels { get { return this.channels; } set { this.channels = value; } }
+
+        protected byte file_type;
+        public byte FileType { get { return this.file_type; } set { this.file_type = value; } }
+
+        protected byte resolution;
+        public byte Resolution { get { return this.resolution; } set { this.resolution = value; } }
+
+        protected bool floating;
+        public bool Floating { get { return this.floating; } set { this.floating = value; } }
+
+        protected bool msb_first;
+        public bool MsbFirst { get { return this.msb_first; } set { this.msb_first = value; } }
+
+        protected ushort frame_length;
+        public ushort FrameLength { get { return this.frame_length; } set { this.frame_length = value; } }
+
+        protected byte random_access;
+        public byte RandomAccess { get { return this.random_access; } set { this.random_access = value; } }
+
+        protected byte ra_flag;
+        public byte RaFlag { get { return this.ra_flag; } set { this.ra_flag = value; } }
+
+        protected bool adapt_order;
+        public bool AdaptOrder { get { return this.adapt_order; } set { this.adapt_order = value; } }
+
+        protected byte coef_table;
+        public byte CoefTable { get { return this.coef_table; } set { this.coef_table = value; } }
+
+        protected bool long_term_prediction;
+        public bool LongTermPrediction { get { return this.long_term_prediction; } set { this.long_term_prediction = value; } }
+
+        protected ushort max_order;
+        public ushort MaxOrder { get { return this.max_order; } set { this.max_order = value; } }
+
+        protected byte block_switching;
+        public byte BlockSwitching { get { return this.block_switching; } set { this.block_switching = value; } }
+
+        protected bool bgmc_mode;
+        public bool BgmcMode { get { return this.bgmc_mode; } set { this.bgmc_mode = value; } }
+
+        protected bool sb_part;
+        public bool SbPart { get { return this.sb_part; } set { this.sb_part = value; } }
+
+        protected bool joint_stereo;
+        public bool JointStereo { get { return this.joint_stereo; } set { this.joint_stereo = value; } }
+
+        protected bool mc_coding;
+        public bool McCoding { get { return this.mc_coding; } set { this.mc_coding = value; } }
+
+        protected bool chan_config;
+        public bool ChanConfig { get { return this.chan_config; } set { this.chan_config = value; } }
+
+        protected bool chan_sort;
+        public bool ChanSort { get { return this.chan_sort; } set { this.chan_sort = value; } }
+
+        protected bool crc_enabled;
+        public bool CrcEnabled { get { return this.crc_enabled; } set { this.crc_enabled = value; } }
+
+        protected bool RLSLMS;
+        public bool _RLSLMS { get { return this.RLSLMS; } set { this.RLSLMS = value; } }
+
+        protected byte reserved;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool aux_data_enabled;
+        public bool AuxDataEnabled { get { return this.aux_data_enabled; } set { this.aux_data_enabled = value; } }
+
+        protected ushort chan_config_info;
+        public ushort ChanConfigInfo { get { return this.chan_config_info; } set { this.chan_config_info = value; } }
+
+        protected bool[] chan_pos;  //  1..16 uimsbf 
+        public bool[] ChanPos { get { return this.chan_pos; } set { this.chan_pos = value; } }
+
+        protected bool byte_align;  //  TODO: 0..7 bslbf 
+        public bool ByteAlign { get { return this.byte_align; } set { this.byte_align = value; } }
+
+        protected uint header_size;
+        public uint HeaderSize { get { return this.header_size; } set { this.header_size = value; } }
+
+        protected uint trailer_size;
+        public uint TrailerSize { get { return this.trailer_size; } set { this.trailer_size = value; } }
+
+        protected byte[] orig_header;
+        public byte[] OrigHeader { get { return this.orig_header; } set { this.orig_header = value; } }
+
+        protected byte[] orig_trailer;
+        public byte[] OrigTrailer { get { return this.orig_trailer; } set { this.orig_trailer = value; } }
+
+        protected uint crc;
+        public uint Crc { get { return this.crc; } set { this.crc = value; } }
+
+        protected uint[] ra_unit_size;
+        public uint[] RaUnitSize { get { return this.ra_unit_size; } set { this.ra_unit_size = value; } }
+
+        protected uint aux_size;
+        public uint AuxSize { get { return this.aux_size; } set { this.aux_size = value; } }
+
+        protected byte[] aux_data;
+        public byte[] AuxData { get { return this.aux_data; } set { this.aux_data = value; } }
+
+        public ALSSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(32, out this.als_id);
+            boxSize += stream.ReadUimsbf(32, out this.samp_freq);
+            boxSize += stream.ReadUimsbf(32, out this.samples);
+            boxSize += stream.ReadUimsbf(16, out this.channels);
+            boxSize += stream.ReadUimsbf(3, out this.file_type);
+            boxSize += stream.ReadUimsbf(3, out this.resolution);
+            boxSize += stream.ReadUimsbf(out this.floating);
+            boxSize += stream.ReadUimsbf(out this.msb_first);
+            boxSize += stream.ReadUimsbf(16, out this.frame_length);
+            boxSize += stream.ReadUimsbf(8, out this.random_access);
+            boxSize += stream.ReadUimsbf(2, out this.ra_flag);
+            boxSize += stream.ReadUimsbf(out this.adapt_order);
+            boxSize += stream.ReadUimsbf(2, out this.coef_table);
+            boxSize += stream.ReadUimsbf(out this.long_term_prediction);
+            boxSize += stream.ReadUimsbf(10, out this.max_order);
+            boxSize += stream.ReadUimsbf(2, out this.block_switching);
+            boxSize += stream.ReadUimsbf(out this.bgmc_mode);
+            boxSize += stream.ReadUimsbf(out this.sb_part);
+            boxSize += stream.ReadUimsbf(out this.joint_stereo);
+            boxSize += stream.ReadUimsbf(out this.mc_coding);
+            boxSize += stream.ReadUimsbf(out this.chan_config);
+            boxSize += stream.ReadUimsbf(out this.chan_sort);
+            boxSize += stream.ReadUimsbf(out this.crc_enabled);
+            boxSize += stream.ReadUimsbf(out this.RLSLMS);
+            boxSize += stream.ReadUimsbf(5, out this.reserved);
+            boxSize += stream.ReadUimsbf(out this.aux_data_enabled);
+
+            if (chan_config)
+            {
+                boxSize += stream.ReadUimsbf(16, out this.chan_config_info);
+            }
+
+            if (chan_sort)
+            {
+
+                for (int c = 0; c <= channels; c++)
+                {
+                    boxSize += stream.ReadUimsbf(out this.chan_pos[c]); // 1..16 uimsbf 
+                }
+            }
+            boxSize += stream.ReadBslbf(out this.byte_align); // TODO: 0..7 bslbf 
+            boxSize += stream.ReadUimsbf(32, out this.header_size);
+            boxSize += stream.ReadUimsbf(32, out this.trailer_size);
+            boxSize += stream.ReadBslbf(header_size * 8, out this.orig_header);
+            boxSize += stream.ReadBslbf(trailer_size * 8, out this.orig_trailer);
+
+            if (crc_enabled)
+            {
+                boxSize += stream.ReadUimsbf(32, out this.crc);
+            }
+
+            if ((ra_flag == 2) && (random_access > 0))
+            {
+
+                for (int f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++)
+                {
+                    boxSize += stream.ReadUimsbf(32, out this.ra_unit_size[f]);
+                }
+            }
+
+            if (aux_data_enabled)
+            {
+                boxSize += stream.ReadUimsbf(32, out this.aux_size);
+                boxSize += stream.ReadBslbf(aux_size * 8, out this.aux_data);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(32, this.als_id);
+            boxSize += stream.WriteUimsbf(32, this.samp_freq);
+            boxSize += stream.WriteUimsbf(32, this.samples);
+            boxSize += stream.WriteUimsbf(16, this.channels);
+            boxSize += stream.WriteUimsbf(3, this.file_type);
+            boxSize += stream.WriteUimsbf(3, this.resolution);
+            boxSize += stream.WriteUimsbf(this.floating);
+            boxSize += stream.WriteUimsbf(this.msb_first);
+            boxSize += stream.WriteUimsbf(16, this.frame_length);
+            boxSize += stream.WriteUimsbf(8, this.random_access);
+            boxSize += stream.WriteUimsbf(2, this.ra_flag);
+            boxSize += stream.WriteUimsbf(this.adapt_order);
+            boxSize += stream.WriteUimsbf(2, this.coef_table);
+            boxSize += stream.WriteUimsbf(this.long_term_prediction);
+            boxSize += stream.WriteUimsbf(10, this.max_order);
+            boxSize += stream.WriteUimsbf(2, this.block_switching);
+            boxSize += stream.WriteUimsbf(this.bgmc_mode);
+            boxSize += stream.WriteUimsbf(this.sb_part);
+            boxSize += stream.WriteUimsbf(this.joint_stereo);
+            boxSize += stream.WriteUimsbf(this.mc_coding);
+            boxSize += stream.WriteUimsbf(this.chan_config);
+            boxSize += stream.WriteUimsbf(this.chan_sort);
+            boxSize += stream.WriteUimsbf(this.crc_enabled);
+            boxSize += stream.WriteUimsbf(this.RLSLMS);
+            boxSize += stream.WriteUimsbf(5, this.reserved);
+            boxSize += stream.WriteUimsbf(this.aux_data_enabled);
+
+            if (chan_config)
+            {
+                boxSize += stream.WriteUimsbf(16, this.chan_config_info);
+            }
+
+            if (chan_sort)
+            {
+
+                for (int c = 0; c <= channels; c++)
+                {
+                    boxSize += stream.WriteUimsbf(this.chan_pos[c]); // 1..16 uimsbf 
+                }
+            }
+            boxSize += stream.WriteBslbf(this.byte_align); // TODO: 0..7 bslbf 
+            boxSize += stream.WriteUimsbf(32, this.header_size);
+            boxSize += stream.WriteUimsbf(32, this.trailer_size);
+            boxSize += stream.WriteBslbf(header_size * 8, this.orig_header);
+            boxSize += stream.WriteBslbf(trailer_size * 8, this.orig_trailer);
+
+            if (crc_enabled)
+            {
+                boxSize += stream.WriteUimsbf(32, this.crc);
+            }
+
+            if ((ra_flag == 2) && (random_access > 0))
+            {
+
+                for (int f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++)
+                {
+                    boxSize += stream.WriteUimsbf(32, this.ra_unit_size[f]);
+                }
+            }
+
+            if (aux_data_enabled)
+            {
+                boxSize += stream.WriteUimsbf(32, this.aux_size);
+                boxSize += stream.WriteBslbf(aux_size * 8, this.aux_data);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 32; // als_id
+            boxSize += 32; // samp_freq
+            boxSize += 32; // samples
+            boxSize += 16; // channels
+            boxSize += 3; // file_type
+            boxSize += 3; // resolution
+            boxSize += 1; // floating
+            boxSize += 1; // msb_first
+            boxSize += 16; // frame_length
+            boxSize += 8; // random_access
+            boxSize += 2; // ra_flag
+            boxSize += 1; // adapt_order
+            boxSize += 2; // coef_table
+            boxSize += 1; // long_term_prediction
+            boxSize += 10; // max_order
+            boxSize += 2; // block_switching
+            boxSize += 1; // bgmc_mode
+            boxSize += 1; // sb_part
+            boxSize += 1; // joint_stereo
+            boxSize += 1; // mc_coding
+            boxSize += 1; // chan_config
+            boxSize += 1; // chan_sort
+            boxSize += 1; // crc_enabled
+            boxSize += 1; // RLSLMS
+            boxSize += 5; // reserved
+            boxSize += 1; // aux_data_enabled
+
+            if (chan_config)
+            {
+                boxSize += 16; // chan_config_info
+            }
+
+            if (chan_sort)
+            {
+
+                for (int c = 0; c <= channels; c++)
+                {
+                    boxSize += 1; // chan_pos
+                }
+            }
+            boxSize += 1; // byte_align
+            boxSize += 32; // header_size
+            boxSize += 32; // trailer_size
+            boxSize += header_size * 8; // orig_header
+            boxSize += trailer_size * 8; // orig_trailer
+
+            if (crc_enabled)
+            {
+                boxSize += 32; // crc
+            }
+
+            if ((ra_flag == 2) && (random_access > 0))
+            {
+
+                for (int f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++)
+                {
+                    boxSize += 32; // ra_unit_size
+                }
+            }
+
+            if (aux_data_enabled)
+            {
+                boxSize += 32; // aux_size
+                boxSize += aux_size * 8; // aux_data
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class SLSSpecificConfig(samplingFrequencyIndex,
+      channelConfiguration,
+      audioObjectType)
+    {
+      uimsbf(3) pcmWordLength;
+      uimsbf(1) aac_core_present;
+      uimsbf(1) lle_main_stream;
+      uimsbf(1) reserved_bit;
+      uimsbf(3) frameLength;
+      if (!channelConfiguration) {
+        program_config_element();
+      }
+    }
+
+    */
+    public class SLSSpecificConfig
+    {
+
+
+        protected byte pcmWordLength;
+        public byte PcmWordLength { get { return this.pcmWordLength; } set { this.pcmWordLength = value; } }
+
+        protected bool aac_core_present;
+        public bool AacCorePresent { get { return this.aac_core_present; } set { this.aac_core_present = value; } }
+
+        protected bool lle_main_stream;
+        public bool LleMainStream { get { return this.lle_main_stream; } set { this.lle_main_stream = value; } }
+
+        protected bool reserved_bit;
+        public bool ReservedBit { get { return this.reserved_bit; } set { this.reserved_bit = value; } }
+
+        protected byte frameLength;
+        public byte FrameLength { get { return this.frameLength; } set { this.frameLength = value; } }
+
+        protected program_config_element program_config_element;
+        public program_config_element ProgramConfigElement { get { return this.program_config_element; } set { this.program_config_element = value; } }
+
+        public SLSSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
+            boxSize += stream.ReadUimsbf(3, out this.pcmWordLength);
+            boxSize += stream.ReadUimsbf(out this.aac_core_present);
+            boxSize += stream.ReadUimsbf(out this.lle_main_stream);
+            boxSize += stream.ReadUimsbf(out this.reserved_bit);
+            boxSize += stream.ReadUimsbf(3, out this.frameLength);
+
+            if (channelConfiguration == 0)
+            {
+                boxSize += stream.ReadClass(out this.program_config_element);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
+            boxSize += stream.WriteUimsbf(3, this.pcmWordLength);
+            boxSize += stream.WriteUimsbf(this.aac_core_present);
+            boxSize += stream.WriteUimsbf(this.lle_main_stream);
+            boxSize += stream.WriteUimsbf(this.reserved_bit);
+            boxSize += stream.WriteUimsbf(3, this.frameLength);
+
+            if (channelConfiguration == 0)
+            {
+                boxSize += stream.WriteClass(this.program_config_element);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            byte channelConfiguration = 0; // TODO: pass through ctor
+
+            boxSize += 3; // pcmWordLength
+            boxSize += 1; // aac_core_present
+            boxSize += 1; // lle_main_stream
+            boxSize += 1; // reserved_bit
+            boxSize += 3; // frameLength
+
+            if (channelConfiguration == 0)
+            {
+                boxSize += IsoStream.CalculateClassSize(program_config_element); // program_config_element
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ELDSpecificConfig(channelConfiguration)
+    {
+      bslbf(1) frameLengthFlag;
+      bslbf(1) aacSectionDataResilienceFlag;
+      bslbf(1) aacScalefactorDataResilienceFlag;
+      bslbf(1) aacSpectralDataResilienceFlag;
+
+      bslbf(1) ldSbrPresentFlag;
+      if (ldSbrPresentFlag) {
+        bslbf(1) ldSbrSamplingRate;
+        bslbf(1) ldSbrCrcFlag;
+        ld_sbr_header(channelConfiguration);
+      }
+
+      bslbf(4) eldExtType;
+    while (eldExtType != ELDEXT_TERM) {
+        uimsbf(4) eldExtLen;
+        len = eldExtLen;
+        if (eldExtLen == 15) {
+          uimsbf(8) eldExtLenAdd;
+          len += eldExtLenAdd;
+        }
+        if (eldExtLenAdd == 255) {
+          uimsbf(16) eldExtLenAddAdd;
+          len += eldExtLenAddAdd;
+        }
+        switch (eldExtType) {
+          /* add future eld extension configs here *//*
+          default:
+            int cntt;
+            for (cnt = 0; cnt < len; cnt++) {
+               uimsbf(8) other_byte;
+            }
+            break;
+        }
+    bslbf(4) eldExtType;
+      }
+    }
+
+    */
+    public class ELDSpecificConfig
+    {
+
+
+        protected bool frameLengthFlag;
+        public bool FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
+
+        protected bool aacSectionDataResilienceFlag;
+        public bool AacSectionDataResilienceFlag { get { return this.aacSectionDataResilienceFlag; } set { this.aacSectionDataResilienceFlag = value; } }
+
+        protected bool aacScalefactorDataResilienceFlag;
+        public bool AacScalefactorDataResilienceFlag { get { return this.aacScalefactorDataResilienceFlag; } set { this.aacScalefactorDataResilienceFlag = value; } }
+
+        protected bool aacSpectralDataResilienceFlag;
+        public bool AacSpectralDataResilienceFlag { get { return this.aacSpectralDataResilienceFlag; } set { this.aacSpectralDataResilienceFlag = value; } }
+
+        protected bool ldSbrPresentFlag;
+        public bool LdSbrPresentFlag { get { return this.ldSbrPresentFlag; } set { this.ldSbrPresentFlag = value; } }
+
+        protected bool ldSbrSamplingRate;
+        public bool LdSbrSamplingRate { get { return this.ldSbrSamplingRate; } set { this.ldSbrSamplingRate = value; } }
+
+        protected bool ldSbrCrcFlag;
+        public bool LdSbrCrcFlag { get { return this.ldSbrCrcFlag; } set { this.ldSbrCrcFlag = value; } }
+
+        protected ld_sbr_header ld_sbr_header;
+        public ld_sbr_header LdSbrHeader { get { return this.ld_sbr_header; } set { this.ld_sbr_header = value; } }
+
+        protected byte eldExtType;
+        public byte EldExtType { get { return this.eldExtType; } set { this.eldExtType = value; } }
+
+        protected byte eldExtLen;
+        public byte EldExtLen { get { return this.eldExtLen; } set { this.eldExtLen = value; } }
+
+        protected byte eldExtLenAdd;
+        public byte EldExtLenAdd { get { return this.eldExtLenAdd; } set { this.eldExtLenAdd = value; } }
+
+        protected ushort eldExtLenAddAdd;
+        public ushort EldExtLenAddAdd { get { return this.eldExtLenAddAdd; } set { this.eldExtLenAddAdd = value; } }
+
+        protected byte other_byte;
+        public byte OtherByte { get { return this.other_byte; } set { this.other_byte = value; } }
+
+        protected byte eldExtType0;
+        public byte EldExtType0 { get { return this.eldExtType0; } set { this.eldExtType0 = value; } }
+
+        public ELDSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            int len = 0;
+
+            const byte ELDEXT_TERM = 0;
+
+            boxSize += stream.ReadBslbf(out this.frameLengthFlag);
+            boxSize += stream.ReadBslbf(out this.aacSectionDataResilienceFlag);
+            boxSize += stream.ReadBslbf(out this.aacScalefactorDataResilienceFlag);
+            boxSize += stream.ReadBslbf(out this.aacSpectralDataResilienceFlag);
+            boxSize += stream.ReadBslbf(out this.ldSbrPresentFlag);
+
+            if (ldSbrPresentFlag)
+            {
+                boxSize += stream.ReadBslbf(out this.ldSbrSamplingRate);
+                boxSize += stream.ReadBslbf(out this.ldSbrCrcFlag);
+                boxSize += stream.ReadClass(out this.ld_sbr_header);
+            }
+            boxSize += stream.ReadBslbf(4, out this.eldExtType);
+
+            while (eldExtType != ELDEXT_TERM)
+            {
+                boxSize += stream.ReadUimsbf(4, out this.eldExtLen);
+                len = eldExtLen;
+
+                if (eldExtLen == 15)
+                {
+                    boxSize += stream.ReadUimsbf(8, out this.eldExtLenAdd);
+                    len += eldExtLenAdd;
+                }
+
+                if (eldExtLenAdd == 255)
+                {
+                    boxSize += stream.ReadUimsbf(16, out this.eldExtLenAddAdd);
+                    len += eldExtLenAddAdd;
+                }
+
+                switch (eldExtType)
+                {
+                    /*  add future eld extension configs here  */
+                    default:
+                        int cntt;
+
+                        for (int cnt = 0; cnt < len; cnt++)
+                        {
+                            boxSize += stream.ReadUimsbf(8, out this.other_byte);
+                        }
+                        break;
+                }
+                boxSize += stream.ReadBslbf(4, out this.eldExtType0);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            int len = 0;
+
+            const byte ELDEXT_TERM = 0;
+
+            boxSize += stream.WriteBslbf(this.frameLengthFlag);
+            boxSize += stream.WriteBslbf(this.aacSectionDataResilienceFlag);
+            boxSize += stream.WriteBslbf(this.aacScalefactorDataResilienceFlag);
+            boxSize += stream.WriteBslbf(this.aacSpectralDataResilienceFlag);
+            boxSize += stream.WriteBslbf(this.ldSbrPresentFlag);
+
+            if (ldSbrPresentFlag)
+            {
+                boxSize += stream.WriteBslbf(this.ldSbrSamplingRate);
+                boxSize += stream.WriteBslbf(this.ldSbrCrcFlag);
+                boxSize += stream.WriteClass(this.ld_sbr_header);
+            }
+            boxSize += stream.WriteBslbf(4, this.eldExtType);
+
+            while (eldExtType != ELDEXT_TERM)
+            {
+                boxSize += stream.WriteUimsbf(4, this.eldExtLen);
+                len = eldExtLen;
+
+                if (eldExtLen == 15)
+                {
+                    boxSize += stream.WriteUimsbf(8, this.eldExtLenAdd);
+                    len += eldExtLenAdd;
+                }
+
+                if (eldExtLenAdd == 255)
+                {
+                    boxSize += stream.WriteUimsbf(16, this.eldExtLenAddAdd);
+                    len += eldExtLenAddAdd;
+                }
+
+                switch (eldExtType)
+                {
+                    /*  add future eld extension configs here  */
+                    default:
+                        int cntt;
+
+                        for (int cnt = 0; cnt < len; cnt++)
+                        {
+                            boxSize += stream.WriteUimsbf(8, this.other_byte);
+                        }
+                        break;
+                }
+                boxSize += stream.WriteBslbf(4, this.eldExtType0);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            int len = 0;
+
+            const byte ELDEXT_TERM = 0;
+
+            boxSize += 1; // frameLengthFlag
+            boxSize += 1; // aacSectionDataResilienceFlag
+            boxSize += 1; // aacScalefactorDataResilienceFlag
+            boxSize += 1; // aacSpectralDataResilienceFlag
+            boxSize += 1; // ldSbrPresentFlag
+
+            if (ldSbrPresentFlag)
+            {
+                boxSize += 1; // ldSbrSamplingRate
+                boxSize += 1; // ldSbrCrcFlag
+                boxSize += IsoStream.CalculateClassSize(ld_sbr_header); // ld_sbr_header
+            }
+            boxSize += 4; // eldExtType
+
+            while (eldExtType != ELDEXT_TERM)
+            {
+                boxSize += 4; // eldExtLen
+                len = eldExtLen;
+
+                if (eldExtLen == 15)
+                {
+                    boxSize += 8; // eldExtLenAdd
+                    len += eldExtLenAdd;
+                }
+
+                if (eldExtLenAdd == 255)
+                {
+                    boxSize += 16; // eldExtLenAddAdd
+                    len += eldExtLenAddAdd;
+                }
+
+                switch (eldExtType)
+                {
+                    /*  add future eld extension configs here  */
+                    default:
+                        int cntt;
+
+                        for (int cnt = 0; cnt < len; cnt++)
+                        {
+                            boxSize += 8; // other_byte
+                        }
+                        break;
+                }
+                boxSize += 4; // eldExtType0
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ld_sbr_header(channelConfiguration)
+    {
+      switch (channelConfiguration) {
+        case 1:
+        case 2:
+          numSbrHeader = 1;
+          break;
+        case 3:
+          numSbrHeader = 2;
+          break;
+        case 4:
+        case 5:
+        case 6:
+          numSbrHeader = 3;
+          break;
+        case 7:
+          numSbrHeader = 4;
+          break;
+        default:
+          numSbrHeader = 0;
+          break;
+      }
+      for (el = 0; el < numSbrHeader; el++) {
+        sbr_header();
+      }
+    }
+
+    */
+    public class ld_sbr_header
+    {
+
+
+        protected sbr_header sbr_header;
+        public sbr_header SbrHeader { get { return this.sbr_header; } set { this.sbr_header = value; } }
+
+        public ld_sbr_header()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            int numSbrHeader = 0;
+
+            int channelConfiguration = 0; // TODO: pass through ctor
+
+
+            switch (channelConfiguration)
+            {
+                case 1:
+                case 2:
+                    numSbrHeader = 1;
+                    break;
+                case 3:
+                    numSbrHeader = 2;
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                    numSbrHeader = 3;
+                    break;
+                case 7:
+                    numSbrHeader = 4;
+                    break;
+                default:
+                    numSbrHeader = 0;
+                    break;
+            }
+
+            for (int el = 0; el < numSbrHeader; el++)
+            {
+                boxSize += stream.ReadClass(out this.sbr_header);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            int numSbrHeader = 0;
+
+            int channelConfiguration = 0; // TODO: pass through ctor
+
+
+            switch (channelConfiguration)
+            {
+                case 1:
+                case 2:
+                    numSbrHeader = 1;
+                    break;
+                case 3:
+                    numSbrHeader = 2;
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                    numSbrHeader = 3;
+                    break;
+                case 7:
+                    numSbrHeader = 4;
+                    break;
+                default:
+                    numSbrHeader = 0;
+                    break;
+            }
+
+            for (int el = 0; el < numSbrHeader; el++)
+            {
+                boxSize += stream.WriteClass(this.sbr_header);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            int numSbrHeader = 0;
+
+            int channelConfiguration = 0; // TODO: pass through ctor
+
+
+            switch (channelConfiguration)
+            {
+                case 1:
+                case 2:
+                    numSbrHeader = 1;
+                    break;
+                case 3:
+                    numSbrHeader = 2;
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                    numSbrHeader = 3;
+                    break;
+                case 7:
+                    numSbrHeader = 4;
+                    break;
+                default:
+                    numSbrHeader = 0;
+                    break;
+            }
+
+            for (int el = 0; el < numSbrHeader; el++)
+            {
+                boxSize += IsoStream.CalculateClassSize(sbr_header); // sbr_header
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ld_sbr_header(channelConfiguration)
+    {
+      switch (channelConfiguration) {
+        case 1:
+        case 2:
+          numSbrHeader = 1;
+          break;
+        case 3:
+          numSbrHeader = 2;
+          break;
+        case 4:
+        case 5:
+        case 6:
+          numSbrHeader = 3;
+          break;
+        case 7:
+          numSbrHeader = 4;
+          break;
+        default:
+          numSbrHeader = 0;
+          break;
+      }
+      for (el = 0; el < numSbrHeader; el++) {
+        sbr_header();
+      }
+    }
+
+    */
+    public class sbr_header
+    {
+
+
+        protected bool bs_amp_res;
+        public bool BsAmpRes { get { return this.bs_amp_res; } set { this.bs_amp_res = value; } }
+
+        protected byte bs_start_freq;
+        public byte BsStartFreq { get { return this.bs_start_freq; } set { this.bs_start_freq = value; } }
+
+        protected byte bs_stop_freq;
+        public byte BsStopFreq { get { return this.bs_stop_freq; } set { this.bs_stop_freq = value; } }
+
+        protected byte bs_xover_band;
+        public byte BsXoverBand { get { return this.bs_xover_band; } set { this.bs_xover_band = value; } }
+
+        protected byte bs_reserved;
+        public byte BsReserved { get { return this.bs_reserved; } set { this.bs_reserved = value; } }
+
+        protected bool bs_header_extra_1;
+        public bool BsHeaderExtra1 { get { return this.bs_header_extra_1; } set { this.bs_header_extra_1 = value; } }
+
+        protected bool bs_header_extra_2;
+        public bool BsHeaderExtra2 { get { return this.bs_header_extra_2; } set { this.bs_header_extra_2 = value; } }
+
+        protected byte bs_freq_scale;
+        public byte BsFreqScale { get { return this.bs_freq_scale; } set { this.bs_freq_scale = value; } }
+
+        protected bool bs_alter_scale;
+        public bool BsAlterScale { get { return this.bs_alter_scale; } set { this.bs_alter_scale = value; } }
+
+        protected byte bs_noise_bands;
+        public byte BsNoiseBands { get { return this.bs_noise_bands; } set { this.bs_noise_bands = value; } }
+
+        protected byte bs_limiter_bands;
+        public byte BsLimiterBands { get { return this.bs_limiter_bands; } set { this.bs_limiter_bands = value; } }
+
+        protected byte bs_limiter_gains;
+        public byte BsLimiterGains { get { return this.bs_limiter_gains; } set { this.bs_limiter_gains = value; } }
+
+        protected bool bs_interpol_freq;
+        public bool BsInterpolFreq { get { return this.bs_interpol_freq; } set { this.bs_interpol_freq = value; } }
+
+        protected bool bs_smoothing_mode;
+        public bool BsSmoothingMode { get { return this.bs_smoothing_mode; } set { this.bs_smoothing_mode = value; } }
+
+        public sbr_header()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(out this.bs_amp_res);
+            boxSize += stream.ReadUimsbf(4, out this.bs_start_freq);
+            boxSize += stream.ReadUimsbf(4, out this.bs_stop_freq);
+            boxSize += stream.ReadUimsbf(3, out this.bs_xover_band);
+            boxSize += stream.ReadUimsbf(2, out this.bs_reserved);
+            boxSize += stream.ReadUimsbf(out this.bs_header_extra_1);
+            boxSize += stream.ReadUimsbf(out this.bs_header_extra_2);
+
+            if (bs_header_extra_1)
+            {
+                boxSize += stream.ReadUimsbf(2, out this.bs_freq_scale);
+                boxSize += stream.ReadUimsbf(out this.bs_alter_scale);
+                boxSize += stream.ReadUimsbf(2, out this.bs_noise_bands);
+            }
+
+            if (bs_header_extra_2)
+            {
+                boxSize += stream.ReadUimsbf(2, out this.bs_limiter_bands);
+                boxSize += stream.ReadUimsbf(2, out this.bs_limiter_gains);
+                boxSize += stream.ReadUimsbf(out this.bs_interpol_freq);
+                boxSize += stream.ReadUimsbf(out this.bs_smoothing_mode);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(this.bs_amp_res);
+            boxSize += stream.WriteUimsbf(4, this.bs_start_freq);
+            boxSize += stream.WriteUimsbf(4, this.bs_stop_freq);
+            boxSize += stream.WriteUimsbf(3, this.bs_xover_band);
+            boxSize += stream.WriteUimsbf(2, this.bs_reserved);
+            boxSize += stream.WriteUimsbf(this.bs_header_extra_1);
+            boxSize += stream.WriteUimsbf(this.bs_header_extra_2);
+
+            if (bs_header_extra_1)
+            {
+                boxSize += stream.WriteUimsbf(2, this.bs_freq_scale);
+                boxSize += stream.WriteUimsbf(this.bs_alter_scale);
+                boxSize += stream.WriteUimsbf(2, this.bs_noise_bands);
+            }
+
+            if (bs_header_extra_2)
+            {
+                boxSize += stream.WriteUimsbf(2, this.bs_limiter_bands);
+                boxSize += stream.WriteUimsbf(2, this.bs_limiter_gains);
+                boxSize += stream.WriteUimsbf(this.bs_interpol_freq);
+                boxSize += stream.WriteUimsbf(this.bs_smoothing_mode);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // bs_amp_res
+            boxSize += 4; // bs_start_freq
+            boxSize += 4; // bs_stop_freq
+            boxSize += 3; // bs_xover_band
+            boxSize += 2; // bs_reserved
+            boxSize += 1; // bs_header_extra_1
+            boxSize += 1; // bs_header_extra_2
+
+            if (bs_header_extra_1)
+            {
+                boxSize += 2; // bs_freq_scale
+                boxSize += 1; // bs_alter_scale
+                boxSize += 2; // bs_noise_bands
+            }
+
+            if (bs_header_extra_2)
+            {
+                boxSize += 2; // bs_limiter_bands
+                boxSize += 2; // bs_limiter_gains
+                boxSize += 1; // bs_interpol_freq
+                boxSize += 1; // bs_smoothing_mode
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ErrorProtectionSpecificConfig()
+    {
+      uimsbf(8) number_of_predefined_set;
+      uimsbf(2) interleave_type;
+      uimsbf(3) bit_stuffing;
+      uimsbf(3) number_of_concatenated_frame;
+      for (i = 0; i < number_of_predefined_set; i++) {
+        uimsbf(6) number_of_class[i];
+        for (j = 0; j < number_of_class[i]; j++) {
+          uimsbf(1) length_escape[i][j];
+          uimsbf(1) rate_escape[i][j];
+          uimsbf(1) crclen_escape[i][j];
+          if (number_of_concatenated_frame != 1) {
+            uimsbf(1) concatenate_flag[i][j];
+          }
+          uimsbf(2) fec_type[i][j];
+          if (fec_type[i][j] == 0) {
+            uimsbf(1) termination_switch[i][j];
+          }
+          if (interleave_type == 2) {
+            uimsbf(2) interleave_switch[i][j];
+          }
+          uimsbf(1) class_optional;
+          if (length_escape[i][j] == 1) { /* ESC *//*
+            uimsbf(4) number_of_bits_for_length[i][j];
+          }
+          else {
+            uimsbf(16) class_length[i][j];
+          }
+          if (rate_escape[i][j] != 1) { /* not ESC *//*
+            if (fec_type[i][j] != 0) {
+              uimsbf(7) class_rate[i][j];
+            } else {
+              uimsbf(5) class_rate[i][j];
+            }
+          }
+          if (crclen_escape[i][j] != 1) {  /* not ESC *//*
+            uimsbf(5) class_crclen[i][j];
+          }
+        }
+        uimsbf(1) class_reordered_output;
+        if (class_reordered_output == 1) {
+          for (j = 0; j < number_of_class[i]; j++) {
+            uimsbf(6) class_output_order[i][j];
+          }
+        }
+      }
+      uimsbf(1) header_protection;
+      if (header_protection == 1) {
+        uimsbf(5) header_rate;
+        uimsbf(5) header_crclen;
+      }
+    }
+    */
+    public class ErrorProtectionSpecificConfig
+    {
+
+
+        protected byte number_of_predefined_set;
+        public byte NumberOfPredefinedSet { get { return this.number_of_predefined_set; } set { this.number_of_predefined_set = value; } }
+
+        protected byte interleave_type;
+        public byte InterleaveType { get { return this.interleave_type; } set { this.interleave_type = value; } }
+
+        protected byte bit_stuffing;
+        public byte BitStuffing { get { return this.bit_stuffing; } set { this.bit_stuffing = value; } }
+
+        protected byte number_of_concatenated_frame;
+        public byte NumberOfConcatenatedFrame { get { return this.number_of_concatenated_frame; } set { this.number_of_concatenated_frame = value; } }
+
+        protected byte[] number_of_class;
+        public byte[] NumberOfClass { get { return this.number_of_class; } set { this.number_of_class = value; } }
+
+        protected bool[][] length_escape;
+        public bool[][] LengthEscape { get { return this.length_escape; } set { this.length_escape = value; } }
+
+        protected bool[][] rate_escape;
+        public bool[][] RateEscape { get { return this.rate_escape; } set { this.rate_escape = value; } }
+
+        protected bool[][] crclen_escape;
+        public bool[][] CrclenEscape { get { return this.crclen_escape; } set { this.crclen_escape = value; } }
+
+        protected bool[][] concatenate_flag;
+        public bool[][] ConcatenateFlag { get { return this.concatenate_flag; } set { this.concatenate_flag = value; } }
+
+        protected byte[][] fec_type;
+        public byte[][] FecType { get { return this.fec_type; } set { this.fec_type = value; } }
+
+        protected bool[][] termination_switch;
+        public bool[][] TerminationSwitch { get { return this.termination_switch; } set { this.termination_switch = value; } }
+
+        protected byte[][] interleave_switch;
+        public byte[][] InterleaveSwitch { get { return this.interleave_switch; } set { this.interleave_switch = value; } }
+
+        protected bool class_optional;
+        public bool ClassOptional { get { return this.class_optional; } set { this.class_optional = value; } }
+
+        protected byte[][] number_of_bits_for_length;
+        public byte[][] NumberOfBitsForLength { get { return this.number_of_bits_for_length; } set { this.number_of_bits_for_length = value; } }
+
+        protected ushort[][] class_length;
+        public ushort[][] ClassLength { get { return this.class_length; } set { this.class_length = value; } }
+
+        protected byte[][] class_rate;
+        public byte[][] ClassRate { get { return this.class_rate; } set { this.class_rate = value; } }
+
+        protected byte[][] class_rate0;
+        public byte[][] ClassRate0 { get { return this.class_rate0; } set { this.class_rate0 = value; } }
+
+        protected byte[][] class_crclen;
+        public byte[][] ClassCrclen { get { return this.class_crclen; } set { this.class_crclen = value; } }
+
+        protected bool class_reordered_output;
+        public bool ClassReorderedOutput { get { return this.class_reordered_output; } set { this.class_reordered_output = value; } }
+
+        protected byte[][] class_output_order;
+        public byte[][] ClassOutputOrder { get { return this.class_output_order; } set { this.class_output_order = value; } }
+
+        protected bool header_protection;
+        public bool HeaderProtection { get { return this.header_protection; } set { this.header_protection = value; } }
+
+        protected byte header_rate;
+        public byte HeaderRate { get { return this.header_rate; } set { this.header_rate = value; } }
+
+        protected byte header_crclen;
+        public byte HeaderCrclen { get { return this.header_crclen; } set { this.header_crclen = value; } }
+
+        public ErrorProtectionSpecificConfig()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUimsbf(8, out this.number_of_predefined_set);
+            boxSize += stream.ReadUimsbf(2, out this.interleave_type);
+            boxSize += stream.ReadUimsbf(3, out this.bit_stuffing);
+            boxSize += stream.ReadUimsbf(3, out this.number_of_concatenated_frame);
+
+            for (int i = 0; i < number_of_predefined_set; i++)
+            {
+                boxSize += stream.ReadUimsbf(6, out this.number_of_class[i]);
+
+                for (int j = 0; j < number_of_class[i]; j++)
+                {
+                    boxSize += stream.ReadUimsbf(out this.length_escape[i][j]);
+                    boxSize += stream.ReadUimsbf(out this.rate_escape[i][j]);
+                    boxSize += stream.ReadUimsbf(out this.crclen_escape[i][j]);
+
+                    if (number_of_concatenated_frame != 1)
+                    {
+                        boxSize += stream.ReadUimsbf(out this.concatenate_flag[i][j]);
+                    }
+                    boxSize += stream.ReadUimsbf(2, out this.fec_type[i][j]);
+
+                    if (fec_type[i][j] == 0)
+                    {
+                        boxSize += stream.ReadUimsbf(out this.termination_switch[i][j]);
+                    }
+
+                    if (interleave_type == 2)
+                    {
+                        boxSize += stream.ReadUimsbf(2, out this.interleave_switch[i][j]);
+                    }
+                    boxSize += stream.ReadUimsbf(out this.class_optional);
+
+                    if (length_escape[i][j] == true)
+                    {
+                        /*  ESC  */
+                        boxSize += stream.ReadUimsbf(4, out this.number_of_bits_for_length[i][j]);
+                    }
+
+                    else
+                    {
+                        boxSize += stream.ReadUimsbf(16, out this.class_length[i][j]);
+                    }
+
+                    if (rate_escape[i][j] != true)
+                    {
+                        /*  not ESC  */
+
+                        if (fec_type[i][j] != 0)
+                        {
+                            boxSize += stream.ReadUimsbf(7, out this.class_rate[i][j]);
+                        }
+
+                        else
+                        {
+                            boxSize += stream.ReadUimsbf(5, out this.class_rate0[i][j]);
+                        }
+                    }
+
+                    if (crclen_escape[i][j] != true)
+                    {
+                        /*  not ESC  */
+                        boxSize += stream.ReadUimsbf(5, out this.class_crclen[i][j]);
+                    }
+                }
+                boxSize += stream.ReadUimsbf(out this.class_reordered_output);
+
+                if (class_reordered_output == true)
+                {
+
+                    for (int j = 0; j < number_of_class[i]; j++)
+                    {
+                        boxSize += stream.ReadUimsbf(6, out this.class_output_order[i][j]);
+                    }
+                }
+            }
+            boxSize += stream.ReadUimsbf(out this.header_protection);
+
+            if (header_protection == true)
+            {
+                boxSize += stream.ReadUimsbf(5, out this.header_rate);
+                boxSize += stream.ReadUimsbf(5, out this.header_crclen);
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUimsbf(8, this.number_of_predefined_set);
+            boxSize += stream.WriteUimsbf(2, this.interleave_type);
+            boxSize += stream.WriteUimsbf(3, this.bit_stuffing);
+            boxSize += stream.WriteUimsbf(3, this.number_of_concatenated_frame);
+
+            for (int i = 0; i < number_of_predefined_set; i++)
+            {
+                boxSize += stream.WriteUimsbf(6, this.number_of_class[i]);
+
+                for (int j = 0; j < number_of_class[i]; j++)
+                {
+                    boxSize += stream.WriteUimsbf(this.length_escape[i][j]);
+                    boxSize += stream.WriteUimsbf(this.rate_escape[i][j]);
+                    boxSize += stream.WriteUimsbf(this.crclen_escape[i][j]);
+
+                    if (number_of_concatenated_frame != 1)
+                    {
+                        boxSize += stream.WriteUimsbf(this.concatenate_flag[i][j]);
+                    }
+                    boxSize += stream.WriteUimsbf(2, this.fec_type[i][j]);
+
+                    if (fec_type[i][j] == 0)
+                    {
+                        boxSize += stream.WriteUimsbf(this.termination_switch[i][j]);
+                    }
+
+                    if (interleave_type == 2)
+                    {
+                        boxSize += stream.WriteUimsbf(2, this.interleave_switch[i][j]);
+                    }
+                    boxSize += stream.WriteUimsbf(this.class_optional);
+
+                    if (length_escape[i][j] == true)
+                    {
+                        /*  ESC  */
+                        boxSize += stream.WriteUimsbf(4, this.number_of_bits_for_length[i][j]);
+                    }
+
+                    else
+                    {
+                        boxSize += stream.WriteUimsbf(16, this.class_length[i][j]);
+                    }
+
+                    if (rate_escape[i][j] != true)
+                    {
+                        /*  not ESC  */
+
+                        if (fec_type[i][j] != 0)
+                        {
+                            boxSize += stream.WriteUimsbf(7, this.class_rate[i][j]);
+                        }
+
+                        else
+                        {
+                            boxSize += stream.WriteUimsbf(5, this.class_rate0[i][j]);
+                        }
+                    }
+
+                    if (crclen_escape[i][j] != true)
+                    {
+                        /*  not ESC  */
+                        boxSize += stream.WriteUimsbf(5, this.class_crclen[i][j]);
+                    }
+                }
+                boxSize += stream.WriteUimsbf(this.class_reordered_output);
+
+                if (class_reordered_output == true)
+                {
+
+                    for (int j = 0; j < number_of_class[i]; j++)
+                    {
+                        boxSize += stream.WriteUimsbf(6, this.class_output_order[i][j]);
+                    }
+                }
+            }
+            boxSize += stream.WriteUimsbf(this.header_protection);
+
+            if (header_protection == true)
+            {
+                boxSize += stream.WriteUimsbf(5, this.header_rate);
+                boxSize += stream.WriteUimsbf(5, this.header_crclen);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // number_of_predefined_set
+            boxSize += 2; // interleave_type
+            boxSize += 3; // bit_stuffing
+            boxSize += 3; // number_of_concatenated_frame
+
+            for (int i = 0; i < number_of_predefined_set; i++)
+            {
+                boxSize += 6; // number_of_class
+
+                for (int j = 0; j < number_of_class[i]; j++)
+                {
+                    boxSize += 1; // length_escape
+                    boxSize += 1; // rate_escape
+                    boxSize += 1; // crclen_escape
+
+                    if (number_of_concatenated_frame != 1)
+                    {
+                        boxSize += 1; // concatenate_flag
+                    }
+                    boxSize += 2; // fec_type
+
+                    if (fec_type[i][j] == 0)
+                    {
+                        boxSize += 1; // termination_switch
+                    }
+
+                    if (interleave_type == 2)
+                    {
+                        boxSize += 2; // interleave_switch
+                    }
+                    boxSize += 1; // class_optional
+
+                    if (length_escape[i][j] == true)
+                    {
+                        /*  ESC  */
+                        boxSize += 4; // number_of_bits_for_length
+                    }
+
+                    else
+                    {
+                        boxSize += 16; // class_length
+                    }
+
+                    if (rate_escape[i][j] != true)
+                    {
+                        /*  not ESC  */
+
+                        if (fec_type[i][j] != 0)
+                        {
+                            boxSize += 7; // class_rate
+                        }
+
+                        else
+                        {
+                            boxSize += 5; // class_rate0
+                        }
+                    }
+
+                    if (crclen_escape[i][j] != true)
+                    {
+                        /*  not ESC  */
+                        boxSize += 5; // class_crclen
+                    }
+                }
+                boxSize += 1; // class_reordered_output
+
+                if (class_reordered_output == true)
+                {
+
+                    for (int j = 0; j < number_of_class[i]; j++)
+                    {
+                        boxSize += 6; // class_output_order
+                    }
+                }
+            }
+            boxSize += 1; // header_protection
+
+            if (header_protection == true)
+            {
+                boxSize += 5; // header_rate
+                boxSize += 5; // header_crclen
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class OpusSampleEntry() extends AudioSampleEntry ('Opus'){
+     OpusSpecificBox();
+     }
+    */
+    public class OpusSampleEntry : AudioSampleEntry
+    {
+        public override string FourCC { get; set; } = "Opus";
+
+        protected OpusSpecificBox OpusSpecificBox;
+        public OpusSpecificBox _OpusSpecificBox { get { return this.OpusSpecificBox; } set { this.OpusSpecificBox = value; } }
+
+        public OpusSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadBox(out this.OpusSpecificBox);
+            boxSize += stream.ReadSkip(size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteBox(this.OpusSpecificBox);
+            boxSize += stream.Flush();
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateSize(OpusSpecificBox); // OpusSpecificBox
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ChannelMappingTable (unsigned int(8) OutputChannelCount){
+     unsigned int(8) StreamCount;
+     unsigned int(8) CoupledCount;
+     unsigned int(8 * OutputChannelCount) ChannelMapping;
+     }
+
+    */
+    public class ChannelMappingTable
+    {
+
+
+        protected byte StreamCount;
+        public byte _StreamCount { get { return this.StreamCount; } set { this.StreamCount = value; } }
+
+        protected byte CoupledCount;
+        public byte _CoupledCount { get { return this.CoupledCount; } set { this.CoupledCount = value; } }
+
+        protected byte[] ChannelMapping;
+        public byte[] _ChannelMapping { get { return this.ChannelMapping; } set { this.ChannelMapping = value; } }
+
+        public ChannelMappingTable()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            ulong OutputChannelCount = 0; // TODO: pass through ctor
+
+            boxSize += stream.ReadUInt8(out this.StreamCount);
+            boxSize += stream.ReadUInt8(out this.CoupledCount);
+            boxSize += stream.ReadBytes(OutputChannelCount, out this.ChannelMapping);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            ulong OutputChannelCount = 0; // TODO: pass through ctor
+
+            boxSize += stream.WriteUInt8(this.StreamCount);
+            boxSize += stream.WriteUInt8(this.CoupledCount);
+            boxSize += stream.WriteBytes(OutputChannelCount, this.ChannelMapping);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            ulong OutputChannelCount = 0; // TODO: pass through ctor
+
+            boxSize += 8; // StreamCount
+            boxSize += 8; // CoupledCount
+            boxSize += (ulong)(OutputChannelCount * 8); // ChannelMapping
+            return boxSize;
+        }
+    }
+
+
+    /*
+     aligned(8) class OpusSpecificBox extends Box('dOps'){
+     unsigned int(8) Version;
+     unsigned int(8) OutputChannelCount;
+     unsigned int(16) PreSkip;
+     unsigned int(32) InputSampleRate;
+     signed int(16) OutputGain;
+     unsigned int(8) ChannelMappingFamily;
+     if (ChannelMappingFamily != 0) {
+     ChannelMappingTable(OutputChannelCount);
+     }
+     }
+    */
+    public class OpusSpecificBox : Box
+    {
+        public override string FourCC { get; set; } = "dOps";
+
+        protected byte Version;
+        public byte _Version { get { return this.Version; } set { this.Version = value; } }
+
+        protected byte OutputChannelCount;
+        public byte _OutputChannelCount { get { return this.OutputChannelCount; } set { this.OutputChannelCount = value; } }
+
+        protected ushort PreSkip;
+        public ushort _PreSkip { get { return this.PreSkip; } set { this.PreSkip = value; } }
+
+        protected uint InputSampleRate;
+        public uint _InputSampleRate { get { return this.InputSampleRate; } set { this.InputSampleRate = value; } }
+
+        protected short OutputGain;
+        public short _OutputGain { get { return this.OutputGain; } set { this.OutputGain = value; } }
+
+        protected byte ChannelMappingFamily;
+        public byte _ChannelMappingFamily { get { return this.ChannelMappingFamily; } set { this.ChannelMappingFamily = value; } }
+
+        protected ChannelMappingTable ChannelMappingTable;
+        public ChannelMappingTable _ChannelMappingTable { get { return this.ChannelMappingTable; } set { this.ChannelMappingTable = value; } }
+
+        public OpusSpecificBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt8(out this.Version);
+            boxSize += stream.ReadUInt8(out this.OutputChannelCount);
+            boxSize += stream.ReadUInt16(out this.PreSkip);
+            boxSize += stream.ReadUInt32(out this.InputSampleRate);
+            boxSize += stream.ReadInt16(out this.OutputGain);
+            boxSize += stream.ReadUInt8(out this.ChannelMappingFamily);
+
+            if (ChannelMappingFamily != 0)
+            {
+                boxSize += stream.ReadClass(out this.ChannelMappingTable);
+            }
+            boxSize += stream.ReadSkip(size, boxSize);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8(this.Version);
+            boxSize += stream.WriteUInt8(this.OutputChannelCount);
+            boxSize += stream.WriteUInt16(this.PreSkip);
+            boxSize += stream.WriteUInt32(this.InputSampleRate);
+            boxSize += stream.WriteInt16(this.OutputGain);
+            boxSize += stream.WriteUInt8(this.ChannelMappingFamily);
+
+            if (ChannelMappingFamily != 0)
+            {
+                boxSize += stream.WriteClass(this.ChannelMappingTable);
+            }
+            boxSize += stream.Flush();
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // Version
+            boxSize += 8; // OutputChannelCount
+            boxSize += 16; // PreSkip
+            boxSize += 32; // InputSampleRate
+            boxSize += 16; // OutputGain
+            boxSize += 8; // ChannelMappingFamily
+
+            if (ChannelMappingFamily != 0)
+            {
+                boxSize += IsoStream.CalculateClassSize(ChannelMappingTable); // ChannelMappingTable
             }
             return boxSize;
         }

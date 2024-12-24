@@ -58,11 +58,6 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong ReadBytes(ulong length, out byte[] value)
-    {
-        throw new NotImplementedException();
-    }
-
     internal ulong ReadClass<T>(out T value) where T : class
     {
         throw new NotImplementedException();
@@ -74,6 +69,11 @@ public class IsoStream
     }
 
     internal ulong ReadClass<T>(ulong count, out T[] value) where T : class
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong ReadBytes(ulong length, out byte[] value)
     {
         throw new NotImplementedException();
     }
