@@ -622,7 +622,7 @@ class ErrorProtectionSpecificConfig()
         uimsbf(16) class_length[i][j];
       }
       if (rate_escape[i][j] != 1) { /* not ESC */
-        if (fec_type[i][j]) {
+        if (fec_type[i][j] != 0) {
           uimsbf(7) class_rate[i][j];
         } else {
           uimsbf(5) class_rate[i][j];

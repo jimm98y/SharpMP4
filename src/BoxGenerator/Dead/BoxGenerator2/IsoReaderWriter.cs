@@ -419,12 +419,12 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong ReadBslbf(ulong count, out uint value)
+    internal ulong ReadBslbf(out bool value)
     {
         throw new NotImplementedException();
     }
 
-    internal ulong WriteBslbf(ulong count, uint value)
+    internal ulong WriteBslbf(bool value)
     {
         throw new NotImplementedException();
     }

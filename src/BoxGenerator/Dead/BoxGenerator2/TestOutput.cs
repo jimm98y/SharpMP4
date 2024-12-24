@@ -1713,7 +1713,7 @@ namespace BoxGenerator2
           }
           break;
       }
-      if (extensionAudioObjectType != 5 && IsoStream.BitsToDecode() >= 16) {
+      if (extensionAudioObjectType != 5 && bits_to_decode() >= 16) {
         bslbf(11) syncExtensionType;
         if (syncExtensionType == 0x2b7) {
           GetAudioObjectType() extensionAudioObjectType;
@@ -1724,7 +1724,7 @@ namespace BoxGenerator2
               if (extensionSamplingFrequencyIndex == 0xf) {
                 uimsbf(24) extensionSamplingFrequency;
               }
-              if (IsoStream.BitsToDecode() >= 12) {
+              if (bits_to_decode() >= 12) {
                 bslbf(11) syncExtensionType;
                 if (syncExtensionType == 0x548) {
                   uimsbf(1) psPresentFlag;
@@ -1835,8 +1835,8 @@ namespace BoxGenerator2
         protected ErrorProtectionSpecificConfig ErrorProtectionSpecificConfig;
         public ErrorProtectionSpecificConfig _ErrorProtectionSpecificConfig { get { return this.ErrorProtectionSpecificConfig; } set { this.ErrorProtectionSpecificConfig = value; } }
 
-        protected byte directMapping;
-        public byte DirectMapping { get { return this.directMapping; } set { this.directMapping = value; } }
+        protected bool directMapping;
+        public bool DirectMapping { get { return this.directMapping; } set { this.directMapping = value; } }
 
         protected ushort syncExtensionType;
         public ushort SyncExtensionType { get { return this.syncExtensionType; } set { this.syncExtensionType = value; } }
@@ -2014,7 +2014,7 @@ namespace BoxGenerator2
 
                     if (epConfig == 3)
                     {
-                        boxSize += stream.ReadBslbf(1, out this.directMapping);
+                        boxSize += stream.ReadBslbf(out this.directMapping);
 
                         if (!directMapping)
                         {
@@ -2217,7 +2217,7 @@ namespace BoxGenerator2
 
                     if (epConfig == 3)
                     {
-                        boxSize += stream.WriteBslbf(1, this.directMapping);
+                        boxSize += stream.WriteBslbf(this.directMapping);
 
                         if (!directMapping)
                         {
@@ -2591,17 +2591,17 @@ namespace BoxGenerator2
     {
 
 
-        protected byte frameLengthFlag;
-        public byte FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
+        protected bool frameLengthFlag;
+        public bool FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
 
-        protected byte dependsOnCoreCoder;
-        public byte DependsOnCoreCoder { get { return this.dependsOnCoreCoder; } set { this.dependsOnCoreCoder = value; } }
+        protected bool dependsOnCoreCoder;
+        public bool DependsOnCoreCoder { get { return this.dependsOnCoreCoder; } set { this.dependsOnCoreCoder = value; } }
 
         protected ushort coreCoderDelay;
         public ushort CoreCoderDelay { get { return this.coreCoderDelay; } set { this.coreCoderDelay = value; } }
 
-        protected byte extensionFlag;
-        public byte ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
+        protected bool extensionFlag;
+        public bool ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
 
         protected program_config_element program_config_element;
         public program_config_element ProgramConfigElement { get { return this.program_config_element; } set { this.program_config_element = value; } }
@@ -2615,17 +2615,17 @@ namespace BoxGenerator2
         protected ushort layer_length;
         public ushort LayerLength { get { return this.layer_length; } set { this.layer_length = value; } }
 
-        protected byte aacSectionDataResilienceFlag;
-        public byte AacSectionDataResilienceFlag { get { return this.aacSectionDataResilienceFlag; } set { this.aacSectionDataResilienceFlag = value; } }
+        protected bool aacSectionDataResilienceFlag;
+        public bool AacSectionDataResilienceFlag { get { return this.aacSectionDataResilienceFlag; } set { this.aacSectionDataResilienceFlag = value; } }
 
-        protected byte aacScalefactorDataResilienceFlag;
-        public byte AacScalefactorDataResilienceFlag { get { return this.aacScalefactorDataResilienceFlag; } set { this.aacScalefactorDataResilienceFlag = value; } }
+        protected bool aacScalefactorDataResilienceFlag;
+        public bool AacScalefactorDataResilienceFlag { get { return this.aacScalefactorDataResilienceFlag; } set { this.aacScalefactorDataResilienceFlag = value; } }
 
-        protected byte aacSpectralDataResilienceFlag;
-        public byte AacSpectralDataResilienceFlag { get { return this.aacSpectralDataResilienceFlag; } set { this.aacSpectralDataResilienceFlag = value; } }
+        protected bool aacSpectralDataResilienceFlag;
+        public bool AacSpectralDataResilienceFlag { get { return this.aacSpectralDataResilienceFlag; } set { this.aacSpectralDataResilienceFlag = value; } }
 
-        protected byte extensionFlag3;
-        public byte ExtensionFlag3 { get { return this.extensionFlag3; } set { this.extensionFlag3 = value; } }
+        protected bool extensionFlag3;
+        public bool ExtensionFlag3 { get { return this.extensionFlag3; } set { this.extensionFlag3 = value; } }
 
         public GASpecificConfig()
         { }
@@ -2633,14 +2633,14 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadBslbf(1, out this.frameLengthFlag);
-            boxSize += stream.ReadBslbf(1, out this.dependsOnCoreCoder);
+            boxSize += stream.ReadBslbf(out this.frameLengthFlag);
+            boxSize += stream.ReadBslbf(out this.dependsOnCoreCoder);
 
             if (dependsOnCoreCoder)
             {
                 boxSize += stream.ReadUimsbf(14, out this.coreCoderDelay);
             }
-            boxSize += stream.ReadBslbf(1, out this.extensionFlag);
+            boxSize += stream.ReadBslbf(out this.extensionFlag);
 
             if (!channelConfiguration)
             {
@@ -2664,11 +2664,11 @@ namespace BoxGenerator2
                 if (audioObjectType.AudioObjectType == 17 || audioObjectType.AudioObjectType == 19 ||
           audioObjectType.AudioObjectType == 20 || audioObjectType.AudioObjectType == 23)
                 {
-                    boxSize += stream.ReadBslbf(1, out this.aacSectionDataResilienceFlag);
-                    boxSize += stream.ReadBslbf(1, out this.aacScalefactorDataResilienceFlag);
-                    boxSize += stream.ReadBslbf(1, out this.aacSpectralDataResilienceFlag);
+                    boxSize += stream.ReadBslbf(out this.aacSectionDataResilienceFlag);
+                    boxSize += stream.ReadBslbf(out this.aacScalefactorDataResilienceFlag);
+                    boxSize += stream.ReadBslbf(out this.aacSpectralDataResilienceFlag);
                 }
-                boxSize += stream.ReadBslbf(1, out this.extensionFlag3);
+                boxSize += stream.ReadBslbf(out this.extensionFlag3);
 
                 if (extensionFlag3)
                 {
@@ -2681,14 +2681,14 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteBslbf(1, this.frameLengthFlag);
-            boxSize += stream.WriteBslbf(1, this.dependsOnCoreCoder);
+            boxSize += stream.WriteBslbf(this.frameLengthFlag);
+            boxSize += stream.WriteBslbf(this.dependsOnCoreCoder);
 
             if (dependsOnCoreCoder)
             {
                 boxSize += stream.WriteUimsbf(14, this.coreCoderDelay);
             }
-            boxSize += stream.WriteBslbf(1, this.extensionFlag);
+            boxSize += stream.WriteBslbf(this.extensionFlag);
 
             if (!channelConfiguration)
             {
@@ -2712,11 +2712,11 @@ namespace BoxGenerator2
                 if (audioObjectType.AudioObjectType == 17 || audioObjectType.AudioObjectType == 19 ||
           audioObjectType.AudioObjectType == 20 || audioObjectType.AudioObjectType == 23)
                 {
-                    boxSize += stream.WriteBslbf(1, this.aacSectionDataResilienceFlag);
-                    boxSize += stream.WriteBslbf(1, this.aacScalefactorDataResilienceFlag);
-                    boxSize += stream.WriteBslbf(1, this.aacSpectralDataResilienceFlag);
+                    boxSize += stream.WriteBslbf(this.aacSectionDataResilienceFlag);
+                    boxSize += stream.WriteBslbf(this.aacScalefactorDataResilienceFlag);
+                    boxSize += stream.WriteBslbf(this.aacSpectralDataResilienceFlag);
                 }
-                boxSize += stream.WriteBslbf(1, this.extensionFlag3);
+                boxSize += stream.WriteBslbf(this.extensionFlag3);
 
                 if (extensionFlag3)
                 {
@@ -3629,26 +3629,26 @@ namespace BoxGenerator2
         protected uint Language_Code;
         public uint LanguageCode { get { return this.Language_Code; } set { this.Language_Code = value; } }
 
-        protected byte Gender_Enable;
-        public byte GenderEnable { get { return this.Gender_Enable; } set { this.Gender_Enable = value; } }
+        protected bool Gender_Enable;
+        public bool GenderEnable { get { return this.Gender_Enable; } set { this.Gender_Enable = value; } }
 
-        protected byte Age_Enable;
-        public byte AgeEnable { get { return this.Age_Enable; } set { this.Age_Enable = value; } }
+        protected bool Age_Enable;
+        public bool AgeEnable { get { return this.Age_Enable; } set { this.Age_Enable = value; } }
 
-        protected byte Speech_Rate_Enable;
-        public byte SpeechRateEnable { get { return this.Speech_Rate_Enable; } set { this.Speech_Rate_Enable = value; } }
+        protected bool Speech_Rate_Enable;
+        public bool SpeechRateEnable { get { return this.Speech_Rate_Enable; } set { this.Speech_Rate_Enable = value; } }
 
-        protected byte Prosody_Enable;
-        public byte ProsodyEnable { get { return this.Prosody_Enable; } set { this.Prosody_Enable = value; } }
+        protected bool Prosody_Enable;
+        public bool ProsodyEnable { get { return this.Prosody_Enable; } set { this.Prosody_Enable = value; } }
 
-        protected byte Video_Enable;
-        public byte VideoEnable { get { return this.Video_Enable; } set { this.Video_Enable = value; } }
+        protected bool Video_Enable;
+        public bool VideoEnable { get { return this.Video_Enable; } set { this.Video_Enable = value; } }
 
-        protected byte Lip_Shape_Enable;
-        public byte LipShapeEnable { get { return this.Lip_Shape_Enable; } set { this.Lip_Shape_Enable = value; } }
+        protected bool Lip_Shape_Enable;
+        public bool LipShapeEnable { get { return this.Lip_Shape_Enable; } set { this.Lip_Shape_Enable = value; } }
 
-        protected byte Trick_Mode_Enable;
-        public byte TrickModeEnable { get { return this.Trick_Mode_Enable; } set { this.Trick_Mode_Enable = value; } }
+        protected bool Trick_Mode_Enable;
+        public bool TrickModeEnable { get { return this.Trick_Mode_Enable; } set { this.Trick_Mode_Enable = value; } }
 
         public TTS_Sequence()
         { }
@@ -3658,13 +3658,13 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(5, out this.TTS_Sequence_ID);
             boxSize += stream.ReadUimsbf(18, out this.Language_Code);
-            boxSize += stream.ReadBslbf(1, out this.Gender_Enable);
-            boxSize += stream.ReadBslbf(1, out this.Age_Enable);
-            boxSize += stream.ReadBslbf(1, out this.Speech_Rate_Enable);
-            boxSize += stream.ReadBslbf(1, out this.Prosody_Enable);
-            boxSize += stream.ReadBslbf(1, out this.Video_Enable);
-            boxSize += stream.ReadBslbf(1, out this.Lip_Shape_Enable);
-            boxSize += stream.ReadBslbf(1, out this.Trick_Mode_Enable);
+            boxSize += stream.ReadBslbf(out this.Gender_Enable);
+            boxSize += stream.ReadBslbf(out this.Age_Enable);
+            boxSize += stream.ReadBslbf(out this.Speech_Rate_Enable);
+            boxSize += stream.ReadBslbf(out this.Prosody_Enable);
+            boxSize += stream.ReadBslbf(out this.Video_Enable);
+            boxSize += stream.ReadBslbf(out this.Lip_Shape_Enable);
+            boxSize += stream.ReadBslbf(out this.Trick_Mode_Enable);
             return boxSize;
         }
 
@@ -3673,13 +3673,13 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += stream.WriteUimsbf(5, this.TTS_Sequence_ID);
             boxSize += stream.WriteUimsbf(18, this.Language_Code);
-            boxSize += stream.WriteBslbf(1, this.Gender_Enable);
-            boxSize += stream.WriteBslbf(1, this.Age_Enable);
-            boxSize += stream.WriteBslbf(1, this.Speech_Rate_Enable);
-            boxSize += stream.WriteBslbf(1, this.Prosody_Enable);
-            boxSize += stream.WriteBslbf(1, this.Video_Enable);
-            boxSize += stream.WriteBslbf(1, this.Lip_Shape_Enable);
-            boxSize += stream.WriteBslbf(1, this.Trick_Mode_Enable);
+            boxSize += stream.WriteBslbf(this.Gender_Enable);
+            boxSize += stream.WriteBslbf(this.Age_Enable);
+            boxSize += stream.WriteBslbf(this.Speech_Rate_Enable);
+            boxSize += stream.WriteBslbf(this.Prosody_Enable);
+            boxSize += stream.WriteBslbf(this.Video_Enable);
+            boxSize += stream.WriteBslbf(this.Lip_Shape_Enable);
+            boxSize += stream.WriteBslbf(this.Trick_Mode_Enable);
             return boxSize;
         }
 
@@ -4519,8 +4519,8 @@ namespace BoxGenerator2
     {
 
 
-        protected byte extension;
-        public byte Extension { get { return this.extension; } set { this.extension = value; } }
+        protected bool extension;
+        public bool Extension { get { return this.extension; } set { this.extension = value; } }
 
         public MPEG_1_2_SpecificConfig()
         { }
@@ -4528,14 +4528,14 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadBslbf(1, out this.extension);
+            boxSize += stream.ReadBslbf(out this.extension);
             return boxSize;
         }
 
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteBslbf(1, this.extension);
+            boxSize += stream.WriteBslbf(this.extension);
             return boxSize;
         }
 
@@ -4745,8 +4745,8 @@ namespace BoxGenerator2
         protected sbyte[] chan_pos;  //  1..16 uimsbf 
         public sbyte[] ChanPos { get { return this.chan_pos; } set { this.chan_pos = value; } }
 
-        protected byte byte_align;  //  TODO: 0..7 bslbf 
-        public byte ByteAlign { get { return this.byte_align; } set { this.byte_align = value; } }
+        protected bool byte_align;  //  TODO: 0..7 bslbf 
+        public bool ByteAlign { get { return this.byte_align; } set { this.byte_align = value; } }
 
         protected uint header_size;
         public uint HeaderSize { get { return this.header_size; } set { this.header_size = value; } }
@@ -4818,7 +4818,7 @@ namespace BoxGenerator2
                     boxSize += stream.ReadUimsbf(1, out this.chan_pos[c]); // 1..16 uimsbf 
                 }
             }
-            boxSize += stream.ReadBslbf(1, out this.byte_align); // TODO: 0..7 bslbf 
+            boxSize += stream.ReadBslbf(out this.byte_align); // TODO: 0..7 bslbf 
             boxSize += stream.ReadUimsbf(32, out this.header_size);
             boxSize += stream.ReadUimsbf(32, out this.trailer_size);
             boxSize += stream.ReadBslbf(header_size * 8, out this.orig_header);
@@ -4889,7 +4889,7 @@ namespace BoxGenerator2
                     boxSize += stream.WriteUimsbf(1, this.chan_pos[c]); // 1..16 uimsbf 
                 }
             }
-            boxSize += stream.WriteBslbf(1, this.byte_align); // TODO: 0..7 bslbf 
+            boxSize += stream.WriteBslbf(this.byte_align); // TODO: 0..7 bslbf 
             boxSize += stream.WriteUimsbf(32, this.header_size);
             boxSize += stream.WriteUimsbf(32, this.trailer_size);
             boxSize += stream.WriteBslbf(header_size * 8, this.orig_header);
@@ -5126,26 +5126,26 @@ namespace BoxGenerator2
     {
 
 
-        protected byte frameLengthFlag;
-        public byte FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
+        protected bool frameLengthFlag;
+        public bool FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
 
-        protected byte aacSectionDataResilienceFlag;
-        public byte AacSectionDataResilienceFlag { get { return this.aacSectionDataResilienceFlag; } set { this.aacSectionDataResilienceFlag = value; } }
+        protected bool aacSectionDataResilienceFlag;
+        public bool AacSectionDataResilienceFlag { get { return this.aacSectionDataResilienceFlag; } set { this.aacSectionDataResilienceFlag = value; } }
 
-        protected byte aacScalefactorDataResilienceFlag;
-        public byte AacScalefactorDataResilienceFlag { get { return this.aacScalefactorDataResilienceFlag; } set { this.aacScalefactorDataResilienceFlag = value; } }
+        protected bool aacScalefactorDataResilienceFlag;
+        public bool AacScalefactorDataResilienceFlag { get { return this.aacScalefactorDataResilienceFlag; } set { this.aacScalefactorDataResilienceFlag = value; } }
 
-        protected byte aacSpectralDataResilienceFlag;
-        public byte AacSpectralDataResilienceFlag { get { return this.aacSpectralDataResilienceFlag; } set { this.aacSpectralDataResilienceFlag = value; } }
+        protected bool aacSpectralDataResilienceFlag;
+        public bool AacSpectralDataResilienceFlag { get { return this.aacSpectralDataResilienceFlag; } set { this.aacSpectralDataResilienceFlag = value; } }
 
-        protected byte ldSbrPresentFlag;
-        public byte LdSbrPresentFlag { get { return this.ldSbrPresentFlag; } set { this.ldSbrPresentFlag = value; } }
+        protected bool ldSbrPresentFlag;
+        public bool LdSbrPresentFlag { get { return this.ldSbrPresentFlag; } set { this.ldSbrPresentFlag = value; } }
 
-        protected byte ldSbrSamplingRate;
-        public byte LdSbrSamplingRate { get { return this.ldSbrSamplingRate; } set { this.ldSbrSamplingRate = value; } }
+        protected bool ldSbrSamplingRate;
+        public bool LdSbrSamplingRate { get { return this.ldSbrSamplingRate; } set { this.ldSbrSamplingRate = value; } }
 
-        protected byte ldSbrCrcFlag;
-        public byte LdSbrCrcFlag { get { return this.ldSbrCrcFlag; } set { this.ldSbrCrcFlag = value; } }
+        protected bool ldSbrCrcFlag;
+        public bool LdSbrCrcFlag { get { return this.ldSbrCrcFlag; } set { this.ldSbrCrcFlag = value; } }
 
         protected ld_sbr_header ld_sbr_header;
         public ld_sbr_header LdSbrHeader { get { return this.ld_sbr_header; } set { this.ld_sbr_header = value; } }
@@ -5178,16 +5178,16 @@ namespace BoxGenerator2
 
             const byte ELDEXT_TERM = 0;
 
-            boxSize += stream.ReadBslbf(1, out this.frameLengthFlag);
-            boxSize += stream.ReadBslbf(1, out this.aacSectionDataResilienceFlag);
-            boxSize += stream.ReadBslbf(1, out this.aacScalefactorDataResilienceFlag);
-            boxSize += stream.ReadBslbf(1, out this.aacSpectralDataResilienceFlag);
-            boxSize += stream.ReadBslbf(1, out this.ldSbrPresentFlag);
+            boxSize += stream.ReadBslbf(out this.frameLengthFlag);
+            boxSize += stream.ReadBslbf(out this.aacSectionDataResilienceFlag);
+            boxSize += stream.ReadBslbf(out this.aacScalefactorDataResilienceFlag);
+            boxSize += stream.ReadBslbf(out this.aacSpectralDataResilienceFlag);
+            boxSize += stream.ReadBslbf(out this.ldSbrPresentFlag);
 
             if (ldSbrPresentFlag)
             {
-                boxSize += stream.ReadBslbf(1, out this.ldSbrSamplingRate);
-                boxSize += stream.ReadBslbf(1, out this.ldSbrCrcFlag);
+                boxSize += stream.ReadBslbf(out this.ldSbrSamplingRate);
+                boxSize += stream.ReadBslbf(out this.ldSbrCrcFlag);
                 boxSize += stream.ReadClass(out this.ld_sbr_header);
             }
             boxSize += stream.ReadBslbf(4, out this.eldExtType);
@@ -5233,16 +5233,16 @@ namespace BoxGenerator2
 
             const byte ELDEXT_TERM = 0;
 
-            boxSize += stream.WriteBslbf(1, this.frameLengthFlag);
-            boxSize += stream.WriteBslbf(1, this.aacSectionDataResilienceFlag);
-            boxSize += stream.WriteBslbf(1, this.aacScalefactorDataResilienceFlag);
-            boxSize += stream.WriteBslbf(1, this.aacSpectralDataResilienceFlag);
-            boxSize += stream.WriteBslbf(1, this.ldSbrPresentFlag);
+            boxSize += stream.WriteBslbf(this.frameLengthFlag);
+            boxSize += stream.WriteBslbf(this.aacSectionDataResilienceFlag);
+            boxSize += stream.WriteBslbf(this.aacScalefactorDataResilienceFlag);
+            boxSize += stream.WriteBslbf(this.aacSpectralDataResilienceFlag);
+            boxSize += stream.WriteBslbf(this.ldSbrPresentFlag);
 
             if (ldSbrPresentFlag)
             {
-                boxSize += stream.WriteBslbf(1, this.ldSbrSamplingRate);
-                boxSize += stream.WriteBslbf(1, this.ldSbrCrcFlag);
+                boxSize += stream.WriteBslbf(this.ldSbrSamplingRate);
+                boxSize += stream.WriteBslbf(this.ldSbrCrcFlag);
                 boxSize += stream.WriteClass(this.ld_sbr_header);
             }
             boxSize += stream.WriteBslbf(4, this.eldExtType);
@@ -5685,7 +5685,7 @@ namespace BoxGenerator2
             uimsbf(16) class_length[i][j];
           }
           if (rate_escape[i][j] != 1) { /* not ESC *//*
-            if (fec_type[i][j]) {
+            if (fec_type[i][j] != 0) {
               uimsbf(7) class_rate[i][j];
             } else {
               uimsbf(5) class_rate[i][j];
@@ -5835,7 +5835,7 @@ namespace BoxGenerator2
                     {
                         /*  not ESC  */
 
-                        if (fec_type[i][j])
+                        if (fec_type[i][j] != 0)
                         {
                             boxSize += stream.ReadUimsbf(7, out this.class_rate[i][j]);
                         }
@@ -5923,7 +5923,7 @@ namespace BoxGenerator2
                     {
                         /*  not ESC  */
 
-                        if (fec_type[i][j])
+                        if (fec_type[i][j] != 0)
                         {
                             boxSize += stream.WriteUimsbf(7, this.class_rate[i][j]);
                         }
@@ -6011,7 +6011,7 @@ namespace BoxGenerator2
                     {
                         /*  not ESC  */
 
-                        if (fec_type[i][j])
+                        if (fec_type[i][j] != 0)
                         {
                             boxSize += 7; // class_rate
                         }
