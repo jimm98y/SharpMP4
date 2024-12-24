@@ -449,16 +449,6 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong ReadUimsbf(ulong count, out sbyte value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUimsbf(ulong count, sbyte value)
-    {
-        throw new NotImplementedException();
-    }
-
     internal ulong ReadUimsbf(out bool value)
     {
         throw new NotImplementedException();
