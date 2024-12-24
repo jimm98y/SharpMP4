@@ -13,8 +13,10 @@ namespace BoxGenerator2
         protected ulong offset = 0;
         public ulong Offset { get { return offset; } set { offset = value; } }
 
+        protected Box parent = null;
+        public Box Parent { get { return parent; } set { parent = value; } }
         protected List<Box> children = null;
-        public List<Box> Children { get; set; }
+        public List<Box> Children { get { return children; } set { children = value; } }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
