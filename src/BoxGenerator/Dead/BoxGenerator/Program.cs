@@ -781,7 +781,6 @@ partial class Program
 
         string resultCode = 
 @"using System;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace BoxGenerator2
