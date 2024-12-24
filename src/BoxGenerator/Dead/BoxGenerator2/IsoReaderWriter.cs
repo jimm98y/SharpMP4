@@ -399,12 +399,32 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
+    internal ulong ReadBslbf(ulong count, out byte[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteBslbf(ulong count, byte[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong ReadBslbf(ulong count, out ushort value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteBslbf(ulong count, ushort value)
+    {
+        throw new NotImplementedException();
+    }
+
     internal ulong ReadBslbf(ulong count, out uint value)
     {
         throw new NotImplementedException();
     }
 
-    internal ulong WriteBslbf(ulong count, out uint value)
+    internal ulong WriteBslbf(ulong count, uint value)
     {
         throw new NotImplementedException();
     }
@@ -455,6 +475,26 @@ public class IsoStream
     }
 
     internal ulong WriteUimsbf(ulong count, uint value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong CalculateByteAlignmentSize(byte byte_alignment)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong ReadByteAlignment(out byte byte_alignment)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteByteAlignment(byte byte_alignment)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static int BitsToDecode()
     {
         throw new NotImplementedException();
     }

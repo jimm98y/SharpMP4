@@ -135,7 +135,7 @@
           }
           if (bits_to_decode() >= 12) {
             bslbf(11) syncExtensionType;
-            if (syncExtesionType == 0x548) {
+            if (syncExtensionType == 0x548) {
               uimsbf(1) psPresentFlag;
             }
           }
@@ -531,7 +531,7 @@ class ELDSpecificConfig(channelConfiguration)
     switch (eldExtType) {
       /* add future eld extension configs here */
       default:
-        int cnt;
+        int cntt;
         for (cnt = 0; cnt < len; cnt++) {
            uimsbf(8) other_byte;
         }

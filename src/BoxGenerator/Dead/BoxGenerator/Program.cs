@@ -512,7 +512,7 @@ partial class Program
             Try(String("len = eldExtLen")),
             Try(String("len += eldExtLenAddAdd")),
             Try(String("len += eldExtLenAdd")),
-            Try(String("default:\r\n        int cnt")),
+            Try(String("default:\r\n        int cntt")),
             Try(String("case 1:\r\n    case 2:\r\n      numSbrHeader = 1")),
             Try(String("case 3:\r\n      numSbrHeader = 2")),
             Try(String("case 4:\r\n    case 5:\r\n    case 6:\r\n      numSbrHeader = 3")),
@@ -966,11 +966,13 @@ namespace BoxGenerator2
         {
             cls += "\r\n\t\tint sample_count = 0; // TODO: taken from the stsz sample_count\r\n";
         }
-        else if (box.BoxName == "DownMixInstructions")
+        
+        if (box.BoxName == "DownMixInstructions")
         {
             cls += "\r\n\t\tint baseChannelCount = 0; // TODO: get somewhere";
         }
-        else if(box.BoxName == "CompactSampleToGroupBox")
+        
+        if(box.BoxName == "CompactSampleToGroupBox")
         {
             cls += "\r\n";
             cls += "\t\tbool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);\r\n";
@@ -978,24 +980,49 @@ namespace BoxGenerator2
             cls += "\t\tuint pattern_size_code = (flags >> 4) & 0x3;\r\n";
             cls += "\t\tuint index_size_code = flags & 0x3;\r\n";
         }
-        else if(box.BoxName == "VvcPTLRecord")
+        
+        if(box.BoxName == "VvcPTLRecord")
         {
             cls += "\r\n";
             cls += "\t\tint num_sublayers = 0; // TODO pass arg\r\n";
         }
-        else if (box.BoxName == "VvcDecoderConfigurationRecord")
+        
+        if (box.BoxName == "VvcDecoderConfigurationRecord")
         {
             cls += "\r\n";
             cls += "\t\tconst int OPI_NUT = 12;\r\n";
             cls += "\t\tconst int DCI_NUT = 13;\r\n";
         }
-        else if(box.BoxName == "ChannelMappingTable")
+        
+        if(box.BoxName == "ChannelMappingTable")
         {
             cls += "\r\n\t\tulong OutputChannelCount = 0; // TODO: pass through ctor\r\n";
         }
-        else if(box.BoxName == "ld_sbr_header")
+        
+        if(box.BoxName == "ld_sbr_header")
         {
-            cls += "\r\n\t\tulong numSbrHeader = 0;\r\n";
+            cls += "\r\n\t\tint numSbrHeader = 0;\r\n";
+        }
+        
+        if(box.BoxName == "ELDSpecificConfig")
+        {
+            cls += "\r\n\t\tint len = 0;\r\n";
+        }
+        
+        if(box.BoxName == "ld_sbr_header" || box.BoxName == "SSCSpecificConfig")
+        {
+            cls += "\r\n\t\tint channelConfiguration = 0; // TODO: pass through ctor\r\n";
+        }
+
+        if(box.BoxName == "ELDSpecificConfig")
+        {
+            cls += "\r\n\t\tconst byte ELDEXT_TERM = 0;\r\n";
+        }
+
+        if(box.BoxName == "CelpHeader" || box.BoxName == "ER_SC_CelpHeader")
+        {
+            cls += "\r\n\t\tconst byte RPE = 1;\r\n";
+            cls += "\r\n\t\tconst byte MPE = 0;\r\n";
         }
 
         return cls;
@@ -1193,6 +1220,8 @@ namespace BoxGenerator2
                 return "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);";
             else if (tt == "totalPatternLength = 0")
                 return "uint totalPatternLength = 0;";
+            else if (tt == "audioObjectType = 32 + audioObjectTypeExt")
+                return "audioObjectType = (byte)(32 + audioObjectTypeExt);";
             else
                 return $"{tt};";
         }
@@ -1305,6 +1334,9 @@ namespace BoxGenerator2
         {
             if (condition.Contains("audioObjectType") && !condition.Contains("audioObjectType == 31"))
                 condition = condition.Replace("audioObjectType", "audioObjectType.AudioObjectType");
+
+            if (condition.Contains("bits_to_decode()"))
+                condition = condition.Replace("bits_to_decode()", "IsoStream.BitsToDecode()");
         }
 
         condition = FixFourCC(condition);
@@ -1689,7 +1721,7 @@ namespace BoxGenerator2
             { "ALSSpecificConfig", "stream.ReadClass(" },
             { "ErrorProtectionSpecificConfig", "stream.ReadClass(" },
             { "program_config_element", "stream.ReadClass(" },
-            { "byte_alignment", "stream.ReadClass(" },
+            { "byte_alignment", "stream.ReadByteAlignment(" },
             { "CelpHeader(samplingFrequencyIndex)", "stream.ReadClass(" },
             { "CelpBWSenhHeader", "stream.ReadClass(" },
             { "HVXCconfig", "stream.ReadClass(" },
@@ -2061,7 +2093,7 @@ namespace BoxGenerator2
             { "ALSSpecificConfig", "IsoStream.CalculateClassSize(value)" },
             { "ErrorProtectionSpecificConfig", "IsoStream.CalculateClassSize(value)" },
             { "program_config_element", "IsoStream.CalculateClassSize(value)" },
-            { "byte_alignment", "IsoStream.CalculateClassSize(value)" },
+            { "byte_alignment", "IsoStream.CalculateByteAlignmentSize(value)" },
             { "CelpHeader(samplingFrequencyIndex)", "IsoStream.CalculateClassSize(value)" },
             { "CelpBWSenhHeader", "IsoStream.CalculateClassSize(value)" },
             { "HVXCconfig", "IsoStream.CalculateClassSize(value)" },
@@ -2432,7 +2464,7 @@ namespace BoxGenerator2
             { "ALSSpecificConfig", "stream.WriteClass(" },
             { "ErrorProtectionSpecificConfig", "stream.WriteClass(" },
             { "program_config_element", "stream.WriteClass(" },
-            { "byte_alignment", "stream.WriteClass(" },
+            { "byte_alignment", "stream.WriteByteAlignment(" },
             { "CelpHeader(samplingFrequencyIndex)", "stream.WriteClass(" },
             { "CelpBWSenhHeader", "stream.WriteClass(" },
             { "HVXCconfig", "stream.WriteClass(" },
@@ -2498,7 +2530,7 @@ namespace BoxGenerator2
             "len += eldExtLenAddAdd",
             "len += eldExtLenAdd",
             "default:\r\n      /* reserved */\r\n      break",
-            "default:\r\n        int cnt",
+            "default:\r\n        int cntt",
             "case 1:\r\n    case 2:\r\n      numSbrHeader = 1",
             "case 3:\r\n      numSbrHeader = 2",
             "case 4:\r\n    case 5:\r\n    case 6:\r\n      numSbrHeader = 3",
@@ -2847,7 +2879,7 @@ namespace BoxGenerator2
             { "ALSSpecificConfig", "ALSSpecificConfig" },
             { "ErrorProtectionSpecificConfig", "ErrorProtectionSpecificConfig" },
             { "program_config_element", "program_config_element" },
-            { "byte_alignment", "byte_alignment" },
+            { "byte_alignment", "byte" },
             { "CelpHeader(samplingFrequencyIndex)", "CelpHeader" },
             { "CelpBWSenhHeader", "CelpBWSenhHeader" },
             { "HVXCconfig", "HVXCconfig" },

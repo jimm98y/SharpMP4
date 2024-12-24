@@ -1713,7 +1713,7 @@ namespace BoxGenerator2
           }
           break;
       }
-      if (extensionAudioObjectType != 5 && bits_to_decode() >= 16) {
+      if (extensionAudioObjectType != 5 && IsoStream.BitsToDecode() >= 16) {
         bslbf(11) syncExtensionType;
         if (syncExtensionType == 0x2b7) {
           GetAudioObjectType() extensionAudioObjectType;
@@ -1724,9 +1724,9 @@ namespace BoxGenerator2
               if (extensionSamplingFrequencyIndex == 0xf) {
                 uimsbf(24) extensionSamplingFrequency;
               }
-              if (bits_to_decode() >= 12) {
+              if (IsoStream.BitsToDecode() >= 12) {
                 bslbf(11) syncExtensionType;
-                if (syncExtesionType == 0x548) {
+                if (syncExtensionType == 0x548) {
                   uimsbf(1) psPresentFlag;
                 }
               }
@@ -2024,7 +2024,7 @@ namespace BoxGenerator2
                     break;
             }
 
-            if (extensionAudioObjectType != 5 && bits_to_decode() >= 16)
+            if (extensionAudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
             {
                 boxSize += stream.ReadBslbf(11, out this.syncExtensionType);
 
@@ -2045,11 +2045,11 @@ namespace BoxGenerator2
                                 boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency0);
                             }
 
-                            if (bits_to_decode() >= 12)
+                            if (IsoStream.BitsToDecode() >= 12)
                             {
                                 boxSize += stream.ReadBslbf(11, out this.syncExtensionType0);
 
-                                if (syncExtesionType == 0x548)
+                                if (syncExtensionType == 0x548)
                                 {
                                     boxSize += stream.ReadUimsbf(1, out this.psPresentFlag);
                                 }
@@ -2227,7 +2227,7 @@ namespace BoxGenerator2
                     break;
             }
 
-            if (extensionAudioObjectType != 5 && bits_to_decode() >= 16)
+            if (extensionAudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
             {
                 boxSize += stream.WriteBslbf(11, this.syncExtensionType);
 
@@ -2248,11 +2248,11 @@ namespace BoxGenerator2
                                 boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency0);
                             }
 
-                            if (bits_to_decode() >= 12)
+                            if (IsoStream.BitsToDecode() >= 12)
                             {
                                 boxSize += stream.WriteBslbf(11, this.syncExtensionType0);
 
-                                if (syncExtesionType == 0x548)
+                                if (syncExtensionType == 0x548)
                                 {
                                     boxSize += stream.WriteUimsbf(1, this.psPresentFlag);
                                 }
@@ -2428,7 +2428,7 @@ namespace BoxGenerator2
                     break;
             }
 
-            if (extensionAudioObjectType != 5 && bits_to_decode() >= 16)
+            if (extensionAudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
             {
                 boxSize += 11; // syncExtensionType
 
@@ -2449,11 +2449,11 @@ namespace BoxGenerator2
                                 boxSize += 24; // extensionSamplingFrequency0
                             }
 
-                            if (bits_to_decode() >= 12)
+                            if (IsoStream.BitsToDecode() >= 12)
                             {
                                 boxSize += 11; // syncExtensionType0
 
-                                if (syncExtesionType == 0x548)
+                                if (syncExtensionType == 0x548)
                                 {
                                     boxSize += 1; // psPresentFlag
                                 }
@@ -2516,7 +2516,7 @@ namespace BoxGenerator2
             if (audioObjectType == 31)
             {
                 boxSize += stream.ReadUimsbf(6, out this.audioObjectTypeExt);
-                audioObjectType = 32 + audioObjectTypeExt;
+                audioObjectType = (byte)(32 + audioObjectTypeExt);
             }
             return audioObjectType;
             return boxSize;
@@ -2530,7 +2530,7 @@ namespace BoxGenerator2
             if (audioObjectType == 31)
             {
                 boxSize += stream.WriteUimsbf(6, this.audioObjectTypeExt);
-                audioObjectType = 32 + audioObjectTypeExt;
+                audioObjectType = (byte)(32 + audioObjectTypeExt);
             }
             return audioObjectType;
             return boxSize;
@@ -2544,7 +2544,7 @@ namespace BoxGenerator2
             if (audioObjectType == 31)
             {
                 boxSize += 6; // audioObjectTypeExt
-                audioObjectType = 32 + audioObjectTypeExt;
+                audioObjectType = (byte)(32 + audioObjectTypeExt);
             }
             return audioObjectType;
             return boxSize;
@@ -2908,8 +2908,8 @@ namespace BoxGenerator2
         protected byte[] valid_cc_element_tag_select;
         public byte[] ValidCcElementTagSelect { get { return this.valid_cc_element_tag_select; } set { this.valid_cc_element_tag_select = value; } }
 
-        protected byte_alignment byte_alignment;  //  Note 1 
-        public byte_alignment ByteAlignment { get { return this.byte_alignment; } set { this.byte_alignment = value; } }
+        protected byte byte_alignment;  //  Note 1 
+        public byte ByteAlignment { get { return this.byte_alignment; } set { this.byte_alignment = value; } }
 
         protected byte comment_field_bytes;
         public byte CommentFieldBytes { get { return this.comment_field_bytes; } set { this.comment_field_bytes = value; } }
@@ -2985,7 +2985,7 @@ namespace BoxGenerator2
                 boxSize += stream.ReadUimsbf(1, out this.cc_element_is_ind_sw[i]);
                 boxSize += stream.ReadUimsbf(4, out this.valid_cc_element_tag_select[i]);
             }
-            boxSize += stream.ReadClass(out this.byte_alignment); // Note 1 
+            boxSize += stream.ReadByteAlignment(out this.byte_alignment); // Note 1 
             boxSize += stream.ReadUimsbf(8, out this.comment_field_bytes);
 
             for (int i = 0; i < comment_field_bytes; i++)
@@ -3060,7 +3060,7 @@ namespace BoxGenerator2
                 boxSize += stream.WriteUimsbf(1, this.cc_element_is_ind_sw[i]);
                 boxSize += stream.WriteUimsbf(4, this.valid_cc_element_tag_select[i]);
             }
-            boxSize += stream.WriteClass(this.byte_alignment); // Note 1 
+            boxSize += stream.WriteByteAlignment(this.byte_alignment); // Note 1 
             boxSize += stream.WriteUimsbf(8, this.comment_field_bytes);
 
             for (int i = 0; i < comment_field_bytes; i++)
@@ -3135,7 +3135,7 @@ namespace BoxGenerator2
                 boxSize += 1; // cc_element_is_ind_sw
                 boxSize += 4; // valid_cc_element_tag_select
             }
-            boxSize += IsoStream.CalculateClassSize(byte_alignment); // byte_alignment
+            boxSize += IsoStream.CalculateByteAlignmentSize(byte_alignment); // byte_alignment
             boxSize += 8; // comment_field_bytes
 
             for (int i = 0; i < comment_field_bytes; i++)
@@ -3319,6 +3319,10 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            const byte RPE = 1;
+
+            const byte MPE = 0;
+
             boxSize += stream.ReadUimsbf(1, out this.ExcitationMode);
             boxSize += stream.ReadUimsbf(1, out this.SampleRateMode);
             boxSize += stream.ReadUimsbf(1, out this.FineRateControl);
@@ -3340,6 +3344,10 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            const byte RPE = 1;
+
+            const byte MPE = 0;
+
             boxSize += stream.WriteUimsbf(1, this.ExcitationMode);
             boxSize += stream.WriteUimsbf(1, this.SampleRateMode);
             boxSize += stream.WriteUimsbf(1, this.FineRateControl);
@@ -3361,6 +3369,10 @@ namespace BoxGenerator2
         public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
+            const byte RPE = 1;
+
+            const byte MPE = 0;
+
             boxSize += 1; // ExcitationMode
             boxSize += 1; // SampleRateMode
             boxSize += 1; // FineRateControl
@@ -3864,6 +3876,10 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            const byte RPE = 1;
+
+            const byte MPE = 0;
+
             boxSize += stream.ReadUimsbf(1, out this.ExcitationMode);
             boxSize += stream.ReadUimsbf(1, out this.SampleRateMode);
             boxSize += stream.ReadUimsbf(1, out this.FineRateControl);
@@ -3886,6 +3902,10 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            const byte RPE = 1;
+
+            const byte MPE = 0;
+
             boxSize += stream.WriteUimsbf(1, this.ExcitationMode);
             boxSize += stream.WriteUimsbf(1, this.SampleRateMode);
             boxSize += stream.WriteUimsbf(1, this.FineRateControl);
@@ -3908,6 +3928,10 @@ namespace BoxGenerator2
         public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
+            const byte RPE = 1;
+
+            const byte MPE = 0;
+
             boxSize += 1; // ExcitationMode
             boxSize += 1; // SampleRateMode
             boxSize += 1; // FineRateControl
@@ -4422,6 +4446,8 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            int channelConfiguration = 0; // TODO: pass through ctor
+
             boxSize += stream.ReadUimsbf(2, out this.decoder_level);
             boxSize += stream.ReadUimsbf(4, out this.update_rate);
             boxSize += stream.ReadUimsbf(2, out this.synthesis_method);
@@ -4441,6 +4467,8 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            int channelConfiguration = 0; // TODO: pass through ctor
+
             boxSize += stream.WriteUimsbf(2, this.decoder_level);
             boxSize += stream.WriteUimsbf(4, this.update_rate);
             boxSize += stream.WriteUimsbf(2, this.synthesis_method);
@@ -4460,6 +4488,8 @@ namespace BoxGenerator2
         public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
+            int channelConfiguration = 0; // TODO: pass through ctor
+
             boxSize += 2; // decoder_level
             boxSize += 4; // update_rate
             boxSize += 2; // synthesis_method
@@ -5081,7 +5111,7 @@ namespace BoxGenerator2
         switch (eldExtType) {
           /* add future eld extension configs here *//*
           default:
-            int cnt;
+            int cntt;
             for (cnt = 0; cnt < len; cnt++) {
                uimsbf(8) other_byte;
             }
@@ -5144,6 +5174,10 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            int len = 0;
+
+            const byte ELDEXT_TERM = 0;
+
             boxSize += stream.ReadBslbf(1, out this.frameLengthFlag);
             boxSize += stream.ReadBslbf(1, out this.aacSectionDataResilienceFlag);
             boxSize += stream.ReadBslbf(1, out this.aacScalefactorDataResilienceFlag);
@@ -5179,7 +5213,7 @@ namespace BoxGenerator2
                 {
                     /*  add future eld extension configs here  */
                     default:
-                        int cnt;
+                        int cntt;
 
                         for (int cnt = 0; cnt < len; cnt++)
                         {
@@ -5195,6 +5229,10 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
+            int len = 0;
+
+            const byte ELDEXT_TERM = 0;
+
             boxSize += stream.WriteBslbf(1, this.frameLengthFlag);
             boxSize += stream.WriteBslbf(1, this.aacSectionDataResilienceFlag);
             boxSize += stream.WriteBslbf(1, this.aacScalefactorDataResilienceFlag);
@@ -5230,7 +5268,7 @@ namespace BoxGenerator2
                 {
                     /*  add future eld extension configs here  */
                     default:
-                        int cnt;
+                        int cntt;
 
                         for (int cnt = 0; cnt < len; cnt++)
                         {
@@ -5246,6 +5284,10 @@ namespace BoxGenerator2
         public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
+            int len = 0;
+
+            const byte ELDEXT_TERM = 0;
+
             boxSize += 1; // frameLengthFlag
             boxSize += 1; // aacSectionDataResilienceFlag
             boxSize += 1; // aacScalefactorDataResilienceFlag
@@ -5281,7 +5323,7 @@ namespace BoxGenerator2
                 {
                     /*  add future eld extension configs here  */
                     default:
-                        int cnt;
+                        int cntt;
 
                         for (int cnt = 0; cnt < len; cnt++)
                         {
@@ -5338,7 +5380,9 @@ namespace BoxGenerator2
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            ulong numSbrHeader = 0;
+            int numSbrHeader = 0;
+
+            int channelConfiguration = 0; // TODO: pass through ctor
 
 
             switch (channelConfiguration)
@@ -5373,7 +5417,9 @@ namespace BoxGenerator2
         public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            ulong numSbrHeader = 0;
+            int numSbrHeader = 0;
+
+            int channelConfiguration = 0; // TODO: pass through ctor
 
 
             switch (channelConfiguration)
@@ -5408,7 +5454,9 @@ namespace BoxGenerator2
         public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
-            ulong numSbrHeader = 0;
+            int numSbrHeader = 0;
+
+            int channelConfiguration = 0; // TODO: pass through ctor
 
 
             switch (channelConfiguration)
