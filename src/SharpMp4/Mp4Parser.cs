@@ -1830,7 +1830,10 @@ namespace SharpMp4
 
         public virtual ulong CalculateSize()
         {
-            return (ulong)GetParsedSize(_originalSize); // box header
+            if (_originalSize == 0 && _originalLargeSize == 0)
+                return 8;
+            else
+                return (ulong)GetParsedSize(_originalSize); // box header
         }
 
         public static long GetParsedSize(uint size)
@@ -3696,7 +3699,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return base.CalculateSize() + 12;
+            return base.CalculateSize() + 8;
         }
     }
 
@@ -3950,7 +3953,7 @@ namespace SharpMp4
 
         public override ulong CalculateSize()
         {
-            return (ulong)((long)base.CalculateSize() + Entries.Count * 12 + 8);
+            return (ulong)((long)base.CalculateSize() + Entries.Count * 12 + 4);
         }
     }
 

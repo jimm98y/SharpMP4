@@ -1,10 +1,11 @@
 ﻿using SharpMp4;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 using (Stream fs = new BufferedStream(new FileStream("frag_bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read)))
 {
-    using (var fmp4 = await FragmentedMp4.ParseAsync(fs))
+    var fmp4 = await FragmentedMp4.ParseAsync(fs);
     {
         uint videoTrackId = fmp4.FindVideoTrackID().First();
         uint audioTrackId = fmp4.FindAudioTrackID().First();
@@ -20,30 +21,29 @@ using (Stream fs = new BufferedStream(new FileStream("frag_bunny.mp4", FileMode.
                 var sourceAudioTrackInfo = fmp4.FindAudioTracks().First().GetAudioSampleEntryBox();
                 var audioTrack = new AACTrack((byte)sourceAudioTrackInfo.ChannelCount, (int)sourceAudioTrackInfo.SampleRate, sourceAudioTrackInfo.SampleSize);
                 builder.AddTrack(audioTrack);
-
-                foreach (var parsedTrack in parsedMDAT)
+                
+                foreach (var nal in parsedMDAT.VideoNALUs)
                 {
-                    if (parsedTrack.Key == videoTrackId)
+                    await videoTrack.ProcessSampleAsync(nal);
+                }
+                var nals = await fmp4.ReadNextTrackAsync(parsedMDAT, (int)videoTrackId);
+                while (nals != null)
+                {
+                    foreach (var nal in nals)
                     {
-                        for (int i = 0; i < parsedTrack.Value.Count; i++)
-                        {
-                            foreach (var nal in parsedTrack.Value[i])
-                            {
-                                await videoTrack.ProcessSampleAsync(nal);
-                            }
-                        }
+                        await videoTrack.ProcessSampleAsync(nal);
                     }
-                    else if (parsedTrack.Key == audioTrackId)
+                    nals = await fmp4.ReadNextTrackAsync(parsedMDAT, (int)videoTrackId);
+                }
+
+                var frames = await fmp4.ReadNextTrackAsync(parsedMDAT, (int)audioTrackId);
+                while(frames != null)
+                {
+                    foreach (var frame in frames)
                     {
-                        for (int i = 0; i < parsedTrack.Value[0].Count; i++)
-                        {
-                            await audioTrack.ProcessSampleAsync(parsedTrack.Value[0][i]);
-                        }
+                        await audioTrack.ProcessSampleAsync(frame);
                     }
-                    else
-                    {
-                        // unknown track
-                    }
+                    frames = await fmp4.ReadNextTrackAsync(parsedMDAT, (int)audioTrackId);
                 }
 
                 await audioTrack.FlushAsync();
