@@ -3,6 +3,379 @@ using System.Threading.Tasks;
 
 namespace BoxGenerator2
 {
+    public class BoxFactory
+    {
+        public static Box CreateBox(string fourCC)
+        {
+            switch (fourCC)
+            {
+                case "stpp": return new XMLSubtitleSampleEntry();
+                case "sbtt": return new TextSubtitleSampleEntry();
+                case "stxt": return new SimpleTextSampleEntry();
+                case "keyd": return new MetaDataKeyDeclarationBox();
+                case "loca": return new MetaDataLocaleBox();
+                case "setu": return new MetaDataSetupBox();
+                case "exte": return new MetaDataExtensionsBox();
+                case "keyi": return new MetaDataInlineKeysPresentBox();
+                case "vipr": return new ViewPriorityBox();
+                case "avss": return new AVCSubSequenceEntry();
+                case "btrt": return new MPEG4BitRateBox();
+                case "icam": return new IntrinsicCameraParametersBox();
+                case "ecam": return new ExtrinsicCameraParametersBox();
+                case "rssr": return new ReceivedSsrcBox();
+                case "tssy": return new timestampsynchrony();
+                case "tims": return new timescaleentry();
+                case "tsro": return new timeoffset();
+                case "snro": return new sequenceoffset();
+                case "trpy": return new hintBytesSent();
+                case "nump": return new hintPacketsSent();
+                case "tpyl": return new hintBytesSent_tpyl();
+                case "totl": return new hintBytesSent_totl();
+                case "npck": return new hintPacketsSent_npck();
+                case "tpay": return new hintBytesSent_tpay();
+                case "maxr": return new hintmaxrate();
+                case "dmed": return new hintmediaBytesSent();
+                case "dimm": return new hintimmediateBytesSent();
+                case "drep": return new hintrepeatedBytesSent();
+                case "tmin": return new hintminrelativetime();
+                case "tmax": return new hintmaxrelativetime();
+                case "pmax": return new hintlargestpacket();
+                case "dmax": return new hintlongestpacket();
+                case "payt": return new hintpayloadID();
+                case "stvi": return new StereoVideoBox();
+                case "elng": return new ExtendedLanguageBox();
+                case "btrt": return new BitRateBox();
+                case "pasp": return new PixelAspectRatioBox();
+                case "clap": return new CleanApertureBox();
+                case "cclv": return new ContentColourVolumeBox();
+                case "colr": return new ColourInformationBox();
+                case "clli": return new ContentLightLevelBox();
+                case "mdcv": return new MasteringDisplayColourVolumeBox();
+                case "scrb": return new ScrambleSchemeInfoBox();
+                case "chnl": return new ChannelLayout();
+                case "dmix": return new DownMixInstructions();
+                case "srat": return new SamplingRateBox();
+                case "txtC": return new TextConfigBox();
+                case "uriI": return new URIInitBox();
+                case "cprt": return new CopyrightBox();
+                case "kind": return new KindBox();
+                case "tsel": return new TrackSelectionBox();
+                case "strk": return new SubTrackBox();
+                case "hnti": return new trackhintinformation();
+                case "sdp ": return new rtptracksdphintinformation();
+                case "hnti": return new moviehintinformation();
+                case "rtp ": return new rtpmoviehintinformation();
+                case "hinf": return new hintstatisticsbox();
+                case "ludt": return new LoudnessBox();
+                case "tlou": return new TrackLoudnessInfo();
+                case "alou": return new AlbumLoudnessInfo();
+                case "url ": return new DataEntryUrlBox();
+                case "urn ": return new DataEntryUrnBox();
+                case "imdt": return new DataEntryImdaBox();
+                case "snim": return new DataEntrySeqNumImdaBox();
+                case "ipco": return new ItemPropertyContainerBox();
+                case "ipma": return new ItemPropertyAssociationBox();
+                case "iprp": return new ItemPropertiesBox();
+                case "assp": return new AlternativeStartupSequencePropertiesBox();
+                case "bxml": return new BinaryXMLBox();
+                case "cinf": return new CompleteTrackInfoBox();
+                case "co64": return new ChunkLargeOffsetBox();
+                case "csgp": return new CompactSampleToGroupBox();
+                case "cslg": return new CompositionToDecodeBox();
+                case "ctts": return new CompositionOffsetBox();
+                case "dinf": return new DataInformationBox();
+                case "dref": return new DataReferenceBox();
+                case "edts": return new EditBox();
+                case "elst": return new EditListBox();
+                case "etyp": return new ExtendedTypeBox();
+                case "fdel": return new FDItemInfoExtension();
+                case "fecr": return new FECReservoirBox();
+                case "paen": return new PartitionEntry();
+                case "fiin": return new FDItemInformationBox();
+                case "fire": return new FileReservoirBox();
+                case "fpar": return new FilePartitionBox();
+                case "free": return new FreeSpaceBox();
+                case "frma": return new OriginalFormatBox();
+                case "ftyp": return new FileTypeBox();
+                case "gitn": return new GroupIdToNameBox();
+                case "grpl": return new GroupsListBox();
+                case "hdlr": return new HandlerBox();
+                case "hmhd": return new HintMediaHeaderBox();
+                case "idat": return new ItemDataBox();
+                case "iinf": return new ItemInfoBox();
+                case "iloc": return new ItemLocationBox();
+                case "imda": return new IdentifiedMediaDataBox();
+                case "infe": return new ItemInfoEntry();
+                case "ipro": return new ItemProtectionBox();
+                case "iref": return new ItemReferenceBox();
+                case "leva": return new LevelAssignmentBox();
+                case "mdat": return new MediaDataBox();
+                case "mdhd": return new MediaHeaderBox();
+                case "mdia": return new MediaBox();
+                case "mehd": return new MovieExtendsHeaderBox();
+                case "meta": return new MetaBox();
+                case "mfhd": return new MovieFragmentHeaderBox();
+                case "mfra": return new MovieFragmentRandomAccessBox();
+                case "mfro": return new MovieFragmentRandomAccessOffsetBox();
+                case "minf": return new MediaInformationBox();
+                case "moof": return new CompressedMovieFragmentBox();
+                case "moov": return new CompressedMovieBox();
+                case "mvex": return new MovieExtendsBox();
+                case "mvhd": return new MovieHeaderBox();
+                case "nmhd": return new NullMediaHeaderBox();
+                case "otyp": return new OriginalFileTypeBox();
+                case "padb": return new PaddingBitsBox();
+                case "pdin": return new ProgressiveDownloadInfoBox();
+                case "pitm": return new PrimaryItemBox();
+                case "prft": return new ProducerReferenceTimeBox();
+                case "rinf": return new RestrictedSchemeInfoBox();
+                case "saio": return new SampleAuxiliaryInformationOffsetsBox();
+                case "saiz": return new SampleAuxiliaryInformationSizesBox();
+                case "sbgp": return new SampleToGroupBox();
+                case "schi": return new SchemeInformationBox();
+                case "schm": return new SchemeTypeBox();
+                case "csch": return new CompatibleSchemeTypeBox();
+                case "sdtp": return new SampleDependencyTypeBox();
+                case "segr": return new FDSessionGroupBox();
+                case "sgpd": return new SampleGroupDescriptionBox();
+                case "sidx": return new CompressedSegmentIndexBox();
+                case "sinf": return new ProtectionSchemeInfoBox();
+                case "skip": return new FreeSpaceBox_skip();
+                case "smhd": return new SoundMediaHeaderBox();
+                case "srpp": return new SRTPProcessBox();
+                case "ssix": return new CompressedSubsegmentIndexBox();
+                case "stbl": return new SampleTableBox();
+                case "stco": return new ChunkOffsetBox();
+                case "stdp": return new DegradationPriorityBox();
+                case "sthd": return new SubtitleMediaHeaderBox();
+                case "strd": return new SubTrackDefinitionBox();
+                case "stri": return new SubTrackInformationBox();
+                case "stsc": return new SampleToChunkBox();
+                case "stsd": return new SampleDescriptionBox();
+                case "stsg": return new SubTrackSampleGroupBox();
+                case "stsh": return new ShadowSyncSampleBox();
+                case "stss": return new SyncSampleBox();
+                case "stsz": return new SampleSizeBox();
+                case "stts": return new TimeToSampleBox();
+                case "styp": return new SegmentTypeBox();
+                case "stz2": return new CompactSampleSizeBox();
+                case "subs": return new SubSampleInformationBox();
+                case "tfdt": return new TrackFragmentBaseMediaDecodeTimeBox();
+                case "tfhd": return new TrackFragmentHeaderBox();
+                case "tfra": return new TrackFragmentRandomAccessBox();
+                case "tkhd": return new TrackHeaderBox();
+                case "traf": return new TrackFragmentBox();
+                case "trak": return new TrackBox();
+                case "tref": return new TrackReferenceBox();
+                case "trep": return new TrackExtensionPropertiesBox();
+                case "trex": return new TrackExtendsBox();
+                case "trgr": return new TrackGroupBox();
+                case "trun": return new TrackRunBox();
+                case "ttyp": return new TrackTypeBox();
+                case "tyco": return new TypeCombinationBox();
+                case "udta": return new UserDataBox();
+                case "vmhd": return new VideoMediaHeaderBox();
+                case "xml ": return new XMLBox();
+                case "amve": return new AmbientViewingEnvironmentBox();
+                case "keys": return new MetaDataKeyTableBox();
+                case "uri ": return new URIBox();
+                case "iroi": return new IroiInfoBox();
+                case "ldep": return new TierDependencyBox();
+                case "svdr": return new SVCDependencyRangeBox();
+                case "svip": return new InitialParameterSetBox();
+                case "svpr": return new PriorityRangeBox();
+                case "tran": return new TranscodingInfoBox();
+                case "rrgn": return new RectRegionBox();
+                case "buff": return new BufferingBox();
+                case "mstv": return new MVCSubTrackViewBox();
+                case "mvcg": return new MultiviewGroupBox();
+                case "mvci": return new MultiviewInformationBox();
+                case "3dpr": return new MVDDepthResolutionBox();
+                case "mvra": return new MultiviewRelationAttributeBox();
+                case "sdep": return new SampleDependencyBox();
+                case "seii": return new SeiInformationBox();
+                case "sstl": return new SVCSubTrackLayerBox();
+                case "stmg": return new MVCSubTrackMultiviewGroupBox();
+                case "stti": return new SubTrackTierBox();
+                case "swtc": return new MultiviewGroupRelationBox();
+                case "tibr": return new TierBitRateBox();
+                case "tiri": return new TierInfoBox();
+                case "tstb": return new TileSubTrackGroupBox();
+                case "vwdi": return new MultiviewSceneInfoBox();
+                case "mvdC": return new MVCDConfigurationBox();
+                case "a3dC": return new A3DConfigurationBox();
+                case "vwid": return new ViewIdentifierBox();
+                case "mvcC": return new MVCConfigurationBox();
+                case "avcC": return new AVCConfigurationBox();
+                case "hvcC": return new HEVCConfigurationBox();
+                case "lhvC": return new LHEVCConfigurationBox();
+                case "m4ds": return new MPEG4ExtensionDescriptorsBox();
+                case "svcC": return new SVCConfigurationBox();
+                case "seib": return new ScalabilityInformationSEIBox();
+                case "svcP": return new SVCPriorityAssignmentBox();
+                case "vsib": return new ViewScalabilityInformationSEIBox();
+                case "3sib": return new MVDScalabilityInformationSEIBox();
+                case "mvcP": return new MVCViewPriorityAssignmentBox();
+                case "hvtC": return new HEVCTileConfigurationBox();
+                case "evcC": return new EVCConfigurationBox();
+                case "qlif": return new SVCPriorityLayerInfoBox();
+                case "vvcC": return new VvcConfigurationBox();
+                case "vvnC": return new VvcNALUConfigBox();
+                case "dhec": return new DefaultHevcExtractorConstructorBox();
+                case "svmC": return new SVCMetadataSampleConfigBox();
+                case "evsC": return new EVCSliceComponentTrackConfigurationBox();
+                case "vttC": return new WebVTTConfigurationBox();
+                case "vlab": return new WebVTTSourceLabelBox();
+                case "wvtt": return new WVTTSampleEntry();
+                case "auxi": return new AuxiliaryTypeInfoBox();
+                case "ccst": return new CodingConstraintsBox();
+                case "md5i": return new MD5IntegrityBox();
+                case "encv": return new GenericSampleEntry();
+                case "metx": return new XMLMetaDataSampleEntry();
+                case "mett": return new TextMetaDataSampleEntry();
+                case "urim": return new URIMetaSampleEntry();
+                case "mebx": return new BoxedMetaDataSampleEntry();
+                case "fdp ": return new FDHintSampleEntry();
+                case "icpv": return new IncompleteAVCSampleEntry();
+                case "pm2t": return new ProtectedMPEG2TransportStreamSampleEntry();
+                case "prtp": return new ProtectedRtpReceptionHintSampleEntry();
+                case "rm2t": return new MPEG2TSReceptionSampleEntry();
+                case "rrtp": return new ReceivedRtpHintSampleEntry();
+                case "rsrp": return new ReceivedSrtpHintSampleEntry();
+                case "sm2t": return new MPEG2TSServerSampleEntry();
+                case "srtp": return new SrtpHintSampleEntry();
+                case "resv": return new VisualSampleEntry();
+                case "rtp ": return new RtpHintSampleEntry();
+                case "brnd": return new BrandProperty();
+                case "alst": return new AlternativeStartupEntry();
+                case "drap": return new VisualDRAPEntry();
+                case "prol": return new AudioPreRollEntry();
+                case "rap ": return new VisualRandomAccessEntry();
+                case "rash": return new RateShareEntry();
+                case "roll": return new AudioRollRecoveryEntry();
+                case "sap ": return new SAPEntry();
+                case "stmi": return new SampleToMetadataItemEntry();
+                case "tele": return new TemporalLevelEntry();
+                case "pasr": return new PixelAspectRatioEntry();
+                case "casg": return new CleanApertureEntry();
+                case "msrc": return new TrackGroupTypeBox();
+                case "ster": return new StereoVideoGroupBox();
+                case "hvc1": return new HEVCSampleEntry();
+                case "hvc2": return new HEVCSampleEntry_hvc2();
+                case "hvc3": return new HEVCSampleEntry_hvc3();
+                case "lhv1": return new LHEVCSampleEntry();
+                case "lhe1": return new LHEVCSampleEntry_lhe1();
+                case "hev1": return new HEVCSampleEntry_hev1();
+                case "hev2": return new HEVCSampleEntry_hev2();
+                case "hev3": return new HEVCSampleEntry_hev3();
+                case "avcp": return new AVCParameterSampleEntry();
+                case "avc1": return new AVCMVCSampleEntry();
+                case "avc3": return new AVCMVCSampleEntry_avc3();
+                case "avc2": return new AVC2MVCSampleEntry();
+                case "avc4": return new AVC2MVCSampleEntry_avc4();
+                case "mvc1": return new MVCSampleEntry();
+                case "mvc2": return new MVCSampleEntry_mvc2();
+                case "mvc3": return new MVCSampleEntry_mvc3();
+                case "mvc4": return new MVCSampleEntry_mvc4();
+                case "mvd1": return new MVCDSampleEntry();
+                case "mvd2": return new MVCDSampleEntry_mvd2();
+                case "mvd3": return new MVCDSampleEntry_mvd3();
+                case "mvd4": return new MVCDSampleEntry_mvd4();
+                case "a3d1": return new A3DSampleEntry();
+                case "a3d2": return new A3DSampleEntry_a3d2();
+                case "a3d3": return new A3DSampleEntry_a3d3();
+                case "a3d4": return new A3DSampleEntry_a3d4();
+                case "'avc1' or 'avc3'": return new AVCSVCSampleEntry();
+                case "'avc2' or 'avc4'": return new AVC2SVCSampleEntry();
+                case "'svc1' or 'svc2'": return new SVCSampleEntry();
+                case "hvt1": return new HEVCTileSampleEntry();
+                case "lht1": return new LHEVCTileSampleEntry();
+                case "hvt3": return new HEVCTileSSHInfoSampleEntry();
+                case "hvt2": return new HEVCSliceSegmentDataSampleEntry();
+                case "'vvc1' or 'vvi1'": return new VvcSampleEntry();
+                case "vvs1": return new VvcSubpicSampleEntry();
+                case "vvcN": return new VvcNonVCLSampleEntry();
+                case "evc1": return new EVCSampleEntry();
+                case "svcM": return new SVCMetaDataSampleEntry();
+                case "'evs1' or 'evs2'": return new EVCSliceComponentTrackSampleEntry();
+                case "acgl": return new SubpicCommonGroupBox();
+                case "amgl": return new SubpicMultipleGroupsBox();
+                case "opeg": return new OperatingPointGroupBox();
+                case "swtk": return new SwitchableTracks();
+                case "vvcb": return new EntityToGroupBox_vvcb();
+                case "aud ": return new AUDSampleEntry();
+                case "avll": return new AVCLayerEntry();
+                case "dcfi": return new DecodingCapabilityInformation();
+                case "dtrt": return new DecodeRetimingEntry();
+                case "eob ": return new EndOfBitstreamSampleEntry();
+                case "eos ": return new EndOfSequenceSampleEntry();
+                case "lbli": return new LhvcExternalBaseLayerInfo();
+                case "linf": return new LayerInfoGroupEntry();
+                case "minp": return new VvcMixedNALUnitTypePicEntry();
+                case "mvif": return new MultiviewGroupEntry();
+                case "nalm": return new NALUMapEntry();
+                case "oinf": return new OperatingPointsInformation();
+                case "opth": return new OperatingPointDecodeTimeHint();
+                case "pase": return new ParameterSetNALUEntry();
+                case "pss1": return new PSSampleGroupEntry();
+                case "rror": return new VvcRectRegionOrderEntry();
+                case "scif": return new ScalableGroupEntry();
+                case "scnm": return new ScalableNALUMapEntry();
+                case "spid": return new VvcSubpicIDEntry();
+                case "spli": return new SubpicLevelInfoEntry();
+                case "spor": return new VvcSubpicOrderEntry();
+                case "stsa": return new StepwiseTemporalLayerEntry();
+                case "sulm": return new VvcSubpicLayoutMapEntry();
+                case "sync": return new SyncSampleEntry();
+                case "trif": return new RectangularRegionGroupEntry();
+                case "tsas": return new TemporalSubLayerEntry();
+                case "tscl": return new TemporalLayerEntry();
+                case "vipr": return new ViewPriorityEntry();
+                case "vopi": return new VvcOperatingPointsInformation();
+                case "alte": return new TrackGroupTypeBox_alte();
+                case "cstg": return new TrackGroupTypeBox_cstg();
+                case "snut": return new TrackGroupTypeBox_snut();
+                case "auxC": return new AuxiliaryTypeProperty();
+                case "imir": return new ImageMirror();
+                case "irot": return new ImageRotation();
+                case "ispe": return new ImageSpatialExtentsProperty();
+                case "jpgC": return new JPEGConfigurationBox();
+                case "lsel": return new LayerSelectorProperty();
+                case "oinf": return new OperatingPointsInformationProperty();
+                case "pixi": return new PixelInformationProperty();
+                case "rloc": return new RelativeLocationProperty();
+                case "tols": return new TargetOlsProperty();
+                case "aebr": return new AutoExposureBracketingEntry();
+                case "afbr": return new FlashExposureBracketingEntry();
+                case "altt": return new AccessibilityTextProperty();
+                case "crtt": return new CreationTimeProperty();
+                case "dobr": return new DepthOfFieldBracketingEntry();
+                case "fobr": return new FocusBracketingEntry();
+                case "iscl": return new ImageScaling();
+                case "mdft": return new ModificationTimeProperty();
+                case "pano": return new PanoramaEntry();
+                case "rref": return new RequiredReferenceTypesProperty();
+                case "udes": return new UserDescriptionProperty();
+                case "wbbr": return new WhiteBalanceBracketingEntry();
+                case "wipe": return new WipeTransitionEffectProperty();
+                case "zoom": return new ZoomTransitionEffectProperty();
+                case "fade": return new FadeTransitionEffectProperty();
+                case "splt": return new SplitTransitionEffectProperty();
+                case "stpe": return new SuggestedTransitionPeriodProperty();
+                case "ssld": return new SuggestedTimeDisplayDurationProperty();
+                case "mskC": return new MaskConfigurationProperty();
+                case "spid": return new VvcSubpicIDProperty();
+                case "spor": return new VvcSubpicOrderProperty();
+                case "eqiv": return new VisualEquivalenceEntry();
+                case "refs": return new DirectReferenceSamplesList();
+                case "Opus": return new OpusSampleEntry();
+                case "dOps": return new OpusSpecificBox();
+            }
+
+            throw new NotSupportedException(fourCC);
+        }
+    }
+
     /*
     aligned(8) class FullBox(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)
     extends Box(boxtype) { 
@@ -12,7 +385,7 @@ namespace BoxGenerator2
     */
     public class FullBox : Box
     {
-        public override string FourCC { get; set; } = "uuid";
+
 
         protected byte version; // = v
         public byte Version { get { return this.version; } set { this.version = value; } }
@@ -319,7 +692,7 @@ namespace BoxGenerator2
     */
     public class XMLSubtitleSampleEntry : SubtitleSampleEntry
     {
-
+        public override string FourCC { get; set; } = "stpp";
 
         protected string ns;
         public string Ns { get { return this.ns; } set { this.ns = value; } }
@@ -381,7 +754,7 @@ namespace BoxGenerator2
     */
     public class TextSubtitleSampleEntry : SubtitleSampleEntry
     {
-
+        public override string FourCC { get; set; } = "sbtt";
 
         protected string content_encoding;  //  optional 
         public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -406,6 +779,7 @@ namespace BoxGenerator2
             boxSize += stream.ReadString(out this.mime_format);
             if (boxSize < size) boxSize += stream.ReadBox(out this.BitRateBox); // optional 
             if (boxSize < size) boxSize += stream.ReadBox(out this.TextConfigBox); // optional 
+            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -417,6 +791,7 @@ namespace BoxGenerator2
             boxSize += stream.WriteString(this.mime_format);
             if (this.BitRateBox != null) boxSize += stream.WriteBox(this.BitRateBox); // optional 
             if (this.TextConfigBox != null) boxSize += stream.WriteBox(this.TextConfigBox); // optional 
+            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -734,7 +1109,7 @@ namespace BoxGenerator2
     */
     public class SimpleTextSampleEntry : PlainTextSampleEntry
     {
-
+        public override string FourCC { get; set; } = "stxt";
 
         protected string content_encoding;  //  optional 
         public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -759,6 +1134,7 @@ namespace BoxGenerator2
             boxSize += stream.ReadString(out this.mime_format);
             if (boxSize < size) boxSize += stream.ReadBox(out this.BitRateBox); // optional 
             if (boxSize < size) boxSize += stream.ReadBox(out this.TextConfigBox); // optional 
+            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -770,6 +1146,7 @@ namespace BoxGenerator2
             boxSize += stream.WriteString(this.mime_format);
             if (this.BitRateBox != null) boxSize += stream.WriteBox(this.BitRateBox); // optional 
             if (this.TextConfigBox != null) boxSize += stream.WriteBox(this.TextConfigBox); // optional 
+            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -985,7 +1362,7 @@ namespace BoxGenerator2
     */
     public class MetaDataKeyDeclarationBox : Box
     {
-
+        public override string FourCC { get; set; } = "keyd";
 
         protected uint key_namespace;
         public uint KeyNamespace { get { return this.key_namespace; } set { this.key_namespace = value; } }
@@ -1033,7 +1410,7 @@ namespace BoxGenerator2
     */
     public class MetaDataLocaleBox : Box
     {
-
+        public override string FourCC { get; set; } = "loca";
 
         protected string locale_string;
         public string LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
@@ -1074,7 +1451,7 @@ namespace BoxGenerator2
     */
     public class MetaDataSetupBox : Box
     {
-
+        public override string FourCC { get; set; } = "setu";
 
         public MetaDataSetupBox()
         { }
@@ -1113,7 +1490,7 @@ namespace BoxGenerator2
     */
     public class MetaDataExtensionsBox : Box
     {
-
+        public override string FourCC { get; set; } = "exte";
 
         protected Box[] extensions;
         public Box[] Extensions { get { return this.extensions; } set { this.extensions = value; } }
@@ -1155,7 +1532,7 @@ namespace BoxGenerator2
     */
     public class MetaDataInlineKeysPresentBox : Box
     {
-
+        public override string FourCC { get; set; } = "keyi";
 
         protected byte inlineKeyValueBoxesPresent;
         public byte InlineKeyValueBoxesPresent { get { return this.inlineKeyValueBoxesPresent; } set { this.inlineKeyValueBoxesPresent = value; } }
@@ -1258,6 +1635,98 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) abstract class SampleEntry (unsigned int(32) format) extends Box(format){ 
+    const unsigned int(8)[6] reserved = 0; 
+    unsigned int(16) data_reference_index; 
+    }
+
+    */
+    public class SampleEntry : Box
+    {
+
+
+        protected byte[] reserved = [];
+        public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected ushort data_reference_index;
+        public ushort DataReferenceIndex { get { return this.data_reference_index; } set { this.data_reference_index = value; } }
+
+        public SampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt8Array(6, out this.reserved);
+            boxSize += stream.ReadUInt16(out this.data_reference_index);
+            boxSize += stream.ReadBoxChildren(boxSize, this);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8Array(6, this.reserved);
+            boxSize += stream.WriteUInt16(this.data_reference_index);
+            boxSize += stream.WriteBoxChildren(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 6 * 8; // reserved
+            boxSize += 16; // data_reference_index
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HintSampleEntry() extends SampleEntry (protocol) { 
+    unsigned int(8) data []; 
+    } 
+    */
+    public class HintSampleEntry : SampleEntry
+    {
+
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public HintSampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt8Array(out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8Array(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)data.Length * 8; // data
             return boxSize;
         }
     }
@@ -1412,7 +1881,7 @@ namespace BoxGenerator2
     */
     public class AVCSubSequenceEntry : VisualSampleGroupEntry
     {
-
+        public override string FourCC { get; set; } = "avss";
 
         protected ushort subSequenceIdentifer;
         public ushort SubSequenceIdentifer { get { return this.subSequenceIdentifer; } set { this.subSequenceIdentifer = value; } }
@@ -1539,7 +2008,7 @@ namespace BoxGenerator2
     */
     public class MPEG4BitRateBox : Box
     {
-
+        public override string FourCC { get; set; } = "btrt";
 
         protected uint bufferSizeDB;
         public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
@@ -4235,7 +4704,7 @@ namespace BoxGenerator2
     */
     public class timeoffset : Box
     {
-        public override string FourCC { get; set; } = "tims";
+        public override string FourCC { get; set; } = "tsro";
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
@@ -4276,262 +4745,12 @@ namespace BoxGenerator2
     */
     public class sequenceoffset : Box
     {
-        public override string FourCC { get; set; } = "tims";
+        public override string FourCC { get; set; } = "snro";
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
 
         public sequenceoffset()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadInt32(out this.offset);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteInt32(this.offset);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // offset
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class timescaleentry() extends Box('tims') {
-        uint(32)	timescale;
-    }
-
-    */
-    public class timescaleentry1 : Box
-    {
-        public override string FourCC { get; set; } = "tsro";
-
-        protected uint timescale;
-        public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }
-
-        public timescaleentry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.timescale);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.timescale);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // timescale
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class timeoffset() extends Box('tsro') {
-        int(32)		offset;
-    }
-
-    */
-    public class timeoffset1 : Box
-    {
-        public override string FourCC { get; set; } = "tsro";
-
-        protected int offset;
-        public int Offset { get { return this.offset; } set { this.offset = value; } }
-
-        public timeoffset1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadInt32(out this.offset);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteInt32(this.offset);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // offset
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class sequenceoffset() extends Box('snro') {
-        int(32)		offset;
-    }
-    */
-    public class sequenceoffset1 : Box
-    {
-        public override string FourCC { get; set; } = "tsro";
-
-        protected int offset;
-        public int Offset { get { return this.offset; } set { this.offset = value; } }
-
-        public sequenceoffset1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadInt32(out this.offset);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteInt32(this.offset);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // offset
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class timescaleentry() extends Box('tims') {
-        uint(32)	timescale;
-    }
-
-    */
-    public class timescaleentry2 : Box
-    {
-        public override string FourCC { get; set; } = "snro";
-
-        protected uint timescale;
-        public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }
-
-        public timescaleentry2()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.timescale);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.timescale);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // timescale
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class timeoffset() extends Box('tsro') {
-        int(32)		offset;
-    }
-
-    */
-    public class timeoffset2 : Box
-    {
-        public override string FourCC { get; set; } = "snro";
-
-        protected int offset;
-        public int Offset { get { return this.offset; } set { this.offset = value; } }
-
-        public timeoffset2()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadInt32(out this.offset);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteInt32(this.offset);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // offset
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class sequenceoffset() extends Box('snro') {
-        int(32)		offset;
-    }
-    */
-    public class sequenceoffset2 : Box
-    {
-        public override string FourCC { get; set; } = "snro";
-
-        protected int offset;
-        public int Offset { get { return this.offset; } set { this.offset = value; } }
-
-        public sequenceoffset2()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4606,7 +4825,7 @@ namespace BoxGenerator2
     */
     public class hintPacketsSent : Box
     {
-        public override string FourCC { get; set; } = "trpy";
+        public override string FourCC { get; set; } = "nump";
 
         protected ulong packetssent;
         public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
@@ -4644,214 +4863,14 @@ namespace BoxGenerator2
     aligned(8) class hintBytesSent extends Box('trpy') {
         uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
     */
-    public class hintBytesSent1 : Box
-    {
-        public override string FourCC { get; set; } = "nump";
-
-        protected ulong bytessent;
-        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintBytesSent1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt64(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt64(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintPacketsSent extends Box('nump') {
-        uint(64)	packetssent; }	// total packets sent
-    */
-    public class hintPacketsSent1 : Box
-    {
-        public override string FourCC { get; set; } = "nump";
-
-        protected ulong packetssent;
-        public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
-
-        public hintPacketsSent1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt64(out this.packetssent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt64(this.packetssent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // packetssent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintBytesSent extends Box('trpy') {
-        uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
-    */
-    public class hintBytesSent2 : Box
-    {
-        public override string FourCC { get; set; } = "nump";
-
-        protected ulong bytessent;
-        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintBytesSent2()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt64(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt64(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintBytesSent extends Box('trpy') {
-        uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
-    */
-    public class hintBytesSent3 : Box
+    public class hintBytesSent_tpyl : Box
     {
         public override string FourCC { get; set; } = "tpyl";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent3()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt64(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt64(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintPacketsSent extends Box('nump') {
-        uint(64)	packetssent; }	// total packets sent
-    */
-    public class hintPacketsSent2 : Box
-    {
-        public override string FourCC { get; set; } = "tpyl";
-
-        protected ulong packetssent;
-        public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
-
-        public hintPacketsSent2()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt64(out this.packetssent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt64(this.packetssent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // packetssent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintBytesSent extends Box('trpy') {
-        uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
-    */
-    public class hintBytesSent4 : Box
-    {
-        public override string FourCC { get; set; } = "tpyl";
-
-        protected ulong bytessent;
-        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintBytesSent4()
+        public hintBytesSent_tpyl()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4884,14 +4903,14 @@ namespace BoxGenerator2
     aligned(8) class hintBytesSent extends Box('totl') {
         uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
     */
-    public class hintBytesSent5 : Box
+    public class hintBytesSent_totl : Box
     {
         public override string FourCC { get; set; } = "totl";
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent5()
+        public hintBytesSent_totl()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4924,14 +4943,14 @@ namespace BoxGenerator2
     aligned(8) class hintPacketsSent extends Box('npck') {
         uint(32)	packetssent; }	// total packets sent
     */
-    public class hintPacketsSent3 : Box
+    public class hintPacketsSent_npck : Box
     {
-        public override string FourCC { get; set; } = "totl";
+        public override string FourCC { get; set; } = "npck";
 
         protected uint packetssent;
         public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
 
-        public hintPacketsSent3()
+        public hintPacketsSent_npck()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4964,254 +4983,14 @@ namespace BoxGenerator2
     aligned(8) class hintBytesSent extends Box('totl') {
         uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
     */
-    public class hintBytesSent6 : Box
-    {
-        public override string FourCC { get; set; } = "totl";
-
-        protected uint bytessent;
-        public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintBytesSent6()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintBytesSent extends Box('totl') {
-        uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
-    */
-    public class hintBytesSent7 : Box
-    {
-        public override string FourCC { get; set; } = "npck";
-
-        protected uint bytessent;
-        public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintBytesSent7()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintPacketsSent extends Box('npck') {
-        uint(32)	packetssent; }	// total packets sent
-    */
-    public class hintPacketsSent4 : Box
-    {
-        public override string FourCC { get; set; } = "npck";
-
-        protected uint packetssent;
-        public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
-
-        public hintPacketsSent4()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.packetssent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.packetssent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // packetssent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintBytesSent extends Box('totl') {
-        uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
-    */
-    public class hintBytesSent8 : Box
-    {
-        public override string FourCC { get; set; } = "npck";
-
-        protected uint bytessent;
-        public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintBytesSent8()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintBytesSent extends Box('totl') {
-        uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
-    */
-    public class hintBytesSent9 : Box
+    public class hintBytesSent_tpay : Box
     {
         public override string FourCC { get; set; } = "tpay";
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent9()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintPacketsSent extends Box('npck') {
-        uint(32)	packetssent; }	// total packets sent
-    */
-    public class hintPacketsSent5 : Box
-    {
-        public override string FourCC { get; set; } = "tpay";
-
-        protected uint packetssent;
-        public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
-
-        public hintPacketsSent5()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.packetssent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.packetssent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // packetssent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintBytesSent extends Box('totl') {
-        uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
-    */
-    public class hintBytesSent10 : Box
-    {
-        public override string FourCC { get; set; } = "tpay";
-
-        protected uint bytessent;
-        public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintBytesSent10()
+        public hintBytesSent_tpay()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5336,7 +5115,7 @@ namespace BoxGenerator2
     */
     public class hintimmediateBytesSent : Box
     {
-        public override string FourCC { get; set; } = "dmed";
+        public override string FourCC { get; set; } = "dimm";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5376,252 +5155,12 @@ namespace BoxGenerator2
     */
     public class hintrepeatedBytesSent : Box
     {
-        public override string FourCC { get; set; } = "dmed";
+        public override string FourCC { get; set; } = "drep";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
         public hintrepeatedBytesSent()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt64(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt64(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintmediaBytesSent extends Box('dmed') {
-        uint(64)	bytessent; }	// total bytes sent from media tracks
-    */
-    public class hintmediaBytesSent1 : Box
-    {
-        public override string FourCC { get; set; } = "dimm";
-
-        protected ulong bytessent;
-        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintmediaBytesSent1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt64(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt64(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintimmediateBytesSent extends Box('dimm') {
-        uint(64)	bytessent; }	// total bytes sent immediate mode
-    */
-    public class hintimmediateBytesSent1 : Box
-    {
-        public override string FourCC { get; set; } = "dimm";
-
-        protected ulong bytessent;
-        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintimmediateBytesSent1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt64(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt64(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintrepeatedBytesSent extends Box('drep') {
-        uint(64)	bytessent; }	// total bytes in repeated packets
-    */
-    public class hintrepeatedBytesSent1 : Box
-    {
-        public override string FourCC { get; set; } = "dimm";
-
-        protected ulong bytessent;
-        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintrepeatedBytesSent1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt64(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt64(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintmediaBytesSent extends Box('dmed') {
-        uint(64)	bytessent; }	// total bytes sent from media tracks
-    */
-    public class hintmediaBytesSent2 : Box
-    {
-        public override string FourCC { get; set; } = "drep";
-
-        protected ulong bytessent;
-        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintmediaBytesSent2()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt64(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt64(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintimmediateBytesSent extends Box('dimm') {
-        uint(64)	bytessent; }	// total bytes sent immediate mode
-    */
-    public class hintimmediateBytesSent2 : Box
-    {
-        public override string FourCC { get; set; } = "drep";
-
-        protected ulong bytessent;
-        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintimmediateBytesSent2()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt64(out this.bytessent);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt64(this.bytessent);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // bytessent
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintrepeatedBytesSent extends Box('drep') {
-        uint(64)	bytessent; }	// total bytes in repeated packets
-    */
-    public class hintrepeatedBytesSent2 : Box
-    {
-        public override string FourCC { get; set; } = "drep";
-
-        protected ulong bytessent;
-        public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
-
-        public hintrepeatedBytesSent2()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5696,92 +5235,12 @@ namespace BoxGenerator2
     */
     public class hintmaxrelativetime : Box
     {
-        public override string FourCC { get; set; } = "tmin";
+        public override string FourCC { get; set; } = "tmax";
 
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
 
         public hintmaxrelativetime()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadInt32(out this.time);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteInt32(this.time);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // time
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintminrelativetime extends Box('tmin') {
-        int(32)		time; }		// smallest relative transmission time, milliseconds
-    */
-    public class hintminrelativetime1 : Box
-    {
-        public override string FourCC { get; set; } = "tmax";
-
-        protected int time;
-        public int Time { get { return this.time; } set { this.time = value; } }
-
-        public hintminrelativetime1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadInt32(out this.time);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteInt32(this.time);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // time
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintmaxrelativetime extends Box('tmax') {
-        int(32)		time; }		// largest relative transmission time, milliseconds
-    */
-    public class hintmaxrelativetime1 : Box
-    {
-        public override string FourCC { get; set; } = "tmax";
-
-        protected int time;
-        public int Time { get { return this.time; } set { this.time = value; } }
-
-        public hintmaxrelativetime1()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5856,92 +5315,12 @@ namespace BoxGenerator2
     */
     public class hintlongestpacket : Box
     {
-        public override string FourCC { get; set; } = "pmax";
+        public override string FourCC { get; set; } = "dmax";
 
         protected uint time;
         public uint Time { get { return this.time; } set { this.time = value; } }
 
         public hintlongestpacket()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.time);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.time);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // time
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintlargestpacket extends Box('pmax') {
-        uint(32)	bytes; }			// largest packet sent, including RTP header
-    */
-    public class hintlargestpacket1 : Box
-    {
-        public override string FourCC { get; set; } = "dmax";
-
-        protected uint bytes;
-        public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
-
-        public hintlargestpacket1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.bytes);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.bytes);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // bytes
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class hintlongestpacket extends Box('dmax') {
-        uint(32)	time; }			// longest packet duration, milliseconds
-    */
-    public class hintlongestpacket1 : Box
-    {
-        public override string FourCC { get; set; } = "dmax";
-
-        protected uint time;
-        public uint Time { get { return this.time; } set { this.time = value; } }
-
-        public hintlongestpacket1()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7868,90 +7247,12 @@ namespace BoxGenerator2
     */
     public class rtptracksdphintinformation : Box
     {
-        public override string FourCC { get; set; } = "hnti";
+        public override string FourCC { get; set; } = "sdp ";
 
         protected byte[] sdptext;
         public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
 
         public rtptracksdphintinformation()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8Array(out this.sdptext);
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8Array(this.sdptext);
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += (ulong)sdptext.Length * 8; // sdptext
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class trackhintinformation extends Box('hnti') {
-    }
-
-    */
-    public class trackhintinformation1 : Box
-    {
-        public override string FourCC { get; set; } = "sdp ";
-
-        public trackhintinformation1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class rtptracksdphintinformation extends Box('sdp ') {
-        char	sdptext[];
-    }
-    */
-    public class rtptracksdphintinformation1 : Box
-    {
-        public override string FourCC { get; set; } = "sdp ";
-
-        protected byte[] sdptext;
-        public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
-
-        public rtptracksdphintinformation1()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7987,7 +7288,7 @@ namespace BoxGenerator2
     */
     public class moviehintinformation : Box
     {
-        public override string FourCC { get; set; } = "rtp ";
+        public override string FourCC { get; set; } = "hnti";
 
         public moviehintinformation()
         { }
@@ -9872,7 +9173,7 @@ namespace BoxGenerator2
     */
     public class PartitionEntry : Box
     {
-        public override string FourCC { get; set; } = "fiin";
+        public override string FourCC { get; set; } = "paen";
 
         protected FilePartitionBox blocks_and_symbols;
         public FilePartitionBox BlocksAndSymbols { get { return this.blocks_and_symbols; } set { this.blocks_and_symbols = value; } }
@@ -12741,129 +12042,6 @@ namespace BoxGenerator2
 
 
     /*
-    aligned(8) class PartitionEntry extends Box('paen') {
-        FilePartitionBox	blocks_and_symbols;
-        FECReservoirBox	FEC_symbol_locations; //optional
-        FileReservoirBox	File_symbol_locations; //optional
-    }
-
-    */
-    public class PartitionEntry1 : Box
-    {
-        public override string FourCC { get; set; } = "paen";
-
-        protected FilePartitionBox blocks_and_symbols;
-        public FilePartitionBox BlocksAndSymbols { get { return this.blocks_and_symbols; } set { this.blocks_and_symbols = value; } }
-
-        protected FECReservoirBox FEC_symbol_locations;  // optional
-        public FECReservoirBox FECSymbolLocations { get { return this.FEC_symbol_locations; } set { this.FEC_symbol_locations = value; } }
-
-        protected FileReservoirBox File_symbol_locations;  // optional
-        public FileReservoirBox FileSymbolLocations { get { return this.File_symbol_locations; } set { this.File_symbol_locations = value; } }
-
-        public PartitionEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.blocks_and_symbols);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.FEC_symbol_locations); //optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.File_symbol_locations); //optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.blocks_and_symbols);
-            if (this.FEC_symbol_locations != null) boxSize += stream.WriteBox(this.FEC_symbol_locations); //optional
-            if (this.File_symbol_locations != null) boxSize += stream.WriteBox(this.File_symbol_locations); //optional
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(blocks_and_symbols); // blocks_and_symbols
-            if (this.FEC_symbol_locations != null) boxSize += IsoStream.CalculateSize(FEC_symbol_locations); // FEC_symbol_locations
-            if (this.File_symbol_locations != null) boxSize += IsoStream.CalculateSize(File_symbol_locations); // File_symbol_locations
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class FDItemInformationBox
-            extends FullBox('fiin', version = 0, 0) {
-        unsigned int(16)	entry_count;
-        PartitionEntry		partition_entries[ entry_count ];
-        FDSessionGroupBox	session_info;			//optional
-        GroupIdToNameBox	group_id_to_name;	//optional
-    }
-    */
-    public class FDItemInformationBox1 : FullBox
-    {
-        public override string FourCC { get; set; } = "paen";
-
-        protected ushort entry_count;
-        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
-
-        protected PartitionEntry[] partition_entries;
-        public PartitionEntry[] PartitionEntries { get { return this.partition_entries; } set { this.partition_entries = value; } }
-
-        protected FDSessionGroupBox session_info;  // optional
-        public FDSessionGroupBox SessionInfo { get { return this.session_info; } set { this.session_info = value; } }
-
-        protected GroupIdToNameBox group_id_to_name;  // optional
-        public GroupIdToNameBox GroupIdToName { get { return this.group_id_to_name; } set { this.group_id_to_name = value; } }
-
-        public FDItemInformationBox1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.entry_count);
-            boxSize += stream.ReadClass(entry_count, out this.partition_entries);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.session_info); //optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.group_id_to_name); //optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.entry_count);
-            boxSize += stream.WriteClass(entry_count, this.partition_entries);
-            if (this.session_info != null) boxSize += stream.WriteBox(this.session_info); //optional
-            if (this.group_id_to_name != null) boxSize += stream.WriteBox(this.group_id_to_name); //optional
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // entry_count
-            boxSize += IsoStream.CalculateSize(partition_entries); // partition_entries
-            if (this.session_info != null) boxSize += IsoStream.CalculateSize(session_info); // session_info
-            if (this.group_id_to_name != null) boxSize += IsoStream.CalculateSize(group_id_to_name); // group_id_to_name
-            return boxSize;
-        }
-    }
-
-
-    /*
     aligned(8) class ProgressiveDownloadInfoBox
             extends FullBox('pdin', version = 0, 0) {
         for (i=0; ; i++) {	// to end of box
@@ -14093,14 +13271,14 @@ namespace BoxGenerator2
     unsigned int(8) data[];
     }
     */
-    public class FreeSpaceBox1 : Box
+    public class FreeSpaceBox_skip : Box
     {
         public override string FourCC { get; set; } = "skip";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public FreeSpaceBox1()
+        public FreeSpaceBox_skip()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -16539,146 +15717,6 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += (ulong)xml.Length * 8; // xml
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class CompressedMovieFragmentBox
-        extends CompressedBox('!mof', 'moof') {
-    }
-    */
-    public class CompressedMovieFragmentBox1 : CompressedBox
-    {
-        public override string FourCC { get; set; } = "!mof";
-
-        public CompressedMovieFragmentBox1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class CompressedMovieBox
-        extends CompressedBox('!mov', 'moov') {
-    }
-    */
-    public class CompressedMovieBox1 : CompressedBox
-    {
-        public override string FourCC { get; set; } = "!mov";
-
-        public CompressedMovieBox1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class CompressedSegmentIndexBox
-        extends CompressedBox('!six', 'sidx') {
-    }
-    */
-    public class CompressedSegmentIndexBox1 : CompressedBox
-    {
-        public override string FourCC { get; set; } = "!six";
-
-        public CompressedSegmentIndexBox1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class CompressedSubsegmentIndexBox
-        extends CompressedBox('!ssx', 'ssix') {
-    }
-    */
-    public class CompressedSubsegmentIndexBox1 : CompressedBox
-    {
-        public override string FourCC { get; set; } = "!ssx";
-
-        public CompressedSubsegmentIndexBox1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -20611,7 +19649,7 @@ namespace BoxGenerator2
     */
     public class AudioSampleEntry : SampleEntry
     {
-        public override string FourCC { get; set; } = "enca";
+
 
         protected uint[] reserved = [];
         public uint[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -20764,7 +19802,7 @@ namespace BoxGenerator2
     */
     public class AudioSampleEntryV1 : SampleEntry
     {
-        public override string FourCC { get; set; } = "enca";
+
 
         protected ushort entry_version;  //  shall be 1, 
         public ushort EntryVersion { get { return this.entry_version; } set { this.entry_version = value; } }
@@ -20904,7 +19942,7 @@ namespace BoxGenerator2
     */
     public class FontSampleEntry : SampleEntry
     {
-        public override string FourCC { get; set; } = "encf";
+
 
         public FontSampleEntry()
         { }
@@ -20941,7 +19979,7 @@ namespace BoxGenerator2
     */
     public class MetaDataSampleEntry : SampleEntry
     {
-        public override string FourCC { get; set; } = "encm";
+
 
         public MetaDataSampleEntry()
         { }
@@ -20970,7 +20008,7 @@ namespace BoxGenerator2
 
 
     /*
-    class SampleEntry extends Box('encv') {
+    class GenericSampleEntry extends Box('encv') {
         // ProtectionSchemeInfoBox {
             // OriginalFormatBox;	// data_format is 'resv'
             // SchemeTypeBox;
@@ -20985,11 +20023,11 @@ namespace BoxGenerator2
         // For 'avc1', these would include AVCConfigurationBox
     }
     */
-    public class SampleEntry : Box
+    public class GenericSampleEntry : Box
     {
         public override string FourCC { get; set; } = "encv";
 
-        public SampleEntry()
+        public GenericSampleEntry()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21610,97 +20648,6 @@ namespace BoxGenerator2
 
 
     /*
-    class HintSampleEntry() extends SampleEntry (protocol) {
-    }
-    */
-    public class HintSampleEntry : SampleEntry
-    {
-        public override string FourCC { get; set; } = "rtcp";
-
-        public HintSampleEntry()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class TextSubtitleSampleEntry() extends SubtitleSampleEntry ('sbtt') {
-        utf8string content_encoding; // optional
-        utf8string mime_format;
-        TextConfigBox (); // optional
-    }
-    */
-    public class TextSubtitleSampleEntry1 : SubtitleSampleEntry
-    {
-        public override string FourCC { get; set; } = "sbtt";
-
-        protected string content_encoding;  //  optional
-        public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
-
-        protected string mime_format;
-        public string MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
-
-        protected TextConfigBox TextConfigBox;  //  optional
-        public TextConfigBox _TextConfigBox { get { return this.TextConfigBox; } set { this.TextConfigBox = value; } }
-
-        public TextSubtitleSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadString(out this.content_encoding); // optional
-            boxSize += stream.ReadString(out this.mime_format);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.TextConfigBox); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            if (this.content_encoding != null) boxSize += stream.WriteString(this.content_encoding); // optional
-            boxSize += stream.WriteString(this.mime_format);
-            if (this.TextConfigBox != null) boxSize += stream.WriteBox(this.TextConfigBox); // optional
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
-            boxSize += (ulong)mime_format.Length * 8; // mime_format
-            if (this.TextConfigBox != null) boxSize += IsoStream.CalculateSize(TextConfigBox); // TextConfigBox
-            return boxSize;
-        }
-    }
-
-
-    /*
     class MPEG2TSServerSampleEntry extends MPEG2TSSampleEntry('sm2t') {}
     */
     public class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
@@ -21791,119 +20738,6 @@ namespace BoxGenerator2
 
 
     /*
-    class XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') {
-        utf8list namespace;
-        utf8list schema_location; // optional
-        utf8list auxiliary_mime_types;
-                    // optional, required if auxiliary resources are present
-    }
-    */
-    public class XMLSubtitleSampleEntry1 : SubtitleSampleEntry
-    {
-        public override string FourCC { get; set; } = "stpp";
-
-        protected string ns;
-        public string Ns { get { return this.ns; } set { this.ns = value; } }
-
-        protected string schema_location;  //  optional
-        public string SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
-
-        protected string auxiliary_mime_types;  //  optional, required if auxiliary resources are present
-        public string AuxiliaryMimeTypes { get { return this.auxiliary_mime_types; } set { this.auxiliary_mime_types = value; } }
-
-        public XMLSubtitleSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.ns);
-            if (boxSize < size) boxSize += stream.ReadString(out this.schema_location); // optional
-            if (boxSize < size) boxSize += stream.ReadString(out this.auxiliary_mime_types); // optional, required if auxiliary resources are present
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.ns);
-            if (this.schema_location != null) boxSize += stream.WriteString(this.schema_location); // optional
-            if (this.auxiliary_mime_types != null) boxSize += stream.WriteString(this.auxiliary_mime_types); // optional, required if auxiliary resources are present
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += (ulong)ns.Length * 8; // ns
-            if (this.schema_location != null) boxSize += (ulong)schema_location.Length * 8; // schema_location
-            if (this.auxiliary_mime_types != null) boxSize += (ulong)auxiliary_mime_types.Length * 8; // auxiliary_mime_types
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class SimpleTextSampleEntry extends PlainTextSampleEntry ('stxt') {
-        utf8string	content_encoding;	// optional
-        utf8string	mime_format; 
-        TextConfigBox ();					// optional
-    }
-    */
-    public class SimpleTextSampleEntry1 : PlainTextSampleEntry
-    {
-        public override string FourCC { get; set; } = "stxt";
-
-        protected string content_encoding;  //  optional
-        public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
-
-        protected string mime_format;
-        public string MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
-
-        protected TextConfigBox TextConfigBox;  //  optional
-        public TextConfigBox _TextConfigBox { get { return this.TextConfigBox; } set { this.TextConfigBox = value; } }
-
-        public SimpleTextSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadString(out this.content_encoding); // optional
-            boxSize += stream.ReadString(out this.mime_format);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.TextConfigBox); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            if (this.content_encoding != null) boxSize += stream.WriteString(this.content_encoding); // optional
-            boxSize += stream.WriteString(this.mime_format);
-            if (this.TextConfigBox != null) boxSize += stream.WriteBox(this.TextConfigBox); // optional
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
-            boxSize += (ulong)mime_format.Length * 8; // mime_format
-            if (this.TextConfigBox != null) boxSize += IsoStream.CalculateSize(TextConfigBox); // TextConfigBox
-            return boxSize;
-        }
-    }
-
-
-    /*
     aligned(8) class HapticSampleEntry(codingname)
         extends SampleEntry(codingname) {
         Box()[]	otherboxes;
@@ -21911,7 +20745,7 @@ namespace BoxGenerator2
     */
     public class HapticSampleEntry : SampleEntry
     {
-        public override string FourCC { get; set; } = "encp";
+
 
         protected Box[] otherboxes;
         public Box[] Otherboxes { get { return this.otherboxes; } set { this.otherboxes = value; } }
@@ -21954,7 +20788,7 @@ namespace BoxGenerator2
     */
     public class VolumetricVisualSampleEntry : SampleEntry
     {
-        public override string FourCC { get; set; } = "enc3";
+
 
         protected byte[] compressorname;  //  other boxes from derived specifications
         public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
@@ -22124,472 +20958,6 @@ namespace BoxGenerator2
 
 
     /*
-    class AudioSampleEntry(codingname) extends SampleEntry (codingname){
-        const unsigned int(32)[2] reserved = 0;
-        unsigned int(16) channelcount;
-        template unsigned int(16) samplesize = 16;
-        unsigned int(16) pre_defined = 0;
-        const unsigned int(16) reserved = 0 ;
-        template unsigned int(32) samplerate = { default samplerate of media}<<16;
-        // optional boxes follow
-        Box ();		// further boxes as needed
-        ChannelLayout();
-        DownMixInstructions() [];
-        DRCCoefficientsBasic() [];
-        DRCInstructionsBasic() [];
-        DRCCoefficientsUniDRC() [];
-        DRCInstructionsUniDRC() [];
-        // we permit only one DRC Extension box:
-        UniDrcConfigExtension();
-        // optional boxes follow
-        SamplingRateBox();
-        ChannelLayout();
-    }
-    */
-    public class AudioSampleEntry1 : SampleEntry
-    {
-        public override string FourCC { get; set; } = "resa";
-
-        protected uint[] reserved = [];
-        public uint[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected ushort channelcount;
-        public ushort Channelcount { get { return this.channelcount; } set { this.channelcount = value; } }
-
-        protected ushort samplesize = 16;
-        public ushort Samplesize { get { return this.samplesize; } set { this.samplesize = value; } }
-
-        protected ushort pre_defined = 0;
-        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
-
-        protected ushort reserved0 = 0;
-        public ushort Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected uint samplerate = 0; // = {if track_is_audio 0x0100 else 0}; //  optional boxes follow
-        public uint Samplerate { get { return this.samplerate; } set { this.samplerate = value; } }
-
-        protected Box Box;  //  further boxes as needed
-        public Box _Box { get { return this.Box; } set { this.Box = value; } }
-
-        protected ChannelLayout ChannelLayout;
-        public ChannelLayout _ChannelLayout { get { return this.ChannelLayout; } set { this.ChannelLayout = value; } }
-
-        protected DownMixInstructions[] DownMixInstructions;
-        public DownMixInstructions[] _DownMixInstructions { get { return this.DownMixInstructions; } set { this.DownMixInstructions = value; } }
-
-        protected DRCCoefficientsBasic[] DRCCoefficientsBasic;
-        public DRCCoefficientsBasic[] _DRCCoefficientsBasic { get { return this.DRCCoefficientsBasic; } set { this.DRCCoefficientsBasic = value; } }
-
-        protected DRCInstructionsBasic[] DRCInstructionsBasic;
-        public DRCInstructionsBasic[] _DRCInstructionsBasic { get { return this.DRCInstructionsBasic; } set { this.DRCInstructionsBasic = value; } }
-
-        protected DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC;
-        public DRCCoefficientsUniDRC[] _DRCCoefficientsUniDRC { get { return this.DRCCoefficientsUniDRC; } set { this.DRCCoefficientsUniDRC = value; } }
-
-        protected DRCInstructionsUniDRC[] DRCInstructionsUniDRC;  //  we permit only one DRC Extension box:
-        public DRCInstructionsUniDRC[] _DRCInstructionsUniDRC { get { return this.DRCInstructionsUniDRC; } set { this.DRCInstructionsUniDRC = value; } }
-
-        protected UniDrcConfigExtension UniDrcConfigExtension;  //  optional boxes follow
-        public UniDrcConfigExtension _UniDrcConfigExtension { get { return this.UniDrcConfigExtension; } set { this.UniDrcConfigExtension = value; } }
-
-        protected SamplingRateBox SamplingRateBox;
-        public SamplingRateBox _SamplingRateBox { get { return this.SamplingRateBox; } set { this.SamplingRateBox = value; } }
-
-        protected ChannelLayout ChannelLayout0;
-        public ChannelLayout _ChannelLayout0 { get { return this.ChannelLayout0; } set { this.ChannelLayout0 = value; } }
-
-        public AudioSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(2, out this.reserved);
-            boxSize += stream.ReadUInt16(out this.channelcount);
-            boxSize += stream.ReadUInt16(out this.samplesize);
-            boxSize += stream.ReadUInt16(out this.pre_defined);
-            boxSize += stream.ReadUInt16(out this.reserved0);
-            boxSize += stream.ReadUInt32(out this.samplerate); // optional boxes follow
-            boxSize += stream.ReadBox(out this.Box); // further boxes as needed
-            boxSize += stream.ReadBox(out this.ChannelLayout);
-            boxSize += stream.ReadClass(out this.DownMixInstructions);
-            boxSize += stream.ReadClass(out this.DRCCoefficientsBasic);
-            boxSize += stream.ReadClass(out this.DRCInstructionsBasic);
-            boxSize += stream.ReadClass(out this.DRCCoefficientsUniDRC);
-            boxSize += stream.ReadClass(out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-            boxSize += stream.ReadBox(out this.UniDrcConfigExtension); // optional boxes follow
-            boxSize += stream.ReadBox(out this.SamplingRateBox);
-            boxSize += stream.ReadBox(out this.ChannelLayout0);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(2, this.reserved);
-            boxSize += stream.WriteUInt16(this.channelcount);
-            boxSize += stream.WriteUInt16(this.samplesize);
-            boxSize += stream.WriteUInt16(this.pre_defined);
-            boxSize += stream.WriteUInt16(this.reserved0);
-            boxSize += stream.WriteUInt32(this.samplerate); // optional boxes follow
-            boxSize += stream.WriteBox(this.Box); // further boxes as needed
-            boxSize += stream.WriteBox(this.ChannelLayout);
-            boxSize += stream.WriteClass(this.DownMixInstructions);
-            boxSize += stream.WriteClass(this.DRCCoefficientsBasic);
-            boxSize += stream.WriteClass(this.DRCInstructionsBasic);
-            boxSize += stream.WriteClass(this.DRCCoefficientsUniDRC);
-            boxSize += stream.WriteClass(this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-            boxSize += stream.WriteBox(this.UniDrcConfigExtension); // optional boxes follow
-            boxSize += stream.WriteBox(this.SamplingRateBox);
-            boxSize += stream.WriteBox(this.ChannelLayout0);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 2 * 32; // reserved
-            boxSize += 16; // channelcount
-            boxSize += 16; // samplesize
-            boxSize += 16; // pre_defined
-            boxSize += 16; // reserved0
-            boxSize += 32; // samplerate
-            boxSize += IsoStream.CalculateSize(Box); // Box
-            boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
-            boxSize += IsoStream.CalculateClassSize(DownMixInstructions); // DownMixInstructions
-            boxSize += IsoStream.CalculateClassSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
-            boxSize += IsoStream.CalculateClassSize(DRCInstructionsBasic); // DRCInstructionsBasic
-            boxSize += IsoStream.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
-            boxSize += IsoStream.CalculateClassSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
-            boxSize += IsoStream.CalculateSize(UniDrcConfigExtension); // UniDrcConfigExtension
-            boxSize += IsoStream.CalculateSize(SamplingRateBox); // SamplingRateBox
-            boxSize += IsoStream.CalculateSize(ChannelLayout0); // ChannelLayout0
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){
-        unsigned int(16) entry_version;	// shall be 1, 
-                                // and shall be in an stsd with version ==1
-        const unsigned int(16)[3] reserved = 0;
-        template unsigned int(16) channelcount;	// shall be correct
-        template unsigned int(16) samplesize = 16;
-        unsigned int(16) pre_defined = 0;
-        const unsigned int(16) reserved = 0 ;
-        template unsigned int(32) samplerate = 1<<16;
-        // optional boxes follow
-        SamplingRateBox();
-        Box ();		// further boxes as needed
-        ChannelLayout();
-        DownMixInstructions() [];
-        DRCCoefficientsBasic() [];
-        DRCInstructionsBasic() [];
-        DRCCoefficientsUniDRC() [];
-        DRCInstructionsUniDRC() [];
-        // we permit only one DRC Extension box:
-        UniDrcConfigExtension();
-        // optional boxes follow
-        ChannelLayout();
-    }
-    */
-    public class AudioSampleEntryV11 : SampleEntry
-    {
-        public override string FourCC { get; set; } = "resa";
-
-        protected ushort entry_version;  //  shall be 1, 
-        public ushort EntryVersion { get { return this.entry_version; } set { this.entry_version = value; } }
-
-        protected ushort[] reserved = [];
-        public ushort[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected ushort channelcount;  //  shall be correct
-        public ushort Channelcount { get { return this.channelcount; } set { this.channelcount = value; } }
-
-        protected ushort samplesize = 16;
-        public ushort Samplesize { get { return this.samplesize; } set { this.samplesize = value; } }
-
-        protected ushort pre_defined = 0;
-        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
-
-        protected ushort reserved0 = 0;
-        public ushort Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected uint samplerate = 1 << 16;  //  optional boxes follow
-        public uint Samplerate { get { return this.samplerate; } set { this.samplerate = value; } }
-
-        protected SamplingRateBox SamplingRateBox;
-        public SamplingRateBox _SamplingRateBox { get { return this.SamplingRateBox; } set { this.SamplingRateBox = value; } }
-
-        protected Box Box;  //  further boxes as needed
-        public Box _Box { get { return this.Box; } set { this.Box = value; } }
-
-        protected ChannelLayout ChannelLayout;
-        public ChannelLayout _ChannelLayout { get { return this.ChannelLayout; } set { this.ChannelLayout = value; } }
-
-        protected DownMixInstructions[] DownMixInstructions;
-        public DownMixInstructions[] _DownMixInstructions { get { return this.DownMixInstructions; } set { this.DownMixInstructions = value; } }
-
-        protected DRCCoefficientsBasic[] DRCCoefficientsBasic;
-        public DRCCoefficientsBasic[] _DRCCoefficientsBasic { get { return this.DRCCoefficientsBasic; } set { this.DRCCoefficientsBasic = value; } }
-
-        protected DRCInstructionsBasic[] DRCInstructionsBasic;
-        public DRCInstructionsBasic[] _DRCInstructionsBasic { get { return this.DRCInstructionsBasic; } set { this.DRCInstructionsBasic = value; } }
-
-        protected DRCCoefficientsUniDRC[] DRCCoefficientsUniDRC;
-        public DRCCoefficientsUniDRC[] _DRCCoefficientsUniDRC { get { return this.DRCCoefficientsUniDRC; } set { this.DRCCoefficientsUniDRC = value; } }
-
-        protected DRCInstructionsUniDRC[] DRCInstructionsUniDRC;  //  we permit only one DRC Extension box:
-        public DRCInstructionsUniDRC[] _DRCInstructionsUniDRC { get { return this.DRCInstructionsUniDRC; } set { this.DRCInstructionsUniDRC = value; } }
-
-        protected UniDrcConfigExtension UniDrcConfigExtension;  //  optional boxes follow
-        public UniDrcConfigExtension _UniDrcConfigExtension { get { return this.UniDrcConfigExtension; } set { this.UniDrcConfigExtension = value; } }
-
-        protected ChannelLayout ChannelLayout0;
-        public ChannelLayout _ChannelLayout0 { get { return this.ChannelLayout0; } set { this.ChannelLayout0 = value; } }
-
-        public AudioSampleEntryV11()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.entry_version); // shall be 1, 
-            /*  and shall be in an stsd with version ==1 */
-            boxSize += stream.ReadUInt16Array(3, out this.reserved);
-            boxSize += stream.ReadUInt16(out this.channelcount); // shall be correct
-            boxSize += stream.ReadUInt16(out this.samplesize);
-            boxSize += stream.ReadUInt16(out this.pre_defined);
-            boxSize += stream.ReadUInt16(out this.reserved0);
-            boxSize += stream.ReadUInt32(out this.samplerate); // optional boxes follow
-            boxSize += stream.ReadBox(out this.SamplingRateBox);
-            boxSize += stream.ReadBox(out this.Box); // further boxes as needed
-            boxSize += stream.ReadBox(out this.ChannelLayout);
-            boxSize += stream.ReadClass(out this.DownMixInstructions);
-            boxSize += stream.ReadClass(out this.DRCCoefficientsBasic);
-            boxSize += stream.ReadClass(out this.DRCInstructionsBasic);
-            boxSize += stream.ReadClass(out this.DRCCoefficientsUniDRC);
-            boxSize += stream.ReadClass(out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-            boxSize += stream.ReadBox(out this.UniDrcConfigExtension); // optional boxes follow
-            boxSize += stream.ReadBox(out this.ChannelLayout0);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.entry_version); // shall be 1, 
-            /*  and shall be in an stsd with version ==1 */
-            boxSize += stream.WriteUInt16Array(3, this.reserved);
-            boxSize += stream.WriteUInt16(this.channelcount); // shall be correct
-            boxSize += stream.WriteUInt16(this.samplesize);
-            boxSize += stream.WriteUInt16(this.pre_defined);
-            boxSize += stream.WriteUInt16(this.reserved0);
-            boxSize += stream.WriteUInt32(this.samplerate); // optional boxes follow
-            boxSize += stream.WriteBox(this.SamplingRateBox);
-            boxSize += stream.WriteBox(this.Box); // further boxes as needed
-            boxSize += stream.WriteBox(this.ChannelLayout);
-            boxSize += stream.WriteClass(this.DownMixInstructions);
-            boxSize += stream.WriteClass(this.DRCCoefficientsBasic);
-            boxSize += stream.WriteClass(this.DRCInstructionsBasic);
-            boxSize += stream.WriteClass(this.DRCCoefficientsUniDRC);
-            boxSize += stream.WriteClass(this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-            boxSize += stream.WriteBox(this.UniDrcConfigExtension); // optional boxes follow
-            boxSize += stream.WriteBox(this.ChannelLayout0);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // entry_version
-            /*  and shall be in an stsd with version ==1 */
-            boxSize += 3 * 16; // reserved
-            boxSize += 16; // channelcount
-            boxSize += 16; // samplesize
-            boxSize += 16; // pre_defined
-            boxSize += 16; // reserved0
-            boxSize += 32; // samplerate
-            boxSize += IsoStream.CalculateSize(SamplingRateBox); // SamplingRateBox
-            boxSize += IsoStream.CalculateSize(Box); // Box
-            boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
-            boxSize += IsoStream.CalculateClassSize(DownMixInstructions); // DownMixInstructions
-            boxSize += IsoStream.CalculateClassSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
-            boxSize += IsoStream.CalculateClassSize(DRCInstructionsBasic); // DRCInstructionsBasic
-            boxSize += IsoStream.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
-            boxSize += IsoStream.CalculateClassSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
-            boxSize += IsoStream.CalculateSize(UniDrcConfigExtension); // UniDrcConfigExtension
-            boxSize += IsoStream.CalculateSize(ChannelLayout0); // ChannelLayout0
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class MetaDataSampleEntry(codingname) extends SampleEntry (codingname) {
-    }
-    */
-    public class MetaDataSampleEntry1 : SampleEntry
-    {
-        public override string FourCC { get; set; } = "resm";
-
-        public MetaDataSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class FontSampleEntry(codingname) extends SampleEntry (codingname){
-        //other boxes from derived specifications
-    }
-    */
-    public class FontSampleEntry1 : SampleEntry
-    {
-        public override string FourCC { get; set; } = "resf";
-
-        public FontSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            /* other boxes from derived specifications */
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            /* other boxes from derived specifications */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /* other boxes from derived specifications */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class HapticSampleEntry(codingname)
-        extends SampleEntry(codingname) {
-        Box()[]	otherboxes;
-    }
-    */
-    public class HapticSampleEntry1 : SampleEntry
-    {
-        public override string FourCC { get; set; } = "resp";
-
-        protected Box[] otherboxes;
-        public Box[] Otherboxes { get { return this.otherboxes; } set { this.otherboxes = value; } }
-
-        public HapticSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.otherboxes);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.otherboxes);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(otherboxes); // otherboxes
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class VolumetricVisualSampleEntry(codingname) 
-        extends SampleEntry (codingname){
-        unsigned int(8)[32] compressorname;
-        // other boxes from derived specifications
-    }
-    */
-    public class VolumetricVisualSampleEntry1 : SampleEntry
-    {
-        public override string FourCC { get; set; } = "res3";
-
-        protected byte[] compressorname;  //  other boxes from derived specifications
-        public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
-
-        public VolumetricVisualSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBytes(32, out this.compressorname); // other boxes from derived specifications
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBytes(32, this.compressorname); // other boxes from derived specifications
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32 * 8; // compressorname
-            return boxSize;
-        }
-    }
-
-
-    /*
     class RtpHintSampleEntry() extends HintSampleEntry ('rtp ') {
         uint(16)		hinttrackversion = 1;
         uint(16)		highestcompatibleversion = 1;
@@ -22658,7 +21026,7 @@ namespace BoxGenerator2
     */
     public class EntityToGroupBox : FullBox
     {
-        public override string FourCC { get; set; } = "altr";
+
 
         protected uint group_id;
         public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
@@ -22763,7 +21131,7 @@ namespace BoxGenerator2
     */
     public class SingleItemTypeReferenceBox : Box
     {
-        public override string FourCC { get; set; } = "fdel";
+
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
@@ -22832,7 +21200,7 @@ namespace BoxGenerator2
     */
     public class SingleItemTypeReferenceBoxLarge : Box
     {
-        public override string FourCC { get; set; } = "fdel";
+
 
         protected uint from_item_ID;
         public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
@@ -22844,146 +21212,6 @@ namespace BoxGenerator2
         public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
 
         public SingleItemTypeReferenceBoxLarge()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt32(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 32; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
-        unsigned int(16) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(16) to_item_ID;
-        }
-    }
-
-
-    */
-    public class SingleItemTypeReferenceBox1 : Box
-    {
-        public override string FourCC { get; set; } = "iloc";
-
-        protected ushort from_item_ID;
-        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected ushort to_item_ID;
-        public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBox1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt16(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt16(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 16; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
-        unsigned int(32) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(32) to_item_ID;
-        }
-    }
-    */
-    public class SingleItemTypeReferenceBoxLarge1 : Box
-    {
-        public override string FourCC { get; set; } = "iloc";
-
-        protected uint from_item_ID;
-        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected uint to_item_ID;
-        public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBoxLarge1()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23867,422 +22095,12 @@ namespace BoxGenerator2
     */
     public class TrackReferenceTypeBox : Box
     {
-        public override string FourCC { get; set; } = "auxl";
+
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
 
         public TrackReferenceTypeBox()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox1 : Box
-    {
-        public override string FourCC { get; set; } = "font";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox2 : Box
-    {
-        public override string FourCC { get; set; } = "hind";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox2()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox3 : Box
-    {
-        public override string FourCC { get; set; } = "hint";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox3()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox4 : Box
-    {
-        public override string FourCC { get; set; } = "subt";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox4()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox5 : Box
-    {
-        public override string FourCC { get; set; } = "thmb";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox5()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox6 : Box
-    {
-        public override string FourCC { get; set; } = "vdep";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox6()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox7 : Box
-    {
-        public override string FourCC { get; set; } = "vplx";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox7()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox8 : Box
-    {
-        public override string FourCC { get; set; } = "cdsc";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox8()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox9 : Box
-    {
-        public override string FourCC { get; set; } = "adda";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox9()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox10 : Box
-    {
-        public override string FourCC { get; set; } = "adrc";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox10()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24368,7 +22186,7 @@ namespace BoxGenerator2
     */
     public class HEVCLHVCSampleEntry : HEVCSampleEntry
     {
-        public override string FourCC { get; set; } = "hvc1";
+
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
@@ -24381,7 +22199,6 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.lhvcconfig);
-            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -24390,7 +22207,6 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.lhvcconfig);
-            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -24410,7 +22226,7 @@ namespace BoxGenerator2
         MPEG4ExtensionDescriptorsBox () descr;	// optional
     }
     */
-    public class HEVCSampleEntry1 : VisualSampleEntry
+    public class HEVCSampleEntry_hvc2 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "hvc2";
 
@@ -24420,7 +22236,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public HEVCSampleEntry1()
+        public HEVCSampleEntry_hvc2()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24449,49 +22265,6 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
             if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {
-        LHEVCConfigurationBox		lhvcconfig;
-    }
-    */
-    public class HEVCLHVCSampleEntry1 : HEVCSampleEntry
-    {
-        public override string FourCC { get; set; } = "hvc2";
-
-        protected LHEVCConfigurationBox lhvcconfig;
-        public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
-
-        public HEVCLHVCSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.lhvcconfig);
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.lhvcconfig);
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(lhvcconfig); // lhvcconfig
             return boxSize;
         }
     }
@@ -24503,7 +22276,7 @@ namespace BoxGenerator2
         MPEG4ExtensionDescriptorsBox () descr;	// optional
     }
     */
-    public class HEVCSampleEntry2 : VisualSampleEntry
+    public class HEVCSampleEntry_hvc3 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "hvc3";
 
@@ -24513,7 +22286,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public HEVCSampleEntry2()
+        public HEVCSampleEntry_hvc3()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24542,49 +22315,6 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
             if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {
-        LHEVCConfigurationBox		lhvcconfig;
-    }
-    */
-    public class HEVCLHVCSampleEntry2 : HEVCSampleEntry
-    {
-        public override string FourCC { get; set; } = "hvc3";
-
-        protected LHEVCConfigurationBox lhvcconfig;
-        public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
-
-        public HEVCLHVCSampleEntry2()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.lhvcconfig);
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.lhvcconfig);
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(lhvcconfig); // lhvcconfig
             return boxSize;
         }
     }
@@ -24646,7 +22376,7 @@ namespace BoxGenerator2
         MPEG4ExtensionDescriptorsBox () descr;	// optional
     }
     */
-    public class LHEVCSampleEntry1 : VisualSampleEntry
+    public class LHEVCSampleEntry_lhe1 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "lhe1";
 
@@ -24656,7 +22386,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public LHEVCSampleEntry1()
+        public LHEVCSampleEntry_lhe1()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24696,7 +22426,7 @@ namespace BoxGenerator2
         MPEG4ExtensionDescriptorsBox () descr;	// optional
     }
     */
-    public class HEVCSampleEntry3 : VisualSampleEntry
+    public class HEVCSampleEntry_hev1 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "hev1";
 
@@ -24706,7 +22436,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public HEVCSampleEntry3()
+        public HEVCSampleEntry_hev1()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24735,49 +22465,6 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
             if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {
-        LHEVCConfigurationBox		lhvcconfig;
-    }
-    */
-    public class HEVCLHVCSampleEntry3 : HEVCSampleEntry
-    {
-        public override string FourCC { get; set; } = "hev1";
-
-        protected LHEVCConfigurationBox lhvcconfig;
-        public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
-
-        public HEVCLHVCSampleEntry3()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.lhvcconfig);
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.lhvcconfig);
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(lhvcconfig); // lhvcconfig
             return boxSize;
         }
     }
@@ -24789,7 +22476,7 @@ namespace BoxGenerator2
         MPEG4ExtensionDescriptorsBox () descr;	// optional
     }
     */
-    public class HEVCSampleEntry4 : VisualSampleEntry
+    public class HEVCSampleEntry_hev2 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "hev2";
 
@@ -24799,7 +22486,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public HEVCSampleEntry4()
+        public HEVCSampleEntry_hev2()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24828,49 +22515,6 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
             if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {
-        LHEVCConfigurationBox		lhvcconfig;
-    }
-    */
-    public class HEVCLHVCSampleEntry4 : HEVCSampleEntry
-    {
-        public override string FourCC { get; set; } = "hev2";
-
-        protected LHEVCConfigurationBox lhvcconfig;
-        public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
-
-        public HEVCLHVCSampleEntry4()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.lhvcconfig);
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.lhvcconfig);
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(lhvcconfig); // lhvcconfig
             return boxSize;
         }
     }
@@ -24882,7 +22526,7 @@ namespace BoxGenerator2
         MPEG4ExtensionDescriptorsBox () descr;	// optional
     }
     */
-    public class HEVCSampleEntry5 : VisualSampleEntry
+    public class HEVCSampleEntry_hev3 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "hev3";
 
@@ -24892,7 +22536,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public HEVCSampleEntry5()
+        public HEVCSampleEntry_hev3()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24921,49 +22565,6 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
             if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {
-        LHEVCConfigurationBox		lhvcconfig;
-    }
-    */
-    public class HEVCLHVCSampleEntry5 : HEVCSampleEntry
-    {
-        public override string FourCC { get; set; } = "hev3";
-
-        protected LHEVCConfigurationBox lhvcconfig;
-        public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
-
-        public HEVCLHVCSampleEntry5()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.lhvcconfig);
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.lhvcconfig);
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(lhvcconfig); // lhvcconfig
             return boxSize;
         }
     }
@@ -25020,7 +22621,7 @@ namespace BoxGenerator2
     */
     public class AVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "avc1";
+
 
         protected AVCConfigurationBox config;
         public AVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -25037,7 +22638,6 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
             if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -25047,57 +22647,6 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
             if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AVCSampleEntry() extends VisualSampleEntry (type) {
-        AVCConfigurationBox	config;
-        MPEG4ExtensionDescriptorsBox () descr;	// optional
-    }
-    */
-    public class AVCSampleEntry1 : VisualSampleEntry
-    {
-        public override string FourCC { get; set; } = "avc3";
-
-        protected AVCConfigurationBox config;
-        public AVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
-
-        protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
-
-        public AVCSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -25224,7 +22773,7 @@ namespace BoxGenerator2
         A3DConfigurationBox	a3dconfig;	// optional
     }
     */
-    public class AVCMVCSampleEntry1 : AVCSampleEntry
+    public class AVCMVCSampleEntry_avc3 : AVCSampleEntry
     {
         public override string FourCC { get; set; } = "avc3";
 
@@ -25255,7 +22804,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public AVCMVCSampleEntry1()
+        public AVCMVCSampleEntry_avc3()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25318,7 +22867,7 @@ namespace BoxGenerator2
     */
     public class AVC2SampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "avc2";
+
 
         protected AVCConfigurationBox config;
         public AVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -25335,7 +22884,6 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
             if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -25345,57 +22893,6 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
             if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AVC2SampleEntry() extends VisualSampleEntry (type) {
-        AVCConfigurationBox	config;
-        MPEG4ExtensionDescriptorsBox () descr;	// optional
-    }
-    */
-    public class AVC2SampleEntry1 : VisualSampleEntry
-    {
-        public override string FourCC { get; set; } = "avc4";
-
-        protected AVCConfigurationBox config;
-        public AVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
-
-        protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
-
-        public AVC2SampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -25522,7 +23019,7 @@ namespace BoxGenerator2
         A3DConfigurationBox	a3dconfig;	// optional
     }
     */
-    public class AVC2MVCSampleEntry1 : AVC2SampleEntry
+    public class AVC2MVCSampleEntry_avc4 : AVC2SampleEntry
     {
         public override string FourCC { get; set; } = "avc4";
 
@@ -25553,7 +23050,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public AVC2MVCSampleEntry1()
+        public AVC2MVCSampleEntry_avc4()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25728,7 +23225,7 @@ namespace BoxGenerator2
         A3DConfigurationBox	a3dconfig;	// optional
     }
     */
-    public class MVCSampleEntry1 : VisualSampleEntry
+    public class MVCSampleEntry_mvc2 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "mvc2";
 
@@ -25762,7 +23259,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCSampleEntry1()
+        public MVCSampleEntry_mvc2()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25834,7 +23331,7 @@ namespace BoxGenerator2
         A3DConfigurationBox	a3dconfig;	// optional
     }
     */
-    public class MVCSampleEntry2 : VisualSampleEntry
+    public class MVCSampleEntry_mvc3 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "mvc3";
 
@@ -25868,7 +23365,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCSampleEntry2()
+        public MVCSampleEntry_mvc3()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25940,7 +23437,7 @@ namespace BoxGenerator2
         A3DConfigurationBox	a3dconfig;	// optional
     }
     */
-    public class MVCSampleEntry3 : VisualSampleEntry
+    public class MVCSampleEntry_mvc4 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "mvc4";
 
@@ -25974,7 +23471,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCSampleEntry3()
+        public MVCSampleEntry_mvc4()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26128,7 +23625,7 @@ namespace BoxGenerator2
         A3DConfigurationBox	a3dconfig;	// optional
     }
     */
-    public class MVCDSampleEntry1 : VisualSampleEntry
+    public class MVCDSampleEntry_mvd2 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "mvd2";
 
@@ -26153,7 +23650,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCDSampleEntry1()
+        public MVCDSampleEntry_mvd2()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26213,7 +23710,7 @@ namespace BoxGenerator2
         A3DConfigurationBox	a3dconfig;	// optional
     }
     */
-    public class MVCDSampleEntry2 : VisualSampleEntry
+    public class MVCDSampleEntry_mvd3 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "mvd3";
 
@@ -26238,7 +23735,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCDSampleEntry2()
+        public MVCDSampleEntry_mvd3()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26298,7 +23795,7 @@ namespace BoxGenerator2
         A3DConfigurationBox	a3dconfig;	// optional
     }
     */
-    public class MVCDSampleEntry3 : VisualSampleEntry
+    public class MVCDSampleEntry_mvd4 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "mvd4";
 
@@ -26323,7 +23820,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCDSampleEntry3()
+        public MVCDSampleEntry_mvd4()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26460,7 +23957,7 @@ namespace BoxGenerator2
         ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
     }
     */
-    public class A3DSampleEntry1 : VisualSampleEntry
+    public class A3DSampleEntry_a3d2 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "a3d2";
 
@@ -26482,7 +23979,7 @@ namespace BoxGenerator2
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
-        public A3DSampleEntry1()
+        public A3DSampleEntry_a3d2()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26538,7 +24035,7 @@ namespace BoxGenerator2
         ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
     }
     */
-    public class A3DSampleEntry2 : VisualSampleEntry
+    public class A3DSampleEntry_a3d3 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "a3d3";
 
@@ -26560,7 +24057,7 @@ namespace BoxGenerator2
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
-        public A3DSampleEntry2()
+        public A3DSampleEntry_a3d3()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26616,7 +24113,7 @@ namespace BoxGenerator2
         ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
     }
     */
-    public class A3DSampleEntry3 : VisualSampleEntry
+    public class A3DSampleEntry_a3d4 : VisualSampleEntry
     {
         public override string FourCC { get; set; } = "a3d4";
 
@@ -26638,7 +24135,7 @@ namespace BoxGenerator2
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
-        public A3DSampleEntry3()
+        public A3DSampleEntry_a3d4()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26693,7 +24190,7 @@ namespace BoxGenerator2
     */
     public class AVCSVCSampleEntry : AVCSampleEntry
     {
-        public override string FourCC { get; set; } = "avc1";
+        public override string FourCC { get; set; } = "'avc1' or 'avc3'";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -26714,7 +24211,6 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -26725,64 +24221,6 @@ namespace BoxGenerator2
             if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
             if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
             if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            if (this.svcconfig != null) boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AVCSVCSampleEntry() extends AVCSampleEntry ('avc1' or 'avc3') {
-        SVCConfigurationBox	svcconfig;			// optional
-        ScalabilityInformationSEIBox	scalability;	// optional
-        SVCPriorityAssignmentBox	method;			// optional
-    }
-    */
-    public class AVCSVCSampleEntry1 : AVCSampleEntry
-    {
-        public override string FourCC { get; set; } = "avc3";
-
-        protected SVCConfigurationBox svcconfig;  //  optional
-        public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
-
-        protected ScalabilityInformationSEIBox scalability;  //  optional
-        public ScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
-
-        protected SVCPriorityAssignmentBox method;  //  optional
-        public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
-
-        public AVCSVCSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
-            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -26807,7 +24245,7 @@ namespace BoxGenerator2
     */
     public class AVC2SVCSampleEntry : AVC2SampleEntry
     {
-        public override string FourCC { get; set; } = "avc2";
+        public override string FourCC { get; set; } = "'avc2' or 'avc4'";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -26828,7 +24266,6 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -26839,64 +24276,6 @@ namespace BoxGenerator2
             if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
             if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
             if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            if (this.svcconfig != null) boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {
-        SVCConfigurationBox	svcconfig;			// optional
-        ScalabilityInformationSEIBox	scalability;	// optional
-        SVCPriorityAssignmentBox	method;			// optional
-    }
-    */
-    public class AVC2SVCSampleEntry1 : AVC2SampleEntry
-    {
-        public override string FourCC { get; set; } = "avc4";
-
-        protected SVCConfigurationBox svcconfig;  //  optional
-        public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
-
-        protected ScalabilityInformationSEIBox scalability;  //  optional
-        public ScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
-
-        protected SVCPriorityAssignmentBox method;  //  optional
-        public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
-
-        public AVC2SVCSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
-            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -26923,7 +24302,7 @@ namespace BoxGenerator2
     */
     public class SVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "svc1";
+        public override string FourCC { get; set; } = "'svc1' or 'svc2'";
 
         protected SVCConfigurationBox svcconfig;
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -26948,7 +24327,6 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -26960,72 +24338,6 @@ namespace BoxGenerator2
             if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
             if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
             if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
-            return boxSize;
-        }
-    }
-
-
-    /*
-    // Use this if the track is NOT AVC compatible
-    class SVCSampleEntry() extends VisualSampleEntry ('svc1' or 'svc2') {
-        SVCConfigurationBox		svcconfig;
-        MPEG4ExtensionDescriptorsBox descr;	// optional
-        ScalabilityInformationSEIBox	scalability;	// optional
-        SVCPriorityAssignmentBox	method;			// optional
-    }
-    */
-    public class SVCSampleEntry1 : VisualSampleEntry
-    {
-        public override string FourCC { get; set; } = "svc2";
-
-        protected SVCConfigurationBox svcconfig;
-        public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
-
-        protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
-
-        protected ScalabilityInformationSEIBox scalability;  //  optional
-        public ScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
-
-        protected SVCPriorityAssignmentBox method;  //  optional
-        public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
-
-        public SVCSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.svcconfig);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.svcconfig);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
-            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -27213,7 +24525,7 @@ namespace BoxGenerator2
     */
     public class VvcSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "vvc1";
+        public override string FourCC { get; set; } = "'vvc1' or 'vvi1'";
 
         protected VvcConfigurationBox config;
         public VvcConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -27230,7 +24542,6 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
             if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -27240,57 +24551,6 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
             if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {
-        VvcConfigurationBox	config;
-        MPEG4ExtensionDescriptorsBox () descr;	// optional
-    }
-    */
-    public class VvcSampleEntry1 : VisualSampleEntry
-    {
-        public override string FourCC { get; set; } = "vvi1";
-
-        protected VvcConfigurationBox config;
-        public VvcConfigurationBox Config { get { return this.config; } set { this.config = value; } }
-
-        protected MPEG4ExtensionDescriptorsBox descr;  //  optional
-        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
-
-        public VvcSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -27507,7 +24767,7 @@ namespace BoxGenerator2
     */
     public class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "evs1";
+        public override string FourCC { get; set; } = "'evs1' or 'evs2'";
 
         protected EVCSliceComponentTrackConfigurationBox config;
         public EVCSliceComponentTrackConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -27520,7 +24780,6 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -27529,51 +24788,6 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class EVCSliceComponentTrackSampleEntry() 
-          extends VisualSampleEntry ('evs1' or 'evs2'){
-        EVCSliceComponentTrackConfigurationBox	config;
-    }
-    */
-    public class EVCSliceComponentTrackSampleEntry1 : VisualSampleEntry
-    {
-        public override string FourCC { get; set; } = "evs2";
-
-        protected EVCSliceComponentTrackConfigurationBox config;
-        public EVCSliceComponentTrackConfigurationBox Config { get { return this.config; } set { this.config = value; } }
-
-        public EVCSliceComponentTrackSampleEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadBox(out this.config);
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBox(this.config);
-            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -28304,7 +25518,7 @@ namespace BoxGenerator2
     // the remaining data may be specified for a particular grouping_type
     }
     */
-    public class EntityToGroupBox1 : FullBox
+    public class EntityToGroupBox_vvcb : FullBox
     {
         public override string FourCC { get; set; } = "vvcb";
 
@@ -28317,7 +25531,7 @@ namespace BoxGenerator2
         protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
         public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
 
-        public EntityToGroupBox1()
+        public EntityToGroupBox_vvcb()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28471,154 +25685,6 @@ namespace BoxGenerator2
             boxSize += 1; // accurateStatisticsFlag
             boxSize += 16; // avgBitRate
             boxSize += 16; // avgFrameRate
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss')
-    {
-            unsigned int(16) subSequenceIdentifer;
-            unsigned int(8)  layerNumber; 
-            unsigned int(1)  durationFlag;
-            unsigned int(1)  avgRateFlag;
-            unsigned int(6)  reserved = 0; 
-            if (durationFlag)
-                unsigned int(32) duration;
-            if (avgRateFlag)
-            {
-                unsigned int(7)  reserved = 0;
-                unsigned int(1)  accurateStatisticsFlag;
-                unsigned int(16) avgBitRate;
-                unsigned int(16) avgFrameRate;
-            }
-            unsigned int(8) numReferences;
-            DependencyInfo dependency[numReferences];
-        }
-    }
-    */
-    public class AVCSubSequenceEntry1 : VisualSampleGroupEntry
-    {
-        public override string FourCC { get; set; } = "avss";
-
-        protected ushort subSequenceIdentifer;
-        public ushort SubSequenceIdentifer { get { return this.subSequenceIdentifer; } set { this.subSequenceIdentifer = value; } }
-
-        protected byte layerNumber;
-        public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
-
-        protected bool durationFlag;
-        public bool DurationFlag { get { return this.durationFlag; } set { this.durationFlag = value; } }
-
-        protected bool avgRateFlag;
-        public bool AvgRateFlag { get { return this.avgRateFlag; } set { this.avgRateFlag = value; } }
-
-        protected byte reserved = 0;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected uint duration;
-        public uint Duration { get { return this.duration; } set { this.duration = value; } }
-
-        protected byte reserved0 = 0;
-        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected bool accurateStatisticsFlag;
-        public bool AccurateStatisticsFlag { get { return this.accurateStatisticsFlag; } set { this.accurateStatisticsFlag = value; } }
-
-        protected ushort avgBitRate;
-        public ushort AvgBitRate { get { return this.avgBitRate; } set { this.avgBitRate = value; } }
-
-        protected ushort avgFrameRate;
-        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
-
-        protected byte numReferences;
-        public byte NumReferences { get { return this.numReferences; } set { this.numReferences = value; } }
-
-        protected DependencyInfo[] dependency;
-        public DependencyInfo[] Dependency { get { return this.dependency; } set { this.dependency = value; } }
-
-        public AVCSubSequenceEntry1()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.subSequenceIdentifer);
-            boxSize += stream.ReadUInt8(out this.layerNumber);
-            boxSize += stream.ReadBit(out this.durationFlag);
-            boxSize += stream.ReadBit(out this.avgRateFlag);
-            boxSize += stream.ReadBits(6, out this.reserved);
-
-            if (durationFlag)
-            {
-                boxSize += stream.ReadUInt32(out this.duration);
-            }
-
-            if (avgRateFlag)
-            {
-                boxSize += stream.ReadBits(7, out this.reserved0);
-                boxSize += stream.ReadBit(out this.accurateStatisticsFlag);
-                boxSize += stream.ReadUInt16(out this.avgBitRate);
-                boxSize += stream.ReadUInt16(out this.avgFrameRate);
-            }
-            boxSize += stream.ReadUInt8(out this.numReferences);
-            boxSize += stream.ReadClass(numReferences, out this.dependency);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.subSequenceIdentifer);
-            boxSize += stream.WriteUInt8(this.layerNumber);
-            boxSize += stream.WriteBit(this.durationFlag);
-            boxSize += stream.WriteBit(this.avgRateFlag);
-            boxSize += stream.WriteBits(6, this.reserved);
-
-            if (durationFlag)
-            {
-                boxSize += stream.WriteUInt32(this.duration);
-            }
-
-            if (avgRateFlag)
-            {
-                boxSize += stream.WriteBits(7, this.reserved0);
-                boxSize += stream.WriteBit(this.accurateStatisticsFlag);
-                boxSize += stream.WriteUInt16(this.avgBitRate);
-                boxSize += stream.WriteUInt16(this.avgFrameRate);
-            }
-            boxSize += stream.WriteUInt8(this.numReferences);
-            boxSize += stream.WriteClass(numReferences, this.dependency);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // subSequenceIdentifer
-            boxSize += 8; // layerNumber
-            boxSize += 1; // durationFlag
-            boxSize += 1; // avgRateFlag
-            boxSize += 6; // reserved
-
-            if (durationFlag)
-            {
-                boxSize += 32; // duration
-            }
-
-            if (avgRateFlag)
-            {
-                boxSize += 7; // reserved0
-                boxSize += 1; // accurateStatisticsFlag
-                boxSize += 16; // avgBitRate
-                boxSize += 16; // avgFrameRate
-            }
-            boxSize += 8; // numReferences
-            boxSize += IsoStream.CalculateClassSize(dependency); // dependency
             return boxSize;
         }
     }
@@ -30896,14 +27962,14 @@ namespace BoxGenerator2
         //  for a particular track_group_type
     }
     */
-    public class TrackGroupTypeBox1 : FullBox
+    public class TrackGroupTypeBox_alte : FullBox
     {
         public override string FourCC { get; set; } = "alte";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
-        public TrackGroupTypeBox1()
+        public TrackGroupTypeBox_alte()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30943,14 +28009,14 @@ namespace BoxGenerator2
         //  for a particular track_group_type
     }
     */
-    public class TrackGroupTypeBox2 : FullBox
+    public class TrackGroupTypeBox_cstg : FullBox
     {
         public override string FourCC { get; set; } = "cstg";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
-        public TrackGroupTypeBox2()
+        public TrackGroupTypeBox_cstg()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30990,14 +28056,14 @@ namespace BoxGenerator2
         //  for a particular track_group_type
     }
     */
-    public class TrackGroupTypeBox3 : FullBox
+    public class TrackGroupTypeBox_snut : FullBox
     {
         public override string FourCC { get; set; } = "snut";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
-        public TrackGroupTypeBox3()
+        public TrackGroupTypeBox_snut()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -31024,1576 +28090,6 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += 32; // track_group_id
             /*   for a particular track_group_type */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox11 : Box
-    {
-        public override string FourCC { get; set; } = "avcp";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox11()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox12 : Box
-    {
-        public override string FourCC { get; set; } = "deps";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox12()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox13 : Box
-    {
-        public override string FourCC { get; set; } = "evcr";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox13()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox14 : Box
-    {
-        public override string FourCC { get; set; } = "mixn";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox14()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox15 : Box
-    {
-        public override string FourCC { get; set; } = "oref";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox15()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox16 : Box
-    {
-        public override string FourCC { get; set; } = "recr";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox16()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox17 : Box
-    {
-        public override string FourCC { get; set; } = "sabt";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox17()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox18 : Box
-    {
-        public override string FourCC { get; set; } = "sbas";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox18()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox19 : Box
-    {
-        public override string FourCC { get; set; } = "scal";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox19()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox20 : Box
-    {
-        public override string FourCC { get; set; } = "subp";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox20()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox21 : Box
-    {
-        public override string FourCC { get; set; } = "swfr";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox21()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox22 : Box
-    {
-        public override string FourCC { get; set; } = "swto";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox22()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox23 : Box
-    {
-        public override string FourCC { get; set; } = "tbas";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox23()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox24 : Box
-    {
-        public override string FourCC { get; set; } = "vref";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox24()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox25 : Box
-    {
-        public override string FourCC { get; set; } = "vreg";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox25()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox26 : Box
-    {
-        public override string FourCC { get; set; } = "vvcN";
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox26()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
-            boxSize += stream.ReadBoxChildren(boxSize, this);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
-            boxSize += stream.WriteBoxChildren(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox2 : FullBox
-    {
-        public override string FourCC { get; set; } = "eqiv";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox2()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox3 : FullBox
-    {
-        public override string FourCC { get; set; } = "ster";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox3()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox4 : FullBox
-    {
-        public override string FourCC { get; set; } = "aebr";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox4()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox5 : FullBox
-    {
-        public override string FourCC { get; set; } = "afbr";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox5()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox6 : FullBox
-    {
-        public override string FourCC { get; set; } = "albc";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox6()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox7 : FullBox
-    {
-        public override string FourCC { get; set; } = "brst";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox7()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox8 : FullBox
-    {
-        public override string FourCC { get; set; } = "iaug";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox8()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox9 : FullBox
-    {
-        public override string FourCC { get; set; } = "tsyn";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox9()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox10 : FullBox
-    {
-        public override string FourCC { get; set; } = "dobr";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox10()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox11 : FullBox
-    {
-        public override string FourCC { get; set; } = "favc";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox11()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox12 : FullBox
-    {
-        public override string FourCC { get; set; } = "fobr";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox12()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox13 : FullBox
-    {
-        public override string FourCC { get; set; } = "pano";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox13()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox14 : FullBox
-    {
-        public override string FourCC { get; set; } = "wbbr";
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox14()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
             return boxSize;
         }
     }
@@ -34065,1266 +29561,6 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateClassSize(sor_info); // sor_info
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
-        unsigned int(16) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(16) to_item_ID;
-        }
-    }
-
-
-    */
-    public class SingleItemTypeReferenceBox2 : Box
-    {
-        public override string FourCC { get; set; } = "auxl";
-
-        protected ushort from_item_ID;
-        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected ushort to_item_ID;
-        public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBox2()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt16(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt16(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 16; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
-        unsigned int(32) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(32) to_item_ID;
-        }
-    }
-    */
-    public class SingleItemTypeReferenceBoxLarge2 : Box
-    {
-        public override string FourCC { get; set; } = "auxl";
-
-        protected uint from_item_ID;
-        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected uint to_item_ID;
-        public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBoxLarge2()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt32(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 32; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
-        unsigned int(16) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(16) to_item_ID;
-        }
-    }
-
-
-    */
-    public class SingleItemTypeReferenceBox3 : Box
-    {
-        public override string FourCC { get; set; } = "base";
-
-        protected ushort from_item_ID;
-        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected ushort to_item_ID;
-        public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBox3()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt16(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt16(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 16; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
-        unsigned int(32) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(32) to_item_ID;
-        }
-    }
-    */
-    public class SingleItemTypeReferenceBoxLarge3 : Box
-    {
-        public override string FourCC { get; set; } = "base";
-
-        protected uint from_item_ID;
-        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected uint to_item_ID;
-        public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBoxLarge3()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt32(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 32; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
-        unsigned int(16) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(16) to_item_ID;
-        }
-    }
-
-
-    */
-    public class SingleItemTypeReferenceBox4 : Box
-    {
-        public override string FourCC { get; set; } = "dimg";
-
-        protected ushort from_item_ID;
-        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected ushort to_item_ID;
-        public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBox4()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt16(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt16(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 16; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
-        unsigned int(32) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(32) to_item_ID;
-        }
-    }
-    */
-    public class SingleItemTypeReferenceBoxLarge4 : Box
-    {
-        public override string FourCC { get; set; } = "dimg";
-
-        protected uint from_item_ID;
-        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected uint to_item_ID;
-        public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBoxLarge4()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt32(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 32; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
-        unsigned int(16) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(16) to_item_ID;
-        }
-    }
-
-
-    */
-    public class SingleItemTypeReferenceBox5 : Box
-    {
-        public override string FourCC { get; set; } = "dpnd";
-
-        protected ushort from_item_ID;
-        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected ushort to_item_ID;
-        public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBox5()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt16(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt16(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 16; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
-        unsigned int(32) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(32) to_item_ID;
-        }
-    }
-    */
-    public class SingleItemTypeReferenceBoxLarge5 : Box
-    {
-        public override string FourCC { get; set; } = "dpnd";
-
-        protected uint from_item_ID;
-        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected uint to_item_ID;
-        public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBoxLarge5()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt32(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 32; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
-        unsigned int(16) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(16) to_item_ID;
-        }
-    }
-
-
-    */
-    public class SingleItemTypeReferenceBox6 : Box
-    {
-        public override string FourCC { get; set; } = "exbl";
-
-        protected ushort from_item_ID;
-        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected ushort to_item_ID;
-        public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBox6()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt16(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt16(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 16; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
-        unsigned int(32) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(32) to_item_ID;
-        }
-    }
-    */
-    public class SingleItemTypeReferenceBoxLarge6 : Box
-    {
-        public override string FourCC { get; set; } = "exbl";
-
-        protected uint from_item_ID;
-        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected uint to_item_ID;
-        public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBoxLarge6()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt32(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 32; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
-        unsigned int(16) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(16) to_item_ID;
-        }
-    }
-
-
-    */
-    public class SingleItemTypeReferenceBox7 : Box
-    {
-        public override string FourCC { get; set; } = "grid";
-
-        protected ushort from_item_ID;
-        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected ushort to_item_ID;
-        public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBox7()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt16(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt16(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 16; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
-        unsigned int(32) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(32) to_item_ID;
-        }
-    }
-    */
-    public class SingleItemTypeReferenceBoxLarge7 : Box
-    {
-        public override string FourCC { get; set; } = "grid";
-
-        protected uint from_item_ID;
-        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected uint to_item_ID;
-        public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBoxLarge7()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt32(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 32; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
-        unsigned int(16) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(16) to_item_ID;
-        }
-    }
-
-
-    */
-    public class SingleItemTypeReferenceBox8 : Box
-    {
-        public override string FourCC { get; set; } = "thmb";
-
-        protected ushort from_item_ID;
-        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected ushort to_item_ID;
-        public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBox8()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt16(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt16(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 16; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
-        unsigned int(32) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(32) to_item_ID;
-        }
-    }
-    */
-    public class SingleItemTypeReferenceBoxLarge8 : Box
-    {
-        public override string FourCC { get; set; } = "thmb";
-
-        protected uint from_item_ID;
-        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected uint to_item_ID;
-        public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBoxLarge8()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt32(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 32; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
-        unsigned int(16) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(16) to_item_ID;
-        }
-    }
-
-
-    */
-    public class SingleItemTypeReferenceBox9 : Box
-    {
-        public override string FourCC { get; set; } = "pred";
-
-        protected ushort from_item_ID;
-        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected ushort to_item_ID;
-        public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBox9()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt16(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt16(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 16; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
-        unsigned int(32) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(32) to_item_ID;
-        }
-    }
-    */
-    public class SingleItemTypeReferenceBoxLarge9 : Box
-    {
-        public override string FourCC { get; set; } = "pred";
-
-        protected uint from_item_ID;
-        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected uint to_item_ID;
-        public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBoxLarge9()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt32(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 32; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
-        unsigned int(16) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(16) to_item_ID;
-        }
-    }
-
-
-    */
-    public class SingleItemTypeReferenceBox10 : Box
-    {
-        public override string FourCC { get; set; } = "tbas";
-
-        protected ushort from_item_ID;
-        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected ushort to_item_ID;
-        public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBox10()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt16(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt16(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt16(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt16(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 16; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
-        unsigned int(32) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(32) to_item_ID;
-        }
-    }
-    */
-    public class SingleItemTypeReferenceBoxLarge10 : Box
-    {
-        public override string FourCC { get; set; } = "tbas";
-
-        protected uint from_item_ID;
-        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected uint to_item_ID;
-        public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBoxLarge10()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt32(this.to_item_ID);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 32; // to_item_ID
-            }
             return boxSize;
         }
     }

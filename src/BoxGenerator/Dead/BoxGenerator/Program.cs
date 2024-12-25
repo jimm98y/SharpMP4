@@ -257,6 +257,7 @@ partial class Program
             Try(String("unsigned int((length_size_of_sample_num+1) * 8)")),
             Try(String("unsigned int(8*size-64)")),
             Try(String("unsigned int(subgroupIdLen)")),
+            Try(String("const unsigned int(8)[6]")),
             Try(String("const unsigned int(32)[2]")),
             Try(String("const unsigned int(32)[3]")),
             Try(String("const unsigned int(32)")),
@@ -580,6 +581,7 @@ partial class Program
     public static Parser<char, string> ClassType =>
         OneOf(
             Try(String("()")),
+            Try(String("(unsigned int(32) format)")),
             Try(String("(bit(24) flags)")),
             Try(String("(fmt)")),
             Try(String("(codingname)")),
@@ -735,8 +737,12 @@ partial class Program
                         var result = Boxes.ParseOrThrow(sample);
                         foreach (var item in result)
                         {
-                            item.FourCC = fourCC;
                             item.Syntax = GetSampleCode(sample, item.BoxName);
+                            if (item.Extended != null)
+                            {
+                                item.FourCC = item.Extended.BoxType;
+                            }
+
                             if (ret.TryAdd(item.BoxName, item))
                             {
                                 success++;                                
@@ -745,17 +751,16 @@ partial class Program
                             {
                                 duplicated++;
                                 duplicates.Add(item);
-                                Console.WriteLine($"Duplicated: {item.BoxName}, 4cc: {item.FourCC}");
+                                Console.WriteLine($"Duplicated: {item.BoxName}");
 
-                                if (item.FourCC != ret[item.BoxName].FourCC)
+                                if (item.Extended != null && item.Extended.BoxType != ret[item.BoxName].Extended.BoxType)
                                 {
-                                    int index = 1;
-                                    while (!ret.TryAdd($"{item.BoxName}{index}", item))
+                                    if (!ret.TryAdd($"{item.BoxName}_{item.Extended.BoxType}", item))
                                     {
-                                        index++;
+                                        Console.WriteLine($"Duplicated and failed to add: {item.BoxName}");
                                     }
                                     // override the name
-                                    item.BoxName = $"{item.BoxName}{index}";
+                                    item.BoxName = $"{item.BoxName}_{item.Extended.BoxType}";
                                 }
                             }
                         }
@@ -786,6 +791,33 @@ using System.Threading.Tasks;
 namespace BoxGenerator2
 {
 ";
+        // build box factory
+        string factory =
+@"   public class BoxFactory
+    {
+        public static Box CreateBox(string fourCC)
+        {
+            switch(fourCC)
+            {
+               ";
+
+        foreach(var item in ret)
+        {
+            if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.BoxType))
+            {
+                factory += $"               case \"{item.Value.Extended.BoxType}\": return new {item.Value.BoxName}();\r\n";
+            }
+        }
+        factory +=    
+@"          }
+
+            throw new NotSupportedException(fourCC);
+        }
+    }
+
+";
+        resultCode += factory;
+
         foreach (var b in ret.Values.ToArray())
         {
             string code = BuildCode(b, containers);
@@ -852,9 +884,9 @@ namespace BoxGenerator2
 
         cls += "\r\n{\r\n";
 
-        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.FourCC))
+        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.Extended.BoxType))
         {
-            cls += $"\tpublic override string FourCC {{ get; set; }} = \"{b.FourCC}\";";
+            cls += $"\tpublic override string FourCC {{ get; set; }} = \"{b.Extended.BoxType}\";";
         }
         else if(b.Extended != null && !string.IsNullOrEmpty(b.Extended.DescriptorTag))
         {
@@ -1476,6 +1508,7 @@ namespace BoxGenerator2
             { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.ReadBytes((ulong)(length_size_of_sample_num+1), " },
             { "unsigned int(8*size-64)", "stream.ReadBytes(size-64, " },
             { "unsigned int(subgroupIdLen)[i]", "stream.ReadUInt32(" },
+            { "const unsigned int(8)[6]", "stream.ReadUInt8Array(6, " },
             { "const unsigned int(32)[2]", "stream.ReadUInt32Array(2, " },
             { "const unsigned int(32)[3]", "stream.ReadUInt32Array(3, " },
             { "const unsigned int(32)", "stream.ReadUInt32(" },
@@ -1848,6 +1881,7 @@ namespace BoxGenerator2
             { "unsigned int((length_size_of_sample_num+1) * 8)", "(ulong)(length_size_of_sample_num+1) * 8" },
             { "unsigned int(8*size-64)", "(ulong)(size - 64) * 8" },
             { "unsigned int(subgroupIdLen)[i]", "32" },
+            { "const unsigned int(8)[6]", "6 * 8" },
             { "const unsigned int(32)[2]", "2 * 32" },
             { "const unsigned int(32)[3]", "3 * 32" },
             { "const unsigned int(32)", "32" },
@@ -2220,6 +2254,7 @@ namespace BoxGenerator2
             { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.WriteBytes((ulong)(length_size_of_sample_num+1), " },
             { "unsigned int(8*size-64)", "stream.WriteBytes(size-64, " },
             { "unsigned int(subgroupIdLen)[i]", "stream.WriteUInt32(" },
+            { "const unsigned int(8)[6]", "stream.WriteUInt8Array(6, " },
             { "const unsigned int(32)[2]", "stream.WriteUInt32Array(2, " },
             { "const unsigned int(32)[3]", "stream.WriteUInt32Array(3, " },
             { "const unsigned int(32)", "stream.WriteUInt32(" },
@@ -2633,6 +2668,7 @@ namespace BoxGenerator2
             { "unsigned int((length_size_of_sample_num+1) * 8)", "byte[]" },
             { "unsigned int(8*size-64)", "byte[]" },
             { "unsigned int(subgroupIdLen)[i]", "uint[]" },
+            { "const unsigned int(8)[6]", "byte[]" },
             { "const unsigned int(32)[2]", "uint[]" },
             { "const unsigned int(32)[3]", "uint[]" },
             { "const unsigned int(32)", "uint" },

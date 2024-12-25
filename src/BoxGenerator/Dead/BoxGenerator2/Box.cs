@@ -10,6 +10,7 @@ namespace BoxGenerator2
 
         protected ulong size = 0;
         public ulong Size { get { return size; } set { size = value; } }
+
         protected ulong offset = 0;
         public ulong Offset { get { return offset; } set { offset = value; } }
 
@@ -33,4 +34,6 @@ namespace BoxGenerator2
             throw new NotImplementedException();
         }
     }
+
+    public class UnknownBox : Box  {  }
 }
