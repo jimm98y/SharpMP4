@@ -837,7 +837,10 @@ namespace BoxGenerator2
         {
             if (item.Value.Count == 1)
             {
-                factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}();\r\n";
+                string comment = "";
+                if (item.Value.Single().BoxName.Contains('_'))
+                    comment = " // TODO: fix duplicate";
+                factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}();{comment}\r\n";
             }
             else
             {

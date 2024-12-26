@@ -12,16 +12,16 @@ namespace BoxGenerator2
                 case "3dpr": return new MVDDepthResolutionBox();
                 case "3sib": return new MVDScalabilityInformationSEIBox();
                 case "a3d1": return new A3DSampleEntry();
-                case "a3d2": return new A3DSampleEntry_a3d2();
-                case "a3d3": return new A3DSampleEntry_a3d3();
-                case "a3d4": return new A3DSampleEntry_a3d4();
+                case "a3d2": return new A3DSampleEntry_a3d2(); // TODO: fix duplicate
+                case "a3d3": return new A3DSampleEntry_a3d3(); // TODO: fix duplicate
+                case "a3d4": return new A3DSampleEntry_a3d4(); // TODO: fix duplicate
                 case "a3dC": return new A3DConfigurationBox();
                 case "acgl": return new SubpicCommonGroupBox();
                 case "aebr": return new AutoExposureBracketingEntry();
                 case "afbr": return new FlashExposureBracketingEntry();
                 case "alou": return new AlbumLoudnessInfo();
                 case "alst": return new AlternativeStartupEntry();
-                case "alte": return new TrackGroupTypeBox_alte();
+                case "alte": return new TrackGroupTypeBox_alte(); // TODO: fix duplicate
                 case "altt": return new AccessibilityTextProperty();
                 case "amgl": return new SubpicMultipleGroupsBox();
                 case "amve": return new AmbientViewingEnvironmentBox();
@@ -55,7 +55,7 @@ namespace BoxGenerator2
                 case "csch": return new CompatibleSchemeTypeBox();
                 case "csgp": return new CompactSampleToGroupBox();
                 case "cslg": return new CompositionToDecodeBox();
-                case "cstg": return new TrackGroupTypeBox_cstg();
+                case "cstg": return new TrackGroupTypeBox_cstg(); // TODO: fix duplicate
                 case "ctts": return new CompositionOffsetBox();
                 case "dcfi": return new DecodingCapabilityInformation();
                 case "dhec": return new DefaultHevcExtractorConstructorBox();
@@ -99,15 +99,15 @@ namespace BoxGenerator2
                 case "gitn": return new GroupIdToNameBox();
                 case "grpl": return new GroupsListBox();
                 case "hdlr": return new HandlerBox();
-                case "hev1": return new HEVCSampleEntry_hev1();
-                case "hev2": return new HEVCSampleEntry_hev2();
-                case "hev3": return new HEVCSampleEntry_hev3();
+                case "hev1": return new HEVCSampleEntry_hev1(); // TODO: fix duplicate
+                case "hev2": return new HEVCSampleEntry_hev2(); // TODO: fix duplicate
+                case "hev3": return new HEVCSampleEntry_hev3(); // TODO: fix duplicate
                 case "hinf": return new hintstatisticsbox();
                 case "hmhd": return new HintMediaHeaderBox();
                 case "hnti": throw new NotSupportedException("hnti"); // TODO: trackhintinformation, moviehintinformation
                 case "hvc1": return new HEVCSampleEntry();
-                case "hvc2": return new HEVCSampleEntry_hvc2();
-                case "hvc3": return new HEVCSampleEntry_hvc3();
+                case "hvc2": return new HEVCSampleEntry_hvc2(); // TODO: fix duplicate
+                case "hvc3": return new HEVCSampleEntry_hvc3(); // TODO: fix duplicate
                 case "hvcC": return new HEVCConfigurationBox();
                 case "hvt1": return new HEVCTileSampleEntry();
                 case "hvt2": return new HEVCSliceSegmentDataSampleEntry();
@@ -139,7 +139,7 @@ namespace BoxGenerator2
                 case "lbli": return new LhvcExternalBaseLayerInfo();
                 case "ldep": return new TierDependencyBox();
                 case "leva": return new LevelAssignmentBox();
-                case "lhe1": return new LHEVCSampleEntry_lhe1();
+                case "lhe1": return new LHEVCSampleEntry_lhe1(); // TODO: fix duplicate
                 case "lht1": return new LHEVCTileSampleEntry();
                 case "lhv1": return new LHEVCSampleEntry();
                 case "lhvC": return new LHEVCConfigurationBox();
@@ -171,17 +171,17 @@ namespace BoxGenerator2
                 case "msrc": return new TrackGroupTypeBox();
                 case "mstv": return new MVCSubTrackViewBox();
                 case "mvc1": return new MVCSampleEntry();
-                case "mvc2": return new MVCSampleEntry_mvc2();
-                case "mvc3": return new MVCSampleEntry_mvc3();
-                case "mvc4": return new MVCSampleEntry_mvc4();
+                case "mvc2": return new MVCSampleEntry_mvc2(); // TODO: fix duplicate
+                case "mvc3": return new MVCSampleEntry_mvc3(); // TODO: fix duplicate
+                case "mvc4": return new MVCSampleEntry_mvc4(); // TODO: fix duplicate
                 case "mvcC": return new MVCConfigurationBox();
                 case "mvcg": return new MultiviewGroupBox();
                 case "mvci": return new MultiviewInformationBox();
                 case "mvcP": return new MVCViewPriorityAssignmentBox();
                 case "mvd1": return new MVCDSampleEntry();
-                case "mvd2": return new MVCDSampleEntry_mvd2();
-                case "mvd3": return new MVCDSampleEntry_mvd3();
-                case "mvd4": return new MVCDSampleEntry_mvd4();
+                case "mvd2": return new MVCDSampleEntry_mvd2(); // TODO: fix duplicate
+                case "mvd3": return new MVCDSampleEntry_mvd3(); // TODO: fix duplicate
+                case "mvd4": return new MVCDSampleEntry_mvd4(); // TODO: fix duplicate
                 case "mvdC": return new MVCDConfigurationBox();
                 case "mvex": return new MovieExtendsBox();
                 case "mvhd": return new MovieHeaderBox();
@@ -189,7 +189,7 @@ namespace BoxGenerator2
                 case "mvra": return new MultiviewRelationAttributeBox();
                 case "nalm": return new NALUMapEntry();
                 case "nmhd": return new NullMediaHeaderBox();
-                case "npck": return new hintPacketsSent_npck();
+                case "npck": return new hintPacketsSent_npck(); // TODO: fix duplicate
                 case "nump": return new hintPacketsSent();
                 case "oinf": throw new NotSupportedException("oinf"); // TODO: OperatingPointsInformation, OperatingPointsInformationProperty
                 case "opeg": return new OperatingPointGroupBox();
@@ -248,12 +248,12 @@ namespace BoxGenerator2
                 case "sgpd": return new SampleGroupDescriptionBox();
                 case "sidx": return new CompressedSegmentIndexBox();
                 case "sinf": return new ProtectionSchemeInfoBox();
-                case "skip": return new FreeSpaceBox_skip();
+                case "skip": return new FreeSpaceBox_skip(); // TODO: fix duplicate
                 case "sm2t": return new MPEG2TSServerSampleEntry();
                 case "smhd": return new SoundMediaHeaderBox();
                 case "snim": return new DataEntrySeqNumImdaBox();
                 case "snro": return new sequenceoffset();
-                case "snut": return new TrackGroupTypeBox_snut();
+                case "snut": return new TrackGroupTypeBox_snut(); // TODO: fix duplicate
                 case "spid": throw new NotSupportedException("spid"); // TODO: VvcSubpicIDEntry, VvcSubpicIDProperty
                 case "spli": return new SubpicLevelInfoEntry();
                 case "splt": return new SplitTransitionEffectProperty();
@@ -315,9 +315,9 @@ namespace BoxGenerator2
                 case "tmax": return new hintmaxrelativetime();
                 case "tmin": return new hintminrelativetime();
                 case "tols": return new TargetOlsProperty();
-                case "totl": return new hintBytesSent_totl();
-                case "tpay": return new hintBytesSent_tpay();
-                case "tpyl": return new hintBytesSent_tpyl();
+                case "totl": return new hintBytesSent_totl(); // TODO: fix duplicate
+                case "tpay": return new hintBytesSent_tpay(); // TODO: fix duplicate
+                case "tpyl": return new hintBytesSent_tpyl(); // TODO: fix duplicate
                 case "traf": return new TrackFragmentBox();
                 case "trak": return new TrackBox();
                 case "tran": return new TranscodingInfoBox();
@@ -351,7 +351,7 @@ namespace BoxGenerator2
                 case "vsib": return new ViewScalabilityInformationSEIBox();
                 case "vttC": return new WebVTTConfigurationBox();
                 case "vvc1": return new VvcSampleEntry();
-                case "vvcb": return new EntityToGroupBox_vvcb();
+                case "vvcb": return new EntityToGroupBox_vvcb(); // TODO: fix duplicate
                 case "vvcC": return new VvcConfigurationBox();
                 case "vvcN": return new VvcNonVCLSampleEntry();
                 case "vvi1": return new VvcSampleEntry();
