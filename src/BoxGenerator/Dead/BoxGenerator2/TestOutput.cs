@@ -17,9 +17,8 @@ namespace BoxGenerator2
                 case "setu": return new MetaDataSetupBox();
                 case "exte": return new MetaDataExtensionsBox();
                 case "keyi": return new MetaDataInlineKeysPresentBox();
-                case "vipr": return new ViewPriorityBox();
+                case "vipr": throw new NotSupportedException("vipr"); // TODO: fix
                 case "avss": return new AVCSubSequenceEntry();
-                case "btrt": return new MPEG4BitRateBox();
                 case "icam": return new IntrinsicCameraParametersBox();
                 case "ecam": return new ExtrinsicCameraParametersBox();
                 case "rssr": return new ReceivedSsrcBox();
@@ -61,10 +60,9 @@ namespace BoxGenerator2
                 case "kind": return new KindBox();
                 case "tsel": return new TrackSelectionBox();
                 case "strk": return new SubTrackBox();
-                case "hnti": return new trackhintinformation();
+                case "hnti": throw new NotSupportedException("hnti"); // TODO: fix
                 case "sdp ": return new rtptracksdphintinformation();
-                case "hnti": return new moviehintinformation();
-                case "rtp ": return new rtpmoviehintinformation();
+                case "rtp ": throw new NotSupportedException("rtp "); // TODO: fix
                 case "hinf": return new hintstatisticsbox();
                 case "ludt": return new LoudnessBox();
                 case "tlou": return new TrackLoudnessInfo();
@@ -245,7 +243,6 @@ namespace BoxGenerator2
                 case "sm2t": return new MPEG2TSServerSampleEntry();
                 case "srtp": return new SrtpHintSampleEntry();
                 case "resv": return new VisualSampleEntry();
-                case "rtp ": return new RtpHintSampleEntry();
                 case "brnd": return new BrandProperty();
                 case "alst": return new AlternativeStartupEntry();
                 case "drap": return new VisualDRAPEntry();
@@ -269,10 +266,10 @@ namespace BoxGenerator2
                 case "hev2": return new HEVCSampleEntry_hev2();
                 case "hev3": return new HEVCSampleEntry_hev3();
                 case "avcp": return new AVCParameterSampleEntry();
-                case "avc1": return new AVCMVCSampleEntry();
-                case "avc3": return new AVCMVCSampleEntry_avc3();
-                case "avc2": return new AVC2MVCSampleEntry();
-                case "avc4": return new AVC2MVCSampleEntry_avc4();
+                case "avc1": throw new NotSupportedException("avc1"); // TODO: fix
+                case "avc3": throw new NotSupportedException("avc3"); // TODO: fix
+                case "avc2": throw new NotSupportedException("avc2"); // TODO: fix
+                case "avc4": throw new NotSupportedException("avc4"); // TODO: fix
                 case "mvc1": return new MVCSampleEntry();
                 case "mvc2": return new MVCSampleEntry_mvc2();
                 case "mvc3": return new MVCSampleEntry_mvc3();
@@ -285,19 +282,20 @@ namespace BoxGenerator2
                 case "a3d2": return new A3DSampleEntry_a3d2();
                 case "a3d3": return new A3DSampleEntry_a3d3();
                 case "a3d4": return new A3DSampleEntry_a3d4();
-                case "'avc1' or 'avc3'": return new AVCSVCSampleEntry();
-                case "'avc2' or 'avc4'": return new AVC2SVCSampleEntry();
-                case "'svc1' or 'svc2'": return new SVCSampleEntry();
+                case "svc1": return new SVCSampleEntry();
+                case "svc2": return new SVCSampleEntry();
                 case "hvt1": return new HEVCTileSampleEntry();
                 case "lht1": return new LHEVCTileSampleEntry();
                 case "hvt3": return new HEVCTileSSHInfoSampleEntry();
                 case "hvt2": return new HEVCSliceSegmentDataSampleEntry();
-                case "'vvc1' or 'vvi1'": return new VvcSampleEntry();
+                case "vvc1": return new VvcSampleEntry();
+                case "vvi1": return new VvcSampleEntry();
                 case "vvs1": return new VvcSubpicSampleEntry();
                 case "vvcN": return new VvcNonVCLSampleEntry();
                 case "evc1": return new EVCSampleEntry();
                 case "svcM": return new SVCMetaDataSampleEntry();
-                case "'evs1' or 'evs2'": return new EVCSliceComponentTrackSampleEntry();
+                case "evs1": return new EVCSliceComponentTrackSampleEntry();
+                case "evs2": return new EVCSliceComponentTrackSampleEntry();
                 case "acgl": return new SubpicCommonGroupBox();
                 case "amgl": return new SubpicMultipleGroupsBox();
                 case "opeg": return new OperatingPointGroupBox();
@@ -314,23 +312,22 @@ namespace BoxGenerator2
                 case "minp": return new VvcMixedNALUnitTypePicEntry();
                 case "mvif": return new MultiviewGroupEntry();
                 case "nalm": return new NALUMapEntry();
-                case "oinf": return new OperatingPointsInformation();
+                case "oinf": throw new NotSupportedException("oinf"); // TODO: fix
                 case "opth": return new OperatingPointDecodeTimeHint();
                 case "pase": return new ParameterSetNALUEntry();
                 case "pss1": return new PSSampleGroupEntry();
                 case "rror": return new VvcRectRegionOrderEntry();
                 case "scif": return new ScalableGroupEntry();
                 case "scnm": return new ScalableNALUMapEntry();
-                case "spid": return new VvcSubpicIDEntry();
+                case "spid": throw new NotSupportedException("spid"); // TODO: fix
                 case "spli": return new SubpicLevelInfoEntry();
-                case "spor": return new VvcSubpicOrderEntry();
+                case "spor": throw new NotSupportedException("spor"); // TODO: fix
                 case "stsa": return new StepwiseTemporalLayerEntry();
                 case "sulm": return new VvcSubpicLayoutMapEntry();
                 case "sync": return new SyncSampleEntry();
                 case "trif": return new RectangularRegionGroupEntry();
                 case "tsas": return new TemporalSubLayerEntry();
                 case "tscl": return new TemporalLayerEntry();
-                case "vipr": return new ViewPriorityEntry();
                 case "vopi": return new VvcOperatingPointsInformation();
                 case "alte": return new TrackGroupTypeBox_alte();
                 case "cstg": return new TrackGroupTypeBox_cstg();
@@ -341,7 +338,6 @@ namespace BoxGenerator2
                 case "ispe": return new ImageSpatialExtentsProperty();
                 case "jpgC": return new JPEGConfigurationBox();
                 case "lsel": return new LayerSelectorProperty();
-                case "oinf": return new OperatingPointsInformationProperty();
                 case "pixi": return new PixelInformationProperty();
                 case "rloc": return new RelativeLocationProperty();
                 case "tols": return new TargetOlsProperty();
@@ -364,8 +360,6 @@ namespace BoxGenerator2
                 case "stpe": return new SuggestedTransitionPeriodProperty();
                 case "ssld": return new SuggestedTimeDisplayDurationProperty();
                 case "mskC": return new MaskConfigurationProperty();
-                case "spid": return new VvcSubpicIDProperty();
-                case "spor": return new VvcSubpicOrderProperty();
                 case "eqiv": return new VisualEquivalenceEntry();
                 case "refs": return new DirectReferenceSamplesList();
                 case "Opus": return new OpusSampleEntry();
@@ -431,6 +425,7 @@ namespace BoxGenerator2
     { 
     } 
 
+
     */
     public abstract class SampleGroupDescriptionEntry : Box
     {
@@ -467,6 +462,7 @@ namespace BoxGenerator2
     SampleGroupDescriptionEntry (grouping_type) 
     { 
     } 
+
 
     */
     public abstract class VisualSampleGroupEntry : SampleGroupDescriptionEntry
@@ -505,6 +501,7 @@ namespace BoxGenerator2
     { 
     } 
 
+
     */
     public abstract class AudioSampleGroupEntry : SampleGroupDescriptionEntry
     {
@@ -542,6 +539,7 @@ namespace BoxGenerator2
     { 
     } 
 
+
     */
     public abstract class HintSampleGroupEntry : SampleGroupDescriptionEntry
     {
@@ -578,6 +576,7 @@ namespace BoxGenerator2
     SampleGroupDescriptionEntry (grouping_type) 
     { 
     } 
+
 
     */
     public abstract class SubtitleSampleGroupEntry : SampleGroupDescriptionEntry
@@ -650,6 +649,7 @@ namespace BoxGenerator2
     class SubtitleSampleEntry(codingname) extends SampleEntry (codingname) { 
     } 
 
+
     */
     public abstract class SubtitleSampleEntry : SampleEntry
     {
@@ -688,6 +688,7 @@ namespace BoxGenerator2
      string auxiliary_mime_types; // optional, required if auxiliary resources are present 
      BitRateBox (); 
     } 
+
 
     */
     public class XMLSubtitleSampleEntry : SubtitleSampleEntry
@@ -826,6 +827,7 @@ namespace BoxGenerator2
       unsigned int(4) reliability; 
      } 
     } 
+
     */
     public class LoudnessBaseBox : FullBox
     {
@@ -1031,6 +1033,7 @@ namespace BoxGenerator2
     aligned(8) class ItemInfoExtension(unsigned int(32) extension_type) extends Box(boxtype) 
     { 
     } 
+
     */
     public class ItemInfoExtension : Box
     {
@@ -1065,6 +1068,7 @@ namespace BoxGenerator2
     /*
     class PlainTextSampleEntry(codingname) extends SampleEntry (codingname) { 
     } 
+
     */
     public class PlainTextSampleEntry : SampleEntry
     {
@@ -1165,6 +1169,7 @@ namespace BoxGenerator2
 
     /*
     aligned(8) class ItemProperty(property_type) extends Box(property_type){}
+
     */
     public class ItemProperty : Box
     {
@@ -1292,6 +1297,7 @@ namespace BoxGenerator2
      MetaDataSetupBox();	  // optional
      MetaDataExtensionsBox();  // optional
     }
+
     */
     public class MetaDataKeyBox : Box
     {
@@ -1359,6 +1365,7 @@ namespace BoxGenerator2
      unsigned int(8) key_value[];
     }
 
+
     */
     public class MetaDataKeyDeclarationBox : Box
     {
@@ -1407,6 +1414,7 @@ namespace BoxGenerator2
      string locale_string;
     }
 
+
     */
     public class MetaDataLocaleBox : Box
     {
@@ -1448,6 +1456,7 @@ namespace BoxGenerator2
     aligned(8) class MetaDataSetupBox extends Box('setu') { // 'init' instead?
     }
 
+
     */
     public class MetaDataSetupBox : Box
     {
@@ -1486,6 +1495,7 @@ namespace BoxGenerator2
     aligned(8) class MetaDataExtensionsBox extends Box('exte') {
      Box extensions[];
     }
+
 
     */
     public class MetaDataExtensionsBox : Box
@@ -1529,6 +1539,7 @@ namespace BoxGenerator2
     unsigned int(8) inlineKeyValueBoxesPresent;
     }
 
+
     */
     public class MetaDataInlineKeysPresentBox : Box
     {
@@ -1571,6 +1582,7 @@ namespace BoxGenerator2
     Box boxes[];
     }
 
+
     */
     public class MetaDataAccessUnit
     {
@@ -1609,6 +1621,7 @@ namespace BoxGenerator2
     aligned(8) class MetaDataAUBox extends Box(local_key_id) {
     }
 
+
     */
     public class MetaDataAUBox : Box
     {
@@ -1645,6 +1658,7 @@ namespace BoxGenerator2
     const unsigned int(8)[6] reserved = 0; 
     unsigned int(16) data_reference_index; 
     }
+
 
     */
     public class SampleEntry : Box
@@ -1695,6 +1709,7 @@ namespace BoxGenerator2
     class HintSampleEntry() extends SampleEntry (protocol) { 
     unsigned int(8) data []; 
     } 
+
     */
     public class HintSampleEntry : SampleEntry
     {
@@ -1741,6 +1756,7 @@ namespace BoxGenerator2
       unsigned int(32) content_priority_id; 
      } 
     } 
+
     */
     public class ViewPriorityBox : Box
     {
@@ -1812,6 +1828,7 @@ namespace BoxGenerator2
     unsigned int(8)   layerNumber; 
     unsigned int(16)  subSequenceIdentifier; 
     } 
+
     */
     public class DependencyInfo
     {
@@ -1877,7 +1894,7 @@ namespace BoxGenerator2
       unsigned int(8) numReferences; 
       DependencyInfo dependency[numReferences]; 
      } 
-    } 
+
     */
     public class AVCSubSequenceEntry : VisualSampleGroupEntry
     {
@@ -1994,61 +2011,6 @@ namespace BoxGenerator2
             }
             boxSize += 8; // numReferences
             boxSize += IsoStream.CalculateClassSize(dependency); // dependency
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class MPEG4BitRateBox extends Box('btrt'){ 
-    unsigned int(32) bufferSizeDB; 
-    unsigned int(32) maxBitrate; 
-    unsigned int(32) avgBitrate; 
-    }
-    */
-    public class MPEG4BitRateBox : Box
-    {
-        public override string FourCC { get; set; } = "btrt";
-
-        protected uint bufferSizeDB;
-        public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
-
-        protected uint maxBitrate;
-        public uint MaxBitrate { get { return this.maxBitrate; } set { this.maxBitrate = value; } }
-
-        protected uint avgBitrate;
-        public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
-
-        public MPEG4BitRateBox()
-        { }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32(out this.bufferSizeDB);
-            boxSize += stream.ReadUInt32(out this.maxBitrate);
-            boxSize += stream.ReadUInt32(out this.avgBitrate);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32(this.bufferSizeDB);
-            boxSize += stream.WriteUInt32(this.maxBitrate);
-            boxSize += stream.WriteUInt32(this.avgBitrate);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // bufferSizeDB
-            boxSize += 32; // maxBitrate
-            boxSize += 32; // avgBitrate
             return boxSize;
         }
     }
@@ -3168,6 +3130,7 @@ namespace BoxGenerator2
         unsigned int(8) ptl_num_sub_profiles;
         for (j=0; j < ptl_num_sub_profiles; j++)
             unsigned int(32) general_sub_profile_idc[j];
+    } 
     */
     public class VvcPTLRecord
     {
@@ -3341,7 +3304,7 @@ namespace BoxGenerator2
 
 
     /*
-    } aligned(8) class VvcDecoderConfigurationRecord {
+    aligned(8) class VvcDecoderConfigurationRecord {
         bit(5) reserved = '11111'b;
         unsigned int(2) LengthSizeMinusOne;
         unsigned int(1) ptl_present_flag;
@@ -3787,6 +3750,7 @@ namespace BoxGenerator2
      unsigned int(8) max_tid_il_ref_pics_plus1; 
      }
     }
+
     */
     public class VvcOperatingPointsRecord
     {
@@ -4659,6 +4623,7 @@ namespace BoxGenerator2
         uint(32)	timescale;
     }
 
+
     */
     public class timescaleentry : Box
     {
@@ -4700,6 +4665,7 @@ namespace BoxGenerator2
     class timeoffset() extends Box('tsro') {
         int(32)		offset;
     }
+
 
     */
     public class timeoffset : Box
@@ -4782,6 +4748,7 @@ namespace BoxGenerator2
     /*
     aligned(8) class hintBytesSent extends Box('trpy') {
         uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
+
     */
     public class hintBytesSent : Box
     {
@@ -4822,6 +4789,7 @@ namespace BoxGenerator2
     /*
     aligned(8) class hintPacketsSent extends Box('nump') {
         uint(64)	packetssent; }	// total packets sent
+
     */
     public class hintPacketsSent : Box
     {
@@ -4860,8 +4828,8 @@ namespace BoxGenerator2
 
 
     /*
-    aligned(8) class hintBytesSent extends Box('trpy') {
-        uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
+    aligned(8) class hintBytesSent extends Box('tpyl') {
+        uint(64)	bytessent; }	// total bytes sent, not including RTP headers
     */
     public class hintBytesSent_tpyl : Box
     {
@@ -4902,6 +4870,7 @@ namespace BoxGenerator2
     /*
     aligned(8) class hintBytesSent extends Box('totl') {
         uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
+
     */
     public class hintBytesSent_totl : Box
     {
@@ -4942,6 +4911,7 @@ namespace BoxGenerator2
     /*
     aligned(8) class hintPacketsSent extends Box('npck') {
         uint(32)	packetssent; }	// total packets sent
+
     */
     public class hintPacketsSent_npck : Box
     {
@@ -4980,8 +4950,8 @@ namespace BoxGenerator2
 
 
     /*
-    aligned(8) class hintBytesSent extends Box('totl') {
-        uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
+    aligned(8) class hintBytesSent extends Box('tpay') {
+        uint(32)	bytessent; }	// total bytes sent, not including RTP headers
     */
     public class hintBytesSent_tpay : Box
     {
@@ -5072,6 +5042,7 @@ namespace BoxGenerator2
     /*
     aligned(8) class hintmediaBytesSent extends Box('dmed') {
         uint(64)	bytessent; }	// total bytes sent from media tracks
+
     */
     public class hintmediaBytesSent : Box
     {
@@ -5112,6 +5083,7 @@ namespace BoxGenerator2
     /*
     aligned(8) class hintimmediateBytesSent extends Box('dimm') {
         uint(64)	bytessent; }	// total bytes sent immediate mode
+
     */
     public class hintimmediateBytesSent : Box
     {
@@ -5192,6 +5164,7 @@ namespace BoxGenerator2
     /*
     aligned(8) class hintminrelativetime extends Box('tmin') {
         int(32)		time; }		// smallest relative transmission time, milliseconds
+
     */
     public class hintminrelativetime : Box
     {
@@ -5272,6 +5245,7 @@ namespace BoxGenerator2
     /*
     aligned(8) class hintlargestpacket extends Box('pmax') {
         uint(32)	bytes; }			// largest packet sent, including RTP header
+
     */
     public class hintlargestpacket : Box
     {
@@ -6278,6 +6252,7 @@ namespace BoxGenerator2
             }
         }
     }
+
     */
     public class ChannelLayout : FullBox
     {
@@ -7207,6 +7182,7 @@ namespace BoxGenerator2
     aligned(8) class trackhintinformation extends Box('hnti') {
     }
 
+
     */
     public class trackhintinformation : Box
     {
@@ -7284,6 +7260,7 @@ namespace BoxGenerator2
     /*
     aligned(8) class moviehintinformation extends Box('hnti') {
     }
+
 
     */
     public class moviehintinformation : Box
@@ -7701,6 +7678,7 @@ namespace BoxGenerator2
             // ItemProperty or ItemFullProperty, or FreeSpaceBox(es)
             // to fill the box
     }
+
     */
     public class ItemPropertyContainerBox : Box
     {
@@ -7766,6 +7744,7 @@ namespace BoxGenerator2
             }
         }
     }
+
     */
     public class ItemPropertyAssociationBox : FullBox
     {
@@ -9169,6 +9148,7 @@ namespace BoxGenerator2
         FECReservoirBox	FEC_symbol_locations; //optional
         FileReservoirBox	File_symbol_locations; //optional
     }
+
 
     */
     public class PartitionEntry : Box
@@ -11605,6 +11585,7 @@ namespace BoxGenerator2
     aligned(8) class CompressedMovieFragmentBox
         extends CompressedBox('!mof', 'moof') {
     }
+
     */
     public class CompressedMovieFragmentBox : CompressedBox
     {
@@ -12763,6 +12744,7 @@ namespace BoxGenerator2
             utf8string scheme_uri;		// browser uri
         }
     }
+
     */
     public class CompatibleSchemeTypeBox : FullBox
     {
@@ -13038,6 +13020,10 @@ namespace BoxGenerator2
                 }
             }
             SampleGroupDescriptionEntry (grouping_type);
+            // an instance of a class derived from SampleGroupDescriptionEntry
+            //  that is appropriate and permitted for the media type
+        }
+    }
     */
     public class SampleGroupDescriptionBox : FullBox
     {
@@ -13177,6 +13163,7 @@ namespace BoxGenerator2
     aligned(8) class CompressedSegmentIndexBox
         extends CompressedBox('!six', 'sidx') {
     }
+
     */
     public class CompressedSegmentIndexBox : CompressedBox
     {
@@ -13849,6 +13836,9 @@ namespace BoxGenerator2
         int i ;
         unsigned int(32) entry_count;
         for (i = 1 ; i <= entry_count ; i++){
+            SampleEntry();		// an instance of a class derived from SampleEntry
+        }
+    }
     */
     public class SampleDescriptionBox : FullBox
     {
@@ -19348,7 +19338,7 @@ namespace BoxGenerator2
     class WVTTSampleEntry() extends PlainTextSampleEntry ('wvtt'){
         WebVTTConfigurationBox	config;
         WebVTTSourceLabelBox		label;	// recommended
-        MPEG4BitRateBox (); 					// optional
+        BitRateBox (); 					// optional
     }
     */
     public class WVTTSampleEntry : PlainTextSampleEntry
@@ -19361,8 +19351,8 @@ namespace BoxGenerator2
         protected WebVTTSourceLabelBox label;  //  recommended
         public WebVTTSourceLabelBox Label { get { return this.label; } set { this.label = value; } }
 
-        protected MPEG4BitRateBox MPEG4BitRateBox;  //  optional
-        public MPEG4BitRateBox _MPEG4BitRateBox { get { return this.MPEG4BitRateBox; } set { this.MPEG4BitRateBox = value; } }
+        protected BitRateBox BitRateBox;  //  optional
+        public BitRateBox _BitRateBox { get { return this.BitRateBox; } set { this.BitRateBox = value; } }
 
         public WVTTSampleEntry()
         { }
@@ -19373,7 +19363,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
             boxSize += stream.ReadBox(out this.label); // recommended
-            if (boxSize < size) boxSize += stream.ReadBox(out this.MPEG4BitRateBox); // optional
+            if (boxSize < size) boxSize += stream.ReadBox(out this.BitRateBox); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -19384,7 +19374,7 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
             boxSize += stream.WriteBox(this.label); // recommended
-            if (this.MPEG4BitRateBox != null) boxSize += stream.WriteBox(this.MPEG4BitRateBox); // optional
+            if (this.BitRateBox != null) boxSize += stream.WriteBox(this.BitRateBox); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -19395,7 +19385,7 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
             boxSize += IsoStream.CalculateSize(label); // label
-            if (this.MPEG4BitRateBox != null) boxSize += IsoStream.CalculateSize(MPEG4BitRateBox); // MPEG4BitRateBox
+            if (this.BitRateBox != null) boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
             return boxSize;
         }
     }
@@ -19450,6 +19440,7 @@ namespace BoxGenerator2
         unsigned int(4) max_ref_per_pic;
         unsigned int(26) reserved;
     }
+
     */
     public class CodingConstraintsBox : FullBox
     {
@@ -19645,6 +19636,7 @@ namespace BoxGenerator2
         SamplingRateBox();
         ChannelLayout();
     }
+
 
     */
     public class AudioSampleEntry : SampleEntry
@@ -20840,6 +20832,7 @@ namespace BoxGenerator2
         CleanApertureBox			clap;		// optional
         PixelAspectRatioBox		pasp;		// optional
     }
+
     */
     public class VisualSampleEntry : SampleEntry
     {
@@ -21126,6 +21119,7 @@ namespace BoxGenerator2
             unsigned int(16) to_item_ID;
         }
     }
+
 
 
     */
@@ -23539,6 +23533,7 @@ namespace BoxGenerator2
         ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
         A3DConfigurationBox	a3dconfig;	// optional
     }
+
     */
     public class MVCDSampleEntry : VisualSampleEntry
     {
@@ -23624,6 +23619,7 @@ namespace BoxGenerator2
         ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
         A3DConfigurationBox	a3dconfig;	// optional
     }
+
     */
     public class MVCDSampleEntry_mvd2 : VisualSampleEntry
     {
@@ -23709,6 +23705,7 @@ namespace BoxGenerator2
         ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
         A3DConfigurationBox	a3dconfig;	// optional
     }
+
     */
     public class MVCDSampleEntry_mvd3 : VisualSampleEntry
     {
@@ -23794,6 +23791,7 @@ namespace BoxGenerator2
         ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
         A3DConfigurationBox	a3dconfig;	// optional
     }
+
     */
     public class MVCDSampleEntry_mvd4 : VisualSampleEntry
     {
@@ -26557,6 +26555,7 @@ namespace BoxGenerator2
     {
         signed int(32) delta_time;
     }
+
     */
     public class OperatingPointDecodeTimeHint : VisualSampleGroupEntry
     {
@@ -27061,7 +27060,7 @@ namespace BoxGenerator2
         for (i=1; i<= NALU_count; i++)
             unsigned int(8) groupID;
         }
-    }
+
     */
     public class ScalableNALUMapEntry : VisualSampleGroupEntry
     {
@@ -28249,6 +28248,7 @@ namespace BoxGenerator2
         unsigned int(32) image_width;
         unsigned int(32) image_height;
     }
+
     */
     public class ImageSpatialExtentsProperty : ItemFullProperty
     {
@@ -28676,6 +28676,7 @@ namespace BoxGenerator2
         utf8string alt_text;
         utf8string alt_lang;
     }
+
     */
     public class AccessibilityTextProperty : ItemFullProperty
     {
@@ -28724,6 +28725,7 @@ namespace BoxGenerator2
     extends ItemFullProperty('crtt', version = 0, flags = 0) {
         unsigned int(64)  creation_time;
     }
+
     */
     public class CreationTimeProperty : ItemFullProperty
     {
@@ -28927,6 +28929,7 @@ namespace BoxGenerator2
     extends ItemFullProperty('mdft', version = 0, flags = 0) {
         unsigned int(64)  modification_time;
     }
+
     */
     public class ModificationTimeProperty : ItemFullProperty
     {
@@ -28969,6 +28972,7 @@ namespace BoxGenerator2
     extends VisualSampleGroupEntry('pano') {
         unsigned int(16) frame_number;
     }
+
     */
     public class PanoramaEntry : VisualSampleGroupEntry
     {
@@ -29077,6 +29081,7 @@ namespace BoxGenerator2
         utf8string description;
         utf8string tags;
     }
+
     */
     public class UserDescriptionProperty : ItemFullProperty
     {
@@ -30662,6 +30667,7 @@ namespace BoxGenerator2
     abstract aligned(8) expandable(228-1) class QoS_Qualifier : bit(8) tag=0x01..0xff {
      // empty. To be filled by classes extending this class.
      }
+
     */
     public class QoS_Qualifier
     {
@@ -30695,9 +30701,10 @@ namespace BoxGenerator2
 
 
     /*
-     class QoS_Qualifier_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x01 {
+    class QoS_Qualifier_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x01 {
      unsigned int(32) MAX_DELAY;
      }
+
     */
     public class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
     {
@@ -30736,9 +30743,10 @@ namespace BoxGenerator2
 
 
     /*
-     class QoS_Qualifier_PREF_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x02 {
+    class QoS_Qualifier_PREF_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x02 {
      unsigned int(32) PREF_MAX_DELAY;
      }
+
     */
     public class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
     {
@@ -30777,9 +30785,10 @@ namespace BoxGenerator2
 
 
     /*
-     class QoS_Qualifier_LOSS_PROB extends QoS_Qualifier : bit(8) tag=0x03 {
+    class QoS_Qualifier_LOSS_PROB extends QoS_Qualifier : bit(8) tag=0x03 {
      double(32) LOSS_PROB;
      }
+
     */
     public class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
     {
@@ -30818,9 +30827,10 @@ namespace BoxGenerator2
 
 
     /*
-     class QoS_Qualifier_MAX_GAP_LOSS extends QoS_Qualifier : bit(8) tag=0x04 {
+    class QoS_Qualifier_MAX_GAP_LOSS extends QoS_Qualifier : bit(8) tag=0x04 {
      unsigned int(32) MAX_GAP_LOSS;
      }
+
     */
     public class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
     {
@@ -30859,9 +30869,10 @@ namespace BoxGenerator2
 
 
     /*
-     class QoS_Qualifier_MAX_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x41 {
+    class QoS_Qualifier_MAX_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x41 {
      unsigned int(32) MAX_AU_SIZE;
      }
+
     */
     public class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
     {
@@ -30900,9 +30911,10 @@ namespace BoxGenerator2
 
 
     /*
-     class QoS_Qualifier_AVG_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x42 {
+    class QoS_Qualifier_AVG_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x42 {
      unsigned int(32) AVG_AU_SIZE;
      }
+
     */
     public class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
     {
@@ -30941,7 +30953,7 @@ namespace BoxGenerator2
 
 
     /*
-     class QoS_Qualifier_MAX_AU_RATE extends QoS_Qualifier : bit(8) tag=0x43 {
+    class QoS_Qualifier_MAX_AU_RATE extends QoS_Qualifier : bit(8) tag=0x43 {
      unsigned int(32) MAX_AU_RATE;
      }
     */
@@ -31225,6 +31237,7 @@ namespace BoxGenerator2
         }
       }   
     }
+
 
     */
     public class AudioSpecificConfig
@@ -31974,6 +31987,7 @@ namespace BoxGenerator2
       return audioObjectType;
     }
 
+
     */
     public class GetAudioObjectType
     {
@@ -32065,6 +32079,7 @@ namespace BoxGenerator2
         }
       }
     }
+
 
     */
     public class GASpecificConfig
@@ -32316,6 +32331,7 @@ namespace BoxGenerator2
       for (i = 0; i < comment_field_bytes; i++)
         uimsbf(8) comment_field_data[i];
     }
+
 
     */
     public class program_config_element
@@ -32657,6 +32673,7 @@ namespace BoxGenerator2
       }
     }
 
+
     */
     public class CelpSpecificConfig
     {
@@ -32779,6 +32796,7 @@ namespace BoxGenerator2
       }
     }
 
+
     */
     public class CelpHeader
     {
@@ -32891,6 +32909,7 @@ namespace BoxGenerator2
       uimsbf(2) BWS_configuration;
     }
 
+
     */
     public class CelpBWSenhHeader
     {
@@ -32932,6 +32951,7 @@ namespace BoxGenerator2
         HVXCconfig();
       }
     }
+
 
     */
     public class HvxcSpecificConfig
@@ -32995,6 +33015,7 @@ namespace BoxGenerator2
         // to be defined in MPEG-4 Version 2
       }
     }
+
 
     */
     public class HVXCconfig
@@ -33062,6 +33083,7 @@ namespace BoxGenerator2
         TTS_Sequence();
     }
 
+
     */
     public class TTSSpecificConfig
     {
@@ -33109,6 +33131,7 @@ namespace BoxGenerator2
       bslbf(1) Lip_Shape_Enable;
       bslbf(1) Trick_Mode_Enable;
     }
+
 
     */
     public class TTS_Sequence
@@ -33209,6 +33232,7 @@ namespace BoxGenerator2
         }
       }
     }
+
 
     */
     public class ErrorResilientCelpSpecificConfig
@@ -33333,6 +33357,7 @@ namespace BoxGenerator2
       }
     }
 
+
     */
     public class ER_SC_CelpHeader
     {
@@ -33453,6 +33478,7 @@ namespace BoxGenerator2
       }
     }
 
+
     */
     public class ErrorResilientHvxcSpecificConfig
     {
@@ -33515,6 +33541,7 @@ namespace BoxGenerator2
         uimsbf(1) var_ScalableFlag;
       }
     }
+
 
     */
     public class ErHVXCconfig
@@ -33591,6 +33618,7 @@ namespace BoxGenerator2
         HILNenexConfig();
       }
     }
+
 
     */
     public class ParametricSpecificConfig
@@ -33677,6 +33705,7 @@ namespace BoxGenerator2
         /* to be defined in MPEG-4 Phase 3 *//*
       }
     }
+
 
     */
     public class PARAconfig
@@ -33779,6 +33808,7 @@ namespace BoxGenerator2
       uimsbf(2) HILNcontMode;
     }
 
+
     */
     public class HILNconfig
     {
@@ -33846,6 +33876,7 @@ namespace BoxGenerator2
       }
     }
 
+
     */
     public class HILNenexConfig
     {
@@ -33911,6 +33942,7 @@ namespace BoxGenerator2
         }
       }
     }
+
 
     */
     public class SSCSpecificConfig
@@ -34006,6 +34038,7 @@ namespace BoxGenerator2
       bslbf(1) extension;
     }
 
+
     */
     public class MPEG_1_2_SpecificConfig
     {
@@ -34046,6 +34079,7 @@ namespace BoxGenerator2
       uimsbf(14) N_Channels;
       uimsbf(1) reserved;
     }
+
 
     */
     public class DSTSpecificConfig
@@ -34147,6 +34181,7 @@ namespace BoxGenerator2
         bslbf(aux_size * 8) aux_data[];
       }
     }
+
 
     */
     public class ALSSpecificConfig
@@ -34497,6 +34532,7 @@ namespace BoxGenerator2
       }
     }
 
+
     */
     public class SLSSpecificConfig
     {
@@ -34618,6 +34654,7 @@ namespace BoxGenerator2
     bslbf(4) eldExtType;
       }
     }
+
 
     */
     public class ELDSpecificConfig
@@ -34864,6 +34901,7 @@ namespace BoxGenerator2
       }
     }
 
+
     */
     public class ld_sbr_header
     {
@@ -34989,32 +35027,30 @@ namespace BoxGenerator2
 
 
     /*
-    class ld_sbr_header(channelConfiguration)
+    class sbr_header()
     {
-      switch (channelConfiguration) {
-        case 1:
-        case 2:
-          numSbrHeader = 1;
-          break;
-        case 3:
-          numSbrHeader = 2;
-          break;
-        case 4:
-        case 5:
-        case 6:
-          numSbrHeader = 3;
-          break;
-        case 7:
-          numSbrHeader = 4;
-          break;
-        default:
-          numSbrHeader = 0;
-          break;
+      uimsbf(1) bs_amp_res;
+      uimsbf(4) bs_start_freq;
+      uimsbf(4) bs_stop_freq;
+      uimsbf(3) bs_xover_band;
+      uimsbf(2) bs_reserved;
+      uimsbf(1) bs_header_extra_1;
+      uimsbf(1) bs_header_extra_2;
+
+      if (bs_header_extra_1) {
+        uimsbf(2) bs_freq_scale;
+        uimsbf(1) bs_alter_scale;
+        uimsbf(2) bs_noise_bands;
       }
-      for (el = 0; el < numSbrHeader; el++) {
-        sbr_header();
+
+      if (bs_header_extra_2) {
+        uimsbf(2) bs_limiter_bands;
+        uimsbf(2) bs_limiter_gains;
+        uimsbf(1) bs_interpol_freq;
+        uimsbf(1) bs_smoothing_mode;
       }
     }
+
 
     */
     public class sbr_header
@@ -35206,6 +35242,7 @@ namespace BoxGenerator2
         uimsbf(5) header_crclen;
       }
     }
+
     */
     public class ErrorProtectionSpecificConfig
     {
@@ -35597,6 +35634,7 @@ namespace BoxGenerator2
      unsigned int(8 * OutputChannelCount) ChannelMapping;
      }
 
+
     */
     public class ChannelMappingTable
     {
@@ -35650,7 +35688,7 @@ namespace BoxGenerator2
 
 
     /*
-     aligned(8) class OpusSpecificBox extends Box('dOps'){
+    aligned(8) class OpusSpecificBox extends Box('dOps'){
      unsigned int(8) Version;
      unsigned int(8) OutputChannelCount;
      unsigned int(16) PreSkip;

@@ -29,7 +29,7 @@
       "description": "WebVTT data",
       "containers": [ "stsd" ],
       "type": "PlainTextSampleEntry",
-      "syntax": "class WVTTSampleEntry() extends PlainTextSampleEntry ('wvtt'){\n\tWebVTTConfigurationBox\tconfig;\n\tWebVTTSourceLabelBox\t\tlabel;\t// recommended\n\tMPEG4BitRateBox (); \t\t\t\t\t// optional\n}"
+      "syntax": "class WVTTSampleEntry() extends PlainTextSampleEntry ('wvtt'){\n\tWebVTTConfigurationBox\tconfig;\n\tWebVTTSourceLabelBox\t\tlabel;\t// recommended\n\tBitRateBox (); \t\t\t\t\t// optional\n}"
     }
   ]
 }

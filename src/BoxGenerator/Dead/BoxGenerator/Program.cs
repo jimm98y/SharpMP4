@@ -25,6 +25,7 @@ public class PseudoClass : PseudoCode
     public string Alignment { get; }
     public PseudoExtendedClass Extended { get; }
     public string Syntax { get; internal set; }
+    public long CurrentOffset { get; internal set; }
 
     public PseudoClass(
         Maybe<string> comment,
@@ -33,7 +34,8 @@ public class PseudoClass : PseudoCode
         Maybe<string> classType,
         Maybe<PseudoExtendedClass> extended,
         IEnumerable<PseudoCode> fields,
-        Maybe<string> endComment)
+        Maybe<string> endComment,
+        long currentOffset)
     {
         Comment = comment.GetValueOrDefault();
         BoxName = boxName;
@@ -42,6 +44,7 @@ public class PseudoClass : PseudoCode
         Alignment = alignment.GetValueOrDefault();
         Extended = extended.GetValueOrDefault();
         EndComment = endComment.GetValueOrDefault();
+        CurrentOffset = currentOffset;
     }
 
 }
@@ -647,14 +650,15 @@ partial class Program
         );
 
     public static Parser<char, PseudoClass> Box =>
-        Map((comment, alignment, boxName, classType, extended, fields, endComment) => new PseudoClass(comment, alignment, boxName, classType, extended, fields, endComment),
+        Map((comment, alignment, boxName, classType, extended, fields, endComment, endOffset) => new PseudoClass(comment, alignment, boxName, classType, extended, fields, endComment, endOffset),
             SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
             SkipWhitespaces.Then(Try(String("abstract")).Optional()).Then(SkipWhitespaces).Then(Try(String("aligned(8)")).Optional()).Before(SkipWhitespaces).Before(Try(String("expandable(228-1)")).Optional()),
             SkipWhitespaces.Then(Try(String("abstract")).Optional()).Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
             SkipWhitespaces.Then(Try(ClassType).Optional()),
             SkipWhitespaces.Then(Try(ExtendedClass).Optional()),
             Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}')),
-            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional())
+            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
+            CurrentOffset
         );
 
     public static Parser<char, IEnumerable<PseudoClass>> Boxes => SkipWhitespaces.Then(Box.SeparatedAndOptionallyTerminated(SkipWhitespaces));
@@ -735,9 +739,11 @@ partial class Program
                     try
                     {
                         var result = Boxes.ParseOrThrow(sample);
+                        long offset = 0;
                         foreach (var item in result)
                         {
-                            item.Syntax = GetSampleCode(sample, item.BoxName);
+                            item.Syntax = GetSampleCode(sample, offset, item.CurrentOffset);
+                            offset = item.CurrentOffset;
                             if (item.Extended != null)
                             {
                                 item.FourCC = item.Extended.BoxType;
@@ -801,13 +807,43 @@ namespace BoxGenerator2
             {
                ";
 
-        foreach(var item in ret)
+        Dictionary<string, List<PseudoClass>> fourccBoxes = new Dictionary<string, List<PseudoClass>>();
+        foreach (var item in ret)
         {
             if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.BoxType))
             {
-                factory += $"               case \"{item.Value.Extended.BoxType}\": return new {item.Value.BoxName}();\r\n";
+
+                if(item.Value.Extended.BoxType.Contains("\' or \'"))
+                {
+                    string[] parts = item.Value.Extended.BoxType.Split("\' or \'");
+                    foreach (var part in parts)
+                    {
+                        string key = part.TrimStart('\'').TrimEnd('\'');
+                        if (!fourccBoxes.ContainsKey(key))
+                            fourccBoxes.Add(key, new List<PseudoClass>() { item.Value });
+                        else
+                            fourccBoxes[key].Add(item.Value);
+                    }
+                }
+                else if (!fourccBoxes.ContainsKey(item.Value.Extended.BoxType))
+                    fourccBoxes.Add(item.Value.Extended.BoxType, new List<PseudoClass>() { item.Value });
+                else
+                    fourccBoxes[item.Value.Extended.BoxType].Add(item.Value);
             }
         }
+
+        foreach (var item in fourccBoxes)
+        {
+            if (item.Value.Count == 1)
+            {
+                factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}();\r\n";
+            }
+            else
+            {
+                factory += $"               case \"{item.Key}\": throw new NotSupportedException(\"{item.Key}\"); // TODO: fix\r\n";
+            }
+        }
+
         factory +=    
 @"          }
 
@@ -829,33 +865,9 @@ namespace BoxGenerator2
 ";
     }
 
-    private static string GetSampleCode(string sample, string boxName)
+    private static string GetSampleCode(string sample, long startOffset, long endOffset)
     {
-        Dictionary<string, string> c = new System.Collections.Generic.Dictionary<string, string>();
-        List<string> lines = new List<string>();
-        string className = "";
-        using (var streamReader = new StringReader(sample))
-        {
-            String line;
-            while ((line = streamReader.ReadLine()) != null)
-            {
-                if (line.Contains("class "))
-                {
-                    if(!string.IsNullOrEmpty(className))
-                    {
-                        c.Add(className, string.Join("\r\n", lines));
-                        lines = new List<string>();
-                    }
-
-                    // start of class
-                    className = line;
-                }
-                lines.Add(line);
-            }
-            c.Add(className, string.Join("\r\n", lines));
-            lines = new List<string>();
-        }
-        return c.FirstOrDefault(x => x.Key.Contains(boxName)).Value;
+        return sample.Substring((int)startOffset, (int)(endOffset - startOffset));
     }
 
     private static string Sanitize(string name)
