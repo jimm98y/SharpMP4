@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Pidgin;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using static Pidgin.Parser<char>;
 using static Pidgin.Parser;
+using static Pidgin.Parser<char>;
 
 namespace ConsoleApp;
 
@@ -807,7 +808,7 @@ namespace BoxGenerator2
             {
                ";
 
-        Dictionary<string, List<PseudoClass>> fourccBoxes = new Dictionary<string, List<PseudoClass>>();
+        SortedDictionary<string, List<PseudoClass>> fourccBoxes = new SortedDictionary<string, List<PseudoClass>>();
         foreach (var item in ret)
         {
             if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.BoxType))
@@ -840,7 +841,7 @@ namespace BoxGenerator2
             }
             else
             {
-                factory += $"               case \"{item.Key}\": throw new NotSupportedException(\"{item.Key}\"); // TODO: fix\r\n";
+                factory += $"               case \"{item.Key}\": throw new NotSupportedException(\"{item.Key}\"); // TODO: {string.Join(", ", item.Value.Select(x => x.BoxName))}\r\n";
             }
         }
 
