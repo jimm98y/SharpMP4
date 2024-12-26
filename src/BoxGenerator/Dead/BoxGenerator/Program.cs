@@ -603,6 +603,10 @@ partial class Program
             Try(String("('alte')")),
             Try(String("(name)")),
             Try(String("(property_type)")),
+            Try(String("(samplingFrequencyIndex, channelConfiguration, audioObjectType)")),
+            Try(String("(samplingFrequencyIndex,\r\n  channelConfiguration,\r\n  audioObjectType)")),
+            Try(String("(channelConfiguration)")),
+            Try(String("(num_sublayers)")),
             Try(String("(code)")),
             Try(String("(property_type, version, flags)")),
             Try(String("(unsigned int(32) extension_type)")),
@@ -610,7 +614,8 @@ partial class Program
             Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)")),
             Try(String("(unsigned int(32) grouping_type)")),
             Try(String("(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)")),            
-            Try(String("(unsigned int(8) OutputChannelCount)"))            
+            Try(String("(unsigned int(8) OutputChannelCount)")),         
+            Try(String("(samplingFrequencyIndex)"))            
             ).Labelled("class type");
 
     public static Parser<char, string> DescriptorTag =>
@@ -818,6 +823,8 @@ namespace BoxGenerator2
         {
             if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.BoxType))
             {
+                if (item.Value.Extended.BoxType == "fdel") // item extension, not a box
+                    continue;
 
                 if(item.Value.Extended.BoxType.Contains("\' or \'"))
                 {
@@ -873,7 +880,7 @@ namespace BoxGenerator2
 }
 ";
     }
-
+    
     private static string GetSampleCode(string sample, long startOffset, long endOffset)
     {
         return sample.Substring((int)startOffset, (int)(endOffset - startOffset));
@@ -907,7 +914,7 @@ namespace BoxGenerator2
 
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.Extended.BoxType))
         {
-            cls += $"\tpublic override string FourCC {{ get; set; }} = \"{b.Extended.BoxType}\";";
+            cls += $"\tpublic const string FourCC = \"{b.Extended.BoxType}\";";
         }
         else if(b.Extended != null && !string.IsNullOrEmpty(b.Extended.DescriptorTag))
         {
@@ -943,7 +950,30 @@ namespace BoxGenerator2
             cls += "\r\n" + BuildField(field);
         }
 
-        cls += $"\r\n\r\n\tpublic {b.BoxName}()\r\n\t{{ }}\r\n";
+        string ctorParams = "";
+        if (!string.IsNullOrEmpty(b.ClassType) || (b.Extended != null && b.Extended.Parameters != null))
+        {
+            ctorParams = GetCtorParams(b.ClassType, b.Extended.Parameters);
+        }
+        string baseCtorParams = "";
+        if (b.Extended != null)
+        {
+            string base4cc = "";
+            if (!string.IsNullOrWhiteSpace(b.Extended.BoxType))
+                base4cc = $"\"{b.Extended.BoxType}\"";
+            string base4ccparams = "";
+            if (b.Extended.Parameters != null)
+            {
+                base4ccparams = string.Join(", ", b.Extended.Parameters.Select(x => string.IsNullOrEmpty(x.Value) ? x.Name : x.Value));
+            }
+            string base4ccseparator = "";
+            if (!string.IsNullOrEmpty(base4cc) && !string.IsNullOrEmpty(base4ccparams))
+                base4ccseparator = ", ";
+            baseCtorParams = $": base({base4cc}{base4ccseparator}{base4ccparams})";
+        }
+
+        cls += $"\r\n\r\n\tpublic {b.BoxName}({ctorParams}){baseCtorParams}\r\n\t{{ }}\r\n";
+
         cls += "\r\n\tpublic async " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "Task<ulong> ReadAsync(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.ReadAsync(stream);" : "");
 
@@ -1010,6 +1040,69 @@ namespace BoxGenerator2
         cls += "}\r\n";
 
         return cls;
+    }
+
+    private static string GetCtorParams(string classType, IList<(string Name, string Value)> parameters)
+    {
+        if (!string.IsNullOrEmpty(classType) && classType != "()")
+        {
+            Dictionary<string, string> map = new Dictionary<string, string>() {
+            { "(unsigned int(32) format)", "string format" },
+            { "(bit(24) flags)", "uint flags = 0" },
+            { "(fmt)", "string fmt = \"\"" },
+            { "(codingname)", "string codingname = \"\"" },
+            { "(handler_type)", "string handler_type = \"\"" },
+            { "(referenceType)", "string referenceType" },
+            { "(unsigned int(32) reference_type)", "string reference_type" },
+            { "(grouping_type, version, flags)", "string grouping_type, byte version, uint flags" },
+            { "('snut')", "string boxtype = \"snut\"" },
+            { "('resv')", "string boxtype = \"resv\"" },
+            { "('msrc')", "string boxtype = \"msrc\"" },
+            { "('cstg')", "string boxtype = \"cstg\"" },
+            { "('alte')", "string boxtype = \"alte\"" },
+            { "(name)", "string name" },
+            { "(property_type)", "string property_type" },
+            { "(channelConfiguration)", "int channelConfiguration" },
+            { "(num_sublayers)", "ulong num_sublayers" },
+            { "(code)", "string code" },
+            { "(property_type, version, flags)", "string property_type, byte version, uint flags" },
+            { "(samplingFrequencyIndex, channelConfiguration, audioObjectType)", "int samplingFrequencyIndex, int channelConfiguration, int audioObjectType" },
+            { "(samplingFrequencyIndex,\r\n  channelConfiguration,\r\n  audioObjectType)", "int samplingFrequencyIndex, int channelConfiguration, int audioObjectType" },
+            { "(unsigned int(32) extension_type)", "string extension_type" },
+            { "('vvcb', version, flags)", "byte version = 0, uint flags = 0" },
+            { "(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)", "string boxtype, byte[] extended_type" },
+            { "(unsigned int(32) grouping_type)", "string grouping_type" },
+            { "(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)", "string boxtype, byte v = 0, uint f = 0" },
+            { "(unsigned int(8) OutputChannelCount)", "byte OutputChannelCount" },
+            { "(samplingFrequencyIndex)", "int samplingFrequencyIndex" },
+            };
+            return map[classType];
+        }
+        else if(parameters != null)
+        {
+            Debug.WriteLine($"---Params: {string.Join(", ", parameters.Select(x => x.Name))}");
+            string joinedParams = string.Join(", ", parameters.Select(x => x.Name));
+            Dictionary<string, string> map = new Dictionary<string, string>()
+            {
+                { "loudnessType", "string loudnessType" },
+                { "local_key_id", "string local_key_id" },
+                { "version, flags", "byte version = 0, uint flags = 0" },
+                { "version, 0", "byte version = 0" },
+                { "0, 0", "" },
+                { "0, flags", "uint flags = 0" },
+                { "version, tr_flags", "byte version = 0, uint tr_flags = 0" },
+                { "0, tf_flags", "uint tf_flags = 0" },
+                { "version, 1", "byte version = 0" },
+                { "size", "ulong size = 0" },
+                { "protocol", "string protocol" },
+                { "type", "string type" },
+            };
+            return map[joinedParams];
+        }
+        else
+        {
+            return "";
+        }
     }
 
     private static string FixMissingCode(PseudoClass? box, string cls)
@@ -1718,7 +1811,7 @@ namespace BoxGenerator2
             { "signed   int(64)[j]", "stream.ReadInt64(" },
             { "char[]", "stream.ReadUInt8Array(" },
             { "string[method_count]", "stream.ReadStringArray(method_count, " },
-            { "ItemInfoExtension", "stream.ReadBox(" },
+            { "ItemInfoExtension", "stream.ReadClass(" },
             { "SampleGroupDescriptionEntry", "stream.ReadBox(" },
             { "SampleEntry", "stream.ReadBox(" },
             { "SampleConstructor", "stream.ReadBox(" },
@@ -2094,7 +2187,7 @@ namespace BoxGenerator2
             { "signed   int(64)[j]", "64" },
             { "char[]", "(ulong)value.Length * 8" },
             { "string[method_count]", "IsoStream.CalculateSize(value)" },
-            { "ItemInfoExtension", "IsoStream.CalculateSize(value)" },
+            { "ItemInfoExtension", "IsoStream.CalculateClassSize(value)" },
             { "SampleGroupDescriptionEntry", "IsoStream.CalculateSize(value)" },
             { "SampleEntry", "IsoStream.CalculateSize(value)" },
             { "SampleConstructor", "IsoStream.CalculateSize(value)" },
@@ -2471,7 +2564,7 @@ namespace BoxGenerator2
             { "signed   int(64)[j]", "stream.WriteInt64(" },
             { "char[]", "stream.WriteUInt8Array(" },
             { "string[method_count]", "stream.WriteStringArray(method_count, " },
-             { "ItemInfoExtension", "stream.WriteBox(" },
+             { "ItemInfoExtension", "stream.WriteClass(" },
             { "SampleGroupDescriptionEntry", "stream.WriteBox(" },
             { "SampleEntry", "stream.WriteBox(" },
             { "SampleConstructor", "stream.WriteBox(" },

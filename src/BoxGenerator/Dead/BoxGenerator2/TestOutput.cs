@@ -93,7 +93,6 @@ namespace BoxGenerator2
                 case "evsC": return new EVCSliceComponentTrackConfigurationBox();
                 case "exte": return new MetaDataExtensionsBox();
                 case "fade": return new FadeTransitionEffectProperty();
-                case "fdel": return new FDItemInfoExtension();
                 case "fdp ": return new FDHintSampleEntry();
                 case "fecr": return new FECReservoirBox();
                 case "fiin": return new FDItemInformationBox();
@@ -394,7 +393,7 @@ namespace BoxGenerator2
         protected uint flags; // = f
         public uint Flags { get { return this.flags; } set { this.flags = value; } }
 
-        public FullBox()
+        public FullBox(string boxtype, byte v = 0, uint f = 0) : base(boxtype)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -438,7 +437,7 @@ namespace BoxGenerator2
     {
 
 
-        public SampleGroupDescriptionEntry()
+        public SampleGroupDescriptionEntry(string grouping_type) : base(grouping_type)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -476,7 +475,7 @@ namespace BoxGenerator2
     {
 
 
-        public VisualSampleGroupEntry()
+        public VisualSampleGroupEntry(string grouping_type) : base(grouping_type)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -514,7 +513,7 @@ namespace BoxGenerator2
     {
 
 
-        public AudioSampleGroupEntry()
+        public AudioSampleGroupEntry(string grouping_type) : base(grouping_type)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -552,7 +551,7 @@ namespace BoxGenerator2
     {
 
 
-        public HintSampleGroupEntry()
+        public HintSampleGroupEntry(string grouping_type) : base(grouping_type)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -590,7 +589,7 @@ namespace BoxGenerator2
     {
 
 
-        public SubtitleSampleGroupEntry()
+        public SubtitleSampleGroupEntry(string grouping_type) : base(grouping_type)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -626,7 +625,7 @@ namespace BoxGenerator2
     {
 
 
-        public TextSampleGroupEntry()
+        public TextSampleGroupEntry(string grouping_type) : base(grouping_type)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -662,7 +661,7 @@ namespace BoxGenerator2
     {
 
 
-        public SubtitleSampleEntry()
+        public SubtitleSampleEntry(string codingname = "") : base(codingname)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -700,7 +699,7 @@ namespace BoxGenerator2
     */
     public class XMLSubtitleSampleEntry : SubtitleSampleEntry
     {
-        public override string FourCC { get; set; } = "stpp";
+        public const string FourCC = "stpp";
 
         protected string ns;
         public string Ns { get { return this.ns; } set { this.ns = value; } }
@@ -714,7 +713,7 @@ namespace BoxGenerator2
         protected BitRateBox BitRateBox;
         public BitRateBox _BitRateBox { get { return this.BitRateBox; } set { this.BitRateBox = value; } }
 
-        public XMLSubtitleSampleEntry()
+        public XMLSubtitleSampleEntry() : base("stpp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -762,7 +761,7 @@ namespace BoxGenerator2
     */
     public class TextSubtitleSampleEntry : SubtitleSampleEntry
     {
-        public override string FourCC { get; set; } = "sbtt";
+        public const string FourCC = "sbtt";
 
         protected string content_encoding;  //  optional 
         public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -776,7 +775,7 @@ namespace BoxGenerator2
         protected TextConfigBox TextConfigBox;  //  optional 
         public TextConfigBox _TextConfigBox { get { return this.TextConfigBox; } set { this.TextConfigBox = value; } }
 
-        public TextSubtitleSampleEntry()
+        public TextSubtitleSampleEntry() : base("sbtt")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -876,7 +875,7 @@ namespace BoxGenerator2
         protected byte reliability;
         public byte Reliability { get { return this.reliability; } set { this.reliability = value; } }
 
-        public LoudnessBaseBox()
+        public LoudnessBaseBox(string loudnessType) : base(loudnessType)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -989,7 +988,7 @@ namespace BoxGenerator2
         protected Box[] additionaldata;
         public Box[] Additionaldata { get { return this.additionaldata; } set { this.additionaldata = value; } }
 
-        public MPEG2TSSampleEntry()
+        public MPEG2TSSampleEntry(string name) : base(name)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1037,36 +1036,33 @@ namespace BoxGenerator2
 
 
     /*
-    aligned(8) class ItemInfoExtension(unsigned int(32) extension_type) extends Box(boxtype) 
+    aligned(8) class ItemInfoExtension(unsigned int(32) extension_type)
     { 
     } 
 
     */
-    public class ItemInfoExtension : Box
+    public class ItemInfoExtension
     {
 
 
-        public ItemInfoExtension()
+        public ItemInfoExtension(string extension_type) : base()
         { }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
             return boxSize;
         }
 
-        public async override Task<ulong> WriteAsync(IsoStream stream)
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
             return boxSize;
         }
 
-        public override ulong CalculateSize()
+        public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
-            boxSize += base.CalculateSize();
             return boxSize;
         }
     }
@@ -1081,7 +1077,7 @@ namespace BoxGenerator2
     {
 
 
-        public PlainTextSampleEntry()
+        public PlainTextSampleEntry(string codingname = "") : base(codingname)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1120,7 +1116,7 @@ namespace BoxGenerator2
     */
     public class SimpleTextSampleEntry : PlainTextSampleEntry
     {
-        public override string FourCC { get; set; } = "stxt";
+        public const string FourCC = "stxt";
 
         protected string content_encoding;  //  optional 
         public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -1134,7 +1130,7 @@ namespace BoxGenerator2
         protected TextConfigBox TextConfigBox;  //  optional 
         public TextConfigBox _TextConfigBox { get { return this.TextConfigBox; } set { this.TextConfigBox = value; } }
 
-        public SimpleTextSampleEntry()
+        public SimpleTextSampleEntry(string codingname = "") : base("stxt")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1182,7 +1178,7 @@ namespace BoxGenerator2
     {
 
 
-        public ItemProperty()
+        public ItemProperty(string property_type) : base(property_type)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1215,7 +1211,7 @@ namespace BoxGenerator2
     {
 
 
-        public ItemFullProperty()
+        public ItemFullProperty(string property_type, byte version, uint flags) : base(property_type, version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1261,7 +1257,7 @@ namespace BoxGenerator2
         protected uint[] compatible_brands;  //  to end of the box
         public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
-        public GeneralTypeBox()
+        public GeneralTypeBox(string code) : base(code)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1325,7 +1321,7 @@ namespace BoxGenerator2
         protected MetaDataExtensionsBox MetaDataExtensionsBox;  //  optional
         public MetaDataExtensionsBox _MetaDataExtensionsBox { get { return this.MetaDataExtensionsBox; } set { this.MetaDataExtensionsBox = value; } }
 
-        public MetaDataKeyBox()
+        public MetaDataKeyBox(string local_key_id) : base(local_key_id)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1376,7 +1372,7 @@ namespace BoxGenerator2
     */
     public class MetaDataKeyDeclarationBox : Box
     {
-        public override string FourCC { get; set; } = "keyd";
+        public const string FourCC = "keyd";
 
         protected uint key_namespace;
         public uint KeyNamespace { get { return this.key_namespace; } set { this.key_namespace = value; } }
@@ -1384,7 +1380,7 @@ namespace BoxGenerator2
         protected byte[] key_value;
         public byte[] KeyValue { get { return this.key_value; } set { this.key_value = value; } }
 
-        public MetaDataKeyDeclarationBox()
+        public MetaDataKeyDeclarationBox() : base("keyd")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1425,12 +1421,12 @@ namespace BoxGenerator2
     */
     public class MetaDataLocaleBox : Box
     {
-        public override string FourCC { get; set; } = "loca";
+        public const string FourCC = "loca";
 
         protected string locale_string;
         public string LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
 
-        public MetaDataLocaleBox()
+        public MetaDataLocaleBox() : base("loca")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1467,9 +1463,9 @@ namespace BoxGenerator2
     */
     public class MetaDataSetupBox : Box
     {
-        public override string FourCC { get; set; } = "setu";
+        public const string FourCC = "setu";
 
-        public MetaDataSetupBox()
+        public MetaDataSetupBox() : base("setu")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1507,12 +1503,12 @@ namespace BoxGenerator2
     */
     public class MetaDataExtensionsBox : Box
     {
-        public override string FourCC { get; set; } = "exte";
+        public const string FourCC = "exte";
 
         protected Box[] extensions;
         public Box[] Extensions { get { return this.extensions; } set { this.extensions = value; } }
 
-        public MetaDataExtensionsBox()
+        public MetaDataExtensionsBox() : base("exte")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1550,12 +1546,12 @@ namespace BoxGenerator2
     */
     public class MetaDataInlineKeysPresentBox : Box
     {
-        public override string FourCC { get; set; } = "keyi";
+        public const string FourCC = "keyi";
 
         protected byte inlineKeyValueBoxesPresent;
         public byte InlineKeyValueBoxesPresent { get { return this.inlineKeyValueBoxesPresent; } set { this.inlineKeyValueBoxesPresent = value; } }
 
-        public MetaDataInlineKeysPresentBox()
+        public MetaDataInlineKeysPresentBox() : base("keyi")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1598,7 +1594,7 @@ namespace BoxGenerator2
         protected Box[] boxes;
         public Box[] Boxes { get { return this.boxes; } set { this.boxes = value; } }
 
-        public MetaDataAccessUnit()
+        public MetaDataAccessUnit() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -1634,7 +1630,7 @@ namespace BoxGenerator2
     {
 
 
-        public MetaDataAUBox()
+        public MetaDataAUBox(string local_key_id) : base(local_key_id)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1678,7 +1674,7 @@ namespace BoxGenerator2
         protected ushort data_reference_index;
         public ushort DataReferenceIndex { get { return this.data_reference_index; } set { this.data_reference_index = value; } }
 
-        public SampleEntry()
+        public SampleEntry(string format) : base(format)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1725,7 +1721,7 @@ namespace BoxGenerator2
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public HintSampleEntry()
+        public HintSampleEntry(string protocol) : base(protocol)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1767,7 +1763,7 @@ namespace BoxGenerator2
     */
     public class ViewPriorityBox : Box
     {
-        public override string FourCC { get; set; } = "vipr";
+        public const string FourCC = "vipr";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -1778,7 +1774,7 @@ namespace BoxGenerator2
         protected uint content_priority_id;
         public uint ContentPriorityId { get { return this.content_priority_id; } set { this.content_priority_id = value; } }
 
-        public ViewPriorityBox()
+        public ViewPriorityBox() : base("vipr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -1850,7 +1846,7 @@ namespace BoxGenerator2
         protected ushort subSequenceIdentifier;
         public ushort SubSequenceIdentifier { get { return this.subSequenceIdentifier; } set { this.subSequenceIdentifier = value; } }
 
-        public DependencyInfo()
+        public DependencyInfo() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -1905,7 +1901,7 @@ namespace BoxGenerator2
     */
     public class AVCSubSequenceEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "avss";
+        public const string FourCC = "avss";
 
         protected ushort subSequenceIdentifer;
         public ushort SubSequenceIdentifer { get { return this.subSequenceIdentifer; } set { this.subSequenceIdentifer = value; } }
@@ -1940,7 +1936,7 @@ namespace BoxGenerator2
         protected DependencyInfo[] dependency;
         public DependencyInfo[] Dependency { get { return this.dependency; } set { this.dependency = value; } }
 
-        public AVCSubSequenceEntry()
+        public AVCSubSequenceEntry() : base("avss")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -2045,7 +2041,7 @@ namespace BoxGenerator2
     */
     public class IntrinsicCameraParametersBox : FullBox
     {
-        public override string FourCC { get; set; } = "icam";
+        public const string FourCC = "icam";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -2092,7 +2088,7 @@ namespace BoxGenerator2
         protected long mantissa_skew_factor;
         public long MantissaSkewFactor { get { return this.mantissa_skew_factor; } set { this.mantissa_skew_factor = value; } }
 
-        public IntrinsicCameraParametersBox()
+        public IntrinsicCameraParametersBox(byte version = 0, uint flags = 0) : base("icam", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -2181,7 +2177,7 @@ namespace BoxGenerator2
     */
     public class ExtrinsicCameraParametersBox : FullBox
     {
-        public override string FourCC { get; set; } = "ecam";
+        public const string FourCC = "ecam";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -2207,7 +2203,7 @@ namespace BoxGenerator2
         protected long[] mantissa_t;
         public long[] Mantissat { get { return this.mantissa_t; } set { this.mantissa_t = value; } }
 
-        public ExtrinsicCameraParametersBox()
+        public ExtrinsicCameraParametersBox(byte version = 0, uint flags = 0) : base("ecam", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -2393,7 +2389,7 @@ namespace BoxGenerator2
         protected byte[] sequenceParameterSetExtNALUnit;
         public byte[] SequenceParameterSetExtNALUnit { get { return this.sequenceParameterSetExtNALUnit; } set { this.sequenceParameterSetExtNALUnit = value; } }
 
-        public AVCDecoderConfigurationRecord()
+        public AVCDecoderConfigurationRecord() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -2605,7 +2601,7 @@ namespace BoxGenerator2
         protected byte[] pictureParameterSetNALUnit;
         public byte[] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
 
-        public MVCDecoderConfigurationRecord()
+        public MVCDecoderConfigurationRecord() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -2765,7 +2761,7 @@ namespace BoxGenerator2
         protected byte[] pictureParameterSetNALUnit;
         public byte[] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
 
-        public SVCDecoderConfigurationRecord()
+        public SVCDecoderConfigurationRecord() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -2982,7 +2978,7 @@ namespace BoxGenerator2
         protected byte[] nalUnit;
         public byte[] NalUnit { get { return this.nalUnit; } set { this.nalUnit = value; } }
 
-        public HEVCDecoderConfigurationRecord()
+        public HEVCDecoderConfigurationRecord() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -3182,7 +3178,7 @@ namespace BoxGenerator2
         protected uint[] general_sub_profile_idc;
         public uint[] GeneralSubProfileIdc { get { return this.general_sub_profile_idc; } set { this.general_sub_profile_idc = value; } }
 
-        public VvcPTLRecord()
+        public VvcPTLRecord(ulong num_sublayers) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -3405,7 +3401,7 @@ namespace BoxGenerator2
         protected byte[] nal_unit;
         public byte[] NalUnit { get { return this.nal_unit; } set { this.nal_unit = value; } }
 
-        public VvcDecoderConfigurationRecord()
+        public VvcDecoderConfigurationRecord() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -3617,7 +3613,7 @@ namespace BoxGenerator2
         protected byte[] pictureParameterSetNALUnit;
         public byte[] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
 
-        public MVDDecoderConfigurationRecord()
+        public MVDDecoderConfigurationRecord() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -3850,7 +3846,7 @@ namespace BoxGenerator2
         protected byte max_tid_il_ref_pics_plus1;
         public byte MaxTidIlRefPicsPlus1 { get { return this.max_tid_il_ref_pics_plus1; } set { this.max_tid_il_ref_pics_plus1 = value; } }
 
-        public VvcOperatingPointsRecord()
+        public VvcOperatingPointsRecord() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -4156,7 +4152,7 @@ namespace BoxGenerator2
         protected byte[] nalUnit;
         public byte[] NalUnit { get { return this.nalUnit; } set { this.nalUnit = value; } }
 
-        public EVCDecoderConfigurationRecord()
+        public EVCDecoderConfigurationRecord() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -4396,7 +4392,7 @@ namespace BoxGenerator2
         protected ushort operationPointIdx;
         public ushort OperationPointIdx { get { return this.operationPointIdx; } set { this.operationPointIdx = value; } }
 
-        public LHEVCDecoderConfigurationRecord()
+        public LHEVCDecoderConfigurationRecord() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -4543,12 +4539,12 @@ namespace BoxGenerator2
     */
     public class ReceivedSsrcBox : Box
     {
-        public override string FourCC { get; set; } = "rssr";
+        public const string FourCC = "rssr";
 
         protected uint SSRC;
         public uint _SSRC { get { return this.SSRC; } set { this.SSRC = value; } }
 
-        public ReceivedSsrcBox()
+        public ReceivedSsrcBox() : base("rssr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4585,7 +4581,7 @@ namespace BoxGenerator2
     */
     public class timestampsynchrony : Box
     {
-        public override string FourCC { get; set; } = "tssy";
+        public const string FourCC = "tssy";
 
         protected byte reserved;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -4593,7 +4589,7 @@ namespace BoxGenerator2
         protected byte timestamp_sync;
         public byte TimestampSync { get { return this.timestamp_sync; } set { this.timestamp_sync = value; } }
 
-        public timestampsynchrony()
+        public timestampsynchrony() : base("tssy")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4634,12 +4630,12 @@ namespace BoxGenerator2
     */
     public class timescaleentry : Box
     {
-        public override string FourCC { get; set; } = "tims";
+        public const string FourCC = "tims";
 
         protected uint timescale;
         public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }
 
-        public timescaleentry()
+        public timescaleentry() : base("tims")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4677,12 +4673,12 @@ namespace BoxGenerator2
     */
     public class timeoffset : Box
     {
-        public override string FourCC { get; set; } = "tsro";
+        public const string FourCC = "tsro";
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
 
-        public timeoffset()
+        public timeoffset() : base("tsro")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4718,12 +4714,12 @@ namespace BoxGenerator2
     */
     public class sequenceoffset : Box
     {
-        public override string FourCC { get; set; } = "snro";
+        public const string FourCC = "snro";
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
 
-        public sequenceoffset()
+        public sequenceoffset() : base("snro")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4759,12 +4755,12 @@ namespace BoxGenerator2
     */
     public class hintBytesSent : Box
     {
-        public override string FourCC { get; set; } = "trpy";
+        public const string FourCC = "trpy";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent()
+        public hintBytesSent() : base("trpy")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4800,12 +4796,12 @@ namespace BoxGenerator2
     */
     public class hintPacketsSent : Box
     {
-        public override string FourCC { get; set; } = "nump";
+        public const string FourCC = "nump";
 
         protected ulong packetssent;
         public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
 
-        public hintPacketsSent()
+        public hintPacketsSent() : base("nump")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4840,12 +4836,12 @@ namespace BoxGenerator2
     */
     public class hintBytesSent_tpyl : Box
     {
-        public override string FourCC { get; set; } = "tpyl";
+        public const string FourCC = "tpyl";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_tpyl()
+        public hintBytesSent_tpyl() : base("tpyl")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4881,12 +4877,12 @@ namespace BoxGenerator2
     */
     public class hintBytesSent_totl : Box
     {
-        public override string FourCC { get; set; } = "totl";
+        public const string FourCC = "totl";
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_totl()
+        public hintBytesSent_totl() : base("totl")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4922,12 +4918,12 @@ namespace BoxGenerator2
     */
     public class hintPacketsSent_npck : Box
     {
-        public override string FourCC { get; set; } = "npck";
+        public const string FourCC = "npck";
 
         protected uint packetssent;
         public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
 
-        public hintPacketsSent_npck()
+        public hintPacketsSent_npck() : base("npck")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4962,12 +4958,12 @@ namespace BoxGenerator2
     */
     public class hintBytesSent_tpay : Box
     {
-        public override string FourCC { get; set; } = "tpay";
+        public const string FourCC = "tpay";
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_tpay()
+        public hintBytesSent_tpay() : base("tpay")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5003,7 +4999,7 @@ namespace BoxGenerator2
     */
     public class hintmaxrate : Box
     {
-        public override string FourCC { get; set; } = "maxr";
+        public const string FourCC = "maxr";
 
         protected uint period;  //  in milliseconds
         public uint Period { get { return this.period; } set { this.period = value; } }
@@ -5011,7 +5007,7 @@ namespace BoxGenerator2
         protected uint bytes;
         public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
 
-        public hintmaxrate()
+        public hintmaxrate() : base("maxr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5053,12 +5049,12 @@ namespace BoxGenerator2
     */
     public class hintmediaBytesSent : Box
     {
-        public override string FourCC { get; set; } = "dmed";
+        public const string FourCC = "dmed";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintmediaBytesSent()
+        public hintmediaBytesSent() : base("dmed")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5094,12 +5090,12 @@ namespace BoxGenerator2
     */
     public class hintimmediateBytesSent : Box
     {
-        public override string FourCC { get; set; } = "dimm";
+        public const string FourCC = "dimm";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintimmediateBytesSent()
+        public hintimmediateBytesSent() : base("dimm")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5134,12 +5130,12 @@ namespace BoxGenerator2
     */
     public class hintrepeatedBytesSent : Box
     {
-        public override string FourCC { get; set; } = "drep";
+        public const string FourCC = "drep";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintrepeatedBytesSent()
+        public hintrepeatedBytesSent() : base("drep")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5175,12 +5171,12 @@ namespace BoxGenerator2
     */
     public class hintminrelativetime : Box
     {
-        public override string FourCC { get; set; } = "tmin";
+        public const string FourCC = "tmin";
 
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
 
-        public hintminrelativetime()
+        public hintminrelativetime() : base("tmin")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5215,12 +5211,12 @@ namespace BoxGenerator2
     */
     public class hintmaxrelativetime : Box
     {
-        public override string FourCC { get; set; } = "tmax";
+        public const string FourCC = "tmax";
 
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
 
-        public hintmaxrelativetime()
+        public hintmaxrelativetime() : base("tmax")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5256,12 +5252,12 @@ namespace BoxGenerator2
     */
     public class hintlargestpacket : Box
     {
-        public override string FourCC { get; set; } = "pmax";
+        public const string FourCC = "pmax";
 
         protected uint bytes;
         public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
 
-        public hintlargestpacket()
+        public hintlargestpacket() : base("pmax")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5296,12 +5292,12 @@ namespace BoxGenerator2
     */
     public class hintlongestpacket : Box
     {
-        public override string FourCC { get; set; } = "dmax";
+        public const string FourCC = "dmax";
 
         protected uint time;
         public uint Time { get { return this.time; } set { this.time = value; } }
 
-        public hintlongestpacket()
+        public hintlongestpacket() : base("dmax")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5338,7 +5334,7 @@ namespace BoxGenerator2
     */
     public class hintpayloadID : Box
     {
-        public override string FourCC { get; set; } = "payt";
+        public const string FourCC = "payt";
 
         protected uint payloadID;  //  payload ID used in RTP packets
         public uint PayloadID { get { return this.payloadID; } set { this.payloadID = value; } }
@@ -5349,7 +5345,7 @@ namespace BoxGenerator2
         protected byte[] rtpmap_string;
         public byte[] RtpmapString { get { return this.rtpmap_string; } set { this.rtpmap_string = value; } }
 
-        public hintpayloadID()
+        public hintpayloadID() : base("payt")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5397,7 +5393,7 @@ namespace BoxGenerator2
     */
     public class StereoVideoBox : FullBox
     {
-        public override string FourCC { get; set; } = "stvi";
+        public const string FourCC = "stvi";
 
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -5417,7 +5413,7 @@ namespace BoxGenerator2
         protected Box[] any_box;  //  optional
         public Box[] AnyBox { get { return this.any_box; } set { this.any_box = value; } }
 
-        public StereoVideoBox()
+        public StereoVideoBox(byte version = 0) : base("stvi", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5468,12 +5464,12 @@ namespace BoxGenerator2
     */
     public class ExtendedLanguageBox : FullBox
     {
-        public override string FourCC { get; set; } = "elng";
+        public const string FourCC = "elng";
 
         protected string extended_language;
         public string ExtendedLanguage { get { return this.extended_language; } set { this.extended_language = value; } }
 
-        public ExtendedLanguageBox()
+        public ExtendedLanguageBox() : base("elng", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5511,7 +5507,7 @@ namespace BoxGenerator2
     */
     public class BitRateBox : Box
     {
-        public override string FourCC { get; set; } = "btrt";
+        public const string FourCC = "btrt";
 
         protected uint bufferSizeDB;
         public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
@@ -5522,7 +5518,7 @@ namespace BoxGenerator2
         protected uint avgBitrate;
         public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
 
-        public BitRateBox()
+        public BitRateBox() : base("btrt")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5565,7 +5561,7 @@ namespace BoxGenerator2
     */
     public class PixelAspectRatioBox : Box
     {
-        public override string FourCC { get; set; } = "pasp";
+        public const string FourCC = "pasp";
 
         protected uint hSpacing;
         public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
@@ -5573,7 +5569,7 @@ namespace BoxGenerator2
         protected uint vSpacing;
         public uint VSpacing { get { return this.vSpacing; } set { this.vSpacing = value; } }
 
-        public PixelAspectRatioBox()
+        public PixelAspectRatioBox() : base("pasp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5625,7 +5621,7 @@ namespace BoxGenerator2
     */
     public class CleanApertureBox : Box
     {
-        public override string FourCC { get; set; } = "clap";
+        public const string FourCC = "clap";
 
         protected uint cleanApertureWidthN;
         public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
@@ -5651,7 +5647,7 @@ namespace BoxGenerator2
         protected uint vertOffD;
         public uint VertOffD { get { return this.vertOffD; } set { this.vertOffD = value; } }
 
-        public CleanApertureBox()
+        public CleanApertureBox() : base("clap")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5726,7 +5722,7 @@ namespace BoxGenerator2
     */
     public class ContentColourVolumeBox : Box
     {
-        public override string FourCC { get; set; } = "cclv";
+        public const string FourCC = "cclv";
 
         protected bool reserved1 = false;  //  ccv_cancel_flag
         public bool Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -5764,7 +5760,7 @@ namespace BoxGenerator2
         protected uint ccv_avg_luminance_value;
         public uint CcvAvgLuminanceValue { get { return this.ccv_avg_luminance_value; } set { this.ccv_avg_luminance_value = value; } }
 
-        public ContentColourVolumeBox()
+        public ContentColourVolumeBox() : base("cclv")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -5909,7 +5905,7 @@ namespace BoxGenerator2
     */
     public class ColourInformationBox : Box
     {
-        public override string FourCC { get; set; } = "colr";
+        public const string FourCC = "colr";
 
         protected uint colour_type;
         public uint ColourType { get { return this.colour_type; } set { this.colour_type = value; } }
@@ -5935,7 +5931,7 @@ namespace BoxGenerator2
         protected ICC_profile ICC_profile0;  //  unrestricted ICC profile
         public ICC_profile ICCProfile0 { get { return this.ICC_profile0; } set { this.ICC_profile0 = value; } }
 
-        public ColourInformationBox()
+        public ColourInformationBox() : base("colr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -6029,7 +6025,7 @@ namespace BoxGenerator2
     */
     public class ContentLightLevelBox : Box
     {
-        public override string FourCC { get; set; } = "clli";
+        public const string FourCC = "clli";
 
         protected ushort max_content_light_level;
         public ushort MaxContentLightLevel { get { return this.max_content_light_level; } set { this.max_content_light_level = value; } }
@@ -6037,7 +6033,7 @@ namespace BoxGenerator2
         protected ushort max_pic_average_light_level;
         public ushort MaxPicAverageLightLevel { get { return this.max_pic_average_light_level; } set { this.max_pic_average_light_level = value; } }
 
-        public ContentLightLevelBox()
+        public ContentLightLevelBox() : base("clli")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -6083,7 +6079,7 @@ namespace BoxGenerator2
     */
     public class MasteringDisplayColourVolumeBox : Box
     {
-        public override string FourCC { get; set; } = "mdcv";
+        public const string FourCC = "mdcv";
 
         protected ushort display_primaries_x;
         public ushort DisplayPrimariesx { get { return this.display_primaries_x; } set { this.display_primaries_x = value; } }
@@ -6103,7 +6099,7 @@ namespace BoxGenerator2
         protected uint min_display_mastering_luminance;
         public uint MinDisplayMasteringLuminance { get { return this.min_display_mastering_luminance; } set { this.min_display_mastering_luminance = value; } }
 
-        public MasteringDisplayColourVolumeBox()
+        public MasteringDisplayColourVolumeBox() : base("mdcv")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -6167,7 +6163,7 @@ namespace BoxGenerator2
     */
     public class ScrambleSchemeInfoBox : Box
     {
-        public override string FourCC { get; set; } = "scrb";
+        public const string FourCC = "scrb";
 
         protected SchemeTypeBox scheme_type_box;
         public SchemeTypeBox SchemeTypeBox { get { return this.scheme_type_box; } set { this.scheme_type_box = value; } }
@@ -6175,7 +6171,7 @@ namespace BoxGenerator2
         protected SchemeInformationBox info;  //  optional
         public SchemeInformationBox Info { get { return this.info; } set { this.info = value; } }
 
-        public ScrambleSchemeInfoBox()
+        public ScrambleSchemeInfoBox() : base("scrb")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -6263,7 +6259,7 @@ namespace BoxGenerator2
     */
     public class ChannelLayout : FullBox
     {
-        public override string FourCC { get; set; } = "chnl";
+        public const string FourCC = "chnl";
 
         protected byte stream_structure;
         public byte StreamStructure { get { return this.stream_structure; } set { this.stream_structure = value; } }
@@ -6322,7 +6318,7 @@ namespace BoxGenerator2
         protected ulong omittedChannelsMap0;  //  a ‘1’ bit indicates ‘not in this track’
         public ulong OmittedChannelsMap0 { get { return this.omittedChannelsMap0; } set { this.omittedChannelsMap0 = value; } }
 
-        public ChannelLayout()
+        public ChannelLayout(byte version = 0, uint flags = 0) : base("chnl", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -6637,7 +6633,7 @@ namespace BoxGenerator2
     */
     public class DownMixInstructions : FullBox
     {
-        public override string FourCC { get; set; } = "dmix";
+        public const string FourCC = "dmix";
 
         protected bool reserved = false;
         public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -6675,7 +6671,7 @@ namespace BoxGenerator2
         protected byte bs_downmix_coefficient;
         public byte BsDownmixCoefficient { get { return this.bs_downmix_coefficient; } set { this.bs_downmix_coefficient = value; } }
 
-        public DownMixInstructions()
+        public DownMixInstructions(byte version = 0, uint flags = 0) : base("dmix", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -6879,12 +6875,12 @@ namespace BoxGenerator2
     */
     public class SamplingRateBox : FullBox
     {
-        public override string FourCC { get; set; } = "srat";
+        public const string FourCC = "srat";
 
         protected uint sampling_rate;
         public uint SamplingRate { get { return this.sampling_rate; } set { this.sampling_rate = value; } }
 
-        public SamplingRateBox()
+        public SamplingRateBox() : base("srat")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -6920,12 +6916,12 @@ namespace BoxGenerator2
     */
     public class TextConfigBox : FullBox
     {
-        public override string FourCC { get; set; } = "txtC";
+        public const string FourCC = "txtC";
 
         protected string text_config;
         public string TextConfig { get { return this.text_config; } set { this.text_config = value; } }
 
-        public TextConfigBox()
+        public TextConfigBox() : base("txtC", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -6962,12 +6958,12 @@ namespace BoxGenerator2
     */
     public class URIInitBox : FullBox
     {
-        public override string FourCC { get; set; } = "uriI";
+        public const string FourCC = "uriI";
 
         protected byte[] uri_initialization_data;
         public byte[] UriInitializationData { get { return this.uri_initialization_data; } set { this.uri_initialization_data = value; } }
 
-        public URIInitBox()
+        public URIInitBox(byte version = 0) : base("uriI", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7006,7 +7002,7 @@ namespace BoxGenerator2
     */
     public class CopyrightBox : FullBox
     {
-        public override string FourCC { get; set; } = "cprt";
+        public const string FourCC = "cprt";
 
         protected bool pad = false;
         public bool Pad { get { return this.pad; } set { this.pad = value; } }
@@ -7017,7 +7013,7 @@ namespace BoxGenerator2
         protected string notice;
         public string Notice { get { return this.notice; } set { this.notice = value; } }
 
-        public CopyrightBox()
+        public CopyrightBox(byte version = 0) : base("cprt", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7060,7 +7056,7 @@ namespace BoxGenerator2
     */
     public class KindBox : FullBox
     {
-        public override string FourCC { get; set; } = "kind";
+        public const string FourCC = "kind";
 
         protected string schemeURI;
         public string SchemeURI { get { return this.schemeURI; } set { this.schemeURI = value; } }
@@ -7068,7 +7064,7 @@ namespace BoxGenerator2
         protected string value;
         public string Value { get { return this.value; } set { this.value = value; } }
 
-        public KindBox()
+        public KindBox(byte version = 0) : base("kind", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7109,7 +7105,7 @@ namespace BoxGenerator2
     */
     public class TrackSelectionBox : FullBox
     {
-        public override string FourCC { get; set; } = "tsel";
+        public const string FourCC = "tsel";
 
         protected int switch_group = 0;
         public int SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
@@ -7117,7 +7113,7 @@ namespace BoxGenerator2
         protected uint[] attribute_list;  //  to end of the box
         public uint[] AttributeList { get { return this.attribute_list; } set { this.attribute_list = value; } }
 
-        public TrackSelectionBox()
+        public TrackSelectionBox(byte version = 0) : base("tsel", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7155,9 +7151,9 @@ namespace BoxGenerator2
     */
     public class SubTrackBox : Box
     {
-        public override string FourCC { get; set; } = "strk";
+        public const string FourCC = "strk";
 
-        public SubTrackBox()
+        public SubTrackBox() : base("strk")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7193,9 +7189,9 @@ namespace BoxGenerator2
     */
     public class trackhintinformation : Box
     {
-        public override string FourCC { get; set; } = "hnti";
+        public const string FourCC = "hnti";
 
-        public trackhintinformation()
+        public trackhintinformation() : base("hnti")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7230,12 +7226,12 @@ namespace BoxGenerator2
     */
     public class rtptracksdphintinformation : Box
     {
-        public override string FourCC { get; set; } = "sdp ";
+        public const string FourCC = "sdp ";
 
         protected byte[] sdptext;
         public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
 
-        public rtptracksdphintinformation()
+        public rtptracksdphintinformation() : base("sdp ")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7272,9 +7268,9 @@ namespace BoxGenerator2
     */
     public class moviehintinformation : Box
     {
-        public override string FourCC { get; set; } = "hnti";
+        public const string FourCC = "hnti";
 
-        public moviehintinformation()
+        public moviehintinformation() : base("hnti")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7310,7 +7306,7 @@ namespace BoxGenerator2
     */
     public class rtpmoviehintinformation : Box
     {
-        public override string FourCC { get; set; } = "rtp ";
+        public const string FourCC = "rtp ";
 
         protected uint descriptionformat = IsoStream.FromFourCC("sdp ");
         public uint Descriptionformat { get { return this.descriptionformat; } set { this.descriptionformat = value; } }
@@ -7318,7 +7314,7 @@ namespace BoxGenerator2
         protected byte[] sdptext;
         public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
 
-        public rtpmoviehintinformation()
+        public rtpmoviehintinformation() : base("rtp ")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7358,9 +7354,9 @@ namespace BoxGenerator2
     */
     public class hintstatisticsbox : Box
     {
-        public override string FourCC { get; set; } = "hinf";
+        public const string FourCC = "hinf";
 
-        public hintstatisticsbox()
+        public hintstatisticsbox() : base("hinf")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7398,7 +7394,7 @@ namespace BoxGenerator2
     */
     public class LoudnessBox : Box
     {
-        public override string FourCC { get; set; } = "ludt";
+        public const string FourCC = "ludt";
 
         protected TrackLoudnessInfo[] loudness;  //  not more than one AlbumLoudnessInfo box with version>=1 is allowed
         public TrackLoudnessInfo[] Loudness { get { return this.loudness; } set { this.loudness = value; } }
@@ -7406,7 +7402,7 @@ namespace BoxGenerator2
         protected AlbumLoudnessInfo[] albumLoudness;
         public AlbumLoudnessInfo[] AlbumLoudness { get { return this.albumLoudness; } set { this.albumLoudness = value; } }
 
-        public LoudnessBox()
+        public LoudnessBox() : base("ludt")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7448,9 +7444,9 @@ namespace BoxGenerator2
     */
     public class TrackLoudnessInfo : LoudnessBaseBox
     {
-        public override string FourCC { get; set; } = "tlou";
+        public const string FourCC = "tlou";
 
-        public TrackLoudnessInfo()
+        public TrackLoudnessInfo() : base("tlou")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7481,9 +7477,9 @@ namespace BoxGenerator2
     */
     public class AlbumLoudnessInfo : LoudnessBaseBox
     {
-        public override string FourCC { get; set; } = "alou";
+        public const string FourCC = "alou";
 
-        public AlbumLoudnessInfo()
+        public AlbumLoudnessInfo() : base("alou")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7517,12 +7513,12 @@ namespace BoxGenerator2
     */
     public class DataEntryUrlBox : DataEntryBaseBox
     {
-        public override string FourCC { get; set; } = "url ";
+        public const string FourCC = "url ";
 
         protected string location;
         public string Location { get { return this.location; } set { this.location = value; } }
 
-        public DataEntryUrlBox()
+        public DataEntryUrlBox(uint flags = 0) : base("url ", flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7560,7 +7556,7 @@ namespace BoxGenerator2
     */
     public class DataEntryUrnBox : DataEntryBaseBox
     {
-        public override string FourCC { get; set; } = "urn ";
+        public const string FourCC = "urn ";
 
         protected string name;
         public string Name { get { return this.name; } set { this.name = value; } }
@@ -7568,7 +7564,7 @@ namespace BoxGenerator2
         protected string location;
         public string Location { get { return this.location; } set { this.location = value; } }
 
-        public DataEntryUrnBox()
+        public DataEntryUrnBox(uint flags = 0) : base("urn ", flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7608,12 +7604,12 @@ namespace BoxGenerator2
     */
     public class DataEntryImdaBox : DataEntryBaseBox
     {
-        public override string FourCC { get; set; } = "imdt";
+        public const string FourCC = "imdt";
 
         protected uint imda_ref_identifier;
         public uint ImdaRefIdentifier { get { return this.imda_ref_identifier; } set { this.imda_ref_identifier = value; } }
 
-        public DataEntryImdaBox()
+        public DataEntryImdaBox(uint flags = 0) : base("imdt", flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7649,9 +7645,9 @@ namespace BoxGenerator2
     */
     public class DataEntrySeqNumImdaBox : DataEntryBaseBox
     {
-        public override string FourCC { get; set; } = "snim";
+        public const string FourCC = "snim";
 
-        public DataEntrySeqNumImdaBox()
+        public DataEntrySeqNumImdaBox(uint flags = 0) : base("snim", flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7689,12 +7685,12 @@ namespace BoxGenerator2
     */
     public class ItemPropertyContainerBox : Box
     {
-        public override string FourCC { get; set; } = "ipco";
+        public const string FourCC = "ipco";
 
         protected Box[] properties;  //  boxes derived from
         public Box[] Properties { get { return this.properties; } set { this.properties = value; } }
 
-        public ItemPropertyContainerBox()
+        public ItemPropertyContainerBox() : base("ipco")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7755,7 +7751,7 @@ namespace BoxGenerator2
     */
     public class ItemPropertyAssociationBox : FullBox
     {
-        public override string FourCC { get; set; } = "ipma";
+        public const string FourCC = "ipma";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -7778,7 +7774,7 @@ namespace BoxGenerator2
         protected byte property_index0;
         public byte PropertyIndex0 { get { return this.property_index0; } set { this.property_index0 = value; } }
 
-        public ItemPropertyAssociationBox()
+        public ItemPropertyAssociationBox(byte version = 0, uint flags = 0) : base("ipma", version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7906,7 +7902,7 @@ namespace BoxGenerator2
     */
     public class ItemPropertiesBox : Box
     {
-        public override string FourCC { get; set; } = "iprp";
+        public const string FourCC = "iprp";
 
         protected ItemPropertyContainerBox property_container;
         public ItemPropertyContainerBox PropertyContainer { get { return this.property_container; } set { this.property_container = value; } }
@@ -7914,7 +7910,7 @@ namespace BoxGenerator2
         protected ItemPropertyAssociationBox[] association;
         public ItemPropertyAssociationBox[] Association { get { return this.association; } set { this.association = value; } }
 
-        public ItemPropertiesBox()
+        public ItemPropertiesBox() : base("iprp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -7964,7 +7960,7 @@ namespace BoxGenerator2
     */
     public class AlternativeStartupSequencePropertiesBox : FullBox
     {
-        public override string FourCC { get; set; } = "assp";
+        public const string FourCC = "assp";
 
         protected int min_initial_alt_startup_offset;
         public int MinInitialAltStartupOffset { get { return this.min_initial_alt_startup_offset; } set { this.min_initial_alt_startup_offset = value; } }
@@ -7978,7 +7974,7 @@ namespace BoxGenerator2
         protected int min_initial_alt_startup_offset0;
         public int MinInitialAltStartupOffset0 { get { return this.min_initial_alt_startup_offset0; } set { this.min_initial_alt_startup_offset0 = value; } }
 
-        public AlternativeStartupSequencePropertiesBox()
+        public AlternativeStartupSequencePropertiesBox(byte version = 0) : base("assp", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8060,12 +8056,12 @@ namespace BoxGenerator2
     */
     public class BinaryXMLBox : FullBox
     {
-        public override string FourCC { get; set; } = "bxml";
+        public const string FourCC = "bxml";
 
         protected byte[] data;  //  to end of box
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public BinaryXMLBox()
+        public BinaryXMLBox(byte version = 0) : base("bxml", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8101,12 +8097,12 @@ namespace BoxGenerator2
     */
     public class CompleteTrackInfoBox : Box
     {
-        public override string FourCC { get; set; } = "cinf";
+        public const string FourCC = "cinf";
 
         protected OriginalFormatBox original_format;
         public OriginalFormatBox OriginalFormat { get { return this.original_format; } set { this.original_format = value; } }
 
-        public CompleteTrackInfoBox()
+        public CompleteTrackInfoBox(string fmt = "") : base("cinf")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8146,7 +8142,7 @@ namespace BoxGenerator2
     */
     public class ChunkLargeOffsetBox : FullBox
     {
-        public override string FourCC { get; set; } = "co64";
+        public const string FourCC = "co64";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -8154,7 +8150,7 @@ namespace BoxGenerator2
         protected ulong chunk_offset;
         public ulong ChunkOffset { get { return this.chunk_offset; } set { this.chunk_offset = value; } }
 
-        public ChunkLargeOffsetBox()
+        public ChunkLargeOffsetBox(byte version = 0) : base("co64", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8224,7 +8220,7 @@ namespace BoxGenerator2
     */
     public class CompactSampleToGroupBox : FullBox
     {
-        public override string FourCC { get; set; } = "csgp";
+        public const string FourCC = "csgp";
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -8244,7 +8240,7 @@ namespace BoxGenerator2
         protected byte[][] sample_group_description_index;  //  whose msb might indicate fragment_local or global
         public byte[][] SampleGroupDescriptionIndex { get { return this.sample_group_description_index; } set { this.sample_group_description_index = value; } }
 
-        public CompactSampleToGroupBox()
+        public CompactSampleToGroupBox(byte version = 0, uint flags = 0) : base("csgp", version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8373,7 +8369,7 @@ namespace BoxGenerator2
     */
     public class CompositionToDecodeBox : FullBox
     {
-        public override string FourCC { get; set; } = "cslg";
+        public const string FourCC = "cslg";
 
         protected int compositionToDTSShift;
         public int CompositionToDTSShift { get { return this.compositionToDTSShift; } set { this.compositionToDTSShift = value; } }
@@ -8405,7 +8401,7 @@ namespace BoxGenerator2
         protected long compositionEndTime0;
         public long CompositionEndTime0 { get { return this.compositionEndTime0; } set { this.compositionEndTime0 = value; } }
 
-        public CompositionToDecodeBox()
+        public CompositionToDecodeBox(byte version = 0) : base("cslg", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8506,7 +8502,7 @@ namespace BoxGenerator2
     */
     public class CompositionOffsetBox : FullBox
     {
-        public override string FourCC { get; set; } = "ctts";
+        public const string FourCC = "ctts";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -8523,7 +8519,7 @@ namespace BoxGenerator2
         protected int sample_offset0;
         public int SampleOffset0 { get { return this.sample_offset0; } set { this.sample_offset0 = value; } }
 
-        public CompositionOffsetBox()
+        public CompositionOffsetBox(byte version = 0) : base("ctts", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8621,9 +8617,9 @@ namespace BoxGenerator2
     */
     public class DataInformationBox : Box
     {
-        public override string FourCC { get; set; } = "dinf";
+        public const string FourCC = "dinf";
 
-        public DataInformationBox()
+        public DataInformationBox() : base("dinf")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8662,7 +8658,7 @@ namespace BoxGenerator2
     */
     public class DataReferenceBox : FullBox
     {
-        public override string FourCC { get; set; } = "dref";
+        public const string FourCC = "dref";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -8670,7 +8666,7 @@ namespace BoxGenerator2
         protected DataEntryBaseBox data_entry;
         public DataEntryBaseBox DataEntry { get { return this.data_entry; } set { this.data_entry = value; } }
 
-        public DataReferenceBox()
+        public DataReferenceBox(byte version = 0) : base("dref", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8722,9 +8718,9 @@ namespace BoxGenerator2
     */
     public class EditBox : Box
     {
-        public override string FourCC { get; set; } = "edts";
+        public const string FourCC = "edts";
 
-        public EditBox()
+        public EditBox() : base("edts")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8770,7 +8766,7 @@ namespace BoxGenerator2
     */
     public class EditListBox : FullBox
     {
-        public override string FourCC { get; set; } = "elst";
+        public const string FourCC = "elst";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -8793,7 +8789,7 @@ namespace BoxGenerator2
         protected short media_rate_fraction;
         public short MediaRateFraction { get { return this.media_rate_fraction; } set { this.media_rate_fraction = value; } }
 
-        public EditListBox()
+        public EditListBox(byte version = 0, uint flags = 0) : base("elst", version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8886,12 +8882,12 @@ namespace BoxGenerator2
     */
     public class ExtendedTypeBox : Box
     {
-        public override string FourCC { get; set; } = "etyp";
+        public const string FourCC = "etyp";
 
         protected TypeCombinationBox[] compatible_combinations;  //  to end of the box
         public TypeCombinationBox[] CompatibleCombinations { get { return this.compatible_combinations; } set { this.compatible_combinations = value; } }
 
-        public ExtendedTypeBox()
+        public ExtendedTypeBox() : base("etyp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -8935,7 +8931,7 @@ namespace BoxGenerator2
     */
     public class FDItemInfoExtension : ItemInfoExtension
     {
-        public override string FourCC { get; set; } = "fdel";
+        public const string FourCC = "fdel";
 
         protected string content_location;
         public string ContentLocation { get { return this.content_location; } set { this.content_location = value; } }
@@ -8955,7 +8951,7 @@ namespace BoxGenerator2
         protected uint group_id;
         public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
 
-        public FDItemInfoExtension()
+        public FDItemInfoExtension() : base("fdel")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9031,7 +9027,7 @@ namespace BoxGenerator2
     */
     public class FECReservoirBox : FullBox
     {
-        public override string FourCC { get; set; } = "fecr";
+        public const string FourCC = "fecr";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9048,7 +9044,7 @@ namespace BoxGenerator2
         protected uint symbol_count;
         public uint SymbolCount { get { return this.symbol_count; } set { this.symbol_count = value; } }
 
-        public FECReservoirBox()
+        public FECReservoirBox(byte version = 0) : base("fecr", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9160,7 +9156,7 @@ namespace BoxGenerator2
     */
     public class PartitionEntry : Box
     {
-        public override string FourCC { get; set; } = "paen";
+        public const string FourCC = "paen";
 
         protected FilePartitionBox blocks_and_symbols;
         public FilePartitionBox BlocksAndSymbols { get { return this.blocks_and_symbols; } set { this.blocks_and_symbols = value; } }
@@ -9171,7 +9167,7 @@ namespace BoxGenerator2
         protected FileReservoirBox File_symbol_locations;  // optional
         public FileReservoirBox FileSymbolLocations { get { return this.File_symbol_locations; } set { this.File_symbol_locations = value; } }
 
-        public PartitionEntry()
+        public PartitionEntry() : base("paen")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9219,7 +9215,7 @@ namespace BoxGenerator2
     */
     public class FDItemInformationBox : FullBox
     {
-        public override string FourCC { get; set; } = "fiin";
+        public const string FourCC = "fiin";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9233,7 +9229,7 @@ namespace BoxGenerator2
         protected GroupIdToNameBox group_id_to_name;  // optional
         public GroupIdToNameBox GroupIdToName { get { return this.group_id_to_name; } set { this.group_id_to_name = value; } }
 
-        public FDItemInformationBox()
+        public FDItemInformationBox(byte version = 0) : base("fiin", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9293,7 +9289,7 @@ namespace BoxGenerator2
     */
     public class FileReservoirBox : FullBox
     {
-        public override string FourCC { get; set; } = "fire";
+        public const string FourCC = "fire";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9310,7 +9306,7 @@ namespace BoxGenerator2
         protected uint symbol_count;
         public uint SymbolCount { get { return this.symbol_count; } set { this.symbol_count = value; } }
 
-        public FileReservoirBox()
+        public FileReservoirBox(byte version = 0) : base("fire", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9440,7 +9436,7 @@ namespace BoxGenerator2
     */
     public class FilePartitionBox : FullBox
     {
-        public override string FourCC { get; set; } = "fpar";
+        public const string FourCC = "fpar";
 
         protected ushort item_ID;
         public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -9484,7 +9480,7 @@ namespace BoxGenerator2
         protected uint block_size;
         public uint BlockSize { get { return this.block_size; } set { this.block_size = value; } }
 
-        public FilePartitionBox()
+        public FilePartitionBox(byte version = 0) : base("fpar", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9619,12 +9615,12 @@ namespace BoxGenerator2
     */
     public class FreeSpaceBox : Box
     {
-        public override string FourCC { get; set; } = "free";
+        public const string FourCC = "free";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public FreeSpaceBox()
+        public FreeSpaceBox() : base("free")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9663,12 +9659,12 @@ namespace BoxGenerator2
     */
     public class OriginalFormatBox : Box
     {
-        public override string FourCC { get; set; } = "frma";
+        public const string FourCC = "frma";
 
         protected uint data_format; // = codingname
         public uint DataFormat { get { return this.data_format; } set { this.data_format = value; } }
 
-        public OriginalFormatBox()
+        public OriginalFormatBox(string codingname = "") : base("frma")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9714,7 +9710,7 @@ namespace BoxGenerator2
     */
     public class FileTypeBox : Box
     {
-        public override string FourCC { get; set; } = "ftyp";
+        public const string FourCC = "ftyp";
 
         protected uint major_brand;
         public uint MajorBrand { get { return this.major_brand; } set { this.major_brand = value; } }
@@ -9725,7 +9721,7 @@ namespace BoxGenerator2
         protected uint[] compatible_brands;  //  to end of the box
         public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
-        public FileTypeBox()
+        public FileTypeBox() : base("ftyp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9772,7 +9768,7 @@ namespace BoxGenerator2
     */
     public class GroupIdToNameBox : FullBox
     {
-        public override string FourCC { get; set; } = "gitn";
+        public const string FourCC = "gitn";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9783,7 +9779,7 @@ namespace BoxGenerator2
         protected string group_name;
         public string GroupName { get { return this.group_name; } set { this.group_name = value; } }
 
-        public GroupIdToNameBox()
+        public GroupIdToNameBox(byte version = 0) : base("gitn", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9836,9 +9832,9 @@ namespace BoxGenerator2
     */
     public class GroupsListBox : Box
     {
-        public override string FourCC { get; set; } = "grpl";
+        public const string FourCC = "grpl";
 
-        public GroupsListBox()
+        public GroupsListBox() : base("grpl")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9876,7 +9872,7 @@ namespace BoxGenerator2
     */
     public class HandlerBox : FullBox
     {
-        public override string FourCC { get; set; } = "hdlr";
+        public const string FourCC = "hdlr";
 
         protected uint pre_defined = 0;
         public uint PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -9890,7 +9886,7 @@ namespace BoxGenerator2
         protected string name;
         public string Name { get { return this.name; } set { this.name = value; } }
 
-        public HandlerBox()
+        public HandlerBox(byte version = 0) : base("hdlr", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -9940,7 +9936,7 @@ namespace BoxGenerator2
     */
     public class HintMediaHeaderBox : FullBox
     {
-        public override string FourCC { get; set; } = "hmhd";
+        public const string FourCC = "hmhd";
 
         protected ushort maxPDUsize;
         public ushort MaxPDUsize { get { return this.maxPDUsize; } set { this.maxPDUsize = value; } }
@@ -9957,7 +9953,7 @@ namespace BoxGenerator2
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public HintMediaHeaderBox()
+        public HintMediaHeaderBox(byte version = 0) : base("hmhd", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -10005,12 +10001,12 @@ namespace BoxGenerator2
     */
     public class ItemDataBox : Box
     {
-        public override string FourCC { get; set; } = "idat";
+        public const string FourCC = "idat";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ItemDataBox()
+        public ItemDataBox() : base("idat")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -10052,7 +10048,7 @@ namespace BoxGenerator2
     */
     public class ItemInfoBox : FullBox
     {
-        public override string FourCC { get; set; } = "iinf";
+        public const string FourCC = "iinf";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10063,7 +10059,7 @@ namespace BoxGenerator2
         protected ItemInfoEntry[] item_infos;
         public ItemInfoEntry[] ItemInfos { get { return this.item_infos; } set { this.item_infos = value; } }
 
-        public ItemInfoBox()
+        public ItemInfoBox(byte version = 0) : base("iinf", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -10164,7 +10160,7 @@ namespace BoxGenerator2
     */
     public class ItemLocationBox : FullBox
     {
-        public override string FourCC { get; set; } = "iloc";
+        public const string FourCC = "iloc";
 
         protected byte offset_size;
         public byte OffsetSize { get { return this.offset_size; } set { this.offset_size = value; } }
@@ -10217,7 +10213,7 @@ namespace BoxGenerator2
         protected byte[] extent_length;
         public byte[] ExtentLength { get { return this.extent_length; } set { this.extent_length = value; } }
 
-        public ItemLocationBox()
+        public ItemLocationBox(byte version = 0) : base("iloc", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -10422,7 +10418,7 @@ namespace BoxGenerator2
     */
     public class IdentifiedMediaDataBox : Box
     {
-        public override string FourCC { get; set; } = "imda";
+        public const string FourCC = "imda";
 
         protected uint imda_identifier;
         public uint ImdaIdentifier { get { return this.imda_identifier; } set { this.imda_identifier = value; } }
@@ -10430,7 +10426,7 @@ namespace BoxGenerator2
         protected byte[] data;  //  until the end of the box
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public IdentifiedMediaDataBox()
+        public IdentifiedMediaDataBox() : base("imda")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -10496,7 +10492,7 @@ namespace BoxGenerator2
     */
     public class ItemInfoEntry : FullBox
     {
-        public override string FourCC { get; set; } = "infe";
+        public const string FourCC = "infe";
 
         protected ushort item_ID;
         public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -10543,7 +10539,7 @@ namespace BoxGenerator2
         protected string item_uri_type;
         public string ItemUriType { get { return this.item_uri_type; } set { this.item_uri_type = value; } }
 
-        public ItemInfoEntry()
+        public ItemInfoEntry(byte version = 0, uint flags = 0) : base("infe", version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -10563,7 +10559,7 @@ namespace BoxGenerator2
             if (version == 1)
             {
                 if (boxSize < size) boxSize += stream.ReadUInt32(out this.extension_type); //optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.ItemInfoExtension); //optional
+                if (boxSize < size) boxSize += stream.ReadClass(out this.ItemInfoExtension); //optional
             }
 
             if (version >= 2)
@@ -10614,7 +10610,7 @@ namespace BoxGenerator2
             if (version == 1)
             {
                 if (this.extension_type != null) boxSize += stream.WriteUInt32(this.extension_type); //optional
-                if (this.ItemInfoExtension != null) boxSize += stream.WriteBox(this.ItemInfoExtension); //optional
+                if (this.ItemInfoExtension != null) boxSize += stream.WriteClass(this.ItemInfoExtension); //optional
             }
 
             if (version >= 2)
@@ -10665,7 +10661,7 @@ namespace BoxGenerator2
             if (version == 1)
             {
                 if (this.extension_type != null) boxSize += 32; // extension_type
-                if (this.ItemInfoExtension != null) boxSize += IsoStream.CalculateSize(ItemInfoExtension); // ItemInfoExtension
+                if (this.ItemInfoExtension != null) boxSize += IsoStream.CalculateClassSize(ItemInfoExtension); // ItemInfoExtension
             }
 
             if (version >= 2)
@@ -10711,7 +10707,7 @@ namespace BoxGenerator2
     */
     public class ItemProtectionBox : FullBox
     {
-        public override string FourCC { get; set; } = "ipro";
+        public const string FourCC = "ipro";
 
         protected ushort protection_count;
         public ushort ProtectionCount { get { return this.protection_count; } set { this.protection_count = value; } }
@@ -10719,7 +10715,7 @@ namespace BoxGenerator2
         protected ProtectionSchemeInfoBox protection_information;
         public ProtectionSchemeInfoBox ProtectionInformation { get { return this.protection_information; } set { this.protection_information = value; } }
 
-        public ItemProtectionBox()
+        public ItemProtectionBox(byte version = 0) : base("ipro", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -10776,7 +10772,7 @@ namespace BoxGenerator2
     */
     public class ItemReferenceBox : FullBox
     {
-        public override string FourCC { get; set; } = "iref";
+        public const string FourCC = "iref";
 
         protected SingleItemTypeReferenceBox[] references;
         public SingleItemTypeReferenceBox[] References { get { return this.references; } set { this.references = value; } }
@@ -10784,7 +10780,7 @@ namespace BoxGenerator2
         protected SingleItemTypeReferenceBoxLarge[] references0;
         public SingleItemTypeReferenceBoxLarge[] References0 { get { return this.references0; } set { this.references0 = value; } }
 
-        public ItemReferenceBox()
+        public ItemReferenceBox(byte version = 0) : base("iref", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -10870,7 +10866,7 @@ namespace BoxGenerator2
     */
     public class LevelAssignmentBox : FullBox
     {
-        public override string FourCC { get; set; } = "leva";
+        public const string FourCC = "leva";
 
         protected byte level_count;
         public byte LevelCount { get { return this.level_count; } set { this.level_count = value; } }
@@ -10896,7 +10892,7 @@ namespace BoxGenerator2
         protected uint sub_track_ID;
         public uint SubTrackID { get { return this.sub_track_ID; } set { this.sub_track_ID = value; } }
 
-        public LevelAssignmentBox()
+        public LevelAssignmentBox() : base("leva", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11034,12 +11030,12 @@ namespace BoxGenerator2
     */
     public class MediaDataBox : Box
     {
-        public override string FourCC { get; set; } = "mdat";
+        public const string FourCC = "mdat";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public MediaDataBox()
+        public MediaDataBox() : base("mdat")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11088,7 +11084,7 @@ namespace BoxGenerator2
     */
     public class MediaHeaderBox : FullBox
     {
-        public override string FourCC { get; set; } = "mdhd";
+        public const string FourCC = "mdhd";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -11123,7 +11119,7 @@ namespace BoxGenerator2
         protected ushort pre_defined = 0;
         public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
 
-        public MediaHeaderBox()
+        public MediaHeaderBox(byte version = 0) : base("mdhd", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11215,9 +11211,9 @@ namespace BoxGenerator2
     */
     public class MediaBox : Box
     {
-        public override string FourCC { get; set; } = "mdia";
+        public const string FourCC = "mdia";
 
-        public MediaBox()
+        public MediaBox() : base("mdia")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11256,7 +11252,7 @@ namespace BoxGenerator2
     */
     public class MovieExtendsHeaderBox : FullBox
     {
-        public override string FourCC { get; set; } = "mehd";
+        public const string FourCC = "mehd";
 
         protected ulong fragment_duration;
         public ulong FragmentDuration { get { return this.fragment_duration; } set { this.fragment_duration = value; } }
@@ -11264,7 +11260,7 @@ namespace BoxGenerator2
         protected uint fragment_duration0;
         public uint FragmentDuration0 { get { return this.fragment_duration0; } set { this.fragment_duration0 = value; } }
 
-        public MovieExtendsHeaderBox()
+        public MovieExtendsHeaderBox(byte version = 0) : base("mehd", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11340,7 +11336,7 @@ namespace BoxGenerator2
     */
     public class MetaBox : FullBox
     {
-        public override string FourCC { get; set; } = "meta";
+        public const string FourCC = "meta";
 
         protected HandlerBox theHandler;
         public HandlerBox TheHandler { get { return this.theHandler; } set { this.theHandler = value; } }
@@ -11372,7 +11368,7 @@ namespace BoxGenerator2
         protected Box[] other_boxes;  //  optional
         public Box[] OtherBoxes { get { return this.other_boxes; } set { this.other_boxes = value; } }
 
-        public MetaBox()
+        public MetaBox(string handler_type = "") : base("meta", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11438,12 +11434,12 @@ namespace BoxGenerator2
     */
     public class MovieFragmentHeaderBox : FullBox
     {
-        public override string FourCC { get; set; } = "mfhd";
+        public const string FourCC = "mfhd";
 
         protected uint sequence_number;
         public uint SequenceNumber { get { return this.sequence_number; } set { this.sequence_number = value; } }
 
-        public MovieFragmentHeaderBox()
+        public MovieFragmentHeaderBox() : base("mfhd", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11480,9 +11476,9 @@ namespace BoxGenerator2
     */
     public class MovieFragmentRandomAccessBox : Box
     {
-        public override string FourCC { get; set; } = "mfra";
+        public const string FourCC = "mfra";
 
-        public MovieFragmentRandomAccessBox()
+        public MovieFragmentRandomAccessBox() : base("mfra")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11518,12 +11514,12 @@ namespace BoxGenerator2
     */
     public class MovieFragmentRandomAccessOffsetBox : FullBox
     {
-        public override string FourCC { get; set; } = "mfro";
+        public const string FourCC = "mfro";
 
         protected uint parent_size;
         public uint ParentSize { get { return this.parent_size; } set { this.parent_size = value; } }
 
-        public MovieFragmentRandomAccessOffsetBox()
+        public MovieFragmentRandomAccessOffsetBox(byte version = 0) : base("mfro", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11558,9 +11554,9 @@ namespace BoxGenerator2
     */
     public class MediaInformationBox : Box
     {
-        public override string FourCC { get; set; } = "minf";
+        public const string FourCC = "minf";
 
-        public MediaInformationBox()
+        public MediaInformationBox() : base("minf")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11596,9 +11592,9 @@ namespace BoxGenerator2
     */
     public class CompressedMovieFragmentBox : CompressedBox
     {
-        public override string FourCC { get; set; } = "moof";
+        public const string FourCC = "moof";
 
-        public CompressedMovieFragmentBox()
+        public CompressedMovieFragmentBox() : base("moof")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11633,9 +11629,9 @@ namespace BoxGenerator2
     */
     public class CompressedMovieBox : CompressedBox
     {
-        public override string FourCC { get; set; } = "moov";
+        public const string FourCC = "moov";
 
-        public CompressedMovieBox()
+        public CompressedMovieBox() : base("moov")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11669,9 +11665,9 @@ namespace BoxGenerator2
     */
     public class MovieExtendsBox : Box
     {
-        public override string FourCC { get; set; } = "mvex";
+        public const string FourCC = "mvex";
 
-        public MovieExtendsBox()
+        public MovieExtendsBox() : base("mvex")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11725,7 +11721,7 @@ namespace BoxGenerator2
     */
     public class MovieHeaderBox : FullBox
     {
-        public override string FourCC { get; set; } = "mvhd";
+        public const string FourCC = "mvhd";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -11773,7 +11769,7 @@ namespace BoxGenerator2
         protected uint next_track_ID;
         public uint NextTrackID { get { return this.next_track_ID; } set { this.next_track_ID = value; } }
 
-        public MovieHeaderBox()
+        public MovieHeaderBox(byte version = 0) : base("mvhd", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11878,9 +11874,9 @@ namespace BoxGenerator2
     */
     public class NullMediaHeaderBox : FullBox
     {
-        public override string FourCC { get; set; } = "nmhd";
+        public const string FourCC = "nmhd";
 
-        public NullMediaHeaderBox()
+        public NullMediaHeaderBox(byte version = 0, uint flags = 0) : base("nmhd", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11912,9 +11908,9 @@ namespace BoxGenerator2
     */
     public class OriginalFileTypeBox : Box
     {
-        public override string FourCC { get; set; } = "otyp";
+        public const string FourCC = "otyp";
 
-        public OriginalFileTypeBox()
+        public OriginalFileTypeBox() : base("otyp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -11956,7 +11952,7 @@ namespace BoxGenerator2
     */
     public class PaddingBitsBox : FullBox
     {
-        public override string FourCC { get; set; } = "padb";
+        public const string FourCC = "padb";
 
         protected uint sample_count;
         public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
@@ -11973,7 +11969,7 @@ namespace BoxGenerator2
         protected byte pad2;
         public byte Pad2 { get { return this.pad2; } set { this.pad2 = value; } }
 
-        public PaddingBitsBox()
+        public PaddingBitsBox(byte version = 0) : base("padb", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12040,7 +12036,7 @@ namespace BoxGenerator2
     */
     public class ProgressiveDownloadInfoBox : FullBox
     {
-        public override string FourCC { get; set; } = "pdin";
+        public const string FourCC = "pdin";
 
         protected uint rate;
         public uint Rate { get { return this.rate; } set { this.rate = value; } }
@@ -12048,7 +12044,7 @@ namespace BoxGenerator2
         protected uint initial_delay;
         public uint InitialDelay { get { return this.initial_delay; } set { this.initial_delay = value; } }
 
-        public ProgressiveDownloadInfoBox()
+        public ProgressiveDownloadInfoBox(byte version = 0) : base("pdin", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12107,7 +12103,7 @@ namespace BoxGenerator2
     */
     public class PrimaryItemBox : FullBox
     {
-        public override string FourCC { get; set; } = "pitm";
+        public const string FourCC = "pitm";
 
         protected ushort item_ID;
         public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -12115,7 +12111,7 @@ namespace BoxGenerator2
         protected uint item_ID0;
         public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
 
-        public PrimaryItemBox()
+        public PrimaryItemBox(byte version = 0) : base("pitm", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12185,7 +12181,7 @@ namespace BoxGenerator2
     */
     public class ProducerReferenceTimeBox : FullBox
     {
-        public override string FourCC { get; set; } = "prft";
+        public const string FourCC = "prft";
 
         protected uint reference_track_ID;
         public uint ReferenceTrackID { get { return this.reference_track_ID; } set { this.reference_track_ID = value; } }
@@ -12199,7 +12195,7 @@ namespace BoxGenerator2
         protected ulong media_time0;
         public ulong MediaTime0 { get { return this.media_time0; } set { this.media_time0 = value; } }
 
-        public ProducerReferenceTimeBox()
+        public ProducerReferenceTimeBox(byte version = 0, uint flags = 0) : base("prft", version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12270,7 +12266,7 @@ namespace BoxGenerator2
     */
     public class RestrictedSchemeInfoBox : Box
     {
-        public override string FourCC { get; set; } = "rinf";
+        public const string FourCC = "rinf";
 
         protected OriginalFormatBox original_format;
         public OriginalFormatBox OriginalFormat { get { return this.original_format; } set { this.original_format = value; } }
@@ -12281,7 +12277,7 @@ namespace BoxGenerator2
         protected SchemeInformationBox info;  //  optional
         public SchemeInformationBox Info { get { return this.info; } set { this.info = value; } }
 
-        public RestrictedSchemeInfoBox()
+        public RestrictedSchemeInfoBox(string fmt = "") : base("rinf")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12337,7 +12333,7 @@ namespace BoxGenerator2
     */
     public class SampleAuxiliaryInformationOffsetsBox : FullBox
     {
-        public override string FourCC { get; set; } = "saio";
+        public const string FourCC = "saio";
 
         protected uint aux_info_type;
         public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
@@ -12354,7 +12350,7 @@ namespace BoxGenerator2
         protected ulong[] offset0;
         public ulong[] Offset0 { get { return this.offset0; } set { this.offset0 = value; } }
 
-        public SampleAuxiliaryInformationOffsetsBox()
+        public SampleAuxiliaryInformationOffsetsBox(byte version = 0, uint flags = 0) : base("saio", version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12448,7 +12444,7 @@ namespace BoxGenerator2
     */
     public class SampleAuxiliaryInformationSizesBox : FullBox
     {
-        public override string FourCC { get; set; } = "saiz";
+        public const string FourCC = "saiz";
 
         protected uint aux_info_type;
         public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
@@ -12465,7 +12461,7 @@ namespace BoxGenerator2
         protected byte[] sample_info_size;
         public byte[] SampleInfoSize { get { return this.sample_info_size; } set { this.sample_info_size = value; } }
 
-        public SampleAuxiliaryInformationSizesBox()
+        public SampleAuxiliaryInformationSizesBox(byte version = 0, uint flags = 0) : base("saiz", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12548,7 +12544,7 @@ namespace BoxGenerator2
     */
     public class SampleToGroupBox : FullBox
     {
-        public override string FourCC { get; set; } = "sbgp";
+        public const string FourCC = "sbgp";
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -12565,7 +12561,7 @@ namespace BoxGenerator2
         protected uint group_description_index;
         public uint GroupDescriptionIndex { get { return this.group_description_index; } set { this.group_description_index = value; } }
 
-        public SampleToGroupBox()
+        public SampleToGroupBox(byte version = 0) : base("sbgp", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12637,12 +12633,12 @@ namespace BoxGenerator2
     */
     public class SchemeInformationBox : Box
     {
-        public override string FourCC { get; set; } = "schi";
+        public const string FourCC = "schi";
 
         protected Box[] scheme_specific_data;
         public Box[] SchemeSpecificData { get { return this.scheme_specific_data; } set { this.scheme_specific_data = value; } }
 
-        public SchemeInformationBox()
+        public SchemeInformationBox() : base("schi")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12684,7 +12680,7 @@ namespace BoxGenerator2
     */
     public class SchemeTypeBox : FullBox
     {
-        public override string FourCC { get; set; } = "schm";
+        public const string FourCC = "schm";
 
         protected uint scheme_type;  //  4CC identifying the scheme
         public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
@@ -12695,7 +12691,7 @@ namespace BoxGenerator2
         protected string scheme_uri;  //  browser uri
         public string SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
 
-        public SchemeTypeBox()
+        public SchemeTypeBox(uint flags = 0) : base("schm", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12755,7 +12751,7 @@ namespace BoxGenerator2
     */
     public class CompatibleSchemeTypeBox : FullBox
     {
-        public override string FourCC { get; set; } = "csch";
+        public const string FourCC = "csch";
 
         protected uint scheme_type;  //  4CC identifying the scheme
         public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
@@ -12766,7 +12762,7 @@ namespace BoxGenerator2
         protected string scheme_uri;  //  browser uri
         public string SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
 
-        public CompatibleSchemeTypeBox()
+        public CompatibleSchemeTypeBox(uint flags = 0) : base("csch", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12829,7 +12825,7 @@ namespace BoxGenerator2
     */
     public class SampleDependencyTypeBox : FullBox
     {
-        public override string FourCC { get; set; } = "sdtp";
+        public const string FourCC = "sdtp";
 
         protected byte is_leading;
         public byte IsLeading { get { return this.is_leading; } set { this.is_leading = value; } }
@@ -12843,7 +12839,7 @@ namespace BoxGenerator2
         protected byte sample_has_redundancy;
         public byte SampleHasRedundancy { get { return this.sample_has_redundancy; } set { this.sample_has_redundancy = value; } }
 
-        public SampleDependencyTypeBox()
+        public SampleDependencyTypeBox(byte version = 0) : base("sdtp", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -12916,7 +12912,7 @@ namespace BoxGenerator2
     */
     public class FDSessionGroupBox : Box
     {
-        public override string FourCC { get; set; } = "segr";
+        public const string FourCC = "segr";
 
         protected ushort num_session_groups;
         public ushort NumSessionGroups { get { return this.num_session_groups; } set { this.num_session_groups = value; } }
@@ -12933,7 +12929,7 @@ namespace BoxGenerator2
         protected uint hint_track_ID;
         public uint HintTrackID { get { return this.hint_track_ID; } set { this.hint_track_ID = value; } }
 
-        public FDSessionGroupBox()
+        public FDSessionGroupBox() : base("segr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13034,7 +13030,7 @@ namespace BoxGenerator2
     */
     public class SampleGroupDescriptionBox : FullBox
     {
-        public override string FourCC { get; set; } = "sgpd";
+        public const string FourCC = "sgpd";
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -13054,7 +13050,7 @@ namespace BoxGenerator2
         protected SampleGroupDescriptionEntry SampleGroupDescriptionEntry;  //  an instance of a class derived from SampleGroupDescriptionEntry
         public SampleGroupDescriptionEntry _SampleGroupDescriptionEntry { get { return this.SampleGroupDescriptionEntry; } set { this.SampleGroupDescriptionEntry = value; } }
 
-        public SampleGroupDescriptionBox()
+        public SampleGroupDescriptionBox(byte version = 0, uint flags = 0) : base("sgpd", version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13174,9 +13170,9 @@ namespace BoxGenerator2
     */
     public class CompressedSegmentIndexBox : CompressedBox
     {
-        public override string FourCC { get; set; } = "sidx";
+        public const string FourCC = "sidx";
 
-        public CompressedSegmentIndexBox()
+        public CompressedSegmentIndexBox() : base("sidx")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13212,7 +13208,7 @@ namespace BoxGenerator2
     */
     public class ProtectionSchemeInfoBox : Box
     {
-        public override string FourCC { get; set; } = "sinf";
+        public const string FourCC = "sinf";
 
         protected OriginalFormatBox original_format;
         public OriginalFormatBox OriginalFormat { get { return this.original_format; } set { this.original_format = value; } }
@@ -13223,7 +13219,7 @@ namespace BoxGenerator2
         protected SchemeInformationBox info;  //  optional
         public SchemeInformationBox Info { get { return this.info; } set { this.info = value; } }
 
-        public ProtectionSchemeInfoBox()
+        public ProtectionSchemeInfoBox(string fmt = "") : base("sinf")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13267,12 +13263,12 @@ namespace BoxGenerator2
     */
     public class FreeSpaceBox_skip : Box
     {
-        public override string FourCC { get; set; } = "skip";
+        public const string FourCC = "skip";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public FreeSpaceBox_skip()
+        public FreeSpaceBox_skip() : base("skip")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13310,7 +13306,7 @@ namespace BoxGenerator2
     */
     public class SoundMediaHeaderBox : FullBox
     {
-        public override string FourCC { get; set; } = "smhd";
+        public const string FourCC = "smhd";
 
         protected short balance = 0;
         public short Balance { get { return this.balance; } set { this.balance = value; } }
@@ -13318,7 +13314,7 @@ namespace BoxGenerator2
         protected ushort reserved = 0;
         public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public SoundMediaHeaderBox()
+        public SoundMediaHeaderBox(byte version = 0) : base("smhd", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13362,7 +13358,7 @@ namespace BoxGenerator2
     */
     public class SRTPProcessBox : FullBox
     {
-        public override string FourCC { get; set; } = "srpp";
+        public const string FourCC = "srpp";
 
         protected uint encryption_algorithm_rtp;
         public uint EncryptionAlgorithmRtp { get { return this.encryption_algorithm_rtp; } set { this.encryption_algorithm_rtp = value; } }
@@ -13382,7 +13378,7 @@ namespace BoxGenerator2
         protected SchemeInformationBox info;
         public SchemeInformationBox Info { get { return this.info; } set { this.info = value; } }
 
-        public SRTPProcessBox()
+        public SRTPProcessBox(byte version = 0) : base("srpp", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13433,9 +13429,9 @@ namespace BoxGenerator2
     */
     public class CompressedSubsegmentIndexBox : CompressedBox
     {
-        public override string FourCC { get; set; } = "ssix";
+        public const string FourCC = "ssix";
 
-        public CompressedSubsegmentIndexBox()
+        public CompressedSubsegmentIndexBox() : base("ssix")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13467,9 +13463,9 @@ namespace BoxGenerator2
     */
     public class SampleTableBox : Box
     {
-        public override string FourCC { get; set; } = "stbl";
+        public const string FourCC = "stbl";
 
-        public SampleTableBox()
+        public SampleTableBox() : base("stbl")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13508,7 +13504,7 @@ namespace BoxGenerator2
     */
     public class ChunkOffsetBox : FullBox
     {
-        public override string FourCC { get; set; } = "stco";
+        public const string FourCC = "stco";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -13516,7 +13512,7 @@ namespace BoxGenerator2
         protected uint chunk_offset;
         public uint ChunkOffset { get { return this.chunk_offset; } set { this.chunk_offset = value; } }
 
-        public ChunkOffsetBox()
+        public ChunkOffsetBox(byte version = 0) : base("stco", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13571,12 +13567,12 @@ namespace BoxGenerator2
     */
     public class DegradationPriorityBox : FullBox
     {
-        public override string FourCC { get; set; } = "stdp";
+        public const string FourCC = "stdp";
 
         protected ushort priority;
         public ushort Priority { get { return this.priority; } set { this.priority = value; } }
 
-        public DegradationPriorityBox()
+        public DegradationPriorityBox(byte version = 0) : base("stdp", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13633,9 +13629,9 @@ namespace BoxGenerator2
     */
     public class SubtitleMediaHeaderBox : FullBox
     {
-        public override string FourCC { get; set; } = "sthd";
+        public const string FourCC = "sthd";
 
-        public SubtitleMediaHeaderBox()
+        public SubtitleMediaHeaderBox(byte version = 0, uint flags = 0) : base("sthd", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13667,9 +13663,9 @@ namespace BoxGenerator2
     */
     public class SubTrackDefinitionBox : Box
     {
-        public override string FourCC { get; set; } = "strd";
+        public const string FourCC = "strd";
 
-        public SubTrackDefinitionBox()
+        public SubTrackDefinitionBox() : base("strd")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13708,7 +13704,7 @@ namespace BoxGenerator2
     */
     public class SubTrackInformationBox : FullBox
     {
-        public override string FourCC { get; set; } = "stri";
+        public const string FourCC = "stri";
 
         protected short switch_group = 0;
         public short SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
@@ -13722,7 +13718,7 @@ namespace BoxGenerator2
         protected uint[] attribute_list;  //  to the end of the box
         public uint[] AttributeList { get { return this.attribute_list; } set { this.attribute_list = value; } }
 
-        public SubTrackInformationBox()
+        public SubTrackInformationBox(byte version = 0) : base("stri", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13773,7 +13769,7 @@ namespace BoxGenerator2
     */
     public class SampleToChunkBox : FullBox
     {
-        public override string FourCC { get; set; } = "stsc";
+        public const string FourCC = "stsc";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -13787,7 +13783,7 @@ namespace BoxGenerator2
         protected uint sample_description_index;
         public uint SampleDescriptionIndex { get { return this.sample_description_index; } set { this.sample_description_index = value; } }
 
-        public SampleToChunkBox()
+        public SampleToChunkBox(byte version = 0) : base("stsc", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13849,7 +13845,7 @@ namespace BoxGenerator2
     */
     public class SampleDescriptionBox : FullBox
     {
-        public override string FourCC { get; set; } = "stsd";
+        public const string FourCC = "stsd";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -13857,7 +13853,7 @@ namespace BoxGenerator2
         protected SampleEntry SampleEntry;  //  an instance of a class derived from SampleEntry
         public SampleEntry _SampleEntry { get { return this.SampleEntry; } set { this.SampleEntry = value; } }
 
-        public SampleDescriptionBox()
+        public SampleDescriptionBox(byte version = 0) : base("stsd", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13917,7 +13913,7 @@ namespace BoxGenerator2
     */
     public class SubTrackSampleGroupBox : FullBox
     {
-        public override string FourCC { get; set; } = "stsg";
+        public const string FourCC = "stsg";
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -13928,7 +13924,7 @@ namespace BoxGenerator2
         protected uint group_description_index;
         public uint GroupDescriptionIndex { get { return this.group_description_index; } set { this.group_description_index = value; } }
 
-        public SubTrackSampleGroupBox()
+        public SubTrackSampleGroupBox() : base("stsg", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -13988,7 +13984,7 @@ namespace BoxGenerator2
     */
     public class ShadowSyncSampleBox : FullBox
     {
-        public override string FourCC { get; set; } = "stsh";
+        public const string FourCC = "stsh";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -13999,7 +13995,7 @@ namespace BoxGenerator2
         protected uint sync_sample_number;
         public uint SyncSampleNumber { get { return this.sync_sample_number; } set { this.sync_sample_number = value; } }
 
-        public ShadowSyncSampleBox()
+        public ShadowSyncSampleBox(byte version = 0) : base("stsh", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -14061,7 +14057,7 @@ namespace BoxGenerator2
     */
     public class SyncSampleBox : FullBox
     {
-        public override string FourCC { get; set; } = "stss";
+        public const string FourCC = "stss";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14069,7 +14065,7 @@ namespace BoxGenerator2
         protected uint sample_number;
         public uint SampleNumber { get { return this.sample_number; } set { this.sample_number = value; } }
 
-        public SyncSampleBox()
+        public SyncSampleBox(byte version = 0) : base("stss", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -14129,7 +14125,7 @@ namespace BoxGenerator2
     */
     public class SampleSizeBox : FullBox
     {
-        public override string FourCC { get; set; } = "stsz";
+        public const string FourCC = "stsz";
 
         protected uint sample_size;
         public uint SampleSize { get { return this.sample_size; } set { this.sample_size = value; } }
@@ -14140,7 +14136,7 @@ namespace BoxGenerator2
         protected uint entry_size;
         public uint EntrySize { get { return this.entry_size; } set { this.entry_size = value; } }
 
-        public SampleSizeBox()
+        public SampleSizeBox(byte version = 0) : base("stsz", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -14212,7 +14208,7 @@ namespace BoxGenerator2
     */
     public class TimeToSampleBox : FullBox
     {
-        public override string FourCC { get; set; } = "stts";
+        public const string FourCC = "stts";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14223,7 +14219,7 @@ namespace BoxGenerator2
         protected uint sample_delta;
         public uint SampleDelta { get { return this.sample_delta; } set { this.sample_delta = value; } }
 
-        public TimeToSampleBox()
+        public TimeToSampleBox(byte version = 0) : base("stts", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -14279,9 +14275,9 @@ namespace BoxGenerator2
     */
     public class SegmentTypeBox : GeneralTypeBox
     {
-        public override string FourCC { get; set; } = "styp";
+        public const string FourCC = "styp";
 
-        public SegmentTypeBox()
+        public SegmentTypeBox() : base("styp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -14320,7 +14316,7 @@ namespace BoxGenerator2
     */
     public class CompactSampleSizeBox : FullBox
     {
-        public override string FourCC { get; set; } = "stz2";
+        public const string FourCC = "stz2";
 
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -14334,7 +14330,7 @@ namespace BoxGenerator2
         protected byte[] entry_size;
         public byte[] EntrySize { get { return this.entry_size; } set { this.entry_size = value; } }
 
-        public CompactSampleSizeBox()
+        public CompactSampleSizeBox(byte version = 0) : base("stz2", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -14412,7 +14408,7 @@ namespace BoxGenerator2
     */
     public class SubSampleInformationBox : FullBox
     {
-        public override string FourCC { get; set; } = "subs";
+        public const string FourCC = "subs";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14438,7 +14434,7 @@ namespace BoxGenerator2
         protected uint codec_specific_parameters;
         public uint CodecSpecificParameters { get { return this.codec_specific_parameters; } set { this.codec_specific_parameters = value; } }
 
-        public SubSampleInformationBox()
+        public SubSampleInformationBox(byte version = 0, uint flags = 0) : base("subs", version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -14563,7 +14559,7 @@ namespace BoxGenerator2
     */
     public class TrackFragmentBaseMediaDecodeTimeBox : FullBox
     {
-        public override string FourCC { get; set; } = "tfdt";
+        public const string FourCC = "tfdt";
 
         protected ulong baseMediaDecodeTime;
         public ulong BaseMediaDecodeTime { get { return this.baseMediaDecodeTime; } set { this.baseMediaDecodeTime = value; } }
@@ -14571,7 +14567,7 @@ namespace BoxGenerator2
         protected uint baseMediaDecodeTime0;
         public uint BaseMediaDecodeTime0 { get { return this.baseMediaDecodeTime0; } set { this.baseMediaDecodeTime0 = value; } }
 
-        public TrackFragmentBaseMediaDecodeTimeBox()
+        public TrackFragmentBaseMediaDecodeTimeBox(byte version = 0) : base("tfdt", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -14645,7 +14641,7 @@ namespace BoxGenerator2
     */
     public class TrackFragmentHeaderBox : FullBox
     {
-        public override string FourCC { get; set; } = "tfhd";
+        public const string FourCC = "tfhd";
 
         protected uint track_ID;  //  all the following are optional fields
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -14665,7 +14661,7 @@ namespace BoxGenerator2
         protected uint default_sample_flags;
         public uint DefaultSampleFlags { get { return this.default_sample_flags; } set { this.default_sample_flags = value; } }
 
-        public TrackFragmentHeaderBox()
+        public TrackFragmentHeaderBox(uint tf_flags = 0) : base("tfhd", 0, tf_flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -14737,7 +14733,7 @@ namespace BoxGenerator2
     */
     public class TrackFragmentRandomAccessBox : FullBox
     {
-        public override string FourCC { get; set; } = "tfra";
+        public const string FourCC = "tfra";
 
         protected uint track_ID;
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -14778,7 +14774,7 @@ namespace BoxGenerator2
         protected byte[] sample_delta;
         public byte[] SampleDelta { get { return this.sample_delta; } set { this.sample_delta = value; } }
 
-        public TrackFragmentRandomAccessBox()
+        public TrackFragmentRandomAccessBox(byte version = 0) : base("tfra", version, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -14909,7 +14905,7 @@ namespace BoxGenerator2
     */
     public class TrackHeaderBox : FullBox
     {
-        public override string FourCC { get; set; } = "tkhd";
+        public const string FourCC = "tkhd";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -14966,7 +14962,7 @@ namespace BoxGenerator2
         protected uint height;
         public uint Height { get { return this.height; } set { this.height = value; } }
 
-        public TrackHeaderBox()
+        public TrackHeaderBox(byte version = 0, uint flags = 0) : base("tkhd", version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15079,9 +15075,9 @@ namespace BoxGenerator2
     */
     public class TrackFragmentBox : Box
     {
-        public override string FourCC { get; set; } = "traf";
+        public const string FourCC = "traf";
 
-        public TrackFragmentBox()
+        public TrackFragmentBox() : base("traf")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15115,9 +15111,9 @@ namespace BoxGenerator2
     */
     public class TrackBox : Box
     {
-        public override string FourCC { get; set; } = "trak";
+        public const string FourCC = "trak";
 
-        public TrackBox()
+        public TrackBox() : base("trak")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15152,12 +15148,12 @@ namespace BoxGenerator2
     */
     public class TrackReferenceBox : Box
     {
-        public override string FourCC { get; set; } = "tref";
+        public const string FourCC = "tref";
 
         protected TrackReferenceTypeBox[] TrackReferenceTypeBox;
         public TrackReferenceTypeBox[] _TrackReferenceTypeBox { get { return this.TrackReferenceTypeBox; } set { this.TrackReferenceTypeBox = value; } }
 
-        public TrackReferenceBox()
+        public TrackReferenceBox() : base("tref")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15196,12 +15192,12 @@ namespace BoxGenerator2
     */
     public class TrackExtensionPropertiesBox : FullBox
     {
-        public override string FourCC { get; set; } = "trep";
+        public const string FourCC = "trep";
 
         protected uint track_ID;  //  Any number of boxes may follow
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
 
-        public TrackExtensionPropertiesBox()
+        public TrackExtensionPropertiesBox() : base("trep", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15243,7 +15239,7 @@ namespace BoxGenerator2
     */
     public class TrackExtendsBox : FullBox
     {
-        public override string FourCC { get; set; } = "trex";
+        public const string FourCC = "trex";
 
         protected uint track_ID;
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -15260,7 +15256,7 @@ namespace BoxGenerator2
         protected uint default_sample_flags;
         public uint DefaultSampleFlags { get { return this.default_sample_flags; } set { this.default_sample_flags = value; } }
 
-        public TrackExtendsBox()
+        public TrackExtendsBox() : base("trex", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15307,9 +15303,9 @@ namespace BoxGenerator2
     */
     public class TrackGroupBox : Box
     {
-        public override string FourCC { get; set; } = "trgr";
+        public const string FourCC = "trgr";
 
-        public TrackGroupBox()
+        public TrackGroupBox() : base("trgr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15359,7 +15355,7 @@ namespace BoxGenerator2
     */
     public class TrackRunBox : FullBox
     {
-        public override string FourCC { get; set; } = "trun";
+        public const string FourCC = "trun";
 
         protected uint sample_count;  //  the following are optional fields
         public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
@@ -15370,7 +15366,7 @@ namespace BoxGenerator2
         protected uint first_sample_flags;  //  all fields in the following array are optional
         public uint FirstSampleFlags { get { return this.first_sample_flags; } set { this.first_sample_flags = value; } }
 
-        public TrackRunBox()
+        public TrackRunBox(byte version = 0, uint tr_flags = 0) : base("trun", version, tr_flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15417,9 +15413,9 @@ namespace BoxGenerator2
     */
     public class TrackTypeBox : GeneralTypeBox
     {
-        public override string FourCC { get; set; } = "ttyp";
+        public const string FourCC = "ttyp";
 
-        public TrackTypeBox()
+        public TrackTypeBox() : base("ttyp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15452,12 +15448,12 @@ namespace BoxGenerator2
     */
     public class TypeCombinationBox : Box
     {
-        public override string FourCC { get; set; } = "tyco";
+        public const string FourCC = "tyco";
 
         protected uint[] compatible_brands;  //  to end of the box
         public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
-        public TypeCombinationBox()
+        public TypeCombinationBox() : base("tyco")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15492,9 +15488,9 @@ namespace BoxGenerator2
     */
     public class UserDataBox : Box
     {
-        public override string FourCC { get; set; } = "udta";
+        public const string FourCC = "udta";
 
-        public UserDataBox()
+        public UserDataBox() : base("udta")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15554,7 +15550,7 @@ namespace BoxGenerator2
         protected byte[] usertype; // = extended_type
         public byte[] Usertype { get { return this.usertype; } set { this.usertype = value; } }
 
-        public BoxHeader()
+        public BoxHeader(string boxtype, byte[] extended_type) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -15637,7 +15633,7 @@ namespace BoxGenerator2
     */
     public class VideoMediaHeaderBox : FullBox
     {
-        public override string FourCC { get; set; } = "vmhd";
+        public const string FourCC = "vmhd";
 
         protected ushort graphicsmode = 0;  //  copy, see below
         public ushort Graphicsmode { get { return this.graphicsmode; } set { this.graphicsmode = value; } }
@@ -15645,7 +15641,7 @@ namespace BoxGenerator2
         protected ushort[] opcolor = { 0, 0, 0 };
         public ushort[] Opcolor { get { return this.opcolor; } set { this.opcolor = value; } }
 
-        public VideoMediaHeaderBox()
+        public VideoMediaHeaderBox(byte version = 0) : base("vmhd", 0, 1)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15685,12 +15681,12 @@ namespace BoxGenerator2
     */
     public class XMLBox : FullBox
     {
-        public override string FourCC { get; set; } = "xml ";
+        public const string FourCC = "xml ";
 
         protected string xml;
         public string Xml { get { return this.xml; } set { this.xml = value; } }
 
-        public XMLBox()
+        public XMLBox(byte version = 0) : base("xml ", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15728,7 +15724,7 @@ namespace BoxGenerator2
     */
     public class AmbientViewingEnvironmentBox : Box
     {
-        public override string FourCC { get; set; } = "amve";
+        public const string FourCC = "amve";
 
         protected uint ambient_illuminance;
         public uint AmbientIlluminance { get { return this.ambient_illuminance; } set { this.ambient_illuminance = value; } }
@@ -15739,7 +15735,7 @@ namespace BoxGenerator2
         protected ushort ambient_light_y;
         public ushort AmbientLighty { get { return this.ambient_light_y; } set { this.ambient_light_y = value; } }
 
-        public AmbientViewingEnvironmentBox()
+        public AmbientViewingEnvironmentBox() : base("amve")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15781,12 +15777,12 @@ namespace BoxGenerator2
     */
     public class MetaDataKeyTableBox : Box
     {
-        public override string FourCC { get; set; } = "keys";
+        public const string FourCC = "keys";
 
         protected MetaDataKeyBox[] MetaDataKeyBox;
         public MetaDataKeyBox[] _MetaDataKeyBox { get { return this.MetaDataKeyBox; } set { this.MetaDataKeyBox = value; } }
 
-        public MetaDataKeyTableBox()
+        public MetaDataKeyTableBox() : base("keys")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15822,12 +15818,12 @@ namespace BoxGenerator2
     */
     public class URIBox : FullBox
     {
-        public override string FourCC { get; set; } = "uri ";
+        public const string FourCC = "uri ";
 
         protected string theURI;
         public string TheURI { get { return this.theURI; } set { this.theURI = value; } }
 
-        public URIBox()
+        public URIBox(byte version = 0) : base("uri ", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15876,7 +15872,7 @@ namespace BoxGenerator2
     */
     public class IroiInfoBox : Box
     {
-        public override string FourCC { get; set; } = "iroi";
+        public const string FourCC = "iroi";
 
         protected byte iroi_type;
         public byte IroiType { get { return this.iroi_type; } set { this.iroi_type = value; } }
@@ -15902,7 +15898,7 @@ namespace BoxGenerator2
         protected byte roi_mb_height;
         public byte RoiMbHeight { get { return this.roi_mb_height; } set { this.roi_mb_height = value; } }
 
-        public IroiInfoBox()
+        public IroiInfoBox() : base("iroi")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -15997,7 +15993,7 @@ namespace BoxGenerator2
     */
     public class TierDependencyBox : Box
     {
-        public override string FourCC { get; set; } = "ldep";
+        public const string FourCC = "ldep";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -16005,7 +16001,7 @@ namespace BoxGenerator2
         protected ushort dependencyTierId;
         public ushort DependencyTierId { get { return this.dependencyTierId; } set { this.dependencyTierId = value; } }
 
-        public TierDependencyBox()
+        public TierDependencyBox() : base("ldep")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -16063,7 +16059,7 @@ namespace BoxGenerator2
     */
     public class SVCDependencyRangeBox : Box
     {
-        public override string FourCC { get; set; } = "svdr";
+        public const string FourCC = "svdr";
 
         protected byte min_dependency_id;
         public byte MinDependencyId { get { return this.min_dependency_id; } set { this.min_dependency_id = value; } }
@@ -16089,7 +16085,7 @@ namespace BoxGenerator2
         protected byte max_quality_id;
         public byte MaxQualityId { get { return this.max_quality_id; } set { this.max_quality_id = value; } }
 
-        public SVCDependencyRangeBox()
+        public SVCDependencyRangeBox() : base("svdr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -16151,7 +16147,7 @@ namespace BoxGenerator2
     */
     public class InitialParameterSetBox : Box
     {
-        public override string FourCC { get; set; } = "svip";
+        public const string FourCC = "svip";
 
         protected byte sps_id_count;
         public byte SpsIdCount { get { return this.sps_id_count; } set { this.sps_id_count = value; } }
@@ -16165,7 +16161,7 @@ namespace BoxGenerator2
         protected byte PPS_index;
         public byte PPSIndex { get { return this.PPS_index; } set { this.PPS_index = value; } }
 
-        public InitialParameterSetBox()
+        public InitialParameterSetBox() : base("svip")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -16237,7 +16233,7 @@ namespace BoxGenerator2
     */
     public class PriorityRangeBox : Box
     {
-        public override string FourCC { get; set; } = "svpr";
+        public const string FourCC = "svpr";
 
         protected byte reserved1 = 0;
         public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -16251,7 +16247,7 @@ namespace BoxGenerator2
         protected byte max_priorityId;
         public byte MaxPriorityId { get { return this.max_priorityId; } set { this.max_priorityId = value; } }
 
-        public PriorityRangeBox()
+        public PriorityRangeBox() : base("svpr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -16309,7 +16305,7 @@ namespace BoxGenerator2
     */
     public class TranscodingInfoBox : Box
     {
-        public override string FourCC { get; set; } = "tran";
+        public const string FourCC = "tran";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -16341,7 +16337,7 @@ namespace BoxGenerator2
         protected uint cabac_avg_bitrate;
         public uint CabacAvgBitrate { get { return this.cabac_avg_bitrate; } set { this.cabac_avg_bitrate = value; } }
 
-        public TranscodingInfoBox()
+        public TranscodingInfoBox() : base("tran")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -16436,7 +16432,7 @@ namespace BoxGenerator2
     */
     public class RectRegionBox : Box
     {
-        public override string FourCC { get; set; } = "rrgn";
+        public const string FourCC = "rrgn";
 
         protected ushort base_region_tierID;
         public ushort BaseRegionTierID { get { return this.base_region_tierID; } set { this.base_region_tierID = value; } }
@@ -16459,7 +16455,7 @@ namespace BoxGenerator2
         protected ushort region_height;
         public ushort RegionHeight { get { return this.region_height; } set { this.region_height = value; } }
 
-        public RectRegionBox()
+        public RectRegionBox() : base("rrgn")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -16532,7 +16528,7 @@ namespace BoxGenerator2
     */
     public class BufferingBox : Box
     {
-        public override string FourCC { get; set; } = "buff";
+        public const string FourCC = "buff";
 
         protected ushort operating_point_count;
         public ushort OperatingPointCount { get { return this.operating_point_count; } set { this.operating_point_count = value; } }
@@ -16552,7 +16548,7 @@ namespace BoxGenerator2
         protected uint init_dpb_delay;
         public uint InitDpbDelay { get { return this.init_dpb_delay; } set { this.init_dpb_delay = value; } }
 
-        public BufferingBox()
+        public BufferingBox() : base("buff")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -16621,7 +16617,7 @@ namespace BoxGenerator2
     */
     public class MVCSubTrackViewBox : FullBox
     {
-        public override string FourCC { get; set; } = "mstv";
+        public const string FourCC = "mstv";
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -16635,7 +16631,7 @@ namespace BoxGenerator2
         protected byte reserved;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public MVCSubTrackViewBox()
+        public MVCSubTrackViewBox() : base("mstv", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -16717,7 +16713,7 @@ namespace BoxGenerator2
     */
     public class MultiviewGroupBox : FullBox
     {
-        public override string FourCC { get; set; } = "mvcg";
+        public const string FourCC = "mvcg";
 
         protected uint multiview_group_id;
         public uint MultiviewGroupId { get { return this.multiview_group_id; } set { this.multiview_group_id = value; } }
@@ -16770,7 +16766,7 @@ namespace BoxGenerator2
         protected MultiviewSceneInfoBox multiview_scene_info;  //  optional
         public MultiviewSceneInfoBox MultiviewSceneInfo { get { return this.multiview_scene_info; } set { this.multiview_scene_info = value; } }
 
-        public MultiviewGroupBox()
+        public MultiviewGroupBox(byte version = 0, uint flags = 0) : base("mvcg", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -16916,9 +16912,9 @@ namespace BoxGenerator2
     */
     public class MultiviewInformationBox : FullBox
     {
-        public override string FourCC { get; set; } = "mvci";
+        public const string FourCC = "mvci";
 
-        public MultiviewInformationBox()
+        public MultiviewInformationBox(byte version = 0, uint flags = 0) : base("mvci", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -16967,7 +16963,7 @@ namespace BoxGenerator2
     */
     public class MVDDepthResolutionBox : Box
     {
-        public override string FourCC { get; set; } = "3dpr";
+        public const string FourCC = "3dpr";
 
         protected ushort depth_width;
         public ushort DepthWidth { get { return this.depth_width; } set { this.depth_width = value; } }
@@ -17002,7 +16998,7 @@ namespace BoxGenerator2
         protected short[] grid_pos_y;
         public short[] GridPosy { get { return this.grid_pos_y; } set { this.grid_pos_y = value; } }
 
-        public MVDDepthResolutionBox()
+        public MVDDepthResolutionBox() : base("3dpr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17093,7 +17089,7 @@ namespace BoxGenerator2
     */
     public class MultiviewRelationAttributeBox : FullBox
     {
-        public override string FourCC { get; set; } = "mvra";
+        public const string FourCC = "mvra";
 
         protected ushort reserved1 = 0;
         public ushort Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -17116,7 +17112,7 @@ namespace BoxGenerator2
         protected uint differentiating_attribute;
         public uint DifferentiatingAttribute { get { return this.differentiating_attribute; } set { this.differentiating_attribute = value; } }
 
-        public MultiviewRelationAttributeBox()
+        public MultiviewRelationAttributeBox(byte version = 0, uint flags = 0) : base("mvra", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17200,7 +17196,7 @@ namespace BoxGenerator2
     */
     public class SampleDependencyBox : FullBox
     {
-        public override string FourCC { get; set; } = "sdep";
+        public const string FourCC = "sdep";
 
         protected ushort dependency_count;
         public ushort DependencyCount { get { return this.dependency_count; } set { this.dependency_count = value; } }
@@ -17208,7 +17204,7 @@ namespace BoxGenerator2
         protected short relative_sample_number;
         public short RelativeSampleNumber { get { return this.relative_sample_number; } set { this.relative_sample_number = value; } }
 
-        public SampleDependencyBox()
+        public SampleDependencyBox(byte version = 0) : base("sdep", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17284,7 +17280,7 @@ namespace BoxGenerator2
     */
     public class SeiInformationBox : Box
     {
-        public override string FourCC { get; set; } = "seii";
+        public const string FourCC = "seii";
 
         protected ushort numRequiredSEIs;
         public ushort NumRequiredSEIs { get { return this.numRequiredSEIs; } set { this.numRequiredSEIs = value; } }
@@ -17298,7 +17294,7 @@ namespace BoxGenerator2
         protected ushort notrequiredSEI_ID;
         public ushort NotrequiredSEIID { get { return this.notrequiredSEI_ID; } set { this.notrequiredSEI_ID = value; } }
 
-        public SeiInformationBox()
+        public SeiInformationBox() : base("seii")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17378,7 +17374,7 @@ namespace BoxGenerator2
     */
     public class SVCSubTrackLayerBox : FullBox
     {
-        public override string FourCC { get; set; } = "sstl";
+        public const string FourCC = "sstl";
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -17407,7 +17403,7 @@ namespace BoxGenerator2
         protected byte priority_id_range;
         public byte PriorityIdRange { get { return this.priority_id_range; } set { this.priority_id_range = value; } }
 
-        public SVCSubTrackLayerBox()
+        public SVCSubTrackLayerBox() : base("sstl", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17483,7 +17479,7 @@ namespace BoxGenerator2
     */
     public class MVCSubTrackMultiviewGroupBox : FullBox
     {
-        public override string FourCC { get; set; } = "stmg";
+        public const string FourCC = "stmg";
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -17491,7 +17487,7 @@ namespace BoxGenerator2
         protected uint MultiviewGroupId;
         public uint _MultiviewGroupId { get { return this.MultiviewGroupId; } set { this.MultiviewGroupId = value; } }
 
-        public MVCSubTrackMultiviewGroupBox()
+        public MVCSubTrackMultiviewGroupBox() : base("stmg", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17546,7 +17542,7 @@ namespace BoxGenerator2
     */
     public class SubTrackTierBox : FullBox
     {
-        public override string FourCC { get; set; } = "stti";
+        public const string FourCC = "stti";
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -17554,7 +17550,7 @@ namespace BoxGenerator2
         protected ushort tierID;
         public ushort TierID { get { return this.tierID; } set { this.tierID = value; } }
 
-        public SubTrackTierBox()
+        public SubTrackTierBox() : base("stti", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17608,7 +17604,7 @@ namespace BoxGenerator2
     */
     public class MultiviewGroupRelationBox : FullBox
     {
-        public override string FourCC { get; set; } = "swtc";
+        public const string FourCC = "swtc";
 
         protected uint num_entries;
         public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
@@ -17619,7 +17615,7 @@ namespace BoxGenerator2
         protected MultiviewRelationAttributeBox relation_attributes;
         public MultiviewRelationAttributeBox RelationAttributes { get { return this.relation_attributes; } set { this.relation_attributes = value; } }
 
-        public MultiviewGroupRelationBox()
+        public MultiviewGroupRelationBox(byte version = 0, uint flags = 0) : base("swtc", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17681,7 +17677,7 @@ namespace BoxGenerator2
     */
     public class TierBitRateBox : Box
     {
-        public override string FourCC { get; set; } = "tibr";
+        public const string FourCC = "tibr";
 
         protected uint baseBitRate;
         public uint BaseBitRate { get { return this.baseBitRate; } set { this.baseBitRate = value; } }
@@ -17701,7 +17697,7 @@ namespace BoxGenerator2
         protected uint tierAvgBitRate;
         public uint TierAvgBitRate { get { return this.tierAvgBitRate; } set { this.tierAvgBitRate = value; } }
 
-        public TierBitRateBox()
+        public TierBitRateBox() : base("tibr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17764,7 +17760,7 @@ namespace BoxGenerator2
     */
     public class TierInfoBox : Box
     {
-        public override string FourCC { get; set; } = "tiri";
+        public const string FourCC = "tiri";
 
         protected ushort tierID;
         public ushort TierID { get { return this.tierID; } set { this.tierID = value; } }
@@ -17799,7 +17795,7 @@ namespace BoxGenerator2
         protected ushort frameRate;
         public ushort FrameRate { get { return this.frameRate; } set { this.frameRate = value; } }
 
-        public TierInfoBox()
+        public TierInfoBox() : base("tiri")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17871,7 +17867,7 @@ namespace BoxGenerator2
     */
     public class TileSubTrackGroupBox : FullBox
     {
-        public override string FourCC { get; set; } = "tstb";
+        public const string FourCC = "tstb";
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -17879,7 +17875,7 @@ namespace BoxGenerator2
         protected ushort tileGroupID;
         public ushort TileGroupID { get { return this.tileGroupID; } set { this.tileGroupID = value; } }
 
-        public TileSubTrackGroupBox()
+        public TileSubTrackGroupBox() : base("tstb", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17931,12 +17927,12 @@ namespace BoxGenerator2
     */
     public class MultiviewSceneInfoBox : Box
     {
-        public override string FourCC { get; set; } = "vwdi";
+        public const string FourCC = "vwdi";
 
         protected byte max_disparity;
         public byte MaxDisparity { get { return this.max_disparity; } set { this.max_disparity = value; } }
 
-        public MultiviewSceneInfoBox()
+        public MultiviewSceneInfoBox() : base("vwdi")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -17973,7 +17969,7 @@ namespace BoxGenerator2
     */
     public class MVCDConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "mvdC";
+        public const string FourCC = "mvdC";
 
         protected MVDDecoderConfigurationRecord MVDConfig;
         public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
@@ -17981,7 +17977,7 @@ namespace BoxGenerator2
         protected MVDDepthResolutionBox mvdDepthRes;  // Optional
         public MVDDepthResolutionBox MvdDepthRes { get { return this.mvdDepthRes; } set { this.mvdDepthRes = value; } }
 
-        public MVCDConfigurationBox()
+        public MVCDConfigurationBox() : base("mvdC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18023,7 +18019,7 @@ namespace BoxGenerator2
     */
     public class A3DConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "a3dC";
+        public const string FourCC = "a3dC";
 
         protected MVDDecoderConfigurationRecord MVDConfig;
         public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
@@ -18031,7 +18027,7 @@ namespace BoxGenerator2
         protected MVDDepthResolutionBox mvdDepthRes;  // Optional
         public MVDDepthResolutionBox MvdDepthRes { get { return this.mvdDepthRes; } set { this.mvdDepthRes = value; } }
 
-        public A3DConfigurationBox()
+        public A3DConfigurationBox() : base("a3dC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18093,7 +18089,7 @@ namespace BoxGenerator2
     */
     public class ViewIdentifierBox : FullBox
     {
-        public override string FourCC { get; set; } = "vwid";
+        public const string FourCC = "vwid";
 
         protected byte reserved6 = 0;
         public byte Reserved6 { get { return this.reserved6; } set { this.reserved6 = value; } }
@@ -18146,7 +18142,7 @@ namespace BoxGenerator2
         protected ushort[][] ref_view_id;
         public ushort[][] RefViewId { get { return this.ref_view_id; } set { this.ref_view_id = value; } }
 
-        public ViewIdentifierBox()
+        public ViewIdentifierBox(byte version = 0, uint flags = 0) : base("vwid", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18254,12 +18250,12 @@ namespace BoxGenerator2
     */
     public class MVCConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "mvcC";
+        public const string FourCC = "mvcC";
 
         protected MVCDecoderConfigurationRecord MVCConfig;
         public MVCDecoderConfigurationRecord _MVCConfig { get { return this.MVCConfig; } set { this.MVCConfig = value; } }
 
-        public MVCConfigurationBox()
+        public MVCConfigurationBox() : base("mvcC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18295,12 +18291,12 @@ namespace BoxGenerator2
     */
     public class AVCConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "avcC";
+        public const string FourCC = "avcC";
 
         protected AVCDecoderConfigurationRecord AVCConfig;
         public AVCDecoderConfigurationRecord _AVCConfig { get { return this.AVCConfig; } set { this.AVCConfig = value; } }
 
-        public AVCConfigurationBox()
+        public AVCConfigurationBox() : base("avcC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18336,12 +18332,12 @@ namespace BoxGenerator2
     */
     public class HEVCConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "hvcC";
+        public const string FourCC = "hvcC";
 
         protected HEVCDecoderConfigurationRecord HEVCConfig;
         public HEVCDecoderConfigurationRecord _HEVCConfig { get { return this.HEVCConfig; } set { this.HEVCConfig = value; } }
 
-        public HEVCConfigurationBox()
+        public HEVCConfigurationBox() : base("hvcC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18377,12 +18373,12 @@ namespace BoxGenerator2
     */
     public class LHEVCConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "lhvC";
+        public const string FourCC = "lhvC";
 
         protected LHEVCDecoderConfigurationRecord LHEVCConfig;
         public LHEVCDecoderConfigurationRecord _LHEVCConfig { get { return this.LHEVCConfig; } set { this.LHEVCConfig = value; } }
 
-        public LHEVCConfigurationBox()
+        public LHEVCConfigurationBox() : base("lhvC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18418,12 +18414,12 @@ namespace BoxGenerator2
     */
     public class MPEG4ExtensionDescriptorsBox : Box
     {
-        public override string FourCC { get; set; } = "m4ds";
+        public const string FourCC = "m4ds";
 
         protected Descriptor[] Descr;
         public Descriptor[] _Descr { get { return this.Descr; } set { this.Descr = value; } }
 
-        public MPEG4ExtensionDescriptorsBox()
+        public MPEG4ExtensionDescriptorsBox() : base("m4ds")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18459,12 +18455,12 @@ namespace BoxGenerator2
     */
     public class SVCConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "svcC";
+        public const string FourCC = "svcC";
 
         protected SVCDecoderConfigurationRecord SVCConfig;
         public SVCDecoderConfigurationRecord _SVCConfig { get { return this.SVCConfig; } set { this.SVCConfig = value; } }
 
-        public SVCConfigurationBox()
+        public SVCConfigurationBox() : base("svcC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18501,12 +18497,12 @@ namespace BoxGenerator2
     */
     public class ScalabilityInformationSEIBox : Box
     {
-        public override string FourCC { get; set; } = "seib";
+        public const string FourCC = "seib";
 
         protected byte[] scalinfosei;
         public byte[] Scalinfosei { get { return this.scalinfosei; } set { this.scalinfosei = value; } }
 
-        public ScalabilityInformationSEIBox()
+        public ScalabilityInformationSEIBox(ulong size = 0) : base("seib", size)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18544,7 +18540,7 @@ namespace BoxGenerator2
     */
     public class SVCPriorityAssignmentBox : Box
     {
-        public override string FourCC { get; set; } = "svcP";
+        public const string FourCC = "svcP";
 
         protected byte method_count;
         public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
@@ -18552,7 +18548,7 @@ namespace BoxGenerator2
         protected string[] PriorityAssignmentURI;
         public string[] _PriorityAssignmentURI { get { return this.PriorityAssignmentURI; } set { this.PriorityAssignmentURI = value; } }
 
-        public SVCPriorityAssignmentBox()
+        public SVCPriorityAssignmentBox() : base("svcP")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18592,12 +18588,12 @@ namespace BoxGenerator2
     */
     public class ViewScalabilityInformationSEIBox : Box
     {
-        public override string FourCC { get; set; } = "vsib";
+        public const string FourCC = "vsib";
 
         protected byte[] mvcscalinfosei;
         public byte[] Mvcscalinfosei { get { return this.mvcscalinfosei; } set { this.mvcscalinfosei = value; } }
 
-        public ViewScalabilityInformationSEIBox()
+        public ViewScalabilityInformationSEIBox(ulong size = 0) : base("vsib", size)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18634,12 +18630,12 @@ namespace BoxGenerator2
     */
     public class MVDScalabilityInformationSEIBox : Box
     {
-        public override string FourCC { get; set; } = "3sib";
+        public const string FourCC = "3sib";
 
         protected byte[] mvdscalinfosei;
         public byte[] Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
 
-        public MVDScalabilityInformationSEIBox()
+        public MVDScalabilityInformationSEIBox(ulong size = 0) : base("3sib", size)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18677,7 +18673,7 @@ namespace BoxGenerator2
     */
     public class MVCViewPriorityAssignmentBox : Box
     {
-        public override string FourCC { get; set; } = "mvcP";
+        public const string FourCC = "mvcP";
 
         protected byte method_count;
         public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
@@ -18685,7 +18681,7 @@ namespace BoxGenerator2
         protected string[] PriorityAssignmentURI;
         public string[] _PriorityAssignmentURI { get { return this.PriorityAssignmentURI; } set { this.PriorityAssignmentURI = value; } }
 
-        public MVCViewPriorityAssignmentBox()
+        public MVCViewPriorityAssignmentBox() : base("mvcP")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18724,12 +18720,12 @@ namespace BoxGenerator2
     */
     public class HEVCTileConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "hvtC";
+        public const string FourCC = "hvtC";
 
         protected HEVCTileTierLevelConfigurationRecord HEVCTileTierLevelConfig;
         public HEVCTileTierLevelConfigurationRecord _HEVCTileTierLevelConfig { get { return this.HEVCTileTierLevelConfig; } set { this.HEVCTileTierLevelConfig = value; } }
 
-        public HEVCTileConfigurationBox()
+        public HEVCTileConfigurationBox() : base("hvtC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18765,12 +18761,12 @@ namespace BoxGenerator2
     */
     public class EVCConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "evcC";
+        public const string FourCC = "evcC";
 
         protected EVCDecoderConfigurationRecord EVCConfig;
         public EVCDecoderConfigurationRecord _EVCConfig { get { return this.EVCConfig; } set { this.EVCConfig = value; } }
 
-        public EVCConfigurationBox()
+        public EVCConfigurationBox() : base("evcC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18812,7 +18808,7 @@ namespace BoxGenerator2
     */
     public class SVCPriorityLayerInfoBox : Box
     {
-        public override string FourCC { get; set; } = "qlif";
+        public const string FourCC = "qlif";
 
         protected byte pr_layer_num;
         public byte PrLayerNum { get { return this.pr_layer_num; } set { this.pr_layer_num = value; } }
@@ -18829,7 +18825,7 @@ namespace BoxGenerator2
         protected uint avg_bitrate;
         public uint AvgBitrate { get { return this.avg_bitrate; } set { this.avg_bitrate = value; } }
 
-        public SVCPriorityLayerInfoBox()
+        public SVCPriorityLayerInfoBox() : base("qlif")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18889,12 +18885,12 @@ namespace BoxGenerator2
     */
     public class VvcConfigurationBox : FullBox
     {
-        public override string FourCC { get; set; } = "vvcC";
+        public const string FourCC = "vvcC";
 
         protected VvcDecoderConfigurationRecord VvcConfig;
         public VvcDecoderConfigurationRecord _VvcConfig { get { return this.VvcConfig; } set { this.VvcConfig = value; } }
 
-        public VvcConfigurationBox()
+        public VvcConfigurationBox(byte version = 0, uint flags = 0) : base("vvcC", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18931,7 +18927,7 @@ namespace BoxGenerator2
     */
     public class VvcNALUConfigBox : FullBox
     {
-        public override string FourCC { get; set; } = "vvnC";
+        public const string FourCC = "vvnC";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -18939,7 +18935,7 @@ namespace BoxGenerator2
         protected byte LengthSizeMinusOne;
         public byte _LengthSizeMinusOne { get { return this.LengthSizeMinusOne; } set { this.LengthSizeMinusOne = value; } }
 
-        public VvcNALUConfigBox()
+        public VvcNALUConfigBox(byte version = 0, uint flags = 0) : base("vvnC", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -18990,7 +18986,7 @@ namespace BoxGenerator2
     */
     public class DefaultHevcExtractorConstructorBox : FullBox
     {
-        public override string FourCC { get; set; } = "dhec";
+        public const string FourCC = "dhec";
 
         protected uint num_entries;
         public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
@@ -19013,7 +19009,7 @@ namespace BoxGenerator2
         protected NALUStartInlineConstructor NALUStartInlineConstructor;
         public NALUStartInlineConstructor _NALUStartInlineConstructor { get { return this.NALUStartInlineConstructor; } set { this.NALUStartInlineConstructor = value; } }
 
-        public DefaultHevcExtractorConstructorBox()
+        public DefaultHevcExtractorConstructorBox() : base("dhec")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19136,7 +19132,7 @@ namespace BoxGenerator2
     */
     public class SVCMetadataSampleConfigBox : FullBox
     {
-        public override string FourCC { get; set; } = "svmC";
+        public const string FourCC = "svmC";
 
         protected byte sample_statement_type;
         public byte SampleStatementType { get { return this.sample_statement_type; } set { this.sample_statement_type = value; } }
@@ -19156,7 +19152,7 @@ namespace BoxGenerator2
         protected string statement_namespace;
         public string StatementNamespace { get { return this.statement_namespace; } set { this.statement_namespace = value; } }
 
-        public SVCMetadataSampleConfigBox()
+        public SVCMetadataSampleConfigBox() : base("svmC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19225,12 +19221,12 @@ namespace BoxGenerator2
     */
     public class EVCSliceComponentTrackConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "evsC";
+        public const string FourCC = "evsC";
 
         protected EVCSliceComponentTrackConfigurationRecord config;
         public EVCSliceComponentTrackConfigurationRecord Config { get { return this.config; } set { this.config = value; } }
 
-        public EVCSliceComponentTrackConfigurationBox()
+        public EVCSliceComponentTrackConfigurationBox() : base("evsC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19266,12 +19262,12 @@ namespace BoxGenerator2
     */
     public class WebVTTConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "vttC";
+        public const string FourCC = "vttC";
 
         protected string config;
         public string Config { get { return this.config; } set { this.config = value; } }
 
-        public WebVTTConfigurationBox()
+        public WebVTTConfigurationBox() : base("vttC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19307,12 +19303,12 @@ namespace BoxGenerator2
     */
     public class WebVTTSourceLabelBox : Box
     {
-        public override string FourCC { get; set; } = "vlab";
+        public const string FourCC = "vlab";
 
         protected string source_label;
         public string SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
 
-        public WebVTTSourceLabelBox()
+        public WebVTTSourceLabelBox() : base("vlab")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19350,7 +19346,7 @@ namespace BoxGenerator2
     */
     public class WVTTSampleEntry : PlainTextSampleEntry
     {
-        public override string FourCC { get; set; } = "wvtt";
+        public const string FourCC = "wvtt";
 
         protected WebVTTConfigurationBox config;
         public WebVTTConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -19361,7 +19357,7 @@ namespace BoxGenerator2
         protected BitRateBox BitRateBox;  //  optional
         public BitRateBox _BitRateBox { get { return this.BitRateBox; } set { this.BitRateBox = value; } }
 
-        public WVTTSampleEntry()
+        public WVTTSampleEntry() : base("wvtt")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19406,12 +19402,12 @@ namespace BoxGenerator2
     */
     public class AuxiliaryTypeInfoBox : FullBox
     {
-        public override string FourCC { get; set; } = "auxi";
+        public const string FourCC = "auxi";
 
         protected string aux_track_type;
         public string AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
 
-        public AuxiliaryTypeInfoBox()
+        public AuxiliaryTypeInfoBox() : base("auxi", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19451,7 +19447,7 @@ namespace BoxGenerator2
     */
     public class CodingConstraintsBox : FullBox
     {
-        public override string FourCC { get; set; } = "ccst";
+        public const string FourCC = "ccst";
 
         protected bool all_ref_pics_intra;
         public bool AllRefPicsIntra { get { return this.all_ref_pics_intra; } set { this.all_ref_pics_intra = value; } }
@@ -19465,7 +19461,7 @@ namespace BoxGenerator2
         protected uint reserved;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public CodingConstraintsBox()
+        public CodingConstraintsBox(byte version = 0, uint flags = 0) : base("ccst", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19521,7 +19517,7 @@ namespace BoxGenerator2
     */
     public class MD5IntegrityBox : FullBox
     {
-        public override string FourCC { get; set; } = "md5i";
+        public const string FourCC = "md5i";
 
         protected byte[] input_MD5;
         public byte[] InputMD5 { get { return this.input_MD5; } set { this.input_MD5 = value; } }
@@ -19541,7 +19537,7 @@ namespace BoxGenerator2
         protected uint[] group_description_index;
         public uint[] GroupDescriptionIndex { get { return this.group_description_index; } set { this.group_description_index = value; } }
 
-        public MD5IntegrityBox()
+        public MD5IntegrityBox(byte version = 0, uint flags = 0) : base("md5i", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19698,7 +19694,7 @@ namespace BoxGenerator2
         protected ChannelLayout ChannelLayout0;
         public ChannelLayout _ChannelLayout0 { get { return this.ChannelLayout0; } set { this.ChannelLayout0 = value; } }
 
-        public AudioSampleEntry()
+        public AudioSampleEntry(string codingname = "") : base(codingname)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19854,7 +19850,7 @@ namespace BoxGenerator2
         protected ChannelLayout ChannelLayout0;
         public ChannelLayout _ChannelLayout0 { get { return this.ChannelLayout0; } set { this.ChannelLayout0 = value; } }
 
-        public AudioSampleEntryV1()
+        public AudioSampleEntryV1(string codingname = "") : base(codingname)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19943,7 +19939,7 @@ namespace BoxGenerator2
     {
 
 
-        public FontSampleEntry()
+        public FontSampleEntry(string codingname = "") : base(codingname)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -19980,7 +19976,7 @@ namespace BoxGenerator2
     {
 
 
-        public MetaDataSampleEntry()
+        public MetaDataSampleEntry(string codingname = "") : base(codingname)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20024,9 +20020,9 @@ namespace BoxGenerator2
     */
     public class GenericSampleEntry : Box
     {
-        public override string FourCC { get; set; } = "encv";
+        public const string FourCC = "encv";
 
-        public GenericSampleEntry()
+        public GenericSampleEntry() : base("encv")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20099,7 +20095,7 @@ namespace BoxGenerator2
     */
     public class XMLMetaDataSampleEntry : MetaDataSampleEntry
     {
-        public override string FourCC { get; set; } = "metx";
+        public const string FourCC = "metx";
 
         protected string content_encoding;  //  optional
         public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -20110,7 +20106,7 @@ namespace BoxGenerator2
         protected string schema_location;  //  optional
         public string SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
 
-        public XMLMetaDataSampleEntry()
+        public XMLMetaDataSampleEntry() : base("metx")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20154,7 +20150,7 @@ namespace BoxGenerator2
     */
     public class TextMetaDataSampleEntry : MetaDataSampleEntry
     {
-        public override string FourCC { get; set; } = "mett";
+        public const string FourCC = "mett";
 
         protected string content_encoding;  //  optional
         public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -20165,7 +20161,7 @@ namespace BoxGenerator2
         protected TextConfigBox TextConfigBox;  //  optional
         public TextConfigBox _TextConfigBox { get { return this.TextConfigBox; } set { this.TextConfigBox = value; } }
 
-        public TextMetaDataSampleEntry()
+        public TextMetaDataSampleEntry() : base("mett")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20210,7 +20206,7 @@ namespace BoxGenerator2
     */
     public class URIMetaSampleEntry : MetaDataSampleEntry
     {
-        public override string FourCC { get; set; } = "urim";
+        public const string FourCC = "urim";
 
         protected URIBox the_label;
         public URIBox TheLabel { get { return this.the_label; } set { this.the_label = value; } }
@@ -20218,7 +20214,7 @@ namespace BoxGenerator2
         protected URIInitBox init;  //  optional
         public URIInitBox Init { get { return this.init; } set { this.init = value; } }
 
-        public URIMetaSampleEntry()
+        public URIMetaSampleEntry() : base("urim")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20261,7 +20257,7 @@ namespace BoxGenerator2
     */
     public class BoxedMetaDataSampleEntry : MetaDataSampleEntry
     {
-        public override string FourCC { get; set; } = "mebx";
+        public const string FourCC = "mebx";
 
         protected MetaDataKeyTableBox MetaDataKeyTableBox;  //  mandatory
         public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return this.MetaDataKeyTableBox; } set { this.MetaDataKeyTableBox = value; } }
@@ -20269,7 +20265,7 @@ namespace BoxGenerator2
         protected BitRateBox BitRateBox;  //  optional
         public BitRateBox _BitRateBox { get { return this.BitRateBox; } set { this.BitRateBox = value; } }
 
-        public BoxedMetaDataSampleEntry()
+        public BoxedMetaDataSampleEntry() : base("mebx")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20313,7 +20309,7 @@ namespace BoxGenerator2
     */
     public class FDHintSampleEntry : HintSampleEntry
     {
-        public override string FourCC { get; set; } = "fdp ";
+        public const string FourCC = "fdp ";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -20327,7 +20323,7 @@ namespace BoxGenerator2
         protected ushort FEC_overhead;
         public ushort FECOverhead { get { return this.FEC_overhead; } set { this.FEC_overhead = value; } }
 
-        public FDHintSampleEntry()
+        public FDHintSampleEntry() : base("fdp ")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20375,7 +20371,7 @@ namespace BoxGenerator2
     */
     public class IncompleteAVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "icpv";
+        public const string FourCC = "icpv";
 
         protected CompleteTrackInfoBox CompleteTrackInfoBox;
         public CompleteTrackInfoBox _CompleteTrackInfoBox { get { return this.CompleteTrackInfoBox; } set { this.CompleteTrackInfoBox = value; } }
@@ -20383,7 +20379,7 @@ namespace BoxGenerator2
         protected AVCConfigurationBox config;
         public AVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
-        public IncompleteAVCSampleEntry()
+        public IncompleteAVCSampleEntry() : base("icpv")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20425,12 +20421,12 @@ namespace BoxGenerator2
     */
     public class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEntry
     {
-        public override string FourCC { get; set; } = "pm2t";
+        public const string FourCC = "pm2t";
 
         protected ProtectionSchemeInfoBox SchemeInformation;
         public ProtectionSchemeInfoBox _SchemeInformation { get { return this.SchemeInformation; } set { this.SchemeInformation = value; } }
 
-        public ProtectedMPEG2TransportStreamSampleEntry()
+        public ProtectedMPEG2TransportStreamSampleEntry() : base("pm2t")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20467,12 +20463,12 @@ namespace BoxGenerator2
     */
     public class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
     {
-        public override string FourCC { get; set; } = "prtp";
+        public const string FourCC = "prtp";
 
         protected ProtectionSchemeInfoBox SchemeInformation;
         public ProtectionSchemeInfoBox _SchemeInformation { get { return this.SchemeInformation; } set { this.SchemeInformation = value; } }
 
-        public ProtectedRtpReceptionHintSampleEntry()
+        public ProtectedRtpReceptionHintSampleEntry() : base("prtp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20506,9 +20502,9 @@ namespace BoxGenerator2
     */
     public class MPEG2TSReceptionSampleEntry : MPEG2TSSampleEntry
     {
-        public override string FourCC { get; set; } = "rm2t";
+        public const string FourCC = "rm2t";
 
-        public MPEG2TSReceptionSampleEntry()
+        public MPEG2TSReceptionSampleEntry() : base("rm2t")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20543,7 +20539,7 @@ namespace BoxGenerator2
     */
     public class ReceivedRtpHintSampleEntry : HintSampleEntry
     {
-        public override string FourCC { get; set; } = "rrtp";
+        public const string FourCC = "rrtp";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -20554,7 +20550,7 @@ namespace BoxGenerator2
         protected uint maxpacketsize;
         public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
-        public ReceivedRtpHintSampleEntry()
+        public ReceivedRtpHintSampleEntry() : base("rrtp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20600,7 +20596,7 @@ namespace BoxGenerator2
     */
     public class ReceivedSrtpHintSampleEntry : HintSampleEntry
     {
-        public override string FourCC { get; set; } = "rsrp";
+        public const string FourCC = "rsrp";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -20611,7 +20607,7 @@ namespace BoxGenerator2
         protected uint maxpacketsize;
         public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
-        public ReceivedSrtpHintSampleEntry()
+        public ReceivedSrtpHintSampleEntry() : base("rsrp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20651,9 +20647,9 @@ namespace BoxGenerator2
     */
     public class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
     {
-        public override string FourCC { get; set; } = "sm2t";
+        public const string FourCC = "sm2t";
 
-        public MPEG2TSServerSampleEntry()
+        public MPEG2TSServerSampleEntry() : base("sm2t")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20688,7 +20684,7 @@ namespace BoxGenerator2
     */
     public class SrtpHintSampleEntry : HintSampleEntry
     {
-        public override string FourCC { get; set; } = "srtp";
+        public const string FourCC = "srtp";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -20699,7 +20695,7 @@ namespace BoxGenerator2
         protected uint maxpacketsize;
         public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
-        public SrtpHintSampleEntry()
+        public SrtpHintSampleEntry() : base("srtp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20749,7 +20745,7 @@ namespace BoxGenerator2
         protected Box[] otherboxes;
         public Box[] Otherboxes { get { return this.otherboxes; } set { this.otherboxes = value; } }
 
-        public HapticSampleEntry()
+        public HapticSampleEntry(string codingname = "") : base(codingname)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20792,7 +20788,7 @@ namespace BoxGenerator2
         protected byte[] compressorname;  //  other boxes from derived specifications
         public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
 
-        public VolumetricVisualSampleEntry()
+        public VolumetricVisualSampleEntry(string codingname = "") : base(codingname)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20843,7 +20839,7 @@ namespace BoxGenerator2
     */
     public class VisualSampleEntry : SampleEntry
     {
-        public override string FourCC { get; set; } = "resv";
+        public const string FourCC = "resv";
 
         protected ushort pre_defined = 0;
         public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -20887,7 +20883,7 @@ namespace BoxGenerator2
         protected PixelAspectRatioBox pasp;  //  optional
         public PixelAspectRatioBox Pasp { get { return this.pasp; } set { this.pasp = value; } }
 
-        public VisualSampleEntry()
+        public VisualSampleEntry(string boxtype = "resv") : base("resv")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -20966,7 +20962,7 @@ namespace BoxGenerator2
     */
     public class RtpHintSampleEntry : HintSampleEntry
     {
-        public override string FourCC { get; set; } = "rtp ";
+        public const string FourCC = "rtp ";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -20977,7 +20973,7 @@ namespace BoxGenerator2
         protected uint maxpacketsize;
         public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
-        public RtpHintSampleEntry()
+        public RtpHintSampleEntry() : base("rtp ")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21037,7 +21033,7 @@ namespace BoxGenerator2
         protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
         public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
 
-        public EntityToGroupBox()
+        public EntityToGroupBox(string grouping_type, byte version, uint flags) : base(grouping_type, version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21090,9 +21086,9 @@ namespace BoxGenerator2
     */
     public class BrandProperty : GeneralTypeBox
     {
-        public override string FourCC { get; set; } = "brnd";
+        public const string FourCC = "brnd";
 
-        public BrandProperty()
+        public BrandProperty() : base("brnd")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21143,7 +21139,7 @@ namespace BoxGenerator2
         protected ushort to_item_ID;
         public ushort ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
 
-        public SingleItemTypeReferenceBox()
+        public SingleItemTypeReferenceBox(string referenceType) : base(referenceType)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21212,7 +21208,7 @@ namespace BoxGenerator2
         protected uint to_item_ID;
         public uint ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
 
-        public SingleItemTypeReferenceBoxLarge()
+        public SingleItemTypeReferenceBoxLarge(string referenceType) : base(referenceType)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21276,7 +21272,7 @@ namespace BoxGenerator2
     */
     public class AlternativeStartupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "alst";
+        public const string FourCC = "alst";
 
         protected ushort roll_count;
         public ushort RollCount { get { return this.roll_count; } set { this.roll_count = value; } }
@@ -21293,7 +21289,7 @@ namespace BoxGenerator2
         protected ushort[] num_total_samples;
         public ushort[] NumTotalSamples { get { return this.num_total_samples; } set { this.num_total_samples = value; } }
 
-        public AlternativeStartupEntry()
+        public AlternativeStartupEntry() : base("alst")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21376,7 +21372,7 @@ namespace BoxGenerator2
     */
     public class VisualDRAPEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "drap";
+        public const string FourCC = "drap";
 
         protected byte DRAP_type;
         public byte DRAPType { get { return this.DRAP_type; } set { this.DRAP_type = value; } }
@@ -21384,7 +21380,7 @@ namespace BoxGenerator2
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public VisualDRAPEntry()
+        public VisualDRAPEntry() : base("drap")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21424,12 +21420,12 @@ namespace BoxGenerator2
     */
     public class AudioPreRollEntry : AudioSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "prol";
+        public const string FourCC = "prol";
 
         protected short roll_distance;
         public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
 
-        public AudioPreRollEntry()
+        public AudioPreRollEntry() : base("prol")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21467,7 +21463,7 @@ namespace BoxGenerator2
     */
     public class VisualRandomAccessEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "rap ";
+        public const string FourCC = "rap ";
 
         protected bool num_leading_samples_known;
         public bool NumLeadingSamplesKnown { get { return this.num_leading_samples_known; } set { this.num_leading_samples_known = value; } }
@@ -21475,7 +21471,7 @@ namespace BoxGenerator2
         protected byte num_leading_samples;
         public byte NumLeadingSamples { get { return this.num_leading_samples; } set { this.num_leading_samples = value; } }
 
-        public VisualRandomAccessEntry()
+        public VisualRandomAccessEntry() : base("rap ")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21526,7 +21522,7 @@ namespace BoxGenerator2
     */
     public class RateShareEntry : SampleGroupDescriptionEntry
     {
-        public override string FourCC { get; set; } = "rash";
+        public const string FourCC = "rash";
 
         protected ushort operation_point_count;
         public ushort OperationPointCount { get { return this.operation_point_count; } set { this.operation_point_count = value; } }
@@ -21549,7 +21545,7 @@ namespace BoxGenerator2
         protected byte discard_priority;
         public byte DiscardPriority { get { return this.discard_priority; } set { this.discard_priority = value; } }
 
-        public RateShareEntry()
+        public RateShareEntry() : base("rash")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21640,12 +21636,12 @@ namespace BoxGenerator2
     */
     public class AudioRollRecoveryEntry : AudioSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "roll";
+        public const string FourCC = "roll";
 
         protected short roll_distance;
         public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
 
-        public AudioRollRecoveryEntry()
+        public AudioRollRecoveryEntry() : base("roll")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21684,7 +21680,7 @@ namespace BoxGenerator2
     */
     public class SAPEntry : SampleGroupDescriptionEntry
     {
-        public override string FourCC { get; set; } = "sap ";
+        public const string FourCC = "sap ";
 
         protected bool dependent_flag;
         public bool DependentFlag { get { return this.dependent_flag; } set { this.dependent_flag = value; } }
@@ -21695,7 +21691,7 @@ namespace BoxGenerator2
         protected byte SAP_type;
         public byte SAPType { get { return this.SAP_type; } set { this.SAP_type = value; } }
 
-        public SAPEntry()
+        public SAPEntry() : base("sap ")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21742,7 +21738,7 @@ namespace BoxGenerator2
     */
     public class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
     {
-        public override string FourCC { get; set; } = "stmi";
+        public const string FourCC = "stmi";
 
         protected uint meta_box_handler_type;
         public uint MetaBoxHandlerType { get { return this.meta_box_handler_type; } set { this.meta_box_handler_type = value; } }
@@ -21753,7 +21749,7 @@ namespace BoxGenerator2
         protected uint[] item_id;
         public uint[] ItemId { get { return this.item_id; } set { this.item_id = value; } }
 
-        public SampleToMetadataItemEntry()
+        public SampleToMetadataItemEntry() : base("stmi")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21809,7 +21805,7 @@ namespace BoxGenerator2
     */
     public class TemporalLevelEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "tele";
+        public const string FourCC = "tele";
 
         protected bool level_independently_decodable;
         public bool LevelIndependentlyDecodable { get { return this.level_independently_decodable; } set { this.level_independently_decodable = value; } }
@@ -21817,7 +21813,7 @@ namespace BoxGenerator2
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public TemporalLevelEntry()
+        public TemporalLevelEntry() : base("tele")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21857,7 +21853,7 @@ namespace BoxGenerator2
     */
     public class PixelAspectRatioEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "pasr";
+        public const string FourCC = "pasr";
 
         protected uint hSpacing;
         public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
@@ -21865,7 +21861,7 @@ namespace BoxGenerator2
         protected uint vSpacing;
         public uint VSpacing { get { return this.vSpacing; } set { this.vSpacing = value; } }
 
-        public PixelAspectRatioEntry()
+        public PixelAspectRatioEntry() : base("pasr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -21917,7 +21913,7 @@ namespace BoxGenerator2
     */
     public class CleanApertureEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "casg";
+        public const string FourCC = "casg";
 
         protected uint cleanApertureWidthN;
         public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
@@ -21943,7 +21939,7 @@ namespace BoxGenerator2
         protected uint vertOffD;
         public uint VertOffD { get { return this.vertOffD; } set { this.vertOffD = value; } }
 
-        public CleanApertureEntry()
+        public CleanApertureEntry() : base("casg")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22003,12 +21999,12 @@ namespace BoxGenerator2
     */
     public class TrackGroupTypeBox : FullBox
     {
-        public override string FourCC { get; set; } = "msrc";
+        public const string FourCC = "msrc";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
-        public TrackGroupTypeBox()
+        public TrackGroupTypeBox(string boxtype = "msrc") : base("msrc", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22049,7 +22045,7 @@ namespace BoxGenerator2
     */
     public class StereoVideoGroupBox : TrackGroupTypeBox
     {
-        public override string FourCC { get; set; } = "ster";
+        public const string FourCC = "ster";
 
         protected bool left_view_flag;
         public bool LeftViewFlag { get { return this.left_view_flag; } set { this.left_view_flag = value; } }
@@ -22057,7 +22053,7 @@ namespace BoxGenerator2
         protected uint reserved;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public StereoVideoGroupBox()
+        public StereoVideoGroupBox() : base("ster")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22101,7 +22097,7 @@ namespace BoxGenerator2
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
 
-        public TrackReferenceTypeBox()
+        public TrackReferenceTypeBox(string reference_type) : base(reference_type)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22138,7 +22134,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "hvc1";
+        public const string FourCC = "hvc1";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22146,7 +22142,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public HEVCSampleEntry()
+        public HEVCSampleEntry() : base("hvc1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22192,7 +22188,7 @@ namespace BoxGenerator2
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
 
-        public HEVCLHVCSampleEntry()
+        public HEVCLHVCSampleEntry() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22229,7 +22225,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry_hvc2 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "hvc2";
+        public const string FourCC = "hvc2";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22237,7 +22233,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public HEVCSampleEntry_hvc2()
+        public HEVCSampleEntry_hvc2() : base("hvc2")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22279,7 +22275,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry_hvc3 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "hvc3";
+        public const string FourCC = "hvc3";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22287,7 +22283,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public HEVCSampleEntry_hvc3()
+        public HEVCSampleEntry_hvc3() : base("hvc3")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22329,7 +22325,7 @@ namespace BoxGenerator2
     */
     public class LHEVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "lhv1";
+        public const string FourCC = "lhv1";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
@@ -22337,7 +22333,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public LHEVCSampleEntry()
+        public LHEVCSampleEntry() : base("lhv1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22379,7 +22375,7 @@ namespace BoxGenerator2
     */
     public class LHEVCSampleEntry_lhe1 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "lhe1";
+        public const string FourCC = "lhe1";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
@@ -22387,7 +22383,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public LHEVCSampleEntry_lhe1()
+        public LHEVCSampleEntry_lhe1() : base("lhe1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22429,7 +22425,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry_hev1 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "hev1";
+        public const string FourCC = "hev1";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22437,7 +22433,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public HEVCSampleEntry_hev1()
+        public HEVCSampleEntry_hev1() : base("hev1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22479,7 +22475,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry_hev2 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "hev2";
+        public const string FourCC = "hev2";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22487,7 +22483,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public HEVCSampleEntry_hev2()
+        public HEVCSampleEntry_hev2() : base("hev2")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22529,7 +22525,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry_hev3 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "hev3";
+        public const string FourCC = "hev3";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22537,7 +22533,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public HEVCSampleEntry_hev3()
+        public HEVCSampleEntry_hev3() : base("hev3")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22578,12 +22574,12 @@ namespace BoxGenerator2
     */
     public class AVCParameterSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "avcp";
+        public const string FourCC = "avcp";
 
         protected AVCConfigurationBox config;
         public AVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
-        public AVCParameterSampleEntry()
+        public AVCParameterSampleEntry() : base("avcp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22630,7 +22626,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public AVCSampleEntry()
+        public AVCSampleEntry(string type) : base(type)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22677,7 +22673,7 @@ namespace BoxGenerator2
     */
     public class AVCMVCSampleEntry : AVCSampleEntry
     {
-        public override string FourCC { get; set; } = "avc1";
+        public const string FourCC = "avc1";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
@@ -22706,7 +22702,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public AVCMVCSampleEntry()
+        public AVCMVCSampleEntry() : base("avc1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22776,7 +22772,7 @@ namespace BoxGenerator2
     */
     public class AVCMVCSampleEntry_avc3 : AVCSampleEntry
     {
-        public override string FourCC { get; set; } = "avc3";
+        public const string FourCC = "avc3";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
@@ -22805,7 +22801,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public AVCMVCSampleEntry_avc3()
+        public AVCMVCSampleEntry_avc3() : base("avc3")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22876,7 +22872,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public AVC2SampleEntry()
+        public AVC2SampleEntry(string type) : base(type)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -22923,7 +22919,7 @@ namespace BoxGenerator2
     */
     public class AVC2MVCSampleEntry : AVC2SampleEntry
     {
-        public override string FourCC { get; set; } = "avc2";
+        public const string FourCC = "avc2";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
@@ -22952,7 +22948,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public AVC2MVCSampleEntry()
+        public AVC2MVCSampleEntry() : base("avc2")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23022,7 +23018,7 @@ namespace BoxGenerator2
     */
     public class AVC2MVCSampleEntry_avc4 : AVC2SampleEntry
     {
-        public override string FourCC { get; set; } = "avc4";
+        public const string FourCC = "avc4";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
@@ -23051,7 +23047,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public AVC2MVCSampleEntry_avc4()
+        public AVC2MVCSampleEntry_avc4() : base("avc4")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23122,7 +23118,7 @@ namespace BoxGenerator2
     */
     public class MVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "mvc1";
+        public const string FourCC = "mvc1";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return this.mvcconfig; } set { this.mvcconfig = value; } }
@@ -23154,7 +23150,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCSampleEntry()
+        public MVCSampleEntry() : base("mvc1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23228,7 +23224,7 @@ namespace BoxGenerator2
     */
     public class MVCSampleEntry_mvc2 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "mvc2";
+        public const string FourCC = "mvc2";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return this.mvcconfig; } set { this.mvcconfig = value; } }
@@ -23260,7 +23256,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCSampleEntry_mvc2()
+        public MVCSampleEntry_mvc2() : base("mvc2")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23334,7 +23330,7 @@ namespace BoxGenerator2
     */
     public class MVCSampleEntry_mvc3 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "mvc3";
+        public const string FourCC = "mvc3";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return this.mvcconfig; } set { this.mvcconfig = value; } }
@@ -23366,7 +23362,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCSampleEntry_mvc3()
+        public MVCSampleEntry_mvc3() : base("mvc3")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23440,7 +23436,7 @@ namespace BoxGenerator2
     */
     public class MVCSampleEntry_mvc4 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "mvc4";
+        public const string FourCC = "mvc4";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return this.mvcconfig; } set { this.mvcconfig = value; } }
@@ -23472,7 +23468,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCSampleEntry_mvc4()
+        public MVCSampleEntry_mvc4() : base("mvc4")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23544,7 +23540,7 @@ namespace BoxGenerator2
     */
     public class MVCDSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "mvd1";
+        public const string FourCC = "mvd1";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
@@ -23567,7 +23563,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCDSampleEntry()
+        public MVCDSampleEntry() : base("mvd1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23630,7 +23626,7 @@ namespace BoxGenerator2
     */
     public class MVCDSampleEntry_mvd2 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "mvd2";
+        public const string FourCC = "mvd2";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
@@ -23653,7 +23649,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCDSampleEntry_mvd2()
+        public MVCDSampleEntry_mvd2() : base("mvd2")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23716,7 +23712,7 @@ namespace BoxGenerator2
     */
     public class MVCDSampleEntry_mvd3 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "mvd3";
+        public const string FourCC = "mvd3";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
@@ -23739,7 +23735,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCDSampleEntry_mvd3()
+        public MVCDSampleEntry_mvd3() : base("mvd3")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23802,7 +23798,7 @@ namespace BoxGenerator2
     */
     public class MVCDSampleEntry_mvd4 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "mvd4";
+        public const string FourCC = "mvd4";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
@@ -23825,7 +23821,7 @@ namespace BoxGenerator2
         protected A3DConfigurationBox a3dconfig;  //  optional
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
 
-        public MVCDSampleEntry_mvd4()
+        public MVCDSampleEntry_mvd4() : base("mvd4")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23886,7 +23882,7 @@ namespace BoxGenerator2
     */
     public class A3DSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "a3d1";
+        public const string FourCC = "a3d1";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
@@ -23906,7 +23902,7 @@ namespace BoxGenerator2
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
-        public A3DSampleEntry()
+        public A3DSampleEntry() : base("a3d1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -23964,7 +23960,7 @@ namespace BoxGenerator2
     */
     public class A3DSampleEntry_a3d2 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "a3d2";
+        public const string FourCC = "a3d2";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
@@ -23984,7 +23980,7 @@ namespace BoxGenerator2
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
-        public A3DSampleEntry_a3d2()
+        public A3DSampleEntry_a3d2() : base("a3d2")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24042,7 +24038,7 @@ namespace BoxGenerator2
     */
     public class A3DSampleEntry_a3d3 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "a3d3";
+        public const string FourCC = "a3d3";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
@@ -24062,7 +24058,7 @@ namespace BoxGenerator2
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
-        public A3DSampleEntry_a3d3()
+        public A3DSampleEntry_a3d3() : base("a3d3")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24120,7 +24116,7 @@ namespace BoxGenerator2
     */
     public class A3DSampleEntry_a3d4 : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "a3d4";
+        public const string FourCC = "a3d4";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
@@ -24140,7 +24136,7 @@ namespace BoxGenerator2
         protected ExtrinsicCameraParametersBox extrinsic_camera_params;  //  optional
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.extrinsic_camera_params; } set { this.extrinsic_camera_params = value; } }
 
-        public A3DSampleEntry_a3d4()
+        public A3DSampleEntry_a3d4() : base("a3d4")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24195,7 +24191,7 @@ namespace BoxGenerator2
     */
     public class AVCSVCSampleEntry : AVCSampleEntry
     {
-        public override string FourCC { get; set; } = "'avc1' or 'avc3'";
+        public const string FourCC = "'avc1' or 'avc3'";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24206,7 +24202,7 @@ namespace BoxGenerator2
         protected SVCPriorityAssignmentBox method;  //  optional
         public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
 
-        public AVCSVCSampleEntry()
+        public AVCSVCSampleEntry() : base("'avc1' or 'avc3'")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24250,7 +24246,7 @@ namespace BoxGenerator2
     */
     public class AVC2SVCSampleEntry : AVC2SampleEntry
     {
-        public override string FourCC { get; set; } = "'avc2' or 'avc4'";
+        public const string FourCC = "'avc2' or 'avc4'";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24261,7 +24257,7 @@ namespace BoxGenerator2
         protected SVCPriorityAssignmentBox method;  //  optional
         public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
 
-        public AVC2SVCSampleEntry()
+        public AVC2SVCSampleEntry() : base("'avc2' or 'avc4'")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24307,7 +24303,7 @@ namespace BoxGenerator2
     */
     public class SVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "'svc1' or 'svc2'";
+        public const string FourCC = "'svc1' or 'svc2'";
 
         protected SVCConfigurationBox svcconfig;
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24321,7 +24317,7 @@ namespace BoxGenerator2
         protected SVCPriorityAssignmentBox method;  //  optional
         public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
 
-        public SVCSampleEntry()
+        public SVCSampleEntry() : base("'svc1' or 'svc2'")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24366,12 +24362,12 @@ namespace BoxGenerator2
     */
     public class HEVCTileSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "hvt1";
+        public const string FourCC = "hvt1";
 
         protected HEVCTileConfigurationBox config;  //  optional
         public HEVCTileConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
-        public HEVCTileSampleEntry()
+        public HEVCTileSampleEntry() : base("hvt1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24408,9 +24404,9 @@ namespace BoxGenerator2
     */
     public class LHEVCTileSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "lht1";
+        public const string FourCC = "lht1";
 
-        public LHEVCTileSampleEntry()
+        public LHEVCTileSampleEntry() : base("lht1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24443,12 +24439,12 @@ namespace BoxGenerator2
     */
     public class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "hvt3";
+        public const string FourCC = "hvt3";
 
         protected HEVCTileConfigurationBox config;  //  optional 
         public HEVCTileConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
-        public HEVCTileSSHInfoSampleEntry()
+        public HEVCTileSSHInfoSampleEntry() : base("hvt3")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24486,12 +24482,12 @@ namespace BoxGenerator2
     */
     public class HEVCSliceSegmentDataSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "hvt2";
+        public const string FourCC = "hvt2";
 
         protected HEVCTileConfigurationBox config;  //  optional
         public HEVCTileConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
-        public HEVCSliceSegmentDataSampleEntry()
+        public HEVCSliceSegmentDataSampleEntry() : base("hvt2")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24530,7 +24526,7 @@ namespace BoxGenerator2
     */
     public class VvcSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "'vvc1' or 'vvi1'";
+        public const string FourCC = "'vvc1' or 'vvi1'";
 
         protected VvcConfigurationBox config;
         public VvcConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -24538,7 +24534,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public VvcSampleEntry()
+        public VvcSampleEntry() : base("'vvc1' or 'vvi1'")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24577,12 +24573,12 @@ namespace BoxGenerator2
     */
     public class VvcSubpicSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "vvs1";
+        public const string FourCC = "vvs1";
 
         protected VvcNALUConfigBox config;
         public VvcNALUConfigBox Config { get { return this.config; } set { this.config = value; } }
 
-        public VvcSubpicSampleEntry()
+        public VvcSubpicSampleEntry() : base("vvs1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24620,12 +24616,12 @@ namespace BoxGenerator2
     */
     public class VvcNonVCLSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "vvcN";
+        public const string FourCC = "vvcN";
 
         protected VvcNALUConfigBox config;
         public VvcNALUConfigBox Config { get { return this.config; } set { this.config = value; } }
 
-        public VvcNonVCLSampleEntry()
+        public VvcNonVCLSampleEntry() : base("vvcN")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24664,7 +24660,7 @@ namespace BoxGenerator2
     */
     public class EVCSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "evc1";
+        public const string FourCC = "evc1";
 
         protected EVCConfigurationBox config;
         public EVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -24672,7 +24668,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public EVCSampleEntry()
+        public EVCSampleEntry() : base("evc1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24716,7 +24712,7 @@ namespace BoxGenerator2
     */
     public class SVCMetaDataSampleEntry : MetaDataSampleEntry
     {
-        public override string FourCC { get; set; } = "svcM";
+        public const string FourCC = "svcM";
 
         protected SVCMetadataSampleConfigBox config;
         public SVCMetadataSampleConfigBox Config { get { return this.config; } set { this.config = value; } }
@@ -24727,7 +24723,7 @@ namespace BoxGenerator2
         protected SVCPriorityLayerInfoBox priorities;  //  optional
         public SVCPriorityLayerInfoBox Priorities { get { return this.priorities; } set { this.priorities = value; } }
 
-        public SVCMetaDataSampleEntry()
+        public SVCMetaDataSampleEntry() : base("svcM")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24772,12 +24768,12 @@ namespace BoxGenerator2
     */
     public class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "'evs1' or 'evs2'";
+        public const string FourCC = "'evs1' or 'evs2'";
 
         protected EVCSliceComponentTrackConfigurationBox config;
         public EVCSliceComponentTrackConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
-        public EVCSliceComponentTrackSampleEntry()
+        public EVCSliceComponentTrackSampleEntry() : base("'evs1' or 'evs2'")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24820,7 +24816,7 @@ namespace BoxGenerator2
     */
     public class SubpicCommonGroupBox : EntityToGroupBox
     {
-        public override string FourCC { get; set; } = "acgl";
+        public const string FourCC = "acgl";
 
         protected bool level_is_present_flag;
         public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }
@@ -24840,7 +24836,7 @@ namespace BoxGenerator2
         protected ushort num_active_tracks;
         public ushort NumActiveTracks { get { return this.num_active_tracks; } set { this.num_active_tracks = value; } }
 
-        public SubpicCommonGroupBox()
+        public SubpicCommonGroupBox() : base("acgl", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24928,7 +24924,7 @@ namespace BoxGenerator2
     */
     public class SubpicMultipleGroupsBox : EntityToGroupBox
     {
-        public override string FourCC { get; set; } = "amgl";
+        public const string FourCC = "amgl";
 
         protected bool level_is_present_flag;
         public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }
@@ -24954,7 +24950,7 @@ namespace BoxGenerator2
         protected ushort[] num_active_tracks;
         public ushort[] NumActiveTracks { get { return this.num_active_tracks; } set { this.num_active_tracks = value; } }
 
-        public SubpicMultipleGroupsBox()
+        public SubpicMultipleGroupsBox() : base("amgl", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25112,7 +25108,7 @@ namespace BoxGenerator2
     */
     public class OperatingPointGroupBox : EntityToGroupBox
     {
-        public override string FourCC { get; set; } = "opeg";
+        public const string FourCC = "opeg";
 
         protected byte num_profile_tier_level_minus1;
         public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }
@@ -25213,7 +25209,7 @@ namespace BoxGenerator2
         protected byte entity_idx;
         public byte EntityIdx { get { return this.entity_idx; } set { this.entity_idx = value; } }
 
-        public OperatingPointGroupBox()
+        public OperatingPointGroupBox() : base("opeg", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25467,12 +25463,12 @@ namespace BoxGenerator2
     */
     public class SwitchableTracks : EntityToGroupBox
     {
-        public override string FourCC { get; set; } = "swtk";
+        public const string FourCC = "swtk";
 
         protected ushort[] track_switch_hierarchy_id;
         public ushort[] TrackSwitchHierarchyId { get { return this.track_switch_hierarchy_id; } set { this.track_switch_hierarchy_id = value; } }
 
-        public SwitchableTracks()
+        public SwitchableTracks() : base("swtk", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25525,7 +25521,7 @@ namespace BoxGenerator2
     */
     public class EntityToGroupBox_vvcb : FullBox
     {
-        public override string FourCC { get; set; } = "vvcb";
+        public const string FourCC = "vvcb";
 
         protected uint group_id;
         public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
@@ -25536,7 +25532,7 @@ namespace BoxGenerator2
         protected uint entity_id;  //  the remaining data may be specified for a particular grouping_type
         public uint EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
 
-        public EntityToGroupBox_vvcb()
+        public EntityToGroupBox_vvcb(byte version = 0, uint flags = 0) : base("vvcb", version, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25591,12 +25587,12 @@ namespace BoxGenerator2
     */
     public class AUDSampleEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "aud ";
+        public const string FourCC = "aud ";
 
         protected uint audNalUnit;
         public uint AudNalUnit { get { return this.audNalUnit; } set { this.audNalUnit = value; } }
 
-        public AUDSampleEntry()
+        public AUDSampleEntry() : base("aud ")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25637,7 +25633,7 @@ namespace BoxGenerator2
     */
     public class AVCLayerEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "avll";
+        public const string FourCC = "avll";
 
         protected byte layerNumber;
         public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
@@ -25654,7 +25650,7 @@ namespace BoxGenerator2
         protected ushort avgFrameRate;
         public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
 
-        public AVCLayerEntry()
+        public AVCLayerEntry() : base("avll")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25703,7 +25699,7 @@ namespace BoxGenerator2
     */
     public class DecodingCapabilityInformation : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "dcfi";
+        public const string FourCC = "dcfi";
 
         protected ushort dci_nal_unit_length;
         public ushort DciNalUnitLength { get { return this.dci_nal_unit_length; } set { this.dci_nal_unit_length = value; } }
@@ -25711,7 +25707,7 @@ namespace BoxGenerator2
         protected byte[] dci_nal_unit;
         public byte[] DciNalUnit { get { return this.dci_nal_unit; } set { this.dci_nal_unit = value; } }
 
-        public DecodingCapabilityInformation()
+        public DecodingCapabilityInformation() : base("dcfi")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25754,7 +25750,7 @@ namespace BoxGenerator2
     */
     public class DecodeRetimingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "dtrt";
+        public const string FourCC = "dtrt";
 
         protected byte tierCount;
         public byte TierCount { get { return this.tierCount; } set { this.tierCount = value; } }
@@ -25765,7 +25761,7 @@ namespace BoxGenerator2
         protected short delta;
         public short Delta { get { return this.delta; } set { this.delta = value; } }
 
-        public DecodeRetimingEntry()
+        public DecodeRetimingEntry() : base("dtrt")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25820,12 +25816,12 @@ namespace BoxGenerator2
     */
     public class EndOfBitstreamSampleEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "eob ";
+        public const string FourCC = "eob ";
 
         protected ushort eobNalUnit;
         public ushort EobNalUnit { get { return this.eobNalUnit; } set { this.eobNalUnit = value; } }
 
-        public EndOfBitstreamSampleEntry()
+        public EndOfBitstreamSampleEntry() : base("eob ")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25864,7 +25860,7 @@ namespace BoxGenerator2
     */
     public class EndOfSequenceSampleEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "eos ";
+        public const string FourCC = "eos ";
 
         protected byte num_eos_nal_unit_minus1;
         public byte NumEosNalUnitMinus1 { get { return this.num_eos_nal_unit_minus1; } set { this.num_eos_nal_unit_minus1 = value; } }
@@ -25872,7 +25868,7 @@ namespace BoxGenerator2
         protected ushort[] eosNalUnit;
         public ushort[] EosNalUnit { get { return this.eosNalUnit; } set { this.eosNalUnit = value; } }
 
-        public EndOfSequenceSampleEntry()
+        public EndOfSequenceSampleEntry() : base("eos ")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25927,7 +25923,7 @@ namespace BoxGenerator2
     */
     public class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "lbli";
+        public const string FourCC = "lbli";
 
         protected bool reserved = true;
         public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -25941,7 +25937,7 @@ namespace BoxGenerator2
         protected sbyte sample_offset;
         public sbyte SampleOffset { get { return this.sample_offset; } set { this.sample_offset = value; } }
 
-        public LhvcExternalBaseLayerInfo()
+        public LhvcExternalBaseLayerInfo() : base("lbli")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -25997,7 +25993,7 @@ namespace BoxGenerator2
     */
     public class LayerInfoGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "linf";
+        public const string FourCC = "linf";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -26029,7 +26025,7 @@ namespace BoxGenerator2
         protected byte sub_layer_presence_flags;
         public byte SubLayerPresenceFlags { get { return this.sub_layer_presence_flags; } set { this.sub_layer_presence_flags = value; } }
 
-        public LayerInfoGroupEntry()
+        public LayerInfoGroupEntry() : base("linf")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26111,7 +26107,7 @@ namespace BoxGenerator2
     */
     public class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "minp";
+        public const string FourCC = "minp";
 
         protected ushort num_mix_nalu_pic_idx;
         public ushort NumMixNaluPicIdx { get { return this.num_mix_nalu_pic_idx; } set { this.num_mix_nalu_pic_idx = value; } }
@@ -26128,7 +26124,7 @@ namespace BoxGenerator2
         protected byte pps_id;
         public byte PpsId { get { return this.pps_id; } set { this.pps_id = value; } }
 
-        public VvcMixedNALUnitTypePicEntry()
+        public VvcMixedNALUnitTypePicEntry() : base("minp")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26208,7 +26204,7 @@ namespace BoxGenerator2
     */
     public class MultiviewGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "mvif";
+        public const string FourCC = "mvif";
 
         protected byte groupID;
         public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -26255,7 +26251,7 @@ namespace BoxGenerator2
         protected ViewPriorityBox ViewPriorityBox;  //  optional
         public ViewPriorityBox _ViewPriorityBox { get { return this.ViewPriorityBox; } set { this.ViewPriorityBox = value; } }
 
-        public MultiviewGroupEntry()
+        public MultiviewGroupEntry() : base("mvif")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26367,7 +26363,7 @@ namespace BoxGenerator2
     */
     public class NALUMapEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "nalm";
+        public const string FourCC = "nalm";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -26393,7 +26389,7 @@ namespace BoxGenerator2
         protected ushort groupID;
         public ushort GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
-        public NALUMapEntry()
+        public NALUMapEntry() : base("nalm")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26522,12 +26518,12 @@ namespace BoxGenerator2
     */
     public class OperatingPointsInformation : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "oinf";
+        public const string FourCC = "oinf";
 
         protected OperatingPointsRecord oinf;
         public OperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
 
-        public OperatingPointsInformation()
+        public OperatingPointsInformation() : base("oinf")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26566,12 +26562,12 @@ namespace BoxGenerator2
     */
     public class OperatingPointDecodeTimeHint : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "opth";
+        public const string FourCC = "opth";
 
         protected int delta_time;
         public int DeltaTime { get { return this.delta_time; } set { this.delta_time = value; } }
 
-        public OperatingPointDecodeTimeHint()
+        public OperatingPointDecodeTimeHint() : base("opth")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26609,7 +26605,7 @@ namespace BoxGenerator2
     */
     public class ParameterSetNALUEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "pase";
+        public const string FourCC = "pase";
 
         protected ushort ps_nalu_length;
         public ushort PsNaluLength { get { return this.ps_nalu_length; } set { this.ps_nalu_length = value; } }
@@ -26617,7 +26613,7 @@ namespace BoxGenerator2
         protected byte[] ps_nal_unit;
         public byte[] PsNalUnit { get { return this.ps_nal_unit; } set { this.ps_nal_unit = value; } }
 
-        public ParameterSetNALUEntry()
+        public ParameterSetNALUEntry() : base("pase")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26660,7 +26656,7 @@ namespace BoxGenerator2
     */
     public class PSSampleGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "pss1";
+        public const string FourCC = "pss1";
 
         protected bool sps_present;
         public bool SpsPresent { get { return this.sps_present; } set { this.sps_present = value; } }
@@ -26674,7 +26670,7 @@ namespace BoxGenerator2
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public PSSampleGroupEntry()
+        public PSSampleGroupEntry() : base("pss1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26733,7 +26729,7 @@ namespace BoxGenerator2
     */
     public class VvcRectRegionOrderEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "rror";
+        public const string FourCC = "rror";
 
         protected bool subpic_id_info_flag;
         public bool SubpicIdInfoFlag { get { return this.subpic_id_info_flag; } set { this.subpic_id_info_flag = value; } }
@@ -26762,7 +26758,7 @@ namespace BoxGenerator2
         protected VVCSubpicIDRewritingInfomationStruct subpic_id_rewriting_info;
         public VVCSubpicIDRewritingInfomationStruct SubpicIdRewritingInfo { get { return this.subpic_id_rewriting_info; } set { this.subpic_id_rewriting_info = value; } }
 
-        public VvcRectRegionOrderEntry()
+        public VvcRectRegionOrderEntry() : base("rror")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -26895,7 +26891,7 @@ namespace BoxGenerator2
     */
     public class ScalableGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "scif";
+        public const string FourCC = "scif";
 
         protected byte groupID;
         public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -26957,7 +26953,7 @@ namespace BoxGenerator2
         protected TranscodingInfoBox TranscodingInfoBox;  //  optional
         public TranscodingInfoBox _TranscodingInfoBox { get { return this.TranscodingInfoBox; } set { this.TranscodingInfoBox = value; } }
 
-        public ScalableGroupEntry()
+        public ScalableGroupEntry() : base("scif")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27071,7 +27067,7 @@ namespace BoxGenerator2
     */
     public class ScalableNALUMapEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "scnm";
+        public const string FourCC = "scnm";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -27082,7 +27078,7 @@ namespace BoxGenerator2
         protected byte groupID;
         public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
-        public ScalableNALUMapEntry()
+        public ScalableNALUMapEntry() : base("scnm")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27146,7 +27142,7 @@ namespace BoxGenerator2
     */
     public class VvcSubpicIDEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "spid";
+        public const string FourCC = "spid";
 
         protected bool rect_region_flag;
         public bool RectRegionFlag { get { return this.rect_region_flag; } set { this.rect_region_flag = value; } }
@@ -27166,7 +27162,7 @@ namespace BoxGenerator2
         protected ushort[] groupID;
         public ushort[] GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
-        public VvcSubpicIDEntry()
+        public VvcSubpicIDEntry() : base("spid")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27254,12 +27250,12 @@ namespace BoxGenerator2
     */
     public class SubpicLevelInfoEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "spli";
+        public const string FourCC = "spli";
 
         protected byte level_idc;
         public byte LevelIdc { get { return this.level_idc; } set { this.level_idc = value; } }
 
-        public SubpicLevelInfoEntry()
+        public SubpicLevelInfoEntry() : base("spli")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27301,7 +27297,7 @@ namespace BoxGenerator2
     */
     public class VvcSubpicOrderEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "spor";
+        public const string FourCC = "spor";
 
         protected bool subpic_id_info_flag;
         public bool SubpicIdInfoFlag { get { return this.subpic_id_info_flag; } set { this.subpic_id_info_flag = value; } }
@@ -27315,7 +27311,7 @@ namespace BoxGenerator2
         protected VVCSubpicIDRewritingInfomationStruct subpic_id_rewriting_info;
         public VVCSubpicIDRewritingInfomationStruct SubpicIdRewritingInfo { get { return this.subpic_id_rewriting_info; } set { this.subpic_id_rewriting_info = value; } }
 
-        public VvcSubpicOrderEntry()
+        public VvcSubpicOrderEntry() : base("spor")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27384,9 +27380,9 @@ namespace BoxGenerator2
     */
     public class StepwiseTemporalLayerEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "stsa";
+        public const string FourCC = "stsa";
 
-        public StepwiseTemporalLayerEntry()
+        public StepwiseTemporalLayerEntry() : base("stsa")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27422,7 +27418,7 @@ namespace BoxGenerator2
     */
     public class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "sulm";
+        public const string FourCC = "sulm";
 
         protected uint groupID_info_4cc;
         public uint GroupIDInfo4cc { get { return this.groupID_info_4cc; } set { this.groupID_info_4cc = value; } }
@@ -27433,7 +27429,7 @@ namespace BoxGenerator2
         protected ushort groupID;
         public ushort GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
-        public VvcSubpicLayoutMapEntry()
+        public VvcSubpicLayoutMapEntry() : base("sulm")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27489,7 +27485,7 @@ namespace BoxGenerator2
     */
     public class SyncSampleEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "sync";
+        public const string FourCC = "sync";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -27497,7 +27493,7 @@ namespace BoxGenerator2
         protected byte NAL_unit_type;
         public byte NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
 
-        public SyncSampleEntry()
+        public SyncSampleEntry() : base("sync")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27558,7 +27554,7 @@ namespace BoxGenerator2
     */
     public class RectangularRegionGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "trif";
+        public const string FourCC = "trif";
 
         protected ushort groupID;
         public ushort GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -27602,7 +27598,7 @@ namespace BoxGenerator2
         protected ushort dependencyRectRegionGroupID;
         public ushort DependencyRectRegionGroupID { get { return this.dependencyRectRegionGroupID; } set { this.dependencyRectRegionGroupID = value; } }
 
-        public RectangularRegionGroupEntry()
+        public RectangularRegionGroupEntry() : base("trif")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27737,9 +27733,9 @@ namespace BoxGenerator2
     */
     public class TemporalSubLayerEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "tsas";
+        public const string FourCC = "tsas";
 
-        public TemporalSubLayerEntry()
+        public TemporalSubLayerEntry() : base("tsas")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27783,7 +27779,7 @@ namespace BoxGenerator2
     */
     public class TemporalLayerEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "tscl";
+        public const string FourCC = "tscl";
 
         protected byte temporalLayerId;
         public byte TemporalLayerId { get { return this.temporalLayerId; } set { this.temporalLayerId = value; } }
@@ -27818,7 +27814,7 @@ namespace BoxGenerator2
         protected ushort tlAvgFrameRate;
         public ushort TlAvgFrameRate { get { return this.tlAvgFrameRate; } set { this.tlAvgFrameRate = value; } }
 
-        public TemporalLayerEntry()
+        public TemporalLayerEntry() : base("tscl")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27885,12 +27881,12 @@ namespace BoxGenerator2
     */
     public class ViewPriorityEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "vipr";
+        public const string FourCC = "vipr";
 
         protected ViewPriorityBox ViewPriorityBox;
         public ViewPriorityBox _ViewPriorityBox { get { return this.ViewPriorityBox; } set { this.ViewPriorityBox = value; } }
 
-        public ViewPriorityEntry()
+        public ViewPriorityEntry() : base("vipr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27926,12 +27922,12 @@ namespace BoxGenerator2
     */
     public class VvcOperatingPointsInformation : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "vopi";
+        public const string FourCC = "vopi";
 
         protected VvcOperatingPointsRecord oinf;
         public VvcOperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
 
-        public VvcOperatingPointsInformation()
+        public VvcOperatingPointsInformation() : base("vopi")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -27970,12 +27966,12 @@ namespace BoxGenerator2
     */
     public class TrackGroupTypeBox_alte : FullBox
     {
-        public override string FourCC { get; set; } = "alte";
+        public const string FourCC = "alte";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
-        public TrackGroupTypeBox_alte()
+        public TrackGroupTypeBox_alte(string boxtype = "alte") : base("alte", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28017,12 +28013,12 @@ namespace BoxGenerator2
     */
     public class TrackGroupTypeBox_cstg : FullBox
     {
-        public override string FourCC { get; set; } = "cstg";
+        public const string FourCC = "cstg";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
-        public TrackGroupTypeBox_cstg()
+        public TrackGroupTypeBox_cstg(string boxtype = "cstg") : base("cstg", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28064,12 +28060,12 @@ namespace BoxGenerator2
     */
     public class TrackGroupTypeBox_snut : FullBox
     {
-        public override string FourCC { get; set; } = "snut";
+        public const string FourCC = "snut";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
-        public TrackGroupTypeBox_snut()
+        public TrackGroupTypeBox_snut(string boxtype = "snut") : base("snut", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28111,7 +28107,7 @@ namespace BoxGenerator2
     */
     public class AuxiliaryTypeProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "auxC";
+        public const string FourCC = "auxC";
 
         protected string aux_type;
         public string AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
@@ -28119,7 +28115,7 @@ namespace BoxGenerator2
         protected byte[] aux_subtype;  //  until the end of the box, the semantics depend on the aux_type value
         public byte[] AuxSubtype { get { return this.aux_subtype; } set { this.aux_subtype = value; } }
 
-        public AuxiliaryTypeProperty()
+        public AuxiliaryTypeProperty(byte version = 0, uint flags = 0) : base("auxC", 0, flags)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28160,7 +28156,7 @@ namespace BoxGenerator2
     */
     public class ImageMirror : ItemProperty
     {
-        public override string FourCC { get; set; } = "imir";
+        public const string FourCC = "imir";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -28168,7 +28164,7 @@ namespace BoxGenerator2
         protected bool axis;
         public bool Axis { get { return this.axis; } set { this.axis = value; } }
 
-        public ImageMirror()
+        public ImageMirror() : base("imir")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28209,7 +28205,7 @@ namespace BoxGenerator2
     */
     public class ImageRotation : ItemProperty
     {
-        public override string FourCC { get; set; } = "irot";
+        public const string FourCC = "irot";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -28217,7 +28213,7 @@ namespace BoxGenerator2
         protected byte angle;
         public byte Angle { get { return this.angle; } set { this.angle = value; } }
 
-        public ImageRotation()
+        public ImageRotation() : base("irot")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28259,7 +28255,7 @@ namespace BoxGenerator2
     */
     public class ImageSpatialExtentsProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "ispe";
+        public const string FourCC = "ispe";
 
         protected uint image_width;
         public uint ImageWidth { get { return this.image_width; } set { this.image_width = value; } }
@@ -28267,7 +28263,7 @@ namespace BoxGenerator2
         protected uint image_height;
         public uint ImageHeight { get { return this.image_height; } set { this.image_height = value; } }
 
-        public ImageSpatialExtentsProperty()
+        public ImageSpatialExtentsProperty(byte version = 0, uint flags = 0) : base("ispe", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28306,12 +28302,12 @@ namespace BoxGenerator2
     */
     public class JPEGConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "jpgC";
+        public const string FourCC = "jpgC";
 
         protected byte[] JPEGprefix;
         public byte[] _JPEGprefix { get { return this.JPEGprefix; } set { this.JPEGprefix = value; } }
 
-        public JPEGConfigurationBox()
+        public JPEGConfigurationBox() : base("jpgC")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28348,12 +28344,12 @@ namespace BoxGenerator2
     */
     public class LayerSelectorProperty : ItemProperty
     {
-        public override string FourCC { get; set; } = "lsel";
+        public const string FourCC = "lsel";
 
         protected ushort layer_id;
         public ushort LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
 
-        public LayerSelectorProperty()
+        public LayerSelectorProperty() : base("lsel")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28390,12 +28386,12 @@ namespace BoxGenerator2
     */
     public class OperatingPointsInformationProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "oinf";
+        public const string FourCC = "oinf";
 
         protected OperatingPointsRecord op_info;  //  specified in ISO/IEC 14496-15
         public OperatingPointsRecord OpInfo { get { return this.op_info; } set { this.op_info = value; } }
 
-        public OperatingPointsInformationProperty()
+        public OperatingPointsInformationProperty(byte version = 0, uint flags = 0) : base("oinf", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28435,7 +28431,7 @@ namespace BoxGenerator2
     */
     public class PixelInformationProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "pixi";
+        public const string FourCC = "pixi";
 
         protected byte num_channels;
         public byte NumChannels { get { return this.num_channels; } set { this.num_channels = value; } }
@@ -28443,7 +28439,7 @@ namespace BoxGenerator2
         protected byte bits_per_channel;
         public byte BitsPerChannel { get { return this.bits_per_channel; } set { this.bits_per_channel = value; } }
 
-        public PixelInformationProperty()
+        public PixelInformationProperty(byte version = 0, uint flags = 0) : base("pixi", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28497,7 +28493,7 @@ namespace BoxGenerator2
     */
     public class RelativeLocationProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "rloc";
+        public const string FourCC = "rloc";
 
         protected uint horizontal_offset;
         public uint HorizontalOffset { get { return this.horizontal_offset; } set { this.horizontal_offset = value; } }
@@ -28505,7 +28501,7 @@ namespace BoxGenerator2
         protected uint vertical_offset;
         public uint VerticalOffset { get { return this.vertical_offset; } set { this.vertical_offset = value; } }
 
-        public RelativeLocationProperty()
+        public RelativeLocationProperty(byte version = 0, uint flags = 0) : base("rloc", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28545,12 +28541,12 @@ namespace BoxGenerator2
     */
     public class TargetOlsProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "tols";
+        public const string FourCC = "tols";
 
         protected ushort target_ols_idx;
         public ushort TargetOlsIdx { get { return this.target_ols_idx; } set { this.target_ols_idx = value; } }
 
-        public TargetOlsProperty()
+        public TargetOlsProperty(byte version = 0, uint flags = 0) : base("tols", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28588,7 +28584,7 @@ namespace BoxGenerator2
     */
     public class AutoExposureBracketingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "aebr";
+        public const string FourCC = "aebr";
 
         protected sbyte exposure_step;
         public sbyte ExposureStep { get { return this.exposure_step; } set { this.exposure_step = value; } }
@@ -28596,7 +28592,7 @@ namespace BoxGenerator2
         protected sbyte exposure_numerator;
         public sbyte ExposureNumerator { get { return this.exposure_numerator; } set { this.exposure_numerator = value; } }
 
-        public AutoExposureBracketingEntry()
+        public AutoExposureBracketingEntry() : base("aebr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28637,7 +28633,7 @@ namespace BoxGenerator2
     */
     public class FlashExposureBracketingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "afbr";
+        public const string FourCC = "afbr";
 
         protected sbyte flash_exposure_numerator;
         public sbyte FlashExposureNumerator { get { return this.flash_exposure_numerator; } set { this.flash_exposure_numerator = value; } }
@@ -28645,7 +28641,7 @@ namespace BoxGenerator2
         protected sbyte flash_exposure_denominator;
         public sbyte FlashExposureDenominator { get { return this.flash_exposure_denominator; } set { this.flash_exposure_denominator = value; } }
 
-        public FlashExposureBracketingEntry()
+        public FlashExposureBracketingEntry() : base("afbr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28687,7 +28683,7 @@ namespace BoxGenerator2
     */
     public class AccessibilityTextProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "altt";
+        public const string FourCC = "altt";
 
         protected string alt_text;
         public string AltText { get { return this.alt_text; } set { this.alt_text = value; } }
@@ -28695,7 +28691,7 @@ namespace BoxGenerator2
         protected string alt_lang;
         public string AltLang { get { return this.alt_lang; } set { this.alt_lang = value; } }
 
-        public AccessibilityTextProperty()
+        public AccessibilityTextProperty(byte version = 0, uint flags = 0) : base("altt", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28736,12 +28732,12 @@ namespace BoxGenerator2
     */
     public class CreationTimeProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "crtt";
+        public const string FourCC = "crtt";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
 
-        public CreationTimeProperty()
+        public CreationTimeProperty(byte version = 0, uint flags = 0) : base("crtt", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28779,7 +28775,7 @@ namespace BoxGenerator2
     */
     public class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "dobr";
+        public const string FourCC = "dobr";
 
         protected sbyte f_stop_numerator;
         public sbyte fStopNumerator { get { return this.f_stop_numerator; } set { this.f_stop_numerator = value; } }
@@ -28787,7 +28783,7 @@ namespace BoxGenerator2
         protected sbyte f_stop_denominator;
         public sbyte fStopDenominator { get { return this.f_stop_denominator; } set { this.f_stop_denominator = value; } }
 
-        public DepthOfFieldBracketingEntry()
+        public DepthOfFieldBracketingEntry() : base("dobr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28828,7 +28824,7 @@ namespace BoxGenerator2
     */
     public class FocusBracketingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "fobr";
+        public const string FourCC = "fobr";
 
         protected ushort focus_distance_numerator;
         public ushort FocusDistanceNumerator { get { return this.focus_distance_numerator; } set { this.focus_distance_numerator = value; } }
@@ -28836,7 +28832,7 @@ namespace BoxGenerator2
         protected ushort focus_distance_denominator;
         public ushort FocusDistanceDenominator { get { return this.focus_distance_denominator; } set { this.focus_distance_denominator = value; } }
 
-        public FocusBracketingEntry()
+        public FocusBracketingEntry() : base("fobr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28879,7 +28875,7 @@ namespace BoxGenerator2
     */
     public class ImageScaling : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "iscl";
+        public const string FourCC = "iscl";
 
         protected ushort target_width_numerator;
         public ushort TargetWidthNumerator { get { return this.target_width_numerator; } set { this.target_width_numerator = value; } }
@@ -28893,7 +28889,7 @@ namespace BoxGenerator2
         protected ushort target_height_denominator;
         public ushort TargetHeightDenominator { get { return this.target_height_denominator; } set { this.target_height_denominator = value; } }
 
-        public ImageScaling()
+        public ImageScaling(byte version = 0, uint flags = 0) : base("iscl", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28940,12 +28936,12 @@ namespace BoxGenerator2
     */
     public class ModificationTimeProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "mdft";
+        public const string FourCC = "mdft";
 
         protected ulong modification_time;
         public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }
 
-        public ModificationTimeProperty()
+        public ModificationTimeProperty(byte version = 0, uint flags = 0) : base("mdft", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -28983,12 +28979,12 @@ namespace BoxGenerator2
     */
     public class PanoramaEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "pano";
+        public const string FourCC = "pano";
 
         protected ushort frame_number;
         public ushort FrameNumber { get { return this.frame_number; } set { this.frame_number = value; } }
 
-        public PanoramaEntry()
+        public PanoramaEntry() : base("pano")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29028,7 +29024,7 @@ namespace BoxGenerator2
     */
     public class RequiredReferenceTypesProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "rref";
+        public const string FourCC = "rref";
 
         protected byte reference_type_count;
         public byte ReferenceTypeCount { get { return this.reference_type_count; } set { this.reference_type_count = value; } }
@@ -29036,7 +29032,7 @@ namespace BoxGenerator2
         protected uint[] reference_type;
         public uint[] ReferenceType { get { return this.reference_type; } set { this.reference_type = value; } }
 
-        public RequiredReferenceTypesProperty()
+        public RequiredReferenceTypesProperty(byte version = 0, uint flags = 0) : base("rref", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29092,7 +29088,7 @@ namespace BoxGenerator2
     */
     public class UserDescriptionProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "udes";
+        public const string FourCC = "udes";
 
         protected string lang;
         public string Lang { get { return this.lang; } set { this.lang = value; } }
@@ -29106,7 +29102,7 @@ namespace BoxGenerator2
         protected string tags;
         public string Tags { get { return this.tags; } set { this.tags = value; } }
 
-        public UserDescriptionProperty()
+        public UserDescriptionProperty(byte version = 0, uint flags = 0) : base("udes", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29153,7 +29149,7 @@ namespace BoxGenerator2
     */
     public class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "wbbr";
+        public const string FourCC = "wbbr";
 
         protected ushort blue_amber;
         public ushort BlueAmber { get { return this.blue_amber; } set { this.blue_amber = value; } }
@@ -29161,7 +29157,7 @@ namespace BoxGenerator2
         protected sbyte green_magenta;
         public sbyte GreenMagenta { get { return this.green_magenta; } set { this.green_magenta = value; } }
 
-        public WhiteBalanceBracketingEntry()
+        public WhiteBalanceBracketingEntry() : base("wbbr")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29201,12 +29197,12 @@ namespace BoxGenerator2
     */
     public class WipeTransitionEffectProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "wipe";
+        public const string FourCC = "wipe";
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
 
-        public WipeTransitionEffectProperty()
+        public WipeTransitionEffectProperty(byte version = 0, uint flags = 0) : base("wipe", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29244,7 +29240,7 @@ namespace BoxGenerator2
     */
     public class ZoomTransitionEffectProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "zoom";
+        public const string FourCC = "zoom";
 
         protected bool transition_direction;
         public bool TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -29252,7 +29248,7 @@ namespace BoxGenerator2
         protected byte transition_shape;
         public byte TransitionShape { get { return this.transition_shape; } set { this.transition_shape = value; } }
 
-        public ZoomTransitionEffectProperty()
+        public ZoomTransitionEffectProperty(byte version = 0, uint flags = 0) : base("zoom", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29292,12 +29288,12 @@ namespace BoxGenerator2
     */
     public class FadeTransitionEffectProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "fade";
+        public const string FourCC = "fade";
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
 
-        public FadeTransitionEffectProperty()
+        public FadeTransitionEffectProperty(byte version = 0, uint flags = 0) : base("fade", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29334,12 +29330,12 @@ namespace BoxGenerator2
     */
     public class SplitTransitionEffectProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "splt";
+        public const string FourCC = "splt";
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
 
-        public SplitTransitionEffectProperty()
+        public SplitTransitionEffectProperty(byte version = 0, uint flags = 0) : base("splt", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29376,12 +29372,12 @@ namespace BoxGenerator2
     */
     public class SuggestedTransitionPeriodProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "stpe";
+        public const string FourCC = "stpe";
 
         protected byte transition_period;
         public byte TransitionPeriod { get { return this.transition_period; } set { this.transition_period = value; } }
 
-        public SuggestedTransitionPeriodProperty()
+        public SuggestedTransitionPeriodProperty(byte version = 0, uint flags = 0) : base("stpe", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29418,12 +29414,12 @@ namespace BoxGenerator2
     */
     public class SuggestedTimeDisplayDurationProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "ssld";
+        public const string FourCC = "ssld";
 
         protected ushort duration;
         public ushort Duration { get { return this.duration; } set { this.duration = value; } }
 
-        public SuggestedTimeDisplayDurationProperty()
+        public SuggestedTimeDisplayDurationProperty(byte version = 0, uint flags = 0) : base("ssld", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29460,12 +29456,12 @@ namespace BoxGenerator2
     */
     public class MaskConfigurationProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "mskC";
+        public const string FourCC = "mskC";
 
         protected byte bits_per_pixel;
         public byte BitsPerPixel { get { return this.bits_per_pixel; } set { this.bits_per_pixel = value; } }
 
-        public MaskConfigurationProperty()
+        public MaskConfigurationProperty(byte version = 0, uint flags = 0) : base("mskC", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29502,12 +29498,12 @@ namespace BoxGenerator2
     */
     public class VvcSubpicIDProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "spid";
+        public const string FourCC = "spid";
 
         protected VvcSubpicIDEntry sid_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicIDEntry SidInfo { get { return this.sid_info; } set { this.sid_info = value; } }
 
-        public VvcSubpicIDProperty()
+        public VvcSubpicIDProperty(byte version = 0, uint flags = 0) : base("spid", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29544,12 +29540,12 @@ namespace BoxGenerator2
     */
     public class VvcSubpicOrderProperty : ItemFullProperty
     {
-        public override string FourCC { get; set; } = "spor";
+        public const string FourCC = "spor";
 
         protected VvcSubpicOrderEntry sor_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicOrderEntry SorInfo { get { return this.sor_info; } set { this.sor_info = value; } }
 
-        public VvcSubpicOrderProperty()
+        public VvcSubpicOrderProperty(byte version = 0, uint flags = 0) : base("spor", 0, 0)
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29587,7 +29583,7 @@ namespace BoxGenerator2
     */
     public class VisualEquivalenceEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "eqiv";
+        public const string FourCC = "eqiv";
 
         protected short time_offset;
         public short TimeOffset { get { return this.time_offset; } set { this.time_offset = value; } }
@@ -29595,7 +29591,7 @@ namespace BoxGenerator2
         protected ushort timescale_multiplier;
         public ushort TimescaleMultiplier { get { return this.timescale_multiplier; } set { this.timescale_multiplier = value; } }
 
-        public VisualEquivalenceEntry()
+        public VisualEquivalenceEntry() : base("eqiv")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29639,7 +29635,7 @@ namespace BoxGenerator2
     */
     public class DirectReferenceSamplesList : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "refs";
+        public const string FourCC = "refs";
 
         protected uint sample_id;
         public uint SampleId { get { return this.sample_id; } set { this.sample_id = value; } }
@@ -29650,7 +29646,7 @@ namespace BoxGenerator2
         protected uint direct_reference_sample_id;
         public uint DirectReferenceSampleId { get { return this.direct_reference_sample_id; } set { this.direct_reference_sample_id = value; } }
 
-        public DirectReferenceSamplesList()
+        public DirectReferenceSamplesList() : base("refs")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29726,7 +29722,7 @@ namespace BoxGenerator2
         protected byte sizeByte;
         public byte SizeByte { get { return this.sizeByte; } set { this.sizeByte = value; } }
 
-        public BaseDescriptor()
+        public BaseDescriptor() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -29792,7 +29788,7 @@ namespace BoxGenerator2
     {
         public byte Tag { get; set; } = DescriptorTags.DecSpecificInfoTag;
 
-        public DecoderSpecificInfo()
+        public DecoderSpecificInfo() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -29905,7 +29901,7 @@ namespace BoxGenerator2
         protected ExtensionDescriptor[] extDescr;
         public ExtensionDescriptor[] ExtDescr { get { return this.extDescr; } set { this.extDescr = value; } }
 
-        public ES_Descriptor()
+        public ES_Descriptor() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30131,7 +30127,7 @@ namespace BoxGenerator2
         protected byte[] startCompositionTimeStamp;
         public byte[] StartCompositionTimeStamp { get { return this.startCompositionTimeStamp; } set { this.startCompositionTimeStamp = value; } }
 
-        public SLConfigDescriptor()
+        public SLConfigDescriptor() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30309,7 +30305,7 @@ namespace BoxGenerator2
         protected ProfileLevelIndicationIndexDescriptor[] profileLevelIndicationIndexDescr;
         public ProfileLevelIndicationIndexDescriptor[] ProfileLevelIndicationIndexDescr { get { return this.profileLevelIndicationIndexDescr; } set { this.profileLevelIndicationIndexDescr = value; } }
 
-        public DecoderConfigDescriptor()
+        public DecoderConfigDescriptor() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30375,7 +30371,7 @@ namespace BoxGenerator2
         protected byte profileLevelIndicationIndex;
         public byte ProfileLevelIndicationIndex { get { return this.profileLevelIndicationIndex; } set { this.profileLevelIndicationIndex = value; } }
 
-        public ProfileLevelIndicationIndexDescriptor()
+        public ProfileLevelIndicationIndexDescriptor() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30416,7 +30412,7 @@ namespace BoxGenerator2
         protected ushort IPI_ES_Id;
         public ushort IPIESId { get { return this.IPI_ES_Id; } set { this.IPI_ES_Id = value; } }
 
-        public IPI_DescrPointer()
+        public IPI_DescrPointer() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30457,7 +30453,7 @@ namespace BoxGenerator2
         public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
         public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag;
 
-        public IP_IdentificationDataSet()
+        public IP_IdentificationDataSet() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30498,7 +30494,7 @@ namespace BoxGenerator2
         protected byte IPMP_DescriptorID;
         public byte IPMPDescriptorID { get { return this.IPMP_DescriptorID; } set { this.IPMP_DescriptorID = value; } }
 
-        public IPMP_DescriptorPointer()
+        public IPMP_DescriptorPointer() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30538,7 +30534,7 @@ namespace BoxGenerator2
         public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
         public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange;
 
-        public OCI_Descriptor()
+        public OCI_Descriptor() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30579,7 +30575,7 @@ namespace BoxGenerator2
         protected uint languageCode;
         public uint LanguageCode { get { return this.languageCode; } set { this.languageCode = value; } }
 
-        public LanguageDescriptor()
+        public LanguageDescriptor() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30626,7 +30622,7 @@ namespace BoxGenerator2
         protected QoS_Qualifier[] qualifiers;
         public QoS_Qualifier[] Qualifiers { get { return this.qualifiers; } set { this.qualifiers = value; } }
 
-        public QoS_Descriptor()
+        public QoS_Descriptor() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30681,7 +30677,7 @@ namespace BoxGenerator2
         public byte TagMin { get; set; } = 0x01;
         public byte TagMax { get; set; } = 0xff;
 
-        public QoS_Qualifier()
+        public QoS_Qualifier() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -30720,7 +30716,7 @@ namespace BoxGenerator2
         protected uint MAX_DELAY;
         public uint MAXDELAY { get { return this.MAX_DELAY; } set { this.MAX_DELAY = value; } }
 
-        public QoS_Qualifier_MAX_DELAY()
+        public QoS_Qualifier_MAX_DELAY() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30762,7 +30758,7 @@ namespace BoxGenerator2
         protected uint PREF_MAX_DELAY;
         public uint PREFMAXDELAY { get { return this.PREF_MAX_DELAY; } set { this.PREF_MAX_DELAY = value; } }
 
-        public QoS_Qualifier_PREF_MAX_DELAY()
+        public QoS_Qualifier_PREF_MAX_DELAY() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30804,7 +30800,7 @@ namespace BoxGenerator2
         protected double LOSS_PROB;
         public double LOSSPROB { get { return this.LOSS_PROB; } set { this.LOSS_PROB = value; } }
 
-        public QoS_Qualifier_LOSS_PROB()
+        public QoS_Qualifier_LOSS_PROB() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30846,7 +30842,7 @@ namespace BoxGenerator2
         protected uint MAX_GAP_LOSS;
         public uint MAXGAPLOSS { get { return this.MAX_GAP_LOSS; } set { this.MAX_GAP_LOSS = value; } }
 
-        public QoS_Qualifier_MAX_GAP_LOSS()
+        public QoS_Qualifier_MAX_GAP_LOSS() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30888,7 +30884,7 @@ namespace BoxGenerator2
         protected uint MAX_AU_SIZE;
         public uint MAXAUSIZE { get { return this.MAX_AU_SIZE; } set { this.MAX_AU_SIZE = value; } }
 
-        public QoS_Qualifier_MAX_AU_SIZE()
+        public QoS_Qualifier_MAX_AU_SIZE() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30930,7 +30926,7 @@ namespace BoxGenerator2
         protected uint AVG_AU_SIZE;
         public uint AVGAUSIZE { get { return this.AVG_AU_SIZE; } set { this.AVG_AU_SIZE = value; } }
 
-        public QoS_Qualifier_AVG_AU_SIZE()
+        public QoS_Qualifier_AVG_AU_SIZE() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -30971,7 +30967,7 @@ namespace BoxGenerator2
         protected uint MAX_AU_RATE;
         public uint MAXAURATE { get { return this.MAX_AU_RATE; } set { this.MAX_AU_RATE = value; } }
 
-        public QoS_Qualifier_MAX_AU_RATE()
+        public QoS_Qualifier_MAX_AU_RATE() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -31016,7 +31012,7 @@ namespace BoxGenerator2
         protected byte[] additionalIdentificationInfo;
         public byte[] AdditionalIdentificationInfo { get { return this.additionalIdentificationInfo; } set { this.additionalIdentificationInfo = value; } }
 
-        public RegistrationDescriptor()
+        public RegistrationDescriptor() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -31058,7 +31054,7 @@ namespace BoxGenerator2
         public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
         public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange;
 
-        public ExtensionDescriptor()
+        public ExtensionDescriptor() : base()
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -31371,7 +31367,7 @@ namespace BoxGenerator2
         protected byte extensionChannelConfiguration0;
         public byte ExtensionChannelConfiguration0 { get { return this.extensionChannelConfiguration0; } set { this.extensionChannelConfiguration0 = value; } }
 
-        public AudioSpecificConfig()
+        public AudioSpecificConfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -32006,7 +32002,7 @@ namespace BoxGenerator2
         protected byte audioObjectTypeExt;
         public byte AudioObjectTypeExt { get { return this.audioObjectTypeExt; } set { this.audioObjectTypeExt = value; } }
 
-        public GetAudioObjectType()
+        public GetAudioObjectType() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -32129,7 +32125,7 @@ namespace BoxGenerator2
         protected bool extensionFlag3;
         public bool ExtensionFlag3 { get { return this.extensionFlag3; } set { this.extensionFlag3 = value; } }
 
-        public GASpecificConfig()
+        public GASpecificConfig(int samplingFrequencyIndex, int channelConfiguration, int audioObjectType) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -32432,7 +32428,7 @@ namespace BoxGenerator2
         protected byte[] comment_field_data;
         public byte[] CommentFieldData { get { return this.comment_field_data; } set { this.comment_field_data = value; } }
 
-        public program_config_element()
+        public program_config_element() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -32701,7 +32697,7 @@ namespace BoxGenerator2
         protected byte CELPBRSid;
         public byte _CELPBRSid { get { return this.CELPBRSid; } set { this.CELPBRSid = value; } }
 
-        public CelpSpecificConfig()
+        public CelpSpecificConfig(int samplingFrequencyIndex) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -32830,7 +32826,7 @@ namespace BoxGenerator2
         protected bool BandwidthScalabilityMode;
         public bool _BandwidthScalabilityMode { get { return this.BandwidthScalabilityMode; } set { this.BandwidthScalabilityMode = value; } }
 
-        public CelpHeader()
+        public CelpHeader(int samplingFrequencyIndex) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -32925,7 +32921,7 @@ namespace BoxGenerator2
         protected byte BWS_configuration;
         public byte BWSConfiguration { get { return this.BWS_configuration; } set { this.BWS_configuration = value; } }
 
-        public CelpBWSenhHeader()
+        public CelpBWSenhHeader() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -32971,7 +32967,7 @@ namespace BoxGenerator2
         protected HVXCconfig HVXCconfig;
         public HVXCconfig _HVXCconfig { get { return this.HVXCconfig; } set { this.HVXCconfig = value; } }
 
-        public HvxcSpecificConfig()
+        public HvxcSpecificConfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33038,7 +33034,7 @@ namespace BoxGenerator2
         protected bool extensionFlag;
         public bool ExtensionFlag { get { return this.extensionFlag; } set { this.extensionFlag = value; } }
 
-        public HVXCconfig()
+        public HVXCconfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33099,7 +33095,7 @@ namespace BoxGenerator2
         protected TTS_Sequence TTS_Sequence;
         public TTS_Sequence TTSSequence { get { return this.TTS_Sequence; } set { this.TTS_Sequence = value; } }
 
-        public TTSSpecificConfig()
+        public TTSSpecificConfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33172,7 +33168,7 @@ namespace BoxGenerator2
         protected bool Trick_Mode_Enable;
         public bool TrickModeEnable { get { return this.Trick_Mode_Enable; } set { this.Trick_Mode_Enable = value; } }
 
-        public TTS_Sequence()
+        public TTS_Sequence() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33261,7 +33257,7 @@ namespace BoxGenerator2
         protected byte CELPBRSid;
         public byte _CELPBRSid { get { return this.CELPBRSid; } set { this.CELPBRSid = value; } }
 
-        public ErrorResilientCelpSpecificConfig()
+        public ErrorResilientCelpSpecificConfig(int samplingFrequencyIndex) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33394,7 +33390,7 @@ namespace BoxGenerator2
         protected bool BandwidthScalabilityMode;
         public bool _BandwidthScalabilityMode { get { return this.BandwidthScalabilityMode; } set { this.BandwidthScalabilityMode = value; } }
 
-        public ER_SC_CelpHeader()
+        public ER_SC_CelpHeader(int samplingFrequencyIndex) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33497,7 +33493,7 @@ namespace BoxGenerator2
         protected ErHVXCconfig ErHVXCconfig;
         public ErHVXCconfig _ErHVXCconfig { get { return this.ErHVXCconfig; } set { this.ErHVXCconfig = value; } }
 
-        public ErrorResilientHvxcSpecificConfig()
+        public ErrorResilientHvxcSpecificConfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33567,7 +33563,7 @@ namespace BoxGenerator2
         protected bool var_ScalableFlag;
         public bool VarScalableFlag { get { return this.var_ScalableFlag; } set { this.var_ScalableFlag = value; } }
 
-        public ErHVXCconfig()
+        public ErHVXCconfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33641,7 +33637,7 @@ namespace BoxGenerator2
         protected HILNenexConfig HILNenexConfig;
         public HILNenexConfig _HILNenexConfig { get { return this.HILNenexConfig; } set { this.HILNenexConfig = value; } }
 
-        public ParametricSpecificConfig()
+        public ParametricSpecificConfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33731,7 +33727,7 @@ namespace BoxGenerator2
         protected bool PARAextensionFlag;
         public bool _PARAextensionFlag { get { return this.PARAextensionFlag; } set { this.PARAextensionFlag = value; } }
 
-        public PARAconfig()
+        public PARAconfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33836,7 +33832,7 @@ namespace BoxGenerator2
         protected byte HILNcontMode;
         public byte _HILNcontMode { get { return this.HILNcontMode; } set { this.HILNcontMode = value; } }
 
-        public HILNconfig()
+        public HILNconfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33895,7 +33891,7 @@ namespace BoxGenerator2
         protected byte HILNenhaQuantMode;
         public byte _HILNenhaQuantMode { get { return this.HILNenhaQuantMode; } set { this.HILNenhaQuantMode = value; } }
 
-        public HILNenexConfig()
+        public HILNenexConfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -33971,7 +33967,7 @@ namespace BoxGenerator2
         protected byte reserved;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public SSCSpecificConfig()
+        public SSCSpecificConfig(int channelConfiguration) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -34054,7 +34050,7 @@ namespace BoxGenerator2
         protected bool extension;
         public bool Extension { get { return this.extension; } set { this.extension = value; } }
 
-        public MPEG_1_2_SpecificConfig()
+        public MPEG_1_2_SpecificConfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -34102,7 +34098,7 @@ namespace BoxGenerator2
         protected bool reserved;
         public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public DSTSpecificConfig()
+        public DSTSpecificConfig(int channelConfiguration) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -34306,7 +34302,7 @@ namespace BoxGenerator2
         protected byte[] aux_data;
         public byte[] AuxData { get { return this.aux_data; } set { this.aux_data = value; } }
 
-        public ALSSpecificConfig()
+        public ALSSpecificConfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -34563,7 +34559,7 @@ namespace BoxGenerator2
         protected program_config_element program_config_element;
         public program_config_element ProgramConfigElement { get { return this.program_config_element; } set { this.program_config_element = value; } }
 
-        public SLSSpecificConfig()
+        public SLSSpecificConfig(int samplingFrequencyIndex, int channelConfiguration, int audioObjectType) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -34710,7 +34706,7 @@ namespace BoxGenerator2
         protected byte eldExtType0;
         public byte EldExtType0 { get { return this.eldExtType0; } set { this.eldExtType0 = value; } }
 
-        public ELDSpecificConfig()
+        public ELDSpecificConfig(int channelConfiguration) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -34917,7 +34913,7 @@ namespace BoxGenerator2
         protected sbr_header sbr_header;
         public sbr_header SbrHeader { get { return this.sbr_header; } set { this.sbr_header = value; } }
 
-        public ld_sbr_header()
+        public ld_sbr_header(int channelConfiguration) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -35106,7 +35102,7 @@ namespace BoxGenerator2
         protected bool bs_smoothing_mode;
         public bool BsSmoothingMode { get { return this.bs_smoothing_mode; } set { this.bs_smoothing_mode = value; } }
 
-        public sbr_header()
+        public sbr_header() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -35324,7 +35320,7 @@ namespace BoxGenerator2
         protected byte header_crclen;
         public byte HeaderCrclen { get { return this.header_crclen; } set { this.header_crclen = value; } }
 
-        public ErrorProtectionSpecificConfig()
+        public ErrorProtectionSpecificConfig() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -35600,12 +35596,12 @@ namespace BoxGenerator2
     */
     public class OpusSampleEntry : AudioSampleEntry
     {
-        public override string FourCC { get; set; } = "Opus";
+        public const string FourCC = "Opus";
 
         protected OpusSpecificBox OpusSpecificBox;
         public OpusSpecificBox _OpusSpecificBox { get { return this.OpusSpecificBox; } set { this.OpusSpecificBox = value; } }
 
-        public OpusSampleEntry()
+        public OpusSampleEntry() : base("Opus")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -35656,7 +35652,7 @@ namespace BoxGenerator2
         protected byte[] ChannelMapping;
         public byte[] _ChannelMapping { get { return this.ChannelMapping; } set { this.ChannelMapping = value; } }
 
-        public ChannelMappingTable()
+        public ChannelMappingTable(byte OutputChannelCount) : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -35709,7 +35705,7 @@ namespace BoxGenerator2
     */
     public class OpusSpecificBox : Box
     {
-        public override string FourCC { get; set; } = "dOps";
+        public const string FourCC = "dOps";
 
         protected byte Version;
         public byte _Version { get { return this.Version; } set { this.Version = value; } }
@@ -35732,7 +35728,7 @@ namespace BoxGenerator2
         protected ChannelMappingTable ChannelMappingTable;
         public ChannelMappingTable _ChannelMappingTable { get { return this.ChannelMappingTable; } set { this.ChannelMappingTable = value; } }
 
-        public OpusSpecificBox()
+        public OpusSpecificBox() : base("dOps")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -35801,12 +35797,12 @@ namespace BoxGenerator2
     */
     public class AV1SampleEntry : VisualSampleEntry
     {
-        public override string FourCC { get; set; } = "av01";
+        public const string FourCC = "av01";
 
         protected AV1CodecConfigurationBox config;
         public AV1CodecConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
-        public AV1SampleEntry()
+        public AV1SampleEntry() : base("av01")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -35845,12 +35841,12 @@ namespace BoxGenerator2
     */
     public class AV1CodecConfigurationBox : Box
     {
-        public override string FourCC { get; set; } = "av1C";
+        public const string FourCC = "av1C";
 
         protected AV1CodecConfigurationRecord av1Config;
         public AV1CodecConfigurationRecord Av1Config { get { return this.av1Config; } set { this.av1Config = value; } }
 
-        public AV1CodecConfigurationBox()
+        public AV1CodecConfigurationBox() : base("av1C")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -35958,7 +35954,7 @@ namespace BoxGenerator2
         protected byte[] configOBUs;
         public byte[] ConfigOBUs { get { return this.configOBUs; } set { this.configOBUs = value; } }
 
-        public AV1CodecConfigurationRecord()
+        public AV1CodecConfigurationRecord() : base()
         { }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
@@ -36063,12 +36059,12 @@ namespace BoxGenerator2
     */
     public class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "av1f";
+        public const string FourCC = "av1f";
 
         protected byte fwd_distance;
         public byte FwdDistance { get { return this.fwd_distance; } set { this.fwd_distance = value; } }
 
-        public AV1ForwardKeyFrameSampleGroupEntry()
+        public AV1ForwardKeyFrameSampleGroupEntry() : base("av1f")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -36106,9 +36102,9 @@ namespace BoxGenerator2
     */
     public class AV1SwitchFrameSampleGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "av1s";
+        public const string FourCC = "av1s";
 
-        public AV1SwitchFrameSampleGroupEntry()
+        public AV1SwitchFrameSampleGroupEntry() : base("av1s")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -36143,9 +36139,9 @@ namespace BoxGenerator2
     */
     public class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
     {
-        public override string FourCC { get; set; } = "av1M";
+        public const string FourCC = "av1M";
 
-        public AV1MetadataSampleGroupEntry()
+        public AV1MetadataSampleGroupEntry() : base("av1M")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -36179,12 +36175,12 @@ namespace BoxGenerator2
     */
     public class OperatingPointSelectorProperty : ItemProperty
     {
-        public override string FourCC { get; set; } = "a1op";
+        public const string FourCC = "a1op";
 
         protected byte op_index;
         public byte OpIndex { get { return this.op_index; } set { this.op_index = value; } }
 
-        public OperatingPointSelectorProperty()
+        public OperatingPointSelectorProperty() : base("a1op")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -36227,7 +36223,7 @@ namespace BoxGenerator2
     */
     public class AV1LayeredImageIndexingProperty : ItemProperty
     {
-        public override string FourCC { get; set; } = "a1lx";
+        public const string FourCC = "a1lx";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -36241,7 +36237,7 @@ namespace BoxGenerator2
         protected ushort[] layer_size0;
         public ushort[] LayerSize0 { get { return this.layer_size0; } set { this.layer_size0 = value; } }
 
-        public AV1LayeredImageIndexingProperty()
+        public AV1LayeredImageIndexingProperty() : base("a1lx")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)

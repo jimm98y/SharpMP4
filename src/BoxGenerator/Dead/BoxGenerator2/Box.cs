@@ -19,6 +19,18 @@ namespace BoxGenerator2
         protected List<Box> children = null;
         public List<Box> Children { get { return children; } set { children = value; } }
 
+        public Box() {  }
+
+        public Box(string boxType) 
+        {
+            FourCC = boxType;    
+        }
+
+        public Box(string boxType, ulong size) : this(boxType)
+        {
+            Size = size;
+        }
+
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
         {
             throw new NotImplementedException();

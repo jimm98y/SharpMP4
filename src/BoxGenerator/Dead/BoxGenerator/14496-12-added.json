@@ -37,7 +37,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class ItemInfoExtension(unsigned int(32) extension_type) extends Box(boxtype) \r\n{ \r\n} \r\n"
+      "syntax": "aligned(8) class ItemInfoExtension(unsigned int(32) extension_type)\r\n{ \r\n} \r\n"
     },
     {
       "containers": [ "*" ],
