@@ -19709,7 +19709,7 @@ namespace BoxGenerator2
             boxSize += stream.ReadUInt32(out this.samplerate); // optional boxes follow
             boxSize += stream.ReadBox(out this.Box); // further boxes as needed
             boxSize += stream.ReadBox(out this.ChannelLayout);
-            boxSize += stream.ReadClass(out this.DownMixInstructions);
+            boxSize += stream.ReadBox(out this.DownMixInstructions);
             boxSize += stream.ReadClass(out this.DRCCoefficientsBasic);
             boxSize += stream.ReadClass(out this.DRCInstructionsBasic);
             boxSize += stream.ReadClass(out this.DRCCoefficientsUniDRC);
@@ -19733,7 +19733,7 @@ namespace BoxGenerator2
             boxSize += stream.WriteUInt32(this.samplerate); // optional boxes follow
             boxSize += stream.WriteBox(this.Box); // further boxes as needed
             boxSize += stream.WriteBox(this.ChannelLayout);
-            boxSize += stream.WriteClass(this.DownMixInstructions);
+            boxSize += stream.WriteBox(this.DownMixInstructions);
             boxSize += stream.WriteClass(this.DRCCoefficientsBasic);
             boxSize += stream.WriteClass(this.DRCInstructionsBasic);
             boxSize += stream.WriteClass(this.DRCCoefficientsUniDRC);
@@ -19757,7 +19757,7 @@ namespace BoxGenerator2
             boxSize += 32; // samplerate
             boxSize += IsoStream.CalculateSize(Box); // Box
             boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
-            boxSize += IsoStream.CalculateClassSize(DownMixInstructions); // DownMixInstructions
+            boxSize += IsoStream.CalculateSize(DownMixInstructions); // DownMixInstructions
             boxSize += IsoStream.CalculateClassSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
             boxSize += IsoStream.CalculateClassSize(DRCInstructionsBasic); // DRCInstructionsBasic
             boxSize += IsoStream.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
@@ -19868,7 +19868,7 @@ namespace BoxGenerator2
             boxSize += stream.ReadBox(out this.SamplingRateBox);
             boxSize += stream.ReadBox(out this.Box); // further boxes as needed
             boxSize += stream.ReadBox(out this.ChannelLayout);
-            boxSize += stream.ReadClass(out this.DownMixInstructions);
+            boxSize += stream.ReadBox(out this.DownMixInstructions);
             boxSize += stream.ReadClass(out this.DRCCoefficientsBasic);
             boxSize += stream.ReadClass(out this.DRCInstructionsBasic);
             boxSize += stream.ReadClass(out this.DRCCoefficientsUniDRC);
@@ -19893,7 +19893,7 @@ namespace BoxGenerator2
             boxSize += stream.WriteBox(this.SamplingRateBox);
             boxSize += stream.WriteBox(this.Box); // further boxes as needed
             boxSize += stream.WriteBox(this.ChannelLayout);
-            boxSize += stream.WriteClass(this.DownMixInstructions);
+            boxSize += stream.WriteBox(this.DownMixInstructions);
             boxSize += stream.WriteClass(this.DRCCoefficientsBasic);
             boxSize += stream.WriteClass(this.DRCInstructionsBasic);
             boxSize += stream.WriteClass(this.DRCCoefficientsUniDRC);
@@ -19918,7 +19918,7 @@ namespace BoxGenerator2
             boxSize += IsoStream.CalculateSize(SamplingRateBox); // SamplingRateBox
             boxSize += IsoStream.CalculateSize(Box); // Box
             boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
-            boxSize += IsoStream.CalculateClassSize(DownMixInstructions); // DownMixInstructions
+            boxSize += IsoStream.CalculateSize(DownMixInstructions); // DownMixInstructions
             boxSize += IsoStream.CalculateClassSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
             boxSize += IsoStream.CalculateClassSize(DRCInstructionsBasic); // DRCInstructionsBasic
             boxSize += IsoStream.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
