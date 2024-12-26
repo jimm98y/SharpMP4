@@ -9234,7 +9234,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadUInt16(out this.entry_count);
-            boxSize += stream.ReadClass(entry_count, out this.partition_entries);
+            boxSize += stream.ReadBox(entry_count, out this.partition_entries);
             if (boxSize < size) boxSize += stream.ReadBox(out this.session_info); //optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.group_id_to_name); //optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -9246,7 +9246,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteUInt16(this.entry_count);
-            boxSize += stream.WriteClass(entry_count, this.partition_entries);
+            boxSize += stream.WriteBox(entry_count, this.partition_entries);
             if (this.session_info != null) boxSize += stream.WriteBox(this.session_info); //optional
             if (this.group_id_to_name != null) boxSize += stream.WriteBox(this.group_id_to_name); //optional
             boxSize += stream.WriteBoxChildren(this);
@@ -10073,7 +10073,7 @@ namespace BoxGenerator2
             {
                 boxSize += stream.ReadUInt32(out this.entry_count0);
             }
-            boxSize += stream.ReadClass(out this.item_infos);
+            boxSize += stream.ReadBox(out this.item_infos);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -10092,7 +10092,7 @@ namespace BoxGenerator2
             {
                 boxSize += stream.WriteUInt32(this.entry_count0);
             }
-            boxSize += stream.WriteClass(entry_count, this.item_infos);
+            boxSize += stream.WriteBox(entry_count, this.item_infos);
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -10111,7 +10111,7 @@ namespace BoxGenerator2
             {
                 boxSize += 32; // entry_count0
             }
-            boxSize += IsoStream.CalculateClassSize(item_infos); // item_infos
+            boxSize += IsoStream.CalculateSize(item_infos); // item_infos
             return boxSize;
         }
     }
@@ -29507,7 +29507,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadClass(out this.sid_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadBox(out this.sid_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -29515,7 +29515,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteClass(this.sid_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.WriteBox(this.sid_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -29523,7 +29523,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateClassSize(sid_info); // sid_info
+            boxSize += IsoStream.CalculateSize(sid_info); // sid_info
             return boxSize;
         }
     }
@@ -29549,7 +29549,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadClass(out this.sor_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadBox(out this.sor_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -29557,7 +29557,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteClass(this.sor_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.WriteBox(this.sor_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -29565,7 +29565,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateClassSize(sor_info); // sor_info
+            boxSize += IsoStream.CalculateSize(sor_info); // sor_info
             return boxSize;
         }
     }

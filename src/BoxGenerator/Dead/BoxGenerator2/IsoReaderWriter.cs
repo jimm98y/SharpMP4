@@ -58,6 +58,11 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
+    internal ulong ReadBox<T>(ulong count, out T[] value) where T : Box
+    {
+        throw new NotImplementedException();
+    }
+
     internal ulong ReadClass<T>(out T value) where T : class
     {
         throw new NotImplementedException();
@@ -214,6 +219,11 @@ public class IsoStream
     }
 
     internal ulong WriteBox(Box[] value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteBox(ulong count, Box[] values)
     {
         throw new NotImplementedException();
     }
