@@ -15,6 +15,12 @@
     <Content Include="14496-1-added.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="AVIF.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="AV1.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Opus.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

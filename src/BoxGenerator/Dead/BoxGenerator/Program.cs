@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Pidgin;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
@@ -523,7 +522,11 @@ partial class Program
             Try(String("case 4:\r\n    case 5:\r\n    case 6:\r\n      numSbrHeader = 3")),
             Try(String("case 7:\r\n      numSbrHeader = 4")),
             Try(String("default:\r\n      numSbrHeader = 0")),
-            Try(String("sbr_header()"))
+            Try(String("sbr_header()")),
+            Try(String("AV1SampleEntry")),
+            Try(String("AV1CodecConfigurationBox")),
+            Try(String("AV1CodecConfigurationRecord")),
+            Try(String("FieldLength = (large_size + 1) * 16")) // WORKAROUND
             )
         .Labelled("field type");
 
@@ -696,6 +699,8 @@ partial class Program
             "14496-1-added.json",
             "14496-3-added.json",
             "Opus.json",
+            "AV1.json",
+            "AVIF.json",
         };
         int success = 0;
         int duplicated = 0;
@@ -1300,7 +1305,7 @@ namespace BoxGenerator2
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]" 
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" && 
-            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]")
+            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[3]")
         {
             typedef = value;
         }
@@ -1836,6 +1841,10 @@ namespace BoxGenerator2
             { "uimsbf(7)[i][j]", "stream.ReadUimsbf(7, " },
             { "uimsbf(5)[i][j]", "stream.ReadUimsbf(5, " },
             { "uimsbf(6)[i][j]", "stream.ReadUimsbf(6, " },
+            { "AV1SampleEntry", "stream.ReadBox(" },
+            { "AV1CodecConfigurationBox", "stream.ReadBox(" },
+            { "AV1CodecConfigurationRecord", "stream.ReadClass(" },
+            { "unsigned int(16)[3]", "stream.ReadUInt16Array(3, " },
         };
         return map[type];
     }
@@ -2209,6 +2218,10 @@ namespace BoxGenerator2
             { "uimsbf(7)[i][j]", "7" },
             { "uimsbf(5)[i][j]", "5" },
             { "uimsbf(6)[i][j]", "6" },
+            { "AV1SampleEntry", "IsoStream.CalculateSize(value)" },
+            { "AV1CodecConfigurationBox", "IsoStream.CalculateSize(value)" },
+            { "AV1CodecConfigurationRecord","IsoStream.CalculateClassSize(value)" },
+            { "unsigned int(16)[3]", "3 * 16" },
        };
         return map[type];
     }
@@ -2581,6 +2594,10 @@ namespace BoxGenerator2
             { "uimsbf(7)[i][j]", "stream.WriteUimsbf(7, " },
             { "uimsbf(5)[i][j]", "stream.WriteUimsbf(5, " },
             { "uimsbf(6)[i][j]", "stream.WriteUimsbf(6, " },
+            { "AV1SampleEntry", "stream.WriteBox(" },
+            { "AV1CodecConfigurationBox", "stream.WriteBox(" },
+            { "AV1CodecConfigurationRecord", "stream.WriteClass(" },
+            { "unsigned int(16)[3]", "stream.WriteUInt16Array(3, " },
         };
         return map[type];
     }
@@ -2625,6 +2642,7 @@ namespace BoxGenerator2
             "case 4:\r\n    case 5:\r\n    case 6:\r\n      numSbrHeader = 3",
             "case 7:\r\n      numSbrHeader = 4",
             "default:\r\n      numSbrHeader = 0",
+            "FieldLength = (large_size + 1) * 16",
         };
         return map.Contains(type);
     }
@@ -2997,6 +3015,9 @@ namespace BoxGenerator2
             { "uimsbf(6)[i][j]", "byte[][]" },
             { "CelpHeader", "CelpHeader" },
             { "ER_SC_CelpHeader", "ER_SC_CelpHeader" },
+            { "AV1CodecConfigurationBox", "AV1CodecConfigurationBox" },
+            { "AV1CodecConfigurationRecord", "AV1CodecConfigurationRecord" },
+            { "unsigned int(16)[3]", "ushort[]" },
        };
         return map[type];
     }

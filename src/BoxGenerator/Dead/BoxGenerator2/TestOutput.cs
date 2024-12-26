@@ -11,6 +11,8 @@ namespace BoxGenerator2
             {
                 case "3dpr": return new MVDDepthResolutionBox();
                 case "3sib": return new MVDScalabilityInformationSEIBox();
+                case "a1lx": return new AV1LayeredImageIndexingProperty();
+                case "a1op": return new OperatingPointSelectorProperty();
                 case "a3d1": return new A3DSampleEntry();
                 case "a3d2": return new A3DSampleEntry_a3d2(); // TODO: fix duplicate
                 case "a3d3": return new A3DSampleEntry_a3d3(); // TODO: fix duplicate
@@ -29,6 +31,11 @@ namespace BoxGenerator2
                 case "aud ": return new AUDSampleEntry();
                 case "auxC": return new AuxiliaryTypeProperty();
                 case "auxi": return new AuxiliaryTypeInfoBox();
+                case "av01": return new AV1SampleEntry();
+                case "av1C": return new AV1CodecConfigurationBox();
+                case "av1f": return new AV1ForwardKeyFrameSampleGroupEntry();
+                case "av1M": return new AV1MetadataSampleGroupEntry();
+                case "av1s": return new AV1SwitchFrameSampleGroupEntry();
                 case "avc1": throw new NotSupportedException("avc1"); // TODO: AVCMVCSampleEntry, AVCSVCSampleEntry
                 case "avc2": throw new NotSupportedException("avc2"); // TODO: AVC2MVCSampleEntry, AVC2SVCSampleEntry
                 case "avc3": throw new NotSupportedException("avc3"); // TODO: AVCMVCSampleEntry_avc3, AVCSVCSampleEntry
@@ -35778,6 +35785,518 @@ namespace BoxGenerator2
             if (ChannelMappingFamily != 0)
             {
                 boxSize += IsoStream.CalculateClassSize(ChannelMappingTable); // ChannelMappingTable
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1SampleEntry
+    extends VisualSampleEntry('av01')
+    {
+      AV1CodecConfigurationBox config;
+    }
+
+    */
+    public class AV1SampleEntry : VisualSampleEntry
+    {
+        public override string FourCC { get; set; } = "av01";
+
+        protected AV1CodecConfigurationBox config;
+        public AV1CodecConfigurationBox Config { get { return this.config; } set { this.config = value; } }
+
+        public AV1SampleEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadBox(out this.config);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteBox(this.config);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateSize(config); // config
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1CodecConfigurationBox
+    extends Box('av1C')
+    {
+      AV1CodecConfigurationRecord av1Config;
+    }
+
+    */
+    public class AV1CodecConfigurationBox : Box
+    {
+        public override string FourCC { get; set; } = "av1C";
+
+        protected AV1CodecConfigurationRecord av1Config;
+        public AV1CodecConfigurationRecord Av1Config { get { return this.av1Config; } set { this.av1Config = value; } }
+
+        public AV1CodecConfigurationBox()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadClass(out this.av1Config);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteClass(this.av1Config);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateClassSize(av1Config); // av1Config
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AV1CodecConfigurationRecord
+    {
+      unsigned int(1) marker = 1;
+      unsigned int(7) version = 1;
+      unsigned int(3) seq_profile;
+      unsigned int(5) seq_level_idx_0;
+      unsigned int(1) seq_tier_0;
+      unsigned int(1) high_bitdepth;
+      unsigned int(1) twelve_bit;
+      unsigned int(1) monochrome;
+      unsigned int(1) chroma_subsampling_x;
+      unsigned int(1) chroma_subsampling_y;
+      unsigned int(2) chroma_sample_position;
+      unsigned int(3) reserved = 0;
+
+      unsigned int(1) initial_presentation_delay_present;
+      if(initial_presentation_delay_present) {
+        unsigned int(4) initial_presentation_delay_minus_one;
+      } else {
+        unsigned int(4) reserved = 0;
+      }
+
+      unsigned int(8) configOBUs[];
+    }
+
+    */
+    public class AV1CodecConfigurationRecord
+    {
+
+
+        protected bool marker = true;
+        public bool Marker { get { return this.marker; } set { this.marker = value; } }
+
+        protected byte version = 1;
+        public byte Version { get { return this.version; } set { this.version = value; } }
+
+        protected byte seq_profile;
+        public byte SeqProfile { get { return this.seq_profile; } set { this.seq_profile = value; } }
+
+        protected byte seq_level_idx_0;
+        public byte SeqLevelIdx0 { get { return this.seq_level_idx_0; } set { this.seq_level_idx_0 = value; } }
+
+        protected bool seq_tier_0;
+        public bool SeqTier0 { get { return this.seq_tier_0; } set { this.seq_tier_0 = value; } }
+
+        protected bool high_bitdepth;
+        public bool HighBitdepth { get { return this.high_bitdepth; } set { this.high_bitdepth = value; } }
+
+        protected bool twelve_bit;
+        public bool TwelveBit { get { return this.twelve_bit; } set { this.twelve_bit = value; } }
+
+        protected bool monochrome;
+        public bool Monochrome { get { return this.monochrome; } set { this.monochrome = value; } }
+
+        protected bool chroma_subsampling_x;
+        public bool ChromaSubsamplingx { get { return this.chroma_subsampling_x; } set { this.chroma_subsampling_x = value; } }
+
+        protected bool chroma_subsampling_y;
+        public bool ChromaSubsamplingy { get { return this.chroma_subsampling_y; } set { this.chroma_subsampling_y = value; } }
+
+        protected byte chroma_sample_position;
+        public byte ChromaSamplePosition { get { return this.chroma_sample_position; } set { this.chroma_sample_position = value; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool initial_presentation_delay_present;
+        public bool InitialPresentationDelayPresent { get { return this.initial_presentation_delay_present; } set { this.initial_presentation_delay_present = value; } }
+
+        protected byte initial_presentation_delay_minus_one;
+        public byte InitialPresentationDelayMinusOne { get { return this.initial_presentation_delay_minus_one; } set { this.initial_presentation_delay_minus_one = value; } }
+
+        protected byte reserved0 = 0;
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte[] configOBUs;
+        public byte[] ConfigOBUs { get { return this.configOBUs; } set { this.configOBUs = value; } }
+
+        public AV1CodecConfigurationRecord()
+        { }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadBit(out this.marker);
+            boxSize += stream.ReadBits(7, out this.version);
+            boxSize += stream.ReadBits(3, out this.seq_profile);
+            boxSize += stream.ReadBits(5, out this.seq_level_idx_0);
+            boxSize += stream.ReadBit(out this.seq_tier_0);
+            boxSize += stream.ReadBit(out this.high_bitdepth);
+            boxSize += stream.ReadBit(out this.twelve_bit);
+            boxSize += stream.ReadBit(out this.monochrome);
+            boxSize += stream.ReadBit(out this.chroma_subsampling_x);
+            boxSize += stream.ReadBit(out this.chroma_subsampling_y);
+            boxSize += stream.ReadBits(2, out this.chroma_sample_position);
+            boxSize += stream.ReadBits(3, out this.reserved);
+            boxSize += stream.ReadBit(out this.initial_presentation_delay_present);
+
+            if (initial_presentation_delay_present)
+            {
+                boxSize += stream.ReadBits(4, out this.initial_presentation_delay_minus_one);
+            }
+
+            else
+            {
+                boxSize += stream.ReadBits(4, out this.reserved0);
+            }
+            boxSize += stream.ReadUInt8Array(out this.configOBUs);
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteBit(this.marker);
+            boxSize += stream.WriteBits(7, this.version);
+            boxSize += stream.WriteBits(3, this.seq_profile);
+            boxSize += stream.WriteBits(5, this.seq_level_idx_0);
+            boxSize += stream.WriteBit(this.seq_tier_0);
+            boxSize += stream.WriteBit(this.high_bitdepth);
+            boxSize += stream.WriteBit(this.twelve_bit);
+            boxSize += stream.WriteBit(this.monochrome);
+            boxSize += stream.WriteBit(this.chroma_subsampling_x);
+            boxSize += stream.WriteBit(this.chroma_subsampling_y);
+            boxSize += stream.WriteBits(2, this.chroma_sample_position);
+            boxSize += stream.WriteBits(3, this.reserved);
+            boxSize += stream.WriteBit(this.initial_presentation_delay_present);
+
+            if (initial_presentation_delay_present)
+            {
+                boxSize += stream.WriteBits(4, this.initial_presentation_delay_minus_one);
+            }
+
+            else
+            {
+                boxSize += stream.WriteBits(4, this.reserved0);
+            }
+            boxSize += stream.WriteUInt8Array(this.configOBUs);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // marker
+            boxSize += 7; // version
+            boxSize += 3; // seq_profile
+            boxSize += 5; // seq_level_idx_0
+            boxSize += 1; // seq_tier_0
+            boxSize += 1; // high_bitdepth
+            boxSize += 1; // twelve_bit
+            boxSize += 1; // monochrome
+            boxSize += 1; // chroma_subsampling_x
+            boxSize += 1; // chroma_subsampling_y
+            boxSize += 2; // chroma_sample_position
+            boxSize += 3; // reserved
+            boxSize += 1; // initial_presentation_delay_present
+
+            if (initial_presentation_delay_present)
+            {
+                boxSize += 4; // initial_presentation_delay_minus_one
+            }
+
+            else
+            {
+                boxSize += 4; // reserved0
+            }
+            boxSize += (ulong)configOBUs.Length * 8; // configOBUs
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1ForwardKeyFrameSampleGroupEntry
+    extends VisualSampleGroupEntry('av1f')
+    {
+      unsigned int(8) fwd_distance;
+    }
+
+    */
+    public class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
+    {
+        public override string FourCC { get; set; } = "av1f";
+
+        protected byte fwd_distance;
+        public byte FwdDistance { get { return this.fwd_distance; } set { this.fwd_distance = value; } }
+
+        public AV1ForwardKeyFrameSampleGroupEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt8(out this.fwd_distance);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8(this.fwd_distance);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // fwd_distance
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1SwitchFrameSampleGroupEntry
+    extends VisualSampleGroupEntry('av1s')
+    {
+    }
+
+    */
+    public class AV1SwitchFrameSampleGroupEntry : VisualSampleGroupEntry
+    {
+        public override string FourCC { get; set; } = "av1s";
+
+        public AV1SwitchFrameSampleGroupEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1MetadataSampleGroupEntry
+    extends VisualSampleGroupEntry('av1M')
+    {
+    }
+
+    */
+    public class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
+    {
+        public override string FourCC { get; set; } = "av1M";
+
+        public AV1MetadataSampleGroupEntry()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class OperatingPointSelectorProperty extends ItemProperty('a1op') {
+        unsigned int(8) op_index;
+    }
+
+    */
+    public class OperatingPointSelectorProperty : ItemProperty
+    {
+        public override string FourCC { get; set; } = "a1op";
+
+        protected byte op_index;
+        public byte OpIndex { get { return this.op_index; } set { this.op_index = value; } }
+
+        public OperatingPointSelectorProperty()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadUInt8(out this.op_index);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8(this.op_index);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // op_index
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1LayeredImageIndexingProperty extends ItemProperty('a1lx') {
+        unsigned int(7) reserved = 0;
+        unsigned int(1) large_size;
+        if(large_size) {
+           unsigned int(32) layer_size[3];
+        }
+        else {
+           unsigned int(16) layer_size[3];
+        }
+    }
+    */
+    public class AV1LayeredImageIndexingProperty : ItemProperty
+    {
+        public override string FourCC { get; set; } = "a1lx";
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool large_size;
+        public bool LargeSize { get { return this.large_size; } set { this.large_size = value; } }
+
+        protected uint[] layer_size;
+        public uint[] LayerSize { get { return this.layer_size; } set { this.layer_size = value; } }
+
+        protected ushort[] layer_size0;
+        public ushort[] LayerSize0 { get { return this.layer_size0; } set { this.layer_size0 = value; } }
+
+        public AV1LayeredImageIndexingProperty()
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadBits(7, out this.reserved);
+            boxSize += stream.ReadBit(out this.large_size);
+
+            if (large_size)
+            {
+                boxSize += stream.ReadUInt32Array(3, out this.layer_size);
+            }
+
+            else
+            {
+                boxSize += stream.ReadUInt16Array(3, out this.layer_size0);
+            }
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteBits(7, this.reserved);
+            boxSize += stream.WriteBit(this.large_size);
+
+            if (large_size)
+            {
+                boxSize += stream.WriteUInt32Array(3, this.layer_size);
+            }
+
+            else
+            {
+                boxSize += stream.WriteUInt16Array(3, this.layer_size0);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 7; // reserved
+            boxSize += 1; // large_size
+
+            if (large_size)
+            {
+                boxSize += 3 * 32; // layer_size
+            }
+
+            else
+            {
+                boxSize += 3 * 16; // layer_size0
             }
             return boxSize;
         }
