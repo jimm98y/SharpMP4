@@ -1140,22 +1140,26 @@ namespace BoxGenerator2
         }
         else if(parameters != null)
         {
-            Debug.WriteLine($"---Params: {string.Join(", ", parameters.Select(x => x.Name))}");
-            string joinedParams = string.Join(", ", parameters.Select(x => x.Name));
+            Debug.WriteLine($"---Params: {string.Join(", ", parameters.Select(x => x.Name + (string.IsNullOrEmpty(x.Value) ? "" : " = " + x.Value)))}");
+            string joinedParams = string.Join(", ", parameters.Select(x => x.Name + (string.IsNullOrEmpty(x.Value) ? "" : " = " + x.Value)));
             Dictionary<string, string> map = new Dictionary<string, string>()
             {
                 { "loudnessType", "string loudnessType" },
                 { "local_key_id", "string local_key_id" },
-                { "version, flags", "byte version = 0, uint flags = 0" },
-                { "version, 0", "byte version = 0" },
+                { "protocol", "string protocol" },
                 { "0, 0", "" },
+                { "size", "ulong size = 0" },
+                { "type", "string type" },
+                { "version = 0, flags", "uint flags = 0" },
+                { "version = 0, 0", "" },
+                { "version = 0, 1", "" },
+                { "version, 0", "byte version = 0" },
+                { "version, flags = 0", "byte version = 0" },
+                { "version = 0, flags = 0", "" },
+                { "version, flags", "byte version = 0, uint flags = 0" },
+                { "0, tf_flags", "uint tf_flags = 0" },
                 { "0, flags", "uint flags = 0" },
                 { "version, tr_flags", "byte version = 0, uint tr_flags = 0" },
-                { "0, tf_flags", "uint tf_flags = 0" },
-                { "version, 1", "byte version = 0" },
-                { "size", "ulong size = 0" },
-                { "protocol", "string protocol" },
-                { "type", "string type" },
             };
             return map[joinedParams];
         }
