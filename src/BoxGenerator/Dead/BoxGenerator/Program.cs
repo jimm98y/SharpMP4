@@ -1006,13 +1006,36 @@ namespace BoxGenerator2
             }
         }
 
+        string ctorContent = "";
         var fields = FlattenFields(b.Fields);
+
+        if (b.BoxName == "GASpecificConfig" || b.BoxName == "SLSSpecificConfig")
+        {
+            fields.Add(new PseudoField() { Name = "audioObjectType", Type = "signed int(32)" });
+            fields.Add(new PseudoField() { Name = "channelConfiguration", Type = "signed int(32)" });
+            fields.Add(new PseudoField() { Name = "samplingFrequencyIndex", Type = "signed int(32)" });
+            ctorContent = "\t\tthis.audioObjectType = audioObjectType;\r\n\t\tthis.channelConfiguration = channelConfiguration;\r\n\t\tthis.samplingFrequencyIndex = samplingFrequencyIndex;\r\n";
+        }
+        else if(b.BoxName == "SSCSpecificConfig" || b.BoxName == "ld_sbr_header")
+        {
+            fields.Add(new PseudoField() { Name = "channelConfiguration", Type = "signed int(32)" });
+            ctorContent = "\t\tthis.channelConfiguration = channelConfiguration;\r\n";
+        }
+        else if (b.BoxName == "VvcPTLRecord")
+        {
+            fields.Add(new PseudoField() { Name = "num_sublayers", Type = "signed int(32)" });
+            ctorContent = "\t\tthis.num_sublayers = (int)num_sublayers;\r\n";
+        }
+        else if (b.BoxName == "ChannelMappingTable")
+        {
+            fields.Add(new PseudoField() { Name = "OutputChannelCount", Type = "unsigned int(8)" });
+            ctorContent = "\t\tthis.OutputChannelCount = OutputChannelCount;\r\n";
+        }
 
         foreach (var field in fields)
         {
             cls += "\r\n" + BuildField(field);
         }
-
 
         string ctorParams = "";
         if (!string.IsNullOrEmpty(b.ClassType) || (b.Extended != null && b.Extended.Parameters != null))
@@ -1036,16 +1059,18 @@ namespace BoxGenerator2
             baseCtorParams = $": base({base4cc}{base4ccseparator}{base4ccparams})";
         }
 
-        cls += $"\r\n\r\n\tpublic {b.BoxName}({ctorParams}){baseCtorParams}\r\n\t{{ }}\r\n";
+        cls += $"\r\n\r\n\tpublic {b.BoxName}({ctorParams}){baseCtorParams}\r\n\t{{\r\n";
+        cls += ctorContent;
+        cls += $"\t}}\r\n";
 
         cls += "\r\n\tpublic async " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "Task<ulong> ReadAsync(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.ReadAsync(stream);" : "");
 
-        cls = FixMissingCode(b, cls);
+        cls = FixMissingMethodCode(b, cls);
 
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildMethodCode(field, 2, MethodType.Read);
+            cls += "\r\n" + BuildMethodCode(b, field, 2, MethodType.Read);
         }
 
         if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName))
@@ -1064,11 +1089,11 @@ namespace BoxGenerator2
         cls += "\r\n\tpublic async " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "Task<ulong> WriteAsync(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.WriteAsync(stream);" : "");
 
-        cls = FixMissingCode(b, cls);
+        cls = FixMissingMethodCode(b, cls);
 
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildMethodCode(field, 2, MethodType.Write);
+            cls += "\r\n" + BuildMethodCode(b, field, 2, MethodType.Write);
         }
 
         if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName))
@@ -1086,11 +1111,11 @@ namespace BoxGenerator2
         cls += "\r\n\tpublic " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += base.CalculateSize();" : "");
 
-        cls = FixMissingCode(b, cls);
+        cls = FixMissingMethodCode(b, cls);
 
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildMethodCode(field, 2, MethodType.Size);
+            cls += "\r\n" + BuildMethodCode(b, field, 2, MethodType.Size);
         }
 
         //if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName))
@@ -1172,7 +1197,7 @@ namespace BoxGenerator2
         }
     }
 
-    private static string FixMissingCode(PseudoClass? box, string cls)
+    private static string FixMissingMethodCode(PseudoClass? box, string cls)
     {
         if (box.BoxName == "DegradationPriorityBox" || box.BoxName == "SampleDependencyTypeBox" || box.BoxName == "SampleDependencyBox")
         {
@@ -1192,25 +1217,14 @@ namespace BoxGenerator2
             cls += "\t\tuint pattern_size_code = (flags >> 4) & 0x3;\r\n";
             cls += "\t\tuint index_size_code = flags & 0x3;\r\n";
         }
-        
-        if(box.BoxName == "VvcPTLRecord")
-        {
-            cls += "\r\n";
-            cls += "\t\tint num_sublayers = 0; // TODO pass arg\r\n";
-        }
-        
+                
         if (box.BoxName == "VvcDecoderConfigurationRecord")
         {
             cls += "\r\n";
             cls += "\t\tconst int OPI_NUT = 12;\r\n";
             cls += "\t\tconst int DCI_NUT = 13;\r\n";
         }
-        
-        if(box.BoxName == "ChannelMappingTable")
-        {
-            cls += "\r\n\t\tulong OutputChannelCount = 0; // TODO: pass through ctor\r\n";
-        }
-        
+                
         if(box.BoxName == "ld_sbr_header")
         {
             cls += "\r\n\t\tint numSbrHeader = 0;\r\n";
@@ -1221,11 +1235,6 @@ namespace BoxGenerator2
             cls += "\r\n\t\tint len = 0;\r\n";
         }
         
-        if(box.BoxName == "ld_sbr_header" || box.BoxName == "SSCSpecificConfig")
-        {
-            cls += "\r\n\t\tint channelConfiguration = 0; // TODO: pass through ctor\r\n";
-        }
-
         if(box.BoxName == "ELDSpecificConfig")
         {
             cls += "\r\n\t\tconst byte ELDEXT_TERM = 0;\r\n";
@@ -1236,17 +1245,7 @@ namespace BoxGenerator2
             cls += "\r\n\t\tconst bool RPE = true;\r\n";
             cls += "\r\n\t\tconst bool MPE = false;\r\n";
         }
-
-        if(box.BoxName == "GASpecificConfig")
-        {
-            cls += "\r\n\t\tGetAudioObjectType audioObjectType = null; // TODO: pass through ctor\r\n";
-        }
         
-        if(box.BoxName == "GASpecificConfig" || box.BoxName == "SLSSpecificConfig")
-        {
-            cls += "\r\n\t\tbyte channelConfiguration = 0; // TODO: pass through ctor\r\n";
-        }
-
         return cls;
     }
 
@@ -1460,19 +1459,19 @@ namespace BoxGenerator2
         return name;
     }
 
-    private static string BuildMethodCode(PseudoCode field, int level, MethodType methodType)
+    private static string BuildMethodCode(PseudoClass b, PseudoCode field, int level, MethodType methodType)
     {
         string spacing = GetSpacing(level);
         var block = field as PseudoBlock;
         if(block != null)
         {
-            return BuildBlock(block, level, methodType);
+            return BuildBlock(b, block, level, methodType);
         }
 
         var comment = field as PseudoComment;
         if (comment != null)
         {
-            return BuildComment(comment, level, methodType);
+            return BuildComment(b, comment, level, methodType);
         }
 
         string tt = (field as PseudoField)?.Type;
@@ -1555,7 +1554,7 @@ namespace BoxGenerator2
             return $"{spacing}{optional}{boxSize}{m.Replace("value", name)}; // {name}";
     }
 
-    private static string BuildComment(PseudoComment comment, int level, MethodType methodType)
+    private static string BuildComment(PseudoClass b, PseudoComment comment, int level, MethodType methodType)
     {
         string spacing = GetSpacing(level);
         string text = comment.Comment;
@@ -1569,7 +1568,7 @@ namespace BoxGenerator2
         Size
     }
 
-    private static string BuildBlock(PseudoBlock block, int level, MethodType methodType)
+    private static string BuildBlock(PseudoClass b, PseudoBlock block, int level, MethodType methodType)
     {
         string spacing = GetSpacing(level);
         string ret;
@@ -1633,9 +1632,12 @@ namespace BoxGenerator2
 
         if (!string.IsNullOrEmpty(condition))
         {
-            if (condition.Contains("audioObjectType") && !condition.Contains("audioObjectType == 31"))
-                condition = condition.Replace("audioObjectType", "audioObjectType.AudioObjectType");
-            
+            if (b.BoxName != "GASpecificConfig")
+            {
+                if (condition.Contains("audioObjectType") && !condition.Contains("audioObjectType == 31"))
+                    condition = condition.Replace("audioObjectType", "audioObjectType.AudioObjectType");
+            }
+
             if (condition.Contains("extensionAudioObjectType"))
                 condition = condition.Replace("extensionAudioObjectType", "extensionAudioObjectType.AudioObjectType");
 
@@ -1649,7 +1651,7 @@ namespace BoxGenerator2
 
         foreach (var field in block.Content)
         {
-            ret += "\r\n" + BuildMethodCode(field, level + 1, methodType);
+            ret += "\r\n" + BuildMethodCode(b, field, level + 1, methodType);
         }
 
         ret += $"\r\n{spacing}}}";
