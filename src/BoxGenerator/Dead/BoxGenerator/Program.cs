@@ -22,7 +22,7 @@ public class PseudoClass : PseudoCode
     public string Comment { get; set; }
     public string EndComment { get; set; }
     public IList<PseudoCode> Fields { get; set; }
-    public string Alignment { get; set; }
+    public string Abstract { get; set; }
     public PseudoExtendedClass Extended { get; set; }
     public string Syntax { get; set; }
     public long CurrentOffset { get; set; }
@@ -34,7 +34,7 @@ public class PseudoClass : PseudoCode
 
     public PseudoClass(
         Maybe<string> comment,
-        Maybe<string> alignment,
+        Maybe<string> abstrct,
         string boxName, 
         Maybe<string> classType,
         Maybe<PseudoExtendedClass> extended,
@@ -46,7 +46,7 @@ public class PseudoClass : PseudoCode
         BoxName = boxName;
         ClassType = classType.GetValueOrDefault();
         Fields = fields.ToList();
-        Alignment = alignment.GetValueOrDefault();
+        Abstract = abstrct.GetValueOrDefault();
         Extended = extended.GetValueOrDefault();
         EndComment = endComment.GetValueOrDefault();
         CurrentOffset = currentOffset;
@@ -691,8 +691,8 @@ partial class Program
     public static Parser<char, PseudoClass> Box =>
         Map((comment, alignment, boxName, classType, extended, fields, endComment, endOffset) => new PseudoClass(comment, alignment, boxName, classType, extended, fields, endComment, endOffset),
             SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
-            SkipWhitespaces.Then(Try(String("abstract")).Optional()).Then(SkipWhitespaces).Then(Try(String("aligned(8)")).Optional()).Before(SkipWhitespaces).Before(Try(String("expandable(228-1)")).Optional()),
-            SkipWhitespaces.Then(Try(String("abstract")).Optional()).Then(SkipWhitespaces).Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
+            SkipWhitespaces.Then(Try(String("abstract")).Optional()).Before(SkipWhitespaces).Before(Try(String("aligned(8)")).Optional()).Before(SkipWhitespaces).Before(Try(String("expandable(228-1)")).Optional()),
+            SkipWhitespaces.Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
             SkipWhitespaces.Then(Try(ClassType).Optional()),
             SkipWhitespaces.Then(Try(ExtendedClass).Optional()),
             Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}')),
@@ -958,8 +958,7 @@ namespace BoxGenerator2
         string cls = "";
 
         string optAbstract = "";
-        if (b.BoxName == "SampleGroupDescriptionEntry" || b.BoxName == "AudioSampleGroupEntry" || b.BoxName == "VisualSampleGroupEntry" ||
-            b.BoxName == "SubtitleSampleGroupEntry" || b.BoxName == "TextSampleGroupEntry" || b.BoxName == "HintSampleGroupEntry" || b.BoxName == "SubtitleSampleEntry")
+        if (!string.IsNullOrEmpty(b.Abstract))
         {
             optAbstract = "abstract ";
         }
@@ -976,7 +975,7 @@ namespace BoxGenerator2
 
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.Extended.BoxType))
         {
-            cls += $"\tpublic const string FourCC = \"{b.Extended.BoxType}\";";
+            cls += $"\tpublic const string TYPE = \"{b.Extended.BoxType}\";";
         }
         else if(b.Extended != null && !string.IsNullOrEmpty(b.Extended.DescriptorTag))
         {

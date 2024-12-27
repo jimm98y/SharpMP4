@@ -664,7 +664,7 @@ namespace BoxGenerator2
 
 
     */
-    public abstract class SubtitleSampleEntry : SampleEntry
+    public class SubtitleSampleEntry : SampleEntry
     {
 
 
@@ -707,7 +707,7 @@ namespace BoxGenerator2
     */
     public class XMLSubtitleSampleEntry : SubtitleSampleEntry
     {
-        public const string FourCC = "stpp";
+        public const string TYPE = "stpp";
 
         protected string ns;
         public string Ns { get { return this.ns; } set { this.ns = value; } }
@@ -770,7 +770,7 @@ namespace BoxGenerator2
     */
     public class TextSubtitleSampleEntry : SubtitleSampleEntry
     {
-        public const string FourCC = "sbtt";
+        public const string TYPE = "sbtt";
 
         protected string content_encoding;  //  optional 
         public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -1130,7 +1130,7 @@ namespace BoxGenerator2
     */
     public class SimpleTextSampleEntry : PlainTextSampleEntry
     {
-        public const string FourCC = "stxt";
+        public const string TYPE = "stxt";
 
         protected string content_encoding;  //  optional 
         public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -1391,7 +1391,7 @@ namespace BoxGenerator2
     */
     public class MetaDataKeyDeclarationBox : Box
     {
-        public const string FourCC = "keyd";
+        public const string TYPE = "keyd";
 
         protected uint key_namespace;
         public uint KeyNamespace { get { return this.key_namespace; } set { this.key_namespace = value; } }
@@ -1441,7 +1441,7 @@ namespace BoxGenerator2
     */
     public class MetaDataLocaleBox : Box
     {
-        public const string FourCC = "loca";
+        public const string TYPE = "loca";
 
         protected string locale_string;
         public string LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
@@ -1484,7 +1484,7 @@ namespace BoxGenerator2
     */
     public class MetaDataSetupBox : Box
     {
-        public const string FourCC = "setu";
+        public const string TYPE = "setu";
 
         public MetaDataSetupBox() : base("setu")
         {
@@ -1525,7 +1525,7 @@ namespace BoxGenerator2
     */
     public class MetaDataExtensionsBox : Box
     {
-        public const string FourCC = "exte";
+        public const string TYPE = "exte";
 
         protected Box[] extensions;
         public Box[] Extensions { get { return this.extensions; } set { this.extensions = value; } }
@@ -1569,7 +1569,7 @@ namespace BoxGenerator2
     */
     public class MetaDataInlineKeysPresentBox : Box
     {
-        public const string FourCC = "keyi";
+        public const string TYPE = "keyi";
 
         protected byte inlineKeyValueBoxesPresent;
         public byte InlineKeyValueBoxesPresent { get { return this.inlineKeyValueBoxesPresent; } set { this.inlineKeyValueBoxesPresent = value; } }
@@ -1683,14 +1683,14 @@ namespace BoxGenerator2
 
 
     /*
-    aligned(8) abstract class SampleEntry (unsigned int(32) format) extends Box(format){ 
+    abstract aligned(8) class SampleEntry (unsigned int(32) format) extends Box(format){ 
     const unsigned int(8)[6] reserved = 0; 
     unsigned int(16) data_reference_index; 
     }
 
 
     */
-    public class SampleEntry : Box
+    public abstract class SampleEntry : Box
     {
 
 
@@ -1791,7 +1791,7 @@ namespace BoxGenerator2
     */
     public class ViewPriorityBox : Box
     {
-        public const string FourCC = "vipr";
+        public const string TYPE = "vipr";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -1931,7 +1931,7 @@ namespace BoxGenerator2
     */
     public class AVCSubSequenceEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "avss";
+        public const string TYPE = "avss";
 
         protected ushort subSequenceIdentifer;
         public ushort SubSequenceIdentifer { get { return this.subSequenceIdentifer; } set { this.subSequenceIdentifer = value; } }
@@ -2072,7 +2072,7 @@ namespace BoxGenerator2
     */
     public class IntrinsicCameraParametersBox : FullBox
     {
-        public const string FourCC = "icam";
+        public const string TYPE = "icam";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -2209,7 +2209,7 @@ namespace BoxGenerator2
     */
     public class ExtrinsicCameraParametersBox : FullBox
     {
-        public const string FourCC = "ecam";
+        public const string TYPE = "ecam";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -4580,7 +4580,7 @@ namespace BoxGenerator2
     */
     public class ReceivedSsrcBox : Box
     {
-        public const string FourCC = "rssr";
+        public const string TYPE = "rssr";
 
         protected uint SSRC;
         public uint _SSRC { get { return this.SSRC; } set { this.SSRC = value; } }
@@ -4623,7 +4623,7 @@ namespace BoxGenerator2
     */
     public class timestampsynchrony : Box
     {
-        public const string FourCC = "tssy";
+        public const string TYPE = "tssy";
 
         protected byte reserved;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -4673,7 +4673,7 @@ namespace BoxGenerator2
     */
     public class timescaleentry : Box
     {
-        public const string FourCC = "tims";
+        public const string TYPE = "tims";
 
         protected uint timescale;
         public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }
@@ -4717,7 +4717,7 @@ namespace BoxGenerator2
     */
     public class timeoffset : Box
     {
-        public const string FourCC = "tsro";
+        public const string TYPE = "tsro";
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
@@ -4759,7 +4759,7 @@ namespace BoxGenerator2
     */
     public class sequenceoffset : Box
     {
-        public const string FourCC = "snro";
+        public const string TYPE = "snro";
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
@@ -4801,7 +4801,7 @@ namespace BoxGenerator2
     */
     public class hintBytesSentTrpy : Box
     {
-        public const string FourCC = "trpy";
+        public const string TYPE = "trpy";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -4843,7 +4843,7 @@ namespace BoxGenerator2
     */
     public class hintPacketsSentNump : Box
     {
-        public const string FourCC = "nump";
+        public const string TYPE = "nump";
 
         protected ulong packetssent;
         public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
@@ -4884,7 +4884,7 @@ namespace BoxGenerator2
     */
     public class hintBytesSentTpyl : Box
     {
-        public const string FourCC = "tpyl";
+        public const string TYPE = "tpyl";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -4926,7 +4926,7 @@ namespace BoxGenerator2
     */
     public class hintBytesSentTotl : Box
     {
-        public const string FourCC = "totl";
+        public const string TYPE = "totl";
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -4968,7 +4968,7 @@ namespace BoxGenerator2
     */
     public class hintPacketsSentNpck : Box
     {
-        public const string FourCC = "npck";
+        public const string TYPE = "npck";
 
         protected uint packetssent;
         public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
@@ -5009,7 +5009,7 @@ namespace BoxGenerator2
     */
     public class hintBytesSentTpay : Box
     {
-        public const string FourCC = "tpay";
+        public const string TYPE = "tpay";
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5051,7 +5051,7 @@ namespace BoxGenerator2
     */
     public class hintmaxrate : Box
     {
-        public const string FourCC = "maxr";
+        public const string TYPE = "maxr";
 
         protected uint period;  //  in milliseconds
         public uint Period { get { return this.period; } set { this.period = value; } }
@@ -5102,7 +5102,7 @@ namespace BoxGenerator2
     */
     public class hintmediaBytesSent : Box
     {
-        public const string FourCC = "dmed";
+        public const string TYPE = "dmed";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5144,7 +5144,7 @@ namespace BoxGenerator2
     */
     public class hintimmediateBytesSent : Box
     {
-        public const string FourCC = "dimm";
+        public const string TYPE = "dimm";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5185,7 +5185,7 @@ namespace BoxGenerator2
     */
     public class hintrepeatedBytesSent : Box
     {
-        public const string FourCC = "drep";
+        public const string TYPE = "drep";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5227,7 +5227,7 @@ namespace BoxGenerator2
     */
     public class hintminrelativetime : Box
     {
-        public const string FourCC = "tmin";
+        public const string TYPE = "tmin";
 
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
@@ -5268,7 +5268,7 @@ namespace BoxGenerator2
     */
     public class hintmaxrelativetime : Box
     {
-        public const string FourCC = "tmax";
+        public const string TYPE = "tmax";
 
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
@@ -5310,7 +5310,7 @@ namespace BoxGenerator2
     */
     public class hintlargestpacket : Box
     {
-        public const string FourCC = "pmax";
+        public const string TYPE = "pmax";
 
         protected uint bytes;
         public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
@@ -5351,7 +5351,7 @@ namespace BoxGenerator2
     */
     public class hintlongestpacket : Box
     {
-        public const string FourCC = "dmax";
+        public const string TYPE = "dmax";
 
         protected uint time;
         public uint Time { get { return this.time; } set { this.time = value; } }
@@ -5394,7 +5394,7 @@ namespace BoxGenerator2
     */
     public class hintpayloadID : Box
     {
-        public const string FourCC = "payt";
+        public const string TYPE = "payt";
 
         protected uint payloadID;  //  payload ID used in RTP packets
         public uint PayloadID { get { return this.payloadID; } set { this.payloadID = value; } }
@@ -5454,7 +5454,7 @@ namespace BoxGenerator2
     */
     public class StereoVideoBox : FullBox
     {
-        public const string FourCC = "stvi";
+        public const string TYPE = "stvi";
 
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -5526,7 +5526,7 @@ namespace BoxGenerator2
     */
     public class ExtendedLanguageBox : FullBox
     {
-        public const string FourCC = "elng";
+        public const string TYPE = "elng";
 
         protected string extended_language;
         public string ExtendedLanguage { get { return this.extended_language; } set { this.extended_language = value; } }
@@ -5570,7 +5570,7 @@ namespace BoxGenerator2
     */
     public class BitRateBox : Box
     {
-        public const string FourCC = "btrt";
+        public const string TYPE = "btrt";
 
         protected uint bufferSizeDB;
         public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
@@ -5625,7 +5625,7 @@ namespace BoxGenerator2
     */
     public class PixelAspectRatioBox : Box
     {
-        public const string FourCC = "pasp";
+        public const string TYPE = "pasp";
 
         protected uint hSpacing;
         public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
@@ -5686,7 +5686,7 @@ namespace BoxGenerator2
     */
     public class CleanApertureBox : Box
     {
-        public const string FourCC = "clap";
+        public const string TYPE = "clap";
 
         protected uint cleanApertureWidthN;
         public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
@@ -5788,7 +5788,7 @@ namespace BoxGenerator2
     */
     public class ContentColourVolumeBox : Box
     {
-        public const string FourCC = "cclv";
+        public const string TYPE = "cclv";
 
         protected bool reserved1 = false;  //  ccv_cancel_flag
         public bool Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -5972,7 +5972,7 @@ namespace BoxGenerator2
     */
     public class ColourInformationBox : Box
     {
-        public const string FourCC = "colr";
+        public const string TYPE = "colr";
 
         protected uint colour_type;
         public uint ColourType { get { return this.colour_type; } set { this.colour_type = value; } }
@@ -6090,7 +6090,7 @@ namespace BoxGenerator2
     */
     public class ContentLightLevelBox : Box
     {
-        public const string FourCC = "clli";
+        public const string TYPE = "clli";
 
         protected ushort max_content_light_level;
         public ushort MaxContentLightLevel { get { return this.max_content_light_level; } set { this.max_content_light_level = value; } }
@@ -6145,7 +6145,7 @@ namespace BoxGenerator2
     */
     public class MasteringDisplayColourVolumeBox : Box
     {
-        public const string FourCC = "mdcv";
+        public const string TYPE = "mdcv";
 
         protected ushort display_primaries_x;
         public ushort DisplayPrimariesx { get { return this.display_primaries_x; } set { this.display_primaries_x = value; } }
@@ -6230,7 +6230,7 @@ namespace BoxGenerator2
     */
     public class ScrambleSchemeInfoBox : Box
     {
-        public const string FourCC = "scrb";
+        public const string TYPE = "scrb";
 
         protected SchemeTypeBox scheme_type_box;
         public SchemeTypeBox SchemeTypeBox { get { return this.scheme_type_box; } set { this.scheme_type_box = value; } }
@@ -6327,7 +6327,7 @@ namespace BoxGenerator2
     */
     public class ChannelLayout : FullBox
     {
-        public const string FourCC = "chnl";
+        public const string TYPE = "chnl";
 
         protected byte stream_structure;
         public byte StreamStructure { get { return this.stream_structure; } set { this.stream_structure = value; } }
@@ -6684,7 +6684,7 @@ namespace BoxGenerator2
     */
     public class DownMixInstructions : FullBox
     {
-        public const string FourCC = "dmix";
+        public const string TYPE = "dmix";
 
         protected bool reserved = false;
         public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -6924,7 +6924,7 @@ namespace BoxGenerator2
     */
     public class SamplingRateBox : FullBox
     {
-        public const string FourCC = "srat";
+        public const string TYPE = "srat";
 
         protected uint sampling_rate;
         public uint SamplingRate { get { return this.sampling_rate; } set { this.sampling_rate = value; } }
@@ -6966,7 +6966,7 @@ namespace BoxGenerator2
     */
     public class TextConfigBox : FullBox
     {
-        public const string FourCC = "txtC";
+        public const string TYPE = "txtC";
 
         protected string text_config;
         public string TextConfig { get { return this.text_config; } set { this.text_config = value; } }
@@ -7009,7 +7009,7 @@ namespace BoxGenerator2
     */
     public class URIInitBox : FullBox
     {
-        public const string FourCC = "uriI";
+        public const string TYPE = "uriI";
 
         protected byte[] uri_initialization_data;
         public byte[] UriInitializationData { get { return this.uri_initialization_data; } set { this.uri_initialization_data = value; } }
@@ -7054,7 +7054,7 @@ namespace BoxGenerator2
     */
     public class CopyrightBox : FullBox
     {
-        public const string FourCC = "cprt";
+        public const string TYPE = "cprt";
 
         protected bool pad = false;
         public bool Pad { get { return this.pad; } set { this.pad = value; } }
@@ -7109,7 +7109,7 @@ namespace BoxGenerator2
     */
     public class KindBox : FullBox
     {
-        public const string FourCC = "kind";
+        public const string TYPE = "kind";
 
         protected string schemeURI;
         public string SchemeURI { get { return this.schemeURI; } set { this.schemeURI = value; } }
@@ -7159,7 +7159,7 @@ namespace BoxGenerator2
     */
     public class TrackSelectionBox : FullBox
     {
-        public const string FourCC = "tsel";
+        public const string TYPE = "tsel";
 
         protected int switch_group = 0;
         public int SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
@@ -7206,7 +7206,7 @@ namespace BoxGenerator2
     */
     public class SubTrackBox : Box
     {
-        public const string FourCC = "strk";
+        public const string TYPE = "strk";
 
         public SubTrackBox() : base("strk")
         {
@@ -7245,7 +7245,7 @@ namespace BoxGenerator2
     */
     public class trackhintinformation : Box
     {
-        public const string FourCC = "hnti";
+        public const string TYPE = "hnti";
 
         public trackhintinformation() : base("hnti")
         {
@@ -7283,7 +7283,7 @@ namespace BoxGenerator2
     */
     public class rtptracksdphintinformation : Box
     {
-        public const string FourCC = "sdp ";
+        public const string TYPE = "sdp ";
 
         protected byte[] sdptext;
         public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
@@ -7326,7 +7326,7 @@ namespace BoxGenerator2
     */
     public class moviehintinformation : Box
     {
-        public const string FourCC = "hnti";
+        public const string TYPE = "hnti";
 
         public moviehintinformation() : base("hnti")
         {
@@ -7365,7 +7365,7 @@ namespace BoxGenerator2
     */
     public class rtpmoviehintinformation : Box
     {
-        public const string FourCC = "rtp ";
+        public const string TYPE = "rtp ";
 
         protected uint descriptionformat = IsoStream.FromFourCC("sdp ");
         public uint Descriptionformat { get { return this.descriptionformat; } set { this.descriptionformat = value; } }
@@ -7414,7 +7414,7 @@ namespace BoxGenerator2
     */
     public class hintstatisticsbox : Box
     {
-        public const string FourCC = "hinf";
+        public const string TYPE = "hinf";
 
         public hintstatisticsbox() : base("hinf")
         {
@@ -7455,7 +7455,7 @@ namespace BoxGenerator2
     */
     public class LoudnessBox : Box
     {
-        public const string FourCC = "ludt";
+        public const string TYPE = "ludt";
 
         protected TrackLoudnessInfo[] loudness;  //  not more than one AlbumLoudnessInfo box with version>=1 is allowed
         public TrackLoudnessInfo[] Loudness { get { return this.loudness; } set { this.loudness = value; } }
@@ -7506,7 +7506,7 @@ namespace BoxGenerator2
     */
     public class TrackLoudnessInfo : LoudnessBaseBox
     {
-        public const string FourCC = "tlou";
+        public const string TYPE = "tlou";
 
         public TrackLoudnessInfo() : base("tlou")
         {
@@ -7540,7 +7540,7 @@ namespace BoxGenerator2
     */
     public class AlbumLoudnessInfo : LoudnessBaseBox
     {
-        public const string FourCC = "alou";
+        public const string TYPE = "alou";
 
         public AlbumLoudnessInfo() : base("alou")
         {
@@ -7577,7 +7577,7 @@ namespace BoxGenerator2
     */
     public class DataEntryUrlBox : DataEntryBaseBox
     {
-        public const string FourCC = "url ";
+        public const string TYPE = "url ";
 
         protected string location;
         public string Location { get { return this.location; } set { this.location = value; } }
@@ -7621,7 +7621,7 @@ namespace BoxGenerator2
     */
     public class DataEntryUrnBox : DataEntryBaseBox
     {
-        public const string FourCC = "urn ";
+        public const string TYPE = "urn ";
 
         protected string name;
         public string Name { get { return this.name; } set { this.name = value; } }
@@ -7670,7 +7670,7 @@ namespace BoxGenerator2
     */
     public class DataEntryImdaBox : DataEntryBaseBox
     {
-        public const string FourCC = "imdt";
+        public const string TYPE = "imdt";
 
         protected uint imda_ref_identifier;
         public uint ImdaRefIdentifier { get { return this.imda_ref_identifier; } set { this.imda_ref_identifier = value; } }
@@ -7712,7 +7712,7 @@ namespace BoxGenerator2
     */
     public class DataEntrySeqNumImdaBox : DataEntryBaseBox
     {
-        public const string FourCC = "snim";
+        public const string TYPE = "snim";
 
         public DataEntrySeqNumImdaBox(uint flags = 0) : base("snim", flags)
         {
@@ -7753,7 +7753,7 @@ namespace BoxGenerator2
     */
     public class ItemPropertyContainerBox : Box
     {
-        public const string FourCC = "ipco";
+        public const string TYPE = "ipco";
 
         protected Box[] properties;  //  boxes derived from
         public Box[] Properties { get { return this.properties; } set { this.properties = value; } }
@@ -7820,7 +7820,7 @@ namespace BoxGenerator2
     */
     public class ItemPropertyAssociationBox : FullBox
     {
-        public const string FourCC = "ipma";
+        public const string TYPE = "ipma";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -7966,7 +7966,7 @@ namespace BoxGenerator2
     */
     public class ItemPropertiesBox : Box
     {
-        public const string FourCC = "iprp";
+        public const string TYPE = "iprp";
 
         protected ItemPropertyContainerBox property_container;
         public ItemPropertyContainerBox PropertyContainer { get { return this.property_container; } set { this.property_container = value; } }
@@ -8025,7 +8025,7 @@ namespace BoxGenerator2
     */
     public class AlternativeStartupSequencePropertiesBox : FullBox
     {
-        public const string FourCC = "assp";
+        public const string TYPE = "assp";
 
         protected int min_initial_alt_startup_offset;
         public int MinInitialAltStartupOffset { get { return this.min_initial_alt_startup_offset; } set { this.min_initial_alt_startup_offset = value; } }
@@ -8119,7 +8119,7 @@ namespace BoxGenerator2
     */
     public class BinaryXMLBox : FullBox
     {
-        public const string FourCC = "bxml";
+        public const string TYPE = "bxml";
 
         protected byte[] data;  //  to end of box
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -8161,7 +8161,7 @@ namespace BoxGenerator2
     */
     public class CompleteTrackInfoBox : Box
     {
-        public const string FourCC = "cinf";
+        public const string TYPE = "cinf";
 
         protected OriginalFormatBox original_format;
         public OriginalFormatBox OriginalFormat { get { return this.original_format; } set { this.original_format = value; } }
@@ -8207,7 +8207,7 @@ namespace BoxGenerator2
     */
     public class ChunkLargeOffsetBox : FullBox
     {
-        public const string FourCC = "co64";
+        public const string TYPE = "co64";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -8286,7 +8286,7 @@ namespace BoxGenerator2
     */
     public class CompactSampleToGroupBox : FullBox
     {
-        public const string FourCC = "csgp";
+        public const string TYPE = "csgp";
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -8436,7 +8436,7 @@ namespace BoxGenerator2
     */
     public class CompositionToDecodeBox : FullBox
     {
-        public const string FourCC = "cslg";
+        public const string TYPE = "cslg";
 
         protected long compositionToDTSShift;
         public long CompositionToDTSShift { get { return this.compositionToDTSShift; } set { this.compositionToDTSShift = value; } }
@@ -8555,7 +8555,7 @@ namespace BoxGenerator2
     */
     public class CompositionOffsetBox : FullBox
     {
-        public const string FourCC = "ctts";
+        public const string TYPE = "ctts";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -8668,7 +8668,7 @@ namespace BoxGenerator2
     */
     public class DataInformationBox : Box
     {
-        public const string FourCC = "dinf";
+        public const string TYPE = "dinf";
 
         public DataInformationBox() : base("dinf")
         {
@@ -8710,7 +8710,7 @@ namespace BoxGenerator2
     */
     public class DataReferenceBox : FullBox
     {
-        public const string FourCC = "dref";
+        public const string TYPE = "dref";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -8771,7 +8771,7 @@ namespace BoxGenerator2
     */
     public class EditBox : Box
     {
-        public const string FourCC = "edts";
+        public const string TYPE = "edts";
 
         public EditBox() : base("edts")
         {
@@ -8820,7 +8820,7 @@ namespace BoxGenerator2
     */
     public class EditListBox : FullBox
     {
-        public const string FourCC = "elst";
+        public const string TYPE = "elst";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -8931,7 +8931,7 @@ namespace BoxGenerator2
     */
     public class ExtendedTypeBox : Box
     {
-        public const string FourCC = "etyp";
+        public const string TYPE = "etyp";
 
         protected TypeCombinationBox[] compatible_combinations;  //  to end of the box
         public TypeCombinationBox[] CompatibleCombinations { get { return this.compatible_combinations; } set { this.compatible_combinations = value; } }
@@ -8981,7 +8981,7 @@ namespace BoxGenerator2
     */
     public class FDItemInfoExtension : ItemInfoExtension
     {
-        public const string FourCC = "fdel";
+        public const string TYPE = "fdel";
 
         protected string content_location;
         public string ContentLocation { get { return this.content_location; } set { this.content_location = value; } }
@@ -9078,7 +9078,7 @@ namespace BoxGenerator2
     */
     public class FECReservoirBox : FullBox
     {
-        public const string FourCC = "fecr";
+        public const string TYPE = "fecr";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9202,7 +9202,7 @@ namespace BoxGenerator2
     */
     public class PartitionEntry : Box
     {
-        public const string FourCC = "paen";
+        public const string TYPE = "paen";
 
         protected FilePartitionBox blocks_and_symbols;
         public FilePartitionBox BlocksAndSymbols { get { return this.blocks_and_symbols; } set { this.blocks_and_symbols = value; } }
@@ -9262,7 +9262,7 @@ namespace BoxGenerator2
     */
     public class FDItemInformationBox : FullBox
     {
-        public const string FourCC = "fiin";
+        public const string TYPE = "fiin";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9337,7 +9337,7 @@ namespace BoxGenerator2
     */
     public class FileReservoirBox : FullBox
     {
-        public const string FourCC = "fire";
+        public const string TYPE = "fire";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9479,7 +9479,7 @@ namespace BoxGenerator2
     */
     public class FilePartitionBox : FullBox
     {
-        public const string FourCC = "fpar";
+        public const string TYPE = "fpar";
 
         protected uint item_ID;
         public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -9653,7 +9653,7 @@ namespace BoxGenerator2
     */
     public class FreeSpaceBox : Box
     {
-        public const string FourCC = "free";
+        public const string TYPE = "free";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -9698,7 +9698,7 @@ namespace BoxGenerator2
     */
     public class OriginalFormatBox : Box
     {
-        public const string FourCC = "frma";
+        public const string TYPE = "frma";
 
         protected uint data_format; // = codingname
         public uint DataFormat { get { return this.data_format; } set { this.data_format = value; } }
@@ -9750,7 +9750,7 @@ namespace BoxGenerator2
     */
     public class FileTypeBox : Box
     {
-        public const string FourCC = "ftyp";
+        public const string TYPE = "ftyp";
 
         protected uint major_brand;
         public uint MajorBrand { get { return this.major_brand; } set { this.major_brand = value; } }
@@ -9809,7 +9809,7 @@ namespace BoxGenerator2
     */
     public class GroupIdToNameBox : FullBox
     {
-        public const string FourCC = "gitn";
+        public const string TYPE = "gitn";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9874,7 +9874,7 @@ namespace BoxGenerator2
     */
     public class GroupsListBox : Box
     {
-        public const string FourCC = "grpl";
+        public const string TYPE = "grpl";
 
         public GroupsListBox() : base("grpl")
         {
@@ -9915,7 +9915,7 @@ namespace BoxGenerator2
     */
     public class HandlerBox : FullBox
     {
-        public const string FourCC = "hdlr";
+        public const string TYPE = "hdlr";
 
         protected uint pre_defined = 0;
         public uint PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -9980,7 +9980,7 @@ namespace BoxGenerator2
     */
     public class HintMediaHeaderBox : FullBox
     {
-        public const string FourCC = "hmhd";
+        public const string TYPE = "hmhd";
 
         protected ushort maxPDUsize;
         public ushort MaxPDUsize { get { return this.maxPDUsize; } set { this.maxPDUsize = value; } }
@@ -10046,7 +10046,7 @@ namespace BoxGenerator2
     */
     public class ItemDataBox : Box
     {
-        public const string FourCC = "idat";
+        public const string TYPE = "idat";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -10094,7 +10094,7 @@ namespace BoxGenerator2
     */
     public class ItemInfoBox : FullBox
     {
-        public const string FourCC = "iinf";
+        public const string TYPE = "iinf";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10204,7 +10204,7 @@ namespace BoxGenerator2
     */
     public class ItemLocationBox : FullBox
     {
-        public const string FourCC = "iloc";
+        public const string TYPE = "iloc";
 
         protected byte offset_size;
         public byte OffsetSize { get { return this.offset_size; } set { this.offset_size = value; } }
@@ -10457,7 +10457,7 @@ namespace BoxGenerator2
     */
     public class IdentifiedMediaDataBox : Box
     {
-        public const string FourCC = "imda";
+        public const string TYPE = "imda";
 
         protected uint imda_identifier;
         public uint ImdaIdentifier { get { return this.imda_identifier; } set { this.imda_identifier = value; } }
@@ -10532,7 +10532,7 @@ namespace BoxGenerator2
     */
     public class ItemInfoEntry : FullBox
     {
-        public const string FourCC = "infe";
+        public const string TYPE = "infe";
 
         protected uint item_ID;
         public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -10730,7 +10730,7 @@ namespace BoxGenerator2
     */
     public class ItemProtectionBox : FullBox
     {
-        public const string FourCC = "ipro";
+        public const string TYPE = "ipro";
 
         protected ushort protection_count;
         public ushort ProtectionCount { get { return this.protection_count; } set { this.protection_count = value; } }
@@ -10796,7 +10796,7 @@ namespace BoxGenerator2
     */
     public class ItemReferenceBox : FullBox
     {
-        public const string FourCC = "iref";
+        public const string TYPE = "iref";
 
         protected SingleItemTypeReferenceBox[] references;
         public SingleItemTypeReferenceBox[] References { get { return this.references; } set { this.references = value; } }
@@ -10891,7 +10891,7 @@ namespace BoxGenerator2
     */
     public class LevelAssignmentBox : FullBox
     {
-        public const string FourCC = "leva";
+        public const string TYPE = "leva";
 
         protected byte level_count;
         public byte LevelCount { get { return this.level_count; } set { this.level_count = value; } }
@@ -11053,7 +11053,7 @@ namespace BoxGenerator2
     */
     public class MediaDataBox : Box
     {
-        public const string FourCC = "mdat";
+        public const string TYPE = "mdat";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -11108,7 +11108,7 @@ namespace BoxGenerator2
     */
     public class MediaHeaderBox : FullBox
     {
-        public const string FourCC = "mdhd";
+        public const string TYPE = "mdhd";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -11224,7 +11224,7 @@ namespace BoxGenerator2
     */
     public class MediaBox : Box
     {
-        public const string FourCC = "mdia";
+        public const string TYPE = "mdia";
 
         public MediaBox() : base("mdia")
         {
@@ -11266,7 +11266,7 @@ namespace BoxGenerator2
     */
     public class MovieExtendsHeaderBox : FullBox
     {
-        public const string FourCC = "mehd";
+        public const string TYPE = "mehd";
 
         protected ulong fragment_duration;
         public ulong FragmentDuration { get { return this.fragment_duration; } set { this.fragment_duration = value; } }
@@ -11348,7 +11348,7 @@ namespace BoxGenerator2
     */
     public class MetaBox : FullBox
     {
-        public const string FourCC = "meta";
+        public const string TYPE = "meta";
 
         protected HandlerBox theHandler;
         public HandlerBox TheHandler { get { return this.theHandler; } set { this.theHandler = value; } }
@@ -11447,7 +11447,7 @@ namespace BoxGenerator2
     */
     public class MovieFragmentHeaderBox : FullBox
     {
-        public const string FourCC = "mfhd";
+        public const string TYPE = "mfhd";
 
         protected uint sequence_number;
         public uint SequenceNumber { get { return this.sequence_number; } set { this.sequence_number = value; } }
@@ -11490,7 +11490,7 @@ namespace BoxGenerator2
     */
     public class MovieFragmentRandomAccessBox : Box
     {
-        public const string FourCC = "mfra";
+        public const string TYPE = "mfra";
 
         public MovieFragmentRandomAccessBox() : base("mfra")
         {
@@ -11529,7 +11529,7 @@ namespace BoxGenerator2
     */
     public class MovieFragmentRandomAccessOffsetBox : FullBox
     {
-        public const string FourCC = "mfro";
+        public const string TYPE = "mfro";
 
         protected uint parent_size;
         public uint ParentSize { get { return this.parent_size; } set { this.parent_size = value; } }
@@ -11570,7 +11570,7 @@ namespace BoxGenerator2
     */
     public class MediaInformationBox : Box
     {
-        public const string FourCC = "minf";
+        public const string TYPE = "minf";
 
         public MediaInformationBox() : base("minf")
         {
@@ -11609,7 +11609,7 @@ namespace BoxGenerator2
     */
     public class CompressedMovieFragmentBox : CompressedBox
     {
-        public const string FourCC = "moof";
+        public const string TYPE = "moof";
 
         public CompressedMovieFragmentBox() : base("moof")
         {
@@ -11647,7 +11647,7 @@ namespace BoxGenerator2
     */
     public class CompressedMovieBox : CompressedBox
     {
-        public const string FourCC = "moov";
+        public const string TYPE = "moov";
 
         public CompressedMovieBox() : base("moov")
         {
@@ -11684,7 +11684,7 @@ namespace BoxGenerator2
     */
     public class MovieExtendsBox : Box
     {
-        public const string FourCC = "mvex";
+        public const string TYPE = "mvex";
 
         public MovieExtendsBox() : base("mvex")
         {
@@ -11741,7 +11741,7 @@ namespace BoxGenerator2
     */
     public class MovieHeaderBox : FullBox
     {
-        public const string FourCC = "mvhd";
+        public const string TYPE = "mvhd";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -11883,7 +11883,7 @@ namespace BoxGenerator2
     */
     public class NullMediaHeaderBox : FullBox
     {
-        public const string FourCC = "nmhd";
+        public const string TYPE = "nmhd";
 
         public NullMediaHeaderBox(uint flags = 0) : base("nmhd", 0, flags)
         {
@@ -11918,7 +11918,7 @@ namespace BoxGenerator2
     */
     public class OriginalFileTypeBox : Box
     {
-        public const string FourCC = "otyp";
+        public const string TYPE = "otyp";
 
         public OriginalFileTypeBox() : base("otyp")
         {
@@ -11963,7 +11963,7 @@ namespace BoxGenerator2
     */
     public class PaddingBitsBox : FullBox
     {
-        public const string FourCC = "padb";
+        public const string TYPE = "padb";
 
         protected uint sample_count;
         public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
@@ -12048,7 +12048,7 @@ namespace BoxGenerator2
     */
     public class ProgressiveDownloadInfoBox : FullBox
     {
-        public const string FourCC = "pdin";
+        public const string TYPE = "pdin";
 
         protected uint rate;
         public uint Rate { get { return this.rate; } set { this.rate = value; } }
@@ -12116,7 +12116,7 @@ namespace BoxGenerator2
     */
     public class PrimaryItemBox : FullBox
     {
-        public const string FourCC = "pitm";
+        public const string TYPE = "pitm";
 
         protected uint item_ID;
         public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -12192,7 +12192,7 @@ namespace BoxGenerator2
     */
     public class ProducerReferenceTimeBox : FullBox
     {
-        public const string FourCC = "prft";
+        public const string TYPE = "prft";
 
         protected uint reference_track_ID;
         public uint ReferenceTrackID { get { return this.reference_track_ID; } set { this.reference_track_ID = value; } }
@@ -12275,7 +12275,7 @@ namespace BoxGenerator2
     */
     public class RestrictedSchemeInfoBox : Box
     {
-        public const string FourCC = "rinf";
+        public const string TYPE = "rinf";
 
         protected OriginalFormatBox original_format;
         public OriginalFormatBox OriginalFormat { get { return this.original_format; } set { this.original_format = value; } }
@@ -12343,7 +12343,7 @@ namespace BoxGenerator2
     */
     public class SampleAuxiliaryInformationOffsetsBox : FullBox
     {
-        public const string FourCC = "saio";
+        public const string TYPE = "saio";
 
         protected uint aux_info_type;
         public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
@@ -12452,7 +12452,7 @@ namespace BoxGenerator2
     */
     public class SampleAuxiliaryInformationSizesBox : FullBox
     {
-        public const string FourCC = "saiz";
+        public const string TYPE = "saiz";
 
         protected uint aux_info_type;
         public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
@@ -12553,7 +12553,7 @@ namespace BoxGenerator2
     */
     public class SampleToGroupBox : FullBox
     {
-        public const string FourCC = "sbgp";
+        public const string TYPE = "sbgp";
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -12643,7 +12643,7 @@ namespace BoxGenerator2
     */
     public class SchemeInformationBox : Box
     {
-        public const string FourCC = "schi";
+        public const string TYPE = "schi";
 
         protected Box[] scheme_specific_data;
         public Box[] SchemeSpecificData { get { return this.scheme_specific_data; } set { this.scheme_specific_data = value; } }
@@ -12691,7 +12691,7 @@ namespace BoxGenerator2
     */
     public class SchemeTypeBox : FullBox
     {
-        public const string FourCC = "schm";
+        public const string TYPE = "schm";
 
         protected uint scheme_type;  //  4CC identifying the scheme
         public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
@@ -12763,7 +12763,7 @@ namespace BoxGenerator2
     */
     public class CompatibleSchemeTypeBox : FullBox
     {
-        public const string FourCC = "csch";
+        public const string TYPE = "csch";
 
         protected uint scheme_type;  //  4CC identifying the scheme
         public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
@@ -12838,7 +12838,7 @@ namespace BoxGenerator2
     */
     public class SampleDependencyTypeBox : FullBox
     {
-        public const string FourCC = "sdtp";
+        public const string TYPE = "sdtp";
 
         protected byte is_leading;
         public byte IsLeading { get { return this.is_leading; } set { this.is_leading = value; } }
@@ -12926,7 +12926,7 @@ namespace BoxGenerator2
     */
     public class FDSessionGroupBox : Box
     {
-        public const string FourCC = "segr";
+        public const string TYPE = "segr";
 
         protected ushort num_session_groups;
         public ushort NumSessionGroups { get { return this.num_session_groups; } set { this.num_session_groups = value; } }
@@ -13045,7 +13045,7 @@ namespace BoxGenerator2
     */
     public class SampleGroupDescriptionBox : FullBox
     {
-        public const string FourCC = "sgpd";
+        public const string TYPE = "sgpd";
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -13186,7 +13186,7 @@ namespace BoxGenerator2
     */
     public class CompressedSegmentIndexBox : CompressedBox
     {
-        public const string FourCC = "sidx";
+        public const string TYPE = "sidx";
 
         public CompressedSegmentIndexBox() : base("sidx")
         {
@@ -13225,7 +13225,7 @@ namespace BoxGenerator2
     */
     public class ProtectionSchemeInfoBox : Box
     {
-        public const string FourCC = "sinf";
+        public const string TYPE = "sinf";
 
         protected OriginalFormatBox original_format;
         public OriginalFormatBox OriginalFormat { get { return this.original_format; } set { this.original_format = value; } }
@@ -13281,7 +13281,7 @@ namespace BoxGenerator2
     */
     public class FreeSpaceBox_skip : Box
     {
-        public const string FourCC = "skip";
+        public const string TYPE = "skip";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -13325,7 +13325,7 @@ namespace BoxGenerator2
     */
     public class SoundMediaHeaderBox : FullBox
     {
-        public const string FourCC = "smhd";
+        public const string TYPE = "smhd";
 
         protected short balance = 0;
         public short Balance { get { return this.balance; } set { this.balance = value; } }
@@ -13378,7 +13378,7 @@ namespace BoxGenerator2
     */
     public class SRTPProcessBox : FullBox
     {
-        public const string FourCC = "srpp";
+        public const string TYPE = "srpp";
 
         protected uint encryption_algorithm_rtp;
         public uint EncryptionAlgorithmRtp { get { return this.encryption_algorithm_rtp; } set { this.encryption_algorithm_rtp = value; } }
@@ -13450,7 +13450,7 @@ namespace BoxGenerator2
     */
     public class CompressedSubsegmentIndexBox : CompressedBox
     {
-        public const string FourCC = "ssix";
+        public const string TYPE = "ssix";
 
         public CompressedSubsegmentIndexBox() : base("ssix")
         {
@@ -13485,7 +13485,7 @@ namespace BoxGenerator2
     */
     public class SampleTableBox : Box
     {
-        public const string FourCC = "stbl";
+        public const string TYPE = "stbl";
 
         public SampleTableBox() : base("stbl")
         {
@@ -13527,7 +13527,7 @@ namespace BoxGenerator2
     */
     public class ChunkOffsetBox : FullBox
     {
-        public const string FourCC = "stco";
+        public const string TYPE = "stco";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -13591,7 +13591,7 @@ namespace BoxGenerator2
     */
     public class DegradationPriorityBox : FullBox
     {
-        public const string FourCC = "stdp";
+        public const string TYPE = "stdp";
 
         protected ushort priority;
         public ushort Priority { get { return this.priority; } set { this.priority = value; } }
@@ -13654,7 +13654,7 @@ namespace BoxGenerator2
     */
     public class SubtitleMediaHeaderBox : FullBox
     {
-        public const string FourCC = "sthd";
+        public const string TYPE = "sthd";
 
         public SubtitleMediaHeaderBox() : base("sthd", 0, 0)
         {
@@ -13689,7 +13689,7 @@ namespace BoxGenerator2
     */
     public class SubTrackDefinitionBox : Box
     {
-        public const string FourCC = "strd";
+        public const string TYPE = "strd";
 
         public SubTrackDefinitionBox() : base("strd")
         {
@@ -13731,7 +13731,7 @@ namespace BoxGenerator2
     */
     public class SubTrackInformationBox : FullBox
     {
-        public const string FourCC = "stri";
+        public const string TYPE = "stri";
 
         protected short switch_group = 0;
         public short SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
@@ -13797,7 +13797,7 @@ namespace BoxGenerator2
     */
     public class SampleToChunkBox : FullBox
     {
-        public const string FourCC = "stsc";
+        public const string TYPE = "stsc";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -13874,7 +13874,7 @@ namespace BoxGenerator2
     */
     public class SampleDescriptionBox : FullBox
     {
-        public const string FourCC = "stsd";
+        public const string TYPE = "stsd";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -13943,7 +13943,7 @@ namespace BoxGenerator2
     */
     public class SubTrackSampleGroupBox : FullBox
     {
-        public const string FourCC = "stsg";
+        public const string TYPE = "stsg";
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -14015,7 +14015,7 @@ namespace BoxGenerator2
     */
     public class ShadowSyncSampleBox : FullBox
     {
-        public const string FourCC = "stsh";
+        public const string TYPE = "stsh";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14089,7 +14089,7 @@ namespace BoxGenerator2
     */
     public class SyncSampleBox : FullBox
     {
-        public const string FourCC = "stss";
+        public const string TYPE = "stss";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14158,7 +14158,7 @@ namespace BoxGenerator2
     */
     public class SampleSizeBox : FullBox
     {
-        public const string FourCC = "stsz";
+        public const string TYPE = "stsz";
 
         protected uint sample_size;
         public uint SampleSize { get { return this.sample_size; } set { this.sample_size = value; } }
@@ -14242,7 +14242,7 @@ namespace BoxGenerator2
     */
     public class TimeToSampleBox : FullBox
     {
-        public const string FourCC = "stts";
+        public const string TYPE = "stts";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14310,7 +14310,7 @@ namespace BoxGenerator2
     */
     public class SegmentTypeBox : GeneralTypeBox
     {
-        public const string FourCC = "styp";
+        public const string TYPE = "styp";
 
         public SegmentTypeBox() : base("styp")
         {
@@ -14352,7 +14352,7 @@ namespace BoxGenerator2
     */
     public class CompactSampleSizeBox : FullBox
     {
-        public const string FourCC = "stz2";
+        public const string TYPE = "stz2";
 
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -14445,7 +14445,7 @@ namespace BoxGenerator2
     */
     public class SubSampleInformationBox : FullBox
     {
-        public const string FourCC = "subs";
+        public const string TYPE = "subs";
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14594,7 +14594,7 @@ namespace BoxGenerator2
     */
     public class TrackFragmentBaseMediaDecodeTimeBox : FullBox
     {
-        public const string FourCC = "tfdt";
+        public const string TYPE = "tfdt";
 
         protected ulong baseMediaDecodeTime;
         public ulong BaseMediaDecodeTime { get { return this.baseMediaDecodeTime; } set { this.baseMediaDecodeTime = value; } }
@@ -14674,7 +14674,7 @@ namespace BoxGenerator2
     */
     public class TrackFragmentHeaderBox : FullBox
     {
-        public const string FourCC = "tfhd";
+        public const string TYPE = "tfhd";
 
         protected uint track_ID;  //  all the following are optional fields
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -14767,7 +14767,7 @@ namespace BoxGenerator2
     */
     public class TrackFragmentRandomAccessBox : FullBox
     {
-        public const string FourCC = "tfra";
+        public const string TYPE = "tfra";
 
         protected uint track_ID;
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -14934,7 +14934,7 @@ namespace BoxGenerator2
     */
     public class TrackHeaderBox : FullBox
     {
-        public const string FourCC = "tkhd";
+        public const string TYPE = "tkhd";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -15093,7 +15093,7 @@ namespace BoxGenerator2
     */
     public class TrackFragmentBox : Box
     {
-        public const string FourCC = "traf";
+        public const string TYPE = "traf";
 
         public TrackFragmentBox() : base("traf")
         {
@@ -15130,7 +15130,7 @@ namespace BoxGenerator2
     */
     public class TrackBox : Box
     {
-        public const string FourCC = "trak";
+        public const string TYPE = "trak";
 
         public TrackBox() : base("trak")
         {
@@ -15168,7 +15168,7 @@ namespace BoxGenerator2
     */
     public class TrackReferenceBox : Box
     {
-        public const string FourCC = "tref";
+        public const string TYPE = "tref";
 
         protected TrackReferenceTypeBox[] TrackReferenceTypeBox;
         public TrackReferenceTypeBox[] _TrackReferenceTypeBox { get { return this.TrackReferenceTypeBox; } set { this.TrackReferenceTypeBox = value; } }
@@ -15213,7 +15213,7 @@ namespace BoxGenerator2
     */
     public class TrackExtensionPropertiesBox : FullBox
     {
-        public const string FourCC = "trep";
+        public const string TYPE = "trep";
 
         protected uint track_ID;  //  Any number of boxes may follow
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -15261,7 +15261,7 @@ namespace BoxGenerator2
     */
     public class TrackExtendsBox : FullBox
     {
-        public const string FourCC = "trex";
+        public const string TYPE = "trex";
 
         protected uint track_ID;
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -15326,7 +15326,7 @@ namespace BoxGenerator2
     */
     public class TrackGroupBox : Box
     {
-        public const string FourCC = "trgr";
+        public const string TYPE = "trgr";
 
         public TrackGroupBox() : base("trgr")
         {
@@ -15379,7 +15379,7 @@ namespace BoxGenerator2
     */
     public class TrackRunBox : FullBox
     {
-        public const string FourCC = "trun";
+        public const string TYPE = "trun";
 
         protected uint sample_count;  //  the following are optional fields
         public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
@@ -15438,7 +15438,7 @@ namespace BoxGenerator2
     */
     public class TrackTypeBox : GeneralTypeBox
     {
-        public const string FourCC = "ttyp";
+        public const string TYPE = "ttyp";
 
         public TrackTypeBox() : base("ttyp")
         {
@@ -15474,7 +15474,7 @@ namespace BoxGenerator2
     */
     public class TypeCombinationBox : Box
     {
-        public const string FourCC = "tyco";
+        public const string TYPE = "tyco";
 
         protected uint[] compatible_brands;  //  to end of the box
         public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
@@ -15515,7 +15515,7 @@ namespace BoxGenerator2
     */
     public class UserDataBox : Box
     {
-        public const string FourCC = "udta";
+        public const string TYPE = "udta";
 
         public UserDataBox() : base("udta")
         {
@@ -15662,7 +15662,7 @@ namespace BoxGenerator2
     */
     public class VideoMediaHeaderBox : FullBox
     {
-        public const string FourCC = "vmhd";
+        public const string TYPE = "vmhd";
 
         protected ushort graphicsmode = 0;  //  copy, see below
         public ushort Graphicsmode { get { return this.graphicsmode; } set { this.graphicsmode = value; } }
@@ -15711,7 +15711,7 @@ namespace BoxGenerator2
     */
     public class XMLBox : FullBox
     {
-        public const string FourCC = "xml ";
+        public const string TYPE = "xml ";
 
         protected string xml;
         public string Xml { get { return this.xml; } set { this.xml = value; } }
@@ -15755,7 +15755,7 @@ namespace BoxGenerator2
     */
     public class AmbientViewingEnvironmentBox : Box
     {
-        public const string FourCC = "amve";
+        public const string TYPE = "amve";
 
         protected uint ambient_illuminance;
         public uint AmbientIlluminance { get { return this.ambient_illuminance; } set { this.ambient_illuminance = value; } }
@@ -15809,7 +15809,7 @@ namespace BoxGenerator2
     */
     public class MetaDataKeyTableBox : Box
     {
-        public const string FourCC = "keys";
+        public const string TYPE = "keys";
 
         protected MetaDataKeyBox[] MetaDataKeyBox;
         public MetaDataKeyBox[] _MetaDataKeyBox { get { return this.MetaDataKeyBox; } set { this.MetaDataKeyBox = value; } }
@@ -15851,7 +15851,7 @@ namespace BoxGenerator2
     */
     public class URIBox : FullBox
     {
-        public const string FourCC = "uri ";
+        public const string TYPE = "uri ";
 
         protected string theURI;
         public string TheURI { get { return this.theURI; } set { this.theURI = value; } }
@@ -15906,7 +15906,7 @@ namespace BoxGenerator2
     */
     public class IroiInfoBox : Box
     {
-        public const string FourCC = "iroi";
+        public const string TYPE = "iroi";
 
         protected byte iroi_type;
         public byte IroiType { get { return this.iroi_type; } set { this.iroi_type = value; } }
@@ -16028,7 +16028,7 @@ namespace BoxGenerator2
     */
     public class TierDependencyBox : Box
     {
-        public const string FourCC = "ldep";
+        public const string TYPE = "ldep";
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -16095,7 +16095,7 @@ namespace BoxGenerator2
     */
     public class SVCDependencyRangeBox : Box
     {
-        public const string FourCC = "svdr";
+        public const string TYPE = "svdr";
 
         protected byte min_dependency_id;
         public byte MinDependencyId { get { return this.min_dependency_id; } set { this.min_dependency_id = value; } }
@@ -16184,7 +16184,7 @@ namespace BoxGenerator2
     */
     public class InitialParameterSetBox : Box
     {
-        public const string FourCC = "svip";
+        public const string TYPE = "svip";
 
         protected byte sps_id_count;
         public byte SpsIdCount { get { return this.sps_id_count; } set { this.sps_id_count = value; } }
@@ -16271,7 +16271,7 @@ namespace BoxGenerator2
     */
     public class PriorityRangeBox : Box
     {
-        public const string FourCC = "svpr";
+        public const string TYPE = "svpr";
 
         protected byte reserved1 = 0;
         public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -16344,7 +16344,7 @@ namespace BoxGenerator2
     */
     public class TranscodingInfoBox : Box
     {
-        public const string FourCC = "tran";
+        public const string TYPE = "tran";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -16472,7 +16472,7 @@ namespace BoxGenerator2
     */
     public class RectRegionBox : Box
     {
-        public const string FourCC = "rrgn";
+        public const string TYPE = "rrgn";
 
         protected ushort base_region_tierID;
         public ushort BaseRegionTierID { get { return this.base_region_tierID; } set { this.base_region_tierID = value; } }
@@ -16569,7 +16569,7 @@ namespace BoxGenerator2
     */
     public class BufferingBox : Box
     {
-        public const string FourCC = "buff";
+        public const string TYPE = "buff";
 
         protected ushort operating_point_count;
         public ushort OperatingPointCount { get { return this.operating_point_count; } set { this.operating_point_count = value; } }
@@ -16659,7 +16659,7 @@ namespace BoxGenerator2
     */
     public class MVCSubTrackViewBox : FullBox
     {
-        public const string FourCC = "mstv";
+        public const string TYPE = "mstv";
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -16756,7 +16756,7 @@ namespace BoxGenerator2
     */
     public class MultiviewGroupBox : FullBox
     {
-        public const string FourCC = "mvcg";
+        public const string TYPE = "mvcg";
 
         protected uint multiview_group_id;
         public uint MultiviewGroupId { get { return this.multiview_group_id; } set { this.multiview_group_id = value; } }
@@ -16953,7 +16953,7 @@ namespace BoxGenerator2
     */
     public class MultiviewInformationBox : FullBox
     {
-        public const string FourCC = "mvci";
+        public const string TYPE = "mvci";
 
         public MultiviewInformationBox(uint flags = 0) : base("mvci", 0, flags)
         {
@@ -17005,7 +17005,7 @@ namespace BoxGenerator2
     */
     public class MVDDepthResolutionBox : Box
     {
-        public const string FourCC = "3dpr";
+        public const string TYPE = "3dpr";
 
         protected ushort depth_width;
         public ushort DepthWidth { get { return this.depth_width; } set { this.depth_width = value; } }
@@ -17132,7 +17132,7 @@ namespace BoxGenerator2
     */
     public class MultiviewRelationAttributeBox : FullBox
     {
-        public const string FourCC = "mvra";
+        public const string TYPE = "mvra";
 
         protected ushort reserved1 = 0;
         public ushort Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -17240,7 +17240,7 @@ namespace BoxGenerator2
     */
     public class SampleDependencyBox : FullBox
     {
-        public const string FourCC = "sdep";
+        public const string TYPE = "sdep";
 
         protected ushort dependency_count;
         public ushort DependencyCount { get { return this.dependency_count; } set { this.dependency_count = value; } }
@@ -17325,7 +17325,7 @@ namespace BoxGenerator2
     */
     public class SeiInformationBox : Box
     {
-        public const string FourCC = "seii";
+        public const string TYPE = "seii";
 
         protected ushort numRequiredSEIs;
         public ushort NumRequiredSEIs { get { return this.numRequiredSEIs; } set { this.numRequiredSEIs = value; } }
@@ -17420,7 +17420,7 @@ namespace BoxGenerator2
     */
     public class SVCSubTrackLayerBox : FullBox
     {
-        public const string FourCC = "sstl";
+        public const string TYPE = "sstl";
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -17526,7 +17526,7 @@ namespace BoxGenerator2
     */
     public class MVCSubTrackMultiviewGroupBox : FullBox
     {
-        public const string FourCC = "stmg";
+        public const string TYPE = "stmg";
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -17590,7 +17590,7 @@ namespace BoxGenerator2
     */
     public class SubTrackTierBox : FullBox
     {
-        public const string FourCC = "stti";
+        public const string TYPE = "stti";
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -17653,7 +17653,7 @@ namespace BoxGenerator2
     */
     public class MultiviewGroupRelationBox : FullBox
     {
-        public const string FourCC = "swtc";
+        public const string TYPE = "swtc";
 
         protected uint num_entries;
         public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
@@ -17727,7 +17727,7 @@ namespace BoxGenerator2
     */
     public class TierBitRateBox : Box
     {
-        public const string FourCC = "tibr";
+        public const string TYPE = "tibr";
 
         protected uint baseBitRate;
         public uint BaseBitRate { get { return this.baseBitRate; } set { this.baseBitRate = value; } }
@@ -17811,7 +17811,7 @@ namespace BoxGenerator2
     */
     public class TierInfoBox : Box
     {
-        public const string FourCC = "tiri";
+        public const string TYPE = "tiri";
 
         protected ushort tierID;
         public ushort TierID { get { return this.tierID; } set { this.tierID = value; } }
@@ -17919,7 +17919,7 @@ namespace BoxGenerator2
     */
     public class TileSubTrackGroupBox : FullBox
     {
-        public const string FourCC = "tstb";
+        public const string TYPE = "tstb";
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -17980,7 +17980,7 @@ namespace BoxGenerator2
     */
     public class MultiviewSceneInfoBox : Box
     {
-        public const string FourCC = "vwdi";
+        public const string TYPE = "vwdi";
 
         protected byte max_disparity;
         public byte MaxDisparity { get { return this.max_disparity; } set { this.max_disparity = value; } }
@@ -18023,7 +18023,7 @@ namespace BoxGenerator2
     */
     public class MVCDConfigurationBox : Box
     {
-        public const string FourCC = "mvdC";
+        public const string TYPE = "mvdC";
 
         protected MVDDecoderConfigurationRecord MVDConfig;
         public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
@@ -18074,7 +18074,7 @@ namespace BoxGenerator2
     */
     public class A3DConfigurationBox : Box
     {
-        public const string FourCC = "a3dC";
+        public const string TYPE = "a3dC";
 
         protected MVDDecoderConfigurationRecord MVDConfig;
         public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
@@ -18145,7 +18145,7 @@ namespace BoxGenerator2
     */
     public class ViewIdentifierBox : FullBox
     {
-        public const string FourCC = "vwid";
+        public const string TYPE = "vwid";
 
         protected byte reserved6 = 0;
         public byte Reserved6 { get { return this.reserved6; } set { this.reserved6 = value; } }
@@ -18307,7 +18307,7 @@ namespace BoxGenerator2
     */
     public class MVCConfigurationBox : Box
     {
-        public const string FourCC = "mvcC";
+        public const string TYPE = "mvcC";
 
         protected MVCDecoderConfigurationRecord MVCConfig;
         public MVCDecoderConfigurationRecord _MVCConfig { get { return this.MVCConfig; } set { this.MVCConfig = value; } }
@@ -18349,7 +18349,7 @@ namespace BoxGenerator2
     */
     public class AVCConfigurationBox : Box
     {
-        public const string FourCC = "avcC";
+        public const string TYPE = "avcC";
 
         protected AVCDecoderConfigurationRecord AVCConfig;
         public AVCDecoderConfigurationRecord _AVCConfig { get { return this.AVCConfig; } set { this.AVCConfig = value; } }
@@ -18391,7 +18391,7 @@ namespace BoxGenerator2
     */
     public class HEVCConfigurationBox : Box
     {
-        public const string FourCC = "hvcC";
+        public const string TYPE = "hvcC";
 
         protected HEVCDecoderConfigurationRecord HEVCConfig;
         public HEVCDecoderConfigurationRecord _HEVCConfig { get { return this.HEVCConfig; } set { this.HEVCConfig = value; } }
@@ -18433,7 +18433,7 @@ namespace BoxGenerator2
     */
     public class LHEVCConfigurationBox : Box
     {
-        public const string FourCC = "lhvC";
+        public const string TYPE = "lhvC";
 
         protected LHEVCDecoderConfigurationRecord LHEVCConfig;
         public LHEVCDecoderConfigurationRecord _LHEVCConfig { get { return this.LHEVCConfig; } set { this.LHEVCConfig = value; } }
@@ -18475,7 +18475,7 @@ namespace BoxGenerator2
     */
     public class MPEG4ExtensionDescriptorsBox : Box
     {
-        public const string FourCC = "m4ds";
+        public const string TYPE = "m4ds";
 
         protected Descriptor[] Descr;
         public Descriptor[] _Descr { get { return this.Descr; } set { this.Descr = value; } }
@@ -18517,7 +18517,7 @@ namespace BoxGenerator2
     */
     public class SVCConfigurationBox : Box
     {
-        public const string FourCC = "svcC";
+        public const string TYPE = "svcC";
 
         protected SVCDecoderConfigurationRecord SVCConfig;
         public SVCDecoderConfigurationRecord _SVCConfig { get { return this.SVCConfig; } set { this.SVCConfig = value; } }
@@ -18560,7 +18560,7 @@ namespace BoxGenerator2
     */
     public class ScalabilityInformationSEIBox : Box
     {
-        public const string FourCC = "seib";
+        public const string TYPE = "seib";
 
         protected byte[] scalinfosei;
         public byte[] Scalinfosei { get { return this.scalinfosei; } set { this.scalinfosei = value; } }
@@ -18604,7 +18604,7 @@ namespace BoxGenerator2
     */
     public class SVCPriorityAssignmentBox : Box
     {
-        public const string FourCC = "svcP";
+        public const string TYPE = "svcP";
 
         protected byte method_count;
         public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
@@ -18653,7 +18653,7 @@ namespace BoxGenerator2
     */
     public class ViewScalabilityInformationSEIBox : Box
     {
-        public const string FourCC = "vsib";
+        public const string TYPE = "vsib";
 
         protected byte[] mvcscalinfosei;
         public byte[] Mvcscalinfosei { get { return this.mvcscalinfosei; } set { this.mvcscalinfosei = value; } }
@@ -18696,7 +18696,7 @@ namespace BoxGenerator2
     */
     public class MVDScalabilityInformationSEIBox : Box
     {
-        public const string FourCC = "3sib";
+        public const string TYPE = "3sib";
 
         protected byte[] mvdscalinfosei;
         public byte[] Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
@@ -18740,7 +18740,7 @@ namespace BoxGenerator2
     */
     public class MVCViewPriorityAssignmentBox : Box
     {
-        public const string FourCC = "mvcP";
+        public const string TYPE = "mvcP";
 
         protected byte method_count;
         public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
@@ -18788,7 +18788,7 @@ namespace BoxGenerator2
     */
     public class HEVCTileConfigurationBox : Box
     {
-        public const string FourCC = "hvtC";
+        public const string TYPE = "hvtC";
 
         protected HEVCTileTierLevelConfigurationRecord HEVCTileTierLevelConfig;
         public HEVCTileTierLevelConfigurationRecord _HEVCTileTierLevelConfig { get { return this.HEVCTileTierLevelConfig; } set { this.HEVCTileTierLevelConfig = value; } }
@@ -18830,7 +18830,7 @@ namespace BoxGenerator2
     */
     public class EVCConfigurationBox : Box
     {
-        public const string FourCC = "evcC";
+        public const string TYPE = "evcC";
 
         protected EVCDecoderConfigurationRecord EVCConfig;
         public EVCDecoderConfigurationRecord _EVCConfig { get { return this.EVCConfig; } set { this.EVCConfig = value; } }
@@ -18878,7 +18878,7 @@ namespace BoxGenerator2
     */
     public class SVCPriorityLayerInfoBox : Box
     {
-        public const string FourCC = "qlif";
+        public const string TYPE = "qlif";
 
         protected byte pr_layer_num;
         public byte PrLayerNum { get { return this.pr_layer_num; } set { this.pr_layer_num = value; } }
@@ -18956,7 +18956,7 @@ namespace BoxGenerator2
     */
     public class VvcConfigurationBox : FullBox
     {
-        public const string FourCC = "vvcC";
+        public const string TYPE = "vvcC";
 
         protected VvcDecoderConfigurationRecord VvcConfig;
         public VvcDecoderConfigurationRecord _VvcConfig { get { return this.VvcConfig; } set { this.VvcConfig = value; } }
@@ -18999,7 +18999,7 @@ namespace BoxGenerator2
     */
     public class VvcNALUConfigBox : FullBox
     {
-        public const string FourCC = "vvnC";
+        public const string TYPE = "vvnC";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -19059,7 +19059,7 @@ namespace BoxGenerator2
     */
     public class DefaultHevcExtractorConstructorBox : FullBox
     {
-        public const string FourCC = "dhec";
+        public const string TYPE = "dhec";
 
         protected uint num_entries;
         public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
@@ -19206,7 +19206,7 @@ namespace BoxGenerator2
     */
     public class SVCMetadataSampleConfigBox : FullBox
     {
-        public const string FourCC = "svmC";
+        public const string TYPE = "svmC";
 
         protected byte sample_statement_type;
         public byte SampleStatementType { get { return this.sample_statement_type; } set { this.sample_statement_type = value; } }
@@ -19296,7 +19296,7 @@ namespace BoxGenerator2
     */
     public class EVCSliceComponentTrackConfigurationBox : Box
     {
-        public const string FourCC = "evsC";
+        public const string TYPE = "evsC";
 
         protected EVCSliceComponentTrackConfigurationRecord config;
         public EVCSliceComponentTrackConfigurationRecord Config { get { return this.config; } set { this.config = value; } }
@@ -19338,7 +19338,7 @@ namespace BoxGenerator2
     */
     public class WebVTTConfigurationBox : Box
     {
-        public const string FourCC = "vttC";
+        public const string TYPE = "vttC";
 
         protected string config;
         public string Config { get { return this.config; } set { this.config = value; } }
@@ -19380,7 +19380,7 @@ namespace BoxGenerator2
     */
     public class WebVTTSourceLabelBox : Box
     {
-        public const string FourCC = "vlab";
+        public const string TYPE = "vlab";
 
         protected string source_label;
         public string SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
@@ -19424,7 +19424,7 @@ namespace BoxGenerator2
     */
     public class WVTTSampleEntry : PlainTextSampleEntry
     {
-        public const string FourCC = "wvtt";
+        public const string TYPE = "wvtt";
 
         protected WebVTTConfigurationBox config;
         public WebVTTConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -19481,7 +19481,7 @@ namespace BoxGenerator2
     */
     public class AuxiliaryTypeInfoBox : FullBox
     {
-        public const string FourCC = "auxi";
+        public const string TYPE = "auxi";
 
         protected string aux_track_type;
         public string AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
@@ -19527,7 +19527,7 @@ namespace BoxGenerator2
     */
     public class CodingConstraintsBox : FullBox
     {
-        public const string FourCC = "ccst";
+        public const string TYPE = "ccst";
 
         protected bool all_ref_pics_intra;
         public bool AllRefPicsIntra { get { return this.all_ref_pics_intra; } set { this.all_ref_pics_intra = value; } }
@@ -19598,7 +19598,7 @@ namespace BoxGenerator2
     */
     public class MD5IntegrityBox : FullBox
     {
-        public const string FourCC = "md5i";
+        public const string TYPE = "md5i";
 
         protected byte[] input_MD5;
         public byte[] InputMD5 { get { return this.input_MD5; } set { this.input_MD5 = value; } }
@@ -20100,7 +20100,7 @@ namespace BoxGenerator2
     */
     public class GenericSampleEntry : Box
     {
-        public const string FourCC = "encv";
+        public const string TYPE = "encv";
 
         public GenericSampleEntry() : base("encv")
         {
@@ -20176,7 +20176,7 @@ namespace BoxGenerator2
     */
     public class XMLMetaDataSampleEntry : MetaDataSampleEntry
     {
-        public const string FourCC = "metx";
+        public const string TYPE = "metx";
 
         protected string content_encoding;  //  optional
         public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -20232,7 +20232,7 @@ namespace BoxGenerator2
     */
     public class TextMetaDataSampleEntry : MetaDataSampleEntry
     {
-        public const string FourCC = "mett";
+        public const string TYPE = "mett";
 
         protected string content_encoding;  //  optional
         public string ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -20289,7 +20289,7 @@ namespace BoxGenerator2
     */
     public class URIMetaSampleEntry : MetaDataSampleEntry
     {
-        public const string FourCC = "urim";
+        public const string TYPE = "urim";
 
         protected URIBox the_label;
         public URIBox TheLabel { get { return this.the_label; } set { this.the_label = value; } }
@@ -20341,7 +20341,7 @@ namespace BoxGenerator2
     */
     public class BoxedMetaDataSampleEntry : MetaDataSampleEntry
     {
-        public const string FourCC = "mebx";
+        public const string TYPE = "mebx";
 
         protected MetaDataKeyTableBox MetaDataKeyTableBox;  //  mandatory
         public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return this.MetaDataKeyTableBox; } set { this.MetaDataKeyTableBox = value; } }
@@ -20394,7 +20394,7 @@ namespace BoxGenerator2
     */
     public class FDHintSampleEntry : HintSampleEntry
     {
-        public const string FourCC = "fdp ";
+        public const string TYPE = "fdp ";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -20457,7 +20457,7 @@ namespace BoxGenerator2
     */
     public class IncompleteAVCSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "icpv";
+        public const string TYPE = "icpv";
 
         protected CompleteTrackInfoBox CompleteTrackInfoBox;
         public CompleteTrackInfoBox _CompleteTrackInfoBox { get { return this.CompleteTrackInfoBox; } set { this.CompleteTrackInfoBox = value; } }
@@ -20508,7 +20508,7 @@ namespace BoxGenerator2
     */
     public class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEntry
     {
-        public const string FourCC = "pm2t";
+        public const string TYPE = "pm2t";
 
         protected ProtectionSchemeInfoBox SchemeInformation;
         public ProtectionSchemeInfoBox _SchemeInformation { get { return this.SchemeInformation; } set { this.SchemeInformation = value; } }
@@ -20551,7 +20551,7 @@ namespace BoxGenerator2
     */
     public class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
     {
-        public const string FourCC = "prtp";
+        public const string TYPE = "prtp";
 
         protected ProtectionSchemeInfoBox SchemeInformation;
         public ProtectionSchemeInfoBox _SchemeInformation { get { return this.SchemeInformation; } set { this.SchemeInformation = value; } }
@@ -20591,7 +20591,7 @@ namespace BoxGenerator2
     */
     public class MPEG2TSReceptionSampleEntry : MPEG2TSSampleEntry
     {
-        public const string FourCC = "rm2t";
+        public const string TYPE = "rm2t";
 
         public MPEG2TSReceptionSampleEntry() : base("rm2t")
         {
@@ -20629,7 +20629,7 @@ namespace BoxGenerator2
     */
     public class ReceivedRtpHintSampleEntry : HintSampleEntry
     {
-        public const string FourCC = "rrtp";
+        public const string TYPE = "rrtp";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -20687,7 +20687,7 @@ namespace BoxGenerator2
     */
     public class ReceivedSrtpHintSampleEntry : HintSampleEntry
     {
-        public const string FourCC = "rsrp";
+        public const string TYPE = "rsrp";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -20739,7 +20739,7 @@ namespace BoxGenerator2
     */
     public class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
     {
-        public const string FourCC = "sm2t";
+        public const string TYPE = "sm2t";
 
         public MPEG2TSServerSampleEntry() : base("sm2t")
         {
@@ -20777,7 +20777,7 @@ namespace BoxGenerator2
     */
     public class SrtpHintSampleEntry : HintSampleEntry
     {
-        public const string FourCC = "srtp";
+        public const string TYPE = "srtp";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -20935,7 +20935,7 @@ namespace BoxGenerator2
     */
     public class VisualSampleEntry : SampleEntry
     {
-        public const string FourCC = "resv";
+        public const string TYPE = "resv";
 
         protected ushort pre_defined = 0;
         public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -21059,7 +21059,7 @@ namespace BoxGenerator2
     */
     public class RtpHintSampleEntry : HintSampleEntry
     {
-        public const string FourCC = "rtp ";
+        public const string TYPE = "rtp ";
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -21185,7 +21185,7 @@ namespace BoxGenerator2
     */
     public class BrandProperty : GeneralTypeBox
     {
-        public const string FourCC = "brnd";
+        public const string TYPE = "brnd";
 
         public BrandProperty() : base("brnd")
         {
@@ -21374,7 +21374,7 @@ namespace BoxGenerator2
     */
     public class AlternativeStartupEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "alst";
+        public const string TYPE = "alst";
 
         protected ushort roll_count;
         public ushort RollCount { get { return this.roll_count; } set { this.roll_count = value; } }
@@ -21475,7 +21475,7 @@ namespace BoxGenerator2
     */
     public class VisualDRAPEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "drap";
+        public const string TYPE = "drap";
 
         protected byte DRAP_type;
         public byte DRAPType { get { return this.DRAP_type; } set { this.DRAP_type = value; } }
@@ -21524,7 +21524,7 @@ namespace BoxGenerator2
     */
     public class AudioPreRollEntry : AudioSampleGroupEntry
     {
-        public const string FourCC = "prol";
+        public const string TYPE = "prol";
 
         protected short roll_distance;
         public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
@@ -21568,7 +21568,7 @@ namespace BoxGenerator2
     */
     public class VisualRandomAccessEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "rap ";
+        public const string TYPE = "rap ";
 
         protected bool num_leading_samples_known;
         public bool NumLeadingSamplesKnown { get { return this.num_leading_samples_known; } set { this.num_leading_samples_known = value; } }
@@ -21628,7 +21628,7 @@ namespace BoxGenerator2
     */
     public class RateShareEntry : SampleGroupDescriptionEntry
     {
-        public const string FourCC = "rash";
+        public const string TYPE = "rash";
 
         protected ushort operation_point_count;
         public ushort OperationPointCount { get { return this.operation_point_count; } set { this.operation_point_count = value; } }
@@ -21740,7 +21740,7 @@ namespace BoxGenerator2
     */
     public class AudioRollRecoveryEntry : AudioSampleGroupEntry
     {
-        public const string FourCC = "roll";
+        public const string TYPE = "roll";
 
         protected short roll_distance;
         public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
@@ -21785,7 +21785,7 @@ namespace BoxGenerator2
     */
     public class SAPEntry : SampleGroupDescriptionEntry
     {
-        public const string FourCC = "sap ";
+        public const string TYPE = "sap ";
 
         protected bool dependent_flag;
         public bool DependentFlag { get { return this.dependent_flag; } set { this.dependent_flag = value; } }
@@ -21844,7 +21844,7 @@ namespace BoxGenerator2
     */
     public class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
     {
-        public const string FourCC = "stmi";
+        public const string TYPE = "stmi";
 
         protected uint meta_box_handler_type;
         public uint MetaBoxHandlerType { get { return this.meta_box_handler_type; } set { this.meta_box_handler_type = value; } }
@@ -21912,7 +21912,7 @@ namespace BoxGenerator2
     */
     public class TemporalLevelEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "tele";
+        public const string TYPE = "tele";
 
         protected bool level_independently_decodable;
         public bool LevelIndependentlyDecodable { get { return this.level_independently_decodable; } set { this.level_independently_decodable = value; } }
@@ -21961,7 +21961,7 @@ namespace BoxGenerator2
     */
     public class PixelAspectRatioEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "pasr";
+        public const string TYPE = "pasr";
 
         protected uint hSpacing;
         public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
@@ -22022,7 +22022,7 @@ namespace BoxGenerator2
     */
     public class CleanApertureEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "casg";
+        public const string TYPE = "casg";
 
         protected uint cleanApertureWidthN;
         public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
@@ -22109,7 +22109,7 @@ namespace BoxGenerator2
     */
     public class TrackGroupTypeBox : FullBox
     {
-        public const string FourCC = "msrc";
+        public const string TYPE = "msrc";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -22156,7 +22156,7 @@ namespace BoxGenerator2
     */
     public class StereoVideoGroupBox : TrackGroupTypeBox
     {
-        public const string FourCC = "ster";
+        public const string TYPE = "ster";
 
         protected bool left_view_flag;
         public bool LeftViewFlag { get { return this.left_view_flag; } set { this.left_view_flag = value; } }
@@ -22247,7 +22247,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "hvc1";
+        public const string TYPE = "hvc1";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22340,7 +22340,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry_hvc2 : VisualSampleEntry
     {
-        public const string FourCC = "hvc2";
+        public const string TYPE = "hvc2";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22391,7 +22391,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry_hvc3 : VisualSampleEntry
     {
-        public const string FourCC = "hvc3";
+        public const string TYPE = "hvc3";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22442,7 +22442,7 @@ namespace BoxGenerator2
     */
     public class LHEVCSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "lhv1";
+        public const string TYPE = "lhv1";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
@@ -22493,7 +22493,7 @@ namespace BoxGenerator2
     */
     public class LHEVCSampleEntry_lhe1 : VisualSampleEntry
     {
-        public const string FourCC = "lhe1";
+        public const string TYPE = "lhe1";
 
         protected LHEVCConfigurationBox lhvcconfig;
         public LHEVCConfigurationBox Lhvcconfig { get { return this.lhvcconfig; } set { this.lhvcconfig = value; } }
@@ -22544,7 +22544,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry_hev1 : VisualSampleEntry
     {
-        public const string FourCC = "hev1";
+        public const string TYPE = "hev1";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22595,7 +22595,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry_hev2 : VisualSampleEntry
     {
-        public const string FourCC = "hev2";
+        public const string TYPE = "hev2";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22646,7 +22646,7 @@ namespace BoxGenerator2
     */
     public class HEVCSampleEntry_hev3 : VisualSampleEntry
     {
-        public const string FourCC = "hev3";
+        public const string TYPE = "hev3";
 
         protected HEVCConfigurationBox config;
         public HEVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22696,7 +22696,7 @@ namespace BoxGenerator2
     */
     public class AVCParameterSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "avcp";
+        public const string TYPE = "avcp";
 
         protected AVCConfigurationBox config;
         public AVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -22797,7 +22797,7 @@ namespace BoxGenerator2
     */
     public class AVCMVCSampleEntry : AVCSampleEntry
     {
-        public const string FourCC = "avc1";
+        public const string TYPE = "avc1";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
@@ -22897,7 +22897,7 @@ namespace BoxGenerator2
     */
     public class AVCMVCSampleEntry_avc3 : AVCSampleEntry
     {
-        public const string FourCC = "avc3";
+        public const string TYPE = "avc3";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
@@ -23046,7 +23046,7 @@ namespace BoxGenerator2
     */
     public class AVC2MVCSampleEntry : AVC2SampleEntry
     {
-        public const string FourCC = "avc2";
+        public const string TYPE = "avc2";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
@@ -23146,7 +23146,7 @@ namespace BoxGenerator2
     */
     public class AVC2MVCSampleEntry_avc4 : AVC2SampleEntry
     {
-        public const string FourCC = "avc4";
+        public const string TYPE = "avc4";
 
         protected ViewScalabilityInformationSEIBox scalability;  //  optional
         public ViewScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
@@ -23247,7 +23247,7 @@ namespace BoxGenerator2
     */
     public class MVCSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "mvc1";
+        public const string TYPE = "mvc1";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return this.mvcconfig; } set { this.mvcconfig = value; } }
@@ -23354,7 +23354,7 @@ namespace BoxGenerator2
     */
     public class MVCSampleEntry_mvc2 : VisualSampleEntry
     {
-        public const string FourCC = "mvc2";
+        public const string TYPE = "mvc2";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return this.mvcconfig; } set { this.mvcconfig = value; } }
@@ -23461,7 +23461,7 @@ namespace BoxGenerator2
     */
     public class MVCSampleEntry_mvc3 : VisualSampleEntry
     {
-        public const string FourCC = "mvc3";
+        public const string TYPE = "mvc3";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return this.mvcconfig; } set { this.mvcconfig = value; } }
@@ -23568,7 +23568,7 @@ namespace BoxGenerator2
     */
     public class MVCSampleEntry_mvc4 : VisualSampleEntry
     {
-        public const string FourCC = "mvc4";
+        public const string TYPE = "mvc4";
 
         protected MVCConfigurationBox mvcconfig;  //  mandatory
         public MVCConfigurationBox Mvcconfig { get { return this.mvcconfig; } set { this.mvcconfig = value; } }
@@ -23673,7 +23673,7 @@ namespace BoxGenerator2
     */
     public class MVCDSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "mvd1";
+        public const string TYPE = "mvd1";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
@@ -23760,7 +23760,7 @@ namespace BoxGenerator2
     */
     public class MVCDSampleEntry_mvd2 : VisualSampleEntry
     {
-        public const string FourCC = "mvd2";
+        public const string TYPE = "mvd2";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
@@ -23847,7 +23847,7 @@ namespace BoxGenerator2
     */
     public class MVCDSampleEntry_mvd3 : VisualSampleEntry
     {
-        public const string FourCC = "mvd3";
+        public const string TYPE = "mvd3";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
@@ -23934,7 +23934,7 @@ namespace BoxGenerator2
     */
     public class MVCDSampleEntry_mvd4 : VisualSampleEntry
     {
-        public const string FourCC = "mvd4";
+        public const string TYPE = "mvd4";
 
         protected MVCDConfigurationBox mvcdconfig;  //  mandatory
         public MVCDConfigurationBox Mvcdconfig { get { return this.mvcdconfig; } set { this.mvcdconfig = value; } }
@@ -24019,7 +24019,7 @@ namespace BoxGenerator2
     */
     public class A3DSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "a3d1";
+        public const string TYPE = "a3d1";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
@@ -24098,7 +24098,7 @@ namespace BoxGenerator2
     */
     public class A3DSampleEntry_a3d2 : VisualSampleEntry
     {
-        public const string FourCC = "a3d2";
+        public const string TYPE = "a3d2";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
@@ -24177,7 +24177,7 @@ namespace BoxGenerator2
     */
     public class A3DSampleEntry_a3d3 : VisualSampleEntry
     {
-        public const string FourCC = "a3d3";
+        public const string TYPE = "a3d3";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
@@ -24256,7 +24256,7 @@ namespace BoxGenerator2
     */
     public class A3DSampleEntry_a3d4 : VisualSampleEntry
     {
-        public const string FourCC = "a3d4";
+        public const string TYPE = "a3d4";
 
         protected A3DConfigurationBox a3dconfig;  //  mandatory
         public A3DConfigurationBox A3dconfig { get { return this.a3dconfig; } set { this.a3dconfig = value; } }
@@ -24332,7 +24332,7 @@ namespace BoxGenerator2
     */
     public class AVCSVCSampleEntry : AVCSampleEntry
     {
-        public const string FourCC = "avc1";
+        public const string TYPE = "avc1";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24386,7 +24386,7 @@ namespace BoxGenerator2
     */
     public class AVCSVCSampleEntry_avc3 : AVCSampleEntry
     {
-        public const string FourCC = "avc3";
+        public const string TYPE = "avc3";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24444,7 +24444,7 @@ namespace BoxGenerator2
     */
     public class AVC2SVCSampleEntry : AVC2SampleEntry
     {
-        public const string FourCC = "avc2";
+        public const string TYPE = "avc2";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24498,7 +24498,7 @@ namespace BoxGenerator2
     */
     public class AVC2SVCSampleEntry_avc4 : AVC2SampleEntry
     {
-        public const string FourCC = "avc4";
+        public const string TYPE = "avc4";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24558,7 +24558,7 @@ namespace BoxGenerator2
     */
     public class SVCSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "svc1";
+        public const string TYPE = "svc1";
 
         protected SVCConfigurationBox svcconfig;
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24618,7 +24618,7 @@ namespace BoxGenerator2
     */
     public class SVCSampleEntry_svc2 : VisualSampleEntry
     {
-        public const string FourCC = "svc2";
+        public const string TYPE = "svc2";
 
         protected SVCConfigurationBox svcconfig;
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24680,7 +24680,7 @@ namespace BoxGenerator2
     */
     public class HEVCTileSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "hvt1";
+        public const string TYPE = "hvt1";
 
         protected HEVCTileConfigurationBox config;  //  optional
         public HEVCTileConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -24723,7 +24723,7 @@ namespace BoxGenerator2
     */
     public class LHEVCTileSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "lht1";
+        public const string TYPE = "lht1";
 
         public LHEVCTileSampleEntry() : base("lht1")
         {
@@ -24759,7 +24759,7 @@ namespace BoxGenerator2
     */
     public class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "hvt3";
+        public const string TYPE = "hvt3";
 
         protected HEVCTileConfigurationBox config;  //  optional 
         public HEVCTileConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -24803,7 +24803,7 @@ namespace BoxGenerator2
     */
     public class HEVCSliceSegmentDataSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "hvt2";
+        public const string TYPE = "hvt2";
 
         protected HEVCTileConfigurationBox config;  //  optional
         public HEVCTileConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -24848,7 +24848,7 @@ namespace BoxGenerator2
     */
     public class VvcSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "vvc1";
+        public const string TYPE = "vvc1";
 
         protected VvcConfigurationBox config;
         public VvcConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -24896,7 +24896,7 @@ namespace BoxGenerator2
     */
     public class VvcSampleEntry_vvi1 : VisualSampleEntry
     {
-        public const string FourCC = "vvi1";
+        public const string TYPE = "vvi1";
 
         protected VvcConfigurationBox config;
         public VvcConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -24946,7 +24946,7 @@ namespace BoxGenerator2
     */
     public class VvcSubpicSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "vvs1";
+        public const string TYPE = "vvs1";
 
         protected VvcNALUConfigBox config;
         public VvcNALUConfigBox Config { get { return this.config; } set { this.config = value; } }
@@ -24990,7 +24990,7 @@ namespace BoxGenerator2
     */
     public class VvcNonVCLSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "vvcN";
+        public const string TYPE = "vvcN";
 
         protected VvcNALUConfigBox config;
         public VvcNALUConfigBox Config { get { return this.config; } set { this.config = value; } }
@@ -25035,7 +25035,7 @@ namespace BoxGenerator2
     */
     public class EVCSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "evc1";
+        public const string TYPE = "evc1";
 
         protected EVCConfigurationBox config;
         public EVCConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -25088,7 +25088,7 @@ namespace BoxGenerator2
     */
     public class SVCMetaDataSampleEntry : MetaDataSampleEntry
     {
-        public const string FourCC = "svcM";
+        public const string TYPE = "svcM";
 
         protected SVCMetadataSampleConfigBox config;
         public SVCMetadataSampleConfigBox Config { get { return this.config; } set { this.config = value; } }
@@ -25145,7 +25145,7 @@ namespace BoxGenerator2
     */
     public class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "evs1";
+        public const string TYPE = "evs1";
 
         protected EVCSliceComponentTrackConfigurationBox config;
         public EVCSliceComponentTrackConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -25187,7 +25187,7 @@ namespace BoxGenerator2
     */
     public class EVCSliceComponentTrackSampleEntry_evs2 : VisualSampleEntry
     {
-        public const string FourCC = "evs2";
+        public const string TYPE = "evs2";
 
         protected EVCSliceComponentTrackConfigurationBox config;
         public EVCSliceComponentTrackConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -25238,7 +25238,7 @@ namespace BoxGenerator2
     */
     public class SubpicCommonGroupBox : EntityToGroupBox
     {
-        public const string FourCC = "acgl";
+        public const string TYPE = "acgl";
 
         protected bool level_is_present_flag;
         public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }
@@ -25347,7 +25347,7 @@ namespace BoxGenerator2
     */
     public class SubpicMultipleGroupsBox : EntityToGroupBox
     {
-        public const string FourCC = "amgl";
+        public const string TYPE = "amgl";
 
         protected bool level_is_present_flag;
         public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }
@@ -25532,7 +25532,7 @@ namespace BoxGenerator2
     */
     public class OperatingPointGroupBox : EntityToGroupBox
     {
-        public const string FourCC = "opeg";
+        public const string TYPE = "opeg";
 
         protected byte num_profile_tier_level_minus1;
         public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }
@@ -25888,7 +25888,7 @@ namespace BoxGenerator2
     */
     public class SwitchableTracks : EntityToGroupBox
     {
-        public const string FourCC = "swtk";
+        public const string TYPE = "swtk";
 
         protected ushort[] track_switch_hierarchy_id;
         public ushort[] TrackSwitchHierarchyId { get { return this.track_switch_hierarchy_id; } set { this.track_switch_hierarchy_id = value; } }
@@ -25947,7 +25947,7 @@ namespace BoxGenerator2
     */
     public class EntityToGroupBox_vvcb : FullBox
     {
-        public const string FourCC = "vvcb";
+        public const string TYPE = "vvcb";
 
         protected uint group_id;
         public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
@@ -26014,7 +26014,7 @@ namespace BoxGenerator2
     */
     public class AUDSampleEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "aud ";
+        public const string TYPE = "aud ";
 
         protected uint audNalUnit;
         public uint AudNalUnit { get { return this.audNalUnit; } set { this.audNalUnit = value; } }
@@ -26061,7 +26061,7 @@ namespace BoxGenerator2
     */
     public class AVCLayerEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "avll";
+        public const string TYPE = "avll";
 
         protected byte layerNumber;
         public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
@@ -26128,7 +26128,7 @@ namespace BoxGenerator2
     */
     public class DecodingCapabilityInformation : VisualSampleGroupEntry
     {
-        public const string FourCC = "dcfi";
+        public const string TYPE = "dcfi";
 
         protected ushort dci_nal_unit_length;
         public ushort DciNalUnitLength { get { return this.dci_nal_unit_length; } set { this.dci_nal_unit_length = value; } }
@@ -26180,7 +26180,7 @@ namespace BoxGenerator2
     */
     public class DecodeRetimingEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "dtrt";
+        public const string TYPE = "dtrt";
 
         protected byte tierCount;
         public byte TierCount { get { return this.tierCount; } set { this.tierCount = value; } }
@@ -26247,7 +26247,7 @@ namespace BoxGenerator2
     */
     public class EndOfBitstreamSampleEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "eob ";
+        public const string TYPE = "eob ";
 
         protected ushort eobNalUnit;
         public ushort EobNalUnit { get { return this.eobNalUnit; } set { this.eobNalUnit = value; } }
@@ -26292,7 +26292,7 @@ namespace BoxGenerator2
     */
     public class EndOfSequenceSampleEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "eos ";
+        public const string TYPE = "eos ";
 
         protected byte num_eos_nal_unit_minus1;
         public byte NumEosNalUnitMinus1 { get { return this.num_eos_nal_unit_minus1; } set { this.num_eos_nal_unit_minus1 = value; } }
@@ -26356,7 +26356,7 @@ namespace BoxGenerator2
     */
     public class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
     {
-        public const string FourCC = "lbli";
+        public const string TYPE = "lbli";
 
         protected bool reserved = true;
         public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -26427,7 +26427,7 @@ namespace BoxGenerator2
     */
     public class LayerInfoGroupEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "linf";
+        public const string TYPE = "linf";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -26542,7 +26542,7 @@ namespace BoxGenerator2
     */
     public class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "minp";
+        public const string TYPE = "minp";
 
         protected ushort num_mix_nalu_pic_idx;
         public ushort NumMixNaluPicIdx { get { return this.num_mix_nalu_pic_idx; } set { this.num_mix_nalu_pic_idx = value; } }
@@ -26640,7 +26640,7 @@ namespace BoxGenerator2
     */
     public class MultiviewGroupEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "mvif";
+        public const string TYPE = "mvif";
 
         protected byte groupID;
         public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -26800,7 +26800,7 @@ namespace BoxGenerator2
     */
     public class NALUMapEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "nalm";
+        public const string TYPE = "nalm";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -26950,7 +26950,7 @@ namespace BoxGenerator2
     */
     public class OperatingPointsInformation : VisualSampleGroupEntry
     {
-        public const string FourCC = "oinf";
+        public const string TYPE = "oinf";
 
         protected OperatingPointsRecord oinf;
         public OperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
@@ -26995,7 +26995,7 @@ namespace BoxGenerator2
     */
     public class OperatingPointDecodeTimeHint : VisualSampleGroupEntry
     {
-        public const string FourCC = "opth";
+        public const string TYPE = "opth";
 
         protected int delta_time;
         public int DeltaTime { get { return this.delta_time; } set { this.delta_time = value; } }
@@ -27039,7 +27039,7 @@ namespace BoxGenerator2
     */
     public class ParameterSetNALUEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "pase";
+        public const string TYPE = "pase";
 
         protected ushort ps_nalu_length;
         public ushort PsNaluLength { get { return this.ps_nalu_length; } set { this.ps_nalu_length = value; } }
@@ -27091,7 +27091,7 @@ namespace BoxGenerator2
     */
     public class PSSampleGroupEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "pss1";
+        public const string TYPE = "pss1";
 
         protected bool sps_present;
         public bool SpsPresent { get { return this.sps_present; } set { this.sps_present = value; } }
@@ -27165,7 +27165,7 @@ namespace BoxGenerator2
     */
     public class VvcRectRegionOrderEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "rror";
+        public const string TYPE = "rror";
 
         protected bool subpic_id_info_flag;
         public bool SubpicIdInfoFlag { get { return this.subpic_id_info_flag; } set { this.subpic_id_info_flag = value; } }
@@ -27328,7 +27328,7 @@ namespace BoxGenerator2
     */
     public class ScalableGroupEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "scif";
+        public const string TYPE = "scif";
 
         protected byte groupID;
         public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -27505,7 +27505,7 @@ namespace BoxGenerator2
     */
     public class ScalableNALUMapEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "scnm";
+        public const string TYPE = "scnm";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -27581,7 +27581,7 @@ namespace BoxGenerator2
     */
     public class VvcSubpicIDEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "spid";
+        public const string TYPE = "spid";
 
         protected bool rect_region_flag;
         public bool RectRegionFlag { get { return this.rect_region_flag; } set { this.rect_region_flag = value; } }
@@ -27690,7 +27690,7 @@ namespace BoxGenerator2
     */
     public class SubpicLevelInfoEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "spli";
+        public const string TYPE = "spli";
 
         protected byte level_idc;
         public byte LevelIdc { get { return this.level_idc; } set { this.level_idc = value; } }
@@ -27738,7 +27738,7 @@ namespace BoxGenerator2
     */
     public class VvcSubpicOrderEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "spor";
+        public const string TYPE = "spor";
 
         protected bool subpic_id_info_flag;
         public bool SubpicIdInfoFlag { get { return this.subpic_id_info_flag; } set { this.subpic_id_info_flag = value; } }
@@ -27822,7 +27822,7 @@ namespace BoxGenerator2
     */
     public class StepwiseTemporalLayerEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "stsa";
+        public const string TYPE = "stsa";
 
         public StepwiseTemporalLayerEntry() : base("stsa")
         {
@@ -27861,7 +27861,7 @@ namespace BoxGenerator2
     */
     public class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "sulm";
+        public const string TYPE = "sulm";
 
         protected uint groupID_info_4cc;
         public uint GroupIDInfo4cc { get { return this.groupID_info_4cc; } set { this.groupID_info_4cc = value; } }
@@ -27929,7 +27929,7 @@ namespace BoxGenerator2
     */
     public class SyncSampleEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "sync";
+        public const string TYPE = "sync";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -27999,7 +27999,7 @@ namespace BoxGenerator2
     */
     public class RectangularRegionGroupEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "trif";
+        public const string TYPE = "trif";
 
         protected ushort groupID;
         public ushort GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -28179,7 +28179,7 @@ namespace BoxGenerator2
     */
     public class TemporalSubLayerEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "tsas";
+        public const string TYPE = "tsas";
 
         public TemporalSubLayerEntry() : base("tsas")
         {
@@ -28226,7 +28226,7 @@ namespace BoxGenerator2
     */
     public class TemporalLayerEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "tscl";
+        public const string TYPE = "tscl";
 
         protected byte temporalLayerId;
         public byte TemporalLayerId { get { return this.temporalLayerId; } set { this.temporalLayerId = value; } }
@@ -28329,7 +28329,7 @@ namespace BoxGenerator2
     */
     public class ViewPriorityEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "vipr";
+        public const string TYPE = "vipr";
 
         protected ViewPriorityBox ViewPriorityBox;
         public ViewPriorityBox _ViewPriorityBox { get { return this.ViewPriorityBox; } set { this.ViewPriorityBox = value; } }
@@ -28371,7 +28371,7 @@ namespace BoxGenerator2
     */
     public class VvcOperatingPointsInformation : VisualSampleGroupEntry
     {
-        public const string FourCC = "vopi";
+        public const string TYPE = "vopi";
 
         protected VvcOperatingPointsRecord oinf;
         public VvcOperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
@@ -28416,7 +28416,7 @@ namespace BoxGenerator2
     */
     public class TrackGroupTypeBox_alte : FullBox
     {
-        public const string FourCC = "alte";
+        public const string TYPE = "alte";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -28464,7 +28464,7 @@ namespace BoxGenerator2
     */
     public class TrackGroupTypeBox_cstg : FullBox
     {
-        public const string FourCC = "cstg";
+        public const string TYPE = "cstg";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -28512,7 +28512,7 @@ namespace BoxGenerator2
     */
     public class TrackGroupTypeBox_snut : FullBox
     {
-        public const string FourCC = "snut";
+        public const string TYPE = "snut";
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -28560,7 +28560,7 @@ namespace BoxGenerator2
     */
     public class AuxiliaryTypeProperty : ItemFullProperty
     {
-        public const string FourCC = "auxC";
+        public const string TYPE = "auxC";
 
         protected string aux_type;
         public string AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
@@ -28610,7 +28610,7 @@ namespace BoxGenerator2
     */
     public class ImageMirror : ItemProperty
     {
-        public const string FourCC = "imir";
+        public const string TYPE = "imir";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -28660,7 +28660,7 @@ namespace BoxGenerator2
     */
     public class ImageRotation : ItemProperty
     {
-        public const string FourCC = "irot";
+        public const string TYPE = "irot";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -28711,7 +28711,7 @@ namespace BoxGenerator2
     */
     public class ImageSpatialExtentsProperty : ItemFullProperty
     {
-        public const string FourCC = "ispe";
+        public const string TYPE = "ispe";
 
         protected uint image_width;
         public uint ImageWidth { get { return this.image_width; } set { this.image_width = value; } }
@@ -28759,7 +28759,7 @@ namespace BoxGenerator2
     */
     public class JPEGConfigurationBox : Box
     {
-        public const string FourCC = "jpgC";
+        public const string TYPE = "jpgC";
 
         protected byte[] JPEGprefix;
         public byte[] _JPEGprefix { get { return this.JPEGprefix; } set { this.JPEGprefix = value; } }
@@ -28802,7 +28802,7 @@ namespace BoxGenerator2
     */
     public class LayerSelectorProperty : ItemProperty
     {
-        public const string FourCC = "lsel";
+        public const string TYPE = "lsel";
 
         protected ushort layer_id;
         public ushort LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
@@ -28845,7 +28845,7 @@ namespace BoxGenerator2
     */
     public class OperatingPointsInformationProperty : ItemFullProperty
     {
-        public const string FourCC = "oinf";
+        public const string TYPE = "oinf";
 
         protected OperatingPointsRecord op_info;  //  specified in ISO/IEC 14496-15
         public OperatingPointsRecord OpInfo { get { return this.op_info; } set { this.op_info = value; } }
@@ -28891,7 +28891,7 @@ namespace BoxGenerator2
     */
     public class PixelInformationProperty : ItemFullProperty
     {
-        public const string FourCC = "pixi";
+        public const string TYPE = "pixi";
 
         protected byte num_channels;
         public byte NumChannels { get { return this.num_channels; } set { this.num_channels = value; } }
@@ -28954,7 +28954,7 @@ namespace BoxGenerator2
     */
     public class RelativeLocationProperty : ItemFullProperty
     {
-        public const string FourCC = "rloc";
+        public const string TYPE = "rloc";
 
         protected uint horizontal_offset;
         public uint HorizontalOffset { get { return this.horizontal_offset; } set { this.horizontal_offset = value; } }
@@ -29003,7 +29003,7 @@ namespace BoxGenerator2
     */
     public class TargetOlsProperty : ItemFullProperty
     {
-        public const string FourCC = "tols";
+        public const string TYPE = "tols";
 
         protected ushort target_ols_idx;
         public ushort TargetOlsIdx { get { return this.target_ols_idx; } set { this.target_ols_idx = value; } }
@@ -29047,7 +29047,7 @@ namespace BoxGenerator2
     */
     public class AutoExposureBracketingEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "aebr";
+        public const string TYPE = "aebr";
 
         protected sbyte exposure_step;
         public sbyte ExposureStep { get { return this.exposure_step; } set { this.exposure_step = value; } }
@@ -29097,7 +29097,7 @@ namespace BoxGenerator2
     */
     public class FlashExposureBracketingEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "afbr";
+        public const string TYPE = "afbr";
 
         protected sbyte flash_exposure_numerator;
         public sbyte FlashExposureNumerator { get { return this.flash_exposure_numerator; } set { this.flash_exposure_numerator = value; } }
@@ -29148,7 +29148,7 @@ namespace BoxGenerator2
     */
     public class AccessibilityTextProperty : ItemFullProperty
     {
-        public const string FourCC = "altt";
+        public const string TYPE = "altt";
 
         protected string alt_text;
         public string AltText { get { return this.alt_text; } set { this.alt_text = value; } }
@@ -29198,7 +29198,7 @@ namespace BoxGenerator2
     */
     public class CreationTimeProperty : ItemFullProperty
     {
-        public const string FourCC = "crtt";
+        public const string TYPE = "crtt";
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -29242,7 +29242,7 @@ namespace BoxGenerator2
     */
     public class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "dobr";
+        public const string TYPE = "dobr";
 
         protected sbyte f_stop_numerator;
         public sbyte fStopNumerator { get { return this.f_stop_numerator; } set { this.f_stop_numerator = value; } }
@@ -29292,7 +29292,7 @@ namespace BoxGenerator2
     */
     public class FocusBracketingEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "fobr";
+        public const string TYPE = "fobr";
 
         protected ushort focus_distance_numerator;
         public ushort FocusDistanceNumerator { get { return this.focus_distance_numerator; } set { this.focus_distance_numerator = value; } }
@@ -29344,7 +29344,7 @@ namespace BoxGenerator2
     */
     public class ImageScaling : ItemFullProperty
     {
-        public const string FourCC = "iscl";
+        public const string TYPE = "iscl";
 
         protected ushort target_width_numerator;
         public ushort TargetWidthNumerator { get { return this.target_width_numerator; } set { this.target_width_numerator = value; } }
@@ -29406,7 +29406,7 @@ namespace BoxGenerator2
     */
     public class ModificationTimeProperty : ItemFullProperty
     {
-        public const string FourCC = "mdft";
+        public const string TYPE = "mdft";
 
         protected ulong modification_time;
         public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }
@@ -29450,7 +29450,7 @@ namespace BoxGenerator2
     */
     public class PanoramaEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "pano";
+        public const string TYPE = "pano";
 
         protected ushort frame_number;
         public ushort FrameNumber { get { return this.frame_number; } set { this.frame_number = value; } }
@@ -29496,7 +29496,7 @@ namespace BoxGenerator2
     */
     public class RequiredReferenceTypesProperty : ItemFullProperty
     {
-        public const string FourCC = "rref";
+        public const string TYPE = "rref";
 
         protected byte reference_type_count;
         public byte ReferenceTypeCount { get { return this.reference_type_count; } set { this.reference_type_count = value; } }
@@ -29561,7 +29561,7 @@ namespace BoxGenerator2
     */
     public class UserDescriptionProperty : ItemFullProperty
     {
-        public const string FourCC = "udes";
+        public const string TYPE = "udes";
 
         protected string lang;
         public string Lang { get { return this.lang; } set { this.lang = value; } }
@@ -29623,7 +29623,7 @@ namespace BoxGenerator2
     */
     public class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "wbbr";
+        public const string TYPE = "wbbr";
 
         protected ushort blue_amber;
         public ushort BlueAmber { get { return this.blue_amber; } set { this.blue_amber = value; } }
@@ -29672,7 +29672,7 @@ namespace BoxGenerator2
     */
     public class WipeTransitionEffectProperty : ItemFullProperty
     {
-        public const string FourCC = "wipe";
+        public const string TYPE = "wipe";
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -29716,7 +29716,7 @@ namespace BoxGenerator2
     */
     public class ZoomTransitionEffectProperty : ItemFullProperty
     {
-        public const string FourCC = "zoom";
+        public const string TYPE = "zoom";
 
         protected bool transition_direction;
         public bool TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -29765,7 +29765,7 @@ namespace BoxGenerator2
     */
     public class FadeTransitionEffectProperty : ItemFullProperty
     {
-        public const string FourCC = "fade";
+        public const string TYPE = "fade";
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -29808,7 +29808,7 @@ namespace BoxGenerator2
     */
     public class SplitTransitionEffectProperty : ItemFullProperty
     {
-        public const string FourCC = "splt";
+        public const string TYPE = "splt";
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -29851,7 +29851,7 @@ namespace BoxGenerator2
     */
     public class SuggestedTransitionPeriodProperty : ItemFullProperty
     {
-        public const string FourCC = "stpe";
+        public const string TYPE = "stpe";
 
         protected byte transition_period;
         public byte TransitionPeriod { get { return this.transition_period; } set { this.transition_period = value; } }
@@ -29894,7 +29894,7 @@ namespace BoxGenerator2
     */
     public class SuggestedTimeDisplayDurationProperty : ItemFullProperty
     {
-        public const string FourCC = "ssld";
+        public const string TYPE = "ssld";
 
         protected ushort duration;
         public ushort Duration { get { return this.duration; } set { this.duration = value; } }
@@ -29937,7 +29937,7 @@ namespace BoxGenerator2
     */
     public class MaskConfigurationProperty : ItemFullProperty
     {
-        public const string FourCC = "mskC";
+        public const string TYPE = "mskC";
 
         protected byte bits_per_pixel;
         public byte BitsPerPixel { get { return this.bits_per_pixel; } set { this.bits_per_pixel = value; } }
@@ -29980,7 +29980,7 @@ namespace BoxGenerator2
     */
     public class VvcSubpicIDProperty : ItemFullProperty
     {
-        public const string FourCC = "spid";
+        public const string TYPE = "spid";
 
         protected VvcSubpicIDEntry sid_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicIDEntry SidInfo { get { return this.sid_info; } set { this.sid_info = value; } }
@@ -30023,7 +30023,7 @@ namespace BoxGenerator2
     */
     public class VvcSubpicOrderProperty : ItemFullProperty
     {
-        public const string FourCC = "spor";
+        public const string TYPE = "spor";
 
         protected VvcSubpicOrderEntry sor_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicOrderEntry SorInfo { get { return this.sor_info; } set { this.sor_info = value; } }
@@ -30067,7 +30067,7 @@ namespace BoxGenerator2
     */
     public class VisualEquivalenceEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "eqiv";
+        public const string TYPE = "eqiv";
 
         protected short time_offset;
         public short TimeOffset { get { return this.time_offset; } set { this.time_offset = value; } }
@@ -30120,7 +30120,7 @@ namespace BoxGenerator2
     */
     public class DirectReferenceSamplesList : VisualSampleGroupEntry
     {
-        public const string FourCC = "refs";
+        public const string TYPE = "refs";
 
         protected uint sample_id;
         public uint SampleId { get { return this.sample_id; } set { this.sample_id = value; } }
@@ -30192,7 +30192,7 @@ namespace BoxGenerator2
      }
     }
     */
-    public class BaseDescriptor : IMp4Serializable
+    public abstract class BaseDescriptor : IMp4Serializable
     {
         public byte Tag { get; set; } = 0;
 
@@ -30268,7 +30268,7 @@ namespace BoxGenerator2
      // empty. To be filled by classes extending this class.
      }
     */
-    public class DecoderSpecificInfo : BaseDescriptor
+    public abstract class DecoderSpecificInfo : BaseDescriptor
     {
         public byte Tag { get; set; } = DescriptorTags.DecSpecificInfoTag;
 
@@ -30938,7 +30938,7 @@ namespace BoxGenerator2
      // empty. To be filled by classes extending this class.
      }
     */
-    public class IP_IdentificationDataSet : BaseDescriptor
+    public abstract class IP_IdentificationDataSet : BaseDescriptor
     {
         public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
         public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag;
@@ -31021,7 +31021,7 @@ namespace BoxGenerator2
      // empty. To be filled by classes extending this class.
     }
     */
-    public class OCI_Descriptor : BaseDescriptor
+    public abstract class OCI_Descriptor : BaseDescriptor
     {
         public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
         public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange;
@@ -31167,7 +31167,7 @@ namespace BoxGenerator2
      }
 
     */
-    public class QoS_Qualifier : IMp4Serializable
+    public abstract class QoS_Qualifier : IMp4Serializable
     {
         public byte TagMin { get; set; } = 0x01;
         public byte TagMax { get; set; } = 0xff;
@@ -31553,7 +31553,7 @@ namespace BoxGenerator2
      // empty. To be filled by classes extending this class.
      }
     */
-    public class ExtensionDescriptor : BaseDescriptor
+    public abstract class ExtensionDescriptor : BaseDescriptor
     {
         public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
         public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange;
@@ -36101,7 +36101,7 @@ namespace BoxGenerator2
     */
     public class OpusSampleEntry : AudioSampleEntry
     {
-        public const string FourCC = "Opus";
+        public const string TYPE = "Opus";
 
         protected OpusSpecificBox OpusSpecificBox;
         public OpusSpecificBox _OpusSpecificBox { get { return this.OpusSpecificBox; } set { this.OpusSpecificBox = value; } }
@@ -36210,7 +36210,7 @@ namespace BoxGenerator2
     */
     public class OpusSpecificBox : Box
     {
-        public const string FourCC = "dOps";
+        public const string TYPE = "dOps";
 
         protected byte Version;
         public byte _Version { get { return this.Version; } set { this.Version = value; } }
@@ -36303,7 +36303,7 @@ namespace BoxGenerator2
     */
     public class AV1SampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "av01";
+        public const string TYPE = "av01";
 
         protected AV1CodecConfigurationBox config;
         public AV1CodecConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -36348,7 +36348,7 @@ namespace BoxGenerator2
     */
     public class AV1CodecConfigurationBox : Box
     {
-        public const string FourCC = "av1C";
+        public const string TYPE = "av1C";
 
         protected AV1CodecConfigurationRecord av1Config;
         public AV1CodecConfigurationRecord Av1Config { get { return this.av1Config; } set { this.av1Config = value; } }
@@ -36568,7 +36568,7 @@ namespace BoxGenerator2
     */
     public class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "av1f";
+        public const string TYPE = "av1f";
 
         protected byte fwd_distance;
         public byte FwdDistance { get { return this.fwd_distance; } set { this.fwd_distance = value; } }
@@ -36612,7 +36612,7 @@ namespace BoxGenerator2
     */
     public class AV1SwitchFrameSampleGroupEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "av1s";
+        public const string TYPE = "av1s";
 
         public AV1SwitchFrameSampleGroupEntry() : base("av1s")
         {
@@ -36650,7 +36650,7 @@ namespace BoxGenerator2
     */
     public class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
     {
-        public const string FourCC = "av1M";
+        public const string TYPE = "av1M";
 
         public AV1MetadataSampleGroupEntry() : base("av1M")
         {
@@ -36687,7 +36687,7 @@ namespace BoxGenerator2
     */
     public class OperatingPointSelectorProperty : ItemProperty
     {
-        public const string FourCC = "a1op";
+        public const string TYPE = "a1op";
 
         protected byte op_index;
         public byte OpIndex { get { return this.op_index; } set { this.op_index = value; } }
@@ -36736,7 +36736,7 @@ namespace BoxGenerator2
     */
     public class AV1LayeredImageIndexingProperty : ItemProperty
     {
-        public const string FourCC = "a1lx";
+        public const string TYPE = "a1lx";
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
