@@ -4,7 +4,14 @@ using System.Threading.Tasks;
 
 namespace BoxGenerator2
 {
-    public abstract class Box
+    public interface IMp4Serializable
+    {
+        Task<ulong> ReadAsync(IsoStream stream);
+        Task<ulong> WriteAsync(IsoStream stream);
+        ulong CalculateSize();
+    }
+
+    public abstract class Box : IMp4Serializable
     {
         public virtual string FourCC { get; set; }
 

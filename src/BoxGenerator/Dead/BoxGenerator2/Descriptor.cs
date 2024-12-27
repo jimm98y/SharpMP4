@@ -1,4 +1,6 @@
-﻿namespace BoxGenerator2
+﻿using System.Threading.Tasks;
+
+namespace BoxGenerator2
 {
     public static class DescriptorTags
     {
@@ -46,6 +48,21 @@
         public const byte OCIDescrTagEndRange = 0x50;
     }
 
-    public class Descriptor
-    { }
+    public class Descriptor : IMp4Serializable
+    {
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }
