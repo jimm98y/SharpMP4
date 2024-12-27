@@ -5533,7 +5533,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.extended_language);
+            boxSize += stream.ReadStringZeroTerminated(out this.extended_language);
             return boxSize;
         }
 
@@ -5541,7 +5541,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.extended_language);
+            boxSize += stream.WriteStringZeroTerminated(this.extended_language);
             return boxSize;
         }
 
@@ -6972,7 +6972,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.text_config);
+            boxSize += stream.ReadStringZeroTerminated(out this.text_config);
             return boxSize;
         }
 
@@ -6980,7 +6980,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.text_config);
+            boxSize += stream.WriteStringZeroTerminated(this.text_config);
             return boxSize;
         }
 
@@ -7118,8 +7118,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.schemeURI);
-            boxSize += stream.ReadString(out this.value);
+            boxSize += stream.ReadStringZeroTerminated(out this.schemeURI);
+            boxSize += stream.ReadStringZeroTerminated(out this.value);
             return boxSize;
         }
 
@@ -7127,8 +7127,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.schemeURI);
-            boxSize += stream.WriteString(this.value);
+            boxSize += stream.WriteStringZeroTerminated(this.schemeURI);
+            boxSize += stream.WriteStringZeroTerminated(this.value);
             return boxSize;
         }
 
@@ -7585,7 +7585,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.location);
+            boxSize += stream.ReadStringZeroTerminated(out this.location);
             return boxSize;
         }
 
@@ -7593,7 +7593,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.location);
+            boxSize += stream.WriteStringZeroTerminated(this.location);
             return boxSize;
         }
 
@@ -7632,8 +7632,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.name);
-            boxSize += stream.ReadString(out this.location);
+            boxSize += stream.ReadStringZeroTerminated(out this.name);
+            boxSize += stream.ReadStringZeroTerminated(out this.location);
             return boxSize;
         }
 
@@ -7641,8 +7641,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.name);
-            boxSize += stream.WriteString(this.location);
+            boxSize += stream.WriteStringZeroTerminated(this.name);
+            boxSize += stream.WriteStringZeroTerminated(this.location);
             return boxSize;
         }
 
@@ -9001,8 +9001,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.content_location);
-            boxSize += stream.ReadString(out this.content_MD5);
+            boxSize += stream.ReadStringZeroTerminated(out this.content_location);
+            boxSize += stream.ReadStringZeroTerminated(out this.content_MD5);
             boxSize += stream.ReadUInt64(out this.content_length);
             boxSize += stream.ReadUInt64(out this.transfer_length);
             boxSize += stream.ReadUInt8(out this.entry_count);
@@ -9018,8 +9018,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.content_location);
-            boxSize += stream.WriteString(this.content_MD5);
+            boxSize += stream.WriteStringZeroTerminated(this.content_location);
+            boxSize += stream.WriteStringZeroTerminated(this.content_MD5);
             boxSize += stream.WriteUInt64(this.content_length);
             boxSize += stream.WriteUInt64(this.transfer_length);
             boxSize += stream.WriteUInt8(this.entry_count);
@@ -9815,7 +9815,7 @@ namespace BoxGenerator2
             for (int i = 1; i <= entry_count; i++)
             {
                 boxSize += stream.ReadUInt32(out this.group_ID);
-                boxSize += stream.ReadString(out this.group_name);
+                boxSize += stream.ReadStringZeroTerminated(out this.group_name);
             }
             return boxSize;
         }
@@ -9829,7 +9829,7 @@ namespace BoxGenerator2
             for (int i = 1; i <= entry_count; i++)
             {
                 boxSize += stream.WriteUInt32(this.group_ID);
-                boxSize += stream.WriteString(this.group_name);
+                boxSize += stream.WriteStringZeroTerminated(this.group_name);
             }
             return boxSize;
         }
@@ -9923,7 +9923,7 @@ namespace BoxGenerator2
             boxSize += stream.ReadUInt32(out this.pre_defined);
             boxSize += stream.ReadUInt32(out this.handler_type);
             boxSize += stream.ReadUInt32Array(3, out this.reserved);
-            boxSize += stream.ReadString(out this.name);
+            boxSize += stream.ReadStringZeroTerminated(out this.name);
             return boxSize;
         }
 
@@ -9934,7 +9934,7 @@ namespace BoxGenerator2
             boxSize += stream.WriteUInt32(this.pre_defined);
             boxSize += stream.WriteUInt32(this.handler_type);
             boxSize += stream.WriteUInt32Array(3, this.reserved);
-            boxSize += stream.WriteString(this.name);
+            boxSize += stream.WriteStringZeroTerminated(this.name);
             return boxSize;
         }
 
@@ -10556,9 +10556,9 @@ namespace BoxGenerator2
             {
                 boxSize += stream.ReadUInt16(out this.item_ID);
                 boxSize += stream.ReadUInt16(out this.item_protection_index);
-                boxSize += stream.ReadString(out this.item_name);
-                boxSize += stream.ReadString(out this.content_type);
-                boxSize += stream.ReadString(out this.content_encoding); //optional
+                boxSize += stream.ReadStringZeroTerminated(out this.item_name);
+                boxSize += stream.ReadStringZeroTerminated(out this.content_type);
+                boxSize += stream.ReadStringZeroTerminated(out this.content_encoding); //optional
             }
 
             if (version == 1)
@@ -10581,17 +10581,17 @@ namespace BoxGenerator2
                 }
                 boxSize += stream.ReadUInt16(out this.item_protection_index);
                 boxSize += stream.ReadUInt32(out this.item_type);
-                boxSize += stream.ReadString(out this.item_name);
+                boxSize += stream.ReadStringZeroTerminated(out this.item_name);
 
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
-                    boxSize += stream.ReadString(out this.content_type);
-                    boxSize += stream.ReadString(out this.content_encoding); //optional
+                    boxSize += stream.ReadStringZeroTerminated(out this.content_type);
+                    boxSize += stream.ReadStringZeroTerminated(out this.content_encoding); //optional
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
                 {
-                    boxSize += stream.ReadString(out this.item_uri_type);
+                    boxSize += stream.ReadStringZeroTerminated(out this.item_uri_type);
                 }
             }
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -10607,9 +10607,9 @@ namespace BoxGenerator2
             {
                 boxSize += stream.WriteUInt16(this.item_ID);
                 boxSize += stream.WriteUInt16(this.item_protection_index);
-                boxSize += stream.WriteString(this.item_name);
-                boxSize += stream.WriteString(this.content_type);
-                boxSize += stream.WriteString(this.content_encoding); //optional
+                boxSize += stream.WriteStringZeroTerminated(this.item_name);
+                boxSize += stream.WriteStringZeroTerminated(this.content_type);
+                boxSize += stream.WriteStringZeroTerminated(this.content_encoding); //optional
             }
 
             if (version == 1)
@@ -10632,17 +10632,17 @@ namespace BoxGenerator2
                 }
                 boxSize += stream.WriteUInt16(this.item_protection_index);
                 boxSize += stream.WriteUInt32(this.item_type);
-                boxSize += stream.WriteString(this.item_name);
+                boxSize += stream.WriteStringZeroTerminated(this.item_name);
 
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
-                    boxSize += stream.WriteString(this.content_type);
-                    boxSize += stream.WriteString(this.content_encoding); //optional
+                    boxSize += stream.WriteStringZeroTerminated(this.content_type);
+                    boxSize += stream.WriteStringZeroTerminated(this.content_encoding); //optional
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
                 {
-                    boxSize += stream.WriteString(this.item_uri_type);
+                    boxSize += stream.WriteStringZeroTerminated(this.item_uri_type);
                 }
             }
             boxSize += stream.WriteBoxChildren(this);
@@ -12676,7 +12676,7 @@ namespace BoxGenerator2
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.ReadString(out this.scheme_uri); // browser uri
+                boxSize += stream.ReadStringZeroTerminated(out this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -12690,7 +12690,7 @@ namespace BoxGenerator2
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.WriteString(this.scheme_uri); // browser uri
+                boxSize += stream.WriteStringZeroTerminated(this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -12749,7 +12749,7 @@ namespace BoxGenerator2
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.ReadString(out this.scheme_uri); // browser uri
+                boxSize += stream.ReadStringZeroTerminated(out this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -12764,7 +12764,7 @@ namespace BoxGenerator2
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.WriteString(this.scheme_uri); // browser uri
+                boxSize += stream.WriteStringZeroTerminated(this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -15824,7 +15824,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.theURI);
+            boxSize += stream.ReadStringZeroTerminated(out this.theURI);
             return boxSize;
         }
 
@@ -15832,7 +15832,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.theURI);
+            boxSize += stream.WriteStringZeroTerminated(this.theURI);
             return boxSize;
         }
 
@@ -20103,7 +20103,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.content_encoding); // optional
+            boxSize += stream.ReadStringZeroTerminated(out this.content_encoding); // optional
             boxSize += stream.ReadString(out this.ns);
             boxSize += stream.ReadString(out this.schema_location); // optional
             return boxSize;
@@ -20113,7 +20113,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.content_encoding); // optional
+            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional
             boxSize += stream.WriteString(this.ns);
             boxSize += stream.WriteString(this.schema_location); // optional
             return boxSize;
@@ -20157,8 +20157,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.content_encoding); // optional
-            boxSize += stream.ReadString(out this.mime_format);
+            boxSize += stream.ReadStringZeroTerminated(out this.content_encoding); // optional
+            boxSize += stream.ReadStringZeroTerminated(out this.mime_format);
             // boxSize += stream.ReadBox( out this.TextConfigBox); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -20168,8 +20168,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.content_encoding); // optional
-            boxSize += stream.WriteString(this.mime_format);
+            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional
+            boxSize += stream.WriteStringZeroTerminated(this.mime_format);
             // boxSize += stream.WriteBox( this.TextConfigBox); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
@@ -28708,8 +28708,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.alt_text);
-            boxSize += stream.ReadString(out this.alt_lang);
+            boxSize += stream.ReadStringZeroTerminated(out this.alt_text);
+            boxSize += stream.ReadStringZeroTerminated(out this.alt_lang);
             return boxSize;
         }
 
@@ -28717,8 +28717,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.alt_text);
-            boxSize += stream.WriteString(this.alt_lang);
+            boxSize += stream.WriteStringZeroTerminated(this.alt_text);
+            boxSize += stream.WriteStringZeroTerminated(this.alt_lang);
             return boxSize;
         }
 
@@ -29127,10 +29127,10 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadString(out this.lang);
-            boxSize += stream.ReadString(out this.name);
-            boxSize += stream.ReadString(out this.description);
-            boxSize += stream.ReadString(out this.tags);
+            boxSize += stream.ReadStringZeroTerminated(out this.lang);
+            boxSize += stream.ReadStringZeroTerminated(out this.name);
+            boxSize += stream.ReadStringZeroTerminated(out this.description);
+            boxSize += stream.ReadStringZeroTerminated(out this.tags);
             return boxSize;
         }
 
@@ -29138,10 +29138,10 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.lang);
-            boxSize += stream.WriteString(this.name);
-            boxSize += stream.WriteString(this.description);
-            boxSize += stream.WriteString(this.tags);
+            boxSize += stream.WriteStringZeroTerminated(this.lang);
+            boxSize += stream.WriteStringZeroTerminated(this.name);
+            boxSize += stream.WriteStringZeroTerminated(this.description);
+            boxSize += stream.WriteStringZeroTerminated(this.tags);
             return boxSize;
         }
 

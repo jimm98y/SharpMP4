@@ -86,6 +86,18 @@ public class IsoStream
     {
         throw new NotImplementedException();
     }
+    
+    internal ulong ReadStringZeroTerminated(out string value)
+    {
+        List<byte> buffer = new List<byte>();
+        byte c;
+        while ((c = ReadByte()) != 0)
+        {
+            buffer.Add(c);
+        }
+        value = Encoding.UTF8.GetString(buffer.ToArray());
+        return (ulong)(buffer.Count + 1);
+    }
 
     internal ulong ReadStringArray(uint count, out string[] value)
     {
@@ -363,6 +375,17 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
+    internal ulong WriteStringZeroTerminated(string value)
+    {
+        byte[] buffer = Encoding.UTF8.GetBytes(value);
+        for (int i = 0; i < buffer.Length; i++)
+        {
+            WriteByte(buffer[i]);
+        }
+        WriteByte(0);
+        return (ulong)buffer.Length + 1;
+    }
+
     internal ulong WriteStringArray(uint count, string[] values)
     {
         throw new NotImplementedException();
@@ -594,7 +617,7 @@ public class IsoStream
 
     internal static ulong CalculateBoxChildren(Box value)
     {
-        throw new NotImplementedException();
+        return CalculateBoxSize(value.Children);
     }
 
     internal ulong WriteBoxChildren(Box box)
