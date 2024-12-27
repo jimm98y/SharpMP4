@@ -5928,9 +5928,6 @@ namespace BoxGenerator2
         protected ICC_profile ICC_profile;  //  restricted ICC profile
         public ICC_profile ICCProfile { get { return this.ICC_profile; } set { this.ICC_profile = value; } }
 
-        protected ICC_profile ICC_profile0;  //  unrestricted ICC profile
-        public ICC_profile ICCProfile0 { get { return this.ICC_profile0; } set { this.ICC_profile0 = value; } }
-
         public ColourInformationBox() : base("colr")
         { }
 
@@ -5956,7 +5953,7 @@ namespace BoxGenerator2
 
             else if (colour_type == IsoStream.FromFourCC("prof"))
             {
-                boxSize += stream.ReadClass(out this.ICC_profile0); // unrestricted ICC profile
+                boxSize += stream.ReadClass(out this.ICC_profile); // unrestricted ICC profile
             }
             return boxSize;
         }
@@ -5983,7 +5980,7 @@ namespace BoxGenerator2
 
             else if (colour_type == IsoStream.FromFourCC("prof"))
             {
-                boxSize += stream.WriteClass(this.ICC_profile0); // unrestricted ICC profile
+                boxSize += stream.WriteClass(this.ICC_profile); // unrestricted ICC profile
             }
             return boxSize;
         }
@@ -6010,7 +6007,7 @@ namespace BoxGenerator2
 
             else if (colour_type == IsoStream.FromFourCC("prof"))
             {
-                boxSize += IsoStream.CalculateClassSize(ICC_profile0); // ICC_profile0
+                boxSize += IsoStream.CalculateClassSize(ICC_profile); // ICC_profile
             }
             return boxSize;
         }
@@ -6282,29 +6279,14 @@ namespace BoxGenerator2
         protected byte object_count;
         public byte ObjectCount { get { return this.object_count; } set { this.object_count = value; } }
 
-        protected byte stream_structure0;
-        public byte StreamStructure0 { get { return this.stream_structure0; } set { this.stream_structure0 = value; } }
-
         protected byte format_ordering;
         public byte FormatOrdering { get { return this.format_ordering; } set { this.format_ordering = value; } }
 
         protected byte baseChannelCount;
         public byte BaseChannelCount { get { return this.baseChannelCount; } set { this.baseChannelCount = value; } }
 
-        protected byte definedLayout0;
-        public byte DefinedLayout0 { get { return this.definedLayout0; } set { this.definedLayout0 = value; } }
-
         protected byte layout_channel_count;
         public byte LayoutChannelCount { get { return this.layout_channel_count; } set { this.layout_channel_count = value; } }
-
-        protected byte speaker_position0;
-        public byte SpeakerPosition0 { get { return this.speaker_position0; } set { this.speaker_position0 = value; } }
-
-        protected short azimuth0;
-        public short Azimuth0 { get { return this.azimuth0; } set { this.azimuth0 = value; } }
-
-        protected sbyte elevation0;
-        public sbyte Elevation0 { get { return this.elevation0; } set { this.elevation0 = value; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -6314,9 +6296,6 @@ namespace BoxGenerator2
 
         protected bool omitted_channels_present;
         public bool OmittedChannelsPresent { get { return this.omitted_channels_present; } set { this.omitted_channels_present = value; } }
-
-        protected ulong omittedChannelsMap0;  //  a ‘1’ bit indicates ‘not in this track’
-        public ulong OmittedChannelsMap0 { get { return this.omittedChannelsMap0; } set { this.omittedChannelsMap0 = value; } }
 
         public ChannelLayout(byte version = 0) : base("chnl", version, 0)
         { }
@@ -6365,13 +6344,13 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadBits(4, out this.stream_structure0);
+                boxSize += stream.ReadBits(4, out this.stream_structure);
                 boxSize += stream.ReadBits(4, out this.format_ordering);
                 boxSize += stream.ReadUInt8(out this.baseChannelCount);
 
                 if ((stream_structure & 1) == 1)
                 {
-                    boxSize += stream.ReadUInt8(out this.definedLayout0);
+                    boxSize += stream.ReadUInt8(out this.definedLayout);
 
                     if (definedLayout == 0)
                     {
@@ -6379,13 +6358,13 @@ namespace BoxGenerator2
 
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-                            boxSize += stream.ReadUInt8(out this.speaker_position0);
+                            boxSize += stream.ReadUInt8(out this.speaker_position);
 
                             if (speaker_position == 126)
                             {
                                 /*  explicit position */
-                                boxSize += stream.ReadInt16(out this.azimuth0);
-                                boxSize += stream.ReadInt8(out this.elevation0);
+                                boxSize += stream.ReadInt16(out this.azimuth);
+                                boxSize += stream.ReadInt8(out this.elevation);
                             }
                         }
                     }
@@ -6398,7 +6377,7 @@ namespace BoxGenerator2
 
                         if (omitted_channels_present == true)
                         {
-                            boxSize += stream.ReadUInt64(out this.omittedChannelsMap0); // a ‘1’ bit indicates ‘not in this track’
+                            boxSize += stream.ReadUInt64(out this.omittedChannelsMap); // a ‘1’ bit indicates ‘not in this track’
                         }
                     }
                 }
@@ -6455,13 +6434,13 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteBits(4, this.stream_structure0);
+                boxSize += stream.WriteBits(4, this.stream_structure);
                 boxSize += stream.WriteBits(4, this.format_ordering);
                 boxSize += stream.WriteUInt8(this.baseChannelCount);
 
                 if ((stream_structure & 1) == 1)
                 {
-                    boxSize += stream.WriteUInt8(this.definedLayout0);
+                    boxSize += stream.WriteUInt8(this.definedLayout);
 
                     if (definedLayout == 0)
                     {
@@ -6469,13 +6448,13 @@ namespace BoxGenerator2
 
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-                            boxSize += stream.WriteUInt8(this.speaker_position0);
+                            boxSize += stream.WriteUInt8(this.speaker_position);
 
                             if (speaker_position == 126)
                             {
                                 /*  explicit position */
-                                boxSize += stream.WriteInt16(this.azimuth0);
-                                boxSize += stream.WriteInt8(this.elevation0);
+                                boxSize += stream.WriteInt16(this.azimuth);
+                                boxSize += stream.WriteInt8(this.elevation);
                             }
                         }
                     }
@@ -6488,7 +6467,7 @@ namespace BoxGenerator2
 
                         if (omitted_channels_present == true)
                         {
-                            boxSize += stream.WriteUInt64(this.omittedChannelsMap0); // a ‘1’ bit indicates ‘not in this track’
+                            boxSize += stream.WriteUInt64(this.omittedChannelsMap); // a ‘1’ bit indicates ‘not in this track’
                         }
                     }
                 }
@@ -6545,13 +6524,13 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 4; // stream_structure0
+                boxSize += 4; // stream_structure
                 boxSize += 4; // format_ordering
                 boxSize += 8; // baseChannelCount
 
                 if ((stream_structure & 1) == 1)
                 {
-                    boxSize += 8; // definedLayout0
+                    boxSize += 8; // definedLayout
 
                     if (definedLayout == 0)
                     {
@@ -6559,13 +6538,13 @@ namespace BoxGenerator2
 
                         for (int i = 1; i <= layout_channel_count; i++)
                         {
-                            boxSize += 8; // speaker_position0
+                            boxSize += 8; // speaker_position
 
                             if (speaker_position == 126)
                             {
                                 /*  explicit position */
-                                boxSize += 16; // azimuth0
-                                boxSize += 8; // elevation0
+                                boxSize += 16; // azimuth
+                                boxSize += 8; // elevation
                             }
                         }
                     }
@@ -6578,7 +6557,7 @@ namespace BoxGenerator2
 
                         if (omitted_channels_present == true)
                         {
-                            boxSize += 64; // omittedChannelsMap0
+                            boxSize += 64; // omittedChannelsMap
                         }
                     }
                 }
@@ -6641,9 +6620,6 @@ namespace BoxGenerator2
         protected byte downmix_instructions_count;
         public byte DownmixInstructionsCount { get { return this.downmix_instructions_count; } set { this.downmix_instructions_count = value; } }
 
-        protected int downmix_instructions_count0 = 1;
-        public int DownmixInstructionsCount0 { get { return this.downmix_instructions_count0; } set { this.downmix_instructions_count0 = value; } }
-
         protected byte targetLayout;
         public byte TargetLayout { get { return this.targetLayout; } set { this.targetLayout = value; } }
 
@@ -6688,7 +6664,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadInt32(out this.downmix_instructions_count0);
+                downmix_instructions_count = 1;
             }
 
             for (int a = 1; a <= downmix_instructions_count; a++)
@@ -6752,7 +6728,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteInt32(this.downmix_instructions_count0);
+                downmix_instructions_count = 1;
             }
 
             for (int a = 1; a <= downmix_instructions_count; a++)
@@ -6816,7 +6792,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 32; // downmix_instructions_count0
+                downmix_instructions_count = 1;
             }
 
             for (int a = 1; a <= downmix_instructions_count; a++)
@@ -7756,11 +7732,8 @@ namespace BoxGenerator2
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
-        protected ushort item_ID;
-        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
-
-        protected uint item_ID0;
-        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
+        protected uint item_ID;
+        public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected byte association_count;
         public byte AssociationCount { get { return this.association_count; } set { this.association_count = value; } }
@@ -7770,9 +7743,6 @@ namespace BoxGenerator2
 
         protected ushort property_index;
         public ushort PropertyIndex { get { return this.property_index; } set { this.property_index = value; } }
-
-        protected byte property_index0;
-        public byte PropertyIndex0 { get { return this.property_index0; } set { this.property_index0 = value; } }
 
         public ItemPropertyAssociationBox(byte version = 0, uint flags = 0) : base("ipma", version, flags)
         { }
@@ -7793,7 +7763,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += stream.ReadUInt32(out this.item_ID0);
+                    boxSize += stream.ReadUInt32(out this.item_ID);
                 }
                 boxSize += stream.ReadUInt8(out this.association_count);
 
@@ -7808,7 +7778,7 @@ namespace BoxGenerator2
 
                     else
                     {
-                        boxSize += stream.ReadBits(7, out this.property_index0);
+                        boxSize += stream.ReadBits(7, out this.property_index);
                     }
                 }
             }
@@ -7831,7 +7801,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += stream.WriteUInt32(this.item_ID0);
+                    boxSize += stream.WriteUInt32(this.item_ID);
                 }
                 boxSize += stream.WriteUInt8(this.association_count);
 
@@ -7846,7 +7816,7 @@ namespace BoxGenerator2
 
                     else
                     {
-                        boxSize += stream.WriteBits(7, this.property_index0);
+                        boxSize += stream.WriteBits(7, this.property_index);
                     }
                 }
             }
@@ -7869,7 +7839,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += 32; // item_ID0
+                    boxSize += 32; // item_ID
                 }
                 boxSize += 8; // association_count
 
@@ -7884,7 +7854,7 @@ namespace BoxGenerator2
 
                     else
                     {
-                        boxSize += 7; // property_index0
+                        boxSize += 7; // property_index
                     }
                 }
             }
@@ -7971,9 +7941,6 @@ namespace BoxGenerator2
         protected uint grouping_type_parameter;
         public uint GroupingTypeParameter { get { return this.grouping_type_parameter; } set { this.grouping_type_parameter = value; } }
 
-        protected int min_initial_alt_startup_offset0;
-        public int MinInitialAltStartupOffset0 { get { return this.min_initial_alt_startup_offset0; } set { this.min_initial_alt_startup_offset0 = value; } }
-
         public AlternativeStartupSequencePropertiesBox(byte version = 0) : base("assp", version, 0)
         { }
 
@@ -7994,7 +7961,7 @@ namespace BoxGenerator2
                 for (int j = 1; j <= num_entries; j++)
                 {
                     boxSize += stream.ReadUInt32(out this.grouping_type_parameter);
-                    boxSize += stream.ReadInt32(out this.min_initial_alt_startup_offset0);
+                    boxSize += stream.ReadInt32(out this.min_initial_alt_startup_offset);
                 }
             }
             return boxSize;
@@ -8017,7 +7984,7 @@ namespace BoxGenerator2
                 for (int j = 1; j <= num_entries; j++)
                 {
                     boxSize += stream.WriteUInt32(this.grouping_type_parameter);
-                    boxSize += stream.WriteInt32(this.min_initial_alt_startup_offset0);
+                    boxSize += stream.WriteInt32(this.min_initial_alt_startup_offset);
                 }
             }
             return boxSize;
@@ -8040,7 +8007,7 @@ namespace BoxGenerator2
                 for (int j = 1; j <= num_entries; j++)
                 {
                     boxSize += 32; // grouping_type_parameter
-                    boxSize += 32; // min_initial_alt_startup_offset0
+                    boxSize += 32; // min_initial_alt_startup_offset
                 }
             }
             return boxSize;
@@ -8371,35 +8338,20 @@ namespace BoxGenerator2
     {
         public const string FourCC = "cslg";
 
-        protected int compositionToDTSShift;
-        public int CompositionToDTSShift { get { return this.compositionToDTSShift; } set { this.compositionToDTSShift = value; } }
+        protected long compositionToDTSShift;
+        public long CompositionToDTSShift { get { return this.compositionToDTSShift; } set { this.compositionToDTSShift = value; } }
 
-        protected int leastDecodeToDisplayDelta;
-        public int LeastDecodeToDisplayDelta { get { return this.leastDecodeToDisplayDelta; } set { this.leastDecodeToDisplayDelta = value; } }
+        protected long leastDecodeToDisplayDelta;
+        public long LeastDecodeToDisplayDelta { get { return this.leastDecodeToDisplayDelta; } set { this.leastDecodeToDisplayDelta = value; } }
 
-        protected int greatestDecodeToDisplayDelta;
-        public int GreatestDecodeToDisplayDelta { get { return this.greatestDecodeToDisplayDelta; } set { this.greatestDecodeToDisplayDelta = value; } }
+        protected long greatestDecodeToDisplayDelta;
+        public long GreatestDecodeToDisplayDelta { get { return this.greatestDecodeToDisplayDelta; } set { this.greatestDecodeToDisplayDelta = value; } }
 
-        protected int compositionStartTime;
-        public int CompositionStartTime { get { return this.compositionStartTime; } set { this.compositionStartTime = value; } }
+        protected long compositionStartTime;
+        public long CompositionStartTime { get { return this.compositionStartTime; } set { this.compositionStartTime = value; } }
 
-        protected int compositionEndTime;
-        public int CompositionEndTime { get { return this.compositionEndTime; } set { this.compositionEndTime = value; } }
-
-        protected long compositionToDTSShift0;
-        public long CompositionToDTSShift0 { get { return this.compositionToDTSShift0; } set { this.compositionToDTSShift0 = value; } }
-
-        protected long leastDecodeToDisplayDelta0;
-        public long LeastDecodeToDisplayDelta0 { get { return this.leastDecodeToDisplayDelta0; } set { this.leastDecodeToDisplayDelta0 = value; } }
-
-        protected long greatestDecodeToDisplayDelta0;
-        public long GreatestDecodeToDisplayDelta0 { get { return this.greatestDecodeToDisplayDelta0; } set { this.greatestDecodeToDisplayDelta0 = value; } }
-
-        protected long compositionStartTime0;
-        public long CompositionStartTime0 { get { return this.compositionStartTime0; } set { this.compositionStartTime0 = value; } }
-
-        protected long compositionEndTime0;
-        public long CompositionEndTime0 { get { return this.compositionEndTime0; } set { this.compositionEndTime0 = value; } }
+        protected long compositionEndTime;
+        public long CompositionEndTime { get { return this.compositionEndTime; } set { this.compositionEndTime = value; } }
 
         public CompositionToDecodeBox(byte version = 0) : base("cslg", version, 0)
         { }
@@ -8420,11 +8372,11 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadInt64(out this.compositionToDTSShift0);
-                boxSize += stream.ReadInt64(out this.leastDecodeToDisplayDelta0);
-                boxSize += stream.ReadInt64(out this.greatestDecodeToDisplayDelta0);
-                boxSize += stream.ReadInt64(out this.compositionStartTime0);
-                boxSize += stream.ReadInt64(out this.compositionEndTime0);
+                boxSize += stream.ReadInt64(out this.compositionToDTSShift);
+                boxSize += stream.ReadInt64(out this.leastDecodeToDisplayDelta);
+                boxSize += stream.ReadInt64(out this.greatestDecodeToDisplayDelta);
+                boxSize += stream.ReadInt64(out this.compositionStartTime);
+                boxSize += stream.ReadInt64(out this.compositionEndTime);
             }
             return boxSize;
         }
@@ -8445,11 +8397,11 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteInt64(this.compositionToDTSShift0);
-                boxSize += stream.WriteInt64(this.leastDecodeToDisplayDelta0);
-                boxSize += stream.WriteInt64(this.greatestDecodeToDisplayDelta0);
-                boxSize += stream.WriteInt64(this.compositionStartTime0);
-                boxSize += stream.WriteInt64(this.compositionEndTime0);
+                boxSize += stream.WriteInt64(this.compositionToDTSShift);
+                boxSize += stream.WriteInt64(this.leastDecodeToDisplayDelta);
+                boxSize += stream.WriteInt64(this.greatestDecodeToDisplayDelta);
+                boxSize += stream.WriteInt64(this.compositionStartTime);
+                boxSize += stream.WriteInt64(this.compositionEndTime);
             }
             return boxSize;
         }
@@ -8470,11 +8422,11 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 64; // compositionToDTSShift0
-                boxSize += 64; // leastDecodeToDisplayDelta0
-                boxSize += 64; // greatestDecodeToDisplayDelta0
-                boxSize += 64; // compositionStartTime0
-                boxSize += 64; // compositionEndTime0
+                boxSize += 64; // compositionToDTSShift
+                boxSize += 64; // leastDecodeToDisplayDelta
+                boxSize += 64; // greatestDecodeToDisplayDelta
+                boxSize += 64; // compositionStartTime
+                boxSize += 64; // compositionEndTime
             }
             return boxSize;
         }
@@ -8513,9 +8465,6 @@ namespace BoxGenerator2
         protected uint sample_offset;
         public uint SampleOffset { get { return this.sample_offset; } set { this.sample_offset = value; } }
 
-        protected uint sample_count0;
-        public uint SampleCount0 { get { return this.sample_count0; } set { this.sample_count0 = value; } }
-
         protected int sample_offset0;
         public int SampleOffset0 { get { return this.sample_offset0; } set { this.sample_offset0 = value; } }
 
@@ -8544,7 +8493,7 @@ namespace BoxGenerator2
 
                 for (int i = 0; i < entry_count; i++)
                 {
-                    boxSize += stream.ReadUInt32(out this.sample_count0);
+                    boxSize += stream.ReadUInt32(out this.sample_count);
                     boxSize += stream.ReadInt32(out this.sample_offset0);
                 }
             }
@@ -8573,7 +8522,7 @@ namespace BoxGenerator2
 
                 for (int i = 0; i < entry_count; i++)
                 {
-                    boxSize += stream.WriteUInt32(this.sample_count0);
+                    boxSize += stream.WriteUInt32(this.sample_count);
                     boxSize += stream.WriteInt32(this.sample_offset0);
                 }
             }
@@ -8602,7 +8551,7 @@ namespace BoxGenerator2
 
                 for (int i = 0; i < entry_count; i++)
                 {
-                    boxSize += 32; // sample_count0
+                    boxSize += 32; // sample_count
                     boxSize += 32; // sample_offset0
                 }
             }
@@ -8777,12 +8726,6 @@ namespace BoxGenerator2
         protected long media_time;
         public long MediaTime { get { return this.media_time; } set { this.media_time = value; } }
 
-        protected uint edit_duration0;
-        public uint EditDuration0 { get { return this.edit_duration0; } set { this.edit_duration0 = value; } }
-
-        protected int media_time0;
-        public int MediaTime0 { get { return this.media_time0; } set { this.media_time0 = value; } }
-
         protected short media_rate_integer;
         public short MediaRateInteger { get { return this.media_rate_integer; } set { this.media_rate_integer = value; } }
 
@@ -8810,8 +8753,8 @@ namespace BoxGenerator2
                 else
                 {
                     /*  version==0 */
-                    boxSize += stream.ReadUInt32(out this.edit_duration0);
-                    boxSize += stream.ReadInt32(out this.media_time0);
+                    boxSize += stream.ReadUInt32(out this.edit_duration);
+                    boxSize += stream.ReadInt32(out this.media_time);
                 }
                 boxSize += stream.ReadInt16(out this.media_rate_integer);
                 boxSize += stream.ReadInt16(out this.media_rate_fraction);
@@ -8837,8 +8780,8 @@ namespace BoxGenerator2
                 else
                 {
                     /*  version==0 */
-                    boxSize += stream.WriteUInt32(this.edit_duration0);
-                    boxSize += stream.WriteInt32(this.media_time0);
+                    boxSize += stream.WriteUInt32(this.edit_duration);
+                    boxSize += stream.WriteInt32(this.media_time);
                 }
                 boxSize += stream.WriteInt16(this.media_rate_integer);
                 boxSize += stream.WriteInt16(this.media_rate_fraction);
@@ -8864,8 +8807,8 @@ namespace BoxGenerator2
                 else
                 {
                     /*  version==0 */
-                    boxSize += 32; // edit_duration0
-                    boxSize += 32; // media_time0
+                    boxSize += 32; // edit_duration
+                    boxSize += 32; // media_time
                 }
                 boxSize += 16; // media_rate_integer
                 boxSize += 16; // media_rate_fraction
@@ -9029,17 +8972,11 @@ namespace BoxGenerator2
     {
         public const string FourCC = "fecr";
 
-        protected ushort entry_count;
-        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
+        protected uint entry_count;
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
-        protected uint entry_count0;
-        public uint EntryCount0 { get { return this.entry_count0; } set { this.entry_count0 = value; } }
-
-        protected ushort item_ID;
-        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
-
-        protected uint item_ID0;
-        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
+        protected uint item_ID;
+        public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected uint symbol_count;
         public uint SymbolCount { get { return this.symbol_count; } set { this.symbol_count = value; } }
@@ -9059,7 +8996,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUInt32(out this.entry_count0);
+                boxSize += stream.ReadUInt32(out this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -9072,7 +9009,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += stream.ReadUInt32(out this.item_ID0);
+                    boxSize += stream.ReadUInt32(out this.item_ID);
                 }
                 boxSize += stream.ReadUInt32(out this.symbol_count);
             }
@@ -9091,7 +9028,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUInt32(this.entry_count0);
+                boxSize += stream.WriteUInt32(this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -9104,7 +9041,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += stream.WriteUInt32(this.item_ID0);
+                    boxSize += stream.WriteUInt32(this.item_ID);
                 }
                 boxSize += stream.WriteUInt32(this.symbol_count);
             }
@@ -9123,7 +9060,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 32; // entry_count0
+                boxSize += 32; // entry_count
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -9136,7 +9073,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += 32; // item_ID0
+                    boxSize += 32; // item_ID
                 }
                 boxSize += 32; // symbol_count
             }
@@ -9291,17 +9228,11 @@ namespace BoxGenerator2
     {
         public const string FourCC = "fire";
 
-        protected ushort entry_count;
-        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
+        protected uint entry_count;
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
-        protected uint entry_count0;
-        public uint EntryCount0 { get { return this.entry_count0; } set { this.entry_count0 = value; } }
-
-        protected ushort item_ID;
-        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
-
-        protected uint item_ID0;
-        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
+        protected uint item_ID;
+        public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected uint symbol_count;
         public uint SymbolCount { get { return this.symbol_count; } set { this.symbol_count = value; } }
@@ -9321,7 +9252,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUInt32(out this.entry_count0);
+                boxSize += stream.ReadUInt32(out this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -9334,7 +9265,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += stream.ReadUInt32(out this.item_ID0);
+                    boxSize += stream.ReadUInt32(out this.item_ID);
                 }
                 boxSize += stream.ReadUInt32(out this.symbol_count);
             }
@@ -9353,7 +9284,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUInt32(this.entry_count0);
+                boxSize += stream.WriteUInt32(this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -9366,7 +9297,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += stream.WriteUInt32(this.item_ID0);
+                    boxSize += stream.WriteUInt32(this.item_ID);
                 }
                 boxSize += stream.WriteUInt32(this.symbol_count);
             }
@@ -9385,7 +9316,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 32; // entry_count0
+                boxSize += 32; // entry_count
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -9398,7 +9329,7 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += 32; // item_ID0
+                    boxSize += 32; // item_ID
                 }
                 boxSize += 32; // symbol_count
             }
@@ -9438,11 +9369,8 @@ namespace BoxGenerator2
     {
         public const string FourCC = "fpar";
 
-        protected ushort item_ID;
-        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
-
-        protected uint item_ID0;
-        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
+        protected uint item_ID;
+        public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected ushort packet_payload_size;
         public ushort PacketPayloadSize { get { return this.packet_payload_size; } set { this.packet_payload_size = value; } }
@@ -9468,11 +9396,8 @@ namespace BoxGenerator2
         protected string scheme_specific_info;
         public string SchemeSpecificInfo { get { return this.scheme_specific_info; } set { this.scheme_specific_info = value; } }
 
-        protected ushort entry_count;
-        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
-
-        protected uint entry_count0;
-        public uint EntryCount0 { get { return this.entry_count0; } set { this.entry_count0 = value; } }
+        protected uint entry_count;
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected ushort block_count;
         public ushort BlockCount { get { return this.block_count; } set { this.block_count = value; } }
@@ -9495,7 +9420,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUInt32(out this.item_ID0);
+                boxSize += stream.ReadUInt32(out this.item_ID);
             }
             boxSize += stream.ReadUInt16(out this.packet_payload_size);
             boxSize += stream.ReadUInt8(out this.reserved);
@@ -9513,7 +9438,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUInt32(out this.entry_count0);
+                boxSize += stream.ReadUInt32(out this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -9536,7 +9461,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUInt32(this.item_ID0);
+                boxSize += stream.WriteUInt32(this.item_ID);
             }
             boxSize += stream.WriteUInt16(this.packet_payload_size);
             boxSize += stream.WriteUInt8(this.reserved);
@@ -9554,7 +9479,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUInt32(this.entry_count0);
+                boxSize += stream.WriteUInt32(this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -9577,7 +9502,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 32; // item_ID0
+                boxSize += 32; // item_ID
             }
             boxSize += 16; // packet_payload_size
             boxSize += 8; // reserved
@@ -9595,7 +9520,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 32; // entry_count0
+                boxSize += 32; // entry_count
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -10050,11 +9975,8 @@ namespace BoxGenerator2
     {
         public const string FourCC = "iinf";
 
-        protected ushort entry_count;
-        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
-
-        protected uint entry_count0;
-        public uint EntryCount0 { get { return this.entry_count0; } set { this.entry_count0 = value; } }
+        protected uint entry_count;
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
         protected ItemInfoEntry[] item_infos;
         public ItemInfoEntry[] ItemInfos { get { return this.item_infos; } set { this.item_infos = value; } }
@@ -10074,7 +9996,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUInt32(out this.entry_count0);
+                boxSize += stream.ReadUInt32(out this.entry_count);
             }
             boxSize += stream.ReadBox(out this.item_infos);
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -10093,7 +10015,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUInt32(this.entry_count0);
+                boxSize += stream.WriteUInt32(this.entry_count);
             }
             boxSize += stream.WriteBox(entry_count, this.item_infos);
             boxSize += stream.WriteBoxChildren(this);
@@ -10112,7 +10034,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 32; // entry_count0
+                boxSize += 32; // entry_count
             }
             boxSize += IsoStream.CalculateSize(item_infos); // item_infos
             return boxSize;
@@ -10177,17 +10099,11 @@ namespace BoxGenerator2
         protected byte reserved;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        protected ushort item_count;
-        public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
+        protected uint item_count;
+        public uint ItemCount { get { return this.item_count; } set { this.item_count = value; } }
 
-        protected uint item_count0;
-        public uint ItemCount0 { get { return this.item_count0; } set { this.item_count0 = value; } }
-
-        protected ushort item_ID;
-        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
-
-        protected uint item_ID0;
-        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
+        protected uint item_ID;
+        public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected ushort reserved0 = 0;
         public ushort Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
@@ -10241,7 +10157,7 @@ namespace BoxGenerator2
 
             else if (version == 2)
             {
-                boxSize += stream.ReadUInt32(out this.item_count0);
+                boxSize += stream.ReadUInt32(out this.item_count);
             }
 
             for (int i = 0; i < item_count; i++)
@@ -10254,7 +10170,7 @@ namespace BoxGenerator2
 
                 else if (version == 2)
                 {
-                    boxSize += stream.ReadUInt32(out this.item_ID0);
+                    boxSize += stream.ReadUInt32(out this.item_ID);
                 }
 
                 if ((version == 1) || (version == 2))
@@ -10305,7 +10221,7 @@ namespace BoxGenerator2
 
             else if (version == 2)
             {
-                boxSize += stream.WriteUInt32(this.item_count0);
+                boxSize += stream.WriteUInt32(this.item_count);
             }
 
             for (int i = 0; i < item_count; i++)
@@ -10318,7 +10234,7 @@ namespace BoxGenerator2
 
                 else if (version == 2)
                 {
-                    boxSize += stream.WriteUInt32(this.item_ID0);
+                    boxSize += stream.WriteUInt32(this.item_ID);
                 }
 
                 if ((version == 1) || (version == 2))
@@ -10369,7 +10285,7 @@ namespace BoxGenerator2
 
             else if (version == 2)
             {
-                boxSize += 32; // item_count0
+                boxSize += 32; // item_count
             }
 
             for (int i = 0; i < item_count; i++)
@@ -10382,7 +10298,7 @@ namespace BoxGenerator2
 
                 else if (version == 2)
                 {
-                    boxSize += 32; // item_ID0
+                    boxSize += 32; // item_ID
                 }
 
                 if ((version == 1) || (version == 2))
@@ -10494,8 +10410,8 @@ namespace BoxGenerator2
     {
         public const string FourCC = "infe";
 
-        protected ushort item_ID;
-        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
+        protected uint item_ID;
+        public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         protected ushort item_protection_index;
         public ushort ItemProtectionIndex { get { return this.item_protection_index; } set { this.item_protection_index = value; } }
@@ -10515,26 +10431,8 @@ namespace BoxGenerator2
         protected ItemInfoExtension ItemInfoExtension;  // optional
         public ItemInfoExtension _ItemInfoExtension { get { return this.ItemInfoExtension; } set { this.ItemInfoExtension = value; } }
 
-        protected ushort item_ID0;
-        public ushort ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
-
-        protected uint item_ID00;
-        public uint ItemID00 { get { return this.item_ID00; } set { this.item_ID00 = value; } }
-
-        protected ushort item_protection_index0;
-        public ushort ItemProtectionIndex0 { get { return this.item_protection_index0; } set { this.item_protection_index0 = value; } }
-
         protected uint item_type;
         public uint ItemType { get { return this.item_type; } set { this.item_type = value; } }
-
-        protected string item_name0;
-        public string ItemName0 { get { return this.item_name0; } set { this.item_name0 = value; } }
-
-        protected string content_type0;
-        public string ContentType0 { get { return this.content_type0; } set { this.content_type0 = value; } }
-
-        protected string content_encoding0;  // optional
-        public string ContentEncoding0 { get { return this.content_encoding0; } set { this.content_encoding0 = value; } }
 
         protected string item_uri_type;
         public string ItemUriType { get { return this.item_uri_type; } set { this.item_uri_type = value; } }
@@ -10567,21 +10465,21 @@ namespace BoxGenerator2
 
                 if (version == 2)
                 {
-                    boxSize += stream.ReadUInt16(out this.item_ID0);
+                    boxSize += stream.ReadUInt16(out this.item_ID);
                 }
 
                 else if (version == 3)
                 {
-                    boxSize += stream.ReadUInt32(out this.item_ID00);
+                    boxSize += stream.ReadUInt32(out this.item_ID);
                 }
-                boxSize += stream.ReadUInt16(out this.item_protection_index0);
+                boxSize += stream.ReadUInt16(out this.item_protection_index);
                 boxSize += stream.ReadUInt32(out this.item_type);
-                boxSize += stream.ReadString(out this.item_name0);
+                boxSize += stream.ReadString(out this.item_name);
 
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
-                    boxSize += stream.ReadString(out this.content_type0);
-                    if (boxSize < size) boxSize += stream.ReadString(out this.content_encoding0); //optional
+                    boxSize += stream.ReadString(out this.content_type);
+                    if (boxSize < size) boxSize += stream.ReadString(out this.content_encoding); //optional
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
@@ -10618,21 +10516,21 @@ namespace BoxGenerator2
 
                 if (version == 2)
                 {
-                    boxSize += stream.WriteUInt16(this.item_ID0);
+                    boxSize += stream.WriteUInt16(this.item_ID);
                 }
 
                 else if (version == 3)
                 {
-                    boxSize += stream.WriteUInt32(this.item_ID00);
+                    boxSize += stream.WriteUInt32(this.item_ID);
                 }
-                boxSize += stream.WriteUInt16(this.item_protection_index0);
+                boxSize += stream.WriteUInt16(this.item_protection_index);
                 boxSize += stream.WriteUInt32(this.item_type);
-                boxSize += stream.WriteString(this.item_name0);
+                boxSize += stream.WriteString(this.item_name);
 
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
-                    boxSize += stream.WriteString(this.content_type0);
-                    if (this.content_encoding0 != null) boxSize += stream.WriteString(this.content_encoding0); //optional
+                    boxSize += stream.WriteString(this.content_type);
+                    if (this.content_encoding != null) boxSize += stream.WriteString(this.content_encoding); //optional
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
@@ -10669,21 +10567,21 @@ namespace BoxGenerator2
 
                 if (version == 2)
                 {
-                    boxSize += 16; // item_ID0
+                    boxSize += 16; // item_ID
                 }
 
                 else if (version == 3)
                 {
-                    boxSize += 32; // item_ID00
+                    boxSize += 32; // item_ID
                 }
-                boxSize += 16; // item_protection_index0
+                boxSize += 16; // item_protection_index
                 boxSize += 32; // item_type
-                boxSize += (ulong)item_name0.Length * 8; // item_name0
+                boxSize += (ulong)item_name.Length * 8; // item_name
 
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
-                    boxSize += (ulong)content_type0.Length * 8; // content_type0
-                    if (this.content_encoding0 != null) boxSize += (ulong)content_encoding0.Length * 8; // content_encoding0
+                    boxSize += (ulong)content_type.Length * 8; // content_type
+                    if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
@@ -10883,9 +10781,6 @@ namespace BoxGenerator2
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
 
-        protected uint grouping_type0;
-        public uint GroupingType0 { get { return this.grouping_type0; } set { this.grouping_type0 = value; } }
-
         protected uint grouping_type_parameter;
         public uint GroupingTypeParameter { get { return this.grouping_type_parameter; } set { this.grouping_type_parameter = value; } }
 
@@ -10914,7 +10809,7 @@ namespace BoxGenerator2
 
                 else if (assignment_type == 1)
                 {
-                    boxSize += stream.ReadUInt32(out this.grouping_type0);
+                    boxSize += stream.ReadUInt32(out this.grouping_type);
                     boxSize += stream.ReadUInt32(out this.grouping_type_parameter);
                 }
 
@@ -10956,7 +10851,7 @@ namespace BoxGenerator2
 
                 else if (assignment_type == 1)
                 {
-                    boxSize += stream.WriteUInt32(this.grouping_type0);
+                    boxSize += stream.WriteUInt32(this.grouping_type);
                     boxSize += stream.WriteUInt32(this.grouping_type_parameter);
                 }
 
@@ -10998,7 +10893,7 @@ namespace BoxGenerator2
 
                 else if (assignment_type == 1)
                 {
-                    boxSize += 32; // grouping_type0
+                    boxSize += 32; // grouping_type
                     boxSize += 32; // grouping_type_parameter
                 }
 
@@ -11098,18 +10993,6 @@ namespace BoxGenerator2
         protected ulong duration;
         public ulong Duration { get { return this.duration; } set { this.duration = value; } }
 
-        protected uint creation_time0;
-        public uint CreationTime0 { get { return this.creation_time0; } set { this.creation_time0 = value; } }
-
-        protected uint modification_time0;
-        public uint ModificationTime0 { get { return this.modification_time0; } set { this.modification_time0 = value; } }
-
-        protected uint timescale0;
-        public uint Timescale0 { get { return this.timescale0; } set { this.timescale0 = value; } }
-
-        protected uint duration0;
-        public uint Duration0 { get { return this.duration0; } set { this.duration0 = value; } }
-
         protected bool pad = false;
         public bool Pad { get { return this.pad; } set { this.pad = value; } }
 
@@ -11138,10 +11021,10 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += stream.ReadUInt32(out this.creation_time0);
-                boxSize += stream.ReadUInt32(out this.modification_time0);
-                boxSize += stream.ReadUInt32(out this.timescale0);
-                boxSize += stream.ReadUInt32(out this.duration0);
+                boxSize += stream.ReadUInt32(out this.creation_time);
+                boxSize += stream.ReadUInt32(out this.modification_time);
+                boxSize += stream.ReadUInt32(out this.timescale);
+                boxSize += stream.ReadUInt32(out this.duration);
             }
             boxSize += stream.ReadBit(out this.pad);
             boxSize += stream.ReadBitsArray(5, 3, out this.language); // ISO-639-2/T language code
@@ -11165,10 +11048,10 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += stream.WriteUInt32(this.creation_time0);
-                boxSize += stream.WriteUInt32(this.modification_time0);
-                boxSize += stream.WriteUInt32(this.timescale0);
-                boxSize += stream.WriteUInt32(this.duration0);
+                boxSize += stream.WriteUInt32(this.creation_time);
+                boxSize += stream.WriteUInt32(this.modification_time);
+                boxSize += stream.WriteUInt32(this.timescale);
+                boxSize += stream.WriteUInt32(this.duration);
             }
             boxSize += stream.WriteBit(this.pad);
             boxSize += stream.WriteBitsArray(5, 3, this.language); // ISO-639-2/T language code
@@ -11192,10 +11075,10 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += 32; // creation_time0
-                boxSize += 32; // modification_time0
-                boxSize += 32; // timescale0
-                boxSize += 32; // duration0
+                boxSize += 32; // creation_time
+                boxSize += 32; // modification_time
+                boxSize += 32; // timescale
+                boxSize += 32; // duration
             }
             boxSize += 1; // pad
             boxSize += 3 * 5; // language
@@ -11257,9 +11140,6 @@ namespace BoxGenerator2
         protected ulong fragment_duration;
         public ulong FragmentDuration { get { return this.fragment_duration; } set { this.fragment_duration = value; } }
 
-        protected uint fragment_duration0;
-        public uint FragmentDuration0 { get { return this.fragment_duration0; } set { this.fragment_duration0 = value; } }
-
         public MovieExtendsHeaderBox(byte version = 0) : base("mehd", version, 0)
         { }
 
@@ -11276,7 +11156,7 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += stream.ReadUInt32(out this.fragment_duration0);
+                boxSize += stream.ReadUInt32(out this.fragment_duration);
             }
             return boxSize;
         }
@@ -11294,7 +11174,7 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += stream.WriteUInt32(this.fragment_duration0);
+                boxSize += stream.WriteUInt32(this.fragment_duration);
             }
             return boxSize;
         }
@@ -11312,7 +11192,7 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += 32; // fragment_duration0
+                boxSize += 32; // fragment_duration
             }
             return boxSize;
         }
@@ -11735,18 +11615,6 @@ namespace BoxGenerator2
         protected ulong duration;
         public ulong Duration { get { return this.duration; } set { this.duration = value; } }
 
-        protected uint creation_time0;
-        public uint CreationTime0 { get { return this.creation_time0; } set { this.creation_time0 = value; } }
-
-        protected uint modification_time0;
-        public uint ModificationTime0 { get { return this.modification_time0; } set { this.modification_time0 = value; } }
-
-        protected uint timescale0;
-        public uint Timescale0 { get { return this.timescale0; } set { this.timescale0 = value; } }
-
-        protected uint duration0;
-        public uint Duration0 { get { return this.duration0; } set { this.duration0 = value; } }
-
         protected int rate = 0x00010000;  //  typically 1.0
         public int Rate { get { return this.rate; } set { this.rate = value; } }
 
@@ -11788,10 +11656,10 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += stream.ReadUInt32(out this.creation_time0);
-                boxSize += stream.ReadUInt32(out this.modification_time0);
-                boxSize += stream.ReadUInt32(out this.timescale0);
-                boxSize += stream.ReadUInt32(out this.duration0);
+                boxSize += stream.ReadUInt32(out this.creation_time);
+                boxSize += stream.ReadUInt32(out this.modification_time);
+                boxSize += stream.ReadUInt32(out this.timescale);
+                boxSize += stream.ReadUInt32(out this.duration);
             }
             boxSize += stream.ReadInt32(out this.rate); // typically 1.0
             boxSize += stream.ReadInt16(out this.volume); // typically, full volume
@@ -11819,10 +11687,10 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += stream.WriteUInt32(this.creation_time0);
-                boxSize += stream.WriteUInt32(this.modification_time0);
-                boxSize += stream.WriteUInt32(this.timescale0);
-                boxSize += stream.WriteUInt32(this.duration0);
+                boxSize += stream.WriteUInt32(this.creation_time);
+                boxSize += stream.WriteUInt32(this.modification_time);
+                boxSize += stream.WriteUInt32(this.timescale);
+                boxSize += stream.WriteUInt32(this.duration);
             }
             boxSize += stream.WriteInt32(this.rate); // typically 1.0
             boxSize += stream.WriteInt16(this.volume); // typically, full volume
@@ -11850,10 +11718,10 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += 32; // creation_time0
-                boxSize += 32; // modification_time0
-                boxSize += 32; // timescale0
-                boxSize += 32; // duration0
+                boxSize += 32; // creation_time
+                boxSize += 32; // modification_time
+                boxSize += 32; // timescale
+                boxSize += 32; // duration
             }
             boxSize += 32; // rate
             boxSize += 16; // volume
@@ -12105,11 +11973,8 @@ namespace BoxGenerator2
     {
         public const string FourCC = "pitm";
 
-        protected ushort item_ID;
-        public ushort ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
-
-        protected uint item_ID0;
-        public uint ItemID0 { get { return this.item_ID0; } set { this.item_ID0 = value; } }
+        protected uint item_ID;
+        public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
         public PrimaryItemBox(byte version = 0) : base("pitm", version, 0)
         { }
@@ -12126,7 +11991,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUInt32(out this.item_ID0);
+                boxSize += stream.ReadUInt32(out this.item_ID);
             }
             return boxSize;
         }
@@ -12143,7 +12008,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUInt32(this.item_ID0);
+                boxSize += stream.WriteUInt32(this.item_ID);
             }
             return boxSize;
         }
@@ -12160,7 +12025,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 32; // item_ID0
+                boxSize += 32; // item_ID
             }
             return boxSize;
         }
@@ -12189,11 +12054,8 @@ namespace BoxGenerator2
         protected ulong ntp_timestamp;
         public ulong NtpTimestamp { get { return this.ntp_timestamp; } set { this.ntp_timestamp = value; } }
 
-        protected uint media_time;
-        public uint MediaTime { get { return this.media_time; } set { this.media_time = value; } }
-
-        protected ulong media_time0;
-        public ulong MediaTime0 { get { return this.media_time0; } set { this.media_time0 = value; } }
+        protected ulong media_time;
+        public ulong MediaTime { get { return this.media_time; } set { this.media_time = value; } }
 
         public ProducerReferenceTimeBox(byte version = 0, uint flags = 0) : base("prft", version, flags)
         { }
@@ -12212,7 +12074,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUInt64(out this.media_time0);
+                boxSize += stream.ReadUInt64(out this.media_time);
             }
             return boxSize;
         }
@@ -12231,7 +12093,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUInt64(this.media_time0);
+                boxSize += stream.WriteUInt64(this.media_time);
             }
             return boxSize;
         }
@@ -12250,7 +12112,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 64; // media_time0
+                boxSize += 64; // media_time
             }
             return boxSize;
         }
@@ -12344,11 +12206,8 @@ namespace BoxGenerator2
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
-        protected uint[] offset;
-        public uint[] Offset { get { return this.offset; } set { this.offset = value; } }
-
-        protected ulong[] offset0;
-        public ulong[] Offset0 { get { return this.offset0; } set { this.offset0 = value; } }
+        protected ulong[] offset;
+        public ulong[] Offset { get { return this.offset; } set { this.offset = value; } }
 
         public SampleAuxiliaryInformationOffsetsBox(byte version = 0, uint flags = 0) : base("saio", version, flags)
         { }
@@ -12372,7 +12231,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUInt64Array(entry_count, out this.offset0);
+                boxSize += stream.ReadUInt64Array(entry_count, out this.offset);
             }
             return boxSize;
         }
@@ -12396,7 +12255,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUInt64Array(entry_count, this.offset0);
+                boxSize += stream.WriteUInt64Array(entry_count, this.offset);
             }
             return boxSize;
         }
@@ -12420,7 +12279,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += (ulong)entry_count * 64; // offset0
+                boxSize += (ulong)entry_count * 64; // offset
             }
             return boxSize;
         }
@@ -14422,9 +14281,6 @@ namespace BoxGenerator2
         protected uint subsample_size;
         public uint SubsampleSize { get { return this.subsample_size; } set { this.subsample_size = value; } }
 
-        protected ushort subsample_size0;
-        public ushort SubsampleSize0 { get { return this.subsample_size0; } set { this.subsample_size0 = value; } }
-
         protected byte subsample_priority;
         public byte SubsamplePriority { get { return this.subsample_priority; } set { this.subsample_priority = value; } }
 
@@ -14462,7 +14318,7 @@ namespace BoxGenerator2
 
                         else
                         {
-                            boxSize += stream.ReadUInt16(out this.subsample_size0);
+                            boxSize += stream.ReadUInt16(out this.subsample_size);
                         }
                         boxSize += stream.ReadUInt8(out this.subsample_priority);
                         boxSize += stream.ReadUInt8(out this.discardable);
@@ -14498,7 +14354,7 @@ namespace BoxGenerator2
 
                         else
                         {
-                            boxSize += stream.WriteUInt16(this.subsample_size0);
+                            boxSize += stream.WriteUInt16(this.subsample_size);
                         }
                         boxSize += stream.WriteUInt8(this.subsample_priority);
                         boxSize += stream.WriteUInt8(this.discardable);
@@ -14534,7 +14390,7 @@ namespace BoxGenerator2
 
                         else
                         {
-                            boxSize += 16; // subsample_size0
+                            boxSize += 16; // subsample_size
                         }
                         boxSize += 8; // subsample_priority
                         boxSize += 8; // discardable
@@ -14564,9 +14420,6 @@ namespace BoxGenerator2
         protected ulong baseMediaDecodeTime;
         public ulong BaseMediaDecodeTime { get { return this.baseMediaDecodeTime; } set { this.baseMediaDecodeTime = value; } }
 
-        protected uint baseMediaDecodeTime0;
-        public uint BaseMediaDecodeTime0 { get { return this.baseMediaDecodeTime0; } set { this.baseMediaDecodeTime0 = value; } }
-
         public TrackFragmentBaseMediaDecodeTimeBox(byte version = 0) : base("tfdt", version, 0)
         { }
 
@@ -14583,7 +14436,7 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += stream.ReadUInt32(out this.baseMediaDecodeTime0);
+                boxSize += stream.ReadUInt32(out this.baseMediaDecodeTime);
             }
             return boxSize;
         }
@@ -14601,7 +14454,7 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += stream.WriteUInt32(this.baseMediaDecodeTime0);
+                boxSize += stream.WriteUInt32(this.baseMediaDecodeTime);
             }
             return boxSize;
         }
@@ -14619,7 +14472,7 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += 32; // baseMediaDecodeTime0
+                boxSize += 32; // baseMediaDecodeTime
             }
             return boxSize;
         }
@@ -14759,12 +14612,6 @@ namespace BoxGenerator2
         protected ulong moof_offset;
         public ulong MoofOffset { get { return this.moof_offset; } set { this.moof_offset = value; } }
 
-        protected uint time0;
-        public uint Time0 { get { return this.time0; } set { this.time0 = value; } }
-
-        protected uint moof_offset0;
-        public uint MoofOffset0 { get { return this.moof_offset0; } set { this.moof_offset0 = value; } }
-
         protected byte[] traf_number;
         public byte[] TrafNumber { get { return this.traf_number; } set { this.traf_number = value; } }
 
@@ -14799,8 +14646,8 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += stream.ReadUInt32(out this.time0);
-                    boxSize += stream.ReadUInt32(out this.moof_offset0);
+                    boxSize += stream.ReadUInt32(out this.time);
+                    boxSize += stream.ReadUInt32(out this.moof_offset);
                 }
                 boxSize += stream.ReadBytes((ulong)(length_size_of_traf_num + 1), out this.traf_number);
                 boxSize += stream.ReadBytes((ulong)(length_size_of_trun_num + 1), out this.trun_number);
@@ -14831,8 +14678,8 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += stream.WriteUInt32(this.time0);
-                    boxSize += stream.WriteUInt32(this.moof_offset0);
+                    boxSize += stream.WriteUInt32(this.time);
+                    boxSize += stream.WriteUInt32(this.moof_offset);
                 }
                 boxSize += stream.WriteBytes((ulong)(length_size_of_traf_num + 1), this.traf_number);
                 boxSize += stream.WriteBytes((ulong)(length_size_of_trun_num + 1), this.trun_number);
@@ -14863,8 +14710,8 @@ namespace BoxGenerator2
 
                 else
                 {
-                    boxSize += 32; // time0
-                    boxSize += 32; // moof_offset0
+                    boxSize += 32; // time
+                    boxSize += 32; // moof_offset
                 }
                 boxSize += (ulong)(length_size_of_traf_num + 1) * 8; // traf_number
                 boxSize += (ulong)(length_size_of_trun_num + 1) * 8; // trun_number
@@ -14922,20 +14769,8 @@ namespace BoxGenerator2
         protected ulong duration;
         public ulong Duration { get { return this.duration; } set { this.duration = value; } }
 
-        protected uint creation_time0;
-        public uint CreationTime0 { get { return this.creation_time0; } set { this.creation_time0 = value; } }
-
-        protected uint modification_time0;
-        public uint ModificationTime0 { get { return this.modification_time0; } set { this.modification_time0 = value; } }
-
-        protected uint track_ID0;
-        public uint TrackID0 { get { return this.track_ID0; } set { this.track_ID0 = value; } }
-
         protected uint reserved0 = 0;
         public uint Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected uint duration0;
-        public uint Duration0 { get { return this.duration0; } set { this.duration0 = value; } }
 
         protected uint[] reserved1 = [];
         public uint[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -14982,11 +14817,11 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += stream.ReadUInt32(out this.creation_time0);
-                boxSize += stream.ReadUInt32(out this.modification_time0);
-                boxSize += stream.ReadUInt32(out this.track_ID0);
+                boxSize += stream.ReadUInt32(out this.creation_time);
+                boxSize += stream.ReadUInt32(out this.modification_time);
+                boxSize += stream.ReadUInt32(out this.track_ID);
                 boxSize += stream.ReadUInt32(out this.reserved0);
-                boxSize += stream.ReadUInt32(out this.duration0);
+                boxSize += stream.ReadUInt32(out this.duration);
             }
             boxSize += stream.ReadUInt32Array(2, out this.reserved1);
             boxSize += stream.ReadInt16(out this.layer);
@@ -15016,11 +14851,11 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += stream.WriteUInt32(this.creation_time0);
-                boxSize += stream.WriteUInt32(this.modification_time0);
-                boxSize += stream.WriteUInt32(this.track_ID0);
+                boxSize += stream.WriteUInt32(this.creation_time);
+                boxSize += stream.WriteUInt32(this.modification_time);
+                boxSize += stream.WriteUInt32(this.track_ID);
                 boxSize += stream.WriteUInt32(this.reserved0);
-                boxSize += stream.WriteUInt32(this.duration0);
+                boxSize += stream.WriteUInt32(this.duration);
             }
             boxSize += stream.WriteUInt32Array(2, this.reserved1);
             boxSize += stream.WriteInt16(this.layer);
@@ -15050,11 +14885,11 @@ namespace BoxGenerator2
             else
             {
                 /*  version==0 */
-                boxSize += 32; // creation_time0
-                boxSize += 32; // modification_time0
-                boxSize += 32; // track_ID0
+                boxSize += 32; // creation_time
+                boxSize += 32; // modification_time
+                boxSize += 32; // track_ID
                 boxSize += 32; // reserved0
-                boxSize += 32; // duration0
+                boxSize += 32; // duration
             }
             boxSize += 2 * 32; // reserved1
             boxSize += 16; // layer
@@ -16730,9 +16565,6 @@ namespace BoxGenerator2
         protected uint track_id;
         public uint TrackId { get { return this.track_id; } set { this.track_id = value; } }
 
-        protected uint track_id0;
-        public uint TrackId0 { get { return this.track_id0; } set { this.track_id0 = value; } }
-
         protected ushort tier_id;
         public ushort TierId { get { return this.tier_id; } set { this.tier_id = value; } }
 
@@ -16788,7 +16620,7 @@ namespace BoxGenerator2
 
                 else if (entry_type == 1)
                 {
-                    boxSize += stream.ReadUInt32(out this.track_id0);
+                    boxSize += stream.ReadUInt32(out this.track_id);
                     boxSize += stream.ReadUInt16(out this.tier_id);
                 }
 
@@ -16833,7 +16665,7 @@ namespace BoxGenerator2
 
                 else if (entry_type == 1)
                 {
-                    boxSize += stream.WriteUInt32(this.track_id0);
+                    boxSize += stream.WriteUInt32(this.track_id);
                     boxSize += stream.WriteUInt16(this.tier_id);
                 }
 
@@ -16878,7 +16710,7 @@ namespace BoxGenerator2
 
                 else if (entry_type == 1)
                 {
-                    boxSize += 32; // track_id0
+                    boxSize += 32; // track_id
                     boxSize += 16; // tier_id
                 }
 
@@ -19691,9 +19523,6 @@ namespace BoxGenerator2
         protected SamplingRateBox SamplingRateBox;
         public SamplingRateBox _SamplingRateBox { get { return this.SamplingRateBox; } set { this.SamplingRateBox = value; } }
 
-        protected ChannelLayout ChannelLayout0;
-        public ChannelLayout _ChannelLayout0 { get { return this.ChannelLayout0; } set { this.ChannelLayout0 = value; } }
-
         public AudioSampleEntry(string codingname = "") : base(codingname)
         { }
 
@@ -19716,7 +19545,7 @@ namespace BoxGenerator2
             boxSize += stream.ReadClass(out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             boxSize += stream.ReadBox(out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += stream.ReadBox(out this.SamplingRateBox);
-            boxSize += stream.ReadBox(out this.ChannelLayout0);
+            boxSize += stream.ReadBox(out this.ChannelLayout);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -19740,7 +19569,7 @@ namespace BoxGenerator2
             boxSize += stream.WriteClass(this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             boxSize += stream.WriteBox(this.UniDrcConfigExtension); // optional boxes follow
             boxSize += stream.WriteBox(this.SamplingRateBox);
-            boxSize += stream.WriteBox(this.ChannelLayout0);
+            boxSize += stream.WriteBox(this.ChannelLayout);
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -19764,7 +19593,7 @@ namespace BoxGenerator2
             boxSize += IsoStream.CalculateClassSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
             boxSize += IsoStream.CalculateSize(UniDrcConfigExtension); // UniDrcConfigExtension
             boxSize += IsoStream.CalculateSize(SamplingRateBox); // SamplingRateBox
-            boxSize += IsoStream.CalculateSize(ChannelLayout0); // ChannelLayout0
+            boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
             return boxSize;
         }
     }
@@ -19847,9 +19676,6 @@ namespace BoxGenerator2
         protected UniDrcConfigExtension UniDrcConfigExtension;  //  optional boxes follow
         public UniDrcConfigExtension _UniDrcConfigExtension { get { return this.UniDrcConfigExtension; } set { this.UniDrcConfigExtension = value; } }
 
-        protected ChannelLayout ChannelLayout0;
-        public ChannelLayout _ChannelLayout0 { get { return this.ChannelLayout0; } set { this.ChannelLayout0 = value; } }
-
         public AudioSampleEntryV1(string codingname = "") : base(codingname)
         { }
 
@@ -19874,7 +19700,7 @@ namespace BoxGenerator2
             boxSize += stream.ReadClass(out this.DRCCoefficientsUniDRC);
             boxSize += stream.ReadClass(out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             boxSize += stream.ReadBox(out this.UniDrcConfigExtension); // optional boxes follow
-            boxSize += stream.ReadBox(out this.ChannelLayout0);
+            boxSize += stream.ReadBox(out this.ChannelLayout);
             return boxSize;
         }
 
@@ -19899,7 +19725,7 @@ namespace BoxGenerator2
             boxSize += stream.WriteClass(this.DRCCoefficientsUniDRC);
             boxSize += stream.WriteClass(this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             boxSize += stream.WriteBox(this.UniDrcConfigExtension); // optional boxes follow
-            boxSize += stream.WriteBox(this.ChannelLayout0);
+            boxSize += stream.WriteBox(this.ChannelLayout);
             return boxSize;
         }
 
@@ -19924,7 +19750,7 @@ namespace BoxGenerator2
             boxSize += IsoStream.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
             boxSize += IsoStream.CalculateClassSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
             boxSize += IsoStream.CalculateSize(UniDrcConfigExtension); // UniDrcConfigExtension
-            boxSize += IsoStream.CalculateSize(ChannelLayout0); // ChannelLayout0
+            boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
             return boxSize;
         }
     }
@@ -21533,9 +21359,6 @@ namespace BoxGenerator2
         protected uint available_bitrate;
         public uint AvailableBitrate { get { return this.available_bitrate; } set { this.available_bitrate = value; } }
 
-        protected ushort target_rate_share0;
-        public ushort TargetRateShare0 { get { return this.target_rate_share0; } set { this.target_rate_share0 = value; } }
-
         protected uint maximum_bitrate;
         public uint MaximumBitrate { get { return this.maximum_bitrate; } set { this.maximum_bitrate = value; } }
 
@@ -21565,7 +21388,7 @@ namespace BoxGenerator2
                 for (int i = 0; i < operation_point_count; i++)
                 {
                     boxSize += stream.ReadUInt32(out this.available_bitrate);
-                    boxSize += stream.ReadUInt16(out this.target_rate_share0);
+                    boxSize += stream.ReadUInt16(out this.target_rate_share);
                 }
             }
             boxSize += stream.ReadUInt32(out this.maximum_bitrate);
@@ -21591,7 +21414,7 @@ namespace BoxGenerator2
                 for (int i = 0; i < operation_point_count; i++)
                 {
                     boxSize += stream.WriteUInt32(this.available_bitrate);
-                    boxSize += stream.WriteUInt16(this.target_rate_share0);
+                    boxSize += stream.WriteUInt16(this.target_rate_share);
                 }
             }
             boxSize += stream.WriteUInt32(this.maximum_bitrate);
@@ -21617,7 +21440,7 @@ namespace BoxGenerator2
                 for (int i = 0; i < operation_point_count; i++)
                 {
                     boxSize += 32; // available_bitrate
-                    boxSize += 16; // target_rate_share0
+                    boxSize += 16; // target_rate_share
                 }
             }
             boxSize += 32; // maximum_bitrate
@@ -26640,14 +26463,8 @@ namespace BoxGenerator2
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
-        protected byte entry_count0;
-        public byte EntryCount0 { get { return this.entry_count0; } set { this.entry_count0 = value; } }
-
         protected ushort NALU_start_number;
         public ushort NALUStartNumber { get { return this.NALU_start_number; } set { this.NALU_start_number = value; } }
-
-        protected byte NALU_start_number0;
-        public byte NALUStartNumber0 { get { return this.NALU_start_number0; } set { this.NALU_start_number0 = value; } }
 
         protected ushort groupID;
         public ushort GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -26670,7 +26487,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUInt8(out this.entry_count0);
+                boxSize += stream.ReadUInt8(out this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -26686,7 +26503,7 @@ namespace BoxGenerator2
 
                     else
                     {
-                        boxSize += stream.ReadUInt8(out this.NALU_start_number0);
+                        boxSize += stream.ReadUInt8(out this.NALU_start_number);
                     }
                 }
                 boxSize += stream.ReadUInt16(out this.groupID);
@@ -26709,7 +26526,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUInt8(this.entry_count0);
+                boxSize += stream.WriteUInt8(this.entry_count);
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -26725,7 +26542,7 @@ namespace BoxGenerator2
 
                     else
                     {
-                        boxSize += stream.WriteUInt8(this.NALU_start_number0);
+                        boxSize += stream.WriteUInt8(this.NALU_start_number);
                     }
                 }
                 boxSize += stream.WriteUInt16(this.groupID);
@@ -26748,7 +26565,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 8; // entry_count0
+                boxSize += 8; // entry_count
             }
 
             for (int i = 1; i <= entry_count; i++)
@@ -26764,7 +26581,7 @@ namespace BoxGenerator2
 
                     else
                     {
-                        boxSize += 8; // NALU_start_number0
+                        boxSize += 8; // NALU_start_number
                     }
                 }
                 boxSize += 16; // groupID
@@ -29979,9 +29796,6 @@ namespace BoxGenerator2
         protected byte sizeOfInstance;
         public byte SizeOfInstance { get { return this.sizeOfInstance; } set { this.sizeOfInstance = value; } }
 
-        protected bool nextByte0;
-        public bool NextByte0 { get { return this.nextByte0; } set { this.nextByte0 = value; } }
-
         protected byte sizeByte;
         public byte SizeByte { get { return this.sizeByte; } set { this.sizeByte = value; } }
 
@@ -29998,7 +29812,7 @@ namespace BoxGenerator2
 
             while (nextByte)
             {
-                boxSize += stream.ReadBit(out this.nextByte0);
+                boxSize += stream.ReadBit(out this.nextByte);
                 boxSize += stream.ReadBits(7, out this.sizeByte);
                 sizeOfInstance = sizeOfInstance << 7 | sizeByte;
             }
@@ -30015,7 +29829,7 @@ namespace BoxGenerator2
 
             while (nextByte)
             {
-                boxSize += stream.WriteBit(this.nextByte0);
+                boxSize += stream.WriteBit(this.nextByte);
                 boxSize += stream.WriteBits(7, this.sizeByte);
                 sizeOfInstance = sizeOfInstance << 7 | sizeByte;
             }
@@ -30032,7 +29846,7 @@ namespace BoxGenerator2
 
             while (nextByte)
             {
-                boxSize += 1; // nextByte0
+                boxSize += 1; // nextByte
                 boxSize += 7; // sizeByte
                 sizeOfInstance = sizeOfInstance << 7 | sizeByte;
             }
@@ -31528,9 +31342,6 @@ namespace BoxGenerator2
         protected uint extensionSamplingFrequency;
         public uint ExtensionSamplingFrequency { get { return this.extensionSamplingFrequency; } set { this.extensionSamplingFrequency = value; } }
 
-        protected GetAudioObjectType audioObjectType0;
-        public GetAudioObjectType AudioObjectType0 { get { return this.audioObjectType0; } set { this.audioObjectType0 = value; } }
-
         protected byte extensionChannelConfiguration;
         public byte ExtensionChannelConfiguration { get { return this.extensionChannelConfiguration; } set { this.extensionChannelConfiguration = value; } }
 
@@ -31606,29 +31417,8 @@ namespace BoxGenerator2
         protected bool sbrPresentFlag;
         public bool SbrPresentFlag { get { return this.sbrPresentFlag; } set { this.sbrPresentFlag = value; } }
 
-        protected byte extensionSamplingFrequencyIndex0;
-        public byte ExtensionSamplingFrequencyIndex0 { get { return this.extensionSamplingFrequencyIndex0; } set { this.extensionSamplingFrequencyIndex0 = value; } }
-
-        protected uint extensionSamplingFrequency0;
-        public uint ExtensionSamplingFrequency0 { get { return this.extensionSamplingFrequency0; } set { this.extensionSamplingFrequency0 = value; } }
-
-        protected ushort syncExtensionType0;
-        public ushort SyncExtensionType0 { get { return this.syncExtensionType0; } set { this.syncExtensionType0 = value; } }
-
         protected bool psPresentFlag;
         public bool PsPresentFlag { get { return this.psPresentFlag; } set { this.psPresentFlag = value; } }
-
-        protected bool sbrPresentFlag0;
-        public bool SbrPresentFlag0 { get { return this.sbrPresentFlag0; } set { this.sbrPresentFlag0 = value; } }
-
-        protected byte extensionSamplingFrequencyIndex00;
-        public byte ExtensionSamplingFrequencyIndex00 { get { return this.extensionSamplingFrequencyIndex00; } set { this.extensionSamplingFrequencyIndex00 = value; } }
-
-        protected uint extensionSamplingFrequency00;
-        public uint ExtensionSamplingFrequency00 { get { return this.extensionSamplingFrequency00; } set { this.extensionSamplingFrequency00 = value; } }
-
-        protected byte extensionChannelConfiguration0;
-        public byte ExtensionChannelConfiguration0 { get { return this.extensionChannelConfiguration0; } set { this.extensionChannelConfiguration0 = value; } }
 
         public AudioSpecificConfig() : base()
         { }
@@ -31662,7 +31452,7 @@ namespace BoxGenerator2
                 {
                     boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency);
                 }
-                boxSize += stream.ReadClass(out this.audioObjectType0);
+                boxSize += stream.ReadClass(out this.audioObjectType);
 
                 if (audioObjectType.AudioObjectType == 22)
                 {
@@ -31797,16 +31587,16 @@ namespace BoxGenerator2
 
                         if (sbrPresentFlag == true)
                         {
-                            boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex0);
+                            boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex);
 
                             if (extensionSamplingFrequencyIndex == 0xf)
                             {
-                                boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency0);
+                                boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency);
                             }
 
                             if (IsoStream.BitsToDecode() >= 12)
                             {
-                                boxSize += stream.ReadBslbf(11, out this.syncExtensionType0);
+                                boxSize += stream.ReadBslbf(11, out this.syncExtensionType);
 
                                 if (syncExtensionType == 0x548)
                                 {
@@ -31818,18 +31608,18 @@ namespace BoxGenerator2
 
                     if (extensionAudioObjectType.AudioObjectType == 22)
                     {
-                        boxSize += stream.ReadUimsbf(out this.sbrPresentFlag0);
+                        boxSize += stream.ReadUimsbf(out this.sbrPresentFlag);
 
                         if (sbrPresentFlag == true)
                         {
-                            boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex00);
+                            boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex);
 
                             if (extensionSamplingFrequencyIndex == 0xf)
                             {
-                                boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency00);
+                                boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency);
                             }
                         }
-                        boxSize += stream.ReadUimsbf(4, out this.extensionChannelConfiguration0);
+                        boxSize += stream.ReadUimsbf(4, out this.extensionChannelConfiguration);
                     }
                 }
             }
@@ -31865,7 +31655,7 @@ namespace BoxGenerator2
                 {
                     boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency);
                 }
-                boxSize += stream.WriteClass(this.audioObjectType0);
+                boxSize += stream.WriteClass(this.audioObjectType);
 
                 if (audioObjectType.AudioObjectType == 22)
                 {
@@ -32000,16 +31790,16 @@ namespace BoxGenerator2
 
                         if (sbrPresentFlag == true)
                         {
-                            boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex0);
+                            boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex);
 
                             if (extensionSamplingFrequencyIndex == 0xf)
                             {
-                                boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency0);
+                                boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency);
                             }
 
                             if (IsoStream.BitsToDecode() >= 12)
                             {
-                                boxSize += stream.WriteBslbf(11, this.syncExtensionType0);
+                                boxSize += stream.WriteBslbf(11, this.syncExtensionType);
 
                                 if (syncExtensionType == 0x548)
                                 {
@@ -32021,18 +31811,18 @@ namespace BoxGenerator2
 
                     if (extensionAudioObjectType.AudioObjectType == 22)
                     {
-                        boxSize += stream.WriteUimsbf(this.sbrPresentFlag0);
+                        boxSize += stream.WriteUimsbf(this.sbrPresentFlag);
 
                         if (sbrPresentFlag == true)
                         {
-                            boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex00);
+                            boxSize += stream.WriteUimsbf(4, this.extensionSamplingFrequencyIndex);
 
                             if (extensionSamplingFrequencyIndex == 0xf)
                             {
-                                boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency00);
+                                boxSize += stream.WriteUimsbf(24, this.extensionSamplingFrequency);
                             }
                         }
-                        boxSize += stream.WriteUimsbf(4, this.extensionChannelConfiguration0);
+                        boxSize += stream.WriteUimsbf(4, this.extensionChannelConfiguration);
                     }
                 }
             }
@@ -32068,7 +31858,7 @@ namespace BoxGenerator2
                 {
                     boxSize += 24; // extensionSamplingFrequency
                 }
-                boxSize += IsoStream.CalculateClassSize(audioObjectType0); // audioObjectType0
+                boxSize += IsoStream.CalculateClassSize(audioObjectType); // audioObjectType
 
                 if (audioObjectType.AudioObjectType == 22)
                 {
@@ -32201,16 +31991,16 @@ namespace BoxGenerator2
 
                         if (sbrPresentFlag == true)
                         {
-                            boxSize += 4; // extensionSamplingFrequencyIndex0
+                            boxSize += 4; // extensionSamplingFrequencyIndex
 
                             if (extensionSamplingFrequencyIndex == 0xf)
                             {
-                                boxSize += 24; // extensionSamplingFrequency0
+                                boxSize += 24; // extensionSamplingFrequency
                             }
 
                             if (IsoStream.BitsToDecode() >= 12)
                             {
-                                boxSize += 11; // syncExtensionType0
+                                boxSize += 11; // syncExtensionType
 
                                 if (syncExtensionType == 0x548)
                                 {
@@ -32222,18 +32012,18 @@ namespace BoxGenerator2
 
                     if (extensionAudioObjectType.AudioObjectType == 22)
                     {
-                        boxSize += 1; // sbrPresentFlag0
+                        boxSize += 1; // sbrPresentFlag
 
                         if (sbrPresentFlag == true)
                         {
-                            boxSize += 4; // extensionSamplingFrequencyIndex00
+                            boxSize += 4; // extensionSamplingFrequencyIndex
 
                             if (extensionSamplingFrequencyIndex == 0xf)
                             {
-                                boxSize += 24; // extensionSamplingFrequency00
+                                boxSize += 24; // extensionSamplingFrequency
                             }
                         }
-                        boxSize += 4; // extensionChannelConfiguration0
+                        boxSize += 4; // extensionChannelConfiguration
                     }
                 }
             }
@@ -34966,9 +34756,6 @@ namespace BoxGenerator2
         protected byte other_byte;
         public byte OtherByte { get { return this.other_byte; } set { this.other_byte = value; } }
 
-        protected byte eldExtType0;
-        public byte EldExtType0 { get { return this.eldExtType0; } set { this.eldExtType0 = value; } }
-
         public ELDSpecificConfig(int channelConfiguration) : base()
         { }
 
@@ -35022,7 +34809,7 @@ namespace BoxGenerator2
                         }
                         break;
                 }
-                boxSize += stream.ReadBslbf(4, out this.eldExtType0);
+                boxSize += stream.ReadBslbf(4, out this.eldExtType);
             }
             return boxSize;
         }
@@ -35077,7 +34864,7 @@ namespace BoxGenerator2
                         }
                         break;
                 }
-                boxSize += stream.WriteBslbf(4, this.eldExtType0);
+                boxSize += stream.WriteBslbf(4, this.eldExtType);
             }
             return boxSize;
         }
@@ -35132,7 +34919,7 @@ namespace BoxGenerator2
                         }
                         break;
                 }
-                boxSize += 4; // eldExtType0
+                boxSize += 4; // eldExtType
             }
             return boxSize;
         }
@@ -35562,9 +35349,6 @@ namespace BoxGenerator2
         protected byte[][] class_rate;
         public byte[][] ClassRate { get { return this.class_rate; } set { this.class_rate = value; } }
 
-        protected byte[][] class_rate0;
-        public byte[][] ClassRate0 { get { return this.class_rate0; } set { this.class_rate0 = value; } }
-
         protected byte[][] class_crclen;
         public byte[][] ClassCrclen { get { return this.class_crclen; } set { this.class_crclen = value; } }
 
@@ -35643,7 +35427,7 @@ namespace BoxGenerator2
 
                         else
                         {
-                            boxSize += stream.ReadUimsbf(5, out this.class_rate0[i][j]);
+                            boxSize += stream.ReadUimsbf(5, out this.class_rate[i][j]);
                         }
                     }
 
@@ -35731,7 +35515,7 @@ namespace BoxGenerator2
 
                         else
                         {
-                            boxSize += stream.WriteUimsbf(5, this.class_rate0[i][j]);
+                            boxSize += stream.WriteUimsbf(5, this.class_rate[i][j]);
                         }
                     }
 
@@ -35819,7 +35603,7 @@ namespace BoxGenerator2
 
                         else
                         {
-                            boxSize += 5; // class_rate0
+                            boxSize += 5; // class_rate
                         }
                     }
 
@@ -36497,9 +36281,6 @@ namespace BoxGenerator2
         protected uint[] layer_size;
         public uint[] LayerSize { get { return this.layer_size; } set { this.layer_size = value; } }
 
-        protected ushort[] layer_size0;
-        public ushort[] LayerSize0 { get { return this.layer_size0; } set { this.layer_size0 = value; } }
-
         public AV1LayeredImageIndexingProperty() : base("a1lx")
         { }
 
@@ -36517,7 +36298,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.ReadUInt16Array(3, out this.layer_size0);
+                boxSize += stream.ReadUInt16Array(3, out this.layer_size);
             }
             return boxSize;
         }
@@ -36536,7 +36317,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += stream.WriteUInt16Array(3, this.layer_size0);
+                boxSize += stream.WriteUInt16Array(3, this.layer_size);
             }
             return boxSize;
         }
@@ -36555,7 +36336,7 @@ namespace BoxGenerator2
 
             else
             {
-                boxSize += 3 * 16; // layer_size0
+                boxSize += 3 * 16; // layer_size
             }
             return boxSize;
         }

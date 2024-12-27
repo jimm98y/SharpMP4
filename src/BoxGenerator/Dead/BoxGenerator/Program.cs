@@ -241,6 +241,7 @@ partial class Program
 
     public static Parser<char, string> FieldType =>
         OneOf(
+            Try(String("int downmix_instructions_count = 1")), // WORKAROUND
             Try(String("int i, j")), // WORKAROUND
             Try(String("int i,j")), // WORKAROUND
             Try(String("int i")), // WORKAROUND
@@ -1010,6 +1011,7 @@ namespace BoxGenerator2
             cls += "\r\n" + BuildField(field);
         }
 
+
         string ctorParams = "";
         if (!string.IsNullOrEmpty(b.ClassType) || (b.Extended != null && b.Extended.Parameters != null))
         {
@@ -1140,7 +1142,6 @@ namespace BoxGenerator2
         }
         else if(parameters != null)
         {
-            Debug.WriteLine($"---Params: {string.Join(", ", parameters.Select(x => x.Name + (string.IsNullOrEmpty(x.Value) ? "" : " = " + x.Value)))}");
             string joinedParams = string.Join(", ", parameters.Select(x => x.Name + (string.IsNullOrEmpty(x.Value) ? "" : " = " + x.Value)));
             Dictionary<string, string> map = new Dictionary<string, string>()
             {
@@ -1257,6 +1258,21 @@ namespace BoxGenerator2
                 if (IsWorkaround(field.Type))
                     continue;
 
+                string value = field.Value;
+                string tp = field.Type;
+
+                if (string.IsNullOrEmpty(tp) && !string.IsNullOrEmpty(field.Name))
+                    tp = field.Name?.Replace("[]", "").Replace("()", "");
+
+                if (!string.IsNullOrEmpty(tp))
+                {
+                    // TODO: incorrectly parsed type
+                    if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
+                    {
+                        field.Type = tp + value;
+                    }
+                }
+
                 AddAndResolveDuplicates(ret, field);
             }
             else if (code is PseudoBlock block)
@@ -1276,15 +1292,53 @@ namespace BoxGenerator2
         string name = GetFieldName(field);
         if (!ret.TryAdd(name, field))
         {
-            // TODO: this only works as long as the name does not appear in a condition/code
-            int i = 0;
-            string updatedName = $"{name}{i}";
-            while (!ret.TryAdd(updatedName, field))
+            if (name.StartsWith("reserved") || name == "pre_defined" || field.Type.StartsWith("SingleItemTypeReferenceBox") ||
+                (field.Type == "signed   int(32)" && ret[name].Type == "unsigned int(32)"))
             {
-                i++;
-                updatedName = $"{name}{i}";
+                int i = 0;
+                string updatedName = $"{name}{i}";
+                while (!ret.TryAdd(updatedName, field))
+                {
+                    i++;
+                    updatedName = $"{name}{i}";
+                }
+                field.Name = updatedName;
+                //Debug.WriteLine($"-Resolved: {name} => {updatedName}");
             }
-            field.Name = updatedName;
+            else if(field.Type == ret[name].Type)
+            {
+                //Debug.WriteLine($"-Resolved: fields are the same");
+            }
+            else
+            {
+                // try to resolve the conflict using the type size
+                string type1 = GetCalculateSizeMethod(field.Type);
+                string type2 = GetCalculateSizeMethod(ret[name].Type);
+                int type1Size;
+                if (int.TryParse(type1, out type1Size))
+                {
+                    int type2Size;
+                    if(int.TryParse(type2, out type2Size))
+                    {
+                        if (type1Size > type2Size)
+                            ret[name] = field;
+                        if (type1Size != type2Size)
+                            return;
+                    }
+                }
+
+                if(field.Type == "unsigned int(64)[ entry_count ]" && ret[name].Type == "unsigned int(32)[ entry_count ]")
+                {
+                    ret[name] = field;
+                    return;
+                }
+                else if(field.Type == "unsigned int(16)[3]" && ret[name].Type == "unsigned int(32)[3]")
+                {
+                    return;
+                }
+
+                throw new Exception($"---Duplicated fileds: {name} of types: {field.Type}, {ret[name].Type}");                
+            }
         }
     }
 
@@ -1325,8 +1379,6 @@ namespace BoxGenerator2
                 // TODO: incorrectly parsed type
                 if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
                 {
-                    (field as PseudoField).Type = tp + value;
-                    tp = (field as PseudoField)?.Type;
                     value = "";
                 }
 
@@ -1451,6 +1503,8 @@ namespace BoxGenerator2
                 return "psPresentFlag = true;";
             else if (tt.Contains("extensionAudioObjectType"))
                 return tt.Replace("extensionAudioObjectType", "extensionAudioObjectType.AudioObjectType") + ";";
+            else if (tt == "int downmix_instructions_count = 1")
+                return "downmix_instructions_count = 1;";
             else
                 return $"{tt};";
         }
@@ -2763,6 +2817,7 @@ namespace BoxGenerator2
     {
         HashSet<string> map = new HashSet<string>
         {
+            "int downmix_instructions_count = 1",
             "int i, j",
             "int i,j",
             "int i",
@@ -2798,8 +2853,7 @@ namespace BoxGenerator2
             "case 3:\r\n      numSbrHeader = 2",
             "case 4:\r\n    case 5:\r\n    case 6:\r\n      numSbrHeader = 3",
             "case 7:\r\n      numSbrHeader = 4",
-            "default:\r\n      numSbrHeader = 0",
-            "FieldLength = (large_size + 1) * 16",
+            "default:\r\n      numSbrHeader = 0"
         };
         return map.Contains(type);
     }
