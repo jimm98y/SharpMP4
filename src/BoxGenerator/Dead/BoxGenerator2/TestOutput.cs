@@ -1041,7 +1041,7 @@ namespace BoxGenerator2
     } 
 
     */
-    public class ItemInfoExtension
+    public class ItemInfoExtension : IMp4Serializable
     {
 
 
@@ -1587,7 +1587,7 @@ namespace BoxGenerator2
 
 
     */
-    public class MetaDataAccessUnit
+    public class MetaDataAccessUnit : IMp4Serializable
     {
 
 
@@ -1833,7 +1833,7 @@ namespace BoxGenerator2
     } 
 
     */
-    public class DependencyInfo
+    public class DependencyInfo : IMp4Serializable
     {
 
 
@@ -2319,7 +2319,7 @@ namespace BoxGenerator2
      } 
     }
     */
-    public class AVCDecoderConfigurationRecord
+    public class AVCDecoderConfigurationRecord : IMp4Serializable
     {
 
 
@@ -2552,7 +2552,7 @@ namespace BoxGenerator2
      } 
     }
     */
-    public class MVCDecoderConfigurationRecord
+    public class MVCDecoderConfigurationRecord : IMp4Serializable
     {
 
 
@@ -2715,7 +2715,7 @@ namespace BoxGenerator2
      } 
     }
     */
-    public class SVCDecoderConfigurationRecord
+    public class SVCDecoderConfigurationRecord : IMp4Serializable
     {
 
 
@@ -2887,7 +2887,7 @@ namespace BoxGenerator2
         }
     }
     */
-    public class HEVCDecoderConfigurationRecord
+    public class HEVCDecoderConfigurationRecord : IMp4Serializable
     {
 
 
@@ -3135,7 +3135,7 @@ namespace BoxGenerator2
             unsigned int(32) general_sub_profile_idc[j];
     } 
     */
-    public class VvcPTLRecord
+    public class VvcPTLRecord : IMp4Serializable
     {
 
 
@@ -3337,7 +3337,7 @@ namespace BoxGenerator2
         }
     }
     */
-    public class VvcDecoderConfigurationRecord
+    public class VvcDecoderConfigurationRecord : IMp4Serializable
     {
 
 
@@ -3564,7 +3564,7 @@ namespace BoxGenerator2
      } 
     }
     */
-    public class MVDDecoderConfigurationRecord
+    public class MVDDecoderConfigurationRecord : IMp4Serializable
     {
 
 
@@ -3755,7 +3755,7 @@ namespace BoxGenerator2
     }
 
     */
-    public class VvcOperatingPointsRecord
+    public class VvcOperatingPointsRecord : IMp4Serializable
     {
 
 
@@ -4091,7 +4091,7 @@ namespace BoxGenerator2
     }
     }
     */
-    public class EVCDecoderConfigurationRecord
+    public class EVCDecoderConfigurationRecord : IMp4Serializable
     {
 
 
@@ -4295,7 +4295,7 @@ namespace BoxGenerator2
     unsigned int(16) operationPointIdx;
     }
     */
-    public class LHEVCDecoderConfigurationRecord
+    public class LHEVCDecoderConfigurationRecord : IMp4Serializable
     {
 
 
@@ -15369,7 +15369,7 @@ namespace BoxGenerator2
         }
     }
     */
-    public class BoxHeader
+    public class BoxHeader : IMp4Serializable
     {
 
 
@@ -29786,7 +29786,7 @@ namespace BoxGenerator2
      }
     }
     */
-    public class BaseDescriptor
+    public class BaseDescriptor : IMp4Serializable
     {
         public byte Tag { get; set; } = 0;
 
@@ -30749,7 +30749,7 @@ namespace BoxGenerator2
      }
 
     */
-    public class QoS_Qualifier
+    public class QoS_Qualifier : IMp4Serializable
     {
         public byte TagMin { get; set; } = 0x01;
         public byte TagMax { get; set; } = 0xff;
@@ -31320,7 +31320,7 @@ namespace BoxGenerator2
 
 
     */
-    public class AudioSpecificConfig
+    public class AudioSpecificConfig : IMp4Serializable
     {
 
 
@@ -32045,7 +32045,7 @@ namespace BoxGenerator2
 
 
     */
-    public class GetAudioObjectType
+    public class GetAudioObjectType : IMp4Serializable
     {
 
 
@@ -32138,7 +32138,7 @@ namespace BoxGenerator2
 
 
     */
-    public class GASpecificConfig
+    public class GASpecificConfig : IMp4Serializable
     {
 
 
@@ -32390,7 +32390,7 @@ namespace BoxGenerator2
 
 
     */
-    public class program_config_element
+    public class program_config_element : IMp4Serializable
     {
 
 
@@ -32731,7 +32731,7 @@ namespace BoxGenerator2
 
 
     */
-    public class CelpSpecificConfig
+    public class CelpSpecificConfig : IMp4Serializable
     {
 
 
@@ -32854,7 +32854,7 @@ namespace BoxGenerator2
 
 
     */
-    public class CelpHeader
+    public class CelpHeader : IMp4Serializable
     {
 
 
@@ -32967,7 +32967,7 @@ namespace BoxGenerator2
 
 
     */
-    public class CelpBWSenhHeader
+    public class CelpBWSenhHeader : IMp4Serializable
     {
 
 
@@ -33010,7 +33010,7 @@ namespace BoxGenerator2
 
 
     */
-    public class HvxcSpecificConfig
+    public class HvxcSpecificConfig : IMp4Serializable
     {
 
 
@@ -33074,7 +33074,7 @@ namespace BoxGenerator2
 
 
     */
-    public class HVXCconfig
+    public class HVXCconfig : IMp4Serializable
     {
 
 
@@ -33141,7 +33141,7 @@ namespace BoxGenerator2
 
 
     */
-    public class TTSSpecificConfig
+    public class TTSSpecificConfig : IMp4Serializable
     {
 
 
@@ -33190,7 +33190,7 @@ namespace BoxGenerator2
 
 
     */
-    public class TTS_Sequence
+    public class TTS_Sequence : IMp4Serializable
     {
 
 
@@ -33291,7 +33291,7 @@ namespace BoxGenerator2
 
 
     */
-    public class ErrorResilientCelpSpecificConfig
+    public class ErrorResilientCelpSpecificConfig : IMp4Serializable
     {
 
 
@@ -33415,7 +33415,7 @@ namespace BoxGenerator2
 
 
     */
-    public class ER_SC_CelpHeader
+    public class ER_SC_CelpHeader : IMp4Serializable
     {
 
 
@@ -33536,7 +33536,7 @@ namespace BoxGenerator2
 
 
     */
-    public class ErrorResilientHvxcSpecificConfig
+    public class ErrorResilientHvxcSpecificConfig : IMp4Serializable
     {
 
 
@@ -33600,7 +33600,7 @@ namespace BoxGenerator2
 
 
     */
-    public class ErHVXCconfig
+    public class ErHVXCconfig : IMp4Serializable
     {
 
 
@@ -33677,7 +33677,7 @@ namespace BoxGenerator2
 
 
     */
-    public class ParametricSpecificConfig
+    public class ParametricSpecificConfig : IMp4Serializable
     {
 
 
@@ -33764,7 +33764,7 @@ namespace BoxGenerator2
 
 
     */
-    public class PARAconfig
+    public class PARAconfig : IMp4Serializable
     {
 
 
@@ -33866,7 +33866,7 @@ namespace BoxGenerator2
 
 
     */
-    public class HILNconfig
+    public class HILNconfig : IMp4Serializable
     {
 
 
@@ -33934,7 +33934,7 @@ namespace BoxGenerator2
 
 
     */
-    public class HILNenexConfig
+    public class HILNenexConfig : IMp4Serializable
     {
 
 
@@ -34001,7 +34001,7 @@ namespace BoxGenerator2
 
 
     */
-    public class SSCSpecificConfig
+    public class SSCSpecificConfig : IMp4Serializable
     {
 
 
@@ -34096,7 +34096,7 @@ namespace BoxGenerator2
 
 
     */
-    public class MPEG_1_2_SpecificConfig
+    public class MPEG_1_2_SpecificConfig : IMp4Serializable
     {
 
 
@@ -34138,7 +34138,7 @@ namespace BoxGenerator2
 
 
     */
-    public class DSTSpecificConfig
+    public class DSTSpecificConfig : IMp4Serializable
     {
 
 
@@ -34240,7 +34240,7 @@ namespace BoxGenerator2
 
 
     */
-    public class ALSSpecificConfig
+    public class ALSSpecificConfig : IMp4Serializable
     {
 
 
@@ -34590,7 +34590,7 @@ namespace BoxGenerator2
 
 
     */
-    public class SLSSpecificConfig
+    public class SLSSpecificConfig : IMp4Serializable
     {
 
 
@@ -34713,7 +34713,7 @@ namespace BoxGenerator2
 
 
     */
-    public class ELDSpecificConfig
+    public class ELDSpecificConfig : IMp4Serializable
     {
 
 
@@ -34956,7 +34956,7 @@ namespace BoxGenerator2
 
 
     */
-    public class ld_sbr_header
+    public class ld_sbr_header : IMp4Serializable
     {
 
 
@@ -35106,7 +35106,7 @@ namespace BoxGenerator2
 
 
     */
-    public class sbr_header
+    public class sbr_header : IMp4Serializable
     {
 
 
@@ -35297,7 +35297,7 @@ namespace BoxGenerator2
     }
 
     */
-    public class ErrorProtectionSpecificConfig
+    public class ErrorProtectionSpecificConfig : IMp4Serializable
     {
 
 
@@ -35686,7 +35686,7 @@ namespace BoxGenerator2
 
 
     */
-    public class ChannelMappingTable
+    public class ChannelMappingTable : IMp4Serializable
     {
 
 
@@ -35949,7 +35949,7 @@ namespace BoxGenerator2
     }
 
     */
-    public class AV1CodecConfigurationRecord
+    public class AV1CodecConfigurationRecord : IMp4Serializable
     {
 
 

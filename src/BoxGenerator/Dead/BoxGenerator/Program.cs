@@ -970,6 +970,8 @@ namespace BoxGenerator2
         cls += @$"public {optAbstract}class {b.BoxName}";
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
             cls += $" : {b.Extended.BoxName}";
+        else
+            cls += $" : IMp4Serializable";
 
         cls += "\r\n{\r\n";
 

@@ -63,17 +63,17 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong ReadClass<T>(out T value) where T : class
+    internal ulong ReadClass<T>(out T value) where T : IMp4Serializable
     {
         throw new NotImplementedException();
     }
 
-    internal ulong ReadClass<T>(out T[] value) where T : class
+    internal ulong ReadClass<T>(out T[] value) where T : IMp4Serializable
     {
         throw new NotImplementedException();
     }
 
-    internal ulong ReadClass<T>(ulong count, out T[] value) where T : class
+    internal ulong ReadClass<T>(ulong count, out T[] value) where T : IMp4Serializable
     {
         throw new NotImplementedException();
     }
@@ -263,12 +263,17 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong WriteClass(object value)
+    internal ulong WriteClass(IMp4Serializable value)
     {
         throw new NotImplementedException();
     }
 
-    internal ulong WriteClass(object[] values)
+    internal ulong WriteClass(IMp4Serializable[] values)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteClass(uint count, IMp4Serializable[] values)
     {
         throw new NotImplementedException();
     }
@@ -388,11 +393,6 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong WriteClass(uint count, object[] values)
-    {
-        throw new NotImplementedException();
-    }
-
     internal ulong WriteUInt32Array(uint[] values)
     {
         throw new NotImplementedException();
@@ -418,12 +418,12 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal static ulong CalculateClassSize(object value)
+    internal static ulong CalculateClassSize(IMp4Serializable value)
     {
         throw new NotImplementedException();
     }
 
-    internal static ulong CalculateClassSize(object[] value)
+    internal static ulong CalculateClassSize(IMp4Serializable[] value)
     {
         throw new NotImplementedException();
     }

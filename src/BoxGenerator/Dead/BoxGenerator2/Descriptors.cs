@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace BoxGenerator2
 {
-    public class SymbolicMusicSpecificConfig 
+    public class SymbolicMusicSpecificConfig  : IMp4Serializable
     {
         public SymbolicMusicSpecificConfig()
         { }
@@ -24,7 +24,7 @@ namespace BoxGenerator2
         }
     }
 
-    public class SpatialSpecificConfig 
+    public class SpatialSpecificConfig : IMp4Serializable
     {
         public SpatialSpecificConfig()
         { }
@@ -45,7 +45,7 @@ namespace BoxGenerator2
         }
     }
 
-    public class StructuredAudioSpecificConfig
+    public class StructuredAudioSpecificConfig : IMp4Serializable
     {
         public StructuredAudioSpecificConfig()
         { }
