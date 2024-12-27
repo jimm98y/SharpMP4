@@ -48,11 +48,6 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong ReadBox<T>(ulong count, out T[] value) where T : Box
-    {
-        throw new NotImplementedException();
-    }
-
     internal ulong ReadClass<T>(out T value) where T : IMp4Serializable
     {
         throw new NotImplementedException();
@@ -238,11 +233,6 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong WriteBox(ulong count, Box[] values)
-    {
-        throw new NotImplementedException();
-    }
-
     internal ulong WriteBytes(ulong count, byte[] value)
     {
         throw new NotImplementedException();
@@ -398,11 +388,6 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal static ulong CalculateBoxSize(Box box)
-    {
-        throw new NotImplementedException();
-    }
-
     internal static ulong CalculateSize(string[] values)
     {
         throw new NotImplementedException();
@@ -528,12 +513,12 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong ReadByteAlignment(out byte byte_alignment)
+    internal ulong ReadByteAlignment(out byte value)
     {
         throw new NotImplementedException();
     }
 
-    internal ulong WriteByteAlignment(byte byte_alignment)
+    internal ulong WriteByteAlignment(byte value)
     {
         throw new NotImplementedException();
     }
@@ -549,6 +534,11 @@ public class IsoStream
     }
 
     internal ulong ReadIso639(out string language)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong CalculateBoxChildren(Box value)
     {
         throw new NotImplementedException();
     }

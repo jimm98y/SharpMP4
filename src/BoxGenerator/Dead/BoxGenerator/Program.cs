@@ -850,6 +850,8 @@ partial class Program
 
         string resultCode = 
 @"using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BoxGenerator2
@@ -1030,6 +1032,8 @@ namespace BoxGenerator2
             ctorContent = "\t\tthis.OutputChannelCount = OutputChannelCount;\r\n";
         }
 
+        bool hasBoxes = fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit";
+
         foreach (var field in fields)
         {
             cls += "\r\n" + BuildField(b, field);
@@ -1071,7 +1075,7 @@ namespace BoxGenerator2
             cls += "\r\n" + BuildMethodCode(b, field, 2, MethodType.Read);
         }
 
-        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName))
+        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
         {
             cls += "\r\n" + "boxSize += stream.ReadBoxChildren(boxSize, this);";
         }
@@ -1089,7 +1093,7 @@ namespace BoxGenerator2
             cls += "\r\n" + BuildMethodCode(b, field, 2, MethodType.Write);
         }
 
-        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName))
+        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
         {
             cls += "\r\n" + "boxSize += stream.WriteBoxChildren(this);";
         }
@@ -1104,6 +1108,11 @@ namespace BoxGenerator2
         foreach (var field in b.Fields)
         {
             cls += "\r\n" + BuildMethodCode(b, field, 2, MethodType.Size);
+        }
+
+        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
+        {
+            cls += "\r\n" + "boxSize += IsoStream.CalculateBoxChildren(this);";
         }
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
@@ -1423,8 +1432,18 @@ namespace BoxGenerator2
                 if (name == propertyName)
                     propertyName = "_" + name;
 
-                return $"\r\n\tprotected {tt} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
-                 $"\tpublic {tt} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
+                if (GetReadMethod((field as PseudoField)?.Type).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit")
+                {
+                    string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
+                    string ttttt = tt.Replace("[]", "");
+                    string ttt = tt.Contains("[]") ? ("IEnumerable<" + tt.Replace("[]", "") + ">") : tt;
+                    return $"\tpublic {ttt} {propertyName} {{ get {{ return this.children.OfType<{ttttt}>(){suffix}; }} }}";
+                }
+                else
+                {
+                    return $"\r\n\tprotected {tt} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
+                     $"\tpublic {tt} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
+                }
             }
         }
         else
@@ -1514,6 +1533,11 @@ namespace BoxGenerator2
         string boxSize = "boxSize += ";
         if (m.StartsWith("case")) // workaround for missing case support
             boxSize = "";
+
+        if(m.Contains("Box") && b.BoxName != "MetaDataAccessUnit")
+        {
+            spacing += "// ";
+        }
 
         if (methodType == MethodType.Read)
             return $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
