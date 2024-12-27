@@ -19539,10 +19539,10 @@ namespace BoxGenerator2
             boxSize += stream.ReadBox(out this.Box); // further boxes as needed
             boxSize += stream.ReadBox(out this.ChannelLayout);
             boxSize += stream.ReadBox(out this.DownMixInstructions);
-            boxSize += stream.ReadClass(out this.DRCCoefficientsBasic);
-            boxSize += stream.ReadClass(out this.DRCInstructionsBasic);
-            boxSize += stream.ReadClass(out this.DRCCoefficientsUniDRC);
-            boxSize += stream.ReadClass(out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += stream.ReadBox(out this.DRCCoefficientsBasic);
+            boxSize += stream.ReadBox(out this.DRCInstructionsBasic);
+            boxSize += stream.ReadBox(out this.DRCCoefficientsUniDRC);
+            boxSize += stream.ReadBox(out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             boxSize += stream.ReadBox(out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += stream.ReadBox(out this.SamplingRateBox);
             boxSize += stream.ReadBox(out this.ChannelLayout);
@@ -19563,10 +19563,10 @@ namespace BoxGenerator2
             boxSize += stream.WriteBox(this.Box); // further boxes as needed
             boxSize += stream.WriteBox(this.ChannelLayout);
             boxSize += stream.WriteBox(this.DownMixInstructions);
-            boxSize += stream.WriteClass(this.DRCCoefficientsBasic);
-            boxSize += stream.WriteClass(this.DRCInstructionsBasic);
-            boxSize += stream.WriteClass(this.DRCCoefficientsUniDRC);
-            boxSize += stream.WriteClass(this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += stream.WriteBox(this.DRCCoefficientsBasic);
+            boxSize += stream.WriteBox(this.DRCInstructionsBasic);
+            boxSize += stream.WriteBox(this.DRCCoefficientsUniDRC);
+            boxSize += stream.WriteBox(this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             boxSize += stream.WriteBox(this.UniDrcConfigExtension); // optional boxes follow
             boxSize += stream.WriteBox(this.SamplingRateBox);
             boxSize += stream.WriteBox(this.ChannelLayout);
@@ -19587,10 +19587,10 @@ namespace BoxGenerator2
             boxSize += IsoStream.CalculateSize(Box); // Box
             boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
             boxSize += IsoStream.CalculateSize(DownMixInstructions); // DownMixInstructions
-            boxSize += IsoStream.CalculateClassSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
-            boxSize += IsoStream.CalculateClassSize(DRCInstructionsBasic); // DRCInstructionsBasic
-            boxSize += IsoStream.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
-            boxSize += IsoStream.CalculateClassSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+            boxSize += IsoStream.CalculateSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+            boxSize += IsoStream.CalculateSize(DRCInstructionsBasic); // DRCInstructionsBasic
+            boxSize += IsoStream.CalculateSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+            boxSize += IsoStream.CalculateSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
             boxSize += IsoStream.CalculateSize(UniDrcConfigExtension); // UniDrcConfigExtension
             boxSize += IsoStream.CalculateSize(SamplingRateBox); // SamplingRateBox
             boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
@@ -19695,10 +19695,10 @@ namespace BoxGenerator2
             boxSize += stream.ReadBox(out this.Box); // further boxes as needed
             boxSize += stream.ReadBox(out this.ChannelLayout);
             boxSize += stream.ReadBox(out this.DownMixInstructions);
-            boxSize += stream.ReadClass(out this.DRCCoefficientsBasic);
-            boxSize += stream.ReadClass(out this.DRCInstructionsBasic);
-            boxSize += stream.ReadClass(out this.DRCCoefficientsUniDRC);
-            boxSize += stream.ReadClass(out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += stream.ReadBox(out this.DRCCoefficientsBasic);
+            boxSize += stream.ReadBox(out this.DRCInstructionsBasic);
+            boxSize += stream.ReadBox(out this.DRCCoefficientsUniDRC);
+            boxSize += stream.ReadBox(out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             boxSize += stream.ReadBox(out this.UniDrcConfigExtension); // optional boxes follow
             boxSize += stream.ReadBox(out this.ChannelLayout);
             return boxSize;
@@ -19720,10 +19720,10 @@ namespace BoxGenerator2
             boxSize += stream.WriteBox(this.Box); // further boxes as needed
             boxSize += stream.WriteBox(this.ChannelLayout);
             boxSize += stream.WriteBox(this.DownMixInstructions);
-            boxSize += stream.WriteClass(this.DRCCoefficientsBasic);
-            boxSize += stream.WriteClass(this.DRCInstructionsBasic);
-            boxSize += stream.WriteClass(this.DRCCoefficientsUniDRC);
-            boxSize += stream.WriteClass(this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            boxSize += stream.WriteBox(this.DRCCoefficientsBasic);
+            boxSize += stream.WriteBox(this.DRCInstructionsBasic);
+            boxSize += stream.WriteBox(this.DRCCoefficientsUniDRC);
+            boxSize += stream.WriteBox(this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
             boxSize += stream.WriteBox(this.UniDrcConfigExtension); // optional boxes follow
             boxSize += stream.WriteBox(this.ChannelLayout);
             return boxSize;
@@ -19745,10 +19745,10 @@ namespace BoxGenerator2
             boxSize += IsoStream.CalculateSize(Box); // Box
             boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
             boxSize += IsoStream.CalculateSize(DownMixInstructions); // DownMixInstructions
-            boxSize += IsoStream.CalculateClassSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
-            boxSize += IsoStream.CalculateClassSize(DRCInstructionsBasic); // DRCInstructionsBasic
-            boxSize += IsoStream.CalculateClassSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
-            boxSize += IsoStream.CalculateClassSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+            boxSize += IsoStream.CalculateSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+            boxSize += IsoStream.CalculateSize(DRCInstructionsBasic); // DRCInstructionsBasic
+            boxSize += IsoStream.CalculateSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+            boxSize += IsoStream.CalculateSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
             boxSize += IsoStream.CalculateSize(UniDrcConfigExtension); // UniDrcConfigExtension
             boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
             return boxSize;
