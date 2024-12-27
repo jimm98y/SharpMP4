@@ -36,10 +36,10 @@ namespace BoxGenerator2
                 case "av1f": return new AV1ForwardKeyFrameSampleGroupEntry();
                 case "av1M": return new AV1MetadataSampleGroupEntry();
                 case "av1s": return new AV1SwitchFrameSampleGroupEntry();
-                case "avc1": throw new NotSupportedException("avc1"); // TODO: AVCMVCSampleEntry, AVCSVCSampleEntry
-                case "avc2": throw new NotSupportedException("avc2"); // TODO: AVC2MVCSampleEntry, AVC2SVCSampleEntry
-                case "avc3": throw new NotSupportedException("avc3"); // TODO: AVCMVCSampleEntry_avc3, AVCSVCSampleEntry
-                case "avc4": throw new NotSupportedException("avc4"); // TODO: AVC2MVCSampleEntry_avc4, AVC2SVCSampleEntry
+                case "avc1": throw new NotSupportedException("'avc1' is ambiguous in between AVCMVCSampleEntry and AVCSVCSampleEntry");
+                case "avc2": throw new NotSupportedException("'avc2' is ambiguous in between AVC2MVCSampleEntry and AVC2SVCSampleEntry");
+                case "avc3": throw new NotSupportedException("'avc3' is ambiguous in between AVCMVCSampleEntry_avc3 and AVCSVCSampleEntry_avc3");
+                case "avc4": throw new NotSupportedException("'avc4' is ambiguous in between AVC2MVCSampleEntry_avc4 and AVC2SVCSampleEntry_avc4");
                 case "avcC": return new AVCConfigurationBox();
                 case "avcp": return new AVCParameterSampleEntry();
                 case "avll": return new AVCLayerEntry();
@@ -89,7 +89,7 @@ namespace BoxGenerator2
                 case "evc1": return new EVCSampleEntry();
                 case "evcC": return new EVCConfigurationBox();
                 case "evs1": return new EVCSliceComponentTrackSampleEntry();
-                case "evs2": return new EVCSliceComponentTrackSampleEntry();
+                case "evs2": return new EVCSliceComponentTrackSampleEntry_evs2(); // TODO: fix duplicate
                 case "evsC": return new EVCSliceComponentTrackConfigurationBox();
                 case "exte": return new MetaDataExtensionsBox();
                 case "fade": return new FadeTransitionEffectProperty();
@@ -110,7 +110,7 @@ namespace BoxGenerator2
                 case "hev3": return new HEVCSampleEntry_hev3(); // TODO: fix duplicate
                 case "hinf": return new hintstatisticsbox();
                 case "hmhd": return new HintMediaHeaderBox();
-                case "hnti": throw new NotSupportedException("hnti"); // TODO: trackhintinformation, moviehintinformation
+                case "hnti": throw new NotSupportedException("'hnti' is ambiguous in between trackhintinformation and moviehintinformation");
                 case "hvc1": return new HEVCSampleEntry();
                 case "hvc2": return new HEVCSampleEntry_hvc2(); // TODO: fix duplicate
                 case "hvc3": return new HEVCSampleEntry_hvc3(); // TODO: fix duplicate
@@ -197,7 +197,7 @@ namespace BoxGenerator2
                 case "nmhd": return new NullMediaHeaderBox();
                 case "npck": return new hintPacketsSentNpck();
                 case "nump": return new hintPacketsSentNump();
-                case "oinf": throw new NotSupportedException("oinf"); // TODO: OperatingPointsInformation, OperatingPointsInformationProperty
+                case "oinf": throw new NotSupportedException("'oinf' is ambiguous in between OperatingPointsInformation and OperatingPointsInformationProperty");
                 case "opeg": return new OperatingPointGroupBox();
                 case "opth": return new OperatingPointDecodeTimeHint();
                 case "Opus": return new OpusSampleEntry();
@@ -233,7 +233,7 @@ namespace BoxGenerator2
                 case "rrtp": return new ReceivedRtpHintSampleEntry();
                 case "rsrp": return new ReceivedSrtpHintSampleEntry();
                 case "rssr": return new ReceivedSsrcBox();
-                case "rtp ": throw new NotSupportedException("rtp "); // TODO: rtpmoviehintinformation, RtpHintSampleEntry
+                case "rtp ": throw new NotSupportedException("'rtp ' is ambiguous in between rtpmoviehintinformation and RtpHintSampleEntry");
                 case "saio": return new SampleAuxiliaryInformationOffsetsBox();
                 case "saiz": return new SampleAuxiliaryInformationSizesBox();
                 case "sap ": return new SAPEntry();
@@ -260,10 +260,10 @@ namespace BoxGenerator2
                 case "snim": return new DataEntrySeqNumImdaBox();
                 case "snro": return new sequenceoffset();
                 case "snut": return new TrackGroupTypeBox_snut(); // TODO: fix duplicate
-                case "spid": throw new NotSupportedException("spid"); // TODO: VvcSubpicIDEntry, VvcSubpicIDProperty
+                case "spid": throw new NotSupportedException("'spid' is ambiguous in between VvcSubpicIDEntry and VvcSubpicIDProperty");
                 case "spli": return new SubpicLevelInfoEntry();
                 case "splt": return new SplitTransitionEffectProperty();
-                case "spor": throw new NotSupportedException("spor"); // TODO: VvcSubpicOrderEntry, VvcSubpicOrderProperty
+                case "spor": throw new NotSupportedException("'spor' is ambiguous in between VvcSubpicOrderEntry and VvcSubpicOrderProperty");
                 case "srat": return new SamplingRateBox();
                 case "srpp": return new SRTPProcessBox();
                 case "srtp": return new SrtpHintSampleEntry();
@@ -298,7 +298,7 @@ namespace BoxGenerator2
                 case "subs": return new SubSampleInformationBox();
                 case "sulm": return new VvcSubpicLayoutMapEntry();
                 case "svc1": return new SVCSampleEntry();
-                case "svc2": return new SVCSampleEntry();
+                case "svc2": return new SVCSampleEntry_svc2(); // TODO: fix duplicate
                 case "svcC": return new SVCConfigurationBox();
                 case "svcM": return new SVCMetaDataSampleEntry();
                 case "svcP": return new SVCPriorityAssignmentBox();
@@ -350,7 +350,7 @@ namespace BoxGenerator2
                 case "urim": return new URIMetaSampleEntry();
                 case "url ": return new DataEntryUrlBox();
                 case "urn ": return new DataEntryUrnBox();
-                case "vipr": throw new NotSupportedException("vipr"); // TODO: ViewPriorityBox, ViewPriorityEntry
+                case "vipr": throw new NotSupportedException("'vipr' is ambiguous in between ViewPriorityBox and ViewPriorityEntry");
                 case "vlab": return new WebVTTSourceLabelBox();
                 case "vmhd": return new VideoMediaHeaderBox();
                 case "vopi": return new VvcOperatingPointsInformation();
@@ -360,7 +360,7 @@ namespace BoxGenerator2
                 case "vvcb": return new EntityToGroupBox_vvcb(); // TODO: fix duplicate
                 case "vvcC": return new VvcConfigurationBox();
                 case "vvcN": return new VvcNonVCLSampleEntry();
-                case "vvi1": return new VvcSampleEntry();
+                case "vvi1": return new VvcSampleEntry_vvi1(); // TODO: fix duplicate
                 case "vvnC": return new VvcNALUConfigBox();
                 case "vvs1": return new VvcSubpicSampleEntry();
                 case "vwdi": return new MultiviewSceneInfoBox();
@@ -372,7 +372,7 @@ namespace BoxGenerator2
                 case "zoom": return new ZoomTransitionEffectProperty();
             }
 
-            throw new NotSupportedException(fourCC);
+            throw new NotImplementedException(fourCC);
         }
     }
 
@@ -24191,7 +24191,7 @@ namespace BoxGenerator2
     */
     public class AVCSVCSampleEntry : AVCSampleEntry
     {
-        public const string FourCC = "'avc1' or 'avc3'";
+        public const string FourCC = "avc1";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24202,7 +24202,7 @@ namespace BoxGenerator2
         protected SVCPriorityAssignmentBox method;  //  optional
         public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
 
-        public AVCSVCSampleEntry() : base("'avc1' or 'avc3'")
+        public AVCSVCSampleEntry() : base("avc1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24212,6 +24212,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -24222,6 +24223,60 @@ namespace BoxGenerator2
             if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
             if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
             if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBoxChildren(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            if (this.svcconfig != null) boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
+            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
+            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
+            return boxSize;
+        }
+    }
+
+
+    /*
+
+    */
+    public class AVCSVCSampleEntry_avc3 : AVCSampleEntry
+    {
+        public const string FourCC = "avc3";
+
+        protected SVCConfigurationBox svcconfig;  //  optional
+        public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
+
+        protected ScalabilityInformationSEIBox scalability;  //  optional
+        public ScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
+
+        protected SVCPriorityAssignmentBox method;  //  optional
+        public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
+
+        public AVCSVCSampleEntry_avc3() : base("avc3")
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
+            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
+            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBoxChildren(boxSize, this);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
+            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
+            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -24246,7 +24301,7 @@ namespace BoxGenerator2
     */
     public class AVC2SVCSampleEntry : AVC2SampleEntry
     {
-        public const string FourCC = "'avc2' or 'avc4'";
+        public const string FourCC = "avc2";
 
         protected SVCConfigurationBox svcconfig;  //  optional
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24257,7 +24312,7 @@ namespace BoxGenerator2
         protected SVCPriorityAssignmentBox method;  //  optional
         public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
 
-        public AVC2SVCSampleEntry() : base("'avc2' or 'avc4'")
+        public AVC2SVCSampleEntry() : base("avc2")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24267,6 +24322,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -24277,6 +24333,60 @@ namespace BoxGenerator2
             if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
             if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
             if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBoxChildren(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            if (this.svcconfig != null) boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
+            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
+            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
+            return boxSize;
+        }
+    }
+
+
+    /*
+
+    */
+    public class AVC2SVCSampleEntry_avc4 : AVC2SampleEntry
+    {
+        public const string FourCC = "avc4";
+
+        protected SVCConfigurationBox svcconfig;  //  optional
+        public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
+
+        protected ScalabilityInformationSEIBox scalability;  //  optional
+        public ScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
+
+        protected SVCPriorityAssignmentBox method;  //  optional
+        public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
+
+        public AVC2SVCSampleEntry_avc4() : base("avc4")
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
+            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
+            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBoxChildren(boxSize, this);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
+            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
+            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -24303,7 +24413,7 @@ namespace BoxGenerator2
     */
     public class SVCSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "'svc1' or 'svc2'";
+        public const string FourCC = "svc1";
 
         protected SVCConfigurationBox svcconfig;
         public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
@@ -24317,7 +24427,7 @@ namespace BoxGenerator2
         protected SVCPriorityAssignmentBox method;  //  optional
         public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
 
-        public SVCSampleEntry() : base("'svc1' or 'svc2'")
+        public SVCSampleEntry() : base("svc1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24328,6 +24438,7 @@ namespace BoxGenerator2
             if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
             if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -24339,6 +24450,66 @@ namespace BoxGenerator2
             if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
             if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
             if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBoxChildren(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
+            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
+            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
+            return boxSize;
+        }
+    }
+
+
+    /*
+
+    */
+    public class SVCSampleEntry_svc2 : VisualSampleEntry
+    {
+        public const string FourCC = "svc2";
+
+        protected SVCConfigurationBox svcconfig;
+        public SVCConfigurationBox Svcconfig { get { return this.svcconfig; } set { this.svcconfig = value; } }
+
+        protected MPEG4ExtensionDescriptorsBox descr;  //  optional
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
+
+        protected ScalabilityInformationSEIBox scalability;  //  optional
+        public ScalabilityInformationSEIBox Scalability { get { return this.scalability; } set { this.scalability = value; } }
+
+        protected SVCPriorityAssignmentBox method;  //  optional
+        public SVCPriorityAssignmentBox Method { get { return this.method; } set { this.method = value; } }
+
+        public SVCSampleEntry_svc2() : base("svc2")
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadBox(out this.svcconfig);
+            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
+            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBoxChildren(boxSize, this);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteBox(this.svcconfig);
+            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
+            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -24526,7 +24697,7 @@ namespace BoxGenerator2
     */
     public class VvcSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "'vvc1' or 'vvi1'";
+        public const string FourCC = "vvc1";
 
         protected VvcConfigurationBox config;
         public VvcConfigurationBox Config { get { return this.config; } set { this.config = value; } }
@@ -24534,7 +24705,7 @@ namespace BoxGenerator2
         protected MPEG4ExtensionDescriptorsBox descr;  //  optional
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
 
-        public VvcSampleEntry() : base("'vvc1' or 'vvi1'")
+        public VvcSampleEntry() : base("vvc1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24543,6 +24714,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
             if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -24552,6 +24724,54 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
             if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBoxChildren(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateSize(config); // config
+            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            return boxSize;
+        }
+    }
+
+
+    /*
+
+    */
+    public class VvcSampleEntry_vvi1 : VisualSampleEntry
+    {
+        public const string FourCC = "vvi1";
+
+        protected VvcConfigurationBox config;
+        public VvcConfigurationBox Config { get { return this.config; } set { this.config = value; } }
+
+        protected MPEG4ExtensionDescriptorsBox descr;  //  optional
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.descr; } set { this.descr = value; } }
+
+        public VvcSampleEntry_vvi1() : base("vvi1")
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadBox(out this.config);
+            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBoxChildren(boxSize, this);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteBox(this.config);
+            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 
@@ -24768,12 +24988,12 @@ namespace BoxGenerator2
     */
     public class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
     {
-        public const string FourCC = "'evs1' or 'evs2'";
+        public const string FourCC = "evs1";
 
         protected EVCSliceComponentTrackConfigurationBox config;
         public EVCSliceComponentTrackConfigurationBox Config { get { return this.config; } set { this.config = value; } }
 
-        public EVCSliceComponentTrackSampleEntry() : base("'evs1' or 'evs2'")
+        public EVCSliceComponentTrackSampleEntry() : base("evs1")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -24781,6 +25001,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
+            boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
 
@@ -24789,6 +25010,48 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
+            boxSize += stream.WriteBoxChildren(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateSize(config); // config
+            return boxSize;
+        }
+    }
+
+
+    /*
+
+    */
+    public class EVCSliceComponentTrackSampleEntry_evs2 : VisualSampleEntry
+    {
+        public const string FourCC = "evs2";
+
+        protected EVCSliceComponentTrackConfigurationBox config;
+        public EVCSliceComponentTrackConfigurationBox Config { get { return this.config; } set { this.config = value; } }
+
+        public EVCSliceComponentTrackSampleEntry_evs2() : base("evs2")
+        { }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream);
+            boxSize += stream.ReadBox(out this.config);
+            boxSize += stream.ReadBoxChildren(boxSize, this);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteBox(this.config);
+            boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
 

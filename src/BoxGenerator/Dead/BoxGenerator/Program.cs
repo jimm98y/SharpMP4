@@ -10,7 +10,7 @@ using static Pidgin.Parser<char>;
 namespace ConsoleApp;
 
 [SuppressMessage("naming", "CA1724:The type name conflicts with the namespace name", Justification = "Example code")]
-public abstract class PseudoCode
+public interface PseudoCode
 {
 }
 
@@ -18,14 +18,19 @@ public class PseudoClass : PseudoCode
 {
     public string FourCC { get; set; }
     public string BoxName { get; set; }
-    public string ClassType { get; }
-    public string Comment { get; }
-    public string EndComment { get; }
-    public IList<PseudoCode> Fields { get; }
-    public string Alignment { get; }
-    public PseudoExtendedClass Extended { get; }
-    public string Syntax { get; internal set; }
-    public long CurrentOffset { get; internal set; }
+    public string ClassType { get; set; }
+    public string Comment { get; set; }
+    public string EndComment { get; set; }
+    public IList<PseudoCode> Fields { get; set; }
+    public string Alignment { get; set; }
+    public PseudoExtendedClass Extended { get; set; }
+    public string Syntax { get; set; }
+    public long CurrentOffset { get; set; }
+
+    public PseudoClass()
+    {
+
+    }
 
     public PseudoClass(
         Maybe<string> comment,
@@ -51,11 +56,16 @@ public class PseudoClass : PseudoCode
 
 public class PseudoExtendedClass : PseudoCode
 {
-    public string OldType { get; }
-    public string BoxType { get; }
-    public IList<(string Name, string Value)> Parameters { get; }
-    public string BoxName { get; }
-    public string DescriptorTag { get; }
+    public string OldType { get; set; }
+    public string BoxType { get; set; }
+    public IList<(string Name, string Value)> Parameters { get; set; }
+    public string BoxName { get; set; }
+    public string DescriptorTag { get; set; }
+
+    public PseudoExtendedClass()
+    {
+
+    }
 
     public PseudoExtendedClass(
         Maybe<string> boxName,
@@ -81,6 +91,11 @@ public class PseudoExtendedClass : PseudoCode
 
 public class PseudoField : PseudoCode
 {
+    public PseudoField()
+    {
+
+    }
+
     public PseudoField(string type, Maybe<string> name, Maybe<IEnumerable<char>> value, Maybe<string> comment)
     {
         Type = type;
@@ -91,13 +106,18 @@ public class PseudoField : PseudoCode
 
     public string Type { get; set; }
     public string Name { get; set; }
-    public string Value { get; }
-    public string Comment { get; }
+    public string Value { get; set; }
+    public string Comment { get; set; }
 }
 
 
 public class PseudoComment : PseudoCode
 {
+    public PseudoComment()
+    {
+
+    }
+
     public PseudoComment(string comment)
     {
         Comment = comment;
@@ -108,6 +128,11 @@ public class PseudoComment : PseudoCode
 
 public class PseudoBlock : PseudoCode
 {
+    public PseudoBlock()
+    {
+
+    }
+
     public PseudoBlock(string type, Maybe<string> condition, Maybe<string> comment, IEnumerable<PseudoCode> content)
     {
         Type = type;
@@ -124,6 +149,11 @@ public class PseudoBlock : PseudoCode
 
 public class PseudoRepeatingBlock : PseudoCode
 {
+    public PseudoRepeatingBlock()
+    {
+
+    }
+
     public PseudoRepeatingBlock(IEnumerable<PseudoCode> content, IEnumerable<char> array)
     {
         Content = content;
@@ -751,6 +781,7 @@ partial class Program
                     {
                         var result = Boxes.ParseOrThrow(sample);
                         long offset = 0;
+                        result = DeduplicateBoxes(result);
                         foreach (var item in result)
                         {
                             item.Syntax = GetSampleCode(sample, offset, item.CurrentOffset);
@@ -842,19 +873,7 @@ namespace BoxGenerator2
                 if (item.Value.Extended.BoxType == "fdel") // item extension, not a box
                     continue;
 
-                if(item.Value.Extended.BoxType.Contains("\' or \'"))
-                {
-                    string[] parts = item.Value.Extended.BoxType.Split("\' or \'");
-                    foreach (var part in parts)
-                    {
-                        string key = part.TrimStart('\'').TrimEnd('\'');
-                        if (!fourccBoxes.ContainsKey(key))
-                            fourccBoxes.Add(key, new List<PseudoClass>() { item.Value });
-                        else
-                            fourccBoxes[key].Add(item.Value);
-                    }
-                }
-                else if (!fourccBoxes.ContainsKey(item.Value.Extended.BoxType))
+                if (!fourccBoxes.ContainsKey(item.Value.Extended.BoxType))
                     fourccBoxes.Add(item.Value.Extended.BoxType, new List<PseudoClass>() { item.Value });
                 else
                     fourccBoxes[item.Value.Extended.BoxType].Add(item.Value);
@@ -872,14 +891,14 @@ namespace BoxGenerator2
             }
             else
             {
-                factory += $"               case \"{item.Key}\": throw new NotSupportedException(\"{item.Key}\"); // TODO: {string.Join(", ", item.Value.Select(x => x.BoxName))}\r\n";
+                factory += $"               case \"{item.Key}\": throw new NotSupportedException(\"\'{item.Key}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n";
             }
         }
 
-        factory +=    
+        factory +=
 @"          }
 
-            throw new NotSupportedException(fourCC);
+            throw new NotImplementedException(fourCC);
         }
     }
 
@@ -896,7 +915,32 @@ namespace BoxGenerator2
 }
 ";
     }
-    
+
+    private static IEnumerable<PseudoClass> DeduplicateBoxes(IEnumerable<PseudoClass> result)
+    {
+        List<PseudoClass> boxes = new List<PseudoClass>();
+        foreach (var box in result)
+        {
+            if(box.Extended != null && box.Extended.BoxType != null && box.Extended.BoxType.Contains("\' or \'"))
+            {
+                string[] parts = box.Extended.BoxType.Split("\' or \'");
+                for(int i = 0; i < parts.Length; i++)
+                {
+                    string part = parts[i];
+                    string key = part.TrimStart('\'').TrimEnd('\'');
+                    var copy = JsonConvert.DeserializeObject<PseudoClass>(JsonConvert.SerializeObject(box, new JsonSerializerSettings() {  TypeNameHandling = TypeNameHandling.All }), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All }); // deep copy
+                    copy.Extended.BoxType = key;
+                    boxes.Add(copy);
+                }
+            }
+            else
+            {
+                boxes.Add(box);
+            }
+        }
+        return boxes;
+    }
+
     private static string GetSampleCode(string sample, long startOffset, long endOffset)
     {
         return sample.Substring((int)startOffset, (int)(endOffset - startOffset));
