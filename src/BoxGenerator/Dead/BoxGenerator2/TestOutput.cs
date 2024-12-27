@@ -754,7 +754,7 @@ namespace BoxGenerator2
             boxSize += (ulong)ns.Length * 8; // ns
             boxSize += (ulong)schema_location.Length * 8; // schema_location
             boxSize += (ulong)auxiliary_mime_types.Length * 8; // auxiliary_mime_types
-            boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
             return boxSize;
         }
     }
@@ -818,8 +818,8 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += (ulong)content_encoding.Length * 8; // content_encoding
             boxSize += (ulong)mime_format.Length * 8; // mime_format
-            boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
-            boxSize += IsoStream.CalculateSize(TextConfigBox); // TextConfigBox
+            boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
             return boxSize;
         }
     }
@@ -1041,7 +1041,7 @@ namespace BoxGenerator2
             boxSize += 8; // trailingbyteslen
             boxSize += 1; // precomputed_only_flag
             boxSize += 7; // reserved
-            boxSize += IsoStream.CalculateSize(additionaldata); // additionaldata
+            boxSize += IsoStream.CalculateBoxSize(additionaldata); // additionaldata
             return boxSize;
         }
     }
@@ -1178,8 +1178,8 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += (ulong)content_encoding.Length * 8; // content_encoding
             boxSize += (ulong)mime_format.Length * 8; // mime_format
-            boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
-            boxSize += IsoStream.CalculateSize(TextConfigBox); // TextConfigBox
+            boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
             return boxSize;
         }
     }
@@ -1371,11 +1371,11 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(MetaDataKeyDeclarationBox); // MetaDataKeyDeclarationBox
-            boxSize += IsoStream.CalculateSize(MetaDataDatatypeBox); // MetaDataDatatypeBox
-            boxSize += IsoStream.CalculateSize(MetaDataLocaleBox); // MetaDataLocaleBox
-            boxSize += IsoStream.CalculateSize(MetaDataSetupBox); // MetaDataSetupBox
-            boxSize += IsoStream.CalculateSize(MetaDataExtensionsBox); // MetaDataExtensionsBox
+            boxSize += IsoStream.CalculateBoxSize(MetaDataKeyDeclarationBox); // MetaDataKeyDeclarationBox
+            boxSize += IsoStream.CalculateBoxSize(MetaDataDatatypeBox); // MetaDataDatatypeBox
+            boxSize += IsoStream.CalculateBoxSize(MetaDataLocaleBox); // MetaDataLocaleBox
+            boxSize += IsoStream.CalculateBoxSize(MetaDataSetupBox); // MetaDataSetupBox
+            boxSize += IsoStream.CalculateBoxSize(MetaDataExtensionsBox); // MetaDataExtensionsBox
             return boxSize;
         }
     }
@@ -1554,7 +1554,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(extensions); // extensions
+            boxSize += IsoStream.CalculateBoxSize(extensions); // extensions
             return boxSize;
         }
     }
@@ -1639,7 +1639,7 @@ namespace BoxGenerator2
         public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
-            boxSize += IsoStream.CalculateSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
             return boxSize;
         }
     }
@@ -5513,7 +5513,7 @@ namespace BoxGenerator2
             boxSize += 32; // stereo_scheme
             boxSize += 32; // length
             boxSize += (ulong)length * 8; // stereo_indication_type
-            boxSize += IsoStream.CalculateSize(any_box); // any_box
+            boxSize += IsoStream.CalculateBoxSize(any_box); // any_box
             return boxSize;
         }
     }
@@ -6264,8 +6264,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(scheme_type_box); // scheme_type_box
-            boxSize += IsoStream.CalculateSize(info); // info
+            boxSize += IsoStream.CalculateBoxSize(scheme_type_box); // scheme_type_box
+            boxSize += IsoStream.CalculateBoxSize(info); // info
             return boxSize;
         }
     }
@@ -7494,8 +7494,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             /*  not more than one TrackLoudnessInfo box with version>=1 is allowed */
-            boxSize += IsoStream.CalculateSize(loudness); // loudness
-            boxSize += IsoStream.CalculateSize(albumLoudness); // albumLoudness
+            boxSize += IsoStream.CalculateBoxSize(loudness); // loudness
+            boxSize += IsoStream.CalculateBoxSize(albumLoudness); // albumLoudness
             return boxSize;
         }
     }
@@ -7788,7 +7788,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(properties); // properties
+            boxSize += IsoStream.CalculateBoxSize(properties); // properties
             /*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
             /*  to fill the box */
             return boxSize;
@@ -8002,8 +8002,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(property_container); // property_container
-            boxSize += IsoStream.CalculateSize(association); // association
+            boxSize += IsoStream.CalculateBoxSize(property_container); // property_container
+            boxSize += IsoStream.CalculateBoxSize(association); // association
             return boxSize;
         }
     }
@@ -8190,7 +8190,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(original_format); // original_format
+            boxSize += IsoStream.CalculateBoxSize(original_format); // original_format
             return boxSize;
         }
     }
@@ -8758,7 +8758,7 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-                boxSize += IsoStream.CalculateSize(data_entry); // data_entry
+                boxSize += IsoStream.CalculateBoxSize(data_entry); // data_entry
             }
             return boxSize;
         }
@@ -8962,7 +8962,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(compatible_combinations); // compatible_combinations
+            boxSize += IsoStream.CalculateBoxSize(compatible_combinations); // compatible_combinations
             return boxSize;
         }
     }
@@ -9243,9 +9243,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(blocks_and_symbols); // blocks_and_symbols
-            boxSize += IsoStream.CalculateSize(FEC_symbol_locations); // FEC_symbol_locations
-            boxSize += IsoStream.CalculateSize(File_symbol_locations); // File_symbol_locations
+            boxSize += IsoStream.CalculateBoxSize(blocks_and_symbols); // blocks_and_symbols
+            boxSize += IsoStream.CalculateBoxSize(FEC_symbol_locations); // FEC_symbol_locations
+            boxSize += IsoStream.CalculateBoxSize(File_symbol_locations); // File_symbol_locations
             return boxSize;
         }
     }
@@ -9309,9 +9309,9 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 16; // entry_count
-            boxSize += IsoStream.CalculateSize(partition_entries); // partition_entries
-            boxSize += IsoStream.CalculateSize(session_info); // session_info
-            boxSize += IsoStream.CalculateSize(group_id_to_name); // group_id_to_name
+            boxSize += IsoStream.CalculateBoxSize(partition_entries); // partition_entries
+            boxSize += IsoStream.CalculateBoxSize(session_info); // session_info
+            boxSize += IsoStream.CalculateBoxSize(group_id_to_name); // group_id_to_name
             return boxSize;
         }
     }
@@ -10158,7 +10158,7 @@ namespace BoxGenerator2
             {
                 boxSize += 32; // entry_count
             }
-            boxSize += IsoStream.CalculateSize(item_infos); // item_infos
+            boxSize += IsoStream.CalculateBoxSize(item_infos); // item_infos
             return boxSize;
         }
     }
@@ -10778,7 +10778,7 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= protection_count; i++)
             {
-                boxSize += IsoStream.CalculateSize(protection_information); // protection_information
+                boxSize += IsoStream.CalculateBoxSize(protection_information); // protection_information
             }
             return boxSize;
         }
@@ -10851,12 +10851,12 @@ namespace BoxGenerator2
 
             if (version == 0)
             {
-                boxSize += IsoStream.CalculateSize(references); // references
+                boxSize += IsoStream.CalculateBoxSize(references); // references
             }
 
             else if (version == 1)
             {
-                boxSize += IsoStream.CalculateSize(references0); // references0
+                boxSize += IsoStream.CalculateBoxSize(references0); // references0
             }
             return boxSize;
         }
@@ -11424,16 +11424,16 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(theHandler); // theHandler
-            boxSize += IsoStream.CalculateSize(primary_resource); // primary_resource
-            boxSize += IsoStream.CalculateSize(file_locations); // file_locations
-            boxSize += IsoStream.CalculateSize(item_locations); // item_locations
-            boxSize += IsoStream.CalculateSize(protections); // protections
-            boxSize += IsoStream.CalculateSize(item_infos); // item_infos
-            boxSize += IsoStream.CalculateSize(IPMP_control); // IPMP_control
-            boxSize += IsoStream.CalculateSize(item_refs); // item_refs
-            boxSize += IsoStream.CalculateSize(item_data); // item_data
-            boxSize += IsoStream.CalculateSize(other_boxes); // other_boxes
+            boxSize += IsoStream.CalculateBoxSize(theHandler); // theHandler
+            boxSize += IsoStream.CalculateBoxSize(primary_resource); // primary_resource
+            boxSize += IsoStream.CalculateBoxSize(file_locations); // file_locations
+            boxSize += IsoStream.CalculateBoxSize(item_locations); // item_locations
+            boxSize += IsoStream.CalculateBoxSize(protections); // protections
+            boxSize += IsoStream.CalculateBoxSize(item_infos); // item_infos
+            boxSize += IsoStream.CalculateBoxSize(IPMP_control); // IPMP_control
+            boxSize += IsoStream.CalculateBoxSize(item_refs); // item_refs
+            boxSize += IsoStream.CalculateBoxSize(item_data); // item_data
+            boxSize += IsoStream.CalculateBoxSize(other_boxes); // other_boxes
             return boxSize;
         }
     }
@@ -12316,9 +12316,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(original_format); // original_format
-            boxSize += IsoStream.CalculateSize(scheme_type_box); // scheme_type_box
-            boxSize += IsoStream.CalculateSize(info); // info
+            boxSize += IsoStream.CalculateBoxSize(original_format); // original_format
+            boxSize += IsoStream.CalculateBoxSize(scheme_type_box); // scheme_type_box
+            boxSize += IsoStream.CalculateBoxSize(info); // info
             return boxSize;
         }
     }
@@ -12674,7 +12674,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(scheme_specific_data); // scheme_specific_data
+            boxSize += IsoStream.CalculateBoxSize(scheme_specific_data); // scheme_specific_data
             return boxSize;
         }
     }
@@ -13170,7 +13170,7 @@ namespace BoxGenerator2
                         boxSize += 32; // description_length
                     }
                 }
-                boxSize += IsoStream.CalculateSize(SampleGroupDescriptionEntry); // SampleGroupDescriptionEntry
+                boxSize += IsoStream.CalculateBoxSize(SampleGroupDescriptionEntry); // SampleGroupDescriptionEntry
                 /*   that is appropriate and permitted for the media type */
             }
             return boxSize;
@@ -13266,9 +13266,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(original_format); // original_format
-            boxSize += IsoStream.CalculateSize(scheme_type_box); // scheme_type_box
-            boxSize += IsoStream.CalculateSize(info); // info
+            boxSize += IsoStream.CalculateBoxSize(original_format); // original_format
+            boxSize += IsoStream.CalculateBoxSize(scheme_type_box); // scheme_type_box
+            boxSize += IsoStream.CalculateBoxSize(info); // info
             return boxSize;
         }
     }
@@ -13436,8 +13436,8 @@ namespace BoxGenerator2
             boxSize += 32; // encryption_algorithm_rtcp
             boxSize += 32; // integrity_algorithm_rtp
             boxSize += 32; // integrity_algorithm_rtcp
-            boxSize += IsoStream.CalculateSize(scheme_type_box); // scheme_type_box
-            boxSize += IsoStream.CalculateSize(info); // info
+            boxSize += IsoStream.CalculateBoxSize(scheme_type_box); // scheme_type_box
+            boxSize += IsoStream.CalculateBoxSize(info); // info
             return boxSize;
         }
     }
@@ -13925,7 +13925,7 @@ namespace BoxGenerator2
 
             for (int i = 1; i <= entry_count; i++)
             {
-                boxSize += IsoStream.CalculateSize(SampleEntry); // SampleEntry
+                boxSize += IsoStream.CalculateBoxSize(SampleEntry); // SampleEntry
             }
             return boxSize;
         }
@@ -15199,7 +15199,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(TrackReferenceTypeBox); // TrackReferenceTypeBox
+            boxSize += IsoStream.CalculateBoxSize(TrackReferenceTypeBox); // TrackReferenceTypeBox
             return boxSize;
         }
     }
@@ -15838,7 +15838,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(MetaDataKeyBox); // MetaDataKeyBox
+            boxSize += IsoStream.CalculateBoxSize(MetaDataKeyBox); // MetaDataKeyBox
             return boxSize;
         }
     }
@@ -16936,11 +16936,11 @@ namespace BoxGenerator2
                     boxSize += 16; // view_count
                 }
             }
-            boxSize += IsoStream.CalculateSize(subset_stream_info); // subset_stream_info
-            boxSize += IsoStream.CalculateSize(relation_attributes); // relation_attributes
-            boxSize += IsoStream.CalculateSize(subset_stream_bit_rate); // subset_stream_bit_rate
-            boxSize += IsoStream.CalculateSize(subset_stream_buffering); // subset_stream_buffering
-            boxSize += IsoStream.CalculateSize(multiview_scene_info); // multiview_scene_info
+            boxSize += IsoStream.CalculateBoxSize(subset_stream_info); // subset_stream_info
+            boxSize += IsoStream.CalculateBoxSize(relation_attributes); // relation_attributes
+            boxSize += IsoStream.CalculateBoxSize(subset_stream_bit_rate); // subset_stream_bit_rate
+            boxSize += IsoStream.CalculateBoxSize(subset_stream_buffering); // subset_stream_buffering
+            boxSize += IsoStream.CalculateBoxSize(multiview_scene_info); // multiview_scene_info
             return boxSize;
         }
     }
@@ -17708,7 +17708,7 @@ namespace BoxGenerator2
             {
                 boxSize += 32; // multiview_group_id
             }
-            boxSize += IsoStream.CalculateSize(relation_attributes); // relation_attributes
+            boxSize += IsoStream.CalculateBoxSize(relation_attributes); // relation_attributes
             return boxSize;
         }
     }
@@ -18060,7 +18060,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateClassSize(MVDConfig); // MVDConfig
-            boxSize += IsoStream.CalculateSize(mvdDepthRes); // mvdDepthRes
+            boxSize += IsoStream.CalculateBoxSize(mvdDepthRes); // mvdDepthRes
             return boxSize;
         }
     }
@@ -18111,7 +18111,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateClassSize(MVDConfig); // MVDConfig
-            boxSize += IsoStream.CalculateSize(mvdDepthRes); // mvdDepthRes
+            boxSize += IsoStream.CalculateBoxSize(mvdDepthRes); // mvdDepthRes
             return boxSize;
         }
     }
@@ -19167,22 +19167,22 @@ namespace BoxGenerator2
 
                 if (constructor_type == 0)
                 {
-                    boxSize += IsoStream.CalculateSize(SampleConstructor); // SampleConstructor
+                    boxSize += IsoStream.CalculateBoxSize(SampleConstructor); // SampleConstructor
                 }
 
                 else if (constructor_type == 2)
                 {
-                    boxSize += IsoStream.CalculateSize(InlineConstructor); // InlineConstructor
+                    boxSize += IsoStream.CalculateBoxSize(InlineConstructor); // InlineConstructor
                 }
 
                 else if (constructor_type == 3)
                 {
-                    boxSize += IsoStream.CalculateSize(SampleConstructorFromTrackGroup); // SampleConstructorFromTrackGroup
+                    boxSize += IsoStream.CalculateBoxSize(SampleConstructorFromTrackGroup); // SampleConstructorFromTrackGroup
                 }
 
                 else if (constructor_type == 6)
                 {
-                    boxSize += IsoStream.CalculateSize(NALUStartInlineConstructor); // NALUStartInlineConstructor
+                    boxSize += IsoStream.CalculateBoxSize(NALUStartInlineConstructor); // NALUStartInlineConstructor
                 }
             }
             return boxSize;
@@ -19465,9 +19465,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(label); // label
-            boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(label); // label
+            boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
             return boxSize;
         }
     }
@@ -19835,16 +19835,16 @@ namespace BoxGenerator2
             boxSize += 16; // pre_defined
             boxSize += 16; // reserved0
             boxSize += 32; // samplerate
-            boxSize += IsoStream.CalculateSize(Box); // Box
-            boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
-            boxSize += IsoStream.CalculateSize(DownMixInstructions); // DownMixInstructions
-            boxSize += IsoStream.CalculateSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
-            boxSize += IsoStream.CalculateSize(DRCInstructionsBasic); // DRCInstructionsBasic
-            boxSize += IsoStream.CalculateSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
-            boxSize += IsoStream.CalculateSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
-            boxSize += IsoStream.CalculateSize(UniDrcConfigExtension); // UniDrcConfigExtension
-            boxSize += IsoStream.CalculateSize(SamplingRateBox); // SamplingRateBox
-            boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
+            boxSize += IsoStream.CalculateBoxSize(Box); // Box
+            boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
+            boxSize += IsoStream.CalculateBoxSize(DownMixInstructions); // DownMixInstructions
+            boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+            boxSize += IsoStream.CalculateBoxSize(DRCInstructionsBasic); // DRCInstructionsBasic
+            boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+            boxSize += IsoStream.CalculateBoxSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+            boxSize += IsoStream.CalculateBoxSize(UniDrcConfigExtension); // UniDrcConfigExtension
+            boxSize += IsoStream.CalculateBoxSize(SamplingRateBox); // SamplingRateBox
+            boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
             return boxSize;
         }
     }
@@ -19993,16 +19993,16 @@ namespace BoxGenerator2
             boxSize += 16; // pre_defined
             boxSize += 16; // reserved0
             boxSize += 32; // samplerate
-            boxSize += IsoStream.CalculateSize(SamplingRateBox); // SamplingRateBox
-            boxSize += IsoStream.CalculateSize(Box); // Box
-            boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
-            boxSize += IsoStream.CalculateSize(DownMixInstructions); // DownMixInstructions
-            boxSize += IsoStream.CalculateSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
-            boxSize += IsoStream.CalculateSize(DRCInstructionsBasic); // DRCInstructionsBasic
-            boxSize += IsoStream.CalculateSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
-            boxSize += IsoStream.CalculateSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
-            boxSize += IsoStream.CalculateSize(UniDrcConfigExtension); // UniDrcConfigExtension
-            boxSize += IsoStream.CalculateSize(ChannelLayout); // ChannelLayout
+            boxSize += IsoStream.CalculateBoxSize(SamplingRateBox); // SamplingRateBox
+            boxSize += IsoStream.CalculateBoxSize(Box); // Box
+            boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
+            boxSize += IsoStream.CalculateBoxSize(DownMixInstructions); // DownMixInstructions
+            boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+            boxSize += IsoStream.CalculateBoxSize(DRCInstructionsBasic); // DRCInstructionsBasic
+            boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+            boxSize += IsoStream.CalculateBoxSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+            boxSize += IsoStream.CalculateBoxSize(UniDrcConfigExtension); // UniDrcConfigExtension
+            boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
             return boxSize;
         }
     }
@@ -20275,7 +20275,7 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += (ulong)content_encoding.Length * 8; // content_encoding
             boxSize += (ulong)mime_format.Length * 8; // mime_format
-            boxSize += IsoStream.CalculateSize(TextConfigBox); // TextConfigBox
+            boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
             return boxSize;
         }
     }
@@ -20325,8 +20325,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(the_label); // the_label
-            boxSize += IsoStream.CalculateSize(init); // init
+            boxSize += IsoStream.CalculateBoxSize(the_label); // the_label
+            boxSize += IsoStream.CalculateBoxSize(init); // init
             return boxSize;
         }
     }
@@ -20377,8 +20377,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(MetaDataKeyTableBox); // MetaDataKeyTableBox
-            boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateBoxSize(MetaDataKeyTableBox); // MetaDataKeyTableBox
+            boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
             return boxSize;
         }
     }
@@ -20493,8 +20493,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(CompleteTrackInfoBox); // CompleteTrackInfoBox
-            boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(CompleteTrackInfoBox); // CompleteTrackInfoBox
+            boxSize += IsoStream.CalculateBoxSize(config); // config
             return boxSize;
         }
     }
@@ -20537,7 +20537,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(SchemeInformation); // SchemeInformation
+            boxSize += IsoStream.CalculateBoxSize(SchemeInformation); // SchemeInformation
             return boxSize;
         }
     }
@@ -20580,7 +20580,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(SchemeInformation); // SchemeInformation
+            boxSize += IsoStream.CalculateBoxSize(SchemeInformation); // SchemeInformation
             return boxSize;
         }
     }
@@ -20863,7 +20863,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(otherboxes); // otherboxes
+            boxSize += IsoStream.CalculateBoxSize(otherboxes); // otherboxes
             return boxSize;
         }
     }
@@ -21043,8 +21043,8 @@ namespace BoxGenerator2
             boxSize += 32 * 8; // compressorname
             boxSize += 16; // depth
             boxSize += 16; // pre_defined1
-            boxSize += IsoStream.CalculateSize(clap); // clap
-            boxSize += IsoStream.CalculateSize(pasp); // pasp
+            boxSize += IsoStream.CalculateBoxSize(clap); // clap
+            boxSize += IsoStream.CalculateBoxSize(pasp); // pasp
             return boxSize;
         }
     }
@@ -22283,8 +22283,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -22326,7 +22326,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(lhvcconfig); // lhvcconfig
+            boxSize += IsoStream.CalculateBoxSize(lhvcconfig); // lhvcconfig
             return boxSize;
         }
     }
@@ -22376,8 +22376,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -22427,8 +22427,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -22478,8 +22478,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(lhvcconfig); // lhvcconfig
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(lhvcconfig); // lhvcconfig
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -22529,8 +22529,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(lhvcconfig); // lhvcconfig
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(lhvcconfig); // lhvcconfig
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -22580,8 +22580,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -22631,8 +22631,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -22682,8 +22682,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -22727,7 +22727,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(config); // config
             return boxSize;
         }
     }
@@ -22775,8 +22775,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -22868,15 +22868,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -22968,15 +22968,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23024,8 +23024,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -23117,15 +23117,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23217,15 +23217,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23323,16 +23323,16 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23430,16 +23430,16 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23537,16 +23537,16 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23644,16 +23644,16 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23734,13 +23734,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23821,13 +23821,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23908,13 +23908,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23995,13 +23995,13 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -24075,12 +24075,12 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
             return boxSize;
         }
     }
@@ -24154,12 +24154,12 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
             return boxSize;
         }
     }
@@ -24233,12 +24233,12 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
             return boxSize;
         }
     }
@@ -24312,12 +24312,12 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
-            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
             return boxSize;
         }
     }
@@ -24373,9 +24373,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(method); // method
             return boxSize;
         }
     }
@@ -24427,9 +24427,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(method); // method
             return boxSize;
         }
     }
@@ -24485,9 +24485,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(method); // method
             return boxSize;
         }
     }
@@ -24539,9 +24539,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(method); // method
             return boxSize;
         }
     }
@@ -24604,10 +24604,10 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(method); // method
             return boxSize;
         }
     }
@@ -24664,10 +24664,10 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            boxSize += IsoStream.CalculateSize(descr); // descr
-            boxSize += IsoStream.CalculateSize(scalability); // scalability
-            boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            boxSize += IsoStream.CalculateBoxSize(method); // method
             return boxSize;
         }
     }
@@ -24711,7 +24711,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(config); // config
             return boxSize;
         }
     }
@@ -24790,7 +24790,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(config); // config
             return boxSize;
         }
     }
@@ -24834,7 +24834,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(config); // config
             return boxSize;
         }
     }
@@ -24884,8 +24884,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -24932,8 +24932,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -24977,7 +24977,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(config); // config
             return boxSize;
         }
     }
@@ -25021,7 +25021,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(config); // config
             return boxSize;
         }
     }
@@ -25071,8 +25071,8 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(descr); // descr
             return boxSize;
         }
     }
@@ -25129,9 +25129,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
-            boxSize += IsoStream.CalculateSize(methods); // methods
-            boxSize += IsoStream.CalculateSize(priorities); // priorities
+            boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(methods); // methods
+            boxSize += IsoStream.CalculateBoxSize(priorities); // priorities
             return boxSize;
         }
     }
@@ -25176,7 +25176,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(config); // config
             return boxSize;
         }
     }
@@ -25218,7 +25218,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(config); // config
             return boxSize;
         }
     }
@@ -26760,16 +26760,16 @@ namespace BoxGenerator2
 
             if (groupID == primary_groupID)
             {
-                boxSize += IsoStream.CalculateSize(ViewIdentifierBox); // ViewIdentifierBox
-                boxSize += IsoStream.CalculateSize(TierInfoBox); // TierInfoBox
-                boxSize += IsoStream.CalculateSize(TierDependencyBox); // TierDependencyBox
-                boxSize += IsoStream.CalculateSize(PriorityRangeBox); // PriorityRangeBox
+                boxSize += IsoStream.CalculateBoxSize(ViewIdentifierBox); // ViewIdentifierBox
+                boxSize += IsoStream.CalculateBoxSize(TierInfoBox); // TierInfoBox
+                boxSize += IsoStream.CalculateBoxSize(TierDependencyBox); // TierDependencyBox
+                boxSize += IsoStream.CalculateBoxSize(PriorityRangeBox); // PriorityRangeBox
                 /* Optional Boxes or fields may follow when defined later */
-                boxSize += IsoStream.CalculateSize(TierBitRateBox); // TierBitRateBox
-                boxSize += IsoStream.CalculateSize(BufferingBox); // BufferingBox
-                boxSize += IsoStream.CalculateSize(InitialParameterSetBox); // InitialParameterSetBox
-                boxSize += IsoStream.CalculateSize(ProtectionSchemeInfoBox); // ProtectionSchemeInfoBox
-                boxSize += IsoStream.CalculateSize(ViewPriorityBox); // ViewPriorityBox
+                boxSize += IsoStream.CalculateBoxSize(TierBitRateBox); // TierBitRateBox
+                boxSize += IsoStream.CalculateBoxSize(BufferingBox); // BufferingBox
+                boxSize += IsoStream.CalculateBoxSize(InitialParameterSetBox); // InitialParameterSetBox
+                boxSize += IsoStream.CalculateBoxSize(ProtectionSchemeInfoBox); // ProtectionSchemeInfoBox
+                boxSize += IsoStream.CalculateBoxSize(ViewPriorityBox); // ViewPriorityBox
             }
             return boxSize;
         }
@@ -27476,18 +27476,18 @@ namespace BoxGenerator2
 
             if (groupID == primary_groupID)
             {
-                boxSize += IsoStream.CalculateSize(TierInfoBox); // TierInfoBox
-                boxSize += IsoStream.CalculateSize(SVCDependencyRangeBox); // SVCDependencyRangeBox
-                boxSize += IsoStream.CalculateSize(PriorityRangeBox); // PriorityRangeBox
+                boxSize += IsoStream.CalculateBoxSize(TierInfoBox); // TierInfoBox
+                boxSize += IsoStream.CalculateBoxSize(SVCDependencyRangeBox); // SVCDependencyRangeBox
+                boxSize += IsoStream.CalculateBoxSize(PriorityRangeBox); // PriorityRangeBox
                 /* Optional Boxes or fields may follow when defined later */
-                boxSize += IsoStream.CalculateSize(TierBitRateBox); // TierBitRateBox
-                boxSize += IsoStream.CalculateSize(RectRegionBox); // RectRegionBox
-                boxSize += IsoStream.CalculateSize(BufferingBox); // BufferingBox
-                boxSize += IsoStream.CalculateSize(TierDependencyBox); // TierDependencyBox
-                boxSize += IsoStream.CalculateSize(InitialParameterSetBox); // InitialParameterSetBox
-                boxSize += IsoStream.CalculateSize(IroiInfoBox); // IroiInfoBox
-                boxSize += IsoStream.CalculateSize(ProtectionSchemeInfoBox); // ProtectionSchemeInfoBox
-                boxSize += IsoStream.CalculateSize(TranscodingInfoBox); // TranscodingInfoBox
+                boxSize += IsoStream.CalculateBoxSize(TierBitRateBox); // TierBitRateBox
+                boxSize += IsoStream.CalculateBoxSize(RectRegionBox); // RectRegionBox
+                boxSize += IsoStream.CalculateBoxSize(BufferingBox); // BufferingBox
+                boxSize += IsoStream.CalculateBoxSize(TierDependencyBox); // TierDependencyBox
+                boxSize += IsoStream.CalculateBoxSize(InitialParameterSetBox); // InitialParameterSetBox
+                boxSize += IsoStream.CalculateBoxSize(IroiInfoBox); // IroiInfoBox
+                boxSize += IsoStream.CalculateBoxSize(ProtectionSchemeInfoBox); // ProtectionSchemeInfoBox
+                boxSize += IsoStream.CalculateBoxSize(TranscodingInfoBox); // TranscodingInfoBox
             }
             return boxSize;
         }
@@ -28358,7 +28358,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(ViewPriorityBox); // ViewPriorityBox
+            boxSize += IsoStream.CalculateBoxSize(ViewPriorityBox); // ViewPriorityBox
             return boxSize;
         }
     }
@@ -30009,7 +30009,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(sid_info); // sid_info
+            boxSize += IsoStream.CalculateBoxSize(sid_info); // sid_info
             return boxSize;
         }
     }
@@ -30052,7 +30052,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(sor_info); // sor_info
+            boxSize += IsoStream.CalculateBoxSize(sor_info); // sor_info
             return boxSize;
         }
     }
@@ -36130,7 +36130,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(OpusSpecificBox); // OpusSpecificBox
+            boxSize += IsoStream.CalculateBoxSize(OpusSpecificBox); // OpusSpecificBox
             return boxSize;
         }
     }
@@ -36332,7 +36332,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateBoxSize(config); // config
             return boxSize;
         }
     }

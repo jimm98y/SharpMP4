@@ -388,12 +388,17 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal static ulong CalculateSize(IEnumerable<Box> boxes)
+    internal static string ToFourCC(uint input)
     {
         throw new NotImplementedException();
     }
 
-    internal static ulong CalculateSize(Box box)
+    internal static ulong CalculateBoxSize(IEnumerable<Box> boxes)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong CalculateBoxSize(Box box)
     {
         throw new NotImplementedException();
     }
