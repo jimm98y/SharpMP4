@@ -6983,8 +6983,8 @@ namespace BoxGenerator2
         protected bool pad = false;
         public bool Pad { get { return this.pad; } set { this.pad = value; } }
 
-        protected byte[] language;  //  ISO-639-2/T language code
-        public byte[] Language { get { return this.language; } set { this.language = value; } }
+        protected string language;  //  ISO-639-2/T language code
+        public string Language { get { return this.language; } set { this.language = value; } }
 
         protected string notice;
         public string Notice { get { return this.notice; } set { this.notice = value; } }
@@ -6997,7 +6997,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBit(out this.pad);
-            boxSize += stream.ReadBitsArray(5, 3, out this.language); // ISO-639-2/T language code
+            boxSize += stream.ReadIso639(out this.language); // ISO-639-2/T language code
             boxSize += stream.ReadString(out this.notice);
             return boxSize;
         }
@@ -7007,7 +7007,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBit(this.pad);
-            boxSize += stream.WriteBitsArray(5, 3, this.language); // ISO-639-2/T language code
+            boxSize += stream.WriteIso639(this.language); // ISO-639-2/T language code
             boxSize += stream.WriteString(this.notice);
             return boxSize;
         }
@@ -7017,7 +7017,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 1; // pad
-            boxSize += 3 * 5; // language
+            boxSize += 16; // language
             boxSize += (ulong)notice.Length * 8; // notice
             return boxSize;
         }
@@ -10996,8 +10996,8 @@ namespace BoxGenerator2
         protected bool pad = false;
         public bool Pad { get { return this.pad; } set { this.pad = value; } }
 
-        protected byte[] language;  //  ISO-639-2/T language code
-        public byte[] Language { get { return this.language; } set { this.language = value; } }
+        protected string language;  //  ISO-639-2/T language code
+        public string Language { get { return this.language; } set { this.language = value; } }
 
         protected ushort pre_defined = 0;
         public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -11027,7 +11027,7 @@ namespace BoxGenerator2
                 boxSize += stream.ReadUInt32(out this.duration);
             }
             boxSize += stream.ReadBit(out this.pad);
-            boxSize += stream.ReadBitsArray(5, 3, out this.language); // ISO-639-2/T language code
+            boxSize += stream.ReadIso639(out this.language); // ISO-639-2/T language code
             boxSize += stream.ReadUInt16(out this.pre_defined);
             return boxSize;
         }
@@ -11054,7 +11054,7 @@ namespace BoxGenerator2
                 boxSize += stream.WriteUInt32(this.duration);
             }
             boxSize += stream.WriteBit(this.pad);
-            boxSize += stream.WriteBitsArray(5, 3, this.language); // ISO-639-2/T language code
+            boxSize += stream.WriteIso639(this.language); // ISO-639-2/T language code
             boxSize += stream.WriteUInt16(this.pre_defined);
             return boxSize;
         }
@@ -11081,7 +11081,7 @@ namespace BoxGenerator2
                 boxSize += 32; // duration
             }
             boxSize += 1; // pad
-            boxSize += 3 * 5; // language
+            boxSize += 16; // language
             boxSize += 16; // pre_defined
             return boxSize;
         }

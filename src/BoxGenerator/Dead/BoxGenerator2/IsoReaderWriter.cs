@@ -568,4 +568,14 @@ public class IsoStream
     {
         throw new NotImplementedException();
     }
+
+    internal ulong WriteIso639(string language)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong ReadIso639(out string language)
+    {
+        throw new NotImplementedException();
+    }
 }
