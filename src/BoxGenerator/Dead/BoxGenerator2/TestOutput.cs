@@ -730,8 +730,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadString(out this.ns);
-            if (boxSize < size) boxSize += stream.ReadString(out this.schema_location); // optional 
-            if (boxSize < size) boxSize += stream.ReadString(out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+            boxSize += stream.ReadString(out this.schema_location); // optional 
+            boxSize += stream.ReadString(out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
             boxSize += stream.ReadBox(out this.BitRateBox);
             return boxSize;
         }
@@ -741,8 +741,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteString(this.ns);
-            if (this.schema_location != null) boxSize += stream.WriteString(this.schema_location); // optional 
-            if (this.auxiliary_mime_types != null) boxSize += stream.WriteString(this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+            boxSize += stream.WriteString(this.schema_location); // optional 
+            boxSize += stream.WriteString(this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
             boxSize += stream.WriteBox(this.BitRateBox);
             return boxSize;
         }
@@ -752,8 +752,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += (ulong)ns.Length * 8; // ns
-            if (this.schema_location != null) boxSize += (ulong)schema_location.Length * 8; // schema_location
-            if (this.auxiliary_mime_types != null) boxSize += (ulong)auxiliary_mime_types.Length * 8; // auxiliary_mime_types
+            boxSize += (ulong)schema_location.Length * 8; // schema_location
+            boxSize += (ulong)auxiliary_mime_types.Length * 8; // auxiliary_mime_types
             boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
             return boxSize;
         }
@@ -792,10 +792,10 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadString(out this.content_encoding); // optional 
+            boxSize += stream.ReadString(out this.content_encoding); // optional 
             boxSize += stream.ReadString(out this.mime_format);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.BitRateBox); // optional 
-            if (boxSize < size) boxSize += stream.ReadBox(out this.TextConfigBox); // optional 
+            boxSize += stream.ReadBox(out this.BitRateBox); // optional 
+            boxSize += stream.ReadBox(out this.TextConfigBox); // optional 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -804,10 +804,10 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.content_encoding != null) boxSize += stream.WriteString(this.content_encoding); // optional 
+            boxSize += stream.WriteString(this.content_encoding); // optional 
             boxSize += stream.WriteString(this.mime_format);
-            if (this.BitRateBox != null) boxSize += stream.WriteBox(this.BitRateBox); // optional 
-            if (this.TextConfigBox != null) boxSize += stream.WriteBox(this.TextConfigBox); // optional 
+            boxSize += stream.WriteBox(this.BitRateBox); // optional 
+            boxSize += stream.WriteBox(this.TextConfigBox); // optional 
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -816,10 +816,10 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)content_encoding.Length * 8; // content_encoding
             boxSize += (ulong)mime_format.Length * 8; // mime_format
-            if (this.BitRateBox != null) boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
-            if (this.TextConfigBox != null) boxSize += IsoStream.CalculateSize(TextConfigBox); // TextConfigBox
+            boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateSize(TextConfigBox); // TextConfigBox
             return boxSize;
         }
     }
@@ -1152,10 +1152,10 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadString(out this.content_encoding); // optional 
+            boxSize += stream.ReadString(out this.content_encoding); // optional 
             boxSize += stream.ReadString(out this.mime_format);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.BitRateBox); // optional 
-            if (boxSize < size) boxSize += stream.ReadBox(out this.TextConfigBox); // optional 
+            boxSize += stream.ReadBox(out this.BitRateBox); // optional 
+            boxSize += stream.ReadBox(out this.TextConfigBox); // optional 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -1164,10 +1164,10 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.content_encoding != null) boxSize += stream.WriteString(this.content_encoding); // optional 
+            boxSize += stream.WriteString(this.content_encoding); // optional 
             boxSize += stream.WriteString(this.mime_format);
-            if (this.BitRateBox != null) boxSize += stream.WriteBox(this.BitRateBox); // optional 
-            if (this.TextConfigBox != null) boxSize += stream.WriteBox(this.TextConfigBox); // optional 
+            boxSize += stream.WriteBox(this.BitRateBox); // optional 
+            boxSize += stream.WriteBox(this.TextConfigBox); // optional 
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -1176,10 +1176,10 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)content_encoding.Length * 8; // content_encoding
             boxSize += (ulong)mime_format.Length * 8; // mime_format
-            if (this.BitRateBox != null) boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
-            if (this.TextConfigBox != null) boxSize += IsoStream.CalculateSize(TextConfigBox); // TextConfigBox
+            boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateSize(TextConfigBox); // TextConfigBox
             return boxSize;
         }
     }
@@ -1348,10 +1348,10 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.MetaDataKeyDeclarationBox);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.MetaDataDatatypeBox); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.MetaDataLocaleBox); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.MetaDataSetupBox); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.MetaDataExtensionsBox); // optional
+            boxSize += stream.ReadBox(out this.MetaDataDatatypeBox); // optional
+            boxSize += stream.ReadBox(out this.MetaDataLocaleBox); // optional
+            boxSize += stream.ReadBox(out this.MetaDataSetupBox); // optional
+            boxSize += stream.ReadBox(out this.MetaDataExtensionsBox); // optional
             return boxSize;
         }
 
@@ -1360,10 +1360,10 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.MetaDataKeyDeclarationBox);
-            if (this.MetaDataDatatypeBox != null) boxSize += stream.WriteBox(this.MetaDataDatatypeBox); // optional
-            if (this.MetaDataLocaleBox != null) boxSize += stream.WriteBox(this.MetaDataLocaleBox); // optional
-            if (this.MetaDataSetupBox != null) boxSize += stream.WriteBox(this.MetaDataSetupBox); // optional
-            if (this.MetaDataExtensionsBox != null) boxSize += stream.WriteBox(this.MetaDataExtensionsBox); // optional
+            boxSize += stream.WriteBox(this.MetaDataDatatypeBox); // optional
+            boxSize += stream.WriteBox(this.MetaDataLocaleBox); // optional
+            boxSize += stream.WriteBox(this.MetaDataSetupBox); // optional
+            boxSize += stream.WriteBox(this.MetaDataExtensionsBox); // optional
             return boxSize;
         }
 
@@ -1372,10 +1372,10 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(MetaDataKeyDeclarationBox); // MetaDataKeyDeclarationBox
-            if (this.MetaDataDatatypeBox != null) boxSize += IsoStream.CalculateSize(MetaDataDatatypeBox); // MetaDataDatatypeBox
-            if (this.MetaDataLocaleBox != null) boxSize += IsoStream.CalculateSize(MetaDataLocaleBox); // MetaDataLocaleBox
-            if (this.MetaDataSetupBox != null) boxSize += IsoStream.CalculateSize(MetaDataSetupBox); // MetaDataSetupBox
-            if (this.MetaDataExtensionsBox != null) boxSize += IsoStream.CalculateSize(MetaDataExtensionsBox); // MetaDataExtensionsBox
+            boxSize += IsoStream.CalculateSize(MetaDataDatatypeBox); // MetaDataDatatypeBox
+            boxSize += IsoStream.CalculateSize(MetaDataLocaleBox); // MetaDataLocaleBox
+            boxSize += IsoStream.CalculateSize(MetaDataSetupBox); // MetaDataSetupBox
+            boxSize += IsoStream.CalculateSize(MetaDataExtensionsBox); // MetaDataExtensionsBox
             return boxSize;
         }
     }
@@ -5487,7 +5487,7 @@ namespace BoxGenerator2
             boxSize += stream.ReadUInt32(out this.stereo_scheme);
             boxSize += stream.ReadUInt32(out this.length);
             boxSize += stream.ReadBytes(length, out this.stereo_indication_type);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.any_box); // optional
+            boxSize += stream.ReadBox(out this.any_box); // optional
             return boxSize;
         }
 
@@ -5500,7 +5500,7 @@ namespace BoxGenerator2
             boxSize += stream.WriteUInt32(this.stereo_scheme);
             boxSize += stream.WriteUInt32(this.length);
             boxSize += stream.WriteBytes(length, this.stereo_indication_type);
-            if (this.any_box != null) boxSize += stream.WriteBox(this.any_box); // optional
+            boxSize += stream.WriteBox(this.any_box); // optional
             return boxSize;
         }
 
@@ -5513,7 +5513,7 @@ namespace BoxGenerator2
             boxSize += 32; // stereo_scheme
             boxSize += 32; // length
             boxSize += (ulong)length * 8; // stereo_indication_type
-            if (this.any_box != null) boxSize += IsoStream.CalculateSize(any_box); // any_box
+            boxSize += IsoStream.CalculateSize(any_box); // any_box
             return boxSize;
         }
     }
@@ -6247,7 +6247,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.scheme_type_box);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.info); // optional
+            boxSize += stream.ReadBox(out this.info); // optional
             return boxSize;
         }
 
@@ -6256,7 +6256,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.scheme_type_box);
-            if (this.info != null) boxSize += stream.WriteBox(this.info); // optional
+            boxSize += stream.WriteBox(this.info); // optional
             return boxSize;
         }
 
@@ -6265,7 +6265,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(scheme_type_box); // scheme_type_box
-            if (this.info != null) boxSize += IsoStream.CalculateSize(info); // info
+            boxSize += IsoStream.CalculateSize(info); // info
             return boxSize;
         }
     }
@@ -9222,8 +9222,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.blocks_and_symbols);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.FEC_symbol_locations); //optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.File_symbol_locations); //optional
+            boxSize += stream.ReadBox(out this.FEC_symbol_locations); //optional
+            boxSize += stream.ReadBox(out this.File_symbol_locations); //optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -9233,8 +9233,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.blocks_and_symbols);
-            if (this.FEC_symbol_locations != null) boxSize += stream.WriteBox(this.FEC_symbol_locations); //optional
-            if (this.File_symbol_locations != null) boxSize += stream.WriteBox(this.File_symbol_locations); //optional
+            boxSize += stream.WriteBox(this.FEC_symbol_locations); //optional
+            boxSize += stream.WriteBox(this.File_symbol_locations); //optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -9244,8 +9244,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(blocks_and_symbols); // blocks_and_symbols
-            if (this.FEC_symbol_locations != null) boxSize += IsoStream.CalculateSize(FEC_symbol_locations); // FEC_symbol_locations
-            if (this.File_symbol_locations != null) boxSize += IsoStream.CalculateSize(File_symbol_locations); // File_symbol_locations
+            boxSize += IsoStream.CalculateSize(FEC_symbol_locations); // FEC_symbol_locations
+            boxSize += IsoStream.CalculateSize(File_symbol_locations); // File_symbol_locations
             return boxSize;
         }
     }
@@ -9286,8 +9286,8 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadUInt16(out this.entry_count);
             boxSize += stream.ReadBox(entry_count, out this.partition_entries);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.session_info); //optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.group_id_to_name); //optional
+            boxSize += stream.ReadBox(out this.session_info); //optional
+            boxSize += stream.ReadBox(out this.group_id_to_name); //optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -9298,8 +9298,8 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteUInt16(this.entry_count);
             boxSize += stream.WriteBox(entry_count, this.partition_entries);
-            if (this.session_info != null) boxSize += stream.WriteBox(this.session_info); //optional
-            if (this.group_id_to_name != null) boxSize += stream.WriteBox(this.group_id_to_name); //optional
+            boxSize += stream.WriteBox(this.session_info); //optional
+            boxSize += stream.WriteBox(this.group_id_to_name); //optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -9310,8 +9310,8 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += 16; // entry_count
             boxSize += IsoStream.CalculateSize(partition_entries); // partition_entries
-            if (this.session_info != null) boxSize += IsoStream.CalculateSize(session_info); // session_info
-            if (this.group_id_to_name != null) boxSize += IsoStream.CalculateSize(group_id_to_name); // group_id_to_name
+            boxSize += IsoStream.CalculateSize(session_info); // session_info
+            boxSize += IsoStream.CalculateSize(group_id_to_name); // group_id_to_name
             return boxSize;
         }
     }
@@ -10576,13 +10576,13 @@ namespace BoxGenerator2
                 boxSize += stream.ReadUInt16(out this.item_protection_index);
                 boxSize += stream.ReadString(out this.item_name);
                 boxSize += stream.ReadString(out this.content_type);
-                if (boxSize < size) boxSize += stream.ReadString(out this.content_encoding); //optional
+                boxSize += stream.ReadString(out this.content_encoding); //optional
             }
 
             if (version == 1)
             {
-                if (boxSize < size) boxSize += stream.ReadUInt32(out this.extension_type); //optional
-                if (boxSize < size) boxSize += stream.ReadClass(out this.ItemInfoExtension); //optional
+                boxSize += stream.ReadUInt32(out this.extension_type); //optional
+                boxSize += stream.ReadClass(out this.ItemInfoExtension); //optional
             }
 
             if (version >= 2)
@@ -10604,7 +10604,7 @@ namespace BoxGenerator2
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
                     boxSize += stream.ReadString(out this.content_type);
-                    if (boxSize < size) boxSize += stream.ReadString(out this.content_encoding); //optional
+                    boxSize += stream.ReadString(out this.content_encoding); //optional
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
@@ -10627,13 +10627,13 @@ namespace BoxGenerator2
                 boxSize += stream.WriteUInt16(this.item_protection_index);
                 boxSize += stream.WriteString(this.item_name);
                 boxSize += stream.WriteString(this.content_type);
-                if (this.content_encoding != null) boxSize += stream.WriteString(this.content_encoding); //optional
+                boxSize += stream.WriteString(this.content_encoding); //optional
             }
 
             if (version == 1)
             {
-                if (this.extension_type != null) boxSize += stream.WriteUInt32(this.extension_type); //optional
-                if (this.ItemInfoExtension != null) boxSize += stream.WriteClass(this.ItemInfoExtension); //optional
+                boxSize += stream.WriteUInt32(this.extension_type); //optional
+                boxSize += stream.WriteClass(this.ItemInfoExtension); //optional
             }
 
             if (version >= 2)
@@ -10655,7 +10655,7 @@ namespace BoxGenerator2
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
                     boxSize += stream.WriteString(this.content_type);
-                    if (this.content_encoding != null) boxSize += stream.WriteString(this.content_encoding); //optional
+                    boxSize += stream.WriteString(this.content_encoding); //optional
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
@@ -10678,13 +10678,13 @@ namespace BoxGenerator2
                 boxSize += 16; // item_protection_index
                 boxSize += (ulong)item_name.Length * 8; // item_name
                 boxSize += (ulong)content_type.Length * 8; // content_type
-                if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+                boxSize += (ulong)content_encoding.Length * 8; // content_encoding
             }
 
             if (version == 1)
             {
-                if (this.extension_type != null) boxSize += 32; // extension_type
-                if (this.ItemInfoExtension != null) boxSize += IsoStream.CalculateClassSize(ItemInfoExtension); // ItemInfoExtension
+                boxSize += 32; // extension_type
+                boxSize += IsoStream.CalculateClassSize(ItemInfoExtension); // ItemInfoExtension
             }
 
             if (version >= 2)
@@ -10706,7 +10706,7 @@ namespace BoxGenerator2
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
                     boxSize += (ulong)content_type.Length * 8; // content_type
-                    if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+                    boxSize += (ulong)content_encoding.Length * 8; // content_encoding
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
@@ -11389,15 +11389,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.theHandler);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.primary_resource); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.file_locations); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.item_locations); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.protections); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.item_infos); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.IPMP_control); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.item_refs); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.item_data); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.other_boxes); // optional
+            boxSize += stream.ReadBox(out this.primary_resource); // optional
+            boxSize += stream.ReadBox(out this.file_locations); // optional
+            boxSize += stream.ReadBox(out this.item_locations); // optional
+            boxSize += stream.ReadBox(out this.protections); // optional
+            boxSize += stream.ReadBox(out this.item_infos); // optional
+            boxSize += stream.ReadBox(out this.IPMP_control); // optional
+            boxSize += stream.ReadBox(out this.item_refs); // optional
+            boxSize += stream.ReadBox(out this.item_data); // optional
+            boxSize += stream.ReadBox(out this.other_boxes); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -11407,15 +11407,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.theHandler);
-            if (this.primary_resource != null) boxSize += stream.WriteBox(this.primary_resource); // optional
-            if (this.file_locations != null) boxSize += stream.WriteBox(this.file_locations); // optional
-            if (this.item_locations != null) boxSize += stream.WriteBox(this.item_locations); // optional
-            if (this.protections != null) boxSize += stream.WriteBox(this.protections); // optional
-            if (this.item_infos != null) boxSize += stream.WriteBox(this.item_infos); // optional
-            if (this.IPMP_control != null) boxSize += stream.WriteBox(this.IPMP_control); // optional
-            if (this.item_refs != null) boxSize += stream.WriteBox(this.item_refs); // optional
-            if (this.item_data != null) boxSize += stream.WriteBox(this.item_data); // optional
-            if (this.other_boxes != null) boxSize += stream.WriteBox(this.other_boxes); // optional
+            boxSize += stream.WriteBox(this.primary_resource); // optional
+            boxSize += stream.WriteBox(this.file_locations); // optional
+            boxSize += stream.WriteBox(this.item_locations); // optional
+            boxSize += stream.WriteBox(this.protections); // optional
+            boxSize += stream.WriteBox(this.item_infos); // optional
+            boxSize += stream.WriteBox(this.IPMP_control); // optional
+            boxSize += stream.WriteBox(this.item_refs); // optional
+            boxSize += stream.WriteBox(this.item_data); // optional
+            boxSize += stream.WriteBox(this.other_boxes); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -11425,15 +11425,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(theHandler); // theHandler
-            if (this.primary_resource != null) boxSize += IsoStream.CalculateSize(primary_resource); // primary_resource
-            if (this.file_locations != null) boxSize += IsoStream.CalculateSize(file_locations); // file_locations
-            if (this.item_locations != null) boxSize += IsoStream.CalculateSize(item_locations); // item_locations
-            if (this.protections != null) boxSize += IsoStream.CalculateSize(protections); // protections
-            if (this.item_infos != null) boxSize += IsoStream.CalculateSize(item_infos); // item_infos
-            if (this.IPMP_control != null) boxSize += IsoStream.CalculateSize(IPMP_control); // IPMP_control
-            if (this.item_refs != null) boxSize += IsoStream.CalculateSize(item_refs); // item_refs
-            if (this.item_data != null) boxSize += IsoStream.CalculateSize(item_data); // item_data
-            if (this.other_boxes != null) boxSize += IsoStream.CalculateSize(other_boxes); // other_boxes
+            boxSize += IsoStream.CalculateSize(primary_resource); // primary_resource
+            boxSize += IsoStream.CalculateSize(file_locations); // file_locations
+            boxSize += IsoStream.CalculateSize(item_locations); // item_locations
+            boxSize += IsoStream.CalculateSize(protections); // protections
+            boxSize += IsoStream.CalculateSize(item_infos); // item_infos
+            boxSize += IsoStream.CalculateSize(IPMP_control); // IPMP_control
+            boxSize += IsoStream.CalculateSize(item_refs); // item_refs
+            boxSize += IsoStream.CalculateSize(item_data); // item_data
+            boxSize += IsoStream.CalculateSize(other_boxes); // other_boxes
             return boxSize;
         }
     }
@@ -12296,7 +12296,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.original_format);
             boxSize += stream.ReadBox(out this.scheme_type_box);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.info); // optional
+            boxSize += stream.ReadBox(out this.info); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -12307,7 +12307,7 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.original_format);
             boxSize += stream.WriteBox(this.scheme_type_box);
-            if (this.info != null) boxSize += stream.WriteBox(this.info); // optional
+            boxSize += stream.WriteBox(this.info); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -12318,7 +12318,7 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(original_format); // original_format
             boxSize += IsoStream.CalculateSize(scheme_type_box); // scheme_type_box
-            if (this.info != null) boxSize += IsoStream.CalculateSize(info); // info
+            boxSize += IsoStream.CalculateSize(info); // info
             return boxSize;
         }
     }
@@ -13245,8 +13245,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.original_format);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scheme_type_box); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.info); // optional
+            boxSize += stream.ReadBox(out this.scheme_type_box); // optional
+            boxSize += stream.ReadBox(out this.info); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -13256,8 +13256,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.original_format);
-            if (this.scheme_type_box != null) boxSize += stream.WriteBox(this.scheme_type_box); // optional
-            if (this.info != null) boxSize += stream.WriteBox(this.info); // optional
+            boxSize += stream.WriteBox(this.scheme_type_box); // optional
+            boxSize += stream.WriteBox(this.info); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -13267,8 +13267,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(original_format); // original_format
-            if (this.scheme_type_box != null) boxSize += IsoStream.CalculateSize(scheme_type_box); // scheme_type_box
-            if (this.info != null) boxSize += IsoStream.CalculateSize(info); // info
+            boxSize += IsoStream.CalculateSize(scheme_type_box); // scheme_type_box
+            boxSize += IsoStream.CalculateSize(info); // info
             return boxSize;
         }
     }
@@ -14702,7 +14702,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadUInt32(out this.track_ID); // all the following are optional fields
+            boxSize += stream.ReadUInt32(out this.track_ID); // all the following are optional fields
             /*  their presence is indicated by bits in the tf_flags */
             boxSize += stream.ReadUInt64(out this.base_data_offset);
             boxSize += stream.ReadUInt32(out this.sample_description_index);
@@ -14716,7 +14716,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.track_ID != null) boxSize += stream.WriteUInt32(this.track_ID); // all the following are optional fields
+            boxSize += stream.WriteUInt32(this.track_ID); // all the following are optional fields
             /*  their presence is indicated by bits in the tf_flags */
             boxSize += stream.WriteUInt64(this.base_data_offset);
             boxSize += stream.WriteUInt32(this.sample_description_index);
@@ -14730,7 +14730,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.track_ID != null) boxSize += 32; // track_ID
+            boxSize += 32; // track_ID
             /*  their presence is indicated by bits in the tf_flags */
             boxSize += 64; // base_data_offset
             boxSize += 32; // sample_description_index
@@ -15398,9 +15398,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadUInt32(out this.sample_count); // the following are optional fields
+            boxSize += stream.ReadUInt32(out this.sample_count); // the following are optional fields
             boxSize += stream.ReadInt32(out this.data_offset);
-            if (boxSize < size) boxSize += stream.ReadUInt32(out this.first_sample_flags); // all fields in the following array are optional
+            boxSize += stream.ReadUInt32(out this.first_sample_flags); // all fields in the following array are optional
             /*  as indicated by bits set in the tr_flags */
 
             return boxSize;
@@ -15410,9 +15410,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.sample_count != null) boxSize += stream.WriteUInt32(this.sample_count); // the following are optional fields
+            boxSize += stream.WriteUInt32(this.sample_count); // the following are optional fields
             boxSize += stream.WriteInt32(this.data_offset);
-            if (this.first_sample_flags != null) boxSize += stream.WriteUInt32(this.first_sample_flags); // all fields in the following array are optional
+            boxSize += stream.WriteUInt32(this.first_sample_flags); // all fields in the following array are optional
             /*  as indicated by bits set in the tr_flags */
 
             return boxSize;
@@ -15422,9 +15422,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.sample_count != null) boxSize += 32; // sample_count
+            boxSize += 32; // sample_count
             boxSize += 32; // data_offset
-            if (this.first_sample_flags != null) boxSize += 32; // first_sample_flags
+            boxSize += 32; // first_sample_flags
             /*  as indicated by bits set in the tr_flags */
 
             return boxSize;
@@ -16846,11 +16846,11 @@ namespace BoxGenerator2
                     boxSize += stream.ReadUInt16(out this.view_count);
                 }
             }
-            if (boxSize < size) boxSize += stream.ReadBox(out this.subset_stream_info); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.relation_attributes); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.subset_stream_bit_rate); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.subset_stream_buffering); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.multiview_scene_info); // optional
+            boxSize += stream.ReadBox(out this.subset_stream_info); // optional
+            boxSize += stream.ReadBox(out this.relation_attributes); // optional
+            boxSize += stream.ReadBox(out this.subset_stream_bit_rate); // optional
+            boxSize += stream.ReadBox(out this.subset_stream_buffering); // optional
+            boxSize += stream.ReadBox(out this.multiview_scene_info); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -16891,11 +16891,11 @@ namespace BoxGenerator2
                     boxSize += stream.WriteUInt16(this.view_count);
                 }
             }
-            if (this.subset_stream_info != null) boxSize += stream.WriteBox(this.subset_stream_info); // optional
-            if (this.relation_attributes != null) boxSize += stream.WriteBox(this.relation_attributes); // optional
-            if (this.subset_stream_bit_rate != null) boxSize += stream.WriteBox(this.subset_stream_bit_rate); // optional
-            if (this.subset_stream_buffering != null) boxSize += stream.WriteBox(this.subset_stream_buffering); // optional
-            if (this.multiview_scene_info != null) boxSize += stream.WriteBox(this.multiview_scene_info); // optional
+            boxSize += stream.WriteBox(this.subset_stream_info); // optional
+            boxSize += stream.WriteBox(this.relation_attributes); // optional
+            boxSize += stream.WriteBox(this.subset_stream_bit_rate); // optional
+            boxSize += stream.WriteBox(this.subset_stream_buffering); // optional
+            boxSize += stream.WriteBox(this.multiview_scene_info); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -16936,11 +16936,11 @@ namespace BoxGenerator2
                     boxSize += 16; // view_count
                 }
             }
-            if (this.subset_stream_info != null) boxSize += IsoStream.CalculateSize(subset_stream_info); // subset_stream_info
-            if (this.relation_attributes != null) boxSize += IsoStream.CalculateSize(relation_attributes); // relation_attributes
-            if (this.subset_stream_bit_rate != null) boxSize += IsoStream.CalculateSize(subset_stream_bit_rate); // subset_stream_bit_rate
-            if (this.subset_stream_buffering != null) boxSize += IsoStream.CalculateSize(subset_stream_buffering); // subset_stream_buffering
-            if (this.multiview_scene_info != null) boxSize += IsoStream.CalculateSize(multiview_scene_info); // multiview_scene_info
+            boxSize += IsoStream.CalculateSize(subset_stream_info); // subset_stream_info
+            boxSize += IsoStream.CalculateSize(relation_attributes); // relation_attributes
+            boxSize += IsoStream.CalculateSize(subset_stream_bit_rate); // subset_stream_bit_rate
+            boxSize += IsoStream.CalculateSize(subset_stream_buffering); // subset_stream_buffering
+            boxSize += IsoStream.CalculateSize(multiview_scene_info); // multiview_scene_info
             return boxSize;
         }
     }
@@ -17051,11 +17051,11 @@ namespace BoxGenerator2
             boxSize += stream.ReadUInt16(out this.depth_width);
             boxSize += stream.ReadUInt16(out this.depth_height);
             /*  The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox).  */
-            if (boxSize < size) boxSize += stream.ReadUInt16(out this.depth_hor_mult_minus1); // optional
-            if (boxSize < size) boxSize += stream.ReadUInt16(out this.depth_ver_mult_minus1); // optional
-            if (boxSize < size) boxSize += stream.ReadBits(4, out this.depth_hor_rsh); // optional
-            if (boxSize < size) boxSize += stream.ReadBits(4, out this.depth_ver_rsh); // optional
-            if (boxSize < size) boxSize += stream.ReadUInt16(out this.grid_pos_num_views); // optional
+            boxSize += stream.ReadUInt16(out this.depth_hor_mult_minus1); // optional
+            boxSize += stream.ReadUInt16(out this.depth_ver_mult_minus1); // optional
+            boxSize += stream.ReadBits(4, out this.depth_hor_rsh); // optional
+            boxSize += stream.ReadBits(4, out this.depth_ver_rsh); // optional
+            boxSize += stream.ReadUInt16(out this.grid_pos_num_views); // optional
 
             for (int i = 0; i < grid_pos_num_views; i++)
             {
@@ -17074,11 +17074,11 @@ namespace BoxGenerator2
             boxSize += stream.WriteUInt16(this.depth_width);
             boxSize += stream.WriteUInt16(this.depth_height);
             /*  The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox).  */
-            if (this.depth_hor_mult_minus1 != null) boxSize += stream.WriteUInt16(this.depth_hor_mult_minus1); // optional
-            if (this.depth_ver_mult_minus1 != null) boxSize += stream.WriteUInt16(this.depth_ver_mult_minus1); // optional
-            if (this.depth_hor_rsh != null) boxSize += stream.WriteBits(4, this.depth_hor_rsh); // optional
-            if (this.depth_ver_rsh != null) boxSize += stream.WriteBits(4, this.depth_ver_rsh); // optional
-            if (this.grid_pos_num_views != null) boxSize += stream.WriteUInt16(this.grid_pos_num_views); // optional
+            boxSize += stream.WriteUInt16(this.depth_hor_mult_minus1); // optional
+            boxSize += stream.WriteUInt16(this.depth_ver_mult_minus1); // optional
+            boxSize += stream.WriteBits(4, this.depth_hor_rsh); // optional
+            boxSize += stream.WriteBits(4, this.depth_ver_rsh); // optional
+            boxSize += stream.WriteUInt16(this.grid_pos_num_views); // optional
 
             for (int i = 0; i < grid_pos_num_views; i++)
             {
@@ -17097,11 +17097,11 @@ namespace BoxGenerator2
             boxSize += 16; // depth_width
             boxSize += 16; // depth_height
             /*  The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox).  */
-            if (this.depth_hor_mult_minus1 != null) boxSize += 16; // depth_hor_mult_minus1
-            if (this.depth_ver_mult_minus1 != null) boxSize += 16; // depth_ver_mult_minus1
-            if (this.depth_hor_rsh != null) boxSize += 4; // depth_hor_rsh
-            if (this.depth_ver_rsh != null) boxSize += 4; // depth_ver_rsh
-            if (this.grid_pos_num_views != null) boxSize += 16; // grid_pos_num_views
+            boxSize += 16; // depth_hor_mult_minus1
+            boxSize += 16; // depth_ver_mult_minus1
+            boxSize += 4; // depth_hor_rsh
+            boxSize += 4; // depth_ver_rsh
+            boxSize += 16; // grid_pos_num_views
 
             for (int i = 0; i < grid_pos_num_views; i++)
             {
@@ -19445,7 +19445,7 @@ namespace BoxGenerator2
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
             boxSize += stream.ReadBox(out this.label); // recommended
-            if (boxSize < size) boxSize += stream.ReadBox(out this.BitRateBox); // optional
+            boxSize += stream.ReadBox(out this.BitRateBox); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -19456,7 +19456,7 @@ namespace BoxGenerator2
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
             boxSize += stream.WriteBox(this.label); // recommended
-            if (this.BitRateBox != null) boxSize += stream.WriteBox(this.BitRateBox); // optional
+            boxSize += stream.WriteBox(this.BitRateBox); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -19467,7 +19467,7 @@ namespace BoxGenerator2
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
             boxSize += IsoStream.CalculateSize(label); // label
-            if (this.BitRateBox != null) boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
             return boxSize;
         }
     }
@@ -20195,9 +20195,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadString(out this.content_encoding); // optional
+            boxSize += stream.ReadString(out this.content_encoding); // optional
             boxSize += stream.ReadString(out this.ns);
-            if (boxSize < size) boxSize += stream.ReadString(out this.schema_location); // optional
+            boxSize += stream.ReadString(out this.schema_location); // optional
             return boxSize;
         }
 
@@ -20205,9 +20205,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.content_encoding != null) boxSize += stream.WriteString(this.content_encoding); // optional
+            boxSize += stream.WriteString(this.content_encoding); // optional
             boxSize += stream.WriteString(this.ns);
-            if (this.schema_location != null) boxSize += stream.WriteString(this.schema_location); // optional
+            boxSize += stream.WriteString(this.schema_location); // optional
             return boxSize;
         }
 
@@ -20215,9 +20215,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)content_encoding.Length * 8; // content_encoding
             boxSize += (ulong)ns.Length * 8; // ns
-            if (this.schema_location != null) boxSize += (ulong)schema_location.Length * 8; // schema_location
+            boxSize += (ulong)schema_location.Length * 8; // schema_location
             return boxSize;
         }
     }
@@ -20251,9 +20251,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadString(out this.content_encoding); // optional
+            boxSize += stream.ReadString(out this.content_encoding); // optional
             boxSize += stream.ReadString(out this.mime_format);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.TextConfigBox); // optional
+            boxSize += stream.ReadBox(out this.TextConfigBox); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -20262,9 +20262,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.content_encoding != null) boxSize += stream.WriteString(this.content_encoding); // optional
+            boxSize += stream.WriteString(this.content_encoding); // optional
             boxSize += stream.WriteString(this.mime_format);
-            if (this.TextConfigBox != null) boxSize += stream.WriteBox(this.TextConfigBox); // optional
+            boxSize += stream.WriteBox(this.TextConfigBox); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -20273,9 +20273,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.content_encoding != null) boxSize += (ulong)content_encoding.Length * 8; // content_encoding
+            boxSize += (ulong)content_encoding.Length * 8; // content_encoding
             boxSize += (ulong)mime_format.Length * 8; // mime_format
-            if (this.TextConfigBox != null) boxSize += IsoStream.CalculateSize(TextConfigBox); // TextConfigBox
+            boxSize += IsoStream.CalculateSize(TextConfigBox); // TextConfigBox
             return boxSize;
         }
     }
@@ -20306,7 +20306,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.the_label);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.init); // optional
+            boxSize += stream.ReadBox(out this.init); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -20316,7 +20316,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.the_label);
-            if (this.init != null) boxSize += stream.WriteBox(this.init); // optional
+            boxSize += stream.WriteBox(this.init); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -20326,7 +20326,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(the_label); // the_label
-            if (this.init != null) boxSize += IsoStream.CalculateSize(init); // init
+            boxSize += IsoStream.CalculateSize(init); // init
             return boxSize;
         }
     }
@@ -20358,7 +20358,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.MetaDataKeyTableBox); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.BitRateBox); // optional
+            boxSize += stream.ReadBox(out this.BitRateBox); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -20368,7 +20368,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.MetaDataKeyTableBox); // mandatory
-            if (this.BitRateBox != null) boxSize += stream.WriteBox(this.BitRateBox); // optional
+            boxSize += stream.WriteBox(this.BitRateBox); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -20378,7 +20378,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(MetaDataKeyTableBox); // MetaDataKeyTableBox
-            if (this.BitRateBox != null) boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateSize(BitRateBox); // BitRateBox
             return boxSize;
         }
     }
@@ -20999,8 +20999,8 @@ namespace BoxGenerator2
             boxSize += stream.ReadBytes(32, out this.compressorname);
             boxSize += stream.ReadUInt16(out this.depth);
             boxSize += stream.ReadInt16(out this.pre_defined1); // other boxes from derived specifications
-            if (boxSize < size) boxSize += stream.ReadBox(out this.clap); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.pasp); // optional
+            boxSize += stream.ReadBox(out this.clap); // optional
+            boxSize += stream.ReadBox(out this.pasp); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -21021,8 +21021,8 @@ namespace BoxGenerator2
             boxSize += stream.WriteBytes(32, this.compressorname);
             boxSize += stream.WriteUInt16(this.depth);
             boxSize += stream.WriteInt16(this.pre_defined1); // other boxes from derived specifications
-            if (this.clap != null) boxSize += stream.WriteBox(this.clap); // optional
-            if (this.pasp != null) boxSize += stream.WriteBox(this.pasp); // optional
+            boxSize += stream.WriteBox(this.clap); // optional
+            boxSize += stream.WriteBox(this.pasp); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -21043,8 +21043,8 @@ namespace BoxGenerator2
             boxSize += 32 * 8; // compressorname
             boxSize += 16; // depth
             boxSize += 16; // pre_defined1
-            if (this.clap != null) boxSize += IsoStream.CalculateSize(clap); // clap
-            if (this.pasp != null) boxSize += IsoStream.CalculateSize(pasp); // pasp
+            boxSize += IsoStream.CalculateSize(clap); // clap
+            boxSize += IsoStream.CalculateSize(pasp); // pasp
             return boxSize;
         }
     }
@@ -22264,7 +22264,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -22274,7 +22274,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -22284,7 +22284,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -22357,7 +22357,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -22367,7 +22367,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -22377,7 +22377,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -22408,7 +22408,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -22418,7 +22418,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -22428,7 +22428,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -22459,7 +22459,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.lhvcconfig);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -22469,7 +22469,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.lhvcconfig);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -22479,7 +22479,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(lhvcconfig); // lhvcconfig
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -22510,7 +22510,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.lhvcconfig);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -22520,7 +22520,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.lhvcconfig);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -22530,7 +22530,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(lhvcconfig); // lhvcconfig
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -22561,7 +22561,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -22571,7 +22571,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -22581,7 +22581,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -22612,7 +22612,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -22622,7 +22622,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -22632,7 +22632,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -22663,7 +22663,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -22673,7 +22673,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -22683,7 +22683,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -22758,7 +22758,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             return boxSize;
         }
 
@@ -22767,7 +22767,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             return boxSize;
         }
 
@@ -22776,7 +22776,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -22834,15 +22834,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_identifiers); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_priority_method); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcdconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.view_identifiers); // optional
+            boxSize += stream.ReadBox(out this.mvcconfig); // optional
+            boxSize += stream.ReadBox(out this.view_priority_method); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.mvcdconfig); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -22851,15 +22851,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.view_identifiers != null) boxSize += stream.WriteBox(this.view_identifiers); // optional
-            if (this.mvcconfig != null) boxSize += stream.WriteBox(this.mvcconfig); // optional
-            if (this.view_priority_method != null) boxSize += stream.WriteBox(this.view_priority_method); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.mvcdconfig != null) boxSize += stream.WriteBox(this.mvcdconfig); // optional
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.view_identifiers); // optional
+            boxSize += stream.WriteBox(this.mvcconfig); // optional
+            boxSize += stream.WriteBox(this.view_priority_method); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.mvcdconfig); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -22868,15 +22868,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.view_identifiers != null) boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.mvcconfig != null) boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            if (this.view_priority_method != null) boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.mvcdconfig != null) boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -22934,15 +22934,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_identifiers); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_priority_method); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcdconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.view_identifiers); // optional
+            boxSize += stream.ReadBox(out this.mvcconfig); // optional
+            boxSize += stream.ReadBox(out this.view_priority_method); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.mvcdconfig); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -22951,15 +22951,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.view_identifiers != null) boxSize += stream.WriteBox(this.view_identifiers); // optional
-            if (this.mvcconfig != null) boxSize += stream.WriteBox(this.mvcconfig); // optional
-            if (this.view_priority_method != null) boxSize += stream.WriteBox(this.view_priority_method); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.mvcdconfig != null) boxSize += stream.WriteBox(this.mvcdconfig); // optional
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.view_identifiers); // optional
+            boxSize += stream.WriteBox(this.mvcconfig); // optional
+            boxSize += stream.WriteBox(this.view_priority_method); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.mvcdconfig); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -22968,15 +22968,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.view_identifiers != null) boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.mvcconfig != null) boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            if (this.view_priority_method != null) boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.mvcdconfig != null) boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23007,7 +23007,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             return boxSize;
         }
 
@@ -23016,7 +23016,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             return boxSize;
         }
 
@@ -23025,7 +23025,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -23083,15 +23083,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_identifiers); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_priority_method); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcdconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.view_identifiers); // optional
+            boxSize += stream.ReadBox(out this.mvcconfig); // optional
+            boxSize += stream.ReadBox(out this.view_priority_method); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.mvcdconfig); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -23100,15 +23100,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.view_identifiers != null) boxSize += stream.WriteBox(this.view_identifiers); // optional
-            if (this.mvcconfig != null) boxSize += stream.WriteBox(this.mvcconfig); // optional
-            if (this.view_priority_method != null) boxSize += stream.WriteBox(this.view_priority_method); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.mvcdconfig != null) boxSize += stream.WriteBox(this.mvcdconfig); // optional
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.view_identifiers); // optional
+            boxSize += stream.WriteBox(this.mvcconfig); // optional
+            boxSize += stream.WriteBox(this.view_priority_method); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.mvcdconfig); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -23117,15 +23117,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.view_identifiers != null) boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.mvcconfig != null) boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            if (this.view_priority_method != null) boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.mvcdconfig != null) boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23183,15 +23183,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_identifiers); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_priority_method); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcdconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.view_identifiers); // optional
+            boxSize += stream.ReadBox(out this.mvcconfig); // optional
+            boxSize += stream.ReadBox(out this.view_priority_method); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.mvcdconfig); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -23200,15 +23200,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.view_identifiers != null) boxSize += stream.WriteBox(this.view_identifiers); // optional
-            if (this.mvcconfig != null) boxSize += stream.WriteBox(this.mvcconfig); // optional
-            if (this.view_priority_method != null) boxSize += stream.WriteBox(this.view_priority_method); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.mvcdconfig != null) boxSize += stream.WriteBox(this.mvcdconfig); // optional
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.view_identifiers); // optional
+            boxSize += stream.WriteBox(this.mvcconfig); // optional
+            boxSize += stream.WriteBox(this.view_priority_method); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.mvcdconfig); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -23217,15 +23217,15 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.view_identifiers != null) boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.mvcconfig != null) boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            if (this.view_priority_method != null) boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.mvcdconfig != null) boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
+            boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
+            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23288,15 +23288,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.mvcconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_priority_method); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcdconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.view_priority_method); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.mvcdconfig); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -23306,15 +23306,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.mvcconfig); // mandatory
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.view_priority_method != null) boxSize += stream.WriteBox(this.view_priority_method); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.mvcdconfig != null) boxSize += stream.WriteBox(this.mvcdconfig); // optional
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.view_priority_method); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.mvcdconfig); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -23324,15 +23324,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.view_priority_method != null) boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.mvcdconfig != null) boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23395,15 +23395,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.mvcconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_priority_method); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcdconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.view_priority_method); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.mvcdconfig); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -23413,15 +23413,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.mvcconfig); // mandatory
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.view_priority_method != null) boxSize += stream.WriteBox(this.view_priority_method); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.mvcdconfig != null) boxSize += stream.WriteBox(this.mvcdconfig); // optional
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.view_priority_method); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.mvcdconfig); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -23431,15 +23431,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.view_priority_method != null) boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.mvcdconfig != null) boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23502,15 +23502,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.mvcconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_priority_method); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcdconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.view_priority_method); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.mvcdconfig); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -23520,15 +23520,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.mvcconfig); // mandatory
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.view_priority_method != null) boxSize += stream.WriteBox(this.view_priority_method); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.mvcdconfig != null) boxSize += stream.WriteBox(this.mvcdconfig); // optional
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.view_priority_method); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.mvcdconfig); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -23538,15 +23538,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.view_priority_method != null) boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.mvcdconfig != null) boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23609,15 +23609,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.mvcconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.view_priority_method); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvcdconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.view_priority_method); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.mvcdconfig); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -23627,15 +23627,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.mvcconfig); // mandatory
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.view_priority_method != null) boxSize += stream.WriteBox(this.view_priority_method); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.mvcdconfig != null) boxSize += stream.WriteBox(this.mvcdconfig); // optional
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.view_priority_method); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.mvcdconfig); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -23645,15 +23645,15 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(mvcconfig); // mvcconfig
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.view_priority_method != null) boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.mvcdconfig != null) boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(view_priority_method); // view_priority_method
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23705,12 +23705,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.mvcdconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -23720,12 +23720,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.mvcdconfig); // mandatory
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -23735,12 +23735,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23792,12 +23792,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.mvcdconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -23807,12 +23807,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.mvcdconfig); // mandatory
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -23822,12 +23822,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23879,12 +23879,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.mvcdconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -23894,12 +23894,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.mvcdconfig); // mandatory
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -23909,12 +23909,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -23966,12 +23966,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.mvcdconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.a3dconfig); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.a3dconfig); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -23981,12 +23981,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.mvcdconfig); // mandatory
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
-            if (this.a3dconfig != null) boxSize += stream.WriteBox(this.a3dconfig); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.a3dconfig); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -23996,12 +23996,12 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(mvcdconfig); // mvcdconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
-            if (this.a3dconfig != null) boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
             return boxSize;
         }
     }
@@ -24048,11 +24048,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.a3dconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24062,11 +24062,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.a3dconfig); // mandatory
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24076,11 +24076,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
             return boxSize;
         }
     }
@@ -24127,11 +24127,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.a3dconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24141,11 +24141,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.a3dconfig); // mandatory
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24155,11 +24155,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
             return boxSize;
         }
     }
@@ -24206,11 +24206,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.a3dconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24220,11 +24220,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.a3dconfig); // mandatory
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24234,11 +24234,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
             return boxSize;
         }
     }
@@ -24285,11 +24285,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.a3dconfig); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
+            boxSize += stream.ReadBox(out this.mvdscalinfosei); // optional
             boxSize += stream.ReadBox(out this.view_identifiers); // mandatory
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.intrinsic_camera_params); // optional
+            boxSize += stream.ReadBox(out this.extrinsic_camera_params); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24299,11 +24299,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.a3dconfig); // mandatory
-            if (this.mvdscalinfosei != null) boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
+            boxSize += stream.WriteBox(this.mvdscalinfosei); // optional
             boxSize += stream.WriteBox(this.view_identifiers); // mandatory
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.intrinsic_camera_params != null) boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
-            if (this.extrinsic_camera_params != null) boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.intrinsic_camera_params); // optional
+            boxSize += stream.WriteBox(this.extrinsic_camera_params); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24313,11 +24313,11 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(a3dconfig); // a3dconfig
-            if (this.mvdscalinfosei != null) boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
+            boxSize += IsoStream.CalculateSize(mvdscalinfosei); // mvdscalinfosei
             boxSize += IsoStream.CalculateSize(view_identifiers); // view_identifiers
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.intrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
-            if (this.extrinsic_camera_params != null) boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(intrinsic_camera_params); // intrinsic_camera_params
+            boxSize += IsoStream.CalculateSize(extrinsic_camera_params); // extrinsic_camera_params
             return boxSize;
         }
     }
@@ -24351,9 +24351,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBox(out this.svcconfig); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.method); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24362,9 +24362,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBox(this.svcconfig); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.method); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24373,9 +24373,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.svcconfig != null) boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(method); // method
             return boxSize;
         }
     }
@@ -24405,9 +24405,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBox(out this.svcconfig); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.method); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24416,9 +24416,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBox(this.svcconfig); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.method); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24427,9 +24427,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.svcconfig != null) boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(method); // method
             return boxSize;
         }
     }
@@ -24463,9 +24463,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBox(out this.svcconfig); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.method); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24474,9 +24474,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBox(this.svcconfig); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.method); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24485,9 +24485,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.svcconfig != null) boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(method); // method
             return boxSize;
         }
     }
@@ -24517,9 +24517,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.svcconfig); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBox(out this.svcconfig); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.method); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24528,9 +24528,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.svcconfig != null) boxSize += stream.WriteBox(this.svcconfig); // optional
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBox(this.svcconfig); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.method); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24539,9 +24539,9 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.svcconfig != null) boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(method); // method
             return boxSize;
         }
     }
@@ -24581,9 +24581,9 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.svcconfig);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.method); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24593,9 +24593,9 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.svcconfig);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.method); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24605,9 +24605,9 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(method); // method
             return boxSize;
         }
     }
@@ -24641,9 +24641,9 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.svcconfig);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.scalability); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.method); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.scalability); // optional
+            boxSize += stream.ReadBox(out this.method); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24653,9 +24653,9 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.svcconfig);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
-            if (this.scalability != null) boxSize += stream.WriteBox(this.scalability); // optional
-            if (this.method != null) boxSize += stream.WriteBox(this.method); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.scalability); // optional
+            boxSize += stream.WriteBox(this.method); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24665,9 +24665,9 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(svcconfig); // svcconfig
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
-            if (this.scalability != null) boxSize += IsoStream.CalculateSize(scalability); // scalability
-            if (this.method != null) boxSize += IsoStream.CalculateSize(method); // method
+            boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(scalability); // scalability
+            boxSize += IsoStream.CalculateSize(method); // method
             return boxSize;
         }
     }
@@ -24693,7 +24693,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.config); // optional
+            boxSize += stream.ReadBox(out this.config); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24702,7 +24702,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.config != null) boxSize += stream.WriteBox(this.config); // optional
+            boxSize += stream.WriteBox(this.config); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24711,7 +24711,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.config != null) boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateSize(config); // config
             return boxSize;
         }
     }
@@ -24772,7 +24772,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.config); // optional 
+            boxSize += stream.ReadBox(out this.config); // optional 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24781,7 +24781,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.config != null) boxSize += stream.WriteBox(this.config); // optional 
+            boxSize += stream.WriteBox(this.config); // optional 
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24790,7 +24790,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.config != null) boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateSize(config); // config
             return boxSize;
         }
     }
@@ -24816,7 +24816,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.config); // optional
+            boxSize += stream.ReadBox(out this.config); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24825,7 +24825,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            if (this.config != null) boxSize += stream.WriteBox(this.config); // optional
+            boxSize += stream.WriteBox(this.config); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24834,7 +24834,7 @@ namespace BoxGenerator2
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            if (this.config != null) boxSize += IsoStream.CalculateSize(config); // config
+            boxSize += IsoStream.CalculateSize(config); // config
             return boxSize;
         }
     }
@@ -24865,7 +24865,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24875,7 +24875,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24885,7 +24885,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -24913,7 +24913,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -24923,7 +24923,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -24933,7 +24933,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -25052,7 +25052,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.descr); // optional
+            boxSize += stream.ReadBox(out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -25062,7 +25062,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.descr != null) boxSize += stream.WriteBox(this.descr); // optional
+            boxSize += stream.WriteBox(this.descr); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -25072,7 +25072,7 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.descr != null) boxSize += IsoStream.CalculateSize(descr); // descr
+            boxSize += IsoStream.CalculateSize(descr); // descr
             return boxSize;
         }
     }
@@ -25108,8 +25108,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadBox(out this.config);
-            if (boxSize < size) boxSize += stream.ReadBox(out this.methods); // optional
-            if (boxSize < size) boxSize += stream.ReadBox(out this.priorities); // optional
+            boxSize += stream.ReadBox(out this.methods); // optional
+            boxSize += stream.ReadBox(out this.priorities); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -25119,8 +25119,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBox(this.config);
-            if (this.methods != null) boxSize += stream.WriteBox(this.methods); // optional
-            if (this.priorities != null) boxSize += stream.WriteBox(this.priorities); // optional
+            boxSize += stream.WriteBox(this.methods); // optional
+            boxSize += stream.WriteBox(this.priorities); // optional
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -25130,8 +25130,8 @@ namespace BoxGenerator2
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateSize(config); // config
-            if (this.methods != null) boxSize += IsoStream.CalculateSize(methods); // methods
-            if (this.priorities != null) boxSize += IsoStream.CalculateSize(priorities); // priorities
+            boxSize += IsoStream.CalculateSize(methods); // methods
+            boxSize += IsoStream.CalculateSize(priorities); // priorities
             return boxSize;
         }
     }
@@ -26709,11 +26709,11 @@ namespace BoxGenerator2
                 boxSize += stream.ReadBox(out this.TierDependencyBox); // Mandatory
                 boxSize += stream.ReadBox(out this.PriorityRangeBox); // Mandatory
                 /* Optional Boxes or fields may follow when defined later */
-                if (boxSize < size) boxSize += stream.ReadBox(out this.TierBitRateBox); // optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.BufferingBox); // optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.InitialParameterSetBox); // optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.ProtectionSchemeInfoBox); // optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.ViewPriorityBox); // optional
+                boxSize += stream.ReadBox(out this.TierBitRateBox); // optional
+                boxSize += stream.ReadBox(out this.BufferingBox); // optional
+                boxSize += stream.ReadBox(out this.InitialParameterSetBox); // optional
+                boxSize += stream.ReadBox(out this.ProtectionSchemeInfoBox); // optional
+                boxSize += stream.ReadBox(out this.ViewPriorityBox); // optional
             }
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -26737,11 +26737,11 @@ namespace BoxGenerator2
                 boxSize += stream.WriteBox(this.TierDependencyBox); // Mandatory
                 boxSize += stream.WriteBox(this.PriorityRangeBox); // Mandatory
                 /* Optional Boxes or fields may follow when defined later */
-                if (this.TierBitRateBox != null) boxSize += stream.WriteBox(this.TierBitRateBox); // optional
-                if (this.BufferingBox != null) boxSize += stream.WriteBox(this.BufferingBox); // optional
-                if (this.InitialParameterSetBox != null) boxSize += stream.WriteBox(this.InitialParameterSetBox); // optional
-                if (this.ProtectionSchemeInfoBox != null) boxSize += stream.WriteBox(this.ProtectionSchemeInfoBox); // optional
-                if (this.ViewPriorityBox != null) boxSize += stream.WriteBox(this.ViewPriorityBox); // optional
+                boxSize += stream.WriteBox(this.TierBitRateBox); // optional
+                boxSize += stream.WriteBox(this.BufferingBox); // optional
+                boxSize += stream.WriteBox(this.InitialParameterSetBox); // optional
+                boxSize += stream.WriteBox(this.ProtectionSchemeInfoBox); // optional
+                boxSize += stream.WriteBox(this.ViewPriorityBox); // optional
             }
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
@@ -26765,11 +26765,11 @@ namespace BoxGenerator2
                 boxSize += IsoStream.CalculateSize(TierDependencyBox); // TierDependencyBox
                 boxSize += IsoStream.CalculateSize(PriorityRangeBox); // PriorityRangeBox
                 /* Optional Boxes or fields may follow when defined later */
-                if (this.TierBitRateBox != null) boxSize += IsoStream.CalculateSize(TierBitRateBox); // TierBitRateBox
-                if (this.BufferingBox != null) boxSize += IsoStream.CalculateSize(BufferingBox); // BufferingBox
-                if (this.InitialParameterSetBox != null) boxSize += IsoStream.CalculateSize(InitialParameterSetBox); // InitialParameterSetBox
-                if (this.ProtectionSchemeInfoBox != null) boxSize += IsoStream.CalculateSize(ProtectionSchemeInfoBox); // ProtectionSchemeInfoBox
-                if (this.ViewPriorityBox != null) boxSize += IsoStream.CalculateSize(ViewPriorityBox); // ViewPriorityBox
+                boxSize += IsoStream.CalculateSize(TierBitRateBox); // TierBitRateBox
+                boxSize += IsoStream.CalculateSize(BufferingBox); // BufferingBox
+                boxSize += IsoStream.CalculateSize(InitialParameterSetBox); // InitialParameterSetBox
+                boxSize += IsoStream.CalculateSize(ProtectionSchemeInfoBox); // ProtectionSchemeInfoBox
+                boxSize += IsoStream.CalculateSize(ViewPriorityBox); // ViewPriorityBox
             }
             return boxSize;
         }
@@ -27414,14 +27414,14 @@ namespace BoxGenerator2
                 boxSize += stream.ReadBox(out this.SVCDependencyRangeBox); // Mandatory
                 boxSize += stream.ReadBox(out this.PriorityRangeBox); // Mandatory
                 /* Optional Boxes or fields may follow when defined later */
-                if (boxSize < size) boxSize += stream.ReadBox(out this.TierBitRateBox); // optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.RectRegionBox); // optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.BufferingBox); // optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.TierDependencyBox); // optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.InitialParameterSetBox); // optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.IroiInfoBox); // optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.ProtectionSchemeInfoBox); // optional
-                if (boxSize < size) boxSize += stream.ReadBox(out this.TranscodingInfoBox); // optional
+                boxSize += stream.ReadBox(out this.TierBitRateBox); // optional
+                boxSize += stream.ReadBox(out this.RectRegionBox); // optional
+                boxSize += stream.ReadBox(out this.BufferingBox); // optional
+                boxSize += stream.ReadBox(out this.TierDependencyBox); // optional
+                boxSize += stream.ReadBox(out this.InitialParameterSetBox); // optional
+                boxSize += stream.ReadBox(out this.IroiInfoBox); // optional
+                boxSize += stream.ReadBox(out this.ProtectionSchemeInfoBox); // optional
+                boxSize += stream.ReadBox(out this.TranscodingInfoBox); // optional
             }
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -27447,14 +27447,14 @@ namespace BoxGenerator2
                 boxSize += stream.WriteBox(this.SVCDependencyRangeBox); // Mandatory
                 boxSize += stream.WriteBox(this.PriorityRangeBox); // Mandatory
                 /* Optional Boxes or fields may follow when defined later */
-                if (this.TierBitRateBox != null) boxSize += stream.WriteBox(this.TierBitRateBox); // optional
-                if (this.RectRegionBox != null) boxSize += stream.WriteBox(this.RectRegionBox); // optional
-                if (this.BufferingBox != null) boxSize += stream.WriteBox(this.BufferingBox); // optional
-                if (this.TierDependencyBox != null) boxSize += stream.WriteBox(this.TierDependencyBox); // optional
-                if (this.InitialParameterSetBox != null) boxSize += stream.WriteBox(this.InitialParameterSetBox); // optional
-                if (this.IroiInfoBox != null) boxSize += stream.WriteBox(this.IroiInfoBox); // optional
-                if (this.ProtectionSchemeInfoBox != null) boxSize += stream.WriteBox(this.ProtectionSchemeInfoBox); // optional
-                if (this.TranscodingInfoBox != null) boxSize += stream.WriteBox(this.TranscodingInfoBox); // optional
+                boxSize += stream.WriteBox(this.TierBitRateBox); // optional
+                boxSize += stream.WriteBox(this.RectRegionBox); // optional
+                boxSize += stream.WriteBox(this.BufferingBox); // optional
+                boxSize += stream.WriteBox(this.TierDependencyBox); // optional
+                boxSize += stream.WriteBox(this.InitialParameterSetBox); // optional
+                boxSize += stream.WriteBox(this.IroiInfoBox); // optional
+                boxSize += stream.WriteBox(this.ProtectionSchemeInfoBox); // optional
+                boxSize += stream.WriteBox(this.TranscodingInfoBox); // optional
             }
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
@@ -27480,14 +27480,14 @@ namespace BoxGenerator2
                 boxSize += IsoStream.CalculateSize(SVCDependencyRangeBox); // SVCDependencyRangeBox
                 boxSize += IsoStream.CalculateSize(PriorityRangeBox); // PriorityRangeBox
                 /* Optional Boxes or fields may follow when defined later */
-                if (this.TierBitRateBox != null) boxSize += IsoStream.CalculateSize(TierBitRateBox); // TierBitRateBox
-                if (this.RectRegionBox != null) boxSize += IsoStream.CalculateSize(RectRegionBox); // RectRegionBox
-                if (this.BufferingBox != null) boxSize += IsoStream.CalculateSize(BufferingBox); // BufferingBox
-                if (this.TierDependencyBox != null) boxSize += IsoStream.CalculateSize(TierDependencyBox); // TierDependencyBox
-                if (this.InitialParameterSetBox != null) boxSize += IsoStream.CalculateSize(InitialParameterSetBox); // InitialParameterSetBox
-                if (this.IroiInfoBox != null) boxSize += IsoStream.CalculateSize(IroiInfoBox); // IroiInfoBox
-                if (this.ProtectionSchemeInfoBox != null) boxSize += IsoStream.CalculateSize(ProtectionSchemeInfoBox); // ProtectionSchemeInfoBox
-                if (this.TranscodingInfoBox != null) boxSize += IsoStream.CalculateSize(TranscodingInfoBox); // TranscodingInfoBox
+                boxSize += IsoStream.CalculateSize(TierBitRateBox); // TierBitRateBox
+                boxSize += IsoStream.CalculateSize(RectRegionBox); // RectRegionBox
+                boxSize += IsoStream.CalculateSize(BufferingBox); // BufferingBox
+                boxSize += IsoStream.CalculateSize(TierDependencyBox); // TierDependencyBox
+                boxSize += IsoStream.CalculateSize(InitialParameterSetBox); // InitialParameterSetBox
+                boxSize += IsoStream.CalculateSize(IroiInfoBox); // IroiInfoBox
+                boxSize += IsoStream.CalculateSize(ProtectionSchemeInfoBox); // ProtectionSchemeInfoBox
+                boxSize += IsoStream.CalculateSize(TranscodingInfoBox); // TranscodingInfoBox
             }
             return boxSize;
         }

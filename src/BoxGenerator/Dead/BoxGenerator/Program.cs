@@ -415,7 +415,6 @@ partial class Program
             Try(String("VvcSubpicOrderEntry")),
             Try(String("URIInitBox")),
             Try(String("URIBox")),
-            Try(String("URIbox")),
             Try(String("CleanApertureBox")),
             Try(String("PixelAspectRatioBox")),
             Try(String("DownMixInstructions() []")),
@@ -1078,11 +1077,6 @@ namespace BoxGenerator2
             cls += "\r\n" + "boxSize += stream.ReadBoxChildren(boxSize, this);";
         }
 
-        //if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrEmpty(b.FourCC))
-        //{
-        //    cls += "\r\n" + "boxSize += stream.ReadSkip(size, boxSize);";
-        //}
-
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
 
@@ -1101,11 +1095,6 @@ namespace BoxGenerator2
             cls += "\r\n" + "boxSize += stream.WriteBoxChildren(this);";
         }
 
-        //if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrEmpty(b.FourCC))
-        //{
-        //    cls += "\r\n" + "boxSize += stream.Flush();";
-        //}
-
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
         cls += "\r\n\tpublic " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
@@ -1117,11 +1106,6 @@ namespace BoxGenerator2
         {
             cls += "\r\n" + BuildMethodCode(b, field, 2, MethodType.Size);
         }
-
-        //if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName))
-        //{
-        //    cls += "\r\n" + "boxSize += IsoStream.CalculateSize(children);";
-        //}
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
@@ -1527,31 +1511,17 @@ namespace BoxGenerator2
         {
             fieldComment = "//" + (field as PseudoField).Comment;
         }
-
-        string optional = "";
-        if(fieldComment.Contains("optional") && !fieldComment.Contains("optional boxes follow"))
-        {
-            if (methodType == MethodType.Write || methodType == MethodType.Size)
-            {
-                optional = $"if(this.{name} != null) ";
-            }
-            else if(methodType == MethodType.Read)
-            {
-                // TODO: check if we can read
-                optional = "if(boxSize < size) ";
-            }
-        }
-
+                
         string boxSize = "boxSize += ";
         if (m.StartsWith("case")) // workaround for missing case support
             boxSize = "";
 
         if (methodType == MethodType.Read)
-            return $"{spacing}{optional}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
+            return $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
         else if(methodType == MethodType.Write)
-            return $"{spacing}{optional}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
+            return $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
         else
-            return $"{spacing}{optional}{boxSize}{m.Replace("value", name)}; // {name}";
+            return $"{spacing}{boxSize}{m.Replace("value", name)}; // {name}";
     }
 
     private static string BuildComment(PseudoClass b, PseudoComment comment, int level, MethodType methodType)
@@ -1876,7 +1846,6 @@ namespace BoxGenerator2
             { "VvcSubpicOrderEntry", "stream.ReadBox(" },
             { "URIInitBox", "stream.ReadBox(" },
             { "URIBox", "stream.ReadBox(" },
-            { "URIbox", "stream.ReadBox(" },
             { "CleanApertureBox", "stream.ReadBox(" },
             { "PixelAspectRatioBox", "stream.ReadBox(" },
             { "DownMixInstructions() []", "stream.ReadBox(" },
@@ -2252,7 +2221,6 @@ namespace BoxGenerator2
             { "VvcSubpicOrderEntry", "IsoStream.CalculateSize(value)" },
             { "URIInitBox", "IsoStream.CalculateSize(value)" },
             { "URIBox", "IsoStream.CalculateSize(value)" },
-            { "URIbox", "IsoStream.CalculateSize(value)" },
             { "CleanApertureBox", "IsoStream.CalculateSize(value)" },
             { "PixelAspectRatioBox", "IsoStream.CalculateSize(value)" },
             { "DownMixInstructions() []", "IsoStream.CalculateSize(value)" },
@@ -2629,7 +2597,6 @@ namespace BoxGenerator2
             { "VvcSubpicOrderEntry", "stream.WriteBox(" },
             { "URIInitBox", "stream.WriteBox(" },
             { "URIBox", "stream.WriteBox(" },
-            { "URIbox", "stream.WriteBox(" },
             { "CleanApertureBox", "stream.WriteBox(" },
             { "PixelAspectRatioBox", "stream.WriteBox(" },
             { "DownMixInstructions() []", "stream.WriteBox(" },
@@ -3048,7 +3015,6 @@ namespace BoxGenerator2
             { "VvcSubpicOrderEntry", "VvcSubpicOrderEntry" },
             { "URIInitBox", "URIInitBox" },
             { "URIBox", "URIBox" },
-            { "URIbox", "URIBox" },
             { "CleanApertureBox", "CleanApertureBox" },
             { "PixelAspectRatioBox", "PixelAspectRatioBox" },
             { "DownMixInstructions() []", "DownMixInstructions[]" },
