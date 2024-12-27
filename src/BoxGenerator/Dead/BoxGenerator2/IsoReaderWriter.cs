@@ -3,6 +3,7 @@ using BoxGenerator2;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 public class IsoStream
 {
@@ -11,6 +12,19 @@ public class IsoStream
     public IsoStream(Stream stream)
     {
         _stream = stream;
+    }
+
+    private byte ReadByte()
+    {
+        int read = _stream.ReadByte();
+        if (read == -1) throw new EndOfStreamException();
+        return (byte)(read & 0xff);
+    }
+
+    private byte WriteByte(byte value)
+    {
+        _stream.WriteByte(value);
+        return 8;
     }
 
     internal ulong ReadBit(out bool value)
@@ -68,97 +82,7 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong ReadInt16(out short value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadInt32(out int value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadInt32(out long value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal  ulong ReadInt64(out long value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadInt8(out sbyte value)
-    {
-        throw new NotImplementedException();
-    }
-
     internal ulong ReadString(out string value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt16(out ushort value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt16(out uint value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt16Array(int count, out ushort[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt16Array(int count, out uint[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt24(out uint value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt32(out uint value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt32(out ulong value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt32Array(uint count, out uint[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt32Array(uint count, out ulong[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt48(out ulong value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt64(out ulong value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt8(out byte value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt8(out ushort value)
     {
         throw new NotImplementedException();
     }
@@ -168,17 +92,198 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
+    internal ulong ReadInt16(out short value)
+    {
+        ulong count = unchecked(ReadUInt16(out ushort v));
+        value = unchecked((short)v);
+        return count;
+    }
+
+    internal ulong ReadInt32(out int value)
+    {
+        ulong count = unchecked(ReadUInt32(out uint v));
+        value = unchecked((int)v);
+        return count;
+    }
+
+    internal ulong ReadInt32(out long value)
+    {
+        ulong count = unchecked(ReadUInt32(out uint v));
+        value = unchecked((int)v);
+        return count;
+    }
+
+    internal ulong ReadInt64(out long value)
+    {
+        ulong count = unchecked(ReadUInt64(out ulong v));
+        value = unchecked((long)v);
+        return count;
+    }
+
+    internal ulong ReadInt8(out sbyte value)
+    {
+        ulong count = unchecked(ReadUInt8(out byte v));
+        value = unchecked((sbyte)v);
+        return count;
+    }
+
+    internal ulong ReadUInt8(out byte value)
+    {
+        value = ReadByte();
+        return 8;
+    }
+
+    internal ulong ReadUInt8(out ushort value)
+    {
+        value = ReadByte();
+        return 8;
+    }
+
+    internal ulong ReadUInt16(out ushort value)
+    {
+        value = (ushort)(
+            (ReadByte() << 8) +
+            (ReadByte() << 0)
+        );
+        return 16;
+    }
+
+    internal ulong ReadUInt16(out uint value)
+    {
+        value = (uint)(
+            (ReadByte() << 8) +
+            (ReadByte() << 0)
+        );
+        return 16;
+    }
+
+    internal ulong ReadUInt24(out uint value)
+    {
+        value = (uint)(
+            (ReadByte() << 16) + 
+            (ReadByte() << 8) +
+            (ReadByte() << 0)
+        );
+        return 24;
+    }
+
+    internal ulong ReadUInt32(out uint value)
+    {
+        value = (uint)(
+            (ReadByte() << 24) +
+            (ReadByte() << 16) +
+            (ReadByte() << 8) +
+            (ReadByte() << 0)
+        );
+        return 32;
+    }
+
+    internal ulong ReadUInt32(out ulong value)
+    {
+        value = (uint)(
+            (ReadByte() << 24) +
+            (ReadByte() << 16) +
+            (ReadByte() << 8) +
+            (ReadByte() << 0)
+        );
+        return 32;
+    }
+
+    internal ulong ReadUInt48(out ulong value)
+    {
+        value = (ulong)(
+            (ReadByte() << 40) + 
+            (ReadByte() << 32) + 
+            (ReadByte() << 24) + 
+            (ReadByte() << 16) + 
+            (ReadByte() << 8) +
+            (ReadByte() << 0)
+        );
+        return 48;
+    }
+
+    internal ulong ReadUInt64(out ulong value)
+    {
+        value = (ulong)(
+            (ReadByte() << 56) + 
+            (ReadByte() << 48) +
+            (ReadByte() << 40) +
+            (ReadByte() << 32) + 
+            (ReadByte() << 24) + 
+            (ReadByte() << 16) + 
+            (ReadByte() << 8) + 
+            (ReadByte() << 0)
+        );
+        return 64;
+    }
+
+    internal ulong ReadUInt16Array(int count, out ushort[] value)
+    {
+        ulong size = 0;
+        value = new ushort[count];
+        for (int i = 0; i < count; i++)
+        {
+            size += ReadUInt16(out value[i]);
+        }
+        return size;
+    }
+
+    internal ulong ReadUInt16Array(int count, out uint[] value)
+    {
+        ulong size = 0;
+        value = new uint[count];
+        for (int i = 0; i < count; i++)
+        {
+            size += ReadUInt16(out value[i]);
+        }
+        return size;
+    }
+
+    internal ulong ReadUInt32Array(uint count, out uint[] value)
+    {
+        ulong size = 0;
+        value = new uint[count];
+        for (int i = 0; i < count; i++)
+        {
+            size += ReadUInt32(out value[i]);
+        }
+        return size;
+    }
+
+    internal ulong ReadUInt32Array(uint count, out ulong[] value)
+    {
+        ulong size = 0;
+        value = new ulong[count];
+        for (int i = 0; i < count; i++)
+        {
+            size += ReadUInt32(out value[i]);
+        }
+        return size;
+    }
+
     internal ulong ReadUInt64Array(uint count, out ulong[] value)
     {
-        throw new NotImplementedException();
+        ulong size = 0;
+        value = new ulong[count];
+        for (int i = 0; i < count; i++)
+        {
+            size += ReadUInt64(out value[i]);
+        }
+        return size;
+    }
+
+    internal ulong ReadUInt8Array(uint count, out byte[] value)
+    {
+        ulong size = 0;
+        value = new byte[count];
+        for (int i = 0; i < count; i++)
+        {
+            size += ReadUInt8(out value[i]);
+        }
+        return size;
     }
 
     internal ulong ReadUInt8Array(out byte[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUInt8Array(ulong count, out byte[] value)
     {
         throw new NotImplementedException();
     }
@@ -243,97 +348,17 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong WriteClass(IMp4Serializable[] values)
+    internal ulong WriteClass(IMp4Serializable[] value)
     {
         throw new NotImplementedException();
     }
 
-    internal ulong WriteClass(uint count, IMp4Serializable[] values)
+    internal ulong WriteClass(uint count, IMp4Serializable[] value)
     {
         throw new NotImplementedException();
     }
 
-    internal ulong WriteInt16(short value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteInt32(int value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteInt32(long value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteInt64(long value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteInt8(sbyte value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteString(string lang)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt16(ushort value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt16(uint value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt16Array(uint count, ushort[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt16Array(uint count, uint[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt24(uint reserved)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt32(uint value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt32(ulong value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt48(ulong value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt64(ulong value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt8(byte value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt8(ushort value)
+    internal ulong WriteString(string value)
     {
         throw new NotImplementedException();
     }
@@ -343,32 +368,174 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
+    internal ulong WriteInt16(short value)
+    {
+        return WriteUInt16(unchecked((ushort)value));
+    }
+
+    internal ulong WriteInt32(int value)
+    {
+        return WriteUInt32(unchecked((uint)value));
+    }
+
+    internal ulong WriteInt32(long value)
+    {
+        return WriteUInt32(unchecked((uint)value));
+    }
+
+    internal ulong WriteInt64(long value)
+    {
+        return WriteUInt64(unchecked((ulong)value));
+    }
+
+    internal ulong WriteInt8(sbyte value)
+    {
+        return WriteUInt8(unchecked((byte)value));
+    }
+
+    internal ulong WriteUInt8(byte value)
+    {
+        _stream.WriteByte(value);
+        return 1;
+    }
+
+    internal ulong WriteUInt8(ushort value)
+    {
+        _stream.WriteByte((byte)value);
+        return 1;
+    }
+
+    internal ulong WriteUInt16(ushort value)
+    {
+        WriteByte((byte)(value >> 8 & 0xFF));
+        WriteByte((byte)(value & 0xFF));
+        return 16;
+    }
+
+    internal ulong WriteUInt16(uint value)
+    {
+        WriteByte((byte)(value >> 8 & 0xFF));
+        WriteByte((byte)(value & 0xFF));
+        return 16; throw new NotImplementedException();
+    }
+
+    internal ulong WriteUInt24(uint value)
+    {
+        value = value & 0xFFFFFF;
+        WriteByte((byte)(value >> 16 & 0xFF));
+        WriteByte((byte)(value >> 8 & 0xFF));
+        WriteByte((byte)(value & 0xFF));
+        return 24;
+    }
+
+    internal ulong WriteUInt32(uint value)
+    {
+        WriteByte((byte)(value >> 24 & 0xFF));
+        WriteByte((byte)(value >> 16 & 0xFF));
+        WriteByte((byte)(value >> 8 & 0xFF));
+        WriteByte((byte)(value & 0xFF));
+        return 32;
+    }
+
+    internal ulong WriteUInt32(ulong value)
+    {
+        WriteByte((byte)(value >> 24 & 0xFF));
+        WriteByte((byte)(value >> 16 & 0xFF));
+        WriteByte((byte)(value >> 8 & 0xFF));
+        WriteByte((byte)(value & 0xFF));
+        return 32;
+    }
+
+    internal ulong WriteUInt48(ulong value)
+    {
+        WriteByte((byte)(value >> 40 & 0xFF));
+        WriteByte((byte)(value >> 32 & 0xFF));
+        WriteByte((byte)(value >> 24 & 0xFF));
+        WriteByte((byte)(value >> 16 & 0xFF));
+        WriteByte((byte)(value >> 8 & 0xFF));
+        WriteByte((byte)(value & 0xFF));
+        return 48;
+    }
+
+    internal ulong WriteUInt64(ulong value)
+    {
+        WriteByte((byte)(value >> 56 & 0xFF));
+        WriteByte((byte)(value >> 48 & 0xFF));
+        WriteByte((byte)(value >> 40 & 0xFF));
+        WriteByte((byte)(value >> 32 & 0xFF));
+        WriteByte((byte)(value >> 24 & 0xFF));
+        WriteByte((byte)(value >> 16 & 0xFF));
+        WriteByte((byte)(value >> 8 & 0xFF));
+        WriteByte((byte)(value & 0xFF));
+        return 64;
+    }
+
+    internal ulong WriteUInt16Array(uint count, ushort[] value)
+    {
+        ulong size = 0;
+        for (int i = 0; i < count; i++)
+        {
+            size += WriteUInt16(value[i]);
+        }
+        return size;
+    }
+
+    internal ulong WriteUInt16Array(uint count, uint[] value)
+    {
+        ulong size = 0;
+        for (int i = 0; i < count; i++)
+        {
+            size += WriteUInt16(value[i]);
+        }
+        return size;
+    }
+
+    internal ulong WriteUInt8Array(uint count, byte[] value)
+    {
+        ulong size = 0;
+        for (int i = 0; i < count; i++)
+        {
+            size += WriteUInt8(value[i]);
+        }
+        return size;
+    }
+
+    internal ulong WriteUInt32Array(uint count, uint[] value)
+    {
+        ulong size = 0;
+        for (int i = 0; i < count; i++)
+        {
+            size += WriteUInt32(value[i]);
+        }
+        return size;
+    }
+
+    internal ulong WriteUInt32Array(uint count, ulong[] value)
+    {
+        ulong size = 0;
+        for (int i = 0; i < count; i++)
+        {
+            size += WriteUInt32(value[i]);
+        }
+        return size;
+    }
+
+    internal ulong WriteUInt64Array(uint count, ulong[] value)
+    {
+        ulong size = 0;
+        for (int i = 0; i < count; i++)
+        {
+            size += WriteUInt64(value[i]);
+        }
+        return size;
+    }
+
     internal ulong WriteUInt8Array(byte[] value)
     {
         throw new NotImplementedException();
     }
 
-    internal ulong WriteUInt8Array(ulong count, byte[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt32Array(uint count, uint[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt32Array(uint count, ulong[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt64Array(uint count, ulong[] ulongs)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUInt32Array(uint[] values)
+    internal ulong WriteUInt32Array(uint[] value)
     {
         throw new NotImplementedException();
     }
@@ -385,7 +552,12 @@ public class IsoStream
 
     internal static ulong CalculateBoxSize(IEnumerable<Box> boxes)
     {
-        throw new NotImplementedException();
+        ulong size = 0;
+        foreach (Box box in boxes)
+        {
+            size += box.CalculateSize();
+        }
+        return size;
     }
 
     internal static ulong CalculateSize(string[] values)
@@ -395,12 +567,17 @@ public class IsoStream
 
     internal static ulong CalculateClassSize(IMp4Serializable value)
     {
-        throw new NotImplementedException();
+        return value.CalculateSize();
     }
 
     internal static ulong CalculateClassSize(IMp4Serializable[] value)
     {
-        throw new NotImplementedException();
+        ulong size = 0;
+        foreach (IMp4Serializable c in value)
+        {
+            size += c.CalculateSize();
+        }
+        return size;
     }
 
     internal ulong ReadBoxChildren(ulong readSize, Box box)
@@ -413,6 +590,11 @@ public class IsoStream
             box.Children.Add(b);
         }
         return boxSize;
+    }
+
+    internal static ulong CalculateBoxChildren(Box value)
+    {
+        throw new NotImplementedException();
     }
 
     internal ulong WriteBoxChildren(Box box)
@@ -528,18 +710,31 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong WriteIso639(string language)
+    internal ulong WriteIso639(string value)
     {
-        throw new NotImplementedException();
+        if (Encoding.UTF8.GetBytes(value).Length != 3)
+        {
+            throw new ArgumentException($"\"{value}\" value string must be 3 characters long!");
+        }
+        int bits = 0;
+        for (int i = 0; i < 3; i++)
+        {
+            bits += Encoding.UTF8.GetBytes(value)[i] - 0x60 << (2 - i) * 5;
+        }
+        return WriteUInt16((ushort)bits);
     }
 
-    internal ulong ReadIso639(out string language)
+    internal ulong ReadIso639(out string value)
     {
-        throw new NotImplementedException();
-    }
-
-    internal static ulong CalculateBoxChildren(Box value)
-    {
-        throw new NotImplementedException();
+        ushort bits;
+        ReadUInt16(out bits);
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < 3; i++)
+        {
+            int c = bits >> (2 - i) * 5 & 0x1f;
+            result.Append((char)(c + 0x60));
+        }
+        value = result.ToString();
+        return 16;
     }
 }
