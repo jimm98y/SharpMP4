@@ -38,16 +38,6 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong ReadBits(uint count, out ulong value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadBitsArray(uint bitCount, uint count, out byte[] value)
-    {
-        throw new NotImplementedException();
-    }
-
     internal ulong ReadBox<T>(out T value) where T : Box
     {
         throw new NotImplementedException();
@@ -234,11 +224,6 @@ public class IsoStream
     }
 
     internal ulong WriteBits(uint count, uint value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteBitsArray(uint bitCount, uint count, byte[] value)
     {
         throw new NotImplementedException();
     }
@@ -451,22 +436,6 @@ public class IsoStream
             }
         }
         return boxSize;
-    }
-
-    internal ulong ReadSkip(ulong size, ulong boxSize)
-    {
-        if (boxSize != size)
-        {
-            // TODO
-            throw new Exception("Unread bytes at the end of the box!");
-        }
-
-        return 0;
-    }
-
-    internal ulong Flush()
-    {
-        throw new NotImplementedException();
     }
 
     internal ulong ReadBslbf(ulong count, out byte[] value)
