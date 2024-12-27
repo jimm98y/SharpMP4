@@ -760,6 +760,22 @@ partial class Program
                                 item.FourCC = item.Extended.BoxType;
                             }
 
+                            // allowed duplicates
+                            if(item.BoxName == "hintPacketsSent"||
+                                item.BoxName == "hintBytesSent")
+                            {
+                                item.BoxName = item.BoxName + item.FourCC.ToCapital();
+                                if (ret.TryAdd(item.BoxName, item))
+                                    success++;
+                                else
+                                {
+                                    duplicated++;
+                                    duplicates.Add(item);
+                                    Console.WriteLine($"Duplicated: {item.BoxName}");
+                                }
+                                continue;
+                            }
+
                             if (ret.TryAdd(item.BoxName, item))
                             {
                                 success++;                                

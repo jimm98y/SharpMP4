@@ -195,8 +195,8 @@ namespace BoxGenerator2
                 case "mvra": return new MultiviewRelationAttributeBox();
                 case "nalm": return new NALUMapEntry();
                 case "nmhd": return new NullMediaHeaderBox();
-                case "npck": return new hintPacketsSent_npck(); // TODO: fix duplicate
-                case "nump": return new hintPacketsSent();
+                case "npck": return new hintPacketsSentNpck();
+                case "nump": return new hintPacketsSentNump();
                 case "oinf": throw new NotSupportedException("oinf"); // TODO: OperatingPointsInformation, OperatingPointsInformationProperty
                 case "opeg": return new OperatingPointGroupBox();
                 case "opth": return new OperatingPointDecodeTimeHint();
@@ -321,9 +321,9 @@ namespace BoxGenerator2
                 case "tmax": return new hintmaxrelativetime();
                 case "tmin": return new hintminrelativetime();
                 case "tols": return new TargetOlsProperty();
-                case "totl": return new hintBytesSent_totl(); // TODO: fix duplicate
-                case "tpay": return new hintBytesSent_tpay(); // TODO: fix duplicate
-                case "tpyl": return new hintBytesSent_tpyl(); // TODO: fix duplicate
+                case "totl": return new hintBytesSentTotl();
+                case "tpay": return new hintBytesSentTpay();
+                case "tpyl": return new hintBytesSentTpyl();
                 case "traf": return new TrackFragmentBox();
                 case "trak": return new TrackBox();
                 case "tran": return new TranscodingInfoBox();
@@ -332,7 +332,7 @@ namespace BoxGenerator2
                 case "trex": return new TrackExtendsBox();
                 case "trgr": return new TrackGroupBox();
                 case "trif": return new RectangularRegionGroupEntry();
-                case "trpy": return new hintBytesSent();
+                case "trpy": return new hintBytesSentTrpy();
                 case "trun": return new TrackRunBox();
                 case "tsas": return new TemporalSubLayerEntry();
                 case "tscl": return new TemporalLayerEntry();
@@ -4753,14 +4753,14 @@ namespace BoxGenerator2
         uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
 
     */
-    public class hintBytesSent : Box
+    public class hintBytesSentTrpy : Box
     {
         public const string FourCC = "trpy";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent() : base("trpy")
+        public hintBytesSentTrpy() : base("trpy")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4794,14 +4794,14 @@ namespace BoxGenerator2
         uint(64)	packetssent; }	// total packets sent
 
     */
-    public class hintPacketsSent : Box
+    public class hintPacketsSentNump : Box
     {
         public const string FourCC = "nump";
 
         protected ulong packetssent;
         public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
 
-        public hintPacketsSent() : base("nump")
+        public hintPacketsSentNump() : base("nump")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4834,14 +4834,14 @@ namespace BoxGenerator2
     aligned(8) class hintBytesSent extends Box('tpyl') {
         uint(64)	bytessent; }	// total bytes sent, not including RTP headers
     */
-    public class hintBytesSent_tpyl : Box
+    public class hintBytesSentTpyl : Box
     {
         public const string FourCC = "tpyl";
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_tpyl() : base("tpyl")
+        public hintBytesSentTpyl() : base("tpyl")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4875,14 +4875,14 @@ namespace BoxGenerator2
         uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
 
     */
-    public class hintBytesSent_totl : Box
+    public class hintBytesSentTotl : Box
     {
         public const string FourCC = "totl";
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_totl() : base("totl")
+        public hintBytesSentTotl() : base("totl")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4916,14 +4916,14 @@ namespace BoxGenerator2
         uint(32)	packetssent; }	// total packets sent
 
     */
-    public class hintPacketsSent_npck : Box
+    public class hintPacketsSentNpck : Box
     {
         public const string FourCC = "npck";
 
         protected uint packetssent;
         public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
 
-        public hintPacketsSent_npck() : base("npck")
+        public hintPacketsSentNpck() : base("npck")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
@@ -4956,14 +4956,14 @@ namespace BoxGenerator2
     aligned(8) class hintBytesSent extends Box('tpay') {
         uint(32)	bytessent; }	// total bytes sent, not including RTP headers
     */
-    public class hintBytesSent_tpay : Box
+    public class hintBytesSentTpay : Box
     {
         public const string FourCC = "tpay";
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_tpay() : base("tpay")
+        public hintBytesSentTpay() : base("tpay")
         { }
 
         public async override Task<ulong> ReadAsync(IsoStream stream)
