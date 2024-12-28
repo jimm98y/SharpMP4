@@ -108,6 +108,7 @@ public class PseudoField : PseudoCode
     public string Name { get; set; }
     public string Value { get; set; }
     public string Comment { get; set; }
+    public PseudoBlock Parent { get; set; }
 }
 
 
@@ -145,6 +146,7 @@ public class PseudoBlock : PseudoCode
     public string Condition { get; }
     public string Comment { get; }
     public IEnumerable<PseudoCode> Content { get; }
+    public PseudoBlock Parent { get; set; }
 }
 
 public class PseudoRepeatingBlock : PseudoCode
@@ -1090,7 +1092,7 @@ namespace SharpMP4
 
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildMethodCode(b, field, 2, MethodType.Read);
+            cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Read);
         }
 
         if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
@@ -1108,7 +1110,7 @@ namespace SharpMP4
 
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildMethodCode(b, field, 2, MethodType.Write);
+            cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Write);
         }
 
         if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
@@ -1125,7 +1127,7 @@ namespace SharpMP4
 
         foreach (var field in b.Fields)
         {
-            cls += "\r\n" + BuildMethodCode(b, field, 2, MethodType.Size);
+            cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Size);
         }
 
         if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
@@ -1259,13 +1261,15 @@ namespace SharpMP4
         return cls;
     }
 
-    private static List<PseudoField> FlattenFields(IEnumerable<PseudoCode> fields)
+    private static List<PseudoField> FlattenFields(IEnumerable<PseudoCode> fields, PseudoBlock parent = null)
     {
         Dictionary<string, PseudoField> ret = new Dictionary<string, PseudoField>();
         foreach(var code in fields)
         {
             if (code is PseudoField field)
             {
+                field.Parent = parent; // keep track of parent blocks
+
                 if (IsWorkaround(field.Type))
                     continue;
 
@@ -1288,7 +1292,9 @@ namespace SharpMP4
             }
             else if (code is PseudoBlock block)
             {
-                var blockFields = FlattenFields(block.Content);
+                block.Parent = parent; // keep track of parent blocks
+
+                var blockFields = FlattenFields(block.Content, block);
                 foreach (var blockField in blockFields)
                 {
                     AddAndResolveDuplicates(ret, blockField);
@@ -1304,7 +1310,8 @@ namespace SharpMP4
         if (!ret.TryAdd(name, field))
         {
             if (name.StartsWith("reserved") || name == "pre_defined" || field.Type.StartsWith("SingleItemTypeReferenceBox") ||
-                (field.Type == "signed   int(32)" && ret[name].Type == "unsigned int(32)"))
+                (field.Type == "signed   int(32)" && ret[name].Type == "unsigned int(32)") ||
+                field.Name == "min_initial_alt_startup_offset" || field.Name == "target_rate_share") // special case: requires nesting
             {
                 int i = 0;
                 string updatedName = $"{name}{i}";
@@ -1316,7 +1323,7 @@ namespace SharpMP4
                 field.Name = updatedName;
                 //Debug.WriteLine($"-Resolved: {name} => {updatedName}");
             }
-            else if(field.Type == ret[name].Type)
+            else if(field.Type == ret[name].Type && GetNestedInLoop(field) == GetNestedInLoop(ret[name]))
             {
                 //Debug.WriteLine($"-Resolved: fields are the same");
             }
@@ -1454,6 +1461,25 @@ namespace SharpMP4
                 if (name == propertyName)
                     propertyName = "_" + name;
 
+                int nestingLevel = GetNestedInLoop(field);
+                if (nestingLevel > 0)
+                {
+                    string typedef = GetFieldTypeDef(field);
+                    nestingLevel = GetNestedInLoopSuffix(field, typedef, out _);
+
+                    // change the type
+                    for (int i = 0; i < nestingLevel; i++)
+                    {
+                        tt += "[]";
+                    }
+
+                    if(!string.IsNullOrEmpty(value))
+                    {
+                        Debug.WriteLine($"Removing default value: {value}");
+                        value = ""; // default value can no longer be used
+                    }
+                }
+
                 if (GetReadMethod((field as PseudoField)?.Type).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit")
                 {
                     string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
@@ -1472,6 +1498,166 @@ namespace SharpMP4
             return "";
     }
 
+    private static int GetNestedInLoop(PseudoCode code)
+    {
+        int ret = 0;
+        var field = code as PseudoField;
+        var block = code as PseudoBlock;
+        PseudoBlock parent = null;
+
+        if (field != null)
+            parent = field.Parent;
+
+        if (block != null)
+            parent = block.Parent;
+
+        while (parent != null)
+        {
+            if (parent.Type == "for")
+                ret++;
+            parent = parent.Parent;
+        }
+
+        return ret;
+    }
+
+    private static int GetNestedInLoopSuffix(PseudoCode code, string currentSuffix, out string result)
+    {
+        List<string> ret = new List<string>();
+        PseudoBlock parent = null;
+        var field = code as PseudoField;
+        if (field != null)
+            parent = field.Parent;
+        var block = code as PseudoBlock;
+        if (block != null)
+            parent = block.Parent;
+
+        while (parent != null)
+        {
+            if (parent.Type == "for")
+            {
+                if (parent.Condition.Contains("i =") || parent.Condition.Contains("i=") || parent.Condition.Contains("i ="))
+                    ret.Insert(0, "[i]");
+                else if (parent.Condition.Contains("j =") || parent.Condition.Contains("j="))
+                    ret.Insert(0, "[j]");
+                else if (parent.Condition.Contains("f =") || parent.Condition.Contains("f="))
+                    ret.Insert(0, "[f]");
+                else if (parent.Condition.Contains("c =") || parent.Condition.Contains("c="))
+                    ret.Insert(0, "[c]");
+                else if (parent.Condition.Contains("a =") || parent.Condition.Contains("a="))
+                    ret.Insert(0, "[a]");
+                else if (parent.Condition.Contains("k =") || parent.Condition.Contains("k="))
+                    ret.Insert(0, "[k]");
+                else if (parent.Condition.Contains("cnt =") || parent.Condition.Contains("cnt="))
+                    ret.Insert(0, "[cnt]");
+                else if (parent.Condition.Contains("el =") || parent.Condition.Contains("el="))
+                    ret.Insert(0, "[el]");
+                else
+                    throw new Exception();
+            }
+            parent = parent.Parent;
+        }
+
+        foreach(var suffix in ret.ToArray())
+        {
+            if (!string.IsNullOrEmpty(currentSuffix) && currentSuffix.Contains(suffix))
+                ret.Remove(suffix);
+        }
+
+        result = string.Concat(ret);
+        return ret.Count;
+    }
+
+    private static string FixNestedInLoopVariables(PseudoCode code, string condition, string prefix = "", string suffix = "")
+    {
+        if (string.IsNullOrEmpty(condition))
+            return condition;
+
+        List<string> ret = new List<string>();
+        PseudoBlock parent = null;
+        var field = code as PseudoField;
+        if (field != null)
+            parent = field.Parent;
+        var block = code as PseudoBlock;
+        if (block != null)
+            parent = block.Parent;
+
+        while (parent != null)
+        {
+            if (parent.Type == "for")
+            {
+                if (parent.Condition.Contains("i =") || parent.Condition.Contains("i=") || parent.Condition.Contains("i ="))
+                    ret.Insert(0, "[i]");
+                else if (parent.Condition.Contains("j =") || parent.Condition.Contains("j="))
+                    ret.Insert(0, "[j]");
+                else if (parent.Condition.Contains("f =") || parent.Condition.Contains("f="))
+                    ret.Insert(0, "[f]");
+                else if (parent.Condition.Contains("c =") || parent.Condition.Contains("c="))
+                    ret.Insert(0, "[c]");
+                else if (parent.Condition.Contains("a =") || parent.Condition.Contains("a="))
+                    ret.Insert(0, "[a]");
+                else if (parent.Condition.Contains("k =") || parent.Condition.Contains("k="))
+                    ret.Insert(0, "[k]");
+                else if (parent.Condition.Contains("cnt =") || parent.Condition.Contains("cnt="))
+                    ret.Insert(0, "[cnt]");
+                else if (parent.Condition.Contains("el =") || parent.Condition.Contains("el="))
+                    ret.Insert(0, "[el]");
+                else
+                    throw new Exception();
+            }
+
+            parent = parent.Parent;
+        }
+
+        if (field != null)
+            parent = field.Parent;
+        if (block != null)
+            parent = block.Parent;
+
+        int level = 0;
+        while (parent != null)
+        {
+            string str = string.Concat(ret.Skip(level));
+
+            if (parent.Type == "for")
+            {
+                level++;
+            }
+
+            foreach (var f in parent.Content)
+            {
+                if (f is PseudoField ff)
+                {
+                    if (string.IsNullOrWhiteSpace(ff.Name) || IsWorkaround(ff.Name))
+                        continue;
+                    if (condition.Contains(prefix + ff.Name + suffix) && !condition.Contains(prefix + ff.Name + "["))
+                    {
+                        condition = condition.Replace(prefix + ff.Name + suffix, prefix + ff.Name + str + suffix);
+                    }
+                }
+                else if (f is PseudoBlock bb)
+                {
+                    foreach (var fff in bb.Content)
+                    {
+                        if (fff is PseudoField ffff)
+                        {
+                            if (string.IsNullOrWhiteSpace(ffff.Name) || IsWorkaround(ffff.Name))
+                                continue;
+                            if (condition.Contains(prefix + ffff.Name + suffix) && !condition.Contains(prefix + ffff.Name + "["))
+                            {
+                                condition = condition.Replace(prefix + ffff.Name + suffix, prefix + ffff.Name + str + suffix);
+                            }
+                        }
+                    }
+                }
+            }
+
+            parent = parent.Parent;
+        }
+
+        return condition;
+    }
+
     private static string GetFieldName(PseudoCode field)
     {
         string name = Sanitize((field as PseudoField)?.Name);
@@ -1483,13 +1669,13 @@ namespace SharpMP4
         return name;
     }
 
-    private static string BuildMethodCode(PseudoClass b, PseudoCode field, int level, MethodType methodType)
+    private static string BuildMethodCode(PseudoClass b, PseudoBlock parent, PseudoCode field, int level, MethodType methodType)
     {
         string spacing = GetSpacing(level);
         var block = field as PseudoBlock;
-        if(block != null)
+        if (block != null)
         {
-            return BuildBlock(b, block, level, methodType);
+            return BuildBlock(b, parent, block, level, methodType);
         }
 
         var comment = field as PseudoComment;
@@ -1537,36 +1723,58 @@ namespace SharpMP4
         string name = GetFieldName(field);
         string m = methodType == MethodType.Read ? GetReadMethod(tt) : (methodType == MethodType.Write ? GetWriteMethod(tt) : GetCalculateSizeMethod(tt));
         string typedef = "";
-        string value = (field as PseudoField)?.Value;
-        if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
-            value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]" 
-            && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" && 
-            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[3]")
-        {
-            typedef = value;
-        }
+        typedef = GetFieldTypeDef(field);
 
         string fieldComment = "";
         if (!string.IsNullOrEmpty((field as PseudoField)?.Comment))
         {
             fieldComment = "//" + (field as PseudoField).Comment;
         }
-                
+
         string boxSize = "boxSize += ";
         if (m.StartsWith("case")) // workaround for missing case support
             boxSize = "";
 
-        if(m.Contains("Box") && b.BoxName != "MetaDataAccessUnit")
+        if (m.Contains("Box") && b.BoxName != "MetaDataAccessUnit")
         {
             spacing += "// ";
         }
 
+        if (methodType == MethodType.Size)
+            m = m.Replace("value", name);
+
+        if (GetNestedInLoop(field) > 0)
+        {
+            string suffix;
+            GetNestedInLoopSuffix(field, typedef, out suffix);
+            typedef += suffix;
+
+            if(methodType != MethodType.Size)
+                m = FixNestedInLoopVariables(field, m, "(", ",");
+            else
+                m = FixNestedInLoopVariables(field, m, "", " ");
+        }
+
         if (methodType == MethodType.Read)
             return $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
-        else if(methodType == MethodType.Write)
+        else if (methodType == MethodType.Write)
             return $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
         else
-            return $"{spacing}{boxSize}{m.Replace("value", name)}; // {name}";
+            return $"{spacing}{boxSize}{m}; // {name}";
+    }
+
+    private static string GetFieldTypeDef(PseudoCode field)
+    {
+        string value = (field as PseudoField)?.Value;
+        if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
+            value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
+            && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
+            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[3]")
+        {
+            return value;
+        }
+
+        return "";
     }
 
     private static string BuildComment(PseudoClass b, PseudoComment comment, int level, MethodType methodType)
@@ -1583,7 +1791,7 @@ namespace SharpMP4
         Size
     }
 
-    private static string BuildBlock(PseudoClass b, PseudoBlock block, int level, MethodType methodType)
+    private static string BuildBlock(PseudoClass b, PseudoBlock parent, PseudoBlock block, int level, MethodType methodType)
     {
         string spacing = GetSpacing(level);
         string ret;
@@ -1662,11 +1870,18 @@ namespace SharpMP4
 
         condition = FixFourCC(condition);
 
+        int nestedLevel = GetNestedInLoop(block);
+        if (nestedLevel > 0)
+        {
+            // patch condition
+            condition = FixNestedInLoopVariables(block, condition);
+        }
+
         ret = $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
 
         foreach (var field in block.Content)
         {
-            ret += "\r\n" + BuildMethodCode(b, field, level + 1, methodType);
+            ret += "\r\n" + BuildMethodCode(b, block, field, level + 1, methodType);
         }
 
         ret += $"\r\n{spacing}}}";
