@@ -793,24 +793,24 @@ public class IsoStream
         return 16;
     }
 
-    internal ulong ReadAlignedBits(int count, out bool value)
+    internal ulong ReadAlignedBits(uint count, out bool value)
     {
-        throw new NotImplementedException();
+        return ReadBit(out value);
     }
 
-    internal ulong WriteAlignedBits(int count, bool value)
+    internal ulong WriteAlignedBits(uint count, bool value)
     {
-        throw new NotImplementedException();
+        return WriteBit(value);
     }
 
-    internal ulong ReadAlignedBits(int count, out byte value)
+    internal ulong ReadAlignedBits(uint count, out byte value)
     {
-        throw new NotImplementedException();
+        return ReadBits(count, out value);
     }
 
-    internal ulong WriteAlignedBits(int count, byte value)
+    internal ulong WriteAlignedBits(uint count, byte value)
     {
-        throw new NotImplementedException();
+        return WriteBits(count, value);
     }
 }
 
