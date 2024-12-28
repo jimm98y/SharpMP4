@@ -333,6 +333,8 @@ partial class Program
             Try(String("unsigned int(8*num_bytes_constraint_info - 2)")),
             Try(String("bit(8*nal_unit_length)")),
             Try(String("bit(timeStampLength)")),
+            Try(String("bit(length-3)")),
+            Try(String("bit(length)")),
             Try(String("utf8string")),
             Try(String("utfstring")),
             Try(String("utf8list")),
@@ -556,6 +558,19 @@ partial class Program
             Try(String("AV1SampleEntry")),
             Try(String("AV1CodecConfigurationBox")),
             Try(String("AV1CodecConfigurationRecord")),
+            Try(String("vluimsbf8")),
+            Try(String("byte(urlMIDIStream_length)")),
+            Try(String("aligned bit(3)")),
+            Try(String("aligned bit(1)")),
+            Try(String("bit")),
+            Try(String("case 0b000:\r\n                mainscore_file")),
+            Try(String("case 0b001:\r\n                bit(8) partID; // ID of the part at which the following info refers \r\n                part_file")),
+            Try(String("case 0b010:\r\n                // this segment is always in binary as stated in Section 9 \r\n                synch_file")),
+            Try(String("case 0b011:\r\n                format_file")),
+            Try(String("case 0b100:\r\n                bit(8) partID;\r\n                bit(8) lyricID;\r\n                lyrics_file")),
+            Try(String("case 0b101:\r\n                // this segment is always in binary as stated in Section 11.4 \r\n                font_file")),
+            Try(String("case 0b110: ")),
+            Try(String("case 0b111: ")),
             Try(String("FieldLength = (large_size + 1) * 16")) // WORKAROUND
             )
         .Labelled("field type");
@@ -709,6 +724,7 @@ partial class Program
         //var test = Boxes.ParseOrThrow(jds);
 
         string[] jsonFiles = {
+            "14496-23-added.json",
             "14496-12-added.json",
             "14496-15-added.json",
             "14496-12-boxes.json",
@@ -1329,6 +1345,10 @@ namespace BoxGenerator2
                 {
                     return;
                 }
+                else if (field.Type == "aligned bit(1)" && ret[name].Type == "bit")
+                {
+                    return;
+                }
 
                 throw new Exception($"---Duplicated fileds: {name} of types: {field.Type}, {ret[name].Type}");                
             }
@@ -1763,6 +1783,8 @@ namespace BoxGenerator2
             { "bit(1)",                                 "stream.ReadBit(" },
             { "bit(2)",                                 "stream.ReadBits(2, " },
             { "bit(3)",                                 "stream.ReadBits(3, " },
+            { "bit(length-3)",                          "stream.ReadBits((uint)(length-3), " },
+            { "bit(length)",                            "stream.ReadBits(length, " },
             { "bit(4)",                                 "stream.ReadBits(4, " },
             { "bit(5)",                                 "stream.ReadBits(5, " },
             { "bit(6)",                                 "stream.ReadBits(6, " },
@@ -2051,6 +2073,19 @@ namespace BoxGenerator2
             { "AV1SampleEntry",                         "stream.ReadBox(" },
             { "AV1CodecConfigurationBox",               "stream.ReadBox(" },
             { "AV1CodecConfigurationRecord",            "stream.ReadClass(" },
+            { "vluimsbf8",                              "stream.ReadUimsbf(8, " },
+            { "byte(urlMIDIStream_length)",             "stream.ReadBytes(urlMIDIStream_length, " },
+            { "aligned bit(3)",                         "stream.ReadAlignedBits(3, " },
+            { "aligned bit(1)",                         "stream.ReadAlignedBits(1, " },
+            { "bit",                                    "stream.ReadBit(" },
+            { "case 0b000:\r\n                mainscore_file", "case 0b000:\r\n                boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
+            { "case 0b001:\r\n                bit(8) partID; // ID of the part at which the following info refers \r\n                part_file", "case 0b001:\r\n               boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
+            { "case 0b010:\r\n                // this segment is always in binary as stated in Section 9 \r\n                synch_file", "case 0b010:\r\n                // this segment is always in binary as stated in Section 9 \r\n                boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
+            { "case 0b011:\r\n                format_file", "case 0b011:\r\n                boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
+            { "case 0b100:\r\n                bit(8) partID;\r\n                bit(8) lyricID;\r\n                lyrics_file", "case 0b100:\r\n                boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
+            { "case 0b101:\r\n                // this segment is always in binary as stated in Section 11.4 \r\n                font_file", "case 0b101:\r\n                // this segment is always in binary as stated in Section 11.4 \r\n                boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
+            { "case 0b110: ",                           "case 0b110: boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
+            { "case 0b111: ",                           "case 0b111: boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
             { "unsigned int(16)[3]",                    "stream.ReadUInt16Array(3, " },
         };
         return map[type];
@@ -2139,6 +2174,8 @@ namespace BoxGenerator2
             { "bit(1)",                                 "1" },
             { "bit(2)",                                 "2" },
             { "bit(3)",                                 "3" },
+            { "bit(length-3)",                          "(ulong)(length-3)" },
+            { "bit(length)",                            "(ulong)length" },
             { "bit(4)",                                 "4" },
             { "bit(5)",                                 "5" },
             { "bit(6)",                                 "6" },
@@ -2427,6 +2464,19 @@ namespace BoxGenerator2
             { "AV1SampleEntry",                         "IsoStream.CalculateBoxSize(value)" },
             { "AV1CodecConfigurationBox",               "IsoStream.CalculateBoxSize(value)" },
             { "AV1CodecConfigurationRecord",            "IsoStream.CalculateClassSize(value)" },
+            { "vluimsbf8",                              "8" },
+            { "byte(urlMIDIStream_length)",             "(ulong)(urlMIDIStream_length * 8)" },
+            { "aligned bit(3)",                         "(ulong)3" }, // TODO: calculate alignment
+            { "aligned bit(1)",                         "(ulong)1" }, // TODO: calculate alignment
+            { "bit",                                    "1" },
+            { "case 0b000:\r\n                mainscore_file", "case 0b000:\r\n                boxSize += (ulong)((uint)(8 * chunk_length))" },
+            { "case 0b001:\r\n                bit(8) partID; // ID of the part at which the following info refers \r\n                part_file", "case 0b001:\r\n                boxSize += (ulong)((uint)(8 * chunk_length))" },
+            { "case 0b010:\r\n                // this segment is always in binary as stated in Section 9 \r\n                synch_file", "case 0b010:\r\n                boxSize += (ulong)((uint)(8 * chunk_length))" },
+            { "case 0b011:\r\n                format_file", "case 0b011:\r\n                boxSize += (ulong)((uint)(8 * chunk_length))" },
+            { "case 0b100:\r\n                bit(8) partID;\r\n                bit(8) lyricID;\r\n                lyrics_file", "case 0b100:\r\n                boxSize += (ulong)((uint)(8 * chunk_length))" },
+            { "case 0b101:\r\n                // this segment is always in binary as stated in Section 11.4 \r\n                font_file", "case 0b101:\r\n                boxSize += (ulong)((uint)(8 * chunk_length))" },
+            { "case 0b110: ",                           "case 0b110: boxSize += (ulong)((uint)(8 * chunk_length))" },
+            { "case 0b111: ",                           "case 0b111: boxSize += (ulong)((uint)(8 * chunk_length))" },
             { "unsigned int(16)[3]",                    "3 * 16" },
        };
         return map[type];
@@ -2515,6 +2565,8 @@ namespace BoxGenerator2
             { "bit(1)",                                 "stream.WriteBit(" },
             { "bit(2)",                                 "stream.WriteBits(2, " },
             { "bit(3)",                                 "stream.WriteBits(3, " },
+            { "bit(length-3)",                          "stream.WriteBits((uint)(length-3), " },
+            { "bit(length)",                            "stream.WriteBits(length, " },
             { "bit(4)",                                 "stream.WriteBits(4, " },
             { "bit(5)",                                 "stream.WriteBits(5, " },
             { "bit(6)",                                 "stream.WriteBits(6, " },
@@ -2802,6 +2854,19 @@ namespace BoxGenerator2
             { "AV1SampleEntry",                         "stream.WriteBox(" },
             { "AV1CodecConfigurationBox",               "stream.WriteBox(" },
             { "AV1CodecConfigurationRecord",            "stream.WriteClass(" },
+            { "vluimsbf8",                              "stream.WriteUimsbf(8, " },
+            { "byte(urlMIDIStream_length)",             "stream.WriteBytes(urlMIDIStream_length, " },
+            { "aligned bit(3)",                         "stream.WriteAlignedBits(3, " },
+            { "aligned bit(1)",                         "stream.WriteAlignedBits(1, " },
+            { "bit",                                    "stream.WriteBit(" },
+            { "case 0b000:\r\n                mainscore_file", "case 0b000:\r\n                boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
+            { "case 0b001:\r\n                bit(8) partID; // ID of the part at which the following info refers \r\n                part_file", "case 0b001:\r\n                boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
+            { "case 0b010:\r\n                // this segment is always in binary as stated in Section 9 \r\n                synch_file", "case 0b010:\r\n                boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
+            { "case 0b011:\r\n                format_file", "case 0b011:\r\n                boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
+            { "case 0b100:\r\n                bit(8) partID;\r\n                bit(8) lyricID;\r\n                lyrics_file", "case 0b100:\r\n                boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
+            { "case 0b101:\r\n                // this segment is always in binary as stated in Section 11.4 \r\n                font_file", "case 0b101:\r\n                boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
+            { "case 0b110: ",                           "case 0b110: boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
+            { "case 0b111: ",                           "case 0b111: boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
             { "unsigned int(16)[3]",                    "stream.WriteUInt16Array(3, " },
         };
         return map[type];
@@ -2933,6 +2998,8 @@ namespace BoxGenerator2
             { "bit(1)",                                 "bool" },
             { "bit(2)",                                 "byte" },
             { "bit(3)",                                 "byte" },
+            { "bit(length-3)",                          "byte[]" },
+            { "bit(length)",                            "byte[]" },
             { "bit(4)",                                 "byte" },
             { "bit(5)",                                 "byte" },
             { "bit(6)",                                 "byte" },
@@ -3221,6 +3288,19 @@ namespace BoxGenerator2
             { "ER_SC_CelpHeader",                       "ER_SC_CelpHeader" },
             { "AV1CodecConfigurationBox",               "AV1CodecConfigurationBox" },
             { "AV1CodecConfigurationRecord",            "AV1CodecConfigurationRecord" },
+            { "vluimsbf8",                              "byte" },
+            { "byte(urlMIDIStream_length)",             "byte[]" },
+            { "aligned bit(3)",                         "byte" },
+            { "aligned bit(1)",                         "bool" },
+            { "bit",                                    "bool" },
+            { "case 0b000:\r\n                mainscore_file", "byte[]" },
+            { "case 0b001:\r\n                bit(8) partID; // ID of the part at which the following info refers \r\n                part_file", "byte[]" },
+            { "case 0b010:\r\n                // this segment is always in binary as stated in Section 9 \r\n                synch_file", "byte[]" },
+            { "case 0b011:\r\n                format_file", "byte[]" },
+            { "case 0b100:\r\n                bit(8) partID;\r\n                bit(8) lyricID;\r\n                lyrics_file", "byte[]" },
+            { "case 0b101:\r\n                // this segment is always in binary as stated in Section 11.4 \r\n                font_file", "byte[]" },
+            { "case 0b110: ",                           "byte[]" },
+            { "case 0b111: ",                           "byte[]" },
             { "unsigned int(16)[3]",                    "ushort[]" },
        };
         return map[type];

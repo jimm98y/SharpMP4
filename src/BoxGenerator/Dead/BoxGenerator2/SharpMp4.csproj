@@ -7,8 +7,4 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="TestOutput.cs~RF9d591c0c.TMP" />
-  </ItemGroup>
-
 </Project>

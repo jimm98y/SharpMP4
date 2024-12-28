@@ -37,6 +37,11 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
+    internal ulong ReadBits(uint count, out byte[] value)
+    {
+        throw new NotImplementedException();
+    }
+
     internal ulong ReadBits(uint count, out ushort value)
     {
         throw new NotImplementedException();
@@ -108,6 +113,11 @@ public class IsoStream
     }
 
     internal ulong WriteBits(uint count, byte value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteBits(uint count, byte[] value)
     {
         throw new NotImplementedException();
     }
@@ -783,6 +793,25 @@ public class IsoStream
         return 16;
     }
 
+    internal ulong ReadAlignedBits(int count, out bool value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteAlignedBits(int count, bool value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong ReadAlignedBits(int count, out byte value)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal ulong WriteAlignedBits(int count, byte value)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 #if !NET7_0_OR_GREATER

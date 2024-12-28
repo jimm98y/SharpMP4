@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoxGenerator", "BoxGenerato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mp4BoxGenerator", "Mp4BoxGenerator\Mp4BoxGenerator.csproj", "{EDE2FB71-6D04-460B-9CDA-9624E735CB42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoxGenerator2", "BoxGenerator2\BoxGenerator2.csproj", "{1DAF2B53-1394-4C8E-B4DE-0DD3FF0D20A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpMp4", "BoxGenerator2\SharpMp4.csproj", "{1DAF2B53-1394-4C8E-B4DE-0DD3FF0D20A9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DeadEnds", "DeadEnds", "{5A7C1057-2384-4064-B2E5-BB02EF3BDBE4}"
 EndProject

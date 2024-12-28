@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="14496-23-added.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="14496-3-added.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

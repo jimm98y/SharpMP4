@@ -379,6 +379,382 @@ namespace BoxGenerator2
     }
 
     /*
+    class SymbolicMusicSpecificConfig
+    {  // the bitstream header  
+        bit(4) version; //version of this specification is 0b0000 
+
+        unsigned int(12) pictureWidth; // rendering window X size 
+        unsigned int(12) pictureHight; // rendering window Y size 
+
+        bit(1) isScoreMultiwindow; // 0: one window only – 1: multiple windows 
+
+        unsigned int(8) numberOfParts; // parts of the main score 
+
+        unsigned int(3) notationFormat; // CWMN or other sets 
+
+        vluimsbf8 urlMIDIStream_length; //length in bytes 
+        byte(urlMIDIStream_length) urlMIDIStream; // reference to the MIDI stream, as url 
+        bit(2) codingType; // coding of the XML chunks 
+        vluimsbf8 length; //length in bits of decoder configuration, unsigned integer 
+        // start of decoderConfiguration 
+        if (codingType == 0b11) { 
+           bit(3) decoderInitConfig; 
+           if (decoderInitConfig == 0b000) { 
+               bit(length-3)  decoderInit; 
+           }
+        } else
+        {
+          bit(length) reserved;
+        }
+        // end of decoderConfiguration 
+        bit more_data; // 1 if yes, 0 if no 
+        while (more_data)
+        {
+            aligned bit(3) chunk_type;
+            bit(5) reserved; // for alignment 
+            vluimsbf8 chunk_length;  // length of the chunk in byte 
+            switch (chunk_type)
+            {
+                case 0b000:
+                    mainscore_file sco;
+                    break;
+                case 0b001:
+                    bit(8) partID; // ID of the part at which the following info refers 
+                    part_file npf;
+                    break;
+                case 0b010:
+                    // this segment is always in binary as stated in Section 9 
+                    synch_file sync;
+                    break;
+                case 0b011:
+                    format_file fmt;
+                    break;
+                case 0b100:
+                    bit(8) partID;
+                    bit(8) lyricID;
+                    lyrics_file lyr;
+                    break;
+                case 0b101:
+                    // this segment is always in binary as stated in Section 11.4 
+                    font_file fon;
+                    break;
+                case 0b110: reserved;
+                break;
+                case 0b111: reserved;
+                break;
+            }
+            aligned bit(1) more_data;
+            bit(7) reserved; //for alignment 
+        } 
+    } 
+    */
+    public class SymbolicMusicSpecificConfig : IMp4Serializable
+    {
+
+
+        protected byte version;  // version of this specification is 0b0000 
+        public byte Version { get { return this.version; } set { this.version = value; } }
+
+        protected ushort pictureWidth;  //  rendering window X size 
+        public ushort PictureWidth { get { return this.pictureWidth; } set { this.pictureWidth = value; } }
+
+        protected ushort pictureHight;  //  rendering window Y size 
+        public ushort PictureHight { get { return this.pictureHight; } set { this.pictureHight = value; } }
+
+        protected bool isScoreMultiwindow;  //  0: one window only – 1: multiple windows 
+        public bool IsScoreMultiwindow { get { return this.isScoreMultiwindow; } set { this.isScoreMultiwindow = value; } }
+
+        protected byte numberOfParts;  //  parts of the main score 
+        public byte NumberOfParts { get { return this.numberOfParts; } set { this.numberOfParts = value; } }
+
+        protected byte notationFormat;  //  CWMN or other sets 
+        public byte NotationFormat { get { return this.notationFormat; } set { this.notationFormat = value; } }
+
+        protected byte urlMIDIStream_length;  // length in bytes 
+        public byte UrlMIDIStreamLength { get { return this.urlMIDIStream_length; } set { this.urlMIDIStream_length = value; } }
+
+        protected byte[] urlMIDIStream;  //  reference to the MIDI stream, as url 
+        public byte[] UrlMIDIStream { get { return this.urlMIDIStream; } set { this.urlMIDIStream = value; } }
+
+        protected byte codingType;  //  coding of the XML chunks 
+        public byte CodingType { get { return this.codingType; } set { this.codingType = value; } }
+
+        protected byte length;  // length in bits of decoder configuration, unsigned integer 
+        public byte Length { get { return this.length; } set { this.length = value; } }
+
+        protected byte decoderInitConfig;
+        public byte DecoderInitConfig { get { return this.decoderInitConfig; } set { this.decoderInitConfig = value; } }
+
+        protected byte[] decoderInit;
+        public byte[] DecoderInit { get { return this.decoderInit; } set { this.decoderInit = value; } }
+
+        protected byte[] reserved;
+        public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool more_data;  //  1 if yes, 0 if no 
+        public bool MoreData { get { return this.more_data; } set { this.more_data = value; } }
+
+        protected byte chunk_type;
+        public byte ChunkType { get { return this.chunk_type; } set { this.chunk_type = value; } }
+
+        protected byte reserved0;  //  for alignment 
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte chunk_length;  //  length of the chunk in byte 
+        public byte ChunkLength { get { return this.chunk_length; } set { this.chunk_length = value; } }
+
+        protected byte[] sco;
+        public byte[] Sco { get { return this.sco; } set { this.sco = value; } }
+
+        protected byte[] npf;
+        public byte[] Npf { get { return this.npf; } set { this.npf = value; } }
+
+        protected byte[] sync;
+        public byte[] Sync { get { return this.sync; } set { this.sync = value; } }
+
+        protected byte[] fmt;
+        public byte[] Fmt { get { return this.fmt; } set { this.fmt = value; } }
+
+        protected byte[] lyr;
+        public byte[] Lyr { get { return this.lyr; } set { this.lyr = value; } }
+
+        protected byte[] fon;
+        public byte[] Fon { get { return this.fon; } set { this.fon = value; } }
+
+        protected byte[] reserved00;
+        public byte[] Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
+
+        protected byte[] reserved000;
+        public byte[] Reserved000 { get { return this.reserved000; } set { this.reserved000 = value; } }
+
+        protected byte reserved1;  // for alignment 
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        public SymbolicMusicSpecificConfig() : base()
+        {
+        }
+
+        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            /*  the bitstream header   */
+            boxSize += stream.ReadBits(4, out this.version); //version of this specification is 0b0000 
+            boxSize += stream.ReadBits(12, out this.pictureWidth); // rendering window X size 
+            boxSize += stream.ReadBits(12, out this.pictureHight); // rendering window Y size 
+            boxSize += stream.ReadBit(out this.isScoreMultiwindow); // 0: one window only – 1: multiple windows 
+            boxSize += stream.ReadUInt8(out this.numberOfParts); // parts of the main score 
+            boxSize += stream.ReadBits(3, out this.notationFormat); // CWMN or other sets 
+            boxSize += stream.ReadUimsbf(8, out this.urlMIDIStream_length); //length in bytes 
+            boxSize += stream.ReadBytes(urlMIDIStream_length, out this.urlMIDIStream); // reference to the MIDI stream, as url 
+            boxSize += stream.ReadBits(2, out this.codingType); // coding of the XML chunks 
+            boxSize += stream.ReadUimsbf(8, out this.length); //length in bits of decoder configuration, unsigned integer 
+            /*  start of decoderConfiguration  */
+
+            if (codingType == 0b11)
+            {
+                boxSize += stream.ReadBits(3, out this.decoderInitConfig);
+
+                if (decoderInitConfig == 0b000)
+                {
+                    boxSize += stream.ReadBits((uint)(length - 3), out this.decoderInit);
+                }
+            }
+
+            else
+            {
+                boxSize += stream.ReadBits(length, out this.reserved);
+            }
+            /*  end of decoderConfiguration  */
+            boxSize += stream.ReadBit(out this.more_data); // 1 if yes, 0 if no 
+
+            while (more_data)
+            {
+                boxSize += stream.ReadAlignedBits(3, out this.chunk_type);
+                boxSize += stream.ReadBits(5, out this.reserved0); // for alignment 
+                boxSize += stream.ReadUimsbf(8, out this.chunk_length); // length of the chunk in byte 
+
+                switch (chunk_type)
+                {
+                    case 0b000:
+                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.sco);
+                        break;
+                    case 0b001:
+                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.npf);
+                        break;
+                    case 0b010:
+                        // this segment is always in binary as stated in Section 9 
+                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.sync);
+                        break;
+                    case 0b011:
+                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.fmt);
+                        break;
+                    case 0b100:
+                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.lyr);
+                        break;
+                    case 0b101:
+                        // this segment is always in binary as stated in Section 11.4 
+                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.fon);
+                        break;
+                    case 0b110:
+                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.reserved00);
+                        break;
+                    case 0b111:
+                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.reserved000);
+                        break;
+                }
+                boxSize += stream.ReadAlignedBits(1, out this.more_data);
+                boxSize += stream.ReadBits(7, out this.reserved1); //for alignment 
+            }
+            return boxSize;
+        }
+
+        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            /*  the bitstream header   */
+            boxSize += stream.WriteBits(4, this.version); //version of this specification is 0b0000 
+            boxSize += stream.WriteBits(12, this.pictureWidth); // rendering window X size 
+            boxSize += stream.WriteBits(12, this.pictureHight); // rendering window Y size 
+            boxSize += stream.WriteBit(this.isScoreMultiwindow); // 0: one window only – 1: multiple windows 
+            boxSize += stream.WriteUInt8(this.numberOfParts); // parts of the main score 
+            boxSize += stream.WriteBits(3, this.notationFormat); // CWMN or other sets 
+            boxSize += stream.WriteUimsbf(8, this.urlMIDIStream_length); //length in bytes 
+            boxSize += stream.WriteBytes(urlMIDIStream_length, this.urlMIDIStream); // reference to the MIDI stream, as url 
+            boxSize += stream.WriteBits(2, this.codingType); // coding of the XML chunks 
+            boxSize += stream.WriteUimsbf(8, this.length); //length in bits of decoder configuration, unsigned integer 
+            /*  start of decoderConfiguration  */
+
+            if (codingType == 0b11)
+            {
+                boxSize += stream.WriteBits(3, this.decoderInitConfig);
+
+                if (decoderInitConfig == 0b000)
+                {
+                    boxSize += stream.WriteBits((uint)(length - 3), this.decoderInit);
+                }
+            }
+
+            else
+            {
+                boxSize += stream.WriteBits(length, this.reserved);
+            }
+            /*  end of decoderConfiguration  */
+            boxSize += stream.WriteBit(this.more_data); // 1 if yes, 0 if no 
+
+            while (more_data)
+            {
+                boxSize += stream.WriteAlignedBits(3, this.chunk_type);
+                boxSize += stream.WriteBits(5, this.reserved0); // for alignment 
+                boxSize += stream.WriteUimsbf(8, this.chunk_length); // length of the chunk in byte 
+
+                switch (chunk_type)
+                {
+                    case 0b000:
+                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.sco);
+                        break;
+                    case 0b001:
+                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.npf);
+                        break;
+                    case 0b010:
+                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.sync);
+                        break;
+                    case 0b011:
+                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.fmt);
+                        break;
+                    case 0b100:
+                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.lyr);
+                        break;
+                    case 0b101:
+                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.fon);
+                        break;
+                    case 0b110:
+                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.reserved00);
+                        break;
+                    case 0b111:
+                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.reserved000);
+                        break;
+                }
+                boxSize += stream.WriteAlignedBits(1, this.more_data);
+                boxSize += stream.WriteBits(7, this.reserved1); //for alignment 
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            /*  the bitstream header   */
+            boxSize += 4; // version
+            boxSize += 12; // pictureWidth
+            boxSize += 12; // pictureHight
+            boxSize += 1; // isScoreMultiwindow
+            boxSize += 8; // numberOfParts
+            boxSize += 3; // notationFormat
+            boxSize += 8; // urlMIDIStream_length
+            boxSize += (ulong)(urlMIDIStream_length * 8); // urlMIDIStream
+            boxSize += 2; // codingType
+            boxSize += 8; // length
+            /*  start of decoderConfiguration  */
+
+            if (codingType == 0b11)
+            {
+                boxSize += 3; // decoderInitConfig
+
+                if (decoderInitConfig == 0b000)
+                {
+                    boxSize += (ulong)(length - 3); // decoderInit
+                }
+            }
+
+            else
+            {
+                boxSize += (ulong)length; // reserved
+            }
+            /*  end of decoderConfiguration  */
+            boxSize += 1; // more_data
+
+            while (more_data)
+            {
+                boxSize += (ulong)3; // chunk_type
+                boxSize += 5; // reserved0
+                boxSize += 8; // chunk_length
+
+                switch (chunk_type)
+                {
+                    case 0b000:
+                        boxSize += (ulong)((uint)(8 * chunk_length)); // sco
+                        break;
+                    case 0b001:
+                        boxSize += (ulong)((uint)(8 * chunk_length)); // npf
+                        break;
+                    case 0b010:
+                        boxSize += (ulong)((uint)(8 * chunk_length)); // sync
+                        break;
+                    case 0b011:
+                        boxSize += (ulong)((uint)(8 * chunk_length)); // fmt
+                        break;
+                    case 0b100:
+                        boxSize += (ulong)((uint)(8 * chunk_length)); // lyr
+                        break;
+                    case 0b101:
+                        boxSize += (ulong)((uint)(8 * chunk_length)); // fon
+                        break;
+                    case 0b110:
+                        boxSize += (ulong)((uint)(8 * chunk_length)); // reserved00
+                        break;
+                    case 0b111:
+                        boxSize += (ulong)((uint)(8 * chunk_length)); // reserved000
+                        break;
+                }
+                boxSize += (ulong)1; // more_data
+                boxSize += 7; // reserved1
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
     aligned(8) class FullBox(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)
     extends Box(boxtype) { 
     unsigned int(8) version = v;
