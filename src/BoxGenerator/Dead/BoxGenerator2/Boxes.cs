@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace BoxGenerator2
+namespace SharpMP4
 {
     public abstract class CompressedBox : Box 
     {

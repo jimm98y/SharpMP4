@@ -870,7 +870,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BoxGenerator2
+namespace SharpMP4
 {
 ";
         // build box factory
