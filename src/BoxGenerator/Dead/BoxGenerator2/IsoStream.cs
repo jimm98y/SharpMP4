@@ -8,6 +8,9 @@ using System.Text;
 public class IsoStream
 {
     private readonly Stream _stream;
+    protected int _bitsPosition;
+    protected int _currentBytePosition = -1;
+    protected byte _currentByte = 0;
 
     public IsoStream(Stream stream)
     {
@@ -27,34 +30,37 @@ public class IsoStream
         return 8;
     }
 
-    internal ulong ReadBit(out bool value)
+    private int ReadBit()
     {
-        throw new NotImplementedException();
+        int bytePos = _bitsPosition >> 3;
+
+        if (_currentBytePosition != bytePos)
+        {
+            byte b = ReadByte();
+            _currentByte = b;
+            _currentBytePosition = bytePos;
+        }
+
+        int posInByte = 7 - _bitsPosition % 8;
+        int bit = _currentByte >> posInByte & 1;
+        ++_bitsPosition;
+        return bit;
     }
 
-    internal ulong ReadBits(uint count, out byte value)
+    public void WriteBit(int value)
     {
-        throw new NotImplementedException();
-    }
+        int posInByte = 7 - _bitsPosition % 8;
+        int bit = (value & 1) << posInByte;
+        _currentByte = (byte)(_currentByte | bit);
+        ++_bitsPosition;
 
-    internal ulong ReadBits(uint count, out byte[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadBits(uint count, out ushort value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadBits(uint count, out short value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadBits(uint count, out uint value)
-    {
-        throw new NotImplementedException();
+        int bytePos = _bitsPosition >> 3;
+        if (_currentBytePosition != bytePos)
+        {
+            WriteByte(_currentByte);
+            _currentBytePosition = bytePos;
+            _currentByte = 0;
+        }
     }
 
     internal ulong ReadBox<T>(out T value) where T : Box
@@ -82,10 +88,6 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong ReadString(out string value)
-    {
-        throw new NotImplementedException();
-    }
 
     internal ulong ReadUInt8Array(out byte[] value)
     {
@@ -107,36 +109,11 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
-    internal ulong WriteBit(bool value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteBits(uint count, byte value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteBits(uint count, byte[] value)
-    {
-        throw new NotImplementedException();
-    }
-
     internal ulong WriteBits(uint count, short value)
     {
         throw new NotImplementedException();
     }
-
-    internal ulong WriteBits(uint count, ushort value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteBits(uint count, uint value)
-    {
-        throw new NotImplementedException();
-    }
-
+       
     internal ulong WriteBox(Box value)
     {
         throw new NotImplementedException();
@@ -162,12 +139,27 @@ public class IsoStream
         throw new NotImplementedException();
     }
 
+    internal ulong ReadString(out string value)
+    {
+        throw new NotImplementedException();
+    }
+
     internal ulong WriteString(string value)
     {
         throw new NotImplementedException();
     }
 
+    internal ulong ReadStringArray(uint count, out string[] value)
+    {
+        throw new NotImplementedException();
+    }
+
     internal ulong WriteStringArray(uint count, string[] values)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static ulong CalculateSize(string[] values)
     {
         throw new NotImplementedException();
     }
@@ -178,81 +170,6 @@ public class IsoStream
     }
 
     internal ulong WriteUInt32Array(uint[] value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static ulong CalculateSize(string[] values)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadBslbf(ulong count, out ushort value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteBslbf(ulong count, ushort value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadBslbf(out bool value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteBslbf(bool value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadBslbf(ulong count, out byte value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteBslbf(ulong count, byte value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUimsbf(ulong count, out byte value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUimsbf(ulong count, byte value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUimsbf(out bool value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUimsbf(bool value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUimsbf(ulong count, out ushort value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUimsbf(ulong count, ushort value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong ReadUimsbf(ulong count, out uint value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal ulong WriteUimsbf(ulong count, uint value)
     {
         throw new NotImplementedException();
     }
@@ -279,8 +196,209 @@ public class IsoStream
 
 
 
+    internal ulong ReadBslbf(ulong count, out ushort value)
+    {
+        return ReadBits((uint)count, out value);
+    }
 
+    internal ulong WriteBslbf(ulong count, ushort value)
+    {
+        return WriteBits((uint)count, value);
+    }
 
+    internal ulong ReadBslbf(ulong count, out byte value)
+    {
+        return ReadBits((uint)count, out value);
+    }
+
+    internal ulong WriteBslbf(ulong count, byte value)
+    {
+        return WriteBits((uint)count, value);
+    }
+
+    internal ulong ReadUimsbf(ulong count, out byte value)
+    {
+        return ReadBits((uint)count, out value);
+    }
+
+    internal ulong WriteUimsbf(ulong count, byte value)
+    {
+        return WriteBits((uint)count, value);
+    }
+
+    internal ulong ReadUimsbf(ulong count, out ushort value)
+    {
+        return ReadBits((uint)count, out value);
+    }
+
+    internal ulong WriteUimsbf(ulong count, ushort value)
+    {
+        return WriteBits((uint)count, value);
+    }
+
+    internal ulong ReadUimsbf(ulong count, out uint value)
+    {
+        return ReadBits((uint)count, out value);
+    }
+
+    internal ulong WriteUimsbf(ulong count, uint value)
+    {
+        return WriteBits((uint)count, value);
+    }
+
+    internal ulong ReadBits(uint count, out byte[] value)
+    {
+        value = new byte[(count >> 3) + (count % 8)];
+        int i = 0;
+        int c = (int)count;
+        while (i < value.Length && c > 0)
+        {
+            byte v = 0;
+            c -= (int)ReadBits((uint)Math.Min(c, 8), out v);
+            value[i] = v;
+            i++;
+        }
+        return count;
+    }
+
+    internal ulong WriteBits(uint count, byte[] value)
+    {
+        int c = (int)count;
+        int i = 0;
+        while (i < value.Length && c > 0)
+        {
+            c -= (int)WriteBits((uint)Math.Min(c, 8), value[i]);
+            i++;
+        }
+        return count;
+    }
+
+    internal ulong ReadUimsbf(out bool value)
+    {
+        return ReadBit(out value);
+    }
+
+    internal ulong WriteUimsbf(bool value)
+    {
+        return WriteBit(value);
+    }
+
+    internal ulong ReadBslbf(out bool value)
+    {
+        return ReadBit(out value);
+    }
+
+    internal ulong WriteBslbf(bool value)
+    {
+        return WriteBit(value);
+    }
+
+    internal ulong ReadBit(out bool value)
+    {
+        value = ReadBit() != 0;
+        return 1;
+    }
+
+    internal ulong ReadBits(uint count, out byte value)
+    {
+        if (count > 8) throw new ArgumentException();
+        ulong ret = ReadBits(count, out uint v);
+        value = (byte)v;
+        return ret;
+    }
+
+    internal ulong ReadBits(uint count, out ushort value)
+    {
+        if (count > 16) throw new ArgumentException();
+        ulong ret = ReadBits(count, out uint v);
+        value = (ushort)v;
+        return ret;
+    }
+
+    internal ulong ReadBits(uint count, out short value)
+    {
+        if (count > 16) throw new ArgumentException();
+        uint originalCount = count;
+
+        int sign = ReadBit() == 1 ? -1 : 1;
+        count--;
+
+        int res = 0;
+        while (count > 0)
+        {
+            res = res << 1;
+            int u1 = ReadBit();
+
+            if (u1 == -1)
+            {
+                throw new EndOfStreamException();
+            }
+
+            res |= u1;
+            count--;
+        }
+
+        value = (short)(res * sign);
+        return originalCount;
+    }
+
+    internal ulong ReadBits(uint count, out uint value)
+    {
+        if (count > 32) throw new ArgumentException();
+        uint originalCount = count;
+        int res = 0;
+        while (count > 0)
+        {
+            res = res << 1;
+            int u1 = ReadBit();
+
+            if (u1 == -1)
+            {
+                throw new EndOfStreamException();
+            }
+
+            res |= u1;
+            count--;
+        }
+
+        value = (uint)res;
+        return originalCount;
+    }
+
+    internal ulong WriteBit(bool value)
+    {
+        WriteBit(value ? 1 : 0);
+        return 1;
+    }
+
+    internal ulong WriteBits(uint count, byte value)
+    {
+        if (count > 8)
+            throw new ArgumentOutOfRangeException(nameof(count));
+        return WriteBits(count, (uint)value);
+    }
+
+    internal ulong WriteBits(uint count, ushort value)
+    {
+        if (count > 16)
+            throw new ArgumentOutOfRangeException(nameof(count));
+        return WriteBits(count, (uint)value);
+    }
+
+    internal ulong WriteBits(uint count, uint value)
+    {
+        if (count > 32)
+            throw new ArgumentOutOfRangeException(nameof(count));
+        uint originalCount = count;
+        while (count > 0)
+        {
+            int bits = (int)count - 1;
+            int mask = 0x1 << bits;
+            WriteBit((int)((value & mask) >> bits));
+            count--;
+        }
+        return originalCount;
+    }
 
     internal ulong ReadBytes(ulong length, out byte[] value)
     {
@@ -339,11 +457,6 @@ public class IsoStream
         }
         value = Encoding.UTF8.GetString(buffer.ToArray());
         return (ulong)(buffer.Count + 1);
-    }
-
-    internal ulong ReadStringArray(uint count, out string[] value)
-    {
-        throw new NotImplementedException();
     }
 
     internal ulong ReadInt16(out short value)
