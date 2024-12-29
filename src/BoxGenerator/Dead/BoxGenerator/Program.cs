@@ -1822,7 +1822,7 @@ namespace SharpMP4
         string blockType = block.Type;
         if (blockType == "for")
         {
-            condition = "(int " + condition.TrimStart('(');
+            condition = FixForCycleCondition(condition);
         }
         else if (blockType == "do")
         {
@@ -1965,6 +1965,28 @@ namespace SharpMP4
         ret += $"\r\n{spacing}}}";
 
         return ret;
+    }
+
+    private static string FixForCycleCondition(string condition)
+    {
+        condition = condition.Substring(1, condition.Length - 2);
+
+        string[] parts = condition.Split(";");
+
+        if (parts[0].Contains("1") && parts[1].Contains("="))
+        {
+            parts[0] = parts[0].Replace("1", "0");
+            parts[1] = parts[1].Replace("=", "");
+        }
+        else
+        {
+            if (!((parts[0].Contains("0") && !parts[1].Contains("=")) || (parts[0].Contains("0") && parts[1].Contains("_minus1") && parts[1].Contains("="))) &&
+                parts[1] != " i >= 0" &&
+                parts[1] != " j<=8 && num_sublayers > 1")
+                throw new Exception();
+        }
+        
+        return $"(int {string.Join(";", parts)})";
     }
 
     private static string FixFourCC(string value)

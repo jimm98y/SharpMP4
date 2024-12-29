@@ -466,7 +466,7 @@ class ALSSpecificConfig()
     uimsbf(16) chan_config_info;
   }
   if (chan_sort) {
-    for (c = 0; c <= channels; c++)
+    for (c = 0; c < channels; c++)
       uimsbf(1) chan_pos[c]; // 1..16 uimsbf 
   }
   bslbf(1) byte_align; // TODO: 0..7 bslbf 
