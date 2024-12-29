@@ -647,7 +647,6 @@ partial class Program
             Try(String("(unsigned int(32) reference_type)")),
             Try(String("(grouping_type, version, flags)")),
             Try(String("('snut')")),
-            Try(String("('resv')")),
             Try(String("('msrc')")),
             Try(String("('cstg')")),
             Try(String("('alte')")),
@@ -904,6 +903,30 @@ namespace SharpMP4
             }
         }
 
+        // add additional entries
+        string[] audioSampleEntryTypes = new string[]
+        {
+            "samr", "sawb", "mp4a", "drms", "alac", "owma", "ac-3", "ec-3", "mlpa", "dtsl", "dtsh", "dtse", "Opus", "enca", "resa"
+        };
+        foreach(var type in audioSampleEntryTypes)
+        {
+            if (!fourccBoxes.ContainsKey(type))
+                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value });
+            //else
+            //    fourccBoxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value };
+        }
+        string[] visualSampleEntryTypes = new string[]
+        {
+            "mp4v", "s263", "avc1", "avc3", "drmi", "hvc1", "hev1", "encv", "resv"
+        };
+        foreach (var type in visualSampleEntryTypes)
+        {
+            if (!fourccBoxes.ContainsKey(type))
+                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
+            //else
+            //    fourccBoxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value };
+        }
+
         foreach (var item in fourccBoxes)
         {
             if (item.Value.Count == 1)
@@ -911,7 +934,10 @@ namespace SharpMP4
                 string comment = "";
                 if (item.Value.Single().BoxName.Contains('_'))
                     comment = " // TODO: fix duplicate";
-                factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}();{comment}\r\n";
+                string optParams = "";
+                if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry")
+                    optParams = $"\"{item.Key}\"";
+                factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}({optParams});{comment}\r\n";
             }
             else
             {
@@ -1128,7 +1154,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Read);
         }
 
-        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
+        if (string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes))
         {
             cls += "\r\n" + "boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);";
         }
@@ -1146,7 +1172,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Write);
         }
 
-        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
+        if (string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes))
         {
             cls += "\r\n" + "boxSize += stream.WriteBoxArrayTillEnd(this);";
         }
@@ -1163,7 +1189,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Size);
         }
 
-        if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
+        if (string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes))
         {
             cls += "\r\n" + "boxSize += IsoStream.CalculateBoxArray(this);";
         }
@@ -1190,7 +1216,6 @@ namespace SharpMP4
             { "(unsigned int(32) reference_type)",  "string reference_type" },
             { "(grouping_type, version, flags)",    "string grouping_type, byte version, uint flags" },
             { "('snut')",                           "string boxtype = \"snut\"" },
-            { "('resv')",                           "string boxtype = \"resv\"" },
             { "('msrc')",                           "string boxtype = \"msrc\"" },
             { "('cstg')",                           "string boxtype = \"cstg\"" },
             { "('alte')",                           "string boxtype = \"alte\"" },

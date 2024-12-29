@@ -20,9 +20,11 @@ namespace SharpMP4
                 case "a3d3": return new A3DSampleEntry_a3d3(); // TODO: fix duplicate
                 case "a3d4": return new A3DSampleEntry_a3d4(); // TODO: fix duplicate
                 case "a3dC": return new A3DConfigurationBox();
+                case "ac-3": return new AudioSampleEntry("ac-3");
                 case "acgl": return new SubpicCommonGroupBox();
                 case "aebr": return new AutoExposureBracketingEntry();
                 case "afbr": return new FlashExposureBracketingEntry();
+                case "alac": return new AudioSampleEntry("alac");
                 case "alou": return new AlbumLoudnessInfo();
                 case "alst": return new AlternativeStartupEntry();
                 case "alte": return new TrackGroupTypeBox_alte(); // TODO: fix duplicate
@@ -78,11 +80,18 @@ namespace SharpMP4
                 case "drap": return new VisualDRAPEntry();
                 case "dref": return new DataReferenceBox();
                 case "drep": return new hintrepeatedBytesSent();
+                case "drmi": return new VisualSampleEntry("drmi");
+                case "drms": return new AudioSampleEntry("drms");
                 case "dtrt": return new DecodeRetimingEntry();
+                case "dtse": return new AudioSampleEntry("dtse");
+                case "dtsh": return new AudioSampleEntry("dtsh");
+                case "dtsl": return new AudioSampleEntry("dtsl");
+                case "ec-3": return new AudioSampleEntry("ec-3");
                 case "ecam": return new ExtrinsicCameraParametersBox();
                 case "edts": return new EditBox();
                 case "elng": return new ExtendedLanguageBox();
                 case "elst": return new EditListBox();
+                case "enca": return new AudioSampleEntry("enca");
                 case "encv": return new GenericSampleEntry();
                 case "eob ": return new EndOfBitstreamSampleEntry();
                 case "eos ": return new EndOfSequenceSampleEntry();
@@ -173,8 +182,11 @@ namespace SharpMP4
                 case "mfro": return new MovieFragmentRandomAccessOffsetBox();
                 case "minf": return new MediaInformationBox();
                 case "minp": return new VvcMixedNALUnitTypePicEntry();
+                case "mlpa": return new AudioSampleEntry("mlpa");
                 case "moof": return new MovieFragmentBox(); // TODO: box is ambiguous in between MovieFragmentBox and CompressedMovieFragmentBox
                 case "moov": return new MovieBox(); // TODO: box is ambiguous in between MovieBox and CompressedMovieBox
+                case "mp4a": return new AudioSampleEntry("mp4a");
+                case "mp4v": return new VisualSampleEntry("mp4v");
                 case "mskC": return new MaskConfigurationProperty();
                 case "msrc": return new TrackGroupTypeBox();
                 case "mstv": return new MVCSubTrackViewBox();
@@ -204,6 +216,7 @@ namespace SharpMP4
                 case "opth": return new OperatingPointDecodeTimeHint();
                 case "Opus": return new OpusSampleEntry();
                 case "otyp": return new OriginalFileTypeBox();
+                case "owma": return new AudioSampleEntry("owma");
                 case "padb": return new PaddingBitsBox();
                 case "paen": return new PartitionEntry();
                 case "pano": return new PanoramaEntry();
@@ -224,7 +237,8 @@ namespace SharpMP4
                 case "rap ": return new VisualRandomAccessEntry();
                 case "rash": return new RateShareEntry();
                 case "refs": return new DirectReferenceSamplesList();
-                case "resv": return new VisualSampleEntry();
+                case "resa": return new AudioSampleEntry("resa");
+                case "resv": return new VisualSampleEntry("resv");
                 case "rinf": return new RestrictedSchemeInfoBox();
                 case "rloc": return new RelativeLocationProperty();
                 case "rm2t": return new MPEG2TSReceptionSampleEntry();
@@ -236,9 +250,12 @@ namespace SharpMP4
                 case "rsrp": return new ReceivedSrtpHintSampleEntry();
                 case "rssr": return new ReceivedSsrcBox();
                 case "rtp ": return new RtpHintSampleEntry(); // TODO: box is ambiguous in between rtpmoviehintinformation and RtpHintSampleEntry
+                case "s263": return new VisualSampleEntry("s263");
                 case "saio": return new SampleAuxiliaryInformationOffsetsBox();
                 case "saiz": return new SampleAuxiliaryInformationSizesBox();
+                case "samr": return new AudioSampleEntry("samr");
                 case "sap ": return new SAPEntry();
+                case "sawb": return new AudioSampleEntry("sawb");
                 case "sbgp": return new SampleToGroupBox();
                 case "sbtt": return new TextSubtitleSampleEntry();
                 case "schi": return new SchemeInformationBox();
@@ -2082,7 +2099,6 @@ namespace SharpMP4
             boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8Array(6, out this.reserved);
             boxSize += stream.ReadUInt16(out this.data_reference_index);
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -2092,7 +2108,6 @@ namespace SharpMP4
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteUInt8Array(6, this.reserved);
             boxSize += stream.WriteUInt16(this.data_reference_index);
-            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -2102,7 +2117,6 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 6 * 8; // reserved
             boxSize += 16; // data_reference_index
-            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -21760,7 +21774,7 @@ namespace SharpMP4
 
 
     /*
-    class VisualSampleEntry('resv') extends SampleEntry ('resv'){
+    class VisualSampleEntry(codingname) extends SampleEntry (codingname){
         unsigned int(16) pre_defined = 0;
         const unsigned int(16) reserved = 0;
         unsigned int(32)[3]	pre_defined = 0;
@@ -21781,7 +21795,7 @@ namespace SharpMP4
     */
     public class VisualSampleEntry : SampleEntry
     {
-        public const string TYPE = "resv";
+
 
         protected ushort pre_defined = 0;
         public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -21821,7 +21835,7 @@ namespace SharpMP4
         public CleanApertureBox Clap { get { return this.children.OfType<CleanApertureBox>().FirstOrDefault(); } }
         public PixelAspectRatioBox Pasp { get { return this.children.OfType<PixelAspectRatioBox>().FirstOrDefault(); } }
 
-        public VisualSampleEntry(string boxtype = "resv") : base("resv")
+        public VisualSampleEntry(string codingname = "") : base(codingname)
         {
         }
 

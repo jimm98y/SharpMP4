@@ -210,7 +210,7 @@
       "description": "Restricted video",
       "type": "RestrictedSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class VisualSampleEntry('resv') extends SampleEntry ('resv'){\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0;\r\n\tunsigned int(32)[3]\tpre_defined = 0;\r\n\tunsigned int(16)\twidth;\r\n\tunsigned int(16)\theight;\r\n\ttemplate unsigned int(32)\thorizresolution = 0x00480000;\t// 72 dpi\r\n\ttemplate unsigned int(32)\tvertresolution  = 0x00480000;\t// 72 dpi\r\n\tconst unsigned int(32)\treserved = 0;\r\n\ttemplate unsigned int(16)\tframe_count = 1;\r\n\tuint(8)[32]\tcompressorname;\r\n\ttemplate unsigned int(16)\tdepth = 0x0018;\r\n\tint(16)\tpre_defined = -1;\r\n\t// other boxes from derived specifications\r\n\tCleanApertureBox\t\t\tclap;\t\t// optional\r\n\tPixelAspectRatioBox\t\tpasp;\t\t// optional\r\n}\r\n"
+      "syntax": "class VisualSampleEntry(codingname) extends SampleEntry (codingname){\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0;\r\n\tunsigned int(32)[3]\tpre_defined = 0;\r\n\tunsigned int(16)\twidth;\r\n\tunsigned int(16)\theight;\r\n\ttemplate unsigned int(32)\thorizresolution = 0x00480000;\t// 72 dpi\r\n\ttemplate unsigned int(32)\tvertresolution  = 0x00480000;\t// 72 dpi\r\n\tconst unsigned int(32)\treserved = 0;\r\n\ttemplate unsigned int(16)\tframe_count = 1;\r\n\tuint(8)[32]\tcompressorname;\r\n\ttemplate unsigned int(16)\tdepth = 0x0018;\r\n\tint(16)\tpre_defined = -1;\r\n\t// other boxes from derived specifications\r\n\tCleanApertureBox\t\t\tclap;\t\t// optional\r\n\tPixelAspectRatioBox\t\tpasp;\t\t// optional\r\n}\r\n"
     },
     {
       "fourcc": "resa",
