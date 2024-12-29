@@ -1514,7 +1514,6 @@ namespace SharpMP4
             {
                 // add the allocation above the first for in the hierarchy
                 parent.RequiresAllocation.Add(field);
-                break;
             }
 
             parent = parent.Parent;
@@ -1918,7 +1917,18 @@ namespace SharpMP4
                                 continue;
 
                             string suffix;
-                            GetNestedInLoopSuffix(block, "", out suffix);
+                            int blockSuffixLevel = GetNestedInLoopSuffix(block, "", out suffix);
+                            int fieldSuffixLevel = GetNestedInLoopSuffix(req, "", out _);
+
+                            string appendType = "";
+                            if(fieldSuffixLevel - blockSuffixLevel > 1)
+                            {
+                                for (int i = 0; i < (fieldSuffixLevel - blockSuffixLevel - 1); i++)
+                                {
+                                    appendType += "[]";
+                                }
+                            }
+
                             string variableName = req.Name + suffix;
                             string variableType = GetType(req.Type);
                             if (variableType.Contains("[]"))
@@ -1930,7 +1940,7 @@ namespace SharpMP4
                             {
                                 variableType = variableType + $"[{variable}]";
                             }
-                            ret += $"\r\n{spacing}this.{variableName} = new {variableType};";
+                            ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
                         }
                     }
                     else
