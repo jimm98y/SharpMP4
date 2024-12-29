@@ -2797,10 +2797,16 @@ namespace SharpMP4
             boxSize += stream.ReadUInt8(out this.prec_rotation_param);
             boxSize += stream.ReadUInt8(out this.prec_translation_param);
 
+            this.exponent_r = new byte[3][];
+            this.mantissa_r = new long[3][];
+            this.exponent_t = new byte[3];
+            this.mantissa_t = new long[3];
             for (int j = 0; j < 3; j++)
             {
                 /*  row  */
 
+                this.exponent_r[j] = new byte[3];
+                this.mantissa_r[j] = new long[3];
                 for (int k = 0; k < 3; k++)
                 {
                     /*  column  */
@@ -3806,17 +3812,19 @@ namespace SharpMP4
             boxSize += stream.ReadBit(out this.ptl_multi_layer_enabled_flag);
             boxSize += stream.ReadBytes((ulong)(num_bytes_constraint_info - 2), out this.general_constraint_info);
 
+            this.ptl_sublayer_level_present_flag = new bool[num_sublayers - 2];
             for (int i = num_sublayers - 2; i >= 0; i--)
             {
                 boxSize += stream.ReadBit(out this.ptl_sublayer_level_present_flag[i]);
             }
 
-            this.ptl_reserved_zero_bit = new bool[1];
+            this.ptl_reserved_zero_bit = new bool[9];
             for (int j = num_sublayers; j <= 8 && num_sublayers > 1; j++)
             {
                 boxSize += stream.ReadBit(out this.ptl_reserved_zero_bit[j]);
             }
 
+            this.sublayer_level_idc = new byte[num_sublayers - 2];
             for (int i = num_sublayers - 2; i >= 0; i--)
             {
 
@@ -3827,6 +3835,7 @@ namespace SharpMP4
             }
             boxSize += stream.ReadUInt8(out this.ptl_num_sub_profiles);
 
+            this.general_sub_profile_idc = new uint[ptl_num_sub_profiles];
             for (int j = 0; j < ptl_num_sub_profiles; j++)
             {
                 boxSize += stream.ReadUInt32(out this.general_sub_profile_idc[j]);
@@ -4478,6 +4487,8 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.num_profile_tier_level_minus1);
 
+            this.ptl_max_temporal_id = new byte[num_profile_tier_level_minus1 + 1];
+            this.ptl = new VvcPTLRecord[num_profile_tier_level_minus1 + 1];
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
                 boxSize += stream.ReadUInt8(out this.ptl_max_temporal_id[i]);
@@ -6435,11 +6446,11 @@ namespace SharpMP4
         protected byte ccv_reserved_zero_2bits = 0;
         public byte CcvReservedZero2bits { get { return this.ccv_reserved_zero_2bits; } set { this.ccv_reserved_zero_2bits = value; } }
 
-        protected int[][] ccv_primaries_x;
-        public int[][] CcvPrimariesx { get { return this.ccv_primaries_x; } set { this.ccv_primaries_x = value; } }
+        protected int[] ccv_primaries_x;
+        public int[] CcvPrimariesx { get { return this.ccv_primaries_x; } set { this.ccv_primaries_x = value; } }
 
-        protected int[][] ccv_primaries_y;
-        public int[][] CcvPrimariesy { get { return this.ccv_primaries_y; } set { this.ccv_primaries_y = value; } }
+        protected int[] ccv_primaries_y;
+        public int[] CcvPrimariesy { get { return this.ccv_primaries_y; } set { this.ccv_primaries_y = value; } }
 
         protected uint ccv_min_luminance_value;
         public uint CcvMinLuminanceValue { get { return this.ccv_min_luminance_value; } set { this.ccv_min_luminance_value = value; } }
@@ -6469,12 +6480,12 @@ namespace SharpMP4
             if (ccv_primaries_present_flag)
             {
 
-                this.ccv_primaries_x = new int[3][];
-                this.ccv_primaries_y = new int[3][];
+                this.ccv_primaries_x = new int[3];
+                this.ccv_primaries_y = new int[3];
                 for (int c = 0; c < 3; c++)
                 {
-                    boxSize += stream.ReadInt32(out this.ccv_primaries_x[c][c]);
-                    boxSize += stream.ReadInt32(out this.ccv_primaries_y[c][c]);
+                    boxSize += stream.ReadInt32(out this.ccv_primaries_x[c]);
+                    boxSize += stream.ReadInt32(out this.ccv_primaries_y[c]);
                 }
             }
 
@@ -6512,8 +6523,8 @@ namespace SharpMP4
 
                 for (int c = 0; c < 3; c++)
                 {
-                    boxSize += stream.WriteInt32(this.ccv_primaries_x[c][c]);
-                    boxSize += stream.WriteInt32(this.ccv_primaries_y[c][c]);
+                    boxSize += stream.WriteInt32(this.ccv_primaries_x[c]);
+                    boxSize += stream.WriteInt32(this.ccv_primaries_y[c]);
                 }
             }
 
@@ -8982,15 +8993,19 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(out this.pattern_count);
             uint totalPatternLength = 0;
 
+            this.pattern_length = new byte[pattern_count];
+            this.sample_count = new byte[pattern_count];
             for (int i = 0; i < pattern_count; i++)
             {
                 boxSize += stream.ReadBits(pattern_size_code, out this.pattern_length[i]);
                 boxSize += stream.ReadBits(count_size_code, out this.sample_count[i]);
             }
 
+            this.sample_group_description_index = new byte[pattern_count][];
             for (int j = 0; j < pattern_count; j++)
             {
 
+                this.sample_group_description_index[j] = new byte[pattern_length[j]];
                 for (int k = 0; k < pattern_length[j]; k++)
                 {
                     boxSize += stream.ReadBits(index_size_code, out this.sample_group_description_index[j][k]); // whose msb might indicate fragment_local or global
@@ -17773,6 +17788,9 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.grid_pos_num_views); // optional
 
             this.reserved = new byte[grid_pos_num_views];
+            this.grid_pos_view_id = new ushort[grid_pos_num_views];
+            this.grid_pos_x = new short[grid_pos_num_views];
+            this.grid_pos_y = new short[grid_pos_num_views];
             for (int i = 0; i < grid_pos_num_views; i++)
             {
                 boxSize += stream.ReadBits(6, out this.reserved[i]);
@@ -18945,11 +18963,18 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.num_views);
 
             this.reserved1 = new byte[num_views];
+            this.view_id = new ushort[num_views];
             this.reserved2 = new byte[num_views];
             this.view_order_index = new ushort[num_views];
+            this.texture_in_stream = new bool[num_views];
+            this.texture_in_track = new bool[num_views];
+            this.depth_in_stream = new bool[num_views];
+            this.depth_in_track = new bool[num_views];
             this.base_view_type = new byte[num_views];
             this.num_ref_views = new ushort[num_views];
             this.reserved5 = new byte[num_views][];
+            this.dependent_component_idc = new byte[num_views][];
+            this.ref_view_id = new ushort[num_views][];
             for (int i = 0; i < num_views; i++)
             {
                 boxSize += stream.ReadBits(6, out this.reserved1[i]);
@@ -18964,6 +18989,8 @@ namespace SharpMP4
                 boxSize += stream.ReadBits(10, out this.num_ref_views[i]);
 
                 this.reserved5[i] = new byte[num_ref_views[i]];
+                this.dependent_component_idc[i] = new byte[num_ref_views[i]];
+                this.ref_view_id[i] = new ushort[num_ref_views[i]];
                 for (int j = 0; j < num_ref_views[i]; j++)
                 {
                     boxSize += stream.ReadBits(4, out this.reserved5[i][j]);
@@ -20377,6 +20404,7 @@ namespace SharpMP4
                 }
                 boxSize += stream.ReadUInt32(out this.num_entries);
 
+                this.group_description_index = new uint[num_entries];
                 for (int i = 0; i < num_entries; i++)
                 {
                     boxSize += stream.ReadUInt32(out this.group_description_index[i]);
@@ -22106,6 +22134,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.roll_count);
             boxSize += stream.ReadUInt16(out this.first_output_sample);
 
+            this.sample_offset = new uint[roll_count];
             for (int i = 0; i < roll_count; i++)
             {
                 boxSize += stream.ReadUInt32(out this.sample_offset[i]);
@@ -22575,6 +22604,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(out this.meta_box_handler_type);
             boxSize += stream.ReadUInt32(out this.num_items);
 
+            this.item_id = new uint[num_items];
             for (int i = 0; i < num_items; i++)
             {
                 boxSize += stream.ReadUInt32(out this.item_id[i]);
@@ -25785,11 +25815,13 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.num_subgroup_ids);
             ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);
 
+            this.track_subgroup_id = new uint[num_entities_in_group];
             for (int i = 0; i < num_entities_in_group; i++)
             {
                 boxSize += stream.ReadUInt32(out this.track_subgroup_id[i]);
             }
 
+            this.num_active_tracks = new ushort[num_subgroup_ids];
             for (int i = 0; i < num_subgroup_ids; i++)
             {
                 boxSize += stream.ReadUInt16(out this.num_active_tracks[i]);
@@ -26031,6 +26063,7 @@ namespace SharpMP4
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadUInt8(out this.num_profile_tier_level_minus1);
 
+            this.opeg_ptl = new VvcPTLRecord[num_profile_tier_level_minus1 + 1];
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
                 boxSize += stream.ReadClass(out this.opeg_ptl[i]);
@@ -26039,7 +26072,13 @@ namespace SharpMP4
             boxSize += stream.ReadBit(out this.incomplete_operating_points_flag);
             boxSize += stream.ReadBits(9, out this.num_olss);
 
+            this.ptl_idx = new byte[num_olss];
+            this.ols_idx = new ushort[num_olss];
+            this.layer_count = new byte[num_olss];
             this.reserved0 = new bool[num_olss];
+            this.layer_info_present_flag = new bool[num_olss];
+            this.layer_id = new byte[num_olss][];
+            this.is_output_layer = new byte[num_olss][];
             this.reserved00 = new bool[num_olss][];
             for (int i = 0; i < num_olss; i++)
             {
@@ -26052,6 +26091,8 @@ namespace SharpMP4
                 if (layer_info_present_flag[i])
                 {
 
+                    this.layer_id[i] = new byte[layer_count[i]];
+                    this.is_output_layer[i] = new byte[layer_count[i]];
                     this.reserved00[i] = new bool[layer_count[i]];
                     for (int j = 0; j < layer_count[i]; j++)
                     {
@@ -26312,6 +26353,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream);
 
+            this.track_switch_hierarchy_id = new ushort[num_entities_in_group];
             for (int i = 0; i < num_entities_in_group; i++)
             {
                 boxSize += stream.ReadUInt16(out this.track_switch_hierarchy_id[i]);
@@ -26723,6 +26765,7 @@ namespace SharpMP4
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadUInt8(out this.num_eos_nal_unit_minus1);
 
+            this.eosNalUnit = new ushort[num_eos_nal_unit_minus1 + 1];
             for (int i = 0; i <= num_eos_nal_unit_minus1; i++)
             {
                 boxSize += stream.ReadUInt16(out this.eosNalUnit[i]);
@@ -26990,6 +27033,8 @@ namespace SharpMP4
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadUInt16(out this.num_mix_nalu_pic_idx);
 
+            this.mix_subp_track_idx1 = new ushort[num_mix_nalu_pic_idx];
+            this.mix_subp_track_idx2 = new ushort[num_mix_nalu_pic_idx];
             for (int i = 0; i < num_mix_nalu_pic_idx; i++)
             {
                 boxSize += stream.ReadUInt16(out this.mix_subp_track_idx1[i]);
@@ -27612,11 +27657,15 @@ namespace SharpMP4
             boxSize += stream.ReadBits(7, out this.reserved);
             boxSize += stream.ReadUInt16(out this.num_alternate_region_set);
 
+            this.num_regions_in_set = new ushort[num_alternate_region_set];
+            this.alternate_region_set_id = new ushort[num_alternate_region_set];
+            this.groupID = new ushort[num_alternate_region_set][];
             for (int i = 0; i < num_alternate_region_set; i++)
             {
                 boxSize += stream.ReadUInt16(out this.num_regions_in_set[i]);
                 boxSize += stream.ReadUInt16(out this.alternate_region_set_id[i]);
 
+                this.groupID[i] = new ushort[num_regions_in_set[i]];
                 for (int j = 0; j < num_regions_in_set[i]; j++)
                 {
                     boxSize += stream.ReadUInt16(out this.groupID[i][j]);
@@ -27624,6 +27673,7 @@ namespace SharpMP4
             }
             boxSize += stream.ReadUInt16(out this.num_regions_minus1);
 
+            this.region_id = new ushort[num_regions_minus1 + 1];
             for (int i = 0; i < num_regions_minus1; i++)
             {
                 boxSize += stream.ReadUInt16(out this.region_id[i]);
@@ -28000,6 +28050,8 @@ namespace SharpMP4
             boxSize += stream.ReadBit(out this.continuous_id_flag);
             boxSize += stream.ReadBits(12, out this.num_subpics_minus1);
 
+            this.subpic_id = new ushort[num_subpics_minus1 + 1];
+            this.groupID = new ushort[num_subpics_minus1 + 1];
             for (int i = 0; i <= num_subpics_minus1; i++)
             {
 
@@ -28149,6 +28201,7 @@ namespace SharpMP4
             boxSize += stream.ReadBit(out this.subpic_id_info_flag);
             boxSize += stream.ReadBits(15, out this.num_subpic_ref_idx);
 
+            this.subp_track_ref_idx = new ushort[num_subpic_ref_idx];
             for (int i = 0; i < num_subpic_ref_idx; i++)
             {
                 boxSize += stream.ReadUInt16(out this.subp_track_ref_idx[i]);
@@ -28269,7 +28322,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(out this.groupID_info_4cc);
             boxSize += stream.ReadUInt16(out this.entry_count_minus1);
 
-            this.groupID = new ushort[entry_count_minus1];
+            this.groupID = new ushort[entry_count_minus1 + 1];
             for (int i = 0; i <= entry_count_minus1; i++)
             {
                 boxSize += stream.ReadUInt16(out this.groupID[i]);
@@ -29904,6 +29957,7 @@ namespace SharpMP4
             boxSize += await base.ReadAsync(stream);
             boxSize += stream.ReadUInt8(out this.reference_type_count);
 
+            this.reference_type = new uint[reference_type_count];
             for (int i = 0; i < reference_type_count; i++)
             {
                 boxSize += stream.ReadUInt32(out this.reference_type[i]);
@@ -33341,34 +33395,44 @@ namespace SharpMP4
                 boxSize += stream.ReadUimsbf(out this.pseudo_surround_enable);
             }
 
+            this.front_element_is_cpe = new byte[num_front_channel_elements];
+            this.front_element_tag_select = new byte[num_front_channel_elements];
             for (int i = 0; i < num_front_channel_elements; i++)
             {
                 boxSize += stream.ReadBslbf(1, out this.front_element_is_cpe[i]);
                 boxSize += stream.ReadUimsbf(4, out this.front_element_tag_select[i]);
             }
 
+            this.side_element_is_cpe = new byte[num_side_channel_elements];
+            this.side_element_tag_select = new byte[num_side_channel_elements];
             for (int i = 0; i < num_side_channel_elements; i++)
             {
                 boxSize += stream.ReadBslbf(1, out this.side_element_is_cpe[i]);
                 boxSize += stream.ReadUimsbf(4, out this.side_element_tag_select[i]);
             }
 
+            this.back_element_is_cpe = new byte[num_back_channel_elements];
+            this.back_element_tag_select = new byte[num_back_channel_elements];
             for (int i = 0; i < num_back_channel_elements; i++)
             {
                 boxSize += stream.ReadBslbf(1, out this.back_element_is_cpe[i]);
                 boxSize += stream.ReadUimsbf(4, out this.back_element_tag_select[i]);
             }
 
+            this.lfe_element_tag_select = new byte[num_lfe_channel_elements];
             for (int i = 0; i < num_lfe_channel_elements; i++)
             {
                 boxSize += stream.ReadUimsbf(4, out this.lfe_element_tag_select[i]);
             }
 
+            this.assoc_data_element_tag_select = new byte[num_assoc_data_elements];
             for (int i = 0; i < num_assoc_data_elements; i++)
             {
                 boxSize += stream.ReadUimsbf(4, out this.assoc_data_element_tag_select[i]);
             }
 
+            this.cc_element_is_ind_sw = new bool[num_valid_cc_elements];
+            this.valid_cc_element_tag_select = new byte[num_valid_cc_elements];
             for (int i = 0; i < num_valid_cc_elements; i++)
             {
                 boxSize += stream.ReadUimsbf(out this.cc_element_is_ind_sw[i]);
@@ -33377,6 +33441,7 @@ namespace SharpMP4
             boxSize += stream.ReadByteAlignment(out this.byte_alignment); // Note 1 
             boxSize += stream.ReadUimsbf(8, out this.comment_field_bytes);
 
+            this.comment_field_data = new byte[comment_field_bytes];
             for (int i = 0; i < comment_field_bytes; i++)
             {
                 boxSize += stream.ReadUimsbf(8, out this.comment_field_data[i]);
@@ -35238,6 +35303,7 @@ namespace SharpMP4
             if (chan_sort)
             {
 
+                this.chan_pos = new bool[channels];
                 for (int c = 0; c < channels; c++)
                 {
                     boxSize += stream.ReadUimsbf(out this.chan_pos[c]); // 1..16 uimsbf 
@@ -35257,6 +35323,7 @@ namespace SharpMP4
             if ((ra_flag == 2) && (random_access > 0))
             {
 
+                this.ra_unit_size = new uint[((samples - 1) / (frame_length + 1)) + 1];
                 for (int f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++)
                 {
                     boxSize += stream.ReadUimsbf(32, out this.ra_unit_size[f]);
@@ -36231,13 +36298,37 @@ namespace SharpMP4
             boxSize += stream.ReadUimsbf(3, out this.bit_stuffing);
             boxSize += stream.ReadUimsbf(3, out this.number_of_concatenated_frame);
 
+            this.number_of_class = new byte[number_of_predefined_set];
+            this.length_escape = new bool[number_of_predefined_set][];
+            this.rate_escape = new bool[number_of_predefined_set][];
+            this.crclen_escape = new bool[number_of_predefined_set][];
+            this.concatenate_flag = new bool[number_of_predefined_set][];
+            this.fec_type = new byte[number_of_predefined_set][];
+            this.termination_switch = new bool[number_of_predefined_set][];
+            this.interleave_switch = new byte[number_of_predefined_set][];
             this.class_optional = new bool[number_of_predefined_set][];
+            this.number_of_bits_for_length = new byte[number_of_predefined_set][];
+            this.class_length = new ushort[number_of_predefined_set][];
+            this.class_rate = new byte[number_of_predefined_set][];
+            this.class_crclen = new byte[number_of_predefined_set][];
             this.class_reordered_output = new bool[number_of_predefined_set];
+            this.class_output_order = new byte[number_of_predefined_set][];
             for (int i = 0; i < number_of_predefined_set; i++)
             {
                 boxSize += stream.ReadUimsbf(6, out this.number_of_class[i]);
 
+                this.length_escape[i] = new bool[number_of_class[i]];
+                this.rate_escape[i] = new bool[number_of_class[i]];
+                this.crclen_escape[i] = new bool[number_of_class[i]];
+                this.concatenate_flag[i] = new bool[number_of_class[i]];
+                this.fec_type[i] = new byte[number_of_class[i]];
+                this.termination_switch[i] = new bool[number_of_class[i]];
+                this.interleave_switch[i] = new byte[number_of_class[i]];
                 this.class_optional[i] = new bool[number_of_class[i]];
+                this.number_of_bits_for_length[i] = new byte[number_of_class[i]];
+                this.class_length[i] = new ushort[number_of_class[i]];
+                this.class_rate[i] = new byte[number_of_class[i]];
+                this.class_crclen[i] = new byte[number_of_class[i]];
                 for (int j = 0; j < number_of_class[i]; j++)
                 {
                     boxSize += stream.ReadUimsbf(out this.length_escape[i][j]);
@@ -36298,6 +36389,7 @@ namespace SharpMP4
                 if (class_reordered_output[i] == true)
                 {
 
+                    this.class_output_order[i] = new byte[number_of_class[i]];
                     for (int j = 0; j < number_of_class[i]; j++)
                     {
                         boxSize += stream.ReadUimsbf(6, out this.class_output_order[i][j]);

@@ -1468,10 +1468,10 @@ namespace SharpMP4
                     string typedef = GetFieldTypeDef(field);
                     nestingLevel = GetNestedInLoopSuffix(field, typedef, out _);
 
+                    AddRequiresAllocation((PseudoField)field);
+
                     if (nestingLevel > 0)
                     {
-                        AddRequiresAllocation((PseudoField)field);
-
                         // change the type
                         for (int i = 0; i < nestingLevel; i++)
                         {
@@ -1582,7 +1582,7 @@ namespace SharpMP4
 
         foreach(var suffix in ret.ToArray())
         {
-            if (!string.IsNullOrEmpty(currentSuffix) && currentSuffix.Contains(suffix))
+            if (!string.IsNullOrEmpty(currentSuffix) && currentSuffix.Replace(" ", "").Contains(suffix))
                 ret.Remove(suffix);
         }
 
@@ -1908,6 +1908,26 @@ namespace SharpMP4
                     string[] parts = condition.Substring(1, condition.Length - 2).Split(';');
                     string variable = parts[1].Split('<', '=', '>', '!').Last();
 
+                    if (parts[1] == " j<=8 && num_sublayers > 1")
+                    {
+                        variable = "9";
+                    }
+                    else if (variable.Contains("0"))
+                    {
+                        if (parts[0].Contains("num_sublayers-2") || parts[0].Contains("num_sublayers - 2"))
+                        {
+                            variable = "num_sublayers - 2";
+                        }
+                        else
+                        {
+                            throw new Exception();
+                        }
+                    }
+                    else if(variable.Contains("_minus1"))
+                    {
+                        variable = variable + " + 1";
+                    }
+
                     if (!string.IsNullOrWhiteSpace(variable))
                     {
                         foreach (var req in block.RequiresAllocation)
@@ -1923,18 +1943,27 @@ namespace SharpMP4
                             string appendType = "";
                             if(fieldSuffixLevel - blockSuffixLevel > 1)
                             {
-                                for (int i = 0; i < (fieldSuffixLevel - blockSuffixLevel - 1); i++)
+                                int count = fieldSuffixLevel - blockSuffixLevel - 1;
+
+                                for (int i = 0; i < count; i++)
                                 {
                                     appendType += "[]";
                                 }
                             }
 
-                            string variableName = req.Name + suffix;
                             string variableType = GetType(req.Type);
+                            int indexesTypeDef = GetFieldTypeDef(req).Count(x => x == '[');
+                            int indexesType = variableType.Count(x => x == '[');
+                            string variableName = req.Name + suffix;
                             if (variableType.Contains("[]"))
                             {
-                                int index = variableType.IndexOf("[]");
-                                variableType = variableType.Substring(0, index) + $"[{variable}]" + variableType.Substring(index);
+                                int diff = (indexesType - indexesTypeDef);
+                                variableType = variableType.Replace("[]", "");
+                                variableType = $"{variableType}[{variable}]";
+                                for (int i = 0; i < diff; i++)
+                                {
+                                    variableType += "[]";
+                                }
                             }
                             else
                             {
