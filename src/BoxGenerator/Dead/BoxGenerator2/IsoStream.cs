@@ -64,12 +64,12 @@ namespace SharpMP4
             }
         }
 
-        internal ulong ReadBox<T>(out T value) where T : Box
+        internal ulong ReadBox(out Box value)
         {
             throw new NotImplementedException();
         }
 
-        internal ulong ReadBox<T>(out T[] value) where T : Box
+        internal ulong ReadBox(out Box[] value)
         {
             throw new NotImplementedException();
         }
@@ -416,6 +416,8 @@ namespace SharpMP4
 
         internal static uint FromFourCC(string input)
         {
+            if(string.IsNullOrEmpty(input))
+                return 0;
             byte[] buffer = Encoding.ASCII.GetBytes(input);
             if (buffer.Length != 4)
                 throw new Exception("Invalid 4cc!");

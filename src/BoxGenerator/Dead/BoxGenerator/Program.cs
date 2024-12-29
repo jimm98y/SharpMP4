@@ -1052,6 +1052,10 @@ namespace SharpMP4
             fields.Add(new PseudoField() { Name = "OutputChannelCount", Type = "unsigned int(8)" });
             ctorContent = "\t\tthis.OutputChannelCount = OutputChannelCount;\r\n";
         }
+        else if(b.BoxName == "BoxHeader")
+        {
+            ctorContent = "\t\tthis.type = IsoStream.FromFourCC(boxtype);\r\n\t\tthis.usertype = extended_type;\r\n";
+        }
 
         bool hasBoxes = fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit";
 
@@ -1172,7 +1176,7 @@ namespace SharpMP4
             { "(samplingFrequencyIndex,\r\n  channelConfiguration,\r\n  audioObjectType)", "int samplingFrequencyIndex, int channelConfiguration, int audioObjectType" },
             { "(unsigned int(32) extension_type)",  "string extension_type" },
             { "('vvcb', version, flags)",           "byte version = 0, uint flags = 0" },
-            { "(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)", "string boxtype, byte[] extended_type" },
+            { "(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)", "string boxtype = \"\", byte[] extended_type = null" },
             { "(unsigned int(32) grouping_type)",   "string grouping_type" },
             { "(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)", "string boxtype, byte v = 0, uint f = 0" },
             { "(unsigned int(8) OutputChannelCount)", "byte OutputChannelCount" },

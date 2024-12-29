@@ -16293,8 +16293,10 @@ namespace SharpMP4
         protected byte[] usertype; // = extended_type
         public byte[] Usertype { get { return this.usertype; } set { this.usertype = value; } }
 
-        public BoxHeader(string boxtype, byte[] extended_type) : base()
+        public BoxHeader(string boxtype = "", byte[] extended_type = null) : base()
         {
+            this.type = IsoStream.FromFourCC(boxtype);
+            this.usertype = extended_type;
         }
 
         public async virtual Task<ulong> ReadAsync(IsoStream stream)
