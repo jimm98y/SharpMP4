@@ -8,7 +8,7 @@ namespace SharpMP4
         public SpatialSpecificConfig()
         { }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             throw new NotImplementedException();
         }
@@ -29,7 +29,7 @@ namespace SharpMP4
         public StructuredAudioSpecificConfig()
         { }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             throw new NotImplementedException();
         }

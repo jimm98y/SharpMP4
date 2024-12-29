@@ -50,7 +50,7 @@ namespace SharpMP4
 
     public class Descriptor : IMp4Serializable
     {
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             throw new System.NotImplementedException();
         }

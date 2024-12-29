@@ -74,6 +74,18 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class SegmentIndexBox extends FullBox('sidx', version, 0) { \r\n  unsigned int(32) reference_ID; \r\n  unsigned int(32) timescale; \r\n  if (version==0) { \r\n   unsigned int(32) earliest_presentation_time; \r\n   unsigned int(32) first_offset; \r\n  }\r\n  else { \r\n   unsigned int(64) earliest_presentation_time; \r\n   unsigned int(64) first_offset; \r\n  }\r\n unsigned int(16) reserved = 0; \r\n unsigned int(16) reference_count; \r\n for(i=1; i <= reference_count; i++) \r\n {  \r\n  bit(1)   reference_type; \r\n  unsigned int(31) referenced_size; \r\n  unsigned int(32) subsegment_duration; \r\n  bit(1)    starts_with_SAP; \r\n  unsigned int(3) SAP_type; \r\n  unsigned int(28) SAP_delta_time;\r\n } \r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class MovieBox extends Box('moov'){ \r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class MovieFragmentBox extends Box('moof'){ \r\n} "
     }
   ]
 }

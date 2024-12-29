@@ -9,14 +9,14 @@ namespace SharpMP4
     public class ICC_profile : IMp4Serializable 
     {
         public virtual ulong CalculateSize() { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> ReadAsync(IsoStream stream) { throw new System.NotImplementedException(); }
+        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize) { throw new System.NotImplementedException(); }
         public virtual Task<ulong> WriteAsync(IsoStream stream) { throw new System.NotImplementedException(); }
     } // ISO 15076‐1 or ICC.1:2010, or https://github.com/xcorail/metadata-extractor/blob/master/Source/com/drew/metadata/icc/IccReader.java#L50
-    public class DRCCoefficientsBasic : Box { } // ISO/IEC 23003‐4
-    public class DRCInstructionsBasic : Box { } // ISO/IEC 23003‐4
-    public class DRCCoefficientsUniDRC : Box { } // ISO/IEC 23003‐4
-    public class DRCInstructionsUniDRC : Box { } // ISO/IEC 23003‐4
-    public abstract class UniDrcConfigExtension : Box { } // ISO/IEC 23003‐4
+    public class DRCCoefficientsBasic : UnknownBox { } // ISO/IEC 23003‐4
+    public class DRCInstructionsBasic : UnknownBox { } // ISO/IEC 23003‐4
+    public class DRCCoefficientsUniDRC : UnknownBox { } // ISO/IEC 23003‐4
+    public class DRCInstructionsUniDRC : UnknownBox { } // ISO/IEC 23003‐4
+    public abstract class UniDrcConfigExtension : UnknownBox { } // ISO/IEC 23003‐4
     public abstract class DataEntryBaseBox : FullBox 
     {
         protected DataEntryBaseBox(string boxType, uint flags) : base(boxType, 0, flags) { }
@@ -29,11 +29,11 @@ namespace SharpMP4
     public class OperatingPointsRecord : IMp4Serializable
     {
         public virtual ulong CalculateSize() { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> ReadAsync(IsoStream stream) { throw new System.NotImplementedException(); }
+        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize) { throw new System.NotImplementedException(); }
         public virtual Task<ulong> WriteAsync(IsoStream stream) { throw new System.NotImplementedException(); }
     }
 
-    public class MetaDataDatatypeBox : Box { } // missing info
+    public class MetaDataDatatypeBox : UnknownBox { } // missing info
     public abstract class SampleConstructor : Box { }
     public abstract class InlineConstructor : Box { }
     public abstract class NALUStartInlineConstructor : Box { }
@@ -42,21 +42,21 @@ namespace SharpMP4
     public class HEVCTileTierLevelConfigurationRecord : IMp4Serializable 
     {
         public virtual ulong CalculateSize() { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> ReadAsync(IsoStream stream) { throw new System.NotImplementedException(); }
+        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize) { throw new System.NotImplementedException(); }
         public virtual Task<ulong> WriteAsync(IsoStream stream) { throw new System.NotImplementedException(); }
     }
 
     public class EVCSliceComponentTrackConfigurationRecord : IMp4Serializable
     {
         public virtual ulong CalculateSize() { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> ReadAsync(IsoStream stream) { throw new System.NotImplementedException(); }
+        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize) { throw new System.NotImplementedException(); }
         public virtual Task<ulong> WriteAsync(IsoStream stream) { throw new System.NotImplementedException(); }
     }
 
     public class VVCSubpicIDRewritingInfomationStruct : IMp4Serializable
     {
         public virtual ulong CalculateSize() { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> ReadAsync(IsoStream stream) { throw new System.NotImplementedException(); }
+        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize) { throw new System.NotImplementedException(); }
         public virtual Task<ulong> WriteAsync(IsoStream stream) { throw new System.NotImplementedException(); }
     }
 }

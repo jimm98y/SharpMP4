@@ -6,7 +6,7 @@ namespace SharpMP4
 {
     public interface IMp4Serializable
     {
-        Task<ulong> ReadAsync(IsoStream stream);
+        Task<ulong> ReadAsync(IsoStream stream, ulong readSize);
         Task<ulong> WriteAsync(IsoStream stream);
         ulong CalculateSize();
     }
@@ -38,21 +38,38 @@ namespace SharpMP4
             Size = size;
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<ulong>(0);
         }
 
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+
+        public virtual Task<ulong> WriteAsync(IsoStream stream)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<ulong>(0);
         }
 
         public virtual ulong CalculateSize()
         {
-            throw new NotImplementedException();
+            return 0;
         }
     }
 
-    public class UnknownBox : Box  {  }
+    public class UnknownBox : Box
+    {
+        public override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override ulong CalculateSize()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

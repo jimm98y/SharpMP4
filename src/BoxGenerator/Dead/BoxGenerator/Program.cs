@@ -914,7 +914,34 @@ namespace SharpMP4
             }
             else
             {
-                factory += $"               case \"{item.Key}\": throw new NotSupportedException(\"\'{item.Key}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n";
+                if (
+                    item.Value.First().BoxName == "MovieBox" ||
+                    item.Value.First().BoxName == "MovieFragmentBox" ||
+                    item.Value.First().BoxName == "AVCMVCSampleEntry" ||
+                    item.Value.First().BoxName == "AVC2MVCSampleEntry" ||
+                    item.Value.First().BoxName == "AVCMVCSampleEntry_avc3" ||
+                    item.Value.First().BoxName == "AVC2MVCSampleEntry_avc4" ||
+                    item.Value.First().BoxName == "SegmentIndexBox" ||
+                    item.Value.First().BoxName == "OperatingPointsInformation" ||
+                    item.Value.First().BoxName == "trackhintinformation" ||
+                    item.Value.First().BoxName == "VvcSubpicIDEntry" ||
+                    item.Value.First().BoxName == "VvcSubpicOrderEntry" ||
+                    item.Value.First().BoxName == "ViewPriorityBox"
+                    )
+                {
+                    string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
+                    factory += $"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n";
+                }
+                else if (
+                    item.Value.Last().BoxName == "RtpHintSampleEntry")
+                {
+                    string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
+                    factory += $"               case \"{item.Key}\": return new {item.Value.Last().BoxName}();{comment}\r\n";
+                }
+                else
+                {
+                    factory += $"               case \"{item.Key}\": throw new NotSupportedException(\"\'{item.Key}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n";
+                }
             }
         }
 
@@ -1090,8 +1117,8 @@ namespace SharpMP4
         cls += ctorContent;
         cls += $"\t}}\r\n";
 
-        cls += "\r\n\tpublic async " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "Task<ulong> ReadAsync(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
-            (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.ReadAsync(stream);" : "");
+        cls += "\r\n\tpublic async " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "Task<ulong> ReadAsync(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;" +
+            (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.ReadAsync(stream, readSize);" : "");
 
         cls = FixMissingMethodCode(b, cls);
 
@@ -2122,7 +2149,7 @@ namespace SharpMP4
             { "template unsigned int(32)",              "stream.ReadUInt32(" },
             { "template unsigned int(16)[3]",           "stream.ReadUInt16Array(3, " },
             { "template unsigned int(16)",              "stream.ReadUInt16(" },
-            { "template unsigned int(8)[]",             "stream.ReadUInt8Array(" },
+            { "template unsigned int(8)[]",             "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
             { "template unsigned int(8)",               "stream.ReadUInt8(" },
             { "int(64)",                                "stream.ReadInt64(" },
             { "int(32)",                                "stream.ReadInt32(" },
@@ -2141,7 +2168,7 @@ namespace SharpMP4
             { "bit(5)",                                 "stream.ReadBits(5, " },
             { "bit(6)",                                 "stream.ReadBits(6, " },
             { "bit(7)",                                 "stream.ReadBits(7, " },
-            { "bit(8)[]",                               "stream.ReadUInt8Array(" },
+            { "bit(8)[]",                               "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
             { "bit(8)",                                 "stream.ReadUInt8(" },
             { "bit(16)[i]",                             "stream.ReadUInt16(" },
             { "bit(16)",                                "stream.ReadUInt16(" },
@@ -2284,20 +2311,20 @@ namespace SharpMP4
             { "BitRateBox ()",                          "stream.ReadBox(" },
             { "char[count]",                            "stream.ReadUInt8Array(count, " },
             { "signed int(32)[ c ]",                    "stream.ReadInt32(" },
-            { "unsigned int(8)[]",                      "stream.ReadUInt8Array(" },
+            { "unsigned int(8)[]",                      "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
             { "unsigned int(8)[i]",                     "stream.ReadUInt8(" },
             { "unsigned int(6)[i]",                     "stream.ReadBits(6, " },
             { "unsigned int(6)[i][j]",                  "stream.ReadBits(6, " },
             { "unsigned int(1)[i][j]",                  "stream.ReadBits(1, " },
             { "unsigned int(9)[i]",                     "stream.ReadBits(9, " },
-            { "unsigned int(32)[]",                     "stream.ReadUInt32Array(" },
+            { "unsigned int(32)[]",                     "stream.ReadUInt32ArrayTillEnd(boxSize, readSize, " },
             { "unsigned int(32)[i]",                    "stream.ReadUInt32(" },
             { "unsigned int(32)[j]",                    "stream.ReadUInt32(" },
             { "unsigned int(8)[j][k]",                  "stream.ReadUInt8(" },
             { "signed   int(64)[j][k]",                 "stream.ReadInt64(" },
             { "unsigned int(8)[j]",                     "stream.ReadUInt8(" },
             { "signed   int(64)[j]",                    "stream.ReadInt64(" },
-            { "char[]",                                 "stream.ReadUInt8Array(" },
+            { "char[]",                                 "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
             { "string[method_count]",                   "stream.ReadStringArray(method_count, " },
             { "ItemInfoExtension",                      "stream.ReadClass(" },
             { "SampleGroupDescriptionEntry",            "stream.ReadBox(" },
@@ -2908,7 +2935,7 @@ namespace SharpMP4
             { "template unsigned int(32)",              "stream.WriteUInt32(" },
             { "template unsigned int(16)[3]",           "stream.WriteUInt16Array(3, " },
             { "template unsigned int(16)",              "stream.WriteUInt16(" },
-            { "template unsigned int(8)[]",             "stream.WriteUInt8Array(" },
+            { "template unsigned int(8)[]",             "stream.WriteUInt8ArrayTillEnd(" },
             { "template unsigned int(8)",               "stream.WriteUInt8(" },
             { "int(64)",                                "stream.WriteInt64(" },
             { "int(32)",                                "stream.WriteInt32(" },
@@ -2927,7 +2954,7 @@ namespace SharpMP4
             { "bit(5)",                                 "stream.WriteBits(5, " },
             { "bit(6)",                                 "stream.WriteBits(6, " },
             { "bit(7)",                                 "stream.WriteBits(7, " },
-            { "bit(8)[]",                               "stream.WriteUInt8Array(" },
+            { "bit(8)[]",                               "stream.WriteUInt8ArrayTillEnd(" },
             { "bit(8)",                                 "stream.WriteUInt8(" },
             { "bit(16)[i]",                             "stream.WriteUInt16(" },
             { "bit(16)",                                "stream.WriteUInt16(" },
@@ -3069,20 +3096,20 @@ namespace SharpMP4
             { "BitRateBox ()",                          "stream.WriteBox(" },
             { "char[count]",                            "stream.WriteUInt8Array(count, " },
             { "signed int(32)[ c ]",                    "stream.WriteInt32(" },
-            { "unsigned int(8)[]",                      "stream.WriteUInt8Array(" },
+            { "unsigned int(8)[]",                      "stream.WriteUInt8ArrayTillEnd(" },
             { "unsigned int(8)[i]",                     "stream.WriteUInt8(" },
             { "unsigned int(6)[i]",                     "stream.WriteBits(6, " },
             { "unsigned int(6)[i][j]",                  "stream.WriteBits(6, " },
             { "unsigned int(1)[i][j]",                  "stream.WriteBits(1, " },
             { "unsigned int(9)[i]",                     "stream.WriteBits(9, " },
-            { "unsigned int(32)[]",                     "stream.WriteUInt32Array(" },
+            { "unsigned int(32)[]",                     "stream.WriteUInt32ArrayTillEnd(" },
             { "unsigned int(32)[i]",                    "stream.WriteUInt32(" },
             { "unsigned int(32)[j]",                    "stream.WriteUInt32(" },
             { "unsigned int(8)[j][k]",                  "stream.WriteUInt8(" },
             { "signed   int(64)[j][k]",                 "stream.WriteInt64(" },
             { "unsigned int(8)[j]",                     "stream.WriteUInt8(" },
             { "signed   int(64)[j]",                    "stream.WriteInt64(" },
-            { "char[]",                                 "stream.WriteUInt8Array(" },
+            { "char[]",                                 "stream.WriteUInt8ArrayTillEnd(" },
             { "string[method_count]",                   "stream.WriteStringArray(method_count, " },
              { "ItemInfoExtension",                     "stream.WriteClass(" },
             { "SampleGroupDescriptionEntry",            "stream.WriteBox(" },

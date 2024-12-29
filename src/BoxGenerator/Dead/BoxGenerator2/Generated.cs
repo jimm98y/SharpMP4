@@ -38,10 +38,10 @@ namespace SharpMP4
                 case "av1f": return new AV1ForwardKeyFrameSampleGroupEntry();
                 case "av1M": return new AV1MetadataSampleGroupEntry();
                 case "av1s": return new AV1SwitchFrameSampleGroupEntry();
-                case "avc1": throw new NotSupportedException("'avc1' is ambiguous in between AVCMVCSampleEntry and AVCSVCSampleEntry");
-                case "avc2": throw new NotSupportedException("'avc2' is ambiguous in between AVC2MVCSampleEntry and AVC2SVCSampleEntry");
-                case "avc3": throw new NotSupportedException("'avc3' is ambiguous in between AVCMVCSampleEntry_avc3 and AVCSVCSampleEntry_avc3");
-                case "avc4": throw new NotSupportedException("'avc4' is ambiguous in between AVC2MVCSampleEntry_avc4 and AVC2SVCSampleEntry_avc4");
+                case "avc1": return new AVCMVCSampleEntry(); // TODO: box is ambiguous in between AVCMVCSampleEntry and AVCSVCSampleEntry
+                case "avc2": return new AVC2MVCSampleEntry(); // TODO: box is ambiguous in between AVC2MVCSampleEntry and AVC2SVCSampleEntry
+                case "avc3": return new AVCMVCSampleEntry_avc3(); // TODO: box is ambiguous in between AVCMVCSampleEntry_avc3 and AVCSVCSampleEntry_avc3
+                case "avc4": return new AVC2MVCSampleEntry_avc4(); // TODO: box is ambiguous in between AVC2MVCSampleEntry_avc4 and AVC2SVCSampleEntry_avc4
                 case "avcC": return new AVCConfigurationBox();
                 case "avcp": return new AVCParameterSampleEntry();
                 case "avll": return new AVCLayerEntry();
@@ -112,7 +112,7 @@ namespace SharpMP4
                 case "hev3": return new HEVCSampleEntry_hev3(); // TODO: fix duplicate
                 case "hinf": return new hintstatisticsbox();
                 case "hmhd": return new HintMediaHeaderBox();
-                case "hnti": throw new NotSupportedException("'hnti' is ambiguous in between trackhintinformation and moviehintinformation");
+                case "hnti": return new trackhintinformation(); // TODO: box is ambiguous in between trackhintinformation and moviehintinformation
                 case "hvc1": return new HEVCSampleEntry();
                 case "hvc2": return new HEVCSampleEntry_hvc2(); // TODO: fix duplicate
                 case "hvc3": return new HEVCSampleEntry_hvc3(); // TODO: fix duplicate
@@ -173,8 +173,8 @@ namespace SharpMP4
                 case "mfro": return new MovieFragmentRandomAccessOffsetBox();
                 case "minf": return new MediaInformationBox();
                 case "minp": return new VvcMixedNALUnitTypePicEntry();
-                case "moof": return new CompressedMovieFragmentBox();
-                case "moov": return new CompressedMovieBox();
+                case "moof": return new MovieFragmentBox(); // TODO: box is ambiguous in between MovieFragmentBox and CompressedMovieFragmentBox
+                case "moov": return new MovieBox(); // TODO: box is ambiguous in between MovieBox and CompressedMovieBox
                 case "mskC": return new MaskConfigurationProperty();
                 case "msrc": return new TrackGroupTypeBox();
                 case "mstv": return new MVCSubTrackViewBox();
@@ -199,7 +199,7 @@ namespace SharpMP4
                 case "nmhd": return new NullMediaHeaderBox();
                 case "npck": return new hintPacketsSentNpck();
                 case "nump": return new hintPacketsSentNump();
-                case "oinf": throw new NotSupportedException("'oinf' is ambiguous in between OperatingPointsInformation and OperatingPointsInformationProperty");
+                case "oinf": return new OperatingPointsInformation(); // TODO: box is ambiguous in between OperatingPointsInformation and OperatingPointsInformationProperty
                 case "opeg": return new OperatingPointGroupBox();
                 case "opth": return new OperatingPointDecodeTimeHint();
                 case "Opus": return new OpusSampleEntry();
@@ -235,7 +235,7 @@ namespace SharpMP4
                 case "rrtp": return new ReceivedRtpHintSampleEntry();
                 case "rsrp": return new ReceivedSrtpHintSampleEntry();
                 case "rssr": return new ReceivedSsrcBox();
-                case "rtp ": throw new NotSupportedException("'rtp ' is ambiguous in between rtpmoviehintinformation and RtpHintSampleEntry");
+                case "rtp ": return new RtpHintSampleEntry(); // TODO: box is ambiguous in between rtpmoviehintinformation and RtpHintSampleEntry
                 case "saio": return new SampleAuxiliaryInformationOffsetsBox();
                 case "saiz": return new SampleAuxiliaryInformationSizesBox();
                 case "sap ": return new SAPEntry();
@@ -254,7 +254,7 @@ namespace SharpMP4
                 case "seii": return new SeiInformationBox();
                 case "setu": return new MetaDataSetupBox();
                 case "sgpd": return new SampleGroupDescriptionBox();
-                case "sidx": throw new NotSupportedException("'sidx' is ambiguous in between SegmentIndexBox and CompressedSegmentIndexBox");
+                case "sidx": return new SegmentIndexBox(); // TODO: box is ambiguous in between SegmentIndexBox and CompressedSegmentIndexBox
                 case "sinf": return new ProtectionSchemeInfoBox();
                 case "skip": return new FreeSpaceBox_skip(); // TODO: fix duplicate
                 case "sm2t": return new MPEG2TSServerSampleEntry();
@@ -262,10 +262,10 @@ namespace SharpMP4
                 case "snim": return new DataEntrySeqNumImdaBox();
                 case "snro": return new sequenceoffset();
                 case "snut": return new TrackGroupTypeBox_snut(); // TODO: fix duplicate
-                case "spid": throw new NotSupportedException("'spid' is ambiguous in between VvcSubpicIDEntry and VvcSubpicIDProperty");
+                case "spid": return new VvcSubpicIDEntry(); // TODO: box is ambiguous in between VvcSubpicIDEntry and VvcSubpicIDProperty
                 case "spli": return new SubpicLevelInfoEntry();
                 case "splt": return new SplitTransitionEffectProperty();
-                case "spor": throw new NotSupportedException("'spor' is ambiguous in between VvcSubpicOrderEntry and VvcSubpicOrderProperty");
+                case "spor": return new VvcSubpicOrderEntry(); // TODO: box is ambiguous in between VvcSubpicOrderEntry and VvcSubpicOrderProperty
                 case "srat": return new SamplingRateBox();
                 case "srpp": return new SRTPProcessBox();
                 case "srtp": return new SrtpHintSampleEntry();
@@ -352,7 +352,7 @@ namespace SharpMP4
                 case "urim": return new URIMetaSampleEntry();
                 case "url ": return new DataEntryUrlBox();
                 case "urn ": return new DataEntryUrnBox();
-                case "vipr": throw new NotSupportedException("'vipr' is ambiguous in between ViewPriorityBox and ViewPriorityEntry");
+                case "vipr": return new ViewPriorityBox(); // TODO: box is ambiguous in between ViewPriorityBox and ViewPriorityEntry
                 case "vlab": return new WebVTTSourceLabelBox();
                 case "vmhd": return new VideoMediaHeaderBox();
                 case "vopi": return new VvcOperatingPointsInformation();
@@ -534,7 +534,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             /*  the bitstream header   */
@@ -775,10 +775,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.version);
             boxSize += stream.ReadBits(24, out this.flags);
             return boxSize;
@@ -820,10 +820,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -859,10 +859,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -898,10 +898,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -937,10 +937,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -976,10 +976,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -1013,10 +1013,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -1050,10 +1050,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -1101,10 +1101,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadString(out this.ns);
             boxSize += stream.ReadString(out this.schema_location); // optional 
             boxSize += stream.ReadString(out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
@@ -1163,10 +1163,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadString(out this.content_encoding); // optional 
             boxSize += stream.ReadString(out this.mime_format);
             // boxSize += stream.ReadBox( out this.BitRateBox); // optional 
@@ -1265,10 +1265,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(3, out this.reserved);
             boxSize += stream.ReadBits(7, out this.downmix_ID); // matching downmix 
             boxSize += stream.ReadBits(6, out this.DRC_set_ID); // to match a DRC box 
@@ -1381,10 +1381,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.hinttrackversion);
             boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
             boxSize += stream.ReadUInt8(out this.precedingbyteslen);
@@ -1442,7 +1442,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             return boxSize;
@@ -1475,10 +1475,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -1525,10 +1525,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadString(out this.content_encoding); // optional 
             boxSize += stream.ReadString(out this.mime_format);
             // boxSize += stream.ReadBox( out this.BitRateBox); // optional 
@@ -1575,10 +1575,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -1609,10 +1609,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -1656,13 +1656,13 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.major_brand);
             boxSize += stream.ReadUInt32(out this.minor_version);
-            boxSize += stream.ReadUInt32Array(out this.compatible_brands); // to end of the box
+            boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize, out this.compatible_brands); // to end of the box
             return boxSize;
         }
 
@@ -1672,7 +1672,7 @@ namespace SharpMP4
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteUInt32(this.major_brand);
             boxSize += stream.WriteUInt32(this.minor_version);
-            boxSize += stream.WriteUInt32Array(this.compatible_brands); // to end of the box
+            boxSize += stream.WriteUInt32ArrayTillEnd(this.compatible_brands); // to end of the box
             return boxSize;
         }
 
@@ -1711,10 +1711,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.MetaDataKeyDeclarationBox); 
             // boxSize += stream.ReadBox( out this.MetaDataDatatypeBox); // optional
             // boxSize += stream.ReadBox( out this.MetaDataLocaleBox); // optional
@@ -1774,12 +1774,12 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.key_namespace);
-            boxSize += stream.ReadUInt8Array(out this.key_value);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.key_value);
             return boxSize;
         }
 
@@ -1788,7 +1788,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteUInt32(this.key_namespace);
-            boxSize += stream.WriteUInt8Array(this.key_value);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.key_value);
             return boxSize;
         }
 
@@ -1821,10 +1821,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadString(out this.locale_string);
             return boxSize;
         }
@@ -1861,10 +1861,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             /*  'init' instead? */
             return boxSize;
         }
@@ -1903,10 +1903,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.extensions); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -1950,10 +1950,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.inlineKeyValueBoxesPresent);
             return boxSize;
         }
@@ -1994,7 +1994,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadBox(out this.boxes);
@@ -2031,10 +2031,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -2076,10 +2076,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8Array(6, out this.reserved);
             boxSize += stream.ReadUInt16(out this.data_reference_index);
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -2125,11 +2125,11 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8Array(out this.data);
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
@@ -2137,7 +2137,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8Array(this.data);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
             return boxSize;
         }
 
@@ -2220,10 +2220,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.reference_ID);
             boxSize += stream.ReadUInt32(out this.timescale);
 
@@ -2328,6 +2328,82 @@ namespace SharpMP4
 
 
     /*
+    aligned(8) class MovieBox extends Box('moov'){ 
+    } 
+    */
+    public class MovieBox : Box
+    {
+        public const string TYPE = "moov";
+
+        public MovieBox() : base("moov")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadBoxChildren(boxSize, this);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteBoxChildren(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateBoxChildren(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class MovieFragmentBox extends Box('moof'){ 
+    } 
+    */
+    public class MovieFragmentBox : Box
+    {
+        public const string TYPE = "moof";
+
+        public MovieFragmentBox() : base("moof")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadBoxChildren(boxSize, this);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteBoxChildren(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateBoxChildren(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
     class ViewPriorityBox extends Box ('vipr') { 
     for (i=0; ; i++) {  
     // To end of box 
@@ -2355,10 +2431,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             for (int i = 0; ; i++)
             {
@@ -2428,7 +2504,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.subSeqDirectionFlag);
@@ -2519,10 +2595,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.subSequenceIdentifer);
             boxSize += stream.ReadUInt8(out this.layerNumber);
             boxSize += stream.ReadBit(out this.durationFlag);
@@ -2672,10 +2748,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(6, out this.reserved);
             boxSize += stream.ReadBits(10, out this.ref_view_id);
             boxSize += stream.ReadUInt32(out this.prec_focal_length);
@@ -2788,10 +2864,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(6, out this.reserved);
             boxSize += stream.ReadBits(10, out this.ref_view_id);
             boxSize += stream.ReadUInt8(out this.prec_rotation_param);
@@ -2981,7 +3057,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.configurationVersion);
@@ -3200,7 +3276,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.configurationVersion);
@@ -3365,7 +3441,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.configurationVersion);
@@ -3587,7 +3663,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.configurationVersion);
@@ -3800,7 +3876,7 @@ namespace SharpMP4
             this.num_sublayers = (int)num_sublayers;
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadBits(2, out this.reserved);
@@ -4023,7 +4099,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             const int OPI_NUT = 12;
@@ -4244,7 +4320,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.configurationVersion);
@@ -4482,7 +4558,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.num_profile_tier_level_minus1);
@@ -4814,7 +4890,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.configurationVersion);
@@ -5062,7 +5138,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.configurationVersion);
@@ -5223,10 +5299,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.SSRC);
             return boxSize;
         }
@@ -5269,10 +5345,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(6, out this.reserved);
             boxSize += stream.ReadBits(2, out this.timestamp_sync);
             return boxSize;
@@ -5316,10 +5392,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.timescale);
             return boxSize;
         }
@@ -5360,10 +5436,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt32(out this.offset);
             return boxSize;
         }
@@ -5402,10 +5478,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt32(out this.offset);
             return boxSize;
         }
@@ -5444,10 +5520,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt64(out this.bytessent);
             return boxSize;
         }
@@ -5486,10 +5562,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt64(out this.packetssent);
             return boxSize;
         }
@@ -5527,10 +5603,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt64(out this.bytessent);
             return boxSize;
         }
@@ -5569,10 +5645,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.bytessent);
             return boxSize;
         }
@@ -5611,10 +5687,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.packetssent);
             return boxSize;
         }
@@ -5652,10 +5728,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.bytessent);
             return boxSize;
         }
@@ -5697,10 +5773,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             /*  maximum data rate */
             boxSize += stream.ReadUInt32(out this.period); // in milliseconds
             boxSize += stream.ReadUInt32(out this.bytes);
@@ -5745,10 +5821,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt64(out this.bytessent);
             return boxSize;
         }
@@ -5787,10 +5863,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt64(out this.bytessent);
             return boxSize;
         }
@@ -5828,10 +5904,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt64(out this.bytessent);
             return boxSize;
         }
@@ -5870,10 +5946,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt32(out this.time);
             return boxSize;
         }
@@ -5911,10 +5987,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt32(out this.time);
             return boxSize;
         }
@@ -5953,10 +6029,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.bytes);
             return boxSize;
         }
@@ -5994,10 +6070,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.time);
             return boxSize;
         }
@@ -6043,10 +6119,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.payloadID); // payload ID used in RTP packets
             boxSize += stream.ReadUInt8(out this.count);
             boxSize += stream.ReadUInt8Array(count, out this.rtpmap_string);
@@ -6110,10 +6186,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(30, out this.reserved);
             boxSize += stream.ReadBits(2, out this.single_view_allowed);
             boxSize += stream.ReadUInt32(out this.stereo_scheme);
@@ -6170,10 +6246,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(out this.extended_language);
             return boxSize;
         }
@@ -6220,10 +6296,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.bufferSizeDB);
             boxSize += stream.ReadUInt32(out this.maxBitrate);
             boxSize += stream.ReadUInt32(out this.avgBitrate);
@@ -6272,10 +6348,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.hSpacing);
             boxSize += stream.ReadUInt32(out this.vSpacing);
             return boxSize;
@@ -6351,10 +6427,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.cleanApertureWidthN);
             boxSize += stream.ReadUInt32(out this.cleanApertureWidthD);
             boxSize += stream.ReadUInt32(out this.cleanApertureHeightN);
@@ -6465,10 +6541,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.reserved1); // ccv_cancel_flag
             boxSize += stream.ReadBit(out this.reserved2); // ccv_persistence_flag
             boxSize += stream.ReadBit(out this.ccv_primaries_present_flag);
@@ -6636,10 +6712,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.colour_type);
 
             if (colour_type == IsoStream.FromFourCC("nclx"))
@@ -6739,10 +6815,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.max_content_light_level);
             boxSize += stream.ReadUInt16(out this.max_pic_average_light_level);
             return boxSize;
@@ -6806,10 +6882,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             this.display_primaries_x = new ushort[3];
             this.display_primaries_y = new ushort[3];
@@ -6877,10 +6953,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.scheme_type_box); 
             // boxSize += stream.ReadBox( out this.info); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -7010,10 +7086,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 0)
             {
@@ -7364,10 +7440,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             int baseChannelCount = 0; // TODO: get somewhere
 
             if (version >= 1)
@@ -7587,10 +7663,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.sampling_rate);
             return boxSize;
         }
@@ -7629,10 +7705,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(out this.text_config);
             return boxSize;
         }
@@ -7672,11 +7748,11 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8Array(out this.uri_initialization_data);
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.uri_initialization_data);
             return boxSize;
         }
 
@@ -7684,7 +7760,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8Array(this.uri_initialization_data);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.uri_initialization_data);
             return boxSize;
         }
 
@@ -7723,10 +7799,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.pad);
             boxSize += stream.ReadIso639(out this.language); // ISO-639-2/T language code
             boxSize += stream.ReadString(out this.notice);
@@ -7775,10 +7851,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(out this.schemeURI);
             boxSize += stream.ReadStringZeroTerminated(out this.value);
             return boxSize;
@@ -7825,12 +7901,12 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt32(out this.switch_group);
-            boxSize += stream.ReadUInt32Array(out this.attribute_list); // to end of the box
+            boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize, out this.attribute_list); // to end of the box
             return boxSize;
         }
 
@@ -7839,7 +7915,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteInt32(this.switch_group);
-            boxSize += stream.WriteUInt32Array(this.attribute_list); // to end of the box
+            boxSize += stream.WriteUInt32ArrayTillEnd(this.attribute_list); // to end of the box
             return boxSize;
         }
 
@@ -7866,10 +7942,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -7906,10 +7982,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -7948,11 +8024,11 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8Array(out this.sdptext);
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.sdptext);
             return boxSize;
         }
 
@@ -7960,7 +8036,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8Array(this.sdptext);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.sdptext);
             return boxSize;
         }
 
@@ -7988,10 +8064,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -8034,12 +8110,12 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.descriptionformat);
-            boxSize += stream.ReadUInt8Array(out this.sdptext);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.sdptext);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -8049,7 +8125,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteUInt32(this.descriptionformat);
-            boxSize += stream.WriteUInt8Array(this.sdptext);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.sdptext);
             boxSize += stream.WriteBoxChildren(this);
             return boxSize;
         }
@@ -8078,10 +8154,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -8122,10 +8198,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             /*  not more than one TrackLoudnessInfo box with version>=1 is allowed */
             // boxSize += stream.ReadBox( out this.loudness); // not more than one AlbumLoudnessInfo box with version>=1 is allowed
             // boxSize += stream.ReadBox( out this.albumLoudness); 
@@ -8168,10 +8244,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -8202,10 +8278,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -8242,10 +8318,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(out this.location);
             return boxSize;
         }
@@ -8289,10 +8365,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(out this.name);
             boxSize += stream.ReadStringZeroTerminated(out this.location);
             return boxSize;
@@ -8335,10 +8411,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.imda_ref_identifier);
             return boxSize;
         }
@@ -8374,10 +8450,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -8416,10 +8492,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.properties); // boxes derived from
             /*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
             /*  to fill the box */
@@ -8496,10 +8572,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
 
             this.item_ID = new uint[entry_count];
@@ -8635,10 +8711,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.property_container); 
             // boxSize += stream.ReadBox( out this.association); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -8701,10 +8777,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 0)
             {
@@ -8791,11 +8867,11 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8Array(out this.data); // to end of box
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data); // to end of box
             return boxSize;
         }
 
@@ -8803,7 +8879,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8Array(this.data); // to end of box
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data); // to end of box
             return boxSize;
         }
 
@@ -8831,10 +8907,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.original_format); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -8883,10 +8959,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
 
             this.chunk_offset = new ulong[entry_count];
@@ -8975,10 +9051,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
             uint count_size_code = (flags >> 2) & 0x3;
             uint pattern_size_code = (flags >> 4) & 0x3;
@@ -9126,10 +9202,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 0)
             {
@@ -9242,10 +9318,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
 
 
@@ -9346,10 +9422,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -9393,10 +9469,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
 
             for (int i = 0; i < entry_count; i++)
@@ -9449,10 +9525,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -9514,10 +9590,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
 
             this.edit_duration = new ulong[entry_count];
@@ -9615,10 +9691,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.compatible_combinations); // to end of the box
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -9681,10 +9757,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(out this.content_location);
             boxSize += stream.ReadStringZeroTerminated(out this.content_MD5);
             boxSize += stream.ReadUInt64(out this.content_length);
@@ -9770,10 +9846,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 0)
             {
@@ -9890,10 +9966,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.blocks_and_symbols); 
             // boxSize += stream.ReadBox( out this.FEC_symbol_locations); //optional
             // boxSize += stream.ReadBox( out this.File_symbol_locations); //optional
@@ -9948,10 +10024,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.entry_count);
             // boxSize += stream.ReadBox(entry_count,  out this.partition_entries); 
             // boxSize += stream.ReadBox( out this.session_info); //optional
@@ -10021,10 +10097,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 0)
             {
@@ -10192,10 +10268,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 0)
             {
@@ -10335,11 +10411,11 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8Array(out this.data);
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
@@ -10347,7 +10423,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8Array(this.data);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
             return boxSize;
         }
 
@@ -10380,10 +10456,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.data_format); // format of decrypted, encoded data (in case of protection)
             /*  or un-transformed sample entry (in case of restriction */
             /*  and complete track information) */
@@ -10438,13 +10514,13 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.major_brand);
             boxSize += stream.ReadUInt32(out this.minor_version);
-            boxSize += stream.ReadUInt32Array(out this.compatible_brands); // to end of the box
+            boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize, out this.compatible_brands); // to end of the box
             return boxSize;
         }
 
@@ -10454,7 +10530,7 @@ namespace SharpMP4
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteUInt32(this.major_brand);
             boxSize += stream.WriteUInt32(this.minor_version);
-            boxSize += stream.WriteUInt32Array(this.compatible_brands); // to end of the box
+            boxSize += stream.WriteUInt32ArrayTillEnd(this.compatible_brands); // to end of the box
             return boxSize;
         }
 
@@ -10497,10 +10573,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.entry_count);
 
             this.group_ID = new uint[entry_count];
@@ -10555,10 +10631,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -10609,10 +10685,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.pre_defined);
             boxSize += stream.ReadUInt32(out this.handler_type);
             boxSize += stream.ReadUInt32Array(3, out this.reserved);
@@ -10677,10 +10753,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.maxPDUsize);
             boxSize += stream.ReadUInt16(out this.avgPDUsize);
             boxSize += stream.ReadUInt32(out this.maxbitrate);
@@ -10731,11 +10807,11 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8Array(out this.data);
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
@@ -10743,7 +10819,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8Array(this.data);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
             return boxSize;
         }
 
@@ -10780,10 +10856,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 0)
             {
@@ -10930,10 +11006,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(4, out this.offset_size);
             boxSize += stream.ReadBits(4, out this.length_size);
             boxSize += stream.ReadBits(4, out this.base_offset_size);
@@ -11156,12 +11232,12 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.imda_identifier);
-            boxSize += stream.ReadUInt8Array(out this.data); // until the end of the box
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data); // until the end of the box
             return boxSize;
         }
 
@@ -11170,7 +11246,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteUInt32(this.imda_identifier);
-            boxSize += stream.WriteUInt8Array(this.data); // until the end of the box
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data); // until the end of the box
             return boxSize;
         }
 
@@ -11252,10 +11328,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if ((version == 0) || (version == 1))
             {
@@ -11428,10 +11504,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.protection_count);
 
             for (int i = 0; i < protection_count; i++)
@@ -11491,10 +11567,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 0)
             {
@@ -11602,10 +11678,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.level_count);
 
             this.track_ID = new uint[level_count];
@@ -11752,11 +11828,11 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8Array(out this.data);
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
@@ -11764,7 +11840,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8Array(this.data);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
             return boxSize;
         }
 
@@ -11825,10 +11901,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 1)
             {
@@ -11920,10 +11996,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -11966,10 +12042,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 1)
             {
@@ -12055,10 +12131,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.theHandler); 
             // boxSize += stream.ReadBox( out this.primary_resource); // optional
             // boxSize += stream.ReadBox( out this.file_locations); // optional
@@ -12128,10 +12204,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.sequence_number);
             return boxSize;
         }
@@ -12168,10 +12244,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -12211,10 +12287,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.parent_size);
             return boxSize;
         }
@@ -12249,10 +12325,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -12289,10 +12365,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -12328,10 +12404,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -12366,10 +12442,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -12458,10 +12534,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 1)
             {
@@ -12566,10 +12642,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -12601,10 +12677,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -12662,10 +12738,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.sample_count);
 
 
@@ -12742,10 +12818,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             for (int i = 0; ; i++)
             {
@@ -12807,10 +12883,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 0)
             {
@@ -12889,10 +12965,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.reference_track_ID);
             boxSize += stream.ReadUInt64(out this.ntp_timestamp);
 
@@ -12966,10 +13042,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.original_format); 
             // boxSize += stream.ReadBox( out this.scheme_type_box); 
             // boxSize += stream.ReadBox( out this.info); // optional
@@ -13038,10 +13114,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if ((flags & 1) == 1)
             {
@@ -13150,10 +13226,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if ((flags & 1) == 1)
             {
@@ -13251,10 +13327,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.grouping_type);
 
             if (version == 1)
@@ -13329,10 +13405,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.scheme_specific_data); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -13384,10 +13460,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.scheme_type); // 4CC identifying the scheme
             boxSize += stream.ReadUInt32(out this.scheme_version); // scheme version
 
@@ -13456,10 +13532,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             /*  identical syntax to SchemeTypeBox */
             boxSize += stream.ReadUInt32(out this.scheme_type); // 4CC identifying the scheme
             boxSize += stream.ReadUInt32(out this.scheme_version); // scheme version 
@@ -13534,10 +13610,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             int sample_count = 0; // TODO: taken from the stsz sample_count
 
 
@@ -13629,10 +13705,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.num_session_groups);
 
             this.entry_count = new byte[num_session_groups];
@@ -13755,10 +13831,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.grouping_type);
 
             if (version >= 1)
@@ -13880,10 +13956,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -13922,10 +13998,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.original_format); 
             // boxSize += stream.ReadBox( out this.scheme_type_box); // optional
             // boxSize += stream.ReadBox( out this.info); // optional
@@ -13973,11 +14049,11 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8Array(out this.data);
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
@@ -13985,7 +14061,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8Array(this.data);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
             return boxSize;
         }
 
@@ -14020,10 +14096,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt16(out this.balance);
             boxSize += stream.ReadUInt16(out this.reserved);
             return boxSize;
@@ -14081,10 +14157,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.encryption_algorithm_rtp);
             boxSize += stream.ReadUInt32(out this.encryption_algorithm_rtcp);
             boxSize += stream.ReadUInt32(out this.integrity_algorithm_rtp);
@@ -14138,10 +14214,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -14173,10 +14249,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -14222,10 +14298,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
 
             this.chunk_offset = new uint[entry_count];
@@ -14284,10 +14360,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             int sample_count = 0; // TODO: taken from the stsz sample_count
 
 
@@ -14345,10 +14421,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -14380,10 +14456,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -14435,14 +14511,14 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt16(out this.switch_group);
             boxSize += stream.ReadInt16(out this.alternate_group);
             boxSize += stream.ReadUInt32(out this.sub_track_ID);
-            boxSize += stream.ReadUInt32Array(out this.attribute_list); // to the end of the box
+            boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize, out this.attribute_list); // to the end of the box
             return boxSize;
         }
 
@@ -14453,7 +14529,7 @@ namespace SharpMP4
             boxSize += stream.WriteInt16(this.switch_group);
             boxSize += stream.WriteInt16(this.alternate_group);
             boxSize += stream.WriteUInt32(this.sub_track_ID);
-            boxSize += stream.WriteUInt32Array(this.attribute_list); // to the end of the box
+            boxSize += stream.WriteUInt32ArrayTillEnd(this.attribute_list); // to the end of the box
             return boxSize;
         }
 
@@ -14501,10 +14577,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
 
             this.first_chunk = new uint[entry_count];
@@ -14573,10 +14649,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             boxSize += stream.ReadUInt32(out this.entry_count);
 
@@ -14646,10 +14722,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.grouping_type);
             boxSize += stream.ReadUInt16(out this.item_count);
 
@@ -14719,10 +14795,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
 
 
@@ -14792,10 +14868,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
 
 
@@ -14865,10 +14941,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.sample_size);
             boxSize += stream.ReadUInt32(out this.sample_count);
 
@@ -14950,10 +15026,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
 
 
@@ -15011,10 +15087,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -15065,10 +15141,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt24(out this.reserved);
             boxSize += stream.ReadUInt8(out this.field_size);
             boxSize += stream.ReadUInt32(out this.sample_count);
@@ -15168,10 +15244,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
 
 
@@ -15309,10 +15385,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 1)
             {
@@ -15404,10 +15480,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.track_ID); // all the following are optional fields
             /*  their presence is indicated by bits in the tf_flags */
             boxSize += stream.ReadUInt64(out this.base_data_offset);
@@ -15512,10 +15588,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.track_ID);
             boxSize += stream.ReadBits(26, out this.reserved);
             boxSize += stream.ReadBits(2, out this.length_size_of_traf_num);
@@ -15694,10 +15770,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             if (version == 1)
             {
@@ -15810,10 +15886,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -15848,10 +15924,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -15888,10 +15964,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.TrackReferenceTypeBox); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -15934,10 +16010,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.track_ID); // Any number of boxes may follow
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -15995,10 +16071,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.track_ID);
             boxSize += stream.ReadUInt32(out this.default_sample_description_index);
             boxSize += stream.ReadUInt32(out this.default_sample_duration);
@@ -16045,10 +16121,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -16108,10 +16184,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.sample_count); // the following are optional fields
             boxSize += stream.ReadInt32(out this.data_offset);
             boxSize += stream.ReadUInt32(out this.first_sample_flags); // all fields in the following array are optional
@@ -16158,10 +16234,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -16197,11 +16273,11 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.compatible_brands); // to end of the box
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize, out this.compatible_brands); // to end of the box
             return boxSize;
         }
 
@@ -16209,7 +16285,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.compatible_brands); // to end of the box
+            boxSize += stream.WriteUInt32ArrayTillEnd(this.compatible_brands); // to end of the box
             return boxSize;
         }
 
@@ -16235,10 +16311,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -16299,7 +16375,7 @@ namespace SharpMP4
             this.usertype = extended_type;
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUInt32(out this.size);
@@ -16391,10 +16467,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.graphicsmode); // copy, see below
             boxSize += stream.ReadUInt16Array(3, out this.opcolor);
             return boxSize;
@@ -16437,10 +16513,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadString(out this.xml);
             return boxSize;
         }
@@ -16487,10 +16563,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.ambient_illuminance);
             boxSize += stream.ReadUInt16(out this.ambient_light_x);
             boxSize += stream.ReadUInt16(out this.ambient_light_y);
@@ -16533,10 +16609,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.MetaDataKeyBox); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -16578,10 +16654,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(out this.theURI);
             return boxSize;
         }
@@ -16654,10 +16730,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(2, out this.iroi_type);
             boxSize += stream.ReadBits(6, out this.reserved);
 
@@ -16761,10 +16837,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.entry_count);
 
             this.dependencyTierId = new ushort[entry_count];
@@ -16847,10 +16923,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(3, out this.min_dependency_id);
             boxSize += stream.ReadBits(3, out this.min_temporal_id);
             boxSize += stream.ReadBits(6, out this.reserved);
@@ -16924,10 +17000,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.sps_id_count);
 
             this.SPS_index = new byte[sps_id_count];
@@ -17013,10 +17089,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(2, out this.reserved1);
             boxSize += stream.ReadBits(6, out this.min_priorityId);
             boxSize += stream.ReadBits(2, out this.reserved2);
@@ -17104,10 +17180,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(4, out this.reserved);
             boxSize += stream.ReadBits(2, out this.conversion_idc);
             boxSize += stream.ReadBit(out this.cavlc_info_present_flag);
@@ -17223,10 +17299,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.base_region_tierID);
             boxSize += stream.ReadBit(out this.dynamic_rect);
             boxSize += stream.ReadBits(7, out this.reserved);
@@ -17317,10 +17393,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.operating_point_count);
 
             this.byte_rate = new uint[operating_point_count];
@@ -17406,10 +17482,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.item_count);
 
             this.view_id = new ushort[item_count];
@@ -17532,10 +17608,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.multiview_group_id);
             boxSize += stream.ReadUInt16(out this.num_entries);
             boxSize += stream.ReadUInt8(out this.reserved);
@@ -17690,10 +17766,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
         }
@@ -17776,10 +17852,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.depth_width);
             boxSize += stream.ReadUInt16(out this.depth_height);
             /*  The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox).  */
@@ -17895,10 +17971,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.reserved1);
             boxSize += stream.ReadUInt16(out this.num_common_attributes);
 
@@ -17991,10 +18067,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             int sample_count = 0; // TODO: taken from the stsz sample_count
 
 
@@ -18085,10 +18161,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.numRequiredSEIs);
 
             this.requiredSEI_ID = new ushort[numRequiredSEIs];
@@ -18197,10 +18273,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.item_count);
 
             this.dependency_id = new byte[item_count];
@@ -18290,10 +18366,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.item_count);
 
             this.MultiviewGroupId = new uint[item_count];
@@ -18355,10 +18431,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.item_count);
 
             this.tierID = new ushort[item_count];
@@ -18420,10 +18496,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.num_entries);
 
             this.multiview_group_id = new uint[num_entries];
@@ -18505,10 +18581,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.baseBitRate);
             boxSize += stream.ReadUInt32(out this.maxBitRate);
             boxSize += stream.ReadUInt32(out this.avgBitRate);
@@ -18604,10 +18680,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             /* Mandatory Box */
             boxSize += stream.ReadUInt16(out this.tierID);
             boxSize += stream.ReadUInt8(out this.profileIndication);
@@ -18685,10 +18761,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.item_count);
 
             this.tileGroupID = new ushort[item_count];
@@ -18744,10 +18820,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.max_disparity);
             return boxSize;
         }
@@ -18788,10 +18864,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.MVDConfig);
             // boxSize += stream.ReadBox( out this.mvdDepthRes); //Optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -18838,10 +18914,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.MVDConfig);
             // boxSize += stream.ReadBox( out this.mvdDepthRes); //Optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -18955,10 +19031,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(2, out this.reserved6);
             boxSize += stream.ReadBits(3, out this.min_temporal_id);
             boxSize += stream.ReadBits(3, out this.max_temporal_id);
@@ -19085,10 +19161,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.MVCConfig);
             return boxSize;
         }
@@ -19127,10 +19203,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.AVCConfig);
             return boxSize;
         }
@@ -19169,10 +19245,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.HEVCConfig);
             return boxSize;
         }
@@ -19211,10 +19287,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.LHEVCConfig);
             return boxSize;
         }
@@ -19253,10 +19329,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.Descr);
             return boxSize;
         }
@@ -19295,10 +19371,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.SVCConfig);
             return boxSize;
         }
@@ -19338,10 +19414,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBytes(size - 64, out this.scalinfosei);
             return boxSize;
         }
@@ -19385,10 +19461,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.method_count);
             boxSize += stream.ReadStringArray(method_count, out this.PriorityAssignmentURI);
             return boxSize;
@@ -19431,10 +19507,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBytes(size - 64, out this.mvcscalinfosei);
             return boxSize;
         }
@@ -19474,10 +19550,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBytes(size - 64, out this.mvdscalinfosei);
             return boxSize;
         }
@@ -19521,10 +19597,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.method_count);
             boxSize += stream.ReadStringArray(method_count, out this.PriorityAssignmentURI);
             return boxSize;
@@ -19566,10 +19642,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.HEVCTileTierLevelConfig);
             return boxSize;
         }
@@ -19608,10 +19684,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.EVCConfig);
             return boxSize;
         }
@@ -19668,10 +19744,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.pr_layer_num);
 
             this.pr_layer = new byte[pr_layer_num];
@@ -19738,10 +19814,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.VvcConfig);
             return boxSize;
         }
@@ -19784,10 +19860,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(6, out this.reserved);
             boxSize += stream.ReadBits(2, out this.LengthSizeMinusOne);
             return boxSize;
@@ -19851,10 +19927,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.num_entries);
 
             this.constructor_type = new byte[num_entries];
@@ -20000,10 +20076,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             boxSize += stream.ReadUInt8(out this.sample_statement_type);
             /*  normally group, or seq  */
@@ -20077,10 +20153,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.config);
             return boxSize;
         }
@@ -20119,10 +20195,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadString(out this.config);
             return boxSize;
         }
@@ -20161,10 +20237,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadString(out this.source_label);
             return boxSize;
         }
@@ -20205,10 +20281,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.label); // recommended
             // boxSize += stream.ReadBox( out this.BitRateBox); // optional
@@ -20257,10 +20333,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadString(out this.aux_track_type);
             return boxSize;
         }
@@ -20312,10 +20388,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.all_ref_pics_intra);
             boxSize += stream.ReadBit(out this.intra_pred_used);
             boxSize += stream.ReadBits(4, out this.max_ref_per_pic);
@@ -20389,10 +20465,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBytes(16, out this.input_MD5);
             boxSize += stream.ReadUInt32(out this.input_4cc);
 
@@ -20527,10 +20603,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32Array(2, out this.reserved);
             boxSize += stream.ReadUInt16(out this.channelcount);
             boxSize += stream.ReadUInt16(out this.samplesize);
@@ -20664,10 +20740,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.entry_version); // shall be 1, 
             /*  and shall be in an stsd with version ==1 */
             boxSize += stream.ReadUInt16Array(3, out this.reserved);
@@ -20757,10 +20833,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             /* other boxes from derived specifications */
             return boxSize;
         }
@@ -20795,10 +20871,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -20842,10 +20918,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             /*  ProtectionSchemeInfoBox { */
             /*  OriginalFormatBox;	// data_format is 'resv' */
             /*  SchemeTypeBox; */
@@ -20928,10 +21004,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(out this.content_encoding); // optional
             boxSize += stream.ReadString(out this.ns);
             boxSize += stream.ReadString(out this.schema_location); // optional
@@ -20982,10 +21058,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(out this.content_encoding); // optional
             boxSize += stream.ReadStringZeroTerminated(out this.mime_format);
             // boxSize += stream.ReadBox( out this.TextConfigBox); // optional
@@ -21033,10 +21109,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.the_label); 
             // boxSize += stream.ReadBox( out this.init); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -21082,10 +21158,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.MetaDataKeyTableBox); // mandatory
             // boxSize += stream.ReadBox( out this.BitRateBox); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -21142,10 +21218,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.hinttrackversion);
             boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
             boxSize += stream.ReadUInt16(out this.partition_entry_ID);
@@ -21196,10 +21272,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.CompleteTrackInfoBox); 
             // boxSize += stream.ReadBox( out this.config); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -21243,10 +21319,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.SchemeInformation); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -21287,10 +21363,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.SchemeInformation); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -21327,10 +21403,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -21374,10 +21450,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.hinttrackversion);
             boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
             boxSize += stream.ReadUInt32(out this.maxpacketsize);
@@ -21433,10 +21509,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.hinttrackversion);
             boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
             boxSize += stream.ReadUInt32(out this.maxpacketsize);
@@ -21476,10 +21552,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -21523,10 +21599,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.hinttrackversion);
             boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
             boxSize += stream.ReadUInt32(out this.maxpacketsize);
@@ -21573,10 +21649,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.otherboxes); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -21620,10 +21696,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBytes(32, out this.compressorname); // other boxes from derived specifications
             return boxSize;
         }
@@ -21712,10 +21788,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.pre_defined);
             boxSize += stream.ReadUInt16(out this.reserved);
             boxSize += stream.ReadUInt32Array(3, out this.pre_defined0);
@@ -21804,10 +21880,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.hinttrackversion);
             boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
             boxSize += stream.ReadUInt32(out this.maxpacketsize);
@@ -21866,10 +21942,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.group_id);
             boxSize += stream.ReadUInt32(out this.num_entities_in_group);
 
@@ -21923,10 +21999,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -21975,10 +22051,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.from_item_ID);
             boxSize += stream.ReadUInt16(out this.reference_count);
 
@@ -22046,10 +22122,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.from_item_ID);
             boxSize += stream.ReadUInt16(out this.reference_count);
 
@@ -22129,10 +22205,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.roll_count);
             boxSize += stream.ReadUInt16(out this.first_output_sample);
 
@@ -22222,10 +22298,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(3, out this.DRAP_type);
             boxSize += stream.ReadBits(29, out this.reserved);
             return boxSize;
@@ -22268,10 +22344,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt16(out this.roll_distance);
             return boxSize;
         }
@@ -22315,10 +22391,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.num_leading_samples_known);
             boxSize += stream.ReadBits(7, out this.num_leading_samples);
             return boxSize;
@@ -22390,10 +22466,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.operation_point_count);
 
             if (operation_point_count == 1)
@@ -22489,10 +22565,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt16(out this.roll_distance);
             return boxSize;
         }
@@ -22540,10 +22616,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.dependent_flag);
             boxSize += stream.ReadBits(3, out this.reserved);
             boxSize += stream.ReadBits(4, out this.SAP_type);
@@ -22599,10 +22675,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.meta_box_handler_type);
             boxSize += stream.ReadUInt32(out this.num_items);
 
@@ -22665,10 +22741,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.level_independently_decodable);
             boxSize += stream.ReadBits(7, out this.reserved);
             return boxSize;
@@ -22714,10 +22790,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.hSpacing);
             boxSize += stream.ReadUInt32(out this.vSpacing);
             return boxSize;
@@ -22793,10 +22869,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.cleanApertureWidthN);
             boxSize += stream.ReadUInt32(out this.cleanApertureWidthD);
             boxSize += stream.ReadUInt32(out this.cleanApertureHeightN);
@@ -22859,10 +22935,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.track_group_id); // the remaining data may be specified 
             /*   for a particular track_group_type */
             return boxSize;
@@ -22909,10 +22985,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.left_view_flag);
             boxSize += stream.ReadBits(31, out this.reserved);
             return boxSize;
@@ -22954,11 +23030,11 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt32Array(out this.track_IDs);
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize, out this.track_IDs);
             return boxSize;
         }
 
@@ -22966,7 +23042,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(this.track_IDs);
+            boxSize += stream.WriteUInt32ArrayTillEnd(this.track_IDs);
             return boxSize;
         }
 
@@ -22996,10 +23072,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -23042,10 +23118,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.lhvcconfig); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -23087,10 +23163,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -23135,10 +23211,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -23183,10 +23259,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.lhvcconfig); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -23231,10 +23307,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.lhvcconfig); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -23279,10 +23355,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -23327,10 +23403,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -23375,10 +23451,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -23421,10 +23497,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -23466,10 +23542,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -23528,10 +23604,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // optional
             // boxSize += stream.ReadBox( out this.mvcconfig); // optional
@@ -23611,10 +23687,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // optional
             // boxSize += stream.ReadBox( out this.mvcconfig); // optional
@@ -23680,10 +23756,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -23742,10 +23818,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // optional
             // boxSize += stream.ReadBox( out this.mvcconfig); // optional
@@ -23825,10 +23901,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // optional
             // boxSize += stream.ReadBox( out this.mvcconfig); // optional
@@ -23910,10 +23986,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.mvcconfig); // mandatory
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -23998,10 +24074,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.mvcconfig); // mandatory
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -24086,10 +24162,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.mvcconfig); // mandatory
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -24174,10 +24250,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.mvcconfig); // mandatory
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -24257,10 +24333,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.mvcdconfig); // mandatory
             // boxSize += stream.ReadBox( out this.mvdscalinfosei); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -24331,10 +24407,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.mvcdconfig); // mandatory
             // boxSize += stream.ReadBox( out this.mvdscalinfosei); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -24405,10 +24481,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.mvcdconfig); // mandatory
             // boxSize += stream.ReadBox( out this.mvdscalinfosei); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -24479,10 +24555,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.mvcdconfig); // mandatory
             // boxSize += stream.ReadBox( out this.mvdscalinfosei); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -24550,10 +24626,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.a3dconfig); // mandatory
             // boxSize += stream.ReadBox( out this.mvdscalinfosei); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -24618,10 +24694,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.a3dconfig); // mandatory
             // boxSize += stream.ReadBox( out this.mvdscalinfosei); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -24686,10 +24762,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.a3dconfig); // mandatory
             // boxSize += stream.ReadBox( out this.mvdscalinfosei); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -24754,10 +24830,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.a3dconfig); // mandatory
             // boxSize += stream.ReadBox( out this.mvdscalinfosei); // optional
             // boxSize += stream.ReadBox( out this.view_identifiers); // mandatory
@@ -24816,10 +24892,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.svcconfig); // optional
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.method); // optional
@@ -24865,10 +24941,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.svcconfig); // optional
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.method); // optional
@@ -24918,10 +24994,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.svcconfig); // optional
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.method); // optional
@@ -24967,10 +25043,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.svcconfig); // optional
             // boxSize += stream.ReadBox( out this.scalability); // optional
             // boxSize += stream.ReadBox( out this.method); // optional
@@ -25023,10 +25099,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.svcconfig); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             // boxSize += stream.ReadBox( out this.scalability); // optional
@@ -25076,10 +25152,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.svcconfig); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             // boxSize += stream.ReadBox( out this.scalability); // optional
@@ -25128,10 +25204,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -25169,10 +25245,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -25206,10 +25282,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); // optional 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -25249,10 +25325,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -25294,10 +25370,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -25339,10 +25415,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -25385,10 +25461,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -25428,10 +25504,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -25473,10 +25549,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.descr); // optional
             boxSize += stream.ReadBoxChildren(boxSize, this);
@@ -25524,10 +25600,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             // boxSize += stream.ReadBox( out this.methods); // optional
             // boxSize += stream.ReadBox( out this.priorities); // optional
@@ -25574,10 +25650,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -25615,10 +25691,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -25682,10 +25758,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.level_is_present_flag);
             boxSize += stream.ReadBit(out this.level_is_static_flag);
             boxSize += stream.ReadBits(6, out this.reserved);
@@ -25797,10 +25873,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.level_is_present_flag);
             boxSize += stream.ReadBit(out this.level_is_static_flag);
             boxSize += stream.ReadBits(7, out this.reserved);
@@ -26059,10 +26135,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.num_profile_tier_level_minus1);
 
             this.opeg_ptl = new VvcPTLRecord[num_profile_tier_level_minus1 + 1];
@@ -26350,10 +26426,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
 
             this.track_switch_hierarchy_id = new ushort[num_entities_in_group];
             for (int i = 0; i < num_entities_in_group; i++)
@@ -26416,10 +26492,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.group_id);
             boxSize += stream.ReadUInt32(out this.num_entities_in_group);
 
@@ -26478,10 +26554,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(24, out this.audNalUnit);
             return boxSize;
         }
@@ -26537,10 +26613,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.layerNumber);
             boxSize += stream.ReadBits(7, out this.reserved);
             boxSize += stream.ReadBit(out this.accurateStatisticsFlag);
@@ -26595,10 +26671,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.dci_nal_unit_length);
             boxSize += stream.ReadBytes(dci_nal_unit_length, out this.dci_nal_unit);
             return boxSize;
@@ -26650,10 +26726,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.tierCount);
 
             this.tierID = new ushort[tierCount];
@@ -26713,10 +26789,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.eobNalUnit);
             return boxSize;
         }
@@ -26761,10 +26837,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.num_eos_nal_unit_minus1);
 
             this.eosNalUnit = new ushort[num_eos_nal_unit_minus1 + 1];
@@ -26832,10 +26908,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.reserved);
             boxSize += stream.ReadBit(out this.bl_irap_pic_flag);
             boxSize += stream.ReadBits(6, out this.bl_irap_nal_unit_type);
@@ -26921,10 +26997,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(2, out this.reserved);
             boxSize += stream.ReadBits(6, out this.num_layers_in_track);
 
@@ -27029,10 +27105,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.num_mix_nalu_pic_idx);
 
             this.mix_subp_track_idx1 = new ushort[num_mix_nalu_pic_idx];
@@ -27141,10 +27217,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.groupID);
             boxSize += stream.ReadUInt8(out this.primary_groupID);
             boxSize += stream.ReadBits(4, out this.reserved);
@@ -27275,10 +27351,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(6, out this.reserved);
             boxSize += stream.ReadBit(out this.large_size);
             boxSize += stream.ReadBit(out this.rle);
@@ -27412,10 +27488,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.oinf);
             return boxSize;
         }
@@ -27457,10 +27533,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt32(out this.delta_time);
             return boxSize;
         }
@@ -27504,10 +27580,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.ps_nalu_length);
             boxSize += stream.ReadBytes(ps_nalu_length, out this.ps_nal_unit);
             return boxSize;
@@ -27562,10 +27638,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.sps_present);
             boxSize += stream.ReadBit(out this.pps_present);
             boxSize += stream.ReadBit(out this.aps_present);
@@ -27651,10 +27727,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.subpic_id_info_flag);
             boxSize += stream.ReadBits(7, out this.reserved);
             boxSize += stream.ReadUInt16(out this.num_alternate_region_set);
@@ -27830,10 +27906,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.groupID);
             boxSize += stream.ReadUInt8(out this.primary_groupID);
             boxSize += stream.ReadBit(out this.is_tier_IDR);
@@ -27957,10 +28033,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.reserved);
             boxSize += stream.ReadUInt8(out this.NALU_count);
 
@@ -28043,10 +28119,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.rect_region_flag);
             boxSize += stream.ReadBits(2, out this.reserved);
             boxSize += stream.ReadBit(out this.continuous_id_flag);
@@ -28139,10 +28215,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.level_idc);
             return boxSize;
         }
@@ -28196,10 +28272,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.subpic_id_info_flag);
             boxSize += stream.ReadBits(15, out this.num_subpic_ref_idx);
 
@@ -28269,10 +28345,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -28317,10 +28393,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.groupID_info_4cc);
             boxSize += stream.ReadUInt16(out this.entry_count_minus1);
 
@@ -28383,10 +28459,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(2, out this.reserved);
             boxSize += stream.ReadBits(6, out this.NAL_unit_type);
             return boxSize;
@@ -28489,10 +28565,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.groupID);
             boxSize += stream.ReadBit(out this.rect_region_flag);
 
@@ -28628,10 +28704,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -28708,10 +28784,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.temporalLayerId);
             boxSize += stream.ReadBits(2, out this.tlprofile_space);
             boxSize += stream.ReadBit(out this.tltier_flag);
@@ -28779,10 +28855,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.ViewPriorityBox); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -28824,10 +28900,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.oinf);
             return boxSize;
         }
@@ -28869,10 +28945,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.track_group_id); // the remaining data may be specified 
             /*   for a particular track_group_type */
             return boxSize;
@@ -28917,10 +28993,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.track_group_id); // the remaining data may be specified 
             /*   for a particular track_group_type */
             return boxSize;
@@ -28965,10 +29041,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.track_group_id); // the remaining data may be specified 
             /*   for a particular track_group_type */
             return boxSize;
@@ -29016,12 +29092,12 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadString(out this.aux_type);
-            boxSize += stream.ReadUInt8Array(out this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
             return boxSize;
         }
 
@@ -29030,7 +29106,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteString(this.aux_type);
-            boxSize += stream.WriteUInt8Array(this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
             return boxSize;
         }
 
@@ -29066,10 +29142,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(7, out this.reserved);
             boxSize += stream.ReadBit(out this.axis);
             return boxSize;
@@ -29116,10 +29192,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(6, out this.reserved);
             boxSize += stream.ReadBits(2, out this.angle);
             return boxSize;
@@ -29167,10 +29243,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.image_width);
             boxSize += stream.ReadUInt32(out this.image_height);
             return boxSize;
@@ -29212,11 +29288,11 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
-            boxSize += stream.ReadUInt8Array(out this.JPEGprefix);
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.JPEGprefix);
             return boxSize;
         }
 
@@ -29224,7 +29300,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8Array(this.JPEGprefix);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.JPEGprefix);
             return boxSize;
         }
 
@@ -29255,10 +29331,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.layer_id);
             return boxSize;
         }
@@ -29298,10 +29374,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.op_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
@@ -29347,10 +29423,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.num_channels);
 
             this.bits_per_channel = new byte[num_channels];
@@ -29411,10 +29487,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.horizontal_offset);
             boxSize += stream.ReadUInt32(out this.vertical_offset);
             return boxSize;
@@ -29457,10 +29533,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.target_ols_idx);
             return boxSize;
         }
@@ -29504,10 +29580,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt8(out this.exposure_step);
             boxSize += stream.ReadInt8(out this.exposure_numerator);
             return boxSize;
@@ -29554,10 +29630,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt8(out this.flash_exposure_numerator);
             boxSize += stream.ReadInt8(out this.flash_exposure_denominator);
             return boxSize;
@@ -29605,10 +29681,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(out this.alt_text);
             boxSize += stream.ReadStringZeroTerminated(out this.alt_lang);
             return boxSize;
@@ -29652,10 +29728,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt64(out this.creation_time);
             return boxSize;
         }
@@ -29699,10 +29775,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt8(out this.f_stop_numerator);
             boxSize += stream.ReadInt8(out this.f_stop_denominator);
             return boxSize;
@@ -29749,10 +29825,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.focus_distance_numerator);
             boxSize += stream.ReadUInt16(out this.focus_distance_denominator);
             return boxSize;
@@ -29807,10 +29883,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.target_width_numerator);
             boxSize += stream.ReadUInt16(out this.target_width_denominator);
             boxSize += stream.ReadUInt16(out this.target_height_numerator);
@@ -29860,10 +29936,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt64(out this.modification_time);
             return boxSize;
         }
@@ -29904,10 +29980,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.frame_number);
             return boxSize;
         }
@@ -29953,10 +30029,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.reference_type_count);
 
             this.reference_type = new uint[reference_type_count];
@@ -30025,10 +30101,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(out this.lang);
             boxSize += stream.ReadStringZeroTerminated(out this.name);
             boxSize += stream.ReadStringZeroTerminated(out this.description);
@@ -30081,10 +30157,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.blue_amber);
             boxSize += stream.ReadInt8(out this.green_magenta);
             return boxSize;
@@ -30127,10 +30203,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.transition_direction);
             return boxSize;
         }
@@ -30174,10 +30250,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.transition_direction);
             boxSize += stream.ReadBits(7, out this.transition_shape);
             return boxSize;
@@ -30220,10 +30296,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.transition_direction);
             return boxSize;
         }
@@ -30263,10 +30339,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.transition_direction);
             return boxSize;
         }
@@ -30306,10 +30382,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.transition_period);
             return boxSize;
         }
@@ -30349,10 +30425,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.duration);
             return boxSize;
         }
@@ -30392,10 +30468,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.bits_per_pixel);
             return boxSize;
         }
@@ -30433,10 +30509,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.sid_info); // specified in ISO/IEC 14496-15
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -30477,10 +30553,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.sor_info); // specified in ISO/IEC 14496-15
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -30527,10 +30603,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadInt16(out this.time_offset);
             boxSize += stream.ReadUInt16(out this.timescale_multiplier);
             return boxSize;
@@ -30583,10 +30659,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.sample_id);
             boxSize += stream.ReadUInt8(out this.num_direct_reference_samples);
 
@@ -30658,7 +30734,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             /*  empty. To be filled by classes extending this class. */
@@ -30725,10 +30801,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             /*  empty. To be filled by classes extending this class. */
             return boxSize;
         }
@@ -30839,10 +30915,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.ES_ID);
             boxSize += stream.ReadBit(out this.streamDependenceFlag);
             boxSize += stream.ReadBit(out this.URL_Flag);
@@ -31066,10 +31142,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.predefined);
 
             if (predefined == 0)
@@ -31245,10 +31321,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.objectTypeIndication);
             boxSize += stream.ReadBits(6, out this.streamType);
             boxSize += stream.ReadBit(out this.upStream);
@@ -31312,10 +31388,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.profileLevelIndicationIndex);
             return boxSize;
         }
@@ -31354,10 +31430,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt16(out this.IPI_ES_Id);
             return boxSize;
         }
@@ -31396,10 +31472,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             /*  empty. To be filled by classes extending this class. */
             return boxSize;
         }
@@ -31438,10 +31514,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.IPMP_DescriptorID);
             return boxSize;
         }
@@ -31479,10 +31555,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             /*  empty. To be filled by classes extending this class. */
             return boxSize;
         }
@@ -31521,10 +31597,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(24, out this.languageCode);
             return boxSize;
         }
@@ -31569,10 +31645,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.predefined);
 
             if (predefined == 0)
@@ -31625,7 +31701,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             /*  empty. To be filled by classes extending this class. */
@@ -31665,10 +31741,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.MAX_DELAY);
             return boxSize;
         }
@@ -31708,10 +31784,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.PREF_MAX_DELAY);
             return boxSize;
         }
@@ -31751,10 +31827,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadDouble32(out this.LOSS_PROB);
             return boxSize;
         }
@@ -31794,10 +31870,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.MAX_GAP_LOSS);
             return boxSize;
         }
@@ -31837,10 +31913,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.MAX_AU_SIZE);
             return boxSize;
         }
@@ -31880,10 +31956,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.AVG_AU_SIZE);
             return boxSize;
         }
@@ -31922,10 +31998,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.MAX_AU_RATE);
             return boxSize;
         }
@@ -31968,10 +32044,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.formatIdentifier);
             boxSize += stream.ReadBytes((ulong)(sizeOfInstance - 4), out this.additionalIdentificationInfo);
             return boxSize;
@@ -32011,10 +32087,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             /*  empty. To be filled by classes extending this class. */
             return boxSize;
         }
@@ -32301,7 +32377,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadClass(out this.audioObjectType);
@@ -32937,7 +33013,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(5, out this.audioObjectType);
@@ -33073,7 +33149,7 @@ namespace SharpMP4
             this.samplingFrequencyIndex = samplingFrequencyIndex;
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadBslbf(out this.frameLengthFlag);
@@ -33365,7 +33441,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(4, out this.element_instance_tag);
@@ -33646,7 +33722,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(out this.isBaseLayer);
@@ -33776,7 +33852,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             const bool RPE = true;
@@ -33872,7 +33948,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(2, out this.BWS_configuration);
@@ -33919,7 +33995,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(out this.isBaseLayer);
@@ -33987,7 +34063,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(out this.HVXCvarMode);
@@ -34049,7 +34125,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadClass(out this.TTS_Sequence);
@@ -34123,7 +34199,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(5, out this.TTS_Sequence_ID);
@@ -34213,7 +34289,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(out this.isBaseLayer);
@@ -34347,7 +34423,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             const bool RPE = true;
@@ -34451,7 +34527,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(out this.isBaseLayer);
@@ -34522,7 +34598,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(out this.HVXCvarMode);
@@ -34597,7 +34673,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(out this.isBaseLayer);
@@ -34688,7 +34764,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(2, out this.PARAmode);
@@ -34794,7 +34870,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(out this.HILNquantMode);
@@ -34854,7 +34930,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(out this.HILNenhaLayer);
@@ -34935,7 +35011,7 @@ namespace SharpMP4
             this.channelConfiguration = channelConfiguration;
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(2, out this.decoder_level);
@@ -35013,7 +35089,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadBslbf(out this.extension);
@@ -35062,7 +35138,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(out this.DSDDST_Coded);
@@ -35267,7 +35343,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(32, out this.als_id);
@@ -35539,7 +35615,7 @@ namespace SharpMP4
             this.samplingFrequencyIndex = samplingFrequencyIndex;
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(3, out this.pcmWordLength);
@@ -35678,7 +35754,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             int len = 0;
@@ -35891,7 +35967,7 @@ namespace SharpMP4
             this.channelConfiguration = channelConfiguration;
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             int numSbrHeader = 0;
@@ -36076,7 +36152,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(out this.bs_amp_res);
@@ -36292,7 +36368,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUimsbf(8, out this.number_of_predefined_set);
@@ -36600,10 +36676,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.OpusSpecificBox); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -36659,7 +36735,7 @@ namespace SharpMP4
             this.OutputChannelCount = OutputChannelCount;
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.StreamCount);
@@ -36730,10 +36806,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.Version);
             boxSize += stream.ReadUInt8(out this.OutputChannelCount);
             boxSize += stream.ReadUInt16(out this.PreSkip);
@@ -36803,10 +36879,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             // boxSize += stream.ReadBox( out this.config); 
             boxSize += stream.ReadBoxChildren(boxSize, this);
             return boxSize;
@@ -36851,10 +36927,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadClass(out this.av1Config);
             return boxSize;
         }
@@ -36960,7 +37036,7 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream)
+        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             boxSize += stream.ReadBit(out this.marker);
@@ -36986,7 +37062,7 @@ namespace SharpMP4
             {
                 boxSize += stream.ReadBits(4, out this.reserved0);
             }
-            boxSize += stream.ReadUInt8Array(out this.configOBUs);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.configOBUs);
             return boxSize;
         }
 
@@ -37016,7 +37092,7 @@ namespace SharpMP4
             {
                 boxSize += stream.WriteBits(4, this.reserved0);
             }
-            boxSize += stream.WriteUInt8Array(this.configOBUs);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.configOBUs);
             return boxSize;
         }
 
@@ -37071,10 +37147,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.fwd_distance);
             return boxSize;
         }
@@ -37112,10 +37188,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -37150,10 +37226,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             return boxSize;
         }
 
@@ -37190,10 +37266,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt8(out this.op_index);
             return boxSize;
         }
@@ -37245,10 +37321,10 @@ namespace SharpMP4
         {
         }
 
-        public async override Task<ulong> ReadAsync(IsoStream stream)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream);
+            boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBits(7, out this.reserved);
             boxSize += stream.ReadBit(out this.large_size);
 
