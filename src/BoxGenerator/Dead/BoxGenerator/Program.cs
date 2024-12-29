@@ -147,6 +147,7 @@ public class PseudoBlock : PseudoCode
     public string Comment { get; }
     public IEnumerable<PseudoCode> Content { get; }
     public PseudoBlock Parent { get; set; }
+    public List<PseudoField> RequiresAllocation { get; set; } = new List<PseudoField>();
 }
 
 public class PseudoRepeatingBlock : PseudoCode
@@ -1467,13 +1468,18 @@ namespace SharpMP4
                     string typedef = GetFieldTypeDef(field);
                     nestingLevel = GetNestedInLoopSuffix(field, typedef, out _);
 
-                    // change the type
-                    for (int i = 0; i < nestingLevel; i++)
+                    if (nestingLevel > 0)
                     {
-                        tt += "[]";
+                        AddRequiresAllocation((PseudoField)field);
+
+                        // change the type
+                        for (int i = 0; i < nestingLevel; i++)
+                        {
+                            tt += "[]";
+                        }
                     }
 
-                    if(!string.IsNullOrEmpty(value))
+                    if (!string.IsNullOrEmpty(value))
                     {
                         Debug.WriteLine($"Removing default value: {value}");
                         value = ""; // default value can no longer be used
@@ -1496,6 +1502,23 @@ namespace SharpMP4
         }
         else
             return "";
+    }
+
+    private static void AddRequiresAllocation(PseudoField field)
+    {
+        PseudoBlock parent = null;
+        parent = field.Parent;
+        while (parent != null)
+        {
+            if (parent.Type == "for")
+            {
+                // add the allocation above the first for in the hierarchy
+                parent.RequiresAllocation.Add(field);
+                break;
+            }
+
+            parent = parent.Parent;
+        }
     }
 
     private static int GetNestedInLoop(PseudoCode code)
@@ -1794,7 +1817,7 @@ namespace SharpMP4
     private static string BuildBlock(PseudoClass b, PseudoBlock parent, PseudoBlock block, int level, MethodType methodType)
     {
         string spacing = GetSpacing(level);
-        string ret;
+        string ret = "";
 
         string condition = block.Condition?.Replace("'", "\"").Replace("floor(", "(");
         string blockType = block.Type;
@@ -1877,7 +1900,52 @@ namespace SharpMP4
             condition = FixNestedInLoopVariables(block, condition);
         }
 
-        ret = $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
+        if (methodType == MethodType.Read)
+        {
+            if (block.RequiresAllocation.Count > 0)
+            {
+                if (block.Type == "for")
+                {
+                    string[] parts = condition.Substring(1, condition.Length - 2).Split(';');
+                    string variable = parts[1].Split('<', '=', '>', '!').Last();
+
+                    if (!string.IsNullOrWhiteSpace(variable))
+                    {
+                        foreach (var req in block.RequiresAllocation)
+                        {
+                            bool hasBoxes = GetReadMethod(req.Type).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit";
+                            if (hasBoxes)
+                                continue;
+
+                            string suffix;
+                            GetNestedInLoopSuffix(block, "", out suffix);
+                            string variableName = req.Name + suffix;
+                            string variableType = GetType(req.Type);
+                            if (variableType.Contains("[]"))
+                            {
+                                int index = variableType.IndexOf("[]");
+                                variableType = variableType.Substring(0, index) + $"[{variable}]" + variableType.Substring(index);
+                            }
+                            else
+                            {
+                                variableType = variableType + $"[{variable}]";
+                            }
+                            ret += $"\r\n{spacing}this.{variableName} = new {variableType};";
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("ERROR invalid variable");
+                    }
+                }
+                else
+                {
+                    throw new Exception("allocation for block other than for");
+                }
+            }
+        }
+
+        ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
 
         foreach (var field in block.Content)
         {
