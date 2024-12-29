@@ -1,9 +1,10 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SharpMP4
 {
@@ -65,19 +66,61 @@ namespace SharpMP4
             }
         }
 
-        internal ulong ReadBoxChildren(ulong readSize, Box box)
+        internal ulong ReadBoxArrayTillEnd(ulong boxSize, ulong readSize, Box box)
         {
-            throw new NotImplementedException();
+            box.Children = new List<Box>();
+
+            ulong consumed = 0;
+
+            if (readSize == 0)
+            {
+                List<Box> values = new List<Box>();
+                // consume till the end of the stream
+                try
+                {
+                    while (true)
+                    {
+                        Box v;
+                        consumed += ReadBox(out v);
+                        box.Children.Add(v);
+                    }
+                }
+                catch (EndOfStreamException)
+                { }
+
+                return consumed;
+            }
+
+            ulong remaining = readSize - boxSize;
+            while(consumed < remaining)
+            {
+                Box v;
+                consumed += ReadBox(out v);
+                box.Children.Add(v);
+            }
+            return consumed;
         }
 
-        internal ulong WriteBoxChildren(Box box)
+        internal ulong WriteBoxArrayTillEnd(Box box)
         {
-            throw new NotImplementedException();
+            ulong written = 0;
+            foreach (var v in box.Children)
+            {
+                written += WriteBox(v);
+            }
+            return written;
+        }
+
+        internal static ulong CalculateBoxArray(Box value)
+        {
+            return CalculateBoxSize(value.Children);
         }
 
         internal ulong ReadBox(out Box value)
         {
-            throw new NotImplementedException();
+            var header = ReadBoxHeaderAsync().Result;
+            value = ReadBoxAsync(header).Result;
+            return header.HeaderSize + header.BoxSize;
         }
 
         internal ulong ReadBox(out Box[] value)
@@ -518,8 +561,15 @@ namespace SharpMP4
             return WriteBytes(count / 8, value);
         }
 
-        internal ulong ReadStringZeroTerminated(out string value)
+        internal ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out string value)
         {
+            ulong remaining = readSize - boxSize;
+            if (remaining == 0)
+            {
+                value = "";
+                return 0;
+            }
+
             List<byte> buffer = new List<byte>();
             byte c;
             while ((c = ReadByte()) != 0)
@@ -527,7 +577,7 @@ namespace SharpMP4
                 buffer.Add(c);
             }
             value = Encoding.UTF8.GetString(buffer.ToArray());
-            return (ulong)(buffer.Count + 1);
+            return (ulong)(buffer.Count + 1) * 8;
         }
 
         internal ulong ReadInt16(out short value)
@@ -723,13 +773,16 @@ namespace SharpMP4
 
         internal ulong WriteStringZeroTerminated(string value)
         {
+            if (string.IsNullOrEmpty(value))
+                return 0;
+
             byte[] buffer = Encoding.UTF8.GetBytes(value);
             for (int i = 0; i < buffer.Length; i++)
             {
                 WriteByte(buffer[i]);
             }
             WriteByte(0);
-            return (ulong)buffer.Length + 1;
+            return (ulong)(buffer.Length + 1) * 8;
         }
 
         internal ulong WriteInt16(short value)
@@ -919,11 +972,6 @@ namespace SharpMP4
             return size;
         }
 
-        internal static ulong CalculateBoxChildren(Box value)
-        {
-            return CalculateBoxSize(value.Children);
-        }
-
         internal ulong WriteIso639(string value)
         {
             if (Encoding.UTF8.GetBytes(value).Length != 3)
@@ -941,7 +989,7 @@ namespace SharpMP4
         internal ulong ReadIso639(out string value)
         {
             ushort bits;
-            ReadUInt16(out bits);
+            ulong read = ReadBits(15, out bits);
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < 3; i++)
             {
@@ -949,7 +997,7 @@ namespace SharpMP4
                 result.Append((char)(c + 0x60));
             }
             value = result.ToString();
-            return 16;
+            return read;
         }
 
         internal ulong ReadAlignedBits(uint count, out bool value)
@@ -976,6 +1024,25 @@ namespace SharpMP4
         {
             return _stream.Position;
         }
+
+        public async Task<Mp4BoxHeader> ReadBoxHeaderAsync()
+        {
+            BoxHeader header = new BoxHeader();
+            long headerOffset = this.GetCurrentOffset();
+            ulong headerSize = await header.ReadAsync(this, 0);
+            return new Mp4BoxHeader(header, headerOffset, headerSize);
+        }
+
+        public async Task<Box> ReadBoxAsync(Mp4BoxHeader header)
+        {
+            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type));
+            Debug.WriteLine($"--Parsed: {box.FourCC}");
+            ulong size = await box.ReadAsync(this, header.BoxSize);
+
+            if (size != header.BoxSize)
+                throw new Exception("Box not fully read!");
+            return box;
+        }
     }
 
 #if !NET7_0_OR_GREATER
@@ -999,4 +1066,20 @@ namespace SharpMP4
         }
     }
 #endif
+
+    public class Mp4BoxHeader
+    {
+        public BoxHeader Header { get; set; }
+        public long HeaderOffset { get; set; }
+        public ulong HeaderSize { get; set; }
+        public ulong BoxSize { get; set; }
+
+        public Mp4BoxHeader(BoxHeader header, long headerOffset, ulong headerSize)
+        {
+            this.Header = header;
+            this.HeaderOffset = headerOffset;
+            this.HeaderSize = headerSize;
+            this.BoxSize = header.GetBoxSizeInBits() - headerSize;
+        }
+    }
 }

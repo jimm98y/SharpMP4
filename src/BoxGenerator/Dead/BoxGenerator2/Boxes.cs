@@ -17,11 +17,6 @@ namespace SharpMP4
     public class DRCCoefficientsUniDRC : UnknownBox { } // ISO/IEC 23003‐4
     public class DRCInstructionsUniDRC : UnknownBox { } // ISO/IEC 23003‐4
     public abstract class UniDrcConfigExtension : UnknownBox { } // ISO/IEC 23003‐4
-    public abstract class DataEntryBaseBox : FullBox 
-    {
-        protected DataEntryBaseBox(string boxType, uint flags) : base(boxType, 0, flags) { }
-    } // ISO/IEC 14496-12:2022, Section 8.7.2.2
-
     public abstract class RtpReceptionHintSampleEntry : Box 
     {
         public RtpReceptionHintSampleEntry(string boxtype) : base(boxtype) { }

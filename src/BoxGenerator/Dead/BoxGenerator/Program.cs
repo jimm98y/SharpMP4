@@ -665,7 +665,8 @@ partial class Program
             Try(String("(unsigned int(32) grouping_type)")),
             Try(String("(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)")),            
             Try(String("(unsigned int(8) OutputChannelCount)")),         
-            Try(String("(samplingFrequencyIndex)"))            
+            Try(String("(entry_type, bit(24) flags)")),
+            Try(String("(samplingFrequencyIndex)"))
             ).Labelled("class type");
 
     public static Parser<char, string> DescriptorTag =>
@@ -1129,7 +1130,7 @@ namespace SharpMP4
 
         if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
         {
-            cls += "\r\n" + "boxSize += stream.ReadBoxChildren(boxSize, this);";
+            cls += "\r\n" + "boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);";
         }
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
@@ -1147,7 +1148,7 @@ namespace SharpMP4
 
         if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
         {
-            cls += "\r\n" + "boxSize += stream.WriteBoxChildren(this);";
+            cls += "\r\n" + "boxSize += stream.WriteBoxArrayTillEnd(this);";
         }
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
@@ -1164,7 +1165,7 @@ namespace SharpMP4
 
         if (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)
         {
-            cls += "\r\n" + "boxSize += IsoStream.CalculateBoxChildren(this);";
+            cls += "\r\n" + "boxSize += IsoStream.CalculateBoxArray(this);";
         }
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
@@ -1207,6 +1208,7 @@ namespace SharpMP4
             { "(unsigned int(32) grouping_type)",   "string grouping_type" },
             { "(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)", "string boxtype, byte v = 0, uint f = 0" },
             { "(unsigned int(8) OutputChannelCount)", "byte OutputChannelCount" },
+            { "(entry_type, bit(24) flags)",        "string entry_type, uint flags" },
             { "(samplingFrequencyIndex)",           "int samplingFrequencyIndex" },
             };
             return map[classType];
@@ -2183,7 +2185,7 @@ namespace SharpMP4
             { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.ReadBytes((ulong)(num_bytes_constraint_info - 2), " },
             { "bit(8*nal_unit_length)",                 "stream.ReadBytes(nal_unit_length, " },
             { "bit(timeStampLength)",                   "stream.ReadBytes(timeStampLength, " },
-            { "utf8string",                             "stream.ReadStringZeroTerminated(" },
+            { "utf8string",                             "stream.ReadStringZeroTerminated(boxSize, readSize, " },
             { "utfstring",                              "stream.ReadString(" },
             { "utf8list",                               "stream.ReadString(" },
             { "boxstring",                              "stream.ReadString(" },

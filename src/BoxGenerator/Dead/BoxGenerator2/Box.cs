@@ -51,7 +51,7 @@ namespace SharpMP4
 
         public virtual ulong CalculateSize()
         {
-            return 0;
+            return IsoStream.CalculateBoxArray(this);
         }
     }
 

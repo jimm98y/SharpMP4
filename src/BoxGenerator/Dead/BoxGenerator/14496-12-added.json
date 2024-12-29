@@ -86,6 +86,12 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class MovieFragmentBox extends Box('moof'){ \r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class DataEntryBaseBox(entry_type, bit(24) flags) \r\nextends FullBox(entry_type, version = 0, flags) { \r\n\r\n} "
     }
   ]
 }
