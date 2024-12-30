@@ -30760,81 +30760,34 @@ namespace SharpMP4
     /*
     abstract aligned(8) expandable(228-1) class BaseDescriptor : bit(8) tag=0 {
      // empty. To be filled by classes extending this class.
-     int sizeOfInstance = 0;
-     bit(1) nextByte;
-     bit(7) sizeOfInstance;
-     while(nextByte) {
-     bit(1) nextByte;
-     bit(7) sizeByte;
-     sizeOfInstance = sizeOfInstance<<7 | sizeByte;
      }
-    }
     */
-    public abstract class BaseDescriptor : IMp4Serializable
+    public abstract class BaseDescriptor : Descriptor
     {
         public byte Tag { get; set; } = 0;
-
-        protected bool nextByte;
-        public bool NextByte { get { return this.nextByte; } set { this.nextByte = value; } }
-
-        protected byte sizeOfInstance;
-        public byte SizeOfInstance { get { return this.sizeOfInstance; } set { this.sizeOfInstance = value; } }
-
-        protected byte sizeByte;
-        public byte SizeByte { get { return this.sizeByte; } set { this.sizeByte = value; } }
 
         public BaseDescriptor() : base()
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             /*  empty. To be filled by classes extending this class. */
-            int sizeOfInstance = 0;
-            boxSize += stream.ReadBit(out this.nextByte);
-            boxSize += stream.ReadBits(7, out this.sizeOfInstance);
-
-            while (nextByte)
-            {
-                boxSize += stream.ReadBit(out this.nextByte);
-                boxSize += stream.ReadBits(7, out this.sizeByte);
-                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
-            }
             return boxSize;
         }
 
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        public async override Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
             /*  empty. To be filled by classes extending this class. */
-            int sizeOfInstance = 0;
-            boxSize += stream.WriteBit(this.nextByte);
-            boxSize += stream.WriteBits(7, this.sizeOfInstance);
-
-            while (nextByte)
-            {
-                boxSize += stream.WriteBit(this.nextByte);
-                boxSize += stream.WriteBits(7, this.sizeByte);
-                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
-            }
             return boxSize;
         }
 
-        public virtual ulong CalculateSize()
+        public override ulong CalculateSize()
         {
             ulong boxSize = 0;
             /*  empty. To be filled by classes extending this class. */
-            int sizeOfInstance = 0;
-            boxSize += 1; // nextByte
-            boxSize += 7; // sizeOfInstance
-
-            while (nextByte)
-            {
-                boxSize += 1; // nextByte
-                boxSize += 7; // sizeByte
-                sizeOfInstance = sizeOfInstance << 7 | sizeByte;
-            }
             return boxSize;
         }
     }
@@ -30936,33 +30889,15 @@ namespace SharpMP4
 
         protected ushort OCR_ES_Id;
         public ushort OCRESId { get { return this.OCR_ES_Id; } set { this.OCR_ES_Id = value; } }
-
-        protected DecoderConfigDescriptor decConfigDescr;
-        public DecoderConfigDescriptor DecConfigDescr { get { return this.decConfigDescr; } set { this.decConfigDescr = value; } }
-
-        protected SLConfigDescriptor slConfigDescr;
-        public SLConfigDescriptor SlConfigDescr { get { return this.slConfigDescr; } set { this.slConfigDescr = value; } }
-
-        protected IPI_DescrPointer ipiPtr;
-        public IPI_DescrPointer IpiPtr { get { return this.ipiPtr; } set { this.ipiPtr = value; } }
-
-        protected IP_IdentificationDataSet[] ipIDS;
-        public IP_IdentificationDataSet[] IpIDS { get { return this.ipIDS; } set { this.ipIDS = value; } }
-
-        protected IPMP_DescriptorPointer[] ipmpDescrPtr;
-        public IPMP_DescriptorPointer[] IpmpDescrPtr { get { return this.ipmpDescrPtr; } set { this.ipmpDescrPtr = value; } }
-
-        protected LanguageDescriptor langDescr;
-        public LanguageDescriptor LangDescr { get { return this.langDescr; } set { this.langDescr = value; } }
-
-        protected QoS_Descriptor qosDescr;
-        public QoS_Descriptor QosDescr { get { return this.qosDescr; } set { this.qosDescr = value; } }
-
-        protected RegistrationDescriptor regDescr;
-        public RegistrationDescriptor RegDescr { get { return this.regDescr; } set { this.regDescr = value; } }
-
-        protected ExtensionDescriptor[] extDescr;
-        public ExtensionDescriptor[] ExtDescr { get { return this.extDescr; } set { this.extDescr = value; } }
+        public DecoderConfigDescriptor DecConfigDescr { get { return this.children.OfType<DecoderConfigDescriptor>().FirstOrDefault(); } }
+        public SLConfigDescriptor SlConfigDescr { get { return this.children.OfType<SLConfigDescriptor>().FirstOrDefault(); } }
+        public IPI_DescrPointer IpiPtr { get { return this.children.OfType<IPI_DescrPointer>().FirstOrDefault(); } }
+        public IEnumerable<IP_IdentificationDataSet> IpIDS { get { return this.children.OfType<IP_IdentificationDataSet>(); } }
+        public IEnumerable<IPMP_DescriptorPointer> IpmpDescrPtr { get { return this.children.OfType<IPMP_DescriptorPointer>(); } }
+        public LanguageDescriptor LangDescr { get { return this.children.OfType<LanguageDescriptor>().FirstOrDefault(); } }
+        public QoS_Descriptor QosDescr { get { return this.children.OfType<QoS_Descriptor>().FirstOrDefault(); } }
+        public RegistrationDescriptor RegDescr { get { return this.children.OfType<RegistrationDescriptor>().FirstOrDefault(); } }
+        public IEnumerable<ExtensionDescriptor> ExtDescr { get { return this.children.OfType<ExtensionDescriptor>(); } }
 
         public ES_Descriptor() : base()
         {
@@ -30993,15 +30928,16 @@ namespace SharpMP4
             {
                 boxSize += stream.ReadUInt16(out this.OCR_ES_Id);
             }
-            boxSize += stream.ReadDescriptor(out this.decConfigDescr);
-            boxSize += stream.ReadDescriptor(out this.slConfigDescr);
-            boxSize += stream.ReadDescriptor(out this.ipiPtr);
-            boxSize += stream.ReadDescriptor(out this.ipIDS);
-            boxSize += stream.ReadDescriptor(out this.ipmpDescrPtr);
-            boxSize += stream.ReadDescriptor(out this.langDescr);
-            boxSize += stream.ReadDescriptor(out this.qosDescr);
-            boxSize += stream.ReadDescriptor(out this.regDescr);
-            boxSize += stream.ReadDescriptor(out this.extDescr);
+            // boxSize += stream.ReadDescriptor( out this.decConfigDescr); 
+            // boxSize += stream.ReadDescriptor( out this.slConfigDescr); 
+            // boxSize += stream.ReadDescriptor( out this.ipiPtr); 
+            // boxSize += stream.ReadDescriptor( out this.ipIDS); 
+            // boxSize += stream.ReadDescriptor( out this.ipmpDescrPtr); 
+            // boxSize += stream.ReadDescriptor( out this.langDescr); 
+            // boxSize += stream.ReadDescriptor( out this.qosDescr); 
+            // boxSize += stream.ReadDescriptor( out this.regDescr); 
+            // boxSize += stream.ReadDescriptor( out this.extDescr); 
+            boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -31030,15 +30966,16 @@ namespace SharpMP4
             {
                 boxSize += stream.WriteUInt16(this.OCR_ES_Id);
             }
-            boxSize += stream.WriteDescriptor(this.decConfigDescr);
-            boxSize += stream.WriteDescriptor(this.slConfigDescr);
-            boxSize += stream.WriteDescriptor(this.ipiPtr);
-            boxSize += stream.WriteDescriptor(this.ipIDS);
-            boxSize += stream.WriteDescriptor(this.ipmpDescrPtr);
-            boxSize += stream.WriteDescriptor(this.langDescr);
-            boxSize += stream.WriteDescriptor(this.qosDescr);
-            boxSize += stream.WriteDescriptor(this.regDescr);
-            boxSize += stream.WriteDescriptor(this.extDescr);
+            // boxSize += stream.WriteDescriptor( this.decConfigDescr); 
+            // boxSize += stream.WriteDescriptor( this.slConfigDescr); 
+            // boxSize += stream.WriteDescriptor( this.ipiPtr); 
+            // boxSize += stream.WriteDescriptor( this.ipIDS); 
+            // boxSize += stream.WriteDescriptor( this.ipmpDescrPtr); 
+            // boxSize += stream.WriteDescriptor( this.langDescr); 
+            // boxSize += stream.WriteDescriptor( this.qosDescr); 
+            // boxSize += stream.WriteDescriptor( this.regDescr); 
+            // boxSize += stream.WriteDescriptor( this.extDescr); 
+            boxSize += stream.WriteDescriptorsTillEnd(this);
             return boxSize;
         }
 
@@ -31067,15 +31004,16 @@ namespace SharpMP4
             {
                 boxSize += 16; // OCR_ES_Id
             }
-            boxSize += IsoStream.CalculateDescriptorSize(decConfigDescr); // decConfigDescr
-            boxSize += IsoStream.CalculateDescriptorSize(slConfigDescr); // slConfigDescr
-            boxSize += IsoStream.CalculateDescriptorSize(ipiPtr); // ipiPtr
-            boxSize += IsoStream.CalculateDescriptorSize(ipIDS); // ipIDS
-            boxSize += IsoStream.CalculateDescriptorSize(ipmpDescrPtr); // ipmpDescrPtr
-            boxSize += IsoStream.CalculateDescriptorSize(langDescr); // langDescr
-            boxSize += IsoStream.CalculateDescriptorSize(qosDescr); // qosDescr
-            boxSize += IsoStream.CalculateDescriptorSize(regDescr); // regDescr
-            boxSize += IsoStream.CalculateDescriptorSize(extDescr); // extDescr
+            // boxSize += IsoStream.CalculateDescriptorSize(decConfigDescr); // decConfigDescr
+            // boxSize += IsoStream.CalculateDescriptorSize(slConfigDescr); // slConfigDescr
+            // boxSize += IsoStream.CalculateDescriptorSize(ipiPtr); // ipiPtr
+            // boxSize += IsoStream.CalculateDescriptorSize(ipIDS); // ipIDS
+            // boxSize += IsoStream.CalculateDescriptorSize(ipmpDescrPtr); // ipmpDescrPtr
+            // boxSize += IsoStream.CalculateDescriptorSize(langDescr); // langDescr
+            // boxSize += IsoStream.CalculateDescriptorSize(qosDescr); // qosDescr
+            // boxSize += IsoStream.CalculateDescriptorSize(regDescr); // regDescr
+            // boxSize += IsoStream.CalculateDescriptorSize(extDescr); // extDescr
+            boxSize += IsoStream.CalculateDescriptors(this);
             return boxSize;
         }
     }
@@ -31363,12 +31301,8 @@ namespace SharpMP4
 
         protected uint avgBitrate;
         public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
-
-        protected DecoderSpecificInfo[] decSpecificInfo;
-        public DecoderSpecificInfo[] DecSpecificInfo { get { return this.decSpecificInfo; } set { this.decSpecificInfo = value; } }
-
-        protected ProfileLevelIndicationIndexDescriptor[] profileLevelIndicationIndexDescr;
-        public ProfileLevelIndicationIndexDescriptor[] ProfileLevelIndicationIndexDescr { get { return this.profileLevelIndicationIndexDescr; } set { this.profileLevelIndicationIndexDescr = value; } }
+        public IEnumerable<DecoderSpecificInfo> DecSpecificInfo { get { return this.children.OfType<DecoderSpecificInfo>(); } }
+        public IEnumerable<ProfileLevelIndicationIndexDescriptor> ProfileLevelIndicationIndexDescr { get { return this.children.OfType<ProfileLevelIndicationIndexDescriptor>(); } }
 
         public DecoderConfigDescriptor() : base()
         {
@@ -31385,8 +31319,9 @@ namespace SharpMP4
             boxSize += stream.ReadBits(24, out this.bufferSizeDB);
             boxSize += stream.ReadUInt32(out this.maxBitrate);
             boxSize += stream.ReadUInt32(out this.avgBitrate);
-            boxSize += stream.ReadDescriptor(out this.decSpecificInfo);
-            boxSize += stream.ReadDescriptor(out this.profileLevelIndicationIndexDescr);
+            // boxSize += stream.ReadDescriptor( out this.decSpecificInfo); 
+            // boxSize += stream.ReadDescriptor( out this.profileLevelIndicationIndexDescr); 
+            boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -31401,8 +31336,9 @@ namespace SharpMP4
             boxSize += stream.WriteBits(24, this.bufferSizeDB);
             boxSize += stream.WriteUInt32(this.maxBitrate);
             boxSize += stream.WriteUInt32(this.avgBitrate);
-            boxSize += stream.WriteDescriptor(this.decSpecificInfo);
-            boxSize += stream.WriteDescriptor(this.profileLevelIndicationIndexDescr);
+            // boxSize += stream.WriteDescriptor( this.decSpecificInfo); 
+            // boxSize += stream.WriteDescriptor( this.profileLevelIndicationIndexDescr); 
+            boxSize += stream.WriteDescriptorsTillEnd(this);
             return boxSize;
         }
 
@@ -31417,8 +31353,9 @@ namespace SharpMP4
             boxSize += 24; // bufferSizeDB
             boxSize += 32; // maxBitrate
             boxSize += 32; // avgBitrate
-            boxSize += IsoStream.CalculateDescriptorSize(decSpecificInfo); // decSpecificInfo
-            boxSize += IsoStream.CalculateDescriptorSize(profileLevelIndicationIndexDescr); // profileLevelIndicationIndexDescr
+                           // boxSize += IsoStream.CalculateDescriptorSize(decSpecificInfo); // decSpecificInfo
+                           // boxSize += IsoStream.CalculateDescriptorSize(profileLevelIndicationIndexDescr); // profileLevelIndicationIndexDescr
+            boxSize += IsoStream.CalculateDescriptors(this);
             return boxSize;
         }
     }
@@ -31690,9 +31627,7 @@ namespace SharpMP4
 
         protected byte predefined;
         public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
-
-        protected QoS_Qualifier[] qualifiers;
-        public QoS_Qualifier[] Qualifiers { get { return this.qualifiers; } set { this.qualifiers = value; } }
+        public IEnumerable<QoS_Qualifier> Qualifiers { get { return this.children.OfType<QoS_Qualifier>(); } }
 
         public QoS_Descriptor() : base()
         {
@@ -31706,8 +31641,9 @@ namespace SharpMP4
 
             if (predefined == 0)
             {
-                boxSize += stream.ReadDescriptor(out this.qualifiers);
+                // boxSize += stream.ReadDescriptor( out this.qualifiers); 
             }
+            boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -31719,8 +31655,9 @@ namespace SharpMP4
 
             if (predefined == 0)
             {
-                boxSize += stream.WriteDescriptor(this.qualifiers);
+                // boxSize += stream.WriteDescriptor( this.qualifiers); 
             }
+            boxSize += stream.WriteDescriptorsTillEnd(this);
             return boxSize;
         }
 
@@ -31732,8 +31669,9 @@ namespace SharpMP4
 
             if (predefined == 0)
             {
-                boxSize += IsoStream.CalculateDescriptorSize(qualifiers); // qualifiers
+                // boxSize += IsoStream.CalculateDescriptorSize(qualifiers); // qualifiers
             }
+            boxSize += IsoStream.CalculateDescriptors(this);
             return boxSize;
         }
     }
@@ -31745,7 +31683,7 @@ namespace SharpMP4
      }
 
     */
-    public abstract class QoS_Qualifier : IMp4Serializable
+    public abstract class QoS_Qualifier : Descriptor
     {
         public byte TagMin { get; set; } = 0x01;
         public byte TagMax { get; set; } = 0xff;
@@ -31754,21 +31692,21 @@ namespace SharpMP4
         {
         }
 
-        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
             /*  empty. To be filled by classes extending this class. */
             return boxSize;
         }
 
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        public async override Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
             /*  empty. To be filled by classes extending this class. */
             return boxSize;
         }
 
-        public virtual ulong CalculateSize()
+        public override ulong CalculateSize()
         {
             ulong boxSize = 0;
             /*  empty. To be filled by classes extending this class. */

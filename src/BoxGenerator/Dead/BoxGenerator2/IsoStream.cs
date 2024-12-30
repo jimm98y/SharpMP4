@@ -82,7 +82,7 @@ namespace SharpMP4
             }
             sizeBytes = i;
 
-            return sizeBytes;
+            return sizeBytes * 8;
         }
 
         private ulong WriteDescriptorSize(int sizeOfInstance)
@@ -1102,41 +1102,80 @@ namespace SharpMP4
             return box;
         }
 
-        internal static ulong CalculateDescriptorSize<T>(T descriptor) where T : IMp4Serializable
-        {
-            throw new NotImplementedException();
-        }
 
-        internal static ulong CalculateDescriptorSize<T>(T[] descriptor) where T : IMp4Serializable
+        internal ulong ReadDescriptor(out ES_Descriptor descriptor)
         {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteDescriptor<T>(T descriptor) where T : IMp4Serializable
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteDescriptor<T>(T[] descriptor) where T : IMp4Serializable
-        {
-            throw new NotImplementedException();            
-        }
-
-        internal ulong ReadDescriptor<T>(out T descriptor) where T : IMp4Serializable
-        {
-            byte tag = ReadByte();
-            ulong size = 8;
-            size += ReadDescriptorSize(out int sizeOfInstance);
-            ulong sizeOfInstanceBits = (ulong)sizeOfInstance * 8;
-            size += sizeOfInstanceBits;
-            descriptor = (T)DescriptorFactory.CreateDescriptor(tag);
-            size += descriptor.ReadAsync(this, (ulong)sizeOfInstance).Result;
-            if (size != sizeOfInstanceBits)
-                throw new Exception("Descriptor not fully read!");
+            Descriptor d;
+            ulong size = ReadDescriptor(out d);
+            descriptor = (ES_Descriptor)d;
             return size;
         }
 
-        internal ulong ReadDescriptor<T>(out T[] descriptor) where T : IMp4Serializable
+        internal ulong ReadDescriptor(out Descriptor descriptor)
+        {
+            byte tag;
+            ulong size = ReadUInt8(out tag);
+            size += ReadDescriptorSize(out int sizeOfInstance);
+            ulong sizeOfInstanceBits = (ulong)sizeOfInstance * 8;
+            descriptor = DescriptorFactory.CreateDescriptor(tag);
+            ulong readInstanceSizeBits = descriptor.ReadAsync(this, sizeOfInstanceBits).Result;
+            if (readInstanceSizeBits != sizeOfInstanceBits)
+                throw new Exception("Descriptor not fully read!");
+            size += sizeOfInstanceBits;
+            return size;
+        }
+
+        internal ulong ReadDescriptorsTillEnd(ulong boxSize, ulong readSize, Descriptor descriptor)
+        {
+            descriptor.Children = new List<Descriptor>();
+
+            ulong consumed = 0;
+
+            if (readSize == 0)
+            {
+                List<Box> values = new List<Box>();
+                // consume till the end of the stream
+                try
+                {
+                    while (true)
+                    {
+                        Descriptor v;
+                        consumed += ReadDescriptor(out v);
+                        descriptor.Children.Add(v);
+                    }
+                }
+                catch (EndOfStreamException)
+                { }
+
+                return consumed;
+            }
+
+            ulong remaining = readSize - boxSize;
+            while (consumed < remaining)
+            {
+                Descriptor v;
+                consumed += ReadDescriptor(out v);
+                descriptor.Children.Add(v);
+            }
+            return consumed;
+        }
+
+        internal ulong WriteDescriptorsTillEnd(Descriptor descriptor)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateDescriptors(Descriptor descriptor)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteDescriptor(Descriptor descriptor)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateDescriptorSize(Descriptor descriptor)
         {
             throw new NotImplementedException();
         }

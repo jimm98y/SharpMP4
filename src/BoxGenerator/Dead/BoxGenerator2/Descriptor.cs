@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SharpMP4
@@ -51,7 +52,7 @@ namespace SharpMP4
 
     public class DescriptorFactory
     {
-        internal static IMp4Serializable CreateDescriptor(byte tag)
+        internal static Descriptor CreateDescriptor(byte tag)
         {
             switch (tag)
             {
@@ -67,6 +68,12 @@ namespace SharpMP4
 
     public class Descriptor : IMp4Serializable
     {
+        protected List<Descriptor> children = null;
+        public List<Descriptor> Children { get { return children; } set { children = value; } }
+
+        protected ulong sizeOfInstance;
+        public ulong SizeOfInstance {  get { return sizeOfInstance; } set {  sizeOfInstance = value; } }
+
         public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             return Task.FromResult((ulong)0);
@@ -83,21 +90,21 @@ namespace SharpMP4
         }
     }
 
-    public class UnknownDescriptor : IMp4Serializable
+    public class UnknownDescriptor : Descriptor
     {
-        public ulong CalculateSize()
+        public override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
-            throw new NotImplementedException();
+            return base.ReadAsync(stream, readSize);
         }
 
-        public Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        public override Task<ulong> WriteAsync(IsoStream stream)
         {
-            throw new NotImplementedException();
+            return base.WriteAsync(stream);
         }
 
-        public Task<ulong> WriteAsync(IsoStream stream)
+        public override ulong CalculateSize()
         {
-            throw new NotImplementedException();
+            return base.CalculateSize();
         }
     }
 }

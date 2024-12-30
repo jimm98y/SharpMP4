@@ -1047,7 +1047,12 @@ namespace SharpMP4
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
             cls += $" : {b.Extended.BoxName}";
         else
-            cls += $" : IMp4Serializable";
+        {
+            if(b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")
+                cls += $" : Descriptor";
+            else
+                cls += $" : IMp4Serializable";
+        }
 
         cls += "\r\n{\r\n";
 
@@ -1113,6 +1118,7 @@ namespace SharpMP4
         }
 
         bool hasBoxes = fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit";
+        bool hasDescriptors = fields.Select(x => GetReadMethod(x.Type).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry";
 
         foreach (var field in fields)
         {
@@ -1145,7 +1151,8 @@ namespace SharpMP4
         cls += ctorContent;
         cls += $"\t}}\r\n";
 
-        cls += "\r\n\tpublic async " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "Task<ulong> ReadAsync(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;" +
+        bool shouldOverride = (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName)) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier";
+        cls += "\r\n\tpublic async " + (shouldOverride ? "override " : "virtual ") + "Task<ulong> ReadAsync(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.ReadAsync(stream, readSize);" : "");
 
         cls = FixMissingMethodCode(b, cls);
@@ -1159,11 +1166,15 @@ namespace SharpMP4
         {
             cls += "\r\n" + "boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);";
         }
+        else if(hasDescriptors)
+        {
+            cls += "\r\n" + "boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);";
+        }
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
 
-        cls += "\r\n\tpublic async " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "Task<ulong> WriteAsync(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
+        cls += "\r\n\tpublic async " + (shouldOverride ? "override " : "virtual ") + "Task<ulong> WriteAsync(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.WriteAsync(stream);" : "");
 
         cls = FixMissingMethodCode(b, cls);
@@ -1177,10 +1188,14 @@ namespace SharpMP4
         {
             cls += "\r\n" + "boxSize += stream.WriteBoxArrayTillEnd(this);";
         }
+        else if (hasDescriptors)
+        {
+            cls += "\r\n" + "boxSize += stream.WriteDescriptorsTillEnd(this);";
+        }
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
-        cls += "\r\n\tpublic " + (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
+        cls += "\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += base.CalculateSize();" : "");
 
         cls = FixMissingMethodCode(b, cls);
@@ -1193,6 +1208,10 @@ namespace SharpMP4
         if (string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes))
         {
             cls += "\r\n" + "boxSize += IsoStream.CalculateBoxArray(this);";
+        }
+        else if (hasDescriptors)
+        {
+            cls += "\r\n" + "boxSize += IsoStream.CalculateDescriptors(this);";
         }
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
@@ -1545,7 +1564,8 @@ namespace SharpMP4
                     }
                 }
 
-                if (GetReadMethod((field as PseudoField)?.Type).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit")
+                string readMethod = GetReadMethod((field as PseudoField)?.Type);
+                if ((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry"))
                 {
                     string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
                     string ttttt = tt.Replace("[]", "");
@@ -1816,7 +1836,8 @@ namespace SharpMP4
         if (m.StartsWith("case")) // workaround for missing case support
             boxSize = "";
 
-        if (m.Contains("Box") && b.BoxName != "MetaDataAccessUnit")
+        // comment out all ReadBox/ReadDescriptor, WriteBox/WriteDescriptor and Calculate* methods
+        if ((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit") || (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry"))
         {
             spacing += "// ";
         }
