@@ -76,6 +76,11 @@
       "type": "Descriptor",
       "containers": [ "*" ],
       "syntax": "abstract class ExtensionDescriptor extends BaseDescriptor : bit(8) tag=ExtDescrTagStartRange..ExtDescrTagEndRange {\r\n // empty. To be filled by classes extending this class.\r\n }"
+    },
+    {
+      "type": "Box",
+      "containers": [ "*" ],
+      "syntax": "aligned(8) class ESDBox\r\n extends FullBox('esds', version = 0, 0) {\r\n ES_Descriptor ES;\r\n }"
     }
   ]
 }

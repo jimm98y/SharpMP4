@@ -96,6 +96,7 @@ namespace SharpMP4
                 case "eob ": return new EndOfBitstreamSampleEntry();
                 case "eos ": return new EndOfSequenceSampleEntry();
                 case "eqiv": return new VisualEquivalenceEntry();
+                case "esds": return new ESDBox();
                 case "etyp": return new ExtendedTypeBox();
                 case "evc1": return new EVCSampleEntry();
                 case "evcC": return new EVCConfigurationBox();
@@ -32159,6 +32160,49 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ESDBox
+     extends FullBox('esds', version = 0, 0) {
+     ES_Descriptor ES;
+     }
+    */
+    public class ESDBox : FullBox
+    {
+        public const string TYPE = "esds";
+
+        protected ES_Descriptor ES;
+        public ES_Descriptor _ES { get { return this.ES; } set { this.ES = value; } }
+
+        public ESDBox() : base("esds", 0, 0)
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadClass(out this.ES);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteClass(this.ES);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateClassSize(ES); // ES
             return boxSize;
         }
     }
