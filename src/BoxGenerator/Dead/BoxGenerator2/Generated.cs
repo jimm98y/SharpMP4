@@ -55,6 +55,7 @@ namespace SharpMP4
                 case "casg": return new CleanApertureEntry();
                 case "cclv": return new ContentColourVolumeBox();
                 case "ccst": return new CodingConstraintsBox();
+                case "cdsc": return new TrackReferenceTypeBox("cdsc");
                 case "chnl": return new ChannelLayout();
                 case "cinf": return new CompleteTrackInfoBox();
                 case "clap": return new CleanApertureBox();
@@ -70,6 +71,7 @@ namespace SharpMP4
                 case "ctts": return new CompositionOffsetBox();
                 case "dcfi": return new DecodingCapabilityInformation();
                 case "dhec": return new DefaultHevcExtractorConstructorBox();
+                case "dimg": return new SingleItemTypeReferenceBox("dimg");
                 case "dimm": return new hintimmediateBytesSent();
                 case "dinf": return new DataInformationBox();
                 case "dmax": return new hintlongestpacket();

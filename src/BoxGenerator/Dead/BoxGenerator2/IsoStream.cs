@@ -1095,7 +1095,15 @@ namespace SharpMP4
             ulong size = await box.ReadAsync(this, header.BoxSize);
 
             if (size != header.BoxSize)
+            {
+                if(size < header.BoxSize)
+                {
+                    // TODO: Investigate and fix
+                    Debug.Assert(false);
+                    ReadBits((uint)(header.BoxSize - size), out byte[] missing);
+                }
                 throw new Exception("Box not fully read!");
+            }
             return box;
         }
 

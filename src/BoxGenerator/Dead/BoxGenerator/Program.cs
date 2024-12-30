@@ -927,6 +927,24 @@ namespace SharpMP4
             //else
             //    fourccBoxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value };
         }
+        string[] referenceBox = new string[]
+        {
+            "dimg"
+        };
+        foreach (var type in referenceBox)
+        {
+            if (!fourccBoxes.ContainsKey(type))
+                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "SingleItemTypeReferenceBox").Value });
+        }
+        string[] referenceBox2 = new string[]
+        {
+            "cdsc"
+        };
+        foreach (var type in referenceBox2)
+        {
+            if (!fourccBoxes.ContainsKey(type))
+                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "TrackReferenceTypeBox").Value });
+        }
 
         foreach (var item in fourccBoxes)
         {
@@ -936,7 +954,9 @@ namespace SharpMP4
                 if (item.Value.Single().BoxName.Contains('_'))
                     comment = " // TODO: fix duplicate";
                 string optParams = "";
-                if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry")
+                if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" || 
+                    item.Value.Single().BoxName == "SingleItemTypeReferenceBox" || item.Value.Single().BoxName == "SingleItemTypeReferenceBoxLarge" ||
+                    item.Value.Single().BoxName ==  "TrackReferenceTypeBox")
                     optParams = $"\"{item.Key}\"";
                 factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}({optParams});{comment}\r\n";
             }
