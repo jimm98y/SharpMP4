@@ -186,17 +186,14 @@ namespace SharpMP4
             throw new NotImplementedException();
         }
 
-        internal ulong ReadClass<T>(out T value) where T : IMp4Serializable
+        internal ulong ReadClass<T>(T c, out T value) where T : IMp4Serializable
         {
-            throw new NotImplementedException();
+            ulong size = c.ReadAsync(this, 0).Result;
+            value = c;
+            return size;
         }
 
-        internal ulong ReadClass<T>(out T[] value) where T : IMp4Serializable
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadClass<T>(ulong count, out T[] value) where T : IMp4Serializable
+        internal ulong ReadClass<T>(out T[] value) where T : IMp4Serializable, new()
         {
             throw new NotImplementedException();
         }
@@ -1125,7 +1122,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadDescriptorsTillEnd(ulong boxSize, ulong readSize, Descriptor descriptor)
+        internal ulong ReadDescriptorsTillEnd(ulong boxSize, ulong readSize, Descriptor descriptor, int objectTypeIndication = -1)
         {
             descriptor.Children = new List<Descriptor>();
 
@@ -1160,12 +1157,12 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal ulong WriteDescriptorsTillEnd(Descriptor descriptor)
+        internal ulong WriteDescriptorsTillEnd(Descriptor descriptor, int objectTypeIndication = -1)
         {
             throw new NotImplementedException();
         }
 
-        internal static ulong CalculateDescriptors(Descriptor descriptor)
+        internal static ulong CalculateDescriptors(Descriptor descriptor, int objectTypeIndication = -1)
         {
             throw new NotImplementedException();
         }

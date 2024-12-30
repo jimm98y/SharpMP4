@@ -59,6 +59,15 @@ namespace SharpMP4
                 case DescriptorTags.ES_DescrTag:
                     return new ES_Descriptor();
 
+                case DescriptorTags.DecoderConfigDescrTag:
+                    return new DecoderConfigDescriptor();
+
+                case DescriptorTags.DecSpecificInfoTag:
+                    return new GenericDecoderSpecificInfo();
+
+                case DescriptorTags.SLConfigDescrTag:
+                    return new SLConfigDescriptor();
+
                 default:
                     throw new System.NotImplementedException();
                     //return new UnknownDescriptor();
@@ -90,21 +99,55 @@ namespace SharpMP4
         }
     }
 
-    public class UnknownDescriptor : Descriptor
+    public class GenericDecoderSpecificInfo : DecoderSpecificInfo
     {
-        public override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        protected byte[] bytes = null;
+        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
+
+        public override async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
-            return base.ReadAsync(stream, readSize);
+            ulong boxSize = await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8Array((uint)(readSize >> 3), out bytes);
+            return boxSize;
         }
 
-        public override Task<ulong> WriteAsync(IsoStream stream)
+        public override async Task<ulong> WriteAsync(IsoStream stream)
         {
-            return base.WriteAsync(stream);
+            ulong boxSize = await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8Array((uint)bytes.Length, bytes);
+            return boxSize;
         }
-
         public override ulong CalculateSize()
         {
-            return base.CalculateSize();
+            ulong boxSize = base.CalculateSize();
+            boxSize += (ulong)bytes.Length * 8;
+            return boxSize;
+        }
+    }
+
+    public class UnknownDescriptor : Descriptor
+    {
+        protected byte[] bytes = null;
+        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
+
+        public override async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8Array((uint)(readSize >> 3), out bytes);
+            return boxSize;
+        }
+
+        public override async Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8Array((uint)bytes.Length, bytes);
+            return boxSize;
+        }
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = base.CalculateSize();
+            boxSize += (ulong)bytes.Length * 8;
+            return boxSize;
         }
     }
 }
