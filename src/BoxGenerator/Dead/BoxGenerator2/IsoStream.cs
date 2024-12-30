@@ -181,14 +181,6 @@ namespace SharpMP4
             return header.HeaderSize + header.BoxSize;
         }
 
-        internal ulong ReadBox(out SampleGroupDescriptionEntry value)
-        {
-            Box b;
-            ulong boxSize = ReadBox(out b);
-            value = (SampleGroupDescriptionEntry)b;
-            return boxSize;
-        }
-
         internal ulong ReadBox(out Box[] value)
         {
             throw new NotImplementedException();
@@ -1115,6 +1107,30 @@ namespace SharpMP4
             return box;
         }
 
+        internal ulong ReadEntry(string fourCC, out SampleGroupDescriptionEntry entry)
+        {
+            var res = BoxFactory.CreateEntry(fourCC);
+            Debug.WriteLine($"--Parsed entry: {fourCC}");
+            ulong size = res.ReadAsync(this, 0).Result;
+            entry = (SampleGroupDescriptionEntry)res;
+            return size;
+        }
+
+        internal ulong ReadEntry(out VvcSubpicOrderEntry sampleGroupDescriptionEntry)
+        {
+            SampleGroupDescriptionEntry ge;
+            ulong size = ReadEntry(VvcSubpicOrderEntry.TYPE, out ge);
+            sampleGroupDescriptionEntry = (VvcSubpicOrderEntry)ge;
+            return size;
+        }
+
+        internal ulong ReadEntry(out VvcSubpicIDEntry sampleGroupDescriptionEntry)
+        {
+            SampleGroupDescriptionEntry ge;
+            ulong size = ReadEntry(VvcSubpicIDEntry.TYPE, out ge);
+            sampleGroupDescriptionEntry = (VvcSubpicIDEntry)ge;
+            return size;
+        }
 
         internal ulong ReadDescriptor(out ES_Descriptor descriptor)
         {
@@ -1191,7 +1207,7 @@ namespace SharpMP4
         internal static ulong CalculateDescriptorSize(Descriptor descriptor)
         {
             throw new NotImplementedException();
-        }
+        }       
     }
 
 #if !NET7_0_OR_GREATER

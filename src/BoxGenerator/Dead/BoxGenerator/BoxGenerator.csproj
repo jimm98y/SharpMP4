@@ -9,13 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="14496-23-added.json">
+    <Content Include="14496-23-boxes-added.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="14496-3-added.json">
+    <Content Include="14496-3-boxes-added.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="14496-1-added.json">
+    <Content Include="14496-1-boxes-added.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="AVIF.json">
@@ -27,13 +27,13 @@
     <Content Include="Opus.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="14496-3-added.js">
+    <Content Include="14496-3-boxes-added.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="14496-15-added.json">
+    <Content Include="14496-15-boxes-added.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="14496-12-added.json">
+    <Content Include="14496-12-boxes-added.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="14496-12-boxes.json">
