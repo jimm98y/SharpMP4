@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace SharpMP4
 {
@@ -48,21 +49,55 @@ namespace SharpMP4
         public const byte OCIDescrTagEndRange = 0x50;
     }
 
+    public class DescriptorFactory
+    {
+        internal static IMp4Serializable CreateDescriptor(byte tag)
+        {
+            switch (tag)
+            {
+                case DescriptorTags.ES_DescrTag:
+                    return new ES_Descriptor();
+
+                default:
+                    throw new System.NotImplementedException();
+                    //return new UnknownDescriptor();
+            }
+        }
+    }
+
     public class Descriptor : IMp4Serializable
     {
-        public async virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult((ulong)0);
         }
 
-        public async virtual Task<ulong> WriteAsync(IsoStream stream)
+        public virtual Task<ulong> WriteAsync(IsoStream stream)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult((ulong)0);
         }
 
         public virtual ulong CalculateSize()
         {
-            throw new System.NotImplementedException();
+            return 0;
+        }
+    }
+
+    public class UnknownDescriptor : IMp4Serializable
+    {
+        public ulong CalculateSize()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ulong> WriteAsync(IsoStream stream)
+        {
+            throw new NotImplementedException();
         }
     }
 }

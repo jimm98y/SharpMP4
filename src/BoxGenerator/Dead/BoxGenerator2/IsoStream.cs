@@ -1119,12 +1119,21 @@ namespace SharpMP4
 
         internal ulong WriteDescriptor<T>(T[] descriptor) where T : IMp4Serializable
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException();            
         }
 
         internal ulong ReadDescriptor<T>(out T descriptor) where T : IMp4Serializable
         {
-            throw new NotImplementedException();
+            byte tag = ReadByte();
+            ulong size = 8;
+            size += ReadDescriptorSize(out int sizeOfInstance);
+            ulong sizeOfInstanceBits = (ulong)sizeOfInstance * 8;
+            size += sizeOfInstanceBits;
+            descriptor = (T)DescriptorFactory.CreateDescriptor(tag);
+            size += descriptor.ReadAsync(this, (ulong)sizeOfInstance).Result;
+            if (size != sizeOfInstanceBits)
+                throw new Exception("Descriptor not fully read!");
+            return size;
         }
 
         internal ulong ReadDescriptor<T>(out T[] descriptor) where T : IMp4Serializable
