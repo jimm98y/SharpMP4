@@ -954,17 +954,12 @@ namespace SharpMP4
                     item.Value.First().BoxName == "trackhintinformation" ||
                     item.Value.First().BoxName == "VvcSubpicIDEntry" ||
                     item.Value.First().BoxName == "VvcSubpicOrderEntry" ||
-                    item.Value.First().BoxName == "ViewPriorityBox"
+                    item.Value.First().BoxName == "ViewPriorityBox" ||
+                    item.Value.First().BoxName == "rtpmoviehintinformation"
                     )
                 {
                     string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
                     factory += $"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n";
-                }
-                else if (
-                    item.Value.Last().BoxName == "RtpHintSampleEntry")
-                {
-                    string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
-                    factory += $"               case \"{item.Key}\": return new {item.Value.Last().BoxName}();{comment}\r\n";
                 }
                 else
                 {

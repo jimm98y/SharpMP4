@@ -251,7 +251,7 @@ namespace SharpMP4
                 case "rrtp": return new ReceivedRtpHintSampleEntry();
                 case "rsrp": return new ReceivedSrtpHintSampleEntry();
                 case "rssr": return new ReceivedSsrcBox();
-                case "rtp ": return new RtpHintSampleEntry(); // TODO: box is ambiguous in between rtpmoviehintinformation and RtpHintSampleEntry
+                case "rtp ": return new rtpmoviehintinformation(); // TODO: box is ambiguous in between rtpmoviehintinformation and RtpHintSampleEntry
                 case "s263": return new VisualSampleEntry("s263");
                 case "saio": return new SampleAuxiliaryInformationOffsetsBox();
                 case "saiz": return new SampleAuxiliaryInformationSizesBox();
