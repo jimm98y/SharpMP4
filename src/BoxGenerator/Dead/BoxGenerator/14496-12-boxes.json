@@ -1262,7 +1262,7 @@
           "description": ""
         }
       ],
-      "syntax": "aligned(8) class TrackFragmentHeaderBox\n\t\t\textends FullBox('tfhd', 0, tf_flags){\n\tunsigned int(32)\ttrack_ID;\n\t// all the following are optional fields\n\t// their presence is indicated by bits in the tf_flags\n\tunsigned int(64)\tbase_data_offset;\n\tunsigned int(32)\tsample_description_index;\n\tunsigned int(32)\tdefault_sample_duration;\n\tunsigned int(32)\tdefault_sample_size;\n\tunsigned int(32)\tdefault_sample_flags;\n}"
+      "syntax": "aligned(8) class TrackFragmentHeaderBox\r\n                extends FullBox('tfhd', 0, tf_flags){\r\n        unsigned int(32)\ttrack_ID;\r\n        // all the following are optional fields\r\n        // their presence is indicated by bits in the tf_flags\r\n        if (flags & 0x1) {\r\n           unsigned int(64)\tbase_data_offset;\r\n        }\r\n        if (flags & 0x2) {\r\n           unsigned int(32)\tsample_description_index;\r\n        }\r\n        if (flags & 0x8) {\r\n           unsigned int(32)\tdefault_sample_duration;\r\n        }\r\n        if (flags & 0x10) {\r\n           unsigned int(32)\tdefault_sample_size;\r\n        }\r\n        if (flags & 0x20) {\r\n           unsigned int(32)\tdefault_sample_flags;\r\n        }\r\n    }"
     },
     {
       "fourcc": "tfra",

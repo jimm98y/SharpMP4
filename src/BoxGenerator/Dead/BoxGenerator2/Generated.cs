@@ -15496,16 +15496,26 @@ namespace SharpMP4
 
     /*
     aligned(8) class TrackFragmentHeaderBox
-                extends FullBox('tfhd', 0, tf_flags){
-        unsigned int(32)	track_ID;
-        // all the following are optional fields
-        // their presence is indicated by bits in the tf_flags
-        unsigned int(64)	base_data_offset;
-        unsigned int(32)	sample_description_index;
-        unsigned int(32)	default_sample_duration;
-        unsigned int(32)	default_sample_size;
-        unsigned int(32)	default_sample_flags;
-    }
+                    extends FullBox('tfhd', 0, tf_flags){
+            unsigned int(32)	track_ID;
+            // all the following are optional fields
+            // their presence is indicated by bits in the tf_flags
+            if (flags & 0x1) {
+               unsigned int(64)	base_data_offset;
+            }
+            if (flags & 0x2) {
+               unsigned int(32)	sample_description_index;
+            }
+            if (flags & 0x8) {
+               unsigned int(32)	default_sample_duration;
+            }
+            if (flags & 0x10) {
+               unsigned int(32)	default_sample_size;
+            }
+            if (flags & 0x20) {
+               unsigned int(32)	default_sample_flags;
+            }
+        }
     */
     public class TrackFragmentHeaderBox : FullBox
     {
@@ -15539,11 +15549,31 @@ namespace SharpMP4
             boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.track_ID); // all the following are optional fields
             /*  their presence is indicated by bits in the tf_flags */
-            boxSize += stream.ReadUInt64(out this.base_data_offset);
-            boxSize += stream.ReadUInt32(out this.sample_description_index);
-            boxSize += stream.ReadUInt32(out this.default_sample_duration);
-            boxSize += stream.ReadUInt32(out this.default_sample_size);
-            boxSize += stream.ReadUInt32(out this.default_sample_flags);
+
+            if ((flags & 0x1) == 0x1)
+            {
+                boxSize += stream.ReadUInt64(out this.base_data_offset);
+            }
+
+            if ((flags & 0x2) == 0x2)
+            {
+                boxSize += stream.ReadUInt32(out this.sample_description_index);
+            }
+
+            if ((flags & 0x8) == 0x8)
+            {
+                boxSize += stream.ReadUInt32(out this.default_sample_duration);
+            }
+
+            if ((flags & 0x10) == 0x10)
+            {
+                boxSize += stream.ReadUInt32(out this.default_sample_size);
+            }
+
+            if ((flags & 0x20) == 0x20)
+            {
+                boxSize += stream.ReadUInt32(out this.default_sample_flags);
+            }
             return boxSize;
         }
 
@@ -15553,11 +15583,31 @@ namespace SharpMP4
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteUInt32(this.track_ID); // all the following are optional fields
             /*  their presence is indicated by bits in the tf_flags */
-            boxSize += stream.WriteUInt64(this.base_data_offset);
-            boxSize += stream.WriteUInt32(this.sample_description_index);
-            boxSize += stream.WriteUInt32(this.default_sample_duration);
-            boxSize += stream.WriteUInt32(this.default_sample_size);
-            boxSize += stream.WriteUInt32(this.default_sample_flags);
+
+            if ((flags & 0x1) == 0x1)
+            {
+                boxSize += stream.WriteUInt64(this.base_data_offset);
+            }
+
+            if ((flags & 0x2) == 0x2)
+            {
+                boxSize += stream.WriteUInt32(this.sample_description_index);
+            }
+
+            if ((flags & 0x8) == 0x8)
+            {
+                boxSize += stream.WriteUInt32(this.default_sample_duration);
+            }
+
+            if ((flags & 0x10) == 0x10)
+            {
+                boxSize += stream.WriteUInt32(this.default_sample_size);
+            }
+
+            if ((flags & 0x20) == 0x20)
+            {
+                boxSize += stream.WriteUInt32(this.default_sample_flags);
+            }
             return boxSize;
         }
 
@@ -15567,11 +15617,31 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 32; // track_ID
             /*  their presence is indicated by bits in the tf_flags */
-            boxSize += 64; // base_data_offset
-            boxSize += 32; // sample_description_index
-            boxSize += 32; // default_sample_duration
-            boxSize += 32; // default_sample_size
-            boxSize += 32; // default_sample_flags
+
+            if ((flags & 0x1) == 0x1)
+            {
+                boxSize += 64; // base_data_offset
+            }
+
+            if ((flags & 0x2) == 0x2)
+            {
+                boxSize += 32; // sample_description_index
+            }
+
+            if ((flags & 0x8) == 0x8)
+            {
+                boxSize += 32; // default_sample_duration
+            }
+
+            if ((flags & 0x10) == 0x10)
+            {
+                boxSize += 32; // default_sample_size
+            }
+
+            if ((flags & 0x20) == 0x20)
+            {
+                boxSize += 32; // default_sample_flags
+            }
             return boxSize;
         }
     }
