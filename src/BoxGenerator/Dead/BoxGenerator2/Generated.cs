@@ -16272,23 +16272,35 @@ namespace SharpMP4
 
     /*
     aligned(8) class TrackRunBox
-                extends FullBox('trun', version, tr_flags) {
-        unsigned int(32)	sample_count;
-        // the following are optional fields
-        signed int(32)	data_offset;
-        unsigned int(32)	first_sample_flags;
-        // all fields in the following array are optional
-        // as indicated by bits set in the tr_flags
-        {
-            unsigned int(32)	sample_duration;
-            unsigned int(32)	sample_size;
-            unsigned int(32)	sample_flags;
-            if (version == 0)
-                { unsigned int(32)	sample_composition_time_offset; }
-            else
-                { signed int(32)		sample_composition_time_offset; }
-        }[ sample_count ]
-    }
+                    extends FullBox('trun', version, tr_flags) {
+            unsigned int(32)	sample_count;
+            // the following are optional fields
+            if(flags & 0x1) {
+               signed int(32)	data_offset;
+            }
+            if(flags & 0x4) {
+               unsigned int(32)	first_sample_flags;
+            }
+            // all fields in the following array are optional
+            // as indicated by bits set in the tr_flags
+            {
+                if(flags & 0x100) {
+                   unsigned int(32)	sample_duration;
+                }
+                if(flags & 0x200) {
+                   unsigned int(32)	sample_size;
+                }
+                if(flags & 0x400) {
+                   unsigned int(32)	sample_flags;
+                }
+                if(flags & 0x800) {
+                   if (version == 0)
+                       { unsigned int(32)	sample_composition_time_offset; }
+                   else
+                       { signed int(32)		sample_composition_time_offset; }
+                }
+            }[ sample_count ]
+        }
     */
     public class TrackRunBox : FullBox
     {
@@ -16300,8 +16312,10 @@ namespace SharpMP4
         protected int data_offset;
         public int DataOffset { get { return this.data_offset; } set { this.data_offset = value; } }
 
-        protected uint first_sample_flags;  //  all fields in the following array are optional
+        protected uint first_sample_flags;
         public uint FirstSampleFlags { get { return this.first_sample_flags; } set { this.first_sample_flags = value; } }
+        protected List<TrunEntry> entries;
+        public List<TrunEntry> Entries { get { return this.entries; } set { this.entries = value; } }
 
         public TrackRunBox(byte version = 0, uint tr_flags = 0) : base("trun", version, tr_flags)
         {
@@ -16312,10 +16326,51 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadUInt32(out this.sample_count); // the following are optional fields
-            boxSize += stream.ReadInt32(out this.data_offset);
-            boxSize += stream.ReadUInt32(out this.first_sample_flags); // all fields in the following array are optional
-            /*  as indicated by bits set in the tr_flags */
 
+            if ((flags & 0x1) == 0x1)
+            {
+                boxSize += stream.ReadInt32(out this.data_offset);
+            }
+
+            if ((flags & 0x4) == 0x4)
+            {
+                boxSize += stream.ReadUInt32(out this.first_sample_flags);
+            }
+            /*  all fields in the following array are optional */
+            /*  as indicated by bits set in the tr_flags */
+            entries = new List<TrunEntry>();
+            for (int i = 0; i < sample_count; i++)
+            {
+                TrunEntry entry = new TrunEntry();
+                if ((flags & 0x100) == 0x100)
+                {
+                    boxSize += stream.ReadUInt32(out entry.SampleDuration);
+                }
+
+                if ((flags & 0x200) == 0x200)
+                {
+                    boxSize += stream.ReadUInt32(out entry.SampleSize);
+                }
+
+                if ((flags & 0x400) == 0x400)
+                {
+                    boxSize = stream.ReadUInt32(out entry.SampleFlags);
+                }
+
+                if ((flags & 0x800) == 0x800)
+                {
+                    if (version == 0)
+                    {
+                        boxSize += stream.ReadUInt32(out entry.SampleCompositionTimeOffset0);
+                    }
+                    else
+                    {
+                        boxSize = stream.ReadInt32(out entry.SampleCompositionTimeOffset);
+                    }
+                }
+
+                entries.Add(entry);
+            }
             return boxSize;
         }
 
@@ -16324,10 +16379,47 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteUInt32(this.sample_count); // the following are optional fields
-            boxSize += stream.WriteInt32(this.data_offset);
-            boxSize += stream.WriteUInt32(this.first_sample_flags); // all fields in the following array are optional
-            /*  as indicated by bits set in the tr_flags */
 
+            if ((flags & 0x1) == 0x1)
+            {
+                boxSize += stream.WriteInt32(this.data_offset);
+            }
+
+            if ((flags & 0x4) == 0x4)
+            {
+                boxSize += stream.WriteUInt32(this.first_sample_flags);
+            }
+            /*  all fields in the following array are optional */
+            /*  as indicated by bits set in the tr_flags */
+            for (int i = 0; i < sample_count; i++)
+            {
+                if ((flags & 0x100) == 0x100)
+                {
+                    boxSize += stream.WriteUInt32(entries[i].SampleDuration);
+                }
+
+                if ((flags & 0x200) == 0x200)
+                {
+                    boxSize += stream.WriteUInt32(entries[i].SampleSize);
+                }
+
+                if ((flags & 0x400) == 0x400)
+                {
+                    boxSize = stream.WriteUInt32(entries[i].SampleFlags);
+                }
+
+                if ((flags & 0x800) == 0x800)
+                {
+                    if (version == 0)
+                    {
+                        boxSize += stream.WriteUInt32(entries[i].SampleCompositionTimeOffset0);
+                    }
+                    else
+                    {
+                        boxSize = stream.WriteInt32(entries[i].SampleCompositionTimeOffset);
+                    }
+                }
+            }
             return boxSize;
         }
 
@@ -16336,10 +16428,47 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32; // sample_count
-            boxSize += 32; // data_offset
-            boxSize += 32; // first_sample_flags
-            /*  as indicated by bits set in the tr_flags */
 
+            if ((flags & 0x1) == 0x1)
+            {
+                boxSize += 32; // data_offset
+            }
+
+            if ((flags & 0x4) == 0x4)
+            {
+                boxSize += 32; // first_sample_flags
+            }
+            /*  all fields in the following array are optional */
+            /*  as indicated by bits set in the tr_flags */
+            for (int i = 0; i < sample_count; i++)
+            {
+                if ((flags & 0x100) == 0x100)
+                {
+                    boxSize += 32;
+                }
+
+                if ((flags & 0x200) == 0x200)
+                {
+                    boxSize += 32;
+                }
+
+                if ((flags & 0x400) == 0x400)
+                {
+                    boxSize = 32;
+                }
+
+                if ((flags & 0x800) == 0x800)
+                {
+                    if (version == 0)
+                    {
+                        boxSize += 32;
+                    }
+                    else
+                    {
+                        boxSize = 32;
+                    }
+                }
+            }
             return boxSize;
         }
     }

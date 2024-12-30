@@ -2,6 +2,26 @@
 
 namespace SharpMP4
 {
+    public sealed class TrunEntry
+    {
+        public uint SampleDuration;
+        public uint SampleSize;
+        public uint SampleFlags;
+        public uint SampleCompositionTimeOffset0;
+        public int SampleCompositionTimeOffset;
+
+        public TrunEntry(uint sampleDuration, uint sampleSize, uint sampleFlags, int sampleCompositionTimeOffset)
+        {
+            SampleDuration = sampleDuration;
+            SampleSize = sampleSize;
+            SampleFlags = sampleFlags;
+            SampleCompositionTimeOffset = sampleCompositionTimeOffset;
+        }
+
+        public TrunEntry()
+        { }
+    }
+
     public abstract class CompressedBox : Box 
     {
         public CompressedBox(string boxtype) :base(boxtype) {  }

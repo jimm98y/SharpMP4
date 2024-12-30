@@ -1125,6 +1125,11 @@ namespace SharpMP4
             cls += "\r\n" + BuildField(b, field);
         }
 
+        if(b.BoxName == "TrackRunBox")
+        {
+            cls += "\r\n" + "protected List<TrunEntry> entries;  \r\n        public List<TrunEntry> Entries { get { return this.entries; } set { this.entries = value; } }";
+        }
+
         string ctorParams = "";
         if (!string.IsNullOrEmpty(b.ClassType) || (b.Extended != null && b.Extended.Parameters != null))
         {
@@ -1788,6 +1793,12 @@ namespace SharpMP4
             return BuildBlock(b, parent, block, level, methodType);
         }
 
+        var repeatingBlock = field as PseudoRepeatingBlock;
+        if(repeatingBlock != null)
+        {
+            return BuildRepeatingBlock(b, parent, block, level, methodType);
+        }
+
         var comment = field as PseudoComment;
         if (comment != null)
         {
@@ -1874,6 +1885,27 @@ namespace SharpMP4
             return $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
         else
             return $"{spacing}{boxSize}{m}; // {name}";
+    }
+
+    /*
+
+    */
+    private static string BuildRepeatingBlock(PseudoClass b, PseudoBlock parent, PseudoBlock? block, int level, MethodType methodType)
+    {
+        if(methodType == MethodType.Read)
+        {
+            return "entries = new List<TrunEntry>();\r\n            for (int i = 0; i < sample_count; i++)\r\n            {\r\n                TrunEntry entry = new TrunEntry();\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += stream.ReadUInt32(out entry.SampleDuration);\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += stream.ReadUInt32(out entry.SampleSize);\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = stream.ReadUInt32(out entry.SampleFlags);\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += stream.ReadUInt32(out entry.SampleCompositionTimeOffset0);\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = stream.ReadInt32(out entry.SampleCompositionTimeOffset);\r\n                    }\r\n                }\r\n\r\n                entries.Add(entry);\r\n            }";
+        }
+        else if(methodType == MethodType.Write)
+        {
+            return "for (int i = 0; i < sample_count; i++)\r\n            {\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += stream.WriteUInt32(entries[i].SampleDuration);\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += stream.WriteUInt32(entries[i].SampleSize);\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = stream.WriteUInt32(entries[i].SampleFlags);\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += stream.WriteUInt32(entries[i].SampleCompositionTimeOffset0);\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = stream.WriteInt32(entries[i].SampleCompositionTimeOffset);\r\n                    }\r\n                }\r\n            }";
+        }
+        else if(methodType == MethodType.Size)
+        {
+            return "for (int i = 0; i < sample_count; i++)\r\n            {\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += 32;\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += 32;\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = 32;\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += 32;\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = 32;\r\n                    }\r\n                }\r\n            }";
+        }
+
+        throw new NotImplementedException();
     }
 
     private static string GetFieldTypeDef(PseudoCode field)
