@@ -13880,7 +13880,9 @@ namespace SharpMP4
 
         protected uint[] description_length;
         public uint[] DescriptionLength { get { return this.description_length; } set { this.description_length = value; } }
-        public IEnumerable<SampleGroupDescriptionEntry> _SampleGroupDescriptionEntry { get { return this.children.OfType<SampleGroupDescriptionEntry>(); } }
+
+        protected SampleGroupDescriptionEntry[] SampleGroupDescriptionEntry;  //  an instance of a class derived from SampleGroupDescriptionEntry
+        public SampleGroupDescriptionEntry[] _SampleGroupDescriptionEntry { get { return this.SampleGroupDescriptionEntry; } set { this.SampleGroupDescriptionEntry = value; } }
 
         public SampleGroupDescriptionBox(byte version = 0, uint flags = 0) : base("sgpd", version, flags)
         {
@@ -13905,6 +13907,7 @@ namespace SharpMP4
 
 
             this.description_length = new uint[entry_count];
+            this.SampleGroupDescriptionEntry = new SampleGroupDescriptionEntry[entry_count];
             for (int i = 0; i < entry_count; i++)
             {
 
@@ -13916,10 +13919,9 @@ namespace SharpMP4
                         boxSize += stream.ReadUInt32(out this.description_length[i]);
                     }
                 }
-                // boxSize += stream.ReadBox( out this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
+                boxSize += stream.ReadBox(out this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
                 /*   that is appropriate and permitted for the media type */
             }
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -13952,10 +13954,9 @@ namespace SharpMP4
                         boxSize += stream.WriteUInt32(this.description_length[i]);
                     }
                 }
-                // boxSize += stream.WriteBox( this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
+                boxSize += stream.WriteBox(this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
                 /*   that is appropriate and permitted for the media type */
             }
-            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -13988,10 +13989,9 @@ namespace SharpMP4
                         boxSize += 32; // description_length
                     }
                 }
-                // boxSize += IsoStream.CalculateBoxSize(SampleGroupDescriptionEntry); // SampleGroupDescriptionEntry
+                boxSize += IsoStream.CalculateBoxSize(SampleGroupDescriptionEntry); // SampleGroupDescriptionEntry
                 /*   that is appropriate and permitted for the media type */
             }
-            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }

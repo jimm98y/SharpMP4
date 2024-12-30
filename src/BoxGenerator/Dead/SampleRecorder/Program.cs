@@ -1,7 +1,7 @@
 ﻿
 using SharpMP4;
 
-using (Stream fs = new BufferedStream(new FileStream("test.heic", FileMode.Open, FileAccess.Read, FileShare.Read)))
+using (Stream fs = new BufferedStream(new FileStream("C:\\Users\\lukas\\Downloads\\big_buck_bunny_1080p_h264.mp4", FileMode.Open, FileAccess.Read, FileShare.Read)))
 {
     var mp4 = Mp4.Create(fs);
 

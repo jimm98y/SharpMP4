@@ -10,17 +10,10 @@
   <ItemGroup>
     <None Remove="frag_bunny.mp4" />
     <None Remove="test.heic" />
-    <None Remove="test1.mp4" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="frag_bunny.mp4">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="test1.mp4">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-	  <Content Include="test.heic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

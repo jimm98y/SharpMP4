@@ -1187,7 +1187,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Read);
         }
 
-        if (string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes))
+        if ((string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)) && b.BoxName != "SampleGroupDescriptionBox")
         {
             cls += "\r\n" + "boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);";
         }
@@ -1212,7 +1212,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Write);
         }
 
-        if (string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes))
+        if ((string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)) && b.BoxName != "SampleGroupDescriptionBox")
         {
             cls += "\r\n" + "boxSize += stream.WriteBoxArrayTillEnd(this);";
         }
@@ -1236,7 +1236,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Size);
         }
 
-        if (string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes))
+        if ((string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)) && b.BoxName != "SampleGroupDescriptionBox")
         {
             cls += "\r\n" + "boxSize += IsoStream.CalculateBoxArray(this);";
         }
@@ -1599,7 +1599,7 @@ namespace SharpMP4
                 }
 
                 string readMethod = GetReadMethod((field as PseudoField)?.Type);
-                if ((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry"))
+                if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox")
                 {
                     string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
                     string ttttt = tt.Replace("[]", "");
@@ -1879,7 +1879,7 @@ namespace SharpMP4
             boxSize = "";
 
         // comment out all ReadBox/ReadDescriptor, WriteBox/WriteDescriptor and Calculate* methods
-        if ((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit") || (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry"))
+        if (((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit") || (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox")
         {
             spacing += "// ";
         }
@@ -1907,9 +1907,6 @@ namespace SharpMP4
             return $"{spacing}{boxSize}{m}; // {name}";
     }
 
-    /*
-
-    */
     private static string BuildRepeatingBlock(PseudoClass b, PseudoBlock parent, PseudoBlock? block, int level, MethodType methodType)
     {
         if(methodType == MethodType.Read)
@@ -2075,7 +2072,7 @@ namespace SharpMP4
                     {
                         foreach (var req in block.RequiresAllocation)
                         {
-                            bool hasBoxes = GetReadMethod(req.Type).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit";
+                            bool hasBoxes = GetReadMethod(req.Type).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "SampleGroupDescriptionBox";
                             if (hasBoxes)
                                 continue;
 

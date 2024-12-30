@@ -181,6 +181,14 @@ namespace SharpMP4
             return header.HeaderSize + header.BoxSize;
         }
 
+        internal ulong ReadBox(out SampleGroupDescriptionEntry value)
+        {
+            Box b;
+            ulong boxSize = ReadBox(out b);
+            value = (SampleGroupDescriptionEntry)b;
+            return boxSize;
+        }
+
         internal ulong ReadBox(out Box[] value)
         {
             throw new NotImplementedException();
