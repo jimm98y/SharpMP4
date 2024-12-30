@@ -81,6 +81,11 @@
       "type": "Box",
       "containers": [ "*" ],
       "syntax": "aligned(8) class ESDBox\r\n extends FullBox('esds', version = 0, 0) {\r\n ES_Descriptor ES;\r\n }"
+    },
+    {
+      "type": "Box",
+      "containers": [ "*" ],
+      "syntax": "class MpegSampleEntry() extends SampleEntry ('mp4s'){\r\n ES_Descriptor ES;\r\n }"
     }
   ]
 }

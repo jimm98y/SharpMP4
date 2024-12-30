@@ -187,6 +187,7 @@ namespace SharpMP4
                 case "moof": return new MovieFragmentBox(); // TODO: box is ambiguous in between MovieFragmentBox and CompressedMovieFragmentBox
                 case "moov": return new MovieBox(); // TODO: box is ambiguous in between MovieBox and CompressedMovieBox
                 case "mp4a": return new AudioSampleEntry("mp4a");
+                case "mp4s": return new MpegSampleEntry();
                 case "mp4v": return new VisualSampleEntry("mp4v");
                 case "mskC": return new MaskConfigurationProperty();
                 case "msrc": return new TrackGroupTypeBox();
@@ -30992,15 +30993,15 @@ namespace SharpMP4
             {
                 boxSize += stream.ReadUInt16(out this.OCR_ES_Id);
             }
-            boxSize += stream.ReadClass(out this.decConfigDescr);
-            boxSize += stream.ReadClass(out this.slConfigDescr);
-            boxSize += stream.ReadClass(out this.ipiPtr);
-            boxSize += stream.ReadClass(out this.ipIDS);
-            boxSize += stream.ReadClass(out this.ipmpDescrPtr);
-            boxSize += stream.ReadClass(out this.langDescr);
-            boxSize += stream.ReadClass(out this.qosDescr);
-            boxSize += stream.ReadClass(out this.regDescr);
-            boxSize += stream.ReadClass(out this.extDescr);
+            boxSize += stream.ReadDescriptor(out this.decConfigDescr);
+            boxSize += stream.ReadDescriptor(out this.slConfigDescr);
+            boxSize += stream.ReadDescriptor(out this.ipiPtr);
+            boxSize += stream.ReadDescriptor(out this.ipIDS);
+            boxSize += stream.ReadDescriptor(out this.ipmpDescrPtr);
+            boxSize += stream.ReadDescriptor(out this.langDescr);
+            boxSize += stream.ReadDescriptor(out this.qosDescr);
+            boxSize += stream.ReadDescriptor(out this.regDescr);
+            boxSize += stream.ReadDescriptor(out this.extDescr);
             return boxSize;
         }
 
@@ -31029,15 +31030,15 @@ namespace SharpMP4
             {
                 boxSize += stream.WriteUInt16(this.OCR_ES_Id);
             }
-            boxSize += stream.WriteClass(this.decConfigDescr);
-            boxSize += stream.WriteClass(this.slConfigDescr);
-            boxSize += stream.WriteClass(this.ipiPtr);
-            boxSize += stream.WriteClass(this.ipIDS);
-            boxSize += stream.WriteClass(this.ipmpDescrPtr);
-            boxSize += stream.WriteClass(this.langDescr);
-            boxSize += stream.WriteClass(this.qosDescr);
-            boxSize += stream.WriteClass(this.regDescr);
-            boxSize += stream.WriteClass(this.extDescr);
+            boxSize += stream.WriteDescriptor(this.decConfigDescr);
+            boxSize += stream.WriteDescriptor(this.slConfigDescr);
+            boxSize += stream.WriteDescriptor(this.ipiPtr);
+            boxSize += stream.WriteDescriptor(this.ipIDS);
+            boxSize += stream.WriteDescriptor(this.ipmpDescrPtr);
+            boxSize += stream.WriteDescriptor(this.langDescr);
+            boxSize += stream.WriteDescriptor(this.qosDescr);
+            boxSize += stream.WriteDescriptor(this.regDescr);
+            boxSize += stream.WriteDescriptor(this.extDescr);
             return boxSize;
         }
 
@@ -31066,15 +31067,15 @@ namespace SharpMP4
             {
                 boxSize += 16; // OCR_ES_Id
             }
-            boxSize += IsoStream.CalculateClassSize(decConfigDescr); // decConfigDescr
-            boxSize += IsoStream.CalculateClassSize(slConfigDescr); // slConfigDescr
-            boxSize += IsoStream.CalculateClassSize(ipiPtr); // ipiPtr
-            boxSize += IsoStream.CalculateClassSize(ipIDS); // ipIDS
-            boxSize += IsoStream.CalculateClassSize(ipmpDescrPtr); // ipmpDescrPtr
-            boxSize += IsoStream.CalculateClassSize(langDescr); // langDescr
-            boxSize += IsoStream.CalculateClassSize(qosDescr); // qosDescr
-            boxSize += IsoStream.CalculateClassSize(regDescr); // regDescr
-            boxSize += IsoStream.CalculateClassSize(extDescr); // extDescr
+            boxSize += IsoStream.CalculateDescriptorSize(decConfigDescr); // decConfigDescr
+            boxSize += IsoStream.CalculateDescriptorSize(slConfigDescr); // slConfigDescr
+            boxSize += IsoStream.CalculateDescriptorSize(ipiPtr); // ipiPtr
+            boxSize += IsoStream.CalculateDescriptorSize(ipIDS); // ipIDS
+            boxSize += IsoStream.CalculateDescriptorSize(ipmpDescrPtr); // ipmpDescrPtr
+            boxSize += IsoStream.CalculateDescriptorSize(langDescr); // langDescr
+            boxSize += IsoStream.CalculateDescriptorSize(qosDescr); // qosDescr
+            boxSize += IsoStream.CalculateDescriptorSize(regDescr); // regDescr
+            boxSize += IsoStream.CalculateDescriptorSize(extDescr); // extDescr
             return boxSize;
         }
     }
@@ -31384,8 +31385,8 @@ namespace SharpMP4
             boxSize += stream.ReadBits(24, out this.bufferSizeDB);
             boxSize += stream.ReadUInt32(out this.maxBitrate);
             boxSize += stream.ReadUInt32(out this.avgBitrate);
-            boxSize += stream.ReadClass(out this.decSpecificInfo);
-            boxSize += stream.ReadClass(out this.profileLevelIndicationIndexDescr);
+            boxSize += stream.ReadDescriptor(out this.decSpecificInfo);
+            boxSize += stream.ReadDescriptor(out this.profileLevelIndicationIndexDescr);
             return boxSize;
         }
 
@@ -31400,8 +31401,8 @@ namespace SharpMP4
             boxSize += stream.WriteBits(24, this.bufferSizeDB);
             boxSize += stream.WriteUInt32(this.maxBitrate);
             boxSize += stream.WriteUInt32(this.avgBitrate);
-            boxSize += stream.WriteClass(this.decSpecificInfo);
-            boxSize += stream.WriteClass(this.profileLevelIndicationIndexDescr);
+            boxSize += stream.WriteDescriptor(this.decSpecificInfo);
+            boxSize += stream.WriteDescriptor(this.profileLevelIndicationIndexDescr);
             return boxSize;
         }
 
@@ -31416,8 +31417,8 @@ namespace SharpMP4
             boxSize += 24; // bufferSizeDB
             boxSize += 32; // maxBitrate
             boxSize += 32; // avgBitrate
-            boxSize += IsoStream.CalculateClassSize(decSpecificInfo); // decSpecificInfo
-            boxSize += IsoStream.CalculateClassSize(profileLevelIndicationIndexDescr); // profileLevelIndicationIndexDescr
+            boxSize += IsoStream.CalculateDescriptorSize(decSpecificInfo); // decSpecificInfo
+            boxSize += IsoStream.CalculateDescriptorSize(profileLevelIndicationIndexDescr); // profileLevelIndicationIndexDescr
             return boxSize;
         }
     }
@@ -31705,7 +31706,7 @@ namespace SharpMP4
 
             if (predefined == 0)
             {
-                boxSize += stream.ReadClass(out this.qualifiers);
+                boxSize += stream.ReadDescriptor(out this.qualifiers);
             }
             return boxSize;
         }
@@ -31718,7 +31719,7 @@ namespace SharpMP4
 
             if (predefined == 0)
             {
-                boxSize += stream.WriteClass(this.qualifiers);
+                boxSize += stream.WriteDescriptor(this.qualifiers);
             }
             return boxSize;
         }
@@ -31731,7 +31732,7 @@ namespace SharpMP4
 
             if (predefined == 0)
             {
-                boxSize += IsoStream.CalculateClassSize(qualifiers); // qualifiers
+                boxSize += IsoStream.CalculateDescriptorSize(qualifiers); // qualifiers
             }
             return boxSize;
         }
@@ -32186,7 +32187,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadClass(out this.ES);
+            boxSize += stream.ReadDescriptor(out this.ES);
             return boxSize;
         }
 
@@ -32194,7 +32195,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteClass(this.ES);
+            boxSize += stream.WriteDescriptor(this.ES);
             return boxSize;
         }
 
@@ -32202,7 +32203,49 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateClassSize(ES); // ES
+            boxSize += IsoStream.CalculateDescriptorSize(ES); // ES
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MpegSampleEntry() extends SampleEntry ('mp4s'){
+     ES_Descriptor ES;
+     }
+    */
+    public class MpegSampleEntry : SampleEntry
+    {
+        public const string TYPE = "mp4s";
+
+        protected ES_Descriptor ES;
+        public ES_Descriptor _ES { get { return this.ES; } set { this.ES = value; } }
+
+        public MpegSampleEntry() : base("mp4s")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadDescriptor(out this.ES);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteDescriptor(this.ES);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateDescriptorSize(ES); // ES
             return boxSize;
         }
     }

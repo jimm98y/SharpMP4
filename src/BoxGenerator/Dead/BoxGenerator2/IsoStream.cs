@@ -1043,6 +1043,36 @@ namespace SharpMP4
                 throw new Exception("Box not fully read!");
             return box;
         }
+
+        internal static ulong CalculateDescriptorSize<T>(T descriptor) where T : IMp4Serializable
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateDescriptorSize<T>(T[] descriptor) where T : IMp4Serializable
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteDescriptor<T>(T descriptor) where T : IMp4Serializable
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteDescriptor<T>(T[] descriptor) where T : IMp4Serializable
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadDescriptor<T>(out T descriptor) where T : IMp4Serializable
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadDescriptor<T>(out T[] descriptor) where T : IMp4Serializable
+        {
+            throw new NotImplementedException();
+        }
     }
 
 #if !NET7_0_OR_GREATER
