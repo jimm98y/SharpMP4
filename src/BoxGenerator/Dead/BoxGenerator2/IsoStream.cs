@@ -50,7 +50,7 @@ namespace SharpMP4
             return bit;
         }
 
-        public void WriteBit(int value)
+        private void WriteBit(int value)
         {
             int posInByte = 7 - _bitsPosition % 8;
             int bit = (value & 1) << posInByte;
@@ -64,6 +64,64 @@ namespace SharpMP4
                 _currentBytePosition = bytePos;
                 _currentByte = 0;
             }
+        }
+
+        private ulong ReadDescriptorSize(out int sizeOfInstance)
+        {
+            ulong sizeBytes = 0;
+
+            uint i = 0;
+            byte tmp = ReadByte();
+            i++;
+            sizeOfInstance = tmp & 0x7f;
+            while (((uint)tmp >> 7) == 1)
+            {
+                tmp = ReadByte();
+                i++;
+                sizeOfInstance = sizeOfInstance << 7 | tmp & 0x7f;
+            }
+            sizeBytes = i;
+
+            return sizeBytes;
+        }
+
+        private ulong WriteDescriptorSize(int sizeOfInstance)
+        {
+            uint sizeBytesCount = CalculateDescriptorSizeLength(sizeOfInstance);
+
+            int i = 0;
+            byte[] buffer = new byte[sizeBytesCount];
+            while (sizeOfInstance > 0)
+            {
+                i++;
+                if (sizeOfInstance > 0)
+                {
+                    buffer[sizeBytesCount - i] = (byte)(sizeOfInstance & 0x7f);
+                }
+                else
+                {
+                    buffer[sizeBytesCount - i] = 0x80;
+                }
+                sizeOfInstance = sizeOfInstance >> 7;
+            }
+
+            foreach (byte b in buffer)
+            {
+                WriteByte(b);
+            }
+
+            return sizeBytesCount;
+        }
+
+        private static uint CalculateDescriptorSizeLength(int sizeOfInstance)
+        {
+            uint sizeBytesCount = 0;
+            while (sizeOfInstance > 0)
+            {
+                sizeOfInstance = sizeOfInstance >> 7;
+                sizeBytesCount++;
+            }
+            return sizeBytesCount;
         }
 
         internal ulong ReadBoxArrayTillEnd(ulong boxSize, ulong readSize, Box box)
