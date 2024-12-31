@@ -139,7 +139,7 @@ namespace SharpMP4
                     while (true)
                     {
                         Box v;
-                        consumed += ReadBox(out v);
+                        consumed += ReadBox(consumed, readSize, out v);
                         box.Children.Add(v);
                     }
                 }
@@ -153,7 +153,7 @@ namespace SharpMP4
             while(consumed < remaining)
             {
                 Box v;
-                consumed += ReadBox(out v);
+                consumed += ReadBox(consumed, readSize, out v);
                 box.Children.Add(v);
             }
             return consumed;
@@ -174,26 +174,26 @@ namespace SharpMP4
             return CalculateBoxSize(value.Children);
         }
 
-        internal ulong ReadBox(out Box value)
+        internal ulong ReadBox(ulong boxSize, ulong readSize, out Box value)
         {
             var header = ReadBoxHeaderAsync().Result;
             value = ReadBoxAsync(header).Result;
             return header.HeaderSize + header.BoxSize;
         }
 
-        internal ulong ReadBox(out Box[] value)
+        internal ulong ReadBox(ulong boxSize, ulong readSize, out Box[] value)
         {
             throw new NotImplementedException();
         }
 
-        internal ulong ReadClass<T>(T c, out T value) where T : IMp4Serializable
+        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, T c, out T value) where T : IMp4Serializable
         {
-            ulong size = c.ReadAsync(this, 0).Result;
+            ulong size = c.ReadAsync(this, readSize - boxSize).Result;
             value = c;
             return size;
         }
 
-        internal ulong ReadClass<T>(out T[] value) where T : IMp4Serializable, new()
+        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, out T[] value) where T : IMp4Serializable, new()
         {
             throw new NotImplementedException();
         }
