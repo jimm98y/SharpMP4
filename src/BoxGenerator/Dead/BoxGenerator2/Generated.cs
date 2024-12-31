@@ -6752,8 +6752,10 @@ namespace SharpMP4
             unsigned int(16) colour_primaries;
             unsigned int(16) transfer_characteristics;
             unsigned int(16) matrix_coefficients;
-            unsigned int(1)  full_range_flag;
+            if(colour_type == 'nclx') {
+                unsigned int(1)  full_range_flag;
             unsigned int(7)  reserved = 0;
+            }
         }
         else if (colour_type == 'rICC')
         {
@@ -6805,8 +6807,12 @@ namespace SharpMP4
                 boxSize += stream.ReadUInt16(out this.colour_primaries);
                 boxSize += stream.ReadUInt16(out this.transfer_characteristics);
                 boxSize += stream.ReadUInt16(out this.matrix_coefficients);
-                boxSize += stream.ReadBit(out this.full_range_flag);
-                boxSize += stream.ReadBits(7, out this.reserved);
+
+                if (colour_type == IsoStream.FromFourCC("nclx"))
+                {
+                    boxSize += stream.ReadBit(out this.full_range_flag);
+                    boxSize += stream.ReadBits(7, out this.reserved);
+                }
             }
 
             else if (colour_type == IsoStream.FromFourCC("rICC"))
@@ -6832,8 +6838,12 @@ namespace SharpMP4
                 boxSize += stream.WriteUInt16(this.colour_primaries);
                 boxSize += stream.WriteUInt16(this.transfer_characteristics);
                 boxSize += stream.WriteUInt16(this.matrix_coefficients);
-                boxSize += stream.WriteBit(this.full_range_flag);
-                boxSize += stream.WriteBits(7, this.reserved);
+
+                if (colour_type == IsoStream.FromFourCC("nclx"))
+                {
+                    boxSize += stream.WriteBit(this.full_range_flag);
+                    boxSize += stream.WriteBits(7, this.reserved);
+                }
             }
 
             else if (colour_type == IsoStream.FromFourCC("rICC"))
@@ -6859,8 +6869,12 @@ namespace SharpMP4
                 boxSize += 16; // colour_primaries
                 boxSize += 16; // transfer_characteristics
                 boxSize += 16; // matrix_coefficients
-                boxSize += 1; // full_range_flag
-                boxSize += 7; // reserved
+
+                if (colour_type == IsoStream.FromFourCC("nclx"))
+                {
+                    boxSize += 1; // full_range_flag
+                    boxSize += 7; // reserved
+                }
             }
 
             else if (colour_type == IsoStream.FromFourCC("rICC"))
