@@ -37,6 +37,30 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class AppleTszBox() \r\nextends Box('©TSZ') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleNamBox() \r\nextends Box('©nam') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "TODO",
+      "type": "Box",
+      "syntax": "aligned(8) class UuidBox() \r\nextends Box('uuid') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "TODO",
+      "type": "Box",
+      "syntax": "aligned(8) class IodsBox() \r\nextends Box('iods') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleCompilationBox() \r\nextends Box('cpil') {\r\n bit(8) data[];\r\n } "
     }
   ]
 }

@@ -1038,7 +1038,9 @@ namespace SharpMP4
         factory +=
 @"          }
 
-            throw new NotImplementedException(fourCC);
+            //throw new NotImplementedException(fourCC);
+            System.Diagnostics.Debug.WriteLine($""--Unknown box: {fourCC}"");
+            return new UnknownBox(fourCC);
         }";
 
 
@@ -1071,7 +1073,9 @@ namespace SharpMP4
         factory +=
 @"          }
 
-            throw new NotImplementedException(fourCC);
+            //throw new NotImplementedException(fourCC);
+            System.Diagnostics.Debug.WriteLine($""--Unknown entry: {fourCC}"");
+            return new UnknownEntry(fourCC);
         }";
 
         factory += 
@@ -2279,11 +2283,12 @@ namespace SharpMP4
             // fix 4cc
             const string regex = "\\\"[\\w\\s\\!]{4}\\\"";
             var match = Regex.Match(value, regex);
-            if (match.Success)
+            while (match.Success)
             {
                 string inputValue = match.Value;
                 string replaceValue = "IsoStream.FromFourCC(" + inputValue + ")";
                 value = value.Replace(inputValue, replaceValue);
+                match = match.NextMatch();
             }
         }
 

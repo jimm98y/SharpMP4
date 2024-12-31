@@ -26,12 +26,7 @@ namespace SharpMP4
     {
         public CompressedBox(string boxtype) :base(boxtype) {  }
     }
-    public class ICC_profile : IMp4Serializable 
-    {
-        public virtual ulong CalculateSize() { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize) { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> WriteAsync(IsoStream stream) { throw new System.NotImplementedException(); }
-    } // ISO 15076‐1 or ICC.1:2010, or https://github.com/xcorail/metadata-extractor/blob/master/Source/com/drew/metadata/icc/IccReader.java#L50
+    public class ICC_profile : UnknownClass { } // ISO 15076‐1 or ICC.1:2010, or https://github.com/xcorail/metadata-extractor/blob/master/Source/com/drew/metadata/icc/IccReader.java#L50
     public class DRCCoefficientsBasic : UnknownBox { } // ISO/IEC 23003‐4
     public class DRCInstructionsBasic : UnknownBox { } // ISO/IEC 23003‐4
     public class DRCCoefficientsUniDRC : UnknownBox { } // ISO/IEC 23003‐4
@@ -41,12 +36,7 @@ namespace SharpMP4
     {
         public RtpReceptionHintSampleEntry(string boxtype) : base(boxtype) { }
     }
-    public class OperatingPointsRecord : IMp4Serializable
-    {
-        public virtual ulong CalculateSize() { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize) { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> WriteAsync(IsoStream stream) { throw new System.NotImplementedException(); }
-    }
+    public class OperatingPointsRecord : UnknownClass { }
 
     public class MetaDataDatatypeBox : UnknownBox { } // missing info
     public abstract class SampleConstructor : Box { }
@@ -54,24 +44,7 @@ namespace SharpMP4
     public abstract class NALUStartInlineConstructor : Box { }
     public abstract class SampleConstructorFromTrackGroup : Box { }
     public abstract class IPMPControlBox : Box { }
-    public class HEVCTileTierLevelConfigurationRecord : IMp4Serializable 
-    {
-        public virtual ulong CalculateSize() { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize) { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> WriteAsync(IsoStream stream) { throw new System.NotImplementedException(); }
-    }
-
-    public class EVCSliceComponentTrackConfigurationRecord : IMp4Serializable
-    {
-        public virtual ulong CalculateSize() { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize) { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> WriteAsync(IsoStream stream) { throw new System.NotImplementedException(); }
-    }
-
-    public class VVCSubpicIDRewritingInfomationStruct : IMp4Serializable
-    {
-        public virtual ulong CalculateSize() { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize) { throw new System.NotImplementedException(); }
-        public virtual Task<ulong> WriteAsync(IsoStream stream) { throw new System.NotImplementedException(); }
-    }
+    public class HEVCTileTierLevelConfigurationRecord : UnknownClass {  }
+    public class EVCSliceComponentTrackConfigurationRecord : UnknownClass {  }
+    public class VVCSubpicIDRewritingInfomationStruct : UnknownClass { }
 }

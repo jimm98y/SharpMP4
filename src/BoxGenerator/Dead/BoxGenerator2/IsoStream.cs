@@ -1124,7 +1124,7 @@ namespace SharpMP4
         public async Task<Box> ReadBoxAsync(Mp4BoxHeader header)
         {
             var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type));
-            Debug.WriteLine($"--Parsed: {box.FourCC}");
+            //Debug.WriteLine($"--Parsed: {box.FourCC}");
 
             ulong availableSize = 0;
             if (header.BoxSize == 0) 
@@ -1157,7 +1157,7 @@ namespace SharpMP4
         internal ulong ReadEntry(string fourCC, out SampleGroupDescriptionEntry entry)
         {
             var res = BoxFactory.CreateEntry(fourCC);
-            Debug.WriteLine($"--Parsed entry: {fourCC}");
+            //Debug.WriteLine($"--Parsed entry: {fourCC}");
             ulong size = res.ReadAsync(this, 0).Result;
             entry = (SampleGroupDescriptionEntry)res;
             return size;

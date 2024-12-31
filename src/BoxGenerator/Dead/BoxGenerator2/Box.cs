@@ -58,6 +58,15 @@ namespace SharpMP4
     public class UnknownBox : Box
     {
         protected byte[] bytes;
+
+        public UnknownBox()
+        {                
+        }
+
+        public UnknownBox(string boxType) : base(boxType)
+        {
+        }
+
         public byte[] Bytes { get { return bytes; } set { bytes = value; } }
 
         public override async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
@@ -77,6 +86,74 @@ namespace SharpMP4
         public override ulong CalculateSize()
         {
             ulong boxSize = base.CalculateSize();
+            boxSize += (ulong)(bytes.Length * 8);
+            return boxSize;
+        }
+    }
+
+    public class UnknownEntry : IMp4Serializable
+    {
+        protected byte[] bytes;
+
+        public UnknownEntry()
+        {
+        }
+
+        public UnknownEntry(string boxType) 
+        {
+        }
+
+        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
+
+        public virtual async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadBytes(readSize >> 3, out bytes);
+            return boxSize;
+        }
+
+        public virtual async Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteBytes((uint)bytes.Length, bytes);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += (ulong)(bytes.Length * 8);
+            return boxSize;
+        }
+    }
+
+    public class UnknownClass : IMp4Serializable
+    {
+        protected byte[] bytes;
+
+        public UnknownClass()
+        {
+        }
+
+        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
+
+        public virtual async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadBytes(readSize >> 3, out bytes);
+            return boxSize;
+        }
+
+        public virtual async Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteBytes((uint)bytes.Length, bytes);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
             boxSize += (ulong)(bytes.Length * 8);
             return boxSize;
         }

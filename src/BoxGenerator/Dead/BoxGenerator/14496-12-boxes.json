@@ -231,7 +231,7 @@
       "description": "Color information",
       "containers": [ "VisualSampleEntry" ],
       "type": "Box",
-      "syntax": "class ColourInformationBox extends Box('colr'){\n\tunsigned int(32) colour_type;\n\tif (colour_type == 'nclx')\t/* on-screen colours */\n\t{\n\t\tunsigned int(16) colour_primaries;\n\t\tunsigned int(16) transfer_characteristics;\n\t\tunsigned int(16) matrix_coefficients;\n\t\tunsigned int(1)  full_range_flag;\n\t\tunsigned int(7)  reserved = 0;\n\t}\n\telse if (colour_type == 'rICC')\n\t{\n\t\tICC_profile;\t// restricted ICC profile\n\t}\n\telse if (colour_type == 'prof')\n\t{\n\t\tICC_profile;\t// unrestricted ICC profile\n\t}\n}"
+      "syntax": "class ColourInformationBox extends Box('colr'){\n\tunsigned int(32) colour_type;\n\tif (colour_type == 'nclx' || colour_type == 'nclc')\t/* on-screen colours */\n\t{\n\t\tunsigned int(16) colour_primaries;\n\t\tunsigned int(16) transfer_characteristics;\n\t\tunsigned int(16) matrix_coefficients;\n\t\tunsigned int(1)  full_range_flag;\n\t\tunsigned int(7)  reserved = 0;\n\t}\n\telse if (colour_type == 'rICC')\n\t{\n\t\tICC_profile;\t// restricted ICC profile\n\t}\n\telse if (colour_type == 'prof')\n\t{\n\t\tICC_profile;\t// unrestricted ICC profile\n\t}\n}"
     },
     {
       "fourcc": "clli",
