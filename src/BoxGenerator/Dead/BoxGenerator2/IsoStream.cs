@@ -624,13 +624,48 @@ namespace SharpMP4
             }
 
             List<byte> buffer = new List<byte>();
-            byte c;
-            while ((c = ReadByte()) != 0)
+            byte c = ReadByte();
+            int read = 1;
+            while (c != 0 && read < (int)(remaining >> 3))
             {
                 buffer.Add(c);
+                c = ReadByte();
+                read++;
             }
             value = Encoding.UTF8.GetString(buffer.ToArray());
-            return (ulong)(buffer.Count + 1) * 8;
+            return (ulong)read * 8;
+        }
+
+        internal ulong ReadStringSizePrefixed(ulong boxSize, ulong readSize, out string value)
+        {
+            ulong remaining = readSize - boxSize;
+            if (remaining == 0)
+            {
+                value = "";
+                return 0;
+            }
+
+            List<byte> buffer = new List<byte>();
+            int size = ReadByte();
+            int read = 0;
+            while (read < size && (read + 1 < (int)(remaining >> 3)))
+            {
+                buffer.Add(ReadByte());
+                read++;
+            }
+            value = Encoding.UTF8.GetString(buffer.ToArray());
+            return (ulong)(read + 1) * 8;
+        }
+
+        internal ulong WriteStringSizePrefixed(string value)
+        {
+            ulong size = 0;
+            byte[] bytes = Encoding.UTF8.GetBytes(value);
+            if (bytes.Length > 255)
+                throw new ArgumentOutOfRangeException(nameof(value));
+            size += WriteByte((byte)bytes.Length);
+            size += WriteBytes((ulong)bytes.Length, bytes);
+            return size;
         }
 
         internal ulong ReadInt16(out short value)
@@ -1219,7 +1254,7 @@ namespace SharpMP4
         internal static ulong CalculateDescriptorSize(Descriptor descriptor)
         {
             throw new NotImplementedException();
-        }       
+        }
     }
 
 #if !NET7_0_OR_GREATER

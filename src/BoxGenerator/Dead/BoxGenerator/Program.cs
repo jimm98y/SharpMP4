@@ -180,7 +180,7 @@ partial class Program
         LetterOrDigit.Then(Token(c => char.IsLetterOrDigit(c) || c == '_').Labelled("letter or digit or _").ManyString(), (first, rest) => first + rest);
 
     public static Parser<char, string> IdentifierWithSpace =>
-        LetterOrDigit.Then(Token(c => char.IsLetterOrDigit(c) || c == '_' || c == ' ').Labelled("letter or digit or _ or space").ManyString(), (first, rest) => first + rest);
+        Token(c => char.IsLetterOrDigit(c) || c == '_' || c == ' ' || c == '©').Labelled("letter or digit or _ or space").ManyString();
 
     public static Parser<char, string> BoxType =>
         Char('\'').Then(IdentifierWithSpace).Before(Char('\''));
@@ -2392,7 +2392,7 @@ namespace SharpMP4
             { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.ReadBytes((ulong)(num_bytes_constraint_info - 2), " },
             { "bit(8*nal_unit_length)",                 "stream.ReadBytes(nal_unit_length, " },
             { "bit(timeStampLength)",                   "stream.ReadBytes(timeStampLength, " },
-            { "utf8string",                             "stream.ReadStringZeroTerminated(boxSize, readSize, " },
+            { "utf8string",                             "stream.ReadStringSizePrefixed(boxSize, readSize, " },
             { "utfstring",                              "stream.ReadString(" },
             { "utf8list",                               "stream.ReadString(" },
             { "boxstring",                              "stream.ReadString(" },
@@ -2786,7 +2786,7 @@ namespace SharpMP4
             { "unsigned int(8*num_bytes_constraint_info - 2)", "(ulong)(num_bytes_constraint_info - 2)" },
             { "bit(8*nal_unit_length)",                 "(ulong)nal_unit_length * 8" },
             { "bit(timeStampLength)",                   "(ulong)timeStampLength" },
-            { "utf8string",                             "(ulong)value.Length * 8" },
+            { "utf8string",                             "(ulong)(value.Length + 1) * 8" },
             { "utfstring",                              "(ulong)value.Length * 8" },
             { "utf8list",                               "(ulong)value.Length * 8" },
             { "boxstring",                              "(ulong)value.Length * 8" },
@@ -3179,7 +3179,7 @@ namespace SharpMP4
             { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.WriteBytes((ulong)(num_bytes_constraint_info - 2), " },
             { "bit(8*nal_unit_length)",                 "stream.WriteBytes(nal_unit_length, " },
             { "bit(timeStampLength)",                   "stream.WriteBytes(timeStampLength, " },
-            { "utf8string",                             "stream.WriteStringZeroTerminated(" },
+            { "utf8string",                             "stream.WriteStringSizePrefixed(" },
             { "utfstring",                              "stream.WriteString(" },
             { "utf8list",                               "stream.WriteString(" },
             { "boxstring",                              "stream.WriteString(" },

@@ -7,6 +7,18 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class AppleItemListBox() \r\nextends Box('ilst') { \r\n Box boxes[]; \r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleEncoderBox() \r\nextends Box('©too') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleCommentBox() \r\nextends Box('©cmt') {\r\n bit(8) data[];\r\n } "
     }
   ]
 }
