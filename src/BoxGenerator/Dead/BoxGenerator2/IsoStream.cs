@@ -178,7 +178,7 @@ namespace SharpMP4
         {
             var header = ReadBoxHeaderAsync().Result;
             value = ReadBoxAsync(header).Result;
-            return header.HeaderSize + header.BoxSize;
+            return header.BoxSize;
         }
 
         internal ulong ReadBox(ulong boxSize, ulong readSize, out Box[] value)
@@ -283,13 +283,11 @@ namespace SharpMP4
             throw new NotImplementedException();
         }
 
-
-
         internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out byte[] value)
         {
             ulong consumed = 0;
 
-            if (readSize == 0)
+            if (readSize == ulong.MaxValue)
             {
                 List<byte> values = new List<byte>();
                 // consume till the end of the stream
@@ -323,7 +321,7 @@ namespace SharpMP4
         {
             ulong consumed = 0;
 
-            if (readSize == 0)
+            if (readSize == ulong.MaxValue)
             {
                 List<uint> values = new List<uint>();
                 // consume till the end of the stream
@@ -1092,17 +1090,31 @@ namespace SharpMP4
         {
             var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type));
             Debug.WriteLine($"--Parsed: {box.FourCC}");
-            ulong size = await box.ReadAsync(this, header.BoxSize);
 
-            if (size != header.BoxSize && header.BoxSize != 0)
+            ulong availableSize = 0;
+            if (header.BoxSize == 0) 
             {
-                if(size < header.BoxSize)
+                availableSize = ulong.MaxValue;
+            }
+            else 
+            {
+                availableSize = header.BoxSize - header.HeaderSize;
+            }
+
+            ulong size = await box.ReadAsync(this, availableSize);
+
+            if (header.BoxSize != 0 && size != availableSize)
+            {
+                if(size < availableSize)
                 {
                     // TODO: Investigate and fix
-                    Debug.Assert(false);
                     ReadBits((uint)(header.BoxSize - size), out byte[] missing);
+                    throw new Exception("Box not fully read!");
                 }
-                throw new Exception("Box not fully read!");
+                else
+                {
+                    throw new Exception("Box read through!");
+                }
             }
             return box;
         }
@@ -1160,7 +1172,7 @@ namespace SharpMP4
 
             ulong consumed = 0;
 
-            if (readSize == 0)
+            if (readSize == ulong.MaxValue)
             {
                 List<Box> values = new List<Box>();
                 // consume till the end of the stream
@@ -1244,7 +1256,7 @@ namespace SharpMP4
             this.Header = header;
             this.HeaderOffset = headerOffset;
             this.HeaderSize = headerSize;
-            this.BoxSize = header.GetBoxSizeInBits() - headerSize;
+            this.BoxSize = header.GetBoxSizeInBits();
         }
     }
 }
