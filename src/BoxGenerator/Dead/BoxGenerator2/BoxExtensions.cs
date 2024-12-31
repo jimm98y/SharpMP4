@@ -13,7 +13,8 @@ namespace SharpMP4
             if (header.Size == 1)
                 return header.Largesize * 8;
 
-            return header.Size * 8;
+            ulong size = (ulong)header.Size * 8;
+            return size;
         }
     }
 }
