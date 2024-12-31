@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Apple-added.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="14496-23-boxes-added.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

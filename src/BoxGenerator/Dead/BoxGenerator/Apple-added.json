@@ -1,0 +1,12 @@
+﻿{
+  "name": "Boxes",
+  "description": "Boxes (also called atoms)",
+  "entries": [
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleItemListBox() \r\nextends Box('ilst') { \r\n Box boxes[]; \r\n} "
+    }
+  ]
+}

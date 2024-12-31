@@ -765,6 +765,7 @@ partial class Program
             "Opus.json",
             "AV1.json",
             "AVIF.json",
+            "Apple-added.json",
         };
         int success = 0;
         int duplicated = 0;

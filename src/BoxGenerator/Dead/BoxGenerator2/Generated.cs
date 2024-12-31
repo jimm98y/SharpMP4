@@ -120,6 +120,7 @@ namespace SharpMP4
                 case "idat": return new ItemDataBox();
                 case "iinf": return new ItemInfoBox();
                 case "iloc": return new ItemLocationBox();
+                case "ilst": return new AppleItemListBox();
                 case "imda": return new IdentifiedMediaDataBox();
                 case "imdt": return new DataEntryImdaBox();
                 case "imir": return new ImageMirror();
@@ -344,11 +345,12 @@ namespace SharpMP4
                 case "wvtt": return new WVTTSampleEntry();
                 case "xml ": return new XMLBox();
                 case "zoom": return new ZoomTransitionEffectProperty();
+                case "©nam": return new UnknownBox();
+                case "©too": return new UnknownBox();
             }
 
             throw new NotImplementedException(fourCC);
         }
-
         public static IMp4Serializable CreateEntry(string fourCC)
         {
             switch (fourCC)
@@ -37710,6 +37712,50 @@ namespace SharpMP4
             {
                 boxSize += 3 * 16; // layer_size
             }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleItemListBox() 
+    extends Box('ilst') { 
+     Box boxes[]; 
+    } 
+    */
+    public class AppleItemListBox : Box
+    {
+        public const string TYPE = "ilst";
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleItemListBox() : base("ilst")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            // boxSize += stream.ReadBox( out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }

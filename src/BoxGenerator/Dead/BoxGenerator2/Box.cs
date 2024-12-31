@@ -57,19 +57,28 @@ namespace SharpMP4
 
     public class UnknownBox : Box
     {
-        public override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        protected byte[] bytes;
+        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
+
+        public override async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
-            throw new NotImplementedException();
+            ulong boxSize = await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadBytes(readSize >> 3, out bytes);
+            return boxSize;
         }
 
-        public override Task<ulong> WriteAsync(IsoStream stream)
+        public override async Task<ulong> WriteAsync(IsoStream stream)
         {
-            throw new NotImplementedException();
+            ulong boxSize = await base.WriteAsync(stream);
+            boxSize += stream.WriteBytes((uint)bytes.Length, bytes);
+            return boxSize;
         }
 
         public override ulong CalculateSize()
         {
-            throw new NotImplementedException();
+            ulong boxSize = base.CalculateSize();
+            boxSize += (ulong)(bytes.Length * 8);
+            return boxSize;
         }
     }
 }

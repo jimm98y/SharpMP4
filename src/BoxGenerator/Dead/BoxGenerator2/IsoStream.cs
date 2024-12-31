@@ -584,7 +584,7 @@ namespace SharpMP4
         {
             if(string.IsNullOrEmpty(input))
                 return 0;
-            byte[] buffer = Encoding.ASCII.GetBytes(input);
+            byte[] buffer = Encoding.GetEncoding("ISO-8859-1").GetBytes(input);
             if (buffer.Length != 4)
                 throw new Exception("Invalid 4cc!");
             return (uint)(
@@ -603,7 +603,7 @@ namespace SharpMP4
             (byte)(value >> 8 & 0xFF),
             (byte)(value & 0xFF)
         };
-            return Encoding.ASCII.GetString(buffer);
+            return Encoding.GetEncoding("ISO-8859-1").GetString(buffer);
         }
 
         internal ulong ReadBslbf(ulong count, out byte[] value)
@@ -1094,7 +1094,7 @@ namespace SharpMP4
             Debug.WriteLine($"--Parsed: {box.FourCC}");
             ulong size = await box.ReadAsync(this, header.BoxSize);
 
-            if (size != header.BoxSize)
+            if (size != header.BoxSize && header.BoxSize != 0)
             {
                 if(size < header.BoxSize)
                 {
