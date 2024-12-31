@@ -12,7 +12,10 @@ namespace SharpMP4
             switch (fourCC)
             {
                 case "©cmt": return new AppleCommentBox();
+                case "©TIM": return new AppleTimBox();
                 case "©too": return new AppleEncoderBox();
+                case "©TSC": return new AppleTscBox();
+                case "©TSZ": return new AppleTszBox();
                 case "3dpr": return new MVDDepthResolutionBox();
                 case "3sib": return new MVDScalabilityInformationSEIBox();
                 case "a1lx": return new AV1LayeredImageIndexingProperty();
@@ -13685,7 +13688,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            int sample_count = 0; // TODO: taken from the stsz sample_count
+            int sample_count = (int)((readSize - boxSize) >> 3); // should be taken from the stsz sample_count, but we can calculate it from the readSize - 1 byte per sample
 
 
             this.is_leading = new byte[sample_count];
@@ -13706,7 +13709,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            int sample_count = 0; // TODO: taken from the stsz sample_count
+            int sample_count = is_leading.Length;
 
 
             for (int i = 0; i < sample_count; i++)
@@ -13723,7 +13726,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            int sample_count = 0; // TODO: taken from the stsz sample_count
+            int sample_count = is_leading.Length;
 
 
             for (int i = 0; i < sample_count; i++)
@@ -14435,7 +14438,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            int sample_count = 0; // TODO: taken from the stsz sample_count
+            int sample_count = (int)((readSize - boxSize) >> 4); // should be taken from the stsz sample_count, but we can calculate it from the readSize - 2 bytes per sample
 
 
 
@@ -14451,7 +14454,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            int sample_count = 0; // TODO: taken from the stsz sample_count
+            int sample_count = priority.Length;
 
 
 
@@ -14466,7 +14469,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            int sample_count = 0; // TODO: taken from the stsz sample_count
+            int sample_count = priority.Length;
 
 
 
@@ -37821,6 +37824,135 @@ namespace SharpMP4
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public AppleCommentBox() : base("©cmt")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleTimBox() 
+    extends Box('©TIM') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleTimBox : Box
+    {
+        public const string TYPE = "©TIM";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleTimBox() : base("©TIM")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleTscBox() 
+    extends Box('©TSC') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleTscBox : Box
+    {
+        public const string TYPE = "©TSC";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleTscBox() : base("©TSC")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleTszBox() 
+    extends Box('©TSZ') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleTszBox : Box
+    {
+        public const string TYPE = "©TSZ";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleTszBox() : base("©TSZ")
         {
         }
 

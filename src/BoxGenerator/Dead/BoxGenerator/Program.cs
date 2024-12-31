@@ -1263,7 +1263,7 @@ namespace SharpMP4
         cls += "\r\n\tpublic async " + (shouldOverride ? "override " : "virtual ") + "Task<ulong> ReadAsync(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.ReadAsync(stream, readSize);" : "");
 
-        cls = FixMissingMethodCode(b, cls);
+        cls = FixMissingMethodCode(b, cls, MethodType.Read);
 
         foreach (var field in b.Fields)
         {
@@ -1289,7 +1289,7 @@ namespace SharpMP4
         cls += "\r\n\tpublic async " + (shouldOverride ? "override " : "virtual ") + "Task<ulong> WriteAsync(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.WriteAsync(stream);" : "");
 
-        cls = FixMissingMethodCode(b, cls);
+        cls = FixMissingMethodCode(b, cls, MethodType.Write);
 
         foreach (var field in b.Fields)
         {
@@ -1314,7 +1314,7 @@ namespace SharpMP4
         cls += "\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
             (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += base.CalculateSize();" : "");
 
-        cls = FixMissingMethodCode(b, cls);
+        cls = FixMissingMethodCode(b, cls, MethodType.Size);
 
         foreach (var field in b.Fields)
         {
@@ -1408,13 +1408,27 @@ namespace SharpMP4
         }
     }
 
-    private static string FixMissingMethodCode(PseudoClass? box, string cls)
+    private static string FixMissingMethodCode(PseudoClass? box, string cls, MethodType methodType)
     {
-        if (box.BoxName == "DegradationPriorityBox" || box.BoxName == "SampleDependencyTypeBox" || box.BoxName == "SampleDependencyBox")
+        if(box.BoxName == "SampleDependencyBox")
         {
             cls += "\r\n\t\tint sample_count = 0; // TODO: taken from the stsz sample_count\r\n";
         }
-        
+        if (box.BoxName == "SampleDependencyTypeBox")
+        {
+            if(methodType == MethodType.Read)
+                cls += "\r\n\t\tint sample_count = (int)((readSize - boxSize) >> 3); // should be taken from the stsz sample_count, but we can calculate it from the readSize - 1 byte per sample\r\n";
+            else
+                cls += "\r\n\t\tint sample_count = is_leading.Length;\r\n";
+        }
+        if (box.BoxName == "DegradationPriorityBox")
+        {
+            if (methodType == MethodType.Read)
+                cls += "\r\n\t\tint sample_count = (int)((readSize - boxSize) >> 4); // should be taken from the stsz sample_count, but we can calculate it from the readSize - 2 bytes per sample\r\n";
+            else
+                cls += "\r\n\t\tint sample_count = priority.Length;\r\n";
+        }
+
         if (box.BoxName == "DownMixInstructions")
         {
             cls += "\r\n\t\tint baseChannelCount = 0; // TODO: get somewhere";

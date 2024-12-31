@@ -19,6 +19,24 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class AppleCommentBox() \r\nextends Box('©cmt') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleTimBox() \r\nextends Box('©TIM') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleTscBox() \r\nextends Box('©TSC') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleTszBox() \r\nextends Box('©TSZ') {\r\n bit(8) data[];\r\n } "
     }
   ]
 }
