@@ -595,6 +595,28 @@ namespace SharpMP4
 
         internal ulong ReadBytes(ulong length, out byte[] value)
         {
+            ulong consumed = 0;
+
+            if (length == (ulong.MaxValue >> 3))
+            {
+                List<byte> values = new List<byte>();
+                // consume till the end of the stream
+                try
+                {
+                    while (true)
+                    {
+                        byte v;
+                        consumed += ReadUInt8(out v);
+                        values.Add(v);
+                    }
+                }
+                catch (EndOfStreamException)
+                { }
+
+                value = values.ToArray();
+                return consumed;
+            }
+
             value = new byte[length];
             _stream.ReadExactly(value, 0, (int)length);
             return length * 8;
@@ -1171,7 +1193,7 @@ namespace SharpMP4
                 if(size < availableSize)
                 {
                     // TODO: Investigate and fix
-                    ReadBits((uint)(header.BoxSize - size), out byte[] missing);
+                    ReadBits((uint)(availableSize - size), out byte[] missing);
                     //throw new Exception("Box not fully read!");
                     Debug.WriteLine($"--!! Box \'{box.FourCC}\' not fully read!");
                 }
