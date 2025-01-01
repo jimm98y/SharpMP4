@@ -1124,7 +1124,7 @@ namespace SharpMP4
         public async Task<Box> ReadBoxAsync(Mp4BoxHeader header)
         {
             var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type));
-            //Debug.WriteLine($"--Parsed: {box.FourCC}");
+            Debug.WriteLine($"--Parsed: {box.FourCC}");
 
             ulong availableSize = 0;
             if (header.BoxSize == 0) 
@@ -1144,11 +1144,13 @@ namespace SharpMP4
                 {
                     // TODO: Investigate and fix
                     ReadBits((uint)(header.BoxSize - size), out byte[] missing);
-                    throw new Exception("Box not fully read!");
+                    //throw new Exception("Box not fully read!");
+                    Debug.WriteLine($"--!! Box \'{box.FourCC}\' not fully read!");
                 }
                 else
                 {
-                    throw new Exception("Box read through!");
+                    Debug.WriteLine($"--!! Box \'{box.FourCC}\' read through!");
+                    throw new OverflowException("Box read through!");
                 }
             }
             return box;
