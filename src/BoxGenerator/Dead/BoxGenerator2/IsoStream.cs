@@ -314,6 +314,37 @@ namespace SharpMP4
             return (ulong)(count * 8);
         }
 
+        internal ulong ReadUInt8ArraySkip(ulong boxSize, ulong readSize, out byte[] value)
+        {
+            ulong consumed = 0;
+
+            if (readSize == ulong.MaxValue)
+            {
+                List<byte> values = new List<byte>();
+                // consume till the end of the stream
+                try
+                {
+                    while (true)
+                    {
+                        byte v;
+                        consumed += ReadUInt8(out v);
+                        values.Add(v);
+                    }
+                }
+                catch (EndOfStreamException)
+                { }
+
+                value = values.ToArray();
+                return consumed;
+            }
+
+            ulong remaining = readSize - boxSize;
+            ulong count = (ulong)(remaining >> 3);
+            value = new byte[1];
+            _stream.Seek((long)count, SeekOrigin.Current); // optimization for mdat
+            return (ulong)(count * 8);
+        }
+
         internal ulong ReadUInt32ArrayTillEnd(ulong boxSize, ulong readSize, out uint[] value)
         {
             ulong consumed = 0;
@@ -583,10 +614,10 @@ namespace SharpMP4
             if (buffer.Length != 4)
                 throw new Exception("Invalid 4cc!");
             return (uint)(
-                (buffer[0] << 24) +
-                (buffer[1] << 16) +
-                (buffer[2] << 8) +
-                (buffer[3] << 0)
+                ((uint)buffer[0] << 24) +
+                ((uint)buffer[1] << 16) +
+                ((uint)buffer[2] << 8) +
+                ((uint)buffer[3] << 0)
             );
         }
 
@@ -715,8 +746,8 @@ namespace SharpMP4
         internal ulong ReadUInt16(out ushort value)
         {
             value = (ushort)(
-                (ReadByte() << 8) +
-                (ReadByte() << 0)
+                ((ushort)ReadByte() << 8) +
+                ((ushort)ReadByte() << 0)
             );
             return 16;
         }
@@ -724,8 +755,8 @@ namespace SharpMP4
         internal ulong ReadUInt16(out uint value)
         {
             value = (uint)(
-                (ReadByte() << 8) +
-                (ReadByte() << 0)
+                ((uint)ReadByte() << 8) +
+                ((uint)ReadByte() << 0)
             );
             return 16;
         }
@@ -733,9 +764,9 @@ namespace SharpMP4
         internal ulong ReadUInt24(out uint value)
         {
             value = (uint)(
-                (ReadByte() << 16) +
-                (ReadByte() << 8) +
-                (ReadByte() << 0)
+                ((uint)ReadByte() << 16) +
+                ((uint)ReadByte() << 8) +
+                ((uint)ReadByte() << 0)
             );
             return 24;
         }
@@ -743,10 +774,10 @@ namespace SharpMP4
         internal ulong ReadUInt32(out uint value)
         {
             value = (uint)(
-                (ReadByte() << 24) +
-                (ReadByte() << 16) +
-                (ReadByte() << 8) +
-                (ReadByte() << 0)
+                ((uint)ReadByte() << 24) +
+                ((uint)ReadByte() << 16) +
+                ((uint)ReadByte() << 8) +
+                ((uint)ReadByte() << 0)
             );
             return 32;
         }
@@ -754,10 +785,10 @@ namespace SharpMP4
         internal ulong ReadUInt32(out ulong value)
         {
             value = (uint)(
-                (ReadByte() << 24) +
-                (ReadByte() << 16) +
-                (ReadByte() << 8) +
-                (ReadByte() << 0)
+                ((uint)ReadByte() << 24) +
+                ((uint)ReadByte() << 16) +
+                ((uint)ReadByte() << 8) +
+                ((uint)ReadByte() << 0)
             );
             return 32;
         }
@@ -765,12 +796,12 @@ namespace SharpMP4
         internal ulong ReadUInt48(out ulong value)
         {
             value = (ulong)(
-                (ReadByte() << 40) +
-                (ReadByte() << 32) +
-                (ReadByte() << 24) +
-                (ReadByte() << 16) +
-                (ReadByte() << 8) +
-                (ReadByte() << 0)
+                ((ulong)ReadByte() << 40) +
+                ((ulong)ReadByte() << 32) +
+                ((ulong)ReadByte() << 24) +
+                ((ulong)ReadByte() << 16) +
+                ((ulong)ReadByte() << 8) +
+                ((ulong)ReadByte() << 0)
             );
             return 48;
         }
@@ -778,14 +809,14 @@ namespace SharpMP4
         internal ulong ReadUInt64(out ulong value)
         {
             value = (ulong)(
-                (ReadByte() << 56) +
-                (ReadByte() << 48) +
-                (ReadByte() << 40) +
-                (ReadByte() << 32) +
-                (ReadByte() << 24) +
-                (ReadByte() << 16) +
-                (ReadByte() << 8) +
-                (ReadByte() << 0)
+                ((ulong)ReadByte() << 56) +
+                ((ulong)ReadByte() << 48) +
+                ((ulong)ReadByte() << 40) +
+                ((ulong)ReadByte() << 32) +
+                ((ulong)ReadByte() << 24) +
+                ((ulong)ReadByte() << 16) +
+                ((ulong)ReadByte() << 8) +
+                ((ulong)ReadByte() << 0)
             );
             return 64;
         }
