@@ -25,6 +25,8 @@ namespace SharpMP4
         public Box Parent { get { return parent; } set { parent = value; } }
         protected List<Box> children = null;
         public List<Box> Children { get { return children; } set { children = value; } }
+        protected byte[] boxPadding = null;
+        public byte[] BoxPadding { get { return boxPadding; } set { boxPadding = value; } }
 
         public Box() {  }
 

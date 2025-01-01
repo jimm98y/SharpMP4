@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -1194,8 +1195,12 @@ namespace SharpMP4
                 {
                     // TODO: Investigate and fix
                     ReadBits((uint)(availableSize - size), out byte[] missing);
-                    //throw new Exception("Box not fully read!");
-                    Debug.WriteLine($"--!! Box \'{box.FourCC}\' not fully read!");
+                    box.BoxPadding = missing;
+
+                    if(missing.FirstOrDefault(x => x != 0) == default(byte))
+                        Debug.WriteLine($"-Box \'{box.FourCC}\' has extra padding of {missing.Length} zero bytes");
+                    else
+                        throw new Exception("Box not fully read!");
                 }
                 else
                 {
