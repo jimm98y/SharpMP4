@@ -310,11 +310,8 @@ namespace SharpMP4
             ulong remaining = readSize - boxSize;
             int count = (int)(remaining >> 3);
             value = new byte[count];
-            for (int i = 0; i < count; i++)
-            {
-                consumed += ReadUInt8(out value[i]);
-            }
-            return consumed;
+            _stream.ReadExactly(value, 0, count); // optimization for mdat
+            return (ulong)(count * 8);
         }
 
         internal ulong ReadUInt32ArrayTillEnd(ulong boxSize, ulong readSize, out uint[] value)
