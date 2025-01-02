@@ -11,12 +11,19 @@ namespace SharpMP4
         {
             switch (fourCC)
             {
+                case "----": return new CustomBox();
+                case "©alb": return new AppleAlbumBox();
+                case "©ART": return new AppleArtistBox();
                 case "©cmt": return new AppleCommentBox();
-                case "©nam": return new AppleNamBox();
+                case "©cpy": return new AppleCopyrightBox();
+                case "©day": return new AppleRecordingYear2Box();
+                case "©gen": return new AppleGenreBox();
+                case "©nam": return new AppleNameBox();
                 case "©TIM": return new AppleTimBox();
                 case "©too": return new AppleEncoderBox();
                 case "©TSC": return new AppleTscBox();
                 case "©TSZ": return new AppleTszBox();
+                case "©xyz": return new AppleGPSCoordinatesBox();
                 case "3dpr": return new MVDDepthResolutionBox();
                 case "3sib": return new MVDScalabilityInformationSEIBox();
                 case "a1lx": return new AV1LayeredImageIndexingProperty();
@@ -26,6 +33,7 @@ namespace SharpMP4
                 case "a3d3": return new A3DSampleEntry_a3d3(); // TODO: fix duplicate
                 case "a3d4": return new A3DSampleEntry_a3d4(); // TODO: fix duplicate
                 case "a3dC": return new A3DConfigurationBox();
+                case "aART": return new AppleArtist2Box();
                 case "ac-3": return new AudioSampleEntry("ac-3");
                 case "acgl": return new SubpicCommonGroupBox();
                 case "alac": return new AudioSampleEntry("alac");
@@ -35,6 +43,7 @@ namespace SharpMP4
                 case "amgl": return new SubpicMultipleGroupsBox();
                 case "amve": return new AmbientViewingEnvironmentBox();
                 case "assp": return new AlternativeStartupSequencePropertiesBox();
+                case "auth": return new AuthorBox();
                 case "auxC": return new AuxiliaryTypeProperty();
                 case "auxi": return new AuxiliaryTypeInfoBox();
                 case "av01": return new AV1SampleEntry();
@@ -66,6 +75,8 @@ namespace SharpMP4
                 case "cslg": return new CompositionToDecodeBox();
                 case "cstg": return new TrackGroupTypeBox_cstg(); // TODO: fix duplicate
                 case "ctts": return new CompositionOffsetBox();
+                case "dac3": return new AC3SpecificBox();
+                case "desc": return new AppleDescriptionBox();
                 case "dhec": return new DefaultHevcExtractorConstructorBox();
                 case "dimg": return new SingleItemTypeReferenceBox("dimg");
                 case "dimm": return new hintimmediateBytesSent();
@@ -78,6 +89,7 @@ namespace SharpMP4
                 case "drep": return new hintrepeatedBytesSent();
                 case "drmi": return new VisualSampleEntry("drmi");
                 case "drms": return new AudioSampleEntry("drms");
+                case "dscp": return new DescriptionBox();
                 case "dtse": return new AudioSampleEntry("dtse");
                 case "dtsh": return new AudioSampleEntry("dtsh");
                 case "dtsl": return new AudioSampleEntry("dtsl");
@@ -106,6 +118,7 @@ namespace SharpMP4
                 case "frma": return new OriginalFormatBox();
                 case "ftyp": return new FileTypeBox();
                 case "gitn": return new GroupIdToNameBox();
+                case "gmhd": return new GenericMediaHeaderAtom();
                 case "grpl": return new GroupsListBox();
                 case "hdlr": return new HandlerBox();
                 case "hev1": return new HEVCSampleEntry_hev1(); // TODO: fix duplicate
@@ -147,6 +160,7 @@ namespace SharpMP4
                 case "keyi": return new MetaDataInlineKeysPresentBox();
                 case "keys": return new MetaDataKeyTableBox();
                 case "kind": return new KindBox();
+                case "kywd": return new KeywordsBox();
                 case "ldep": return new TierDependencyBox();
                 case "leva": return new LevelAssignmentBox();
                 case "lhe1": return new LHEVCSampleEntry_lhe1(); // TODO: fix duplicate
@@ -198,6 +212,7 @@ namespace SharpMP4
                 case "mvex": return new MovieExtendsBox();
                 case "mvhd": return new MovieHeaderBox();
                 case "mvra": return new MultiviewRelationAttributeBox();
+                case "name": return new AppleNameBox_name(); // TODO: fix duplicate
                 case "nmhd": return new NullMediaHeaderBox();
                 case "npck": return new hintPacketsSentNpck();
                 case "nump": return new hintPacketsSentNump();
@@ -269,6 +284,7 @@ namespace SharpMP4
                 case "stdp": return new DegradationPriorityBox();
                 case "ster": return new StereoVideoGroupBox();
                 case "sthd": return new SubtitleMediaHeaderBox();
+                case "stik": return new AppleMediaTypeBox();
                 case "stmg": return new MVCSubTrackMultiviewGroupBox();
                 case "stpe": return new SuggestedTransitionPeriodProperty();
                 case "stpp": return new XMLSubtitleSampleEntry();
@@ -299,16 +315,20 @@ namespace SharpMP4
                 case "svpr": return new PriorityRangeBox();
                 case "swtc": return new MultiviewGroupRelationBox();
                 case "swtk": return new SwitchableTracks();
+                case "text": return new TextMediaBox();
                 case "tfdt": return new TrackFragmentBaseMediaDecodeTimeBox();
                 case "tfhd": return new TrackFragmentHeaderBox();
                 case "tfra": return new TrackFragmentRandomAccessBox();
                 case "tibr": return new TierBitRateBox();
                 case "tims": return new timescaleentry();
                 case "tiri": return new TierInfoBox();
+                case "titl": return new TitlBox();
                 case "tkhd": return new TrackHeaderBox();
                 case "tlou": return new TrackLoudnessInfo();
                 case "tmax": return new hintmaxrelativetime();
+                case "tmcd": return new TimeCodeBox();
                 case "tmin": return new hintminrelativetime();
+                case "tmpo": return new AppleTempoBox();
                 case "tols": return new TargetOlsProperty();
                 case "totl": return new hintBytesSentTotl();
                 case "tpay": return new hintBytesSentTpay();
@@ -327,6 +347,8 @@ namespace SharpMP4
                 case "tssy": return new timestampsynchrony();
                 case "tstb": return new TileSubTrackGroupBox();
                 case "ttyp": return new TrackTypeBox();
+                case "tves": return new AppleTVEpisodeBox();
+                case "tvsn": return new AppleTVSeasonBox();
                 case "txtC": return new TextConfigBox();
                 case "tyco": return new TypeCombinationBox();
                 case "udes": return new UserDescriptionProperty();
@@ -353,6 +375,7 @@ namespace SharpMP4
                 case "wipe": return new WipeTransitionEffectProperty();
                 case "wvtt": return new WVTTSampleEntry();
                 case "xml ": return new XMLBox();
+                case "Xtra": return new WindowsMediaXtraBox();
                 case "zoom": return new ZoomTransitionEffectProperty();
             }
 
@@ -11656,8 +11679,12 @@ namespace SharpMP4
     public class ItemReferenceBox : FullBox
     {
         public const string TYPE = "iref";
-        public IEnumerable<SingleItemTypeReferenceBox> References { get { return this.children.OfType<SingleItemTypeReferenceBox>(); } }
-        public IEnumerable<SingleItemTypeReferenceBoxLarge> References0 { get { return this.children.OfType<SingleItemTypeReferenceBoxLarge>(); } }
+
+        protected SingleItemTypeReferenceBox[] references;
+        public SingleItemTypeReferenceBox[] References { get { return this.references; } set { this.references = value; } }
+
+        protected SingleItemTypeReferenceBoxLarge[] references0;
+        public SingleItemTypeReferenceBoxLarge[] References0 { get { return this.references0; } set { this.references0 = value; } }
 
         public ItemReferenceBox(byte version = 0) : base("iref", version, 0)
         {
@@ -11670,12 +11697,12 @@ namespace SharpMP4
 
             if (version == 0)
             {
-                // boxSize += stream.ReadBox(boxSize, readSize,  out this.references); 
+                boxSize += stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Header.Type)), out this.references);
             }
 
             else if (version == 1)
             {
-                // boxSize += stream.ReadBox(boxSize, readSize,  out this.references0); 
+                boxSize += stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Header.Type)), out this.references0);
             }
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -11688,12 +11715,12 @@ namespace SharpMP4
 
             if (version == 0)
             {
-                // boxSize += stream.WriteBox( this.references); 
+                boxSize += stream.WriteBox(this.references);
             }
 
             else if (version == 1)
             {
-                // boxSize += stream.WriteBox( this.references0); 
+                boxSize += stream.WriteBox(this.references0);
             }
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
@@ -11706,12 +11733,12 @@ namespace SharpMP4
 
             if (version == 0)
             {
-                // boxSize += IsoStream.CalculateBoxSize(references); // references
+                boxSize += IsoStream.CalculateBoxSize(references); // references
             }
 
             else if (version == 1)
             {
-                // boxSize += IsoStream.CalculateBoxSize(references0); // references0
+                boxSize += IsoStream.CalculateBoxSize(references0); // references0
             }
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
@@ -38027,19 +38054,449 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class AppleNamBox() 
+    aligned(8) class AppleNameBox() 
     extends Box('©nam') {
      bit(8) data[];
      } 
     */
-    public class AppleNamBox : Box
+    public class AppleNameBox : Box
     {
         public const string TYPE = "©nam";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleNamBox() : base("©nam")
+        public AppleNameBox() : base("©nam")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleAlbumBox() 
+    extends Box('©alb') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleAlbumBox : Box
+    {
+        public const string TYPE = "©alb";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleAlbumBox() : base("©alb")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleArtistBox() 
+    extends Box('©ART') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleArtistBox : Box
+    {
+        public const string TYPE = "©ART";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleArtistBox() : base("©ART")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleArtist2Box() 
+    extends Box('aART') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleArtist2Box : Box
+    {
+        public const string TYPE = "aART";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleArtist2Box() : base("aART")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleCopyrightBox() 
+    extends Box('©cpy') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleCopyrightBox : Box
+    {
+        public const string TYPE = "©cpy";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleCopyrightBox() : base("©cpy")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleRecordingYear2Box() 
+    extends Box('©day') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleRecordingYear2Box : Box
+    {
+        public const string TYPE = "©day";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleRecordingYear2Box() : base("©day")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleGenreBox() 
+    extends Box('©gen') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleGenreBox : Box
+    {
+        public const string TYPE = "©gen";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleGenreBox() : base("©gen")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleGPSCoordinatesBox() 
+    extends Box('©xyz') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleGPSCoordinatesBox : Box
+    {
+        public const string TYPE = "©xyz";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleGPSCoordinatesBox() : base("©xyz")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleCompilationBox() 
+    extends Box('cpil') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleCompilationBox : Box
+    {
+        public const string TYPE = "cpil";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleCompilationBox() : base("cpil")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleNameBox() 
+    extends Box('name') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleNameBox_name : Box
+    {
+        public const string TYPE = "name";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleNameBox_name() : base("name")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleDescriptionBox() 
+    extends Box('desc') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleDescriptionBox : Box
+    {
+        public const string TYPE = "desc";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleDescriptionBox() : base("desc")
         {
         }
 
@@ -38156,19 +38613,578 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class AppleCompilationBox() 
-    extends Box('cpil') {
+    aligned(8) class TitlBox() 
+    extends Box('titl') {
      bit(8) data[];
      } 
     */
-    public class AppleCompilationBox : Box
+    public class TitlBox : Box
     {
-        public const string TYPE = "cpil";
+        public const string TYPE = "titl";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleCompilationBox() : base("cpil")
+        public TitlBox() : base("titl")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AuthorBox() 
+    extends Box('auth') {
+     bit(8) data[];
+     } 
+    */
+    public class AuthorBox : Box
+    {
+        public const string TYPE = "auth";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AuthorBox() : base("auth")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TextMediaBox() 
+    extends Box('text') {
+     bit(8) data[];
+     } 
+    */
+    public class TextMediaBox : Box
+    {
+        public const string TYPE = "text";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public TextMediaBox() : base("text")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class WindowsMediaXtraBox() 
+    extends Box('Xtra') {
+     bit(8) data[];
+     } 
+    */
+    public class WindowsMediaXtraBox : Box
+    {
+        public const string TYPE = "Xtra";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public WindowsMediaXtraBox() : base("Xtra")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AC3SpecificBox() 
+    extends Box('dac3') {
+     bit(8) data[];
+     } 
+    */
+    public class AC3SpecificBox : Box
+    {
+        public const string TYPE = "dac3";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AC3SpecificBox() : base("dac3")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class DescriptionBox() 
+    extends Box('dscp') {
+     bit(8) data[];
+     } 
+    */
+    public class DescriptionBox : Box
+    {
+        public const string TYPE = "dscp";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public DescriptionBox() : base("dscp")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class GenericMediaHeaderAtom() 
+    extends Box('gmhd') {
+     bit(8) data[];
+     } 
+    */
+    public class GenericMediaHeaderAtom : Box
+    {
+        public const string TYPE = "gmhd";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public GenericMediaHeaderAtom() : base("gmhd")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class KeywordsBox() 
+    extends Box('kywd') {
+     bit(8) data[];
+     } 
+    */
+    public class KeywordsBox : Box
+    {
+        public const string TYPE = "kywd";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public KeywordsBox() : base("kywd")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleMediaTypeBox() 
+    extends Box('stik') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleMediaTypeBox : Box
+    {
+        public const string TYPE = "stik";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleMediaTypeBox() : base("stik")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TimeCodeBox() 
+    extends Box('tmcd') {
+     bit(8) data[];
+     } 
+    */
+    public class TimeCodeBox : Box
+    {
+        public const string TYPE = "tmcd";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public TimeCodeBox() : base("tmcd")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleTempoBox() 
+    extends Box('tmpo') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleTempoBox : Box
+    {
+        public const string TYPE = "tmpo";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleTempoBox() : base("tmpo")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleTVEpisodeBox() 
+    extends Box('tves') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleTVEpisodeBox : Box
+    {
+        public const string TYPE = "tves";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleTVEpisodeBox() : base("tves")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleTVSeasonBox() 
+    extends Box('tvsn') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleTVSeasonBox : Box
+    {
+        public const string TYPE = "tvsn";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleTVSeasonBox() : base("tvsn")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class CustomBox() 
+    extends Box('----') {
+     bit(8) data[];
+     } 
+    */
+    public class CustomBox : Box
+    {
+        public const string TYPE = "----";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public CustomBox() : base("----")
         {
         }
 

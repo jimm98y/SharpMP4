@@ -178,8 +178,58 @@ namespace SharpMP4
         internal ulong ReadBox(ulong boxSize, ulong readSize, out Box value)
         {
             var header = ReadBoxHeaderAsync().Result;
-            value = ReadBoxAsync(header).Result;
+            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type));
+            ReadBoxAsync(header, box).Wait();
+            value = box;
             return header.BoxSize;
+        }
+
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, out T value) where T: Box
+        {
+            var header = ReadBoxHeaderAsync().Result;
+            var box = factory(header);
+            ReadBoxAsync(header, box).Wait();
+            value = (T)box;
+            return header.BoxSize;
+        }
+
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, out T[] value)  where T: Box
+        {
+            var boxes = new List<T>();
+
+            ulong consumed = 0;
+
+            if (readSize == 0)
+            {
+                List<Box> values = new List<Box>();
+                // consume till the end of the stream
+                try
+                {
+                    while (true)
+                    {
+                        T v;
+                        consumed += ReadBox<T>(consumed, readSize, factory, out v);
+                        boxes.Add(v);
+                    }
+
+                }
+                catch (EndOfStreamException)
+                { }
+
+                value = boxes.ToArray();
+
+                return consumed;
+            }
+
+            ulong remaining = readSize - boxSize;
+            while (consumed < remaining)
+            {
+                T v;
+                consumed += ReadBox<T>(consumed, readSize, factory, out v);
+                boxes.Add(v);
+            }
+            value = boxes.ToArray();
+            return consumed;
         }
 
         internal ulong ReadBox(ulong boxSize, ulong readSize, out Box[] value)
@@ -1175,8 +1225,13 @@ namespace SharpMP4
         public async Task<Box> ReadBoxAsync(Mp4BoxHeader header)
         {
             var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type));
-            Debug.WriteLine($"--Parsed: {box.FourCC}");
+            await ReadBoxAsync(header, box);
+            return box;
+        }
 
+        private async Task ReadBoxAsync(Mp4BoxHeader header, Box box)
+        {
+            Debug.WriteLine($"--Parsed box: {box.FourCC}");
             ulong availableSize = 0;
             if (header.BoxSize == 0) 
             {
@@ -1208,13 +1263,12 @@ namespace SharpMP4
                     throw new OverflowException("Box read through!");
                 }
             }
-            return box;
         }
 
         internal ulong ReadEntry(string fourCC, out SampleGroupDescriptionEntry entry)
         {
             var res = BoxFactory.CreateEntry(fourCC);
-            //Debug.WriteLine($"--Parsed entry: {fourCC}");
+            Debug.WriteLine($"--Parsed entry: {fourCC}");
             ulong size = res.ReadAsync(this, 0).Result;
             entry = (SampleGroupDescriptionEntry)res;
             return size;

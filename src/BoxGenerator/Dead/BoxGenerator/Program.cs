@@ -180,7 +180,7 @@ partial class Program
         LetterOrDigit.Then(Token(c => char.IsLetterOrDigit(c) || c == '_').Labelled("letter or digit or _").ManyString(), (first, rest) => first + rest);
 
     public static Parser<char, string> IdentifierWithSpace =>
-        Token(c => char.IsLetterOrDigit(c) || c == '_' || c == ' ' || c == '©').Labelled("letter or digit or _ or space").ManyString();
+        Token(c => char.IsLetterOrDigit(c) || c == '_' || c == ' ' || c == '©' || c == '-').Labelled("letter or digit or _ or space").ManyString();
 
     public static Parser<char, string> BoxType =>
         Char('\'').Then(IdentifierWithSpace).Before(Char('\''));
@@ -765,7 +765,7 @@ partial class Program
             "Opus.json",
             "AV1.json",
             "AVIF.json",
-            "Apple-added.json",
+            "Boxes-added.json",
         };
         int success = 0;
         int duplicated = 0;
@@ -1224,7 +1224,7 @@ namespace SharpMP4
             ctorContent = "\t\tthis.type = IsoStream.FromFourCC(boxtype);\r\n\t\tthis.usertype = extended_type;\r\n";
         }
 
-        bool hasBoxes = fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit";
+        bool hasBoxes = fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "ItemReferenceBox";
         bool hasDescriptors = fields.Select(x => GetReadMethod(x.Type).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry";
 
         foreach (var field in fields)
@@ -1736,7 +1736,7 @@ namespace SharpMP4
 
                 string readMethod = GetReadMethod((field as PseudoField)?.Type);
                 if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox"
-                    && b.BoxName != "ViewPriorityEntry" && b.BoxName != "MultiviewGroupEntry" && b.BoxName != "ScalableGroupEntry")
+                    && b.BoxName != "ViewPriorityEntry" && b.BoxName != "MultiviewGroupEntry" && b.BoxName != "ScalableGroupEntry" && b.BoxName != "ItemReferenceBox")
                 {
                     string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
                     string ttttt = tt.Replace("[]", "");
@@ -2016,7 +2016,7 @@ namespace SharpMP4
             boxSize = "";
 
         // comment out all ReadBox/ReadDescriptor, WriteBox/WriteDescriptor and Calculate* methods
-        if (((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit") || (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox")
+        if (((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit") || (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ItemReferenceBox")
         {
             spacing += "// ";
         }
@@ -2489,10 +2489,10 @@ namespace SharpMP4
             { "GroupIdToNameBox",                       "stream.ReadBox(boxSize, readSize, " },
             { "base64string",                           "stream.ReadString(" },
             { "ProtectionSchemeInfoBox",                "stream.ReadBox(boxSize, readSize, " },
-            { "SingleItemTypeReferenceBox",             "stream.ReadBox(boxSize, readSize, " },
-            { "SingleItemTypeReferenceBox[]",           "stream.ReadBox(boxSize, readSize, " },
-            { "SingleItemTypeReferenceBoxLarge",        "stream.ReadBox(boxSize, readSize, " },
-            { "SingleItemTypeReferenceBoxLarge[]",      "stream.ReadBox(boxSize, readSize, " },
+            { "SingleItemTypeReferenceBox",             "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Header.Type)),  " },
+            { "SingleItemTypeReferenceBox[]",           "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Header.Type)),  " },
+            { "SingleItemTypeReferenceBoxLarge",        "stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Header.Type)),  " },
+            { "SingleItemTypeReferenceBoxLarge[]",      "stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Header.Type)),  " },
             { "HandlerBox(handler_type)",               "stream.ReadBox(boxSize, readSize, " },
             { "PrimaryItemBox",                         "stream.ReadBox(boxSize, readSize, " },
             { "DataInformationBox",                     "stream.ReadBox(boxSize, readSize, " },
