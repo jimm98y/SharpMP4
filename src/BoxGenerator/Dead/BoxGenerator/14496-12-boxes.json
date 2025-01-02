@@ -1485,7 +1485,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class MetaDataKeyTableBox extends Box('keys') { \n\tMetaDataKeyBox[];\n}"
+      "syntax": "class MetaDataKeyTableBox extends FullBox('keys') { \r\n        unsigned int(32) entry_count;\r\n        MetaDataKeyBox[];\r\n    }"
     },
     {
       "fourcc": "uri ",

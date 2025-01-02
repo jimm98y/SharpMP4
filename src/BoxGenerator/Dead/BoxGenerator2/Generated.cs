@@ -12222,6 +12222,7 @@ namespace SharpMP4
         public ItemReferenceBox ItemRefs { get { return this.children.OfType<ItemReferenceBox>().FirstOrDefault(); } }
         public ItemDataBox ItemData { get { return this.children.OfType<ItemDataBox>().FirstOrDefault(); } }
         public IEnumerable<Box> OtherBoxes { get { return this.children.OfType<Box>(); } }
+        public bool IsQuickTime { get; set; } = false;
 
         public MetaBox(string handler_type = "") : base("meta", 0, 0)
         {
@@ -12230,7 +12231,21 @@ namespace SharpMP4
         public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream, readSize);
+            stream.ReadBytes(20, out byte[] lookahead);
+            if (lookahead[4] == 'h' && lookahead[5] == 'd' && lookahead[6] == 'l' && lookahead[7] == 'r' &&
+                lookahead[16] == 'm' && lookahead[17] == 'd' && lookahead[18] == 't' && lookahead[19] == 'a')
+            {
+                IsQuickTime = true;
+            }
+            else
+            {
+                IsQuickTime = false;
+            }
+            stream.UnreadBytes(20, lookahead);
+            if (!IsQuickTime)
+            {
+                boxSize += await base.ReadAsync(stream, readSize);
+            }
             // boxSize += stream.ReadBox(boxSize, readSize,  out this.theHandler); 
             // boxSize += stream.ReadBox(boxSize, readSize,  out this.primary_resource); // optional
             // boxSize += stream.ReadBox(boxSize, readSize,  out this.file_locations); // optional
@@ -12248,7 +12263,7 @@ namespace SharpMP4
         public async override Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
+            if (IsQuickTime) boxSize += await base.WriteAsync(stream);
             // boxSize += stream.WriteBox( this.theHandler); 
             // boxSize += stream.WriteBox( this.primary_resource); // optional
             // boxSize += stream.WriteBox( this.file_locations); // optional
@@ -12266,7 +12281,7 @@ namespace SharpMP4
         public override ulong CalculateSize()
         {
             ulong boxSize = 0;
-            boxSize += base.CalculateSize();
+            if (IsQuickTime) boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(theHandler); // theHandler
             // boxSize += IsoStream.CalculateBoxSize(primary_resource); // primary_resource
             // boxSize += IsoStream.CalculateBoxSize(file_locations); // file_locations
@@ -16891,13 +16906,17 @@ namespace SharpMP4
 
 
     /*
-    class MetaDataKeyTableBox extends Box('keys') { 
-        MetaDataKeyBox[];
-    }
+    class MetaDataKeyTableBox extends FullBox('keys') { 
+            unsigned int(32) entry_count;
+            MetaDataKeyBox[];
+        }
     */
-    public class MetaDataKeyTableBox : Box
+    public class MetaDataKeyTableBox : FullBox
     {
         public const string TYPE = "keys";
+
+        protected uint entry_count;
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
         public IEnumerable<MetaDataKeyBox> _MetaDataKeyBox { get { return this.children.OfType<MetaDataKeyBox>(); } }
 
         public MetaDataKeyTableBox() : base("keys")
@@ -16908,6 +16927,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.entry_count);
             // boxSize += stream.ReadBox(boxSize, readSize,  out this.MetaDataKeyBox); 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -16917,6 +16937,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt32(this.entry_count);
             // boxSize += stream.WriteBox( this.MetaDataKeyBox); 
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
@@ -16926,7 +16947,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(MetaDataKeyBox); // MetaDataKeyBox
+            boxSize += 32; // entry_count
+                           // boxSize += IsoStream.CalculateBoxSize(MetaDataKeyBox); // MetaDataKeyBox
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }

@@ -1312,6 +1312,11 @@ namespace SharpMP4
         {
             throw new NotImplementedException();
         }
+
+        internal void UnreadBytes(int count, byte[] lookahead)
+        {
+            _stream.Seek(-20, SeekOrigin.Current);
+        }
     }
 
 #if !NET7_0_OR_GREATER

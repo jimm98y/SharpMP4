@@ -1236,6 +1236,10 @@ namespace SharpMP4
         {
             cls += "\r\n" + "protected List<TrunEntry> entries;  \r\n        public List<TrunEntry> Entries { get { return this.entries; } set { this.entries = value; } }";
         }
+        else if(b.BoxName == "MetaBox")
+        {
+            cls += "\r\npublic bool IsQuickTime { get; set; } = false;";
+        }
 
         string ctorParams = "";
         if (!string.IsNullOrEmpty(b.ClassType) || (b.Extended != null && b.Extended.Parameters != null))
@@ -1264,8 +1268,18 @@ namespace SharpMP4
         cls += $"\t}}\r\n";
 
         bool shouldOverride = (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName)) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier";
-        cls += "\r\n\tpublic async " + (shouldOverride ? "override " : "virtual ") + "Task<ulong> ReadAsync(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;" +
-            (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.ReadAsync(stream, readSize);" : "");
+        cls += "\r\n\tpublic async " + (shouldOverride ? "override " : "virtual ") + "Task<ulong> ReadAsync(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;";
+
+
+        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
+        {
+            string baseRead = "\r\n\t\tboxSize += await base.ReadAsync(stream, readSize);";
+            if(b.BoxName == "MetaBox")
+            {
+                baseRead = "\r\n\t\tstream.ReadBytes(20, out byte[] lookahead);\r\n            if (lookahead[4] == 'h' && lookahead[5] == 'd' && lookahead[6] == 'l' && lookahead[7] == 'r' &&\r\n                lookahead[16] == 'm' && lookahead[17] == 'd' && lookahead[18] == 't' && lookahead[19] == 'a')\r\n            {\r\n                IsQuickTime = true;\r\n            }\r\n            else\r\n            {\r\n                IsQuickTime = false;\r\n            }\r\n            stream.UnreadBytes(20, lookahead);\r\n            if (!IsQuickTime)\r\n            {\r\n                boxSize += await base.ReadAsync(stream, readSize);\r\n            }";
+            }
+            cls += baseRead;
+        }
 
         cls = FixMissingMethodCode(b, cls, MethodType.Read);
 
@@ -1290,8 +1304,17 @@ namespace SharpMP4
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
 
-        cls += "\r\n\tpublic async " + (shouldOverride ? "override " : "virtual ") + "Task<ulong> WriteAsync(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;" +
-            (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += await base.WriteAsync(stream);" : "");
+        cls += "\r\n\tpublic async " + (shouldOverride ? "override " : "virtual ") + "Task<ulong> WriteAsync(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;";
+
+        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
+        {
+            string baseWrite = "\r\n\t\tboxSize += await base.WriteAsync(stream);";
+            if (b.BoxName == "MetaBox")
+            {
+                baseWrite = "\r\n\t\tif(IsQuickTime) boxSize += await base.WriteAsync(stream);";
+            }
+            cls += baseWrite;
+        }
 
         cls = FixMissingMethodCode(b, cls, MethodType.Write);
 
@@ -1315,8 +1338,17 @@ namespace SharpMP4
 
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
-        cls += "\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;" +
-            (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) ? "\r\n\t\tboxSize += base.CalculateSize();" : "");
+        cls += "\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;";
+
+        if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
+        {
+            string baseSize = "\r\n\t\tboxSize += base.CalculateSize();";
+            if (b.BoxName == "MetaBox")
+            {
+                baseSize = "\r\n\t\tif(IsQuickTime) boxSize += base.CalculateSize();";
+            }
+            cls += baseSize;
+        }
 
         cls = FixMissingMethodCode(b, cls, MethodType.Size);
 
