@@ -1307,7 +1307,16 @@ namespace SharpMP4
             descriptor = DescriptorFactory.CreateDescriptor(tag);
             ulong readInstanceSizeBits = descriptor.ReadAsync(this, sizeOfInstanceBits).Result;
             if (readInstanceSizeBits != sizeOfInstanceBits)
-                throw new Exception("Descriptor not fully read!");
+            {
+                // TODO: Investigate and fix
+                ReadBits((uint)(sizeOfInstanceBits - readInstanceSizeBits), out byte[] missing);
+                descriptor.DescriptorPadding = missing;
+
+                if (missing.FirstOrDefault(x => x != 0) == default(byte))
+                    Debug.WriteLine($"-Descriptor \'{tag}\' has extra padding of {missing.Length} zero bytes");
+                else
+                    Debug.WriteLine($"Descriptor {tag} not fully read!");
+            }
             size += sizeOfInstanceBits;
             return size;
         }

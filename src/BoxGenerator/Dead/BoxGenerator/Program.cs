@@ -2208,7 +2208,7 @@ namespace SharpMP4
                         {
                             variable = "num_sublayers - 2";
                         }
-                        else
+                        else if (parts[1] != " i< numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0")
                         {
                             throw new Exception();
                         }
@@ -2301,7 +2301,8 @@ namespace SharpMP4
         {
             if (!((parts[0].Contains("0") && !parts[1].Contains("=")) || (parts[0].Contains("0") && parts[1].Contains("_minus1") && parts[1].Contains("="))) &&
                 parts[1] != " i >= 0" &&
-                parts[1] != " j<=8 && num_sublayers > 1")
+                parts[1] != " j<=8 && num_sublayers > 1" && 
+                parts[1] != " i< numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0")
                 throw new Exception();
         }
         

@@ -83,6 +83,8 @@ namespace SharpMP4
         protected ulong sizeOfInstance;
         public ulong SizeOfInstance {  get { return sizeOfInstance; } set {  sizeOfInstance = value; } }
 
+        public byte[] DescriptorPadding { get; internal set; }
+
         public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             return Task.FromResult((ulong)0);

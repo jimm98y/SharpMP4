@@ -3485,7 +3485,7 @@ namespace SharpMP4
     unsigned int(2) lengthSizeMinusOne;  
     bit(1) reserved = '0'b; 
     unsigned int(7) numOfSequenceParameterSets; 
-    for (i=0; i< numOfSequenceParameterSets; i++) { 
+    for (i=0; i< numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++) { 
     unsigned int(16) sequenceParameterSetLength ; 
       bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
      } 
@@ -3559,9 +3559,9 @@ namespace SharpMP4
             boxSize += stream.ReadBit(out this.reserved0);
             boxSize += stream.ReadBits(7, out this.numOfSequenceParameterSets);
 
-            this.sequenceParameterSetLength = new ushort[numOfSequenceParameterSets];
-            this.sequenceParameterSetNALUnit = new byte[numOfSequenceParameterSets][];
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            this.sequenceParameterSetLength = new ushort[0];
+            this.sequenceParameterSetNALUnit = new byte[0][];
+            for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
             {
                 boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
                 boxSize += stream.ReadBytes(sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
@@ -3591,7 +3591,7 @@ namespace SharpMP4
             boxSize += stream.WriteBit(this.reserved0);
             boxSize += stream.WriteBits(7, this.numOfSequenceParameterSets);
 
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
             {
                 boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
                 boxSize += stream.WriteBytes(sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
@@ -3619,7 +3619,7 @@ namespace SharpMP4
             boxSize += 1; // reserved0
             boxSize += 7; // numOfSequenceParameterSets
 
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
             {
                 boxSize += 16; // sequenceParameterSetLength
                 boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
