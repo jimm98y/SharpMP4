@@ -977,6 +977,15 @@ namespace SharpMP4
             if (!fourccEntries.ContainsKey(type))
                 fourccEntries.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
         }
+        string[] sampleEntryTypes = new string[]
+        {
+            "mp4s"
+        };
+        foreach (var type in sampleEntryTypes)
+        {
+            if (!fourccEntries.ContainsKey(type))
+                fourccEntries.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value });
+        }
         string[] referenceBox = new string[]
         {
             "dimg"

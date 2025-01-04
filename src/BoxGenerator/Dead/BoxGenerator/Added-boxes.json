@@ -18,6 +18,12 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
+      "syntax": "aligned(8) class AppleWrtBox() \r\nextends Box('©wrt') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
       "syntax": "aligned(8) class AppleCommentBox() \r\nextends Box('©cmt') {\r\n bit(8) data[];\r\n } "
     },
     {
@@ -199,6 +205,60 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class AppleTVSeasonBox() \r\nextends Box('tvsn') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class HdvdBox() \r\nextends Box('hdvd') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class SyncBox() \r\nextends Box('sync') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class DiskBox() \r\nextends Box('disk') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class HintBox() \r\nextends Box('hint') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class WideBox() \r\nextends Box('wide') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class FielBox() \r\nextends Box('fiel') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class CtypBox() \r\nextends Box('CTYP') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class BcabBox() \r\nextends Box('BCAB') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class Amf0Box() \r\nextends Box('amf0') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
