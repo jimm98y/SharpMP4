@@ -762,10 +762,10 @@ partial class Program
             "23008-12-sample-groups.json",
             "14496-1-boxes-added.json",
             "14496-3-boxes-added.json",
-            "Opus.json",
-            "AV1.json",
-            "AVIF.json",
-            "Boxes-added.json",
+            "Opus-boxes.json",
+            "AV1-boxes.json",
+            "AVIF-boxes.json",
+            "Added-boxes.json",
         };
         int success = 0;
         int duplicated = 0;
@@ -777,9 +777,9 @@ partial class Program
 
         foreach (var file in jsonFiles)
         {
-            ParsedBoxType parsedBoxType = ParsedBoxType.Box;
-            if (file.Contains("-groups"))
-                parsedBoxType = ParsedBoxType.Group;
+            ParsedBoxType parsedBoxType = ParsedBoxType.Group;
+            if (file.Contains("-boxes"))
+                parsedBoxType = ParsedBoxType.Box;
 
             using (var json = File.OpenRead(file))
             using (JsonDocument document = JsonDocument.Parse(json, new JsonDocumentOptions()))
@@ -965,8 +965,8 @@ namespace SharpMP4
         };
         foreach(var type in audioSampleEntryTypes)
         {
-            if (!fourccBoxes.ContainsKey(type))
-                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value });
+            if (!fourccEntries.ContainsKey(type))
+                fourccEntries.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value });
         }
         string[] visualSampleEntryTypes = new string[]
         {
@@ -974,8 +974,8 @@ namespace SharpMP4
         };
         foreach (var type in visualSampleEntryTypes)
         {
-            if (!fourccBoxes.ContainsKey(type))
-                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
+            if (!fourccEntries.ContainsKey(type))
+                fourccEntries.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
         }
         string[] referenceBox = new string[]
         {
@@ -1015,10 +1015,6 @@ namespace SharpMP4
                 if (
                     item.Value.First().BoxName == "MovieBox" ||
                     item.Value.First().BoxName == "MovieFragmentBox" ||
-                    item.Value.First().BoxName == "AVCMVCSampleEntry" ||
-                    item.Value.First().BoxName == "AVC2MVCSampleEntry" ||
-                    item.Value.First().BoxName == "AVCMVCSampleEntry_avc3" ||
-                    item.Value.First().BoxName == "AVC2MVCSampleEntry_avc4" ||
                     item.Value.First().BoxName == "SegmentIndexBox" ||
                     item.Value.First().BoxName == "trackhintinformation" ||
                     item.Value.First().BoxName == "ViewPriorityBox" ||
@@ -1070,7 +1066,26 @@ namespace SharpMP4
             }
             else
             {
-                factory += $"               case \"{item.Key}\": throw new NotSupportedException(\"\'{item.Key}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n";
+                if (
+                    item.Value.First().BoxName == "MovieBox" ||
+                    item.Value.First().BoxName == "MovieFragmentBox" ||
+                    item.Value.First().BoxName == "AVCMVCSampleEntry" ||
+                    item.Value.First().BoxName == "AVC2MVCSampleEntry" ||
+                    item.Value.First().BoxName == "AVCMVCSampleEntry_avc3" ||
+                    item.Value.First().BoxName == "AVC2MVCSampleEntry_avc4" ||
+                    item.Value.First().BoxName == "SegmentIndexBox" ||
+                    item.Value.First().BoxName == "trackhintinformation" ||
+                    item.Value.First().BoxName == "ViewPriorityBox" ||
+                    item.Value.First().BoxName == "rtpmoviehintinformation"
+                    )
+                {
+                    string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
+                    factory += $"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n";
+                }
+                else
+                {
+                    factory += $"               case \"{item.Key}\": throw new NotSupportedException(\"\'{item.Key}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n";
+                }
             }
         }
 
@@ -2525,14 +2540,14 @@ namespace SharpMP4
             { "EVCDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, new EVCDecoderConfigurationRecord(), " },
             { "VvcDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, new VvcDecoderConfigurationRecord(), " },
             { "EVCSliceComponentTrackConfigurationRecord()", "stream.ReadClass(boxSize, readSize, new EVCSliceComponentTrackConfigurationRecord(), " },
-            { "SampleGroupDescriptionEntry(grouping_type)", "stream.ReadEntry(IsoStream.ToFourCC(grouping_type), " },
+            { "SampleGroupDescriptionEntry(grouping_type)", "stream.ReadEntry(boxSize, readSize, IsoStream.ToFourCC(grouping_type), " },
             { "Descriptor[0 .. 255]",                   "stream.ReadClass(boxSize, readSize, new Descriptor(), " },
             { "Descriptor",                             "stream.ReadClass(boxSize, readSize, new Descriptor(), " },
             { "WebVTTConfigurationBox",                 "stream.ReadBox(boxSize, readSize, " },
             { "WebVTTSourceLabelBox",                   "stream.ReadBox(boxSize, readSize, " },
             { "OperatingPointsRecord",                  "stream.ReadClass(boxSize, readSize, new OperatingPointsRecord(), " },
-            { "VvcSubpicIDEntry",                       "stream.ReadEntry(" },
-            { "VvcSubpicOrderEntry",                    "stream.ReadEntry(" },
+            { "VvcSubpicIDEntry",                       "stream.ReadEntry(boxSize, readSize, " },
+            { "VvcSubpicOrderEntry",                    "stream.ReadEntry(boxSize, readSize, " },
             { "URIInitBox",                             "stream.ReadBox(boxSize, readSize, " },
             { "URIBox",                                 "stream.ReadBox(boxSize, readSize, " },
             { "CleanApertureBox",                       "stream.ReadBox(boxSize, readSize, " },
@@ -2592,8 +2607,8 @@ namespace SharpMP4
             { "char[]",                                 "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
             { "string[method_count]",                   "stream.ReadStringArray(method_count, " },
             { "ItemInfoExtension",                      "stream.ReadClass(boxSize, readSize, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), " },
-            { "SampleGroupDescriptionEntry",            "stream.ReadEntry(IsoStream.ToFourCC(grouping_type), " },
-            { "SampleEntry",                            "stream.ReadBox(boxSize, readSize, " },
+            { "SampleGroupDescriptionEntry",            "stream.ReadEntry(boxSize, readSize, IsoStream.ToFourCC(grouping_type), " },
+            { "SampleEntry",                            "stream.ReadEntry(boxSize, readSize, " },
             { "SampleConstructor",                      "stream.ReadBox(boxSize, readSize, " },
             { "InlineConstructor",                      "stream.ReadBox(boxSize, readSize, " },
             { "SampleConstructorFromTrackGroup",        "stream.ReadBox(boxSize, readSize, " },

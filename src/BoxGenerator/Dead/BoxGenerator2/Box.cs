@@ -93,37 +93,33 @@ namespace SharpMP4
         }
     }
 
-    public class UnknownEntry : IMp4Serializable
+    public class UnknownEntry : SampleEntry
     {
         protected byte[] bytes;
 
-        public UnknownEntry()
-        {
-        }
-
-        public UnknownEntry(string boxType) 
+        public UnknownEntry(string format) : base(format)
         {
         }
 
         public byte[] Bytes { get { return bytes; } set { bytes = value; } }
 
-        public virtual async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        public override async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
-            ulong boxSize = 0;
-            boxSize += stream.ReadBytes(readSize >> 3, out bytes);
+            ulong boxSize = await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadBytes((readSize - boxSize) >> 3, out bytes);
             return boxSize;
         }
 
-        public virtual async Task<ulong> WriteAsync(IsoStream stream)
+        public override async Task<ulong> WriteAsync(IsoStream stream)
         {
-            ulong boxSize = 0;
+            ulong boxSize = await base.WriteAsync(stream);
             boxSize += stream.WriteBytes((uint)bytes.Length, bytes);
             return boxSize;
         }
 
-        public virtual ulong CalculateSize()
+        public override ulong CalculateSize()
         {
-            ulong boxSize = 0;
+            ulong boxSize = base.CalculateSize();
             boxSize += (ulong)(bytes.Length * 8);
             return boxSize;
         }

@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Boxes-added.json">
+    <Content Include="Added-boxes.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="14496-23-boxes-added.json">
@@ -21,13 +21,13 @@
     <Content Include="14496-1-boxes-added.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="AVIF.json">
+    <Content Include="AVIF-boxes.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="AV1.json">
+    <Content Include="AV1-boxes.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Opus.json">
+    <Content Include="Opus-boxes.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="14496-3-boxes-added.js">
