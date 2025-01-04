@@ -929,7 +929,7 @@ namespace SharpMP4
         string factory =
 @"   public class BoxFactory
     {
-        public static Box CreateBox(string fourCC)
+        public static Box CreateBox(string fourCC, string parent)
         {
             switch(fourCC)
             {
@@ -1028,9 +1028,13 @@ namespace SharpMP4
                     string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
                     factory += $"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n";
                 }
+                else if(item.Key == "cprt")
+                {
+                    factory += $"               case \"{item.Key}\": if(parent == \"ilst\") return new AppleCopyrightBox(); else return new CopyrightBox();\r\n";
+                }
                 else
                 {
-                    factory += $"               case \"{item.Key}\": throw new NotSupportedException(\"\'{item.Key}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n";
+                    factory += $"               case \"{item.Key}\": throw new NotSupportedException($\"\'{item.Key}\' under \'{{parent}}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n";
                 }
             }
         }
@@ -2445,10 +2449,10 @@ namespace SharpMP4
             { "bit(8*nal_unit_length)",                 "stream.ReadBytes(nal_unit_length, " },
             { "bit(timeStampLength)",                   "stream.ReadBytes(timeStampLength, " },
             { "utf8string",                             "stream.ReadStringZeroTerminated(boxSize, readSize, " },
-            { "utfstring",                              "stream.ReadString(" },
-            { "utf8list",                               "stream.ReadString(" },
-            { "boxstring",                              "stream.ReadString(" },
-            { "string",                                 "stream.ReadString(" },
+            { "utfstring",                              "stream.ReadStringZeroTerminated(boxSize, readSize, " },
+            { "utf8list",                               "stream.ReadStringZeroTerminated(boxSize, readSize, " },
+            { "boxstring",                              "stream.ReadStringZeroTerminated(boxSize, readSize, " },
+            { "string",                                 "stream.ReadStringZeroTerminated(boxSize, readSize, " },
             { "bit(32)[6]",                             "stream.ReadUInt32Array(6, " },
             { "bit(32)",                                "stream.ReadUInt32(" },
             { "uint(32)",                               "stream.ReadUInt32(" },
@@ -2488,7 +2492,7 @@ namespace SharpMP4
             { "PartitionEntry[ entry_count ]",          "stream.ReadBox(boxSize, readSize, entry_count, " },
             { "FDSessionGroupBox",                      "stream.ReadBox(boxSize, readSize, " },
             { "GroupIdToNameBox",                       "stream.ReadBox(boxSize, readSize, " },
-            { "base64string",                           "stream.ReadString(" },
+            { "base64string",                           "stream.ReadStringZeroTerminated(boxSize, readSize, " },
             { "ProtectionSchemeInfoBox",                "stream.ReadBox(boxSize, readSize, " },
             { "SingleItemTypeReferenceBox",             "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Header.Type)),  " },
             { "SingleItemTypeReferenceBox[]",           "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Header.Type)),  " },
@@ -3232,10 +3236,10 @@ namespace SharpMP4
             { "bit(8*nal_unit_length)",                 "stream.WriteBytes(nal_unit_length, " },
             { "bit(timeStampLength)",                   "stream.WriteBytes(timeStampLength, " },
             { "utf8string",                             "stream.WriteStringZeroTerminated(" },
-            { "utfstring",                              "stream.WriteString(" },
-            { "utf8list",                               "stream.WriteString(" },
-            { "boxstring",                              "stream.WriteString(" },
-            { "string",                                 "stream.WriteString(" },
+            { "utfstring",                              "stream.WriteStringZeroTerminated(" },
+            { "utf8list",                               "stream.WriteStringZeroTerminated(" },
+            { "boxstring",                              "stream.WriteStringZeroTerminated(" },
+            { "string",                                 "stream.WriteStringZeroTerminated(" },
             { "bit(32)[6]",                             "stream.WriteUInt32Array(6, " },
             { "bit(32)",                                "stream.WriteUInt32(" },
             { "uint(32)",                               "stream.WriteUInt32(" },
@@ -3274,7 +3278,7 @@ namespace SharpMP4
             { "PartitionEntry[ entry_count ]",          "stream.WriteBox(entry_count, " },
             { "FDSessionGroupBox",                      "stream.WriteBox(" },
             { "GroupIdToNameBox",                       "stream.WriteBox(" },
-            { "base64string",                           "stream.WriteString(" },
+            { "base64string",                           "stream.WriteStringZeroTerminated(" },
             { "ProtectionSchemeInfoBox",                "stream.WriteBox(" },
             { "SingleItemTypeReferenceBox",             "stream.WriteBox(" },
             { "SingleItemTypeReferenceBox[]",           "stream.WriteBox(" },

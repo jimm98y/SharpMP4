@@ -66,7 +66,13 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleCopyrightBox() \r\nextends Box('©cpy') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleCopyrightBox() \r\nextends Box('cprt') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleCopyright2Box() \r\nextends Box('©cpy') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],

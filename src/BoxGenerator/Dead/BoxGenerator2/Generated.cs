@@ -7,7 +7,7 @@ namespace SharpMP4
 {
     public class BoxFactory
     {
-        public static Box CreateBox(string fourCC)
+        public static Box CreateBox(string fourCC, string parent)
         {
             switch (fourCC)
             {
@@ -15,7 +15,7 @@ namespace SharpMP4
                 case "©alb": return new AppleAlbumBox();
                 case "©ART": return new AppleArtistBox();
                 case "©cmt": return new AppleCommentBox();
-                case "©cpy": return new AppleCopyrightBox();
+                case "©cpy": return new AppleCopyright2Box();
                 case "©day": return new AppleRecordingYear2Box();
                 case "©gen": return new AppleGenreBox();
                 case "©nam": return new AppleNameBox();
@@ -68,7 +68,7 @@ namespace SharpMP4
                 case "co64": return new ChunkLargeOffsetBox();
                 case "colr": return new ColourInformationBox();
                 case "cpil": return new AppleCompilationBox();
-                case "cprt": return new CopyrightBox();
+                case "cprt": if (parent == "ilst") return new AppleCopyrightBox(); else return new CopyrightBox();
                 case "crtt": return new CreationTimeProperty();
                 case "csch": return new CompatibleSchemeTypeBox();
                 case "csgp": return new CompactSampleToGroupBox();
@@ -1173,10 +1173,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadString(out this.ns);
-            boxSize += stream.ReadString(out this.schema_location); // optional 
-            boxSize += stream.ReadString(out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
-                                                                         // boxSize += stream.ReadBox(boxSize, readSize,  out this.BitRateBox); 
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.ns);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.schema_location); // optional 
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize,  out this.BitRateBox); 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -1185,10 +1185,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.ns);
-            boxSize += stream.WriteString(this.schema_location); // optional 
-            boxSize += stream.WriteString(this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
-                                                                      // boxSize += stream.WriteBox( this.BitRateBox); 
+            boxSize += stream.WriteStringZeroTerminated(this.ns);
+            boxSize += stream.WriteStringZeroTerminated(this.schema_location); // optional 
+            boxSize += stream.WriteStringZeroTerminated(this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+                                                                                    // boxSize += stream.WriteBox( this.BitRateBox); 
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
@@ -1235,8 +1235,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadString(out this.content_encoding); // optional 
-            boxSize += stream.ReadString(out this.mime_format);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional 
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.mime_format);
             // boxSize += stream.ReadBox(boxSize, readSize,  out this.BitRateBox); // optional 
             // boxSize += stream.ReadBox(boxSize, readSize,  out this.TextConfigBox); // optional 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -1247,8 +1247,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.content_encoding); // optional 
-            boxSize += stream.WriteString(this.mime_format);
+            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional 
+            boxSize += stream.WriteStringZeroTerminated(this.mime_format);
             // boxSize += stream.WriteBox( this.BitRateBox); // optional 
             // boxSize += stream.WriteBox( this.TextConfigBox); // optional 
             boxSize += stream.WriteBoxArrayTillEnd(this);
@@ -1597,8 +1597,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadString(out this.content_encoding); // optional 
-            boxSize += stream.ReadString(out this.mime_format);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional 
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.mime_format);
             // boxSize += stream.ReadBox(boxSize, readSize,  out this.BitRateBox); // optional 
             // boxSize += stream.ReadBox(boxSize, readSize,  out this.TextConfigBox); // optional 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -1609,8 +1609,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.content_encoding); // optional 
-            boxSize += stream.WriteString(this.mime_format);
+            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional 
+            boxSize += stream.WriteStringZeroTerminated(this.mime_format);
             // boxSize += stream.WriteBox( this.BitRateBox); // optional 
             // boxSize += stream.WriteBox( this.TextConfigBox); // optional 
             boxSize += stream.WriteBoxArrayTillEnd(this);
@@ -1893,7 +1893,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadString(out this.locale_string);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.locale_string);
             return boxSize;
         }
 
@@ -1901,7 +1901,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.locale_string);
+            boxSize += stream.WriteStringZeroTerminated(this.locale_string);
             return boxSize;
         }
 
@@ -7924,7 +7924,7 @@ namespace SharpMP4
             boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadBit(out this.pad);
             boxSize += stream.ReadIso639(out this.language); // ISO-639-2/T language code
-            boxSize += stream.ReadString(out this.notice);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.notice);
             return boxSize;
         }
 
@@ -7934,7 +7934,7 @@ namespace SharpMP4
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteBit(this.pad);
             boxSize += stream.WriteIso639(this.language); // ISO-639-2/T language code
-            boxSize += stream.WriteString(this.notice);
+            boxSize += stream.WriteStringZeroTerminated(this.notice);
             return boxSize;
         }
 
@@ -10408,7 +10408,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.max_source_block_length);
             boxSize += stream.ReadUInt16(out this.encoding_symbol_length);
             boxSize += stream.ReadUInt16(out this.max_number_of_encoding_symbols);
-            boxSize += stream.ReadString(out this.scheme_specific_info);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.scheme_specific_info);
 
             if (version == 0)
             {
@@ -10451,7 +10451,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt16(this.max_source_block_length);
             boxSize += stream.WriteUInt16(this.encoding_symbol_length);
             boxSize += stream.WriteUInt16(this.max_number_of_encoding_symbols);
-            boxSize += stream.WriteString(this.scheme_specific_info);
+            boxSize += stream.WriteStringZeroTerminated(this.scheme_specific_info);
 
             if (version == 0)
             {
@@ -16854,7 +16854,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadString(out this.xml);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.xml);
             return boxSize;
         }
 
@@ -16862,7 +16862,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.xml);
+            boxSize += stream.WriteStringZeroTerminated(this.xml);
             return boxSize;
         }
 
@@ -20436,7 +20436,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.ReadUInt8(out this.statement_type[i]); // from the user extension ranges
-                boxSize += stream.ReadString(out this.statement_namespace[i]);
+                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.statement_namespace[i]);
             }
             return boxSize;
         }
@@ -20455,7 +20455,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.WriteUInt8(this.statement_type[i]); // from the user extension ranges
-                boxSize += stream.WriteString(this.statement_namespace[i]);
+                boxSize += stream.WriteStringZeroTerminated(this.statement_namespace[i]);
             }
             return boxSize;
         }
@@ -20543,7 +20543,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadString(out this.config);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.config);
             return boxSize;
         }
 
@@ -20551,7 +20551,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.config);
+            boxSize += stream.WriteStringZeroTerminated(this.config);
             return boxSize;
         }
 
@@ -20585,7 +20585,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadString(out this.source_label);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.source_label);
             return boxSize;
         }
 
@@ -20593,7 +20593,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.source_label);
+            boxSize += stream.WriteStringZeroTerminated(this.source_label);
             return boxSize;
         }
 
@@ -20681,7 +20681,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadString(out this.aux_track_type);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.aux_track_type);
             return boxSize;
         }
 
@@ -20689,7 +20689,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.aux_track_type);
+            boxSize += stream.WriteStringZeroTerminated(this.aux_track_type);
             return boxSize;
         }
 
@@ -21353,8 +21353,8 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
             boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional
-            boxSize += stream.ReadString(out this.ns);
-            boxSize += stream.ReadString(out this.schema_location); // optional
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.ns);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.schema_location); // optional
             return boxSize;
         }
 
@@ -21363,8 +21363,8 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
             boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional
-            boxSize += stream.WriteString(this.ns);
-            boxSize += stream.WriteString(this.schema_location); // optional
+            boxSize += stream.WriteStringZeroTerminated(this.ns);
+            boxSize += stream.WriteStringZeroTerminated(this.schema_location); // optional
             return boxSize;
         }
 
@@ -29473,7 +29473,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadString(out this.aux_type);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.aux_type);
             boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
             return boxSize;
         }
@@ -29482,7 +29482,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteString(this.aux_type);
+            boxSize += stream.WriteStringZeroTerminated(this.aux_type);
             boxSize += stream.WriteUInt8ArrayTillEnd(this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
             return boxSize;
         }
@@ -38227,18 +38227,61 @@ namespace SharpMP4
 
     /*
     aligned(8) class AppleCopyrightBox() 
-    extends Box('©cpy') {
+    extends Box('cprt') {
      bit(8) data[];
      } 
     */
     public class AppleCopyrightBox : Box
+    {
+        public const string TYPE = "cprt";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleCopyrightBox() : base("cprt")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleCopyright2Box() 
+    extends Box('©cpy') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleCopyright2Box : Box
     {
         public const string TYPE = "©cpy";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleCopyrightBox() : base("©cpy")
+        public AppleCopyright2Box() : base("©cpy")
         {
         }
 

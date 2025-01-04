@@ -140,7 +140,7 @@ namespace SharpMP4
                     while (true)
                     {
                         Box v;
-                        consumed += ReadBox(consumed, readSize, out v);
+                        consumed += ReadBox(consumed, readSize, box.FourCC, out v);
                         box.Children.Add(v);
                     }
                 }
@@ -154,7 +154,7 @@ namespace SharpMP4
             while(consumed < remaining)
             {
                 Box v;
-                consumed += ReadBox(consumed, readSize, out v);
+                consumed += ReadBox(consumed, readSize, box.FourCC, out v);
                 box.Children.Add(v);
             }
             return consumed;
@@ -175,10 +175,10 @@ namespace SharpMP4
             return CalculateBoxSize(value.Children);
         }
 
-        internal ulong ReadBox(ulong boxSize, ulong readSize, out Box value)
+        internal ulong ReadBox(ulong boxSize, ulong readSize, string parentFourCC, out Box value)
         {
             var header = ReadBoxHeaderAsync().Result;
-            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type));
+            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), parentFourCC);
             ReadBoxAsync(header, box).Wait();
             value = box;
             return header.BoxSize;
@@ -280,16 +280,6 @@ namespace SharpMP4
         }
 
         internal ulong WriteClass(IMp4Serializable[] value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteClass(uint count, IMp4Serializable[] value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadString(out string value)
         {
             throw new NotImplementedException();
         }
@@ -1224,7 +1214,7 @@ namespace SharpMP4
 
         public async Task<Box> ReadBoxAsync(Mp4BoxHeader header)
         {
-            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type));
+            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), null);
             await ReadBoxAsync(header, box);
             return box;
         }
