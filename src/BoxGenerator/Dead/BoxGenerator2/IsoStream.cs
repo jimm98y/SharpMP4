@@ -1238,10 +1238,16 @@ namespace SharpMP4
                     ReadBits((uint)(availableSize - size), out byte[] missing);
                     box.BoxPadding = missing;
 
-                    if(missing.FirstOrDefault(x => x != 0) == default(byte))
+                    if (missing.FirstOrDefault(x => x != 0) == default(byte))
+                    {
                         Debug.WriteLine($"-Box \'{box.FourCC}\' has extra padding of {missing.Length} zero bytes");
+                    }
                     else
-                        throw new Exception("Box not fully read!");
+                    {
+                        // all the boxes with _count can contain junk at the end apparently
+                        if (box.FourCC != "stts" && box.FourCC != "stsc" && box.FourCC != "stsz" && box.FourCC != "co64" && box.FourCC != "ctts" && box.FourCC != "stss")
+                            throw new Exception("Box not fully read!");
+                    }
                 }
                 else
                 {
