@@ -718,17 +718,9 @@ namespace SharpMP4
                 return 0;
             }
 
-            List<byte> buffer = new List<byte>();
-            byte c = ReadByte();
-            int read = 1;
-            while (c != 0 && read < (int)(remaining >> 3))
-            {
-                buffer.Add(c);
-                c = ReadByte();
-                read++;
-            }
-            value = Encoding.UTF8.GetString(buffer.ToArray());
-            return (ulong)read * 8;
+            ulong read = ReadBytes(remaining >> 3, out byte[] buffer);
+            value = Encoding.UTF8.GetString(buffer);
+            return read;
         }
 
         internal ulong ReadStringSizePrefixed(ulong boxSize, ulong readSize, out string value)
@@ -1314,6 +1306,13 @@ namespace SharpMP4
         {
             byte tag;
             ulong size = ReadUInt8(out tag);
+            if(tag == 0)
+            {
+                Debug.WriteLine("Forbidden descriptor 0!!!");
+                descriptor = null;
+                return (ulong)8;
+            }
+
             size += ReadDescriptorSize(out int sizeOfInstance);
             ulong sizeOfInstanceBits = (ulong)sizeOfInstance * 8;
             descriptor = DescriptorFactory.CreateDescriptor(tag);
