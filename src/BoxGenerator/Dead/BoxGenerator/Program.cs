@@ -1000,8 +1000,8 @@ namespace SharpMP4
         };
         foreach(var type in audioSampleEntryTypes)
         {
-            if (!fourccEntries.ContainsKey(type))
-                fourccEntries.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value });
+            if (!fourccBoxes.ContainsKey(type))
+                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value });
         }
         string[] visualSampleEntryTypes = new string[]
         {
@@ -1054,11 +1054,11 @@ namespace SharpMP4
         };
         foreach (var type in visualSampleEntryTypes)
         {
-            if (!fourccEntries.ContainsKey(type))
-                fourccEntries.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
+            if (!fourccBoxes.ContainsKey(type))
+                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
         }
-        if (!fourccEntries.ContainsKey("mp4s"))
-            fourccEntries.Add("mp4s", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value });
+        if (!fourccBoxes.ContainsKey("mp4s"))
+            fourccBoxes.Add("mp4s", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value });
         if (!fourccBoxes.ContainsKey("dimg"))
             fourccBoxes.Add("dimg", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "SingleItemTypeReferenceBox").Value });
         if (!fourccBoxes.ContainsKey("cdsc"))
@@ -2677,7 +2677,7 @@ namespace SharpMP4
             { "string[method_count]",                   "stream.ReadStringArray(method_count, " },
             { "ItemInfoExtension",                      "stream.ReadClass(boxSize, readSize, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), " },
             { "SampleGroupDescriptionEntry",            "stream.ReadEntry(boxSize, readSize, IsoStream.ToFourCC(grouping_type), " },
-            { "SampleEntry",                            "stream.ReadEntry(boxSize, readSize, " },
+            { "SampleEntry",                            "stream.ReadBox(boxSize, readSize, " },
             { "SampleConstructor",                      "stream.ReadBox(boxSize, readSize, " },
             { "InlineConstructor",                      "stream.ReadBox(boxSize, readSize, " },
             { "SampleConstructorFromTrackGroup",        "stream.ReadBox(boxSize, readSize, " },
@@ -3071,7 +3071,7 @@ namespace SharpMP4
             { "string[method_count]",                   "IsoStream.CalculateSize(value)" },
             { "ItemInfoExtension",                      "IsoStream.CalculateClassSize(value)" },
             { "SampleGroupDescriptionEntry",            "IsoStream.CalculateEntrySize(value)" },
-            { "SampleEntry",                            "IsoStream.CalculateEntrySize(value)" },
+            { "SampleEntry",                            "IsoStream.CalculateBoxSize(value)" },
             { "SampleConstructor",                      "IsoStream.CalculateBoxSize(value)" },
             { "InlineConstructor",                      "IsoStream.CalculateBoxSize(value)" },
             { "SampleConstructorFromTrackGroup",        "IsoStream.CalculateBoxSize(value)" },
@@ -3465,7 +3465,7 @@ namespace SharpMP4
             { "string[method_count]",                   "stream.WriteStringArray(method_count, " },
              { "ItemInfoExtension",                     "stream.WriteClass(" },
             { "SampleGroupDescriptionEntry",            "stream.WriteEntry(" },
-            { "SampleEntry",                            "stream.WriteEntry(" },
+            { "SampleEntry",                            "stream.WriteBox(" },
             { "SampleConstructor",                      "stream.WriteBox(" },
             { "InlineConstructor",                      "stream.WriteBox(" },
             { "SampleConstructorFromTrackGroup",        "stream.WriteBox(" },

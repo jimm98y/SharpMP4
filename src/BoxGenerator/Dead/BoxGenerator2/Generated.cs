@@ -29,9 +29,15 @@ namespace SharpMP4
                 case "3sib": return new MVDScalabilityInformationSEIBox();
                 case "a1lx": return new AV1LayeredImageIndexingProperty();
                 case "a1op": return new OperatingPointSelectorProperty();
+                case "a3d1": return new VisualSampleEntry("a3d1");
+                case "a3d2": return new VisualSampleEntry("a3d2");
+                case "a3d3": return new VisualSampleEntry("a3d3");
+                case "a3d4": return new VisualSampleEntry("a3d4");
                 case "a3dC": return new A3DConfigurationBox();
                 case "aART": return new AppleArtist2Box();
+                case "ac-3": return new AudioSampleEntry("ac-3");
                 case "acgl": return new SubpicCommonGroupBox();
+                case "alac": return new AudioSampleEntry("alac");
                 case "alou": return new AlbumLoudnessInfo();
                 case "alte": return new TrackGroupTypeBox_alte(); // TODO: fix duplicate
                 case "amf0": return new Amf0Box();
@@ -40,8 +46,14 @@ namespace SharpMP4
                 case "assp": return new AlternativeStartupSequencePropertiesBox();
                 case "auth": return new AuthorBox();
                 case "auxi": return new AuxiliaryTypeInfoBox();
+                case "av01": return new VisualSampleEntry("av01");
                 case "av1C": return new AV1CodecConfigurationBox();
+                case "avc1": return new VisualSampleEntry("avc1");
+                case "avc2": return new VisualSampleEntry("avc2");
+                case "avc3": return new VisualSampleEntry("avc3");
+                case "avc4": return new VisualSampleEntry("avc4");
                 case "avcC": return new AVCConfigurationBox();
+                case "avcp": return new VisualSampleEntry("avcp");
                 case "BCAB": return new BcabBox();
                 case "btrt": return new BitRateBox();
                 case "buff": return new BufferingBox();
@@ -76,14 +88,25 @@ namespace SharpMP4
                 case "dOps": return new OpusSpecificBox();
                 case "dref": return new DataReferenceBox();
                 case "drep": return new hintrepeatedBytesSent();
+                case "drmi": return new VisualSampleEntry("drmi");
+                case "drms": return new AudioSampleEntry("drms");
                 case "dscp": return new DescriptionBox();
+                case "dtse": return new AudioSampleEntry("dtse");
+                case "dtsh": return new AudioSampleEntry("dtsh");
+                case "dtsl": return new AudioSampleEntry("dtsl");
+                case "ec-3": return new AudioSampleEntry("ec-3");
                 case "ecam": return new ExtrinsicCameraParametersBox();
                 case "edts": return new EditBox();
                 case "elng": return new ExtendedLanguageBox();
                 case "elst": return new EditListBox();
+                case "enca": return new AudioSampleEntry("enca");
+                case "encv": return new VisualSampleEntry("encv");
                 case "esds": return new ESDBox();
                 case "etyp": return new ExtendedTypeBox();
+                case "evc1": return new VisualSampleEntry("evc1");
                 case "evcC": return new EVCConfigurationBox();
+                case "evs1": return new VisualSampleEntry("evs1");
+                case "evs2": return new VisualSampleEntry("evs2");
                 case "evsC": return new EVCSliceComponentTrackConfigurationBox();
                 case "exte": return new MetaDataExtensionsBox();
                 case "fecr": return new FECReservoirBox();
@@ -99,13 +122,23 @@ namespace SharpMP4
                 case "grpl": return new GroupsListBox();
                 case "hdlr": return new HandlerBox();
                 case "hdvd": return new HdvdBox();
+                case "hev1": return new VisualSampleEntry("hev1");
+                case "hev2": return new VisualSampleEntry("hev2");
+                case "hev3": return new VisualSampleEntry("hev3");
                 case "hinf": return new hintstatisticsbox();
                 case "hint": return new HintBox();
                 case "hmhd": return new HintMediaHeaderBox();
                 case "hnti": return new trackhintinformation(); // TODO: box is ambiguous in between trackhintinformation and moviehintinformation
+                case "hvc1": return new VisualSampleEntry("hvc1");
+                case "hvc2": return new VisualSampleEntry("hvc2");
+                case "hvc3": return new VisualSampleEntry("hvc3");
                 case "hvcC": return new HEVCConfigurationBox();
+                case "hvt1": return new VisualSampleEntry("hvt1");
+                case "hvt2": return new VisualSampleEntry("hvt2");
+                case "hvt3": return new VisualSampleEntry("hvt3");
                 case "hvtC": return new HEVCTileConfigurationBox();
                 case "icam": return new IntrinsicCameraParametersBox();
+                case "icpv": return new VisualSampleEntry("icpv");
                 case "idat": return new ItemDataBox();
                 case "iinf": return new ItemInfoBox();
                 case "iloc": return new ItemLocationBox();
@@ -127,6 +160,9 @@ namespace SharpMP4
                 case "kywd": return new KeywordsBox();
                 case "ldep": return new TierDependencyBox();
                 case "leva": return new LevelAssignmentBox();
+                case "lhe1": return new VisualSampleEntry("lhe1");
+                case "lht1": return new VisualSampleEntry("lht1");
+                case "lhv1": return new VisualSampleEntry("lhv1");
                 case "lhvC": return new LHEVCConfigurationBox();
                 case "loca": return new MetaDataLocaleBox();
                 case "ludt": return new LoudnessBox();
@@ -143,15 +179,26 @@ namespace SharpMP4
                 case "mfra": return new MovieFragmentRandomAccessBox();
                 case "mfro": return new MovieFragmentRandomAccessOffsetBox();
                 case "minf": return new MediaInformationBox();
+                case "mlpa": return new AudioSampleEntry("mlpa");
                 case "moof": return new MovieFragmentBox(); // TODO: box is ambiguous in between MovieFragmentBox and CompressedMovieFragmentBox
                 case "moov": return new MovieBox(); // TODO: box is ambiguous in between MovieBox and CompressedMovieBox
+                case "mp4a": return new AudioSampleEntry("mp4a");
                 case "mp4s": return new MpegSampleEntry();
+                case "mp4v": return new VisualSampleEntry("mp4v");
                 case "msrc": return new TrackGroupTypeBox();
                 case "mstv": return new MVCSubTrackViewBox();
+                case "mvc1": return new VisualSampleEntry("mvc1");
+                case "mvc2": return new VisualSampleEntry("mvc2");
+                case "mvc3": return new VisualSampleEntry("mvc3");
+                case "mvc4": return new VisualSampleEntry("mvc4");
                 case "mvcC": return new MVCConfigurationBox();
                 case "mvcg": return new MultiviewGroupBox();
                 case "mvci": return new MultiviewInformationBox();
                 case "mvcP": return new MVCViewPriorityAssignmentBox();
+                case "mvd1": return new VisualSampleEntry("mvd1");
+                case "mvd2": return new VisualSampleEntry("mvd2");
+                case "mvd3": return new VisualSampleEntry("mvd3");
+                case "mvd4": return new VisualSampleEntry("mvd4");
                 case "mvdC": return new MVCDConfigurationBox();
                 case "mvex": return new MovieExtendsBox();
                 case "mvhd": return new MovieHeaderBox();
@@ -161,7 +208,9 @@ namespace SharpMP4
                 case "npck": return new hintPacketsSentNpck();
                 case "nump": return new hintPacketsSentNump();
                 case "opeg": return new OperatingPointGroupBox();
+                case "Opus": return new AudioSampleEntry("Opus");
                 case "otyp": return new OriginalFileTypeBox();
+                case "owma": return new AudioSampleEntry("owma");
                 case "padb": return new PaddingBitsBox();
                 case "paen": return new PartitionEntry();
                 case "pasp": return new PixelAspectRatioBox();
@@ -171,12 +220,17 @@ namespace SharpMP4
                 case "pmax": return new hintlargestpacket();
                 case "prft": return new ProducerReferenceTimeBox();
                 case "qlif": return new SVCPriorityLayerInfoBox();
+                case "resa": return new AudioSampleEntry("resa");
+                case "resv": return new VisualSampleEntry("resv");
                 case "rinf": return new RestrictedSchemeInfoBox();
                 case "rrgn": return new RectRegionBox();
                 case "rssr": return new ReceivedSsrcBox();
                 case "rtp ": return new rtpmoviehintinformation();
+                case "s263": return new VisualSampleEntry("s263");
                 case "saio": return new SampleAuxiliaryInformationOffsetsBox();
                 case "saiz": return new SampleAuxiliaryInformationSizesBox();
+                case "samr": return new AudioSampleEntry("samr");
+                case "sawb": return new AudioSampleEntry("sawb");
                 case "sbgp": return new SampleToGroupBox();
                 case "sbtt": return new TextSubtitleSampleEntry();
                 case "schi": return new SchemeInformationBox();
@@ -225,6 +279,8 @@ namespace SharpMP4
                 case "styp": return new SegmentTypeBox();
                 case "stz2": return new CompactSampleSizeBox();
                 case "subs": return new SubSampleInformationBox();
+                case "svc1": return new VisualSampleEntry("svc1");
+                case "svc2": return new VisualSampleEntry("svc2");
                 case "svcC": return new SVCConfigurationBox();
                 case "svcP": return new SVCPriorityAssignmentBox();
                 case "svdr": return new SVCDependencyRangeBox();
@@ -280,8 +336,12 @@ namespace SharpMP4
                 case "vmhd": return new VideoMediaHeaderBox();
                 case "vsib": return new ViewScalabilityInformationSEIBox();
                 case "vttC": return new WebVTTConfigurationBox();
+                case "vvc1": return new VisualSampleEntry("vvc1");
                 case "vvcC": return new VvcConfigurationBox();
+                case "vvcN": return new VisualSampleEntry("vvcN");
+                case "vvi1": return new VisualSampleEntry("vvi1");
                 case "vvnC": return new VvcNALUConfigBox();
+                case "vvs1": return new VisualSampleEntry("vvs1");
                 case "vwdi": return new MultiviewSceneInfoBox();
                 case "vwid": return new ViewIdentifierBox();
                 case "wide": return new WideBox();
@@ -298,27 +358,15 @@ namespace SharpMP4
         {
             switch (fourCC)
             {
-                case "a3d1": return new VisualSampleEntry("a3d1");
-                case "a3d2": return new VisualSampleEntry("a3d2");
-                case "a3d3": return new VisualSampleEntry("a3d3");
-                case "a3d4": return new VisualSampleEntry("a3d4");
-                case "ac-3": return new AudioSampleEntry("ac-3");
                 case "aebr": return new AutoExposureBracketingEntry();
                 case "afbr": return new FlashExposureBracketingEntry();
-                case "alac": return new AudioSampleEntry("alac");
                 case "alst": return new AlternativeStartupEntry();
                 case "altt": return new AccessibilityTextProperty();
                 case "aud ": return new AUDSampleEntry();
                 case "auxC": return new AuxiliaryTypeProperty();
-                case "av01": return new VisualSampleEntry("av01");
                 case "av1f": return new AV1ForwardKeyFrameSampleGroupEntry();
                 case "av1M": return new AV1MetadataSampleGroupEntry();
                 case "av1s": return new AV1SwitchFrameSampleGroupEntry();
-                case "avc1": return new VisualSampleEntry("avc1");
-                case "avc2": return new VisualSampleEntry("avc2");
-                case "avc3": return new VisualSampleEntry("avc3");
-                case "avc4": return new VisualSampleEntry("avc4");
-                case "avcp": return new VisualSampleEntry("avcp");
                 case "avll": return new AVCLayerEntry();
                 case "avss": return new AVCSubSequenceEntry();
                 case "brnd": return new BrandProperty();
@@ -327,44 +375,21 @@ namespace SharpMP4
                 case "dcfi": return new DecodingCapabilityInformation();
                 case "dobr": return new DepthOfFieldBracketingEntry();
                 case "drap": return new VisualDRAPEntry();
-                case "drmi": return new VisualSampleEntry("drmi");
-                case "drms": return new AudioSampleEntry("drms");
                 case "dtrt": return new DecodeRetimingEntry();
-                case "dtse": return new AudioSampleEntry("dtse");
-                case "dtsh": return new AudioSampleEntry("dtsh");
-                case "dtsl": return new AudioSampleEntry("dtsl");
-                case "ec-3": return new AudioSampleEntry("ec-3");
-                case "enca": return new AudioSampleEntry("enca");
                 case "encv": return new GenericSampleEntry();
                 case "eob ": return new EndOfBitstreamSampleEntry();
                 case "eos ": return new EndOfSequenceSampleEntry();
                 case "eqiv": return new VisualEquivalenceEntry();
-                case "evc1": return new VisualSampleEntry("evc1");
-                case "evs1": return new VisualSampleEntry("evs1");
-                case "evs2": return new VisualSampleEntry("evs2");
                 case "fade": return new FadeTransitionEffectProperty();
                 case "fdel": return new FDItemInfoExtension();
                 case "fdp ": return new FDHintSampleEntry();
                 case "fobr": return new FocusBracketingEntry();
-                case "hev1": return new VisualSampleEntry("hev1");
-                case "hev2": return new VisualSampleEntry("hev2");
-                case "hev3": return new VisualSampleEntry("hev3");
-                case "hvc1": return new VisualSampleEntry("hvc1");
-                case "hvc2": return new VisualSampleEntry("hvc2");
-                case "hvc3": return new VisualSampleEntry("hvc3");
-                case "hvt1": return new VisualSampleEntry("hvt1");
-                case "hvt2": return new VisualSampleEntry("hvt2");
-                case "hvt3": return new VisualSampleEntry("hvt3");
-                case "icpv": return new VisualSampleEntry("icpv");
                 case "imir": return new ImageMirror();
                 case "irot": return new ImageRotation();
                 case "iscl": return new ImageScaling();
                 case "ispe": return new ImageSpatialExtentsProperty();
                 case "jpgC": return new JPEGConfigurationBox();
                 case "lbli": return new LhvcExternalBaseLayerInfo();
-                case "lhe1": return new VisualSampleEntry("lhe1");
-                case "lht1": return new VisualSampleEntry("lht1");
-                case "lhv1": return new VisualSampleEntry("lhv1");
                 case "linf": return new LayerInfoGroupEntry();
                 case "lsel": return new LayerSelectorProperty();
                 case "mdft": return new ModificationTimeProperty();
@@ -372,25 +397,11 @@ namespace SharpMP4
                 case "mett": return new TextMetaDataSampleEntry();
                 case "metx": return new XMLMetaDataSampleEntry();
                 case "minp": return new VvcMixedNALUnitTypePicEntry();
-                case "mlpa": return new AudioSampleEntry("mlpa");
-                case "mp4a": return new AudioSampleEntry("mp4a");
-                case "mp4s": return new MpegSampleEntry();
-                case "mp4v": return new VisualSampleEntry("mp4v");
                 case "mskC": return new MaskConfigurationProperty();
-                case "mvc1": return new VisualSampleEntry("mvc1");
-                case "mvc2": return new VisualSampleEntry("mvc2");
-                case "mvc3": return new VisualSampleEntry("mvc3");
-                case "mvc4": return new VisualSampleEntry("mvc4");
-                case "mvd1": return new VisualSampleEntry("mvd1");
-                case "mvd2": return new VisualSampleEntry("mvd2");
-                case "mvd3": return new VisualSampleEntry("mvd3");
-                case "mvd4": return new VisualSampleEntry("mvd4");
                 case "mvif": return new MultiviewGroupEntry();
                 case "nalm": return new NALUMapEntry();
                 case "oinf": throw new NotSupportedException("'oinf' is ambiguous in between OperatingPointsInformation and OperatingPointsInformationProperty");
                 case "opth": return new OperatingPointDecodeTimeHint();
-                case "Opus": return new AudioSampleEntry("Opus");
-                case "owma": return new AudioSampleEntry("owma");
                 case "pano": return new PanoramaEntry();
                 case "pase": return new ParameterSetNALUEntry();
                 case "pasr": return new PixelAspectRatioEntry();
@@ -402,8 +413,6 @@ namespace SharpMP4
                 case "rap ": return new VisualRandomAccessEntry();
                 case "rash": return new RateShareEntry();
                 case "refs": return new DirectReferenceSamplesList();
-                case "resa": return new AudioSampleEntry("resa");
-                case "resv": return new VisualSampleEntry("resv");
                 case "rloc": return new RelativeLocationProperty();
                 case "rm2t": return new MPEG2TSReceptionSampleEntry();
                 case "roll": return new AudioRollRecoveryEntry();
@@ -412,10 +421,7 @@ namespace SharpMP4
                 case "rrtp": return new ReceivedRtpHintSampleEntry();
                 case "rsrp": return new ReceivedSrtpHintSampleEntry();
                 case "rtp ": return new RtpHintSampleEntry();
-                case "s263": return new VisualSampleEntry("s263");
-                case "samr": return new AudioSampleEntry("samr");
                 case "sap ": return new SAPEntry();
-                case "sawb": return new AudioSampleEntry("sawb");
                 case "scif": return new ScalableGroupEntry();
                 case "scnm": return new ScalableNALUMapEntry();
                 case "sm2t": return new MPEG2TSServerSampleEntry();
@@ -429,8 +435,6 @@ namespace SharpMP4
                 case "stpe": return new SuggestedTransitionPeriodProperty();
                 case "stsa": return new StepwiseTemporalLayerEntry();
                 case "sulm": return new VvcSubpicLayoutMapEntry();
-                case "svc1": return new VisualSampleEntry("svc1");
-                case "svc2": return new VisualSampleEntry("svc2");
                 case "svcM": return new SVCMetaDataSampleEntry();
                 case "sync": return new SyncSampleEntry();
                 case "tele": return new TemporalLevelEntry();
@@ -442,11 +446,7 @@ namespace SharpMP4
                 case "urim": return new URIMetaSampleEntry();
                 case "vipr": return new ViewPriorityEntry();
                 case "vopi": return new VvcOperatingPointsInformation();
-                case "vvc1": return new VisualSampleEntry("vvc1");
                 case "vvcb": return new EntityToGroupBox_vvcb(); // TODO: fix duplicate
-                case "vvcN": return new VisualSampleEntry("vvcN");
-                case "vvi1": return new VisualSampleEntry("vvi1");
-                case "vvs1": return new VisualSampleEntry("vvs1");
                 case "wbbr": return new WhiteBalanceBracketingEntry();
                 case "wipe": return new WipeTransitionEffectProperty();
                 case "zoom": return new ZoomTransitionEffectProperty();
@@ -14761,9 +14761,7 @@ namespace SharpMP4
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
-
-        protected SampleEntry[] SampleEntry;  //  an instance of a class derived from SampleEntry
-        public SampleEntry[] _SampleEntry { get { return this.SampleEntry; } set { this.SampleEntry = value; } }
+        public IEnumerable<SampleEntry> _SampleEntry { get { return this.children.OfType<SampleEntry>(); } }
 
         public SampleDescriptionBox(byte version = 0) : base("stsd", version, 0)
         {
@@ -14776,10 +14774,9 @@ namespace SharpMP4
 
             boxSize += stream.ReadUInt32(out this.entry_count);
 
-            this.SampleEntry = new SampleEntry[entry_count];
             for (int i = 0; i < entry_count; i++)
             {
-                boxSize += stream.ReadEntry(boxSize, readSize, out this.SampleEntry[i]); // an instance of a class derived from SampleEntry
+                // boxSize += stream.ReadBox(boxSize, readSize,  out this.SampleEntry[i]); // an instance of a class derived from SampleEntry
             }
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -14794,7 +14791,7 @@ namespace SharpMP4
 
             for (int i = 0; i < entry_count; i++)
             {
-                boxSize += stream.WriteEntry(this.SampleEntry[i]); // an instance of a class derived from SampleEntry
+                // boxSize += stream.WriteBox( this.SampleEntry[i]); // an instance of a class derived from SampleEntry
             }
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
@@ -14809,7 +14806,7 @@ namespace SharpMP4
 
             for (int i = 0; i < entry_count; i++)
             {
-                boxSize += IsoStream.CalculateEntrySize(SampleEntry); // SampleEntry
+                // boxSize += IsoStream.CalculateBoxSize(SampleEntry); // SampleEntry
             }
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
