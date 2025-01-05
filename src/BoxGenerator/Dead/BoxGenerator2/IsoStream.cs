@@ -1261,7 +1261,8 @@ namespace SharpMP4
                     else
                     {
                         // all the boxes with _count can contain junk at the end apparently
-                        if (box.FourCC != "stts" && box.FourCC != "stsc" && box.FourCC != "stsz" && box.FourCC != "co64" && box.FourCC != "ctts" && box.FourCC != "stss")
+                        if (box.FourCC != "stts" && box.FourCC != "stsc" && box.FourCC != "stsz" && box.FourCC != "co64" && box.FourCC != "ctts" && box.FourCC != "stss"
+                            && box.FourCC != "mp4s") // mp4s is due to descriptor parsing
                             throw new Exception("Box not fully read!");
                     }
                 }
@@ -1277,48 +1278,6 @@ namespace SharpMP4
             {
                 Debug.WriteLine($"---------Calculated \'{box.FourCC}\' size: {calculatedSize / 8}, read: {header.BoxSize / 8}");
             }
-        }
-
-        internal ulong ReadEntry(ulong boxSize, ulong readSize, out SampleEntry entry)
-        {
-            var header = ReadBoxHeaderAsync().Result;
-            string fourCC = ToFourCC(header.Header.Type);
-            var box = BoxFactory.CreateEntry(fourCC);
-            Debug.WriteLine($"--Parsed entry: {fourCC}");
-            ulong availableSize = header.BoxSize - header.HeaderSize;
-            ulong size = box.ReadAsync(this, availableSize).Result;
-            if (size != availableSize)
-            {
-                if (size < availableSize)
-                {
-                    // TODO: Investigate and fix
-                    size += ReadBits((uint)(availableSize - size), out byte[] missing);
-                    box.Padding = missing;
-
-                    if (missing.FirstOrDefault(x => x != 0) == default(byte))
-                    {
-                        Debug.WriteLine($"-Entry \'{fourCC}\' has extra padding of {missing.Length} zero bytes");
-                    }
-                    else
-                    {
-                        throw new Exception("Entry not fully read!");
-                    }
-                }
-                else
-                {
-                    Debug.WriteLine($"--!! Box \'{fourCC}\' read through!");
-                    throw new Exception("Box read through!");
-                }
-            }
-
-            ulong calculatedSize = box.CalculateSize();
-            if (calculatedSize != header.BoxSize)
-            {
-                Debug.WriteLine($"---------Calculated '{fourCC}' size: {calculatedSize / 8}, read: {header.BoxSize / 8}");
-            }
-
-            entry = (SampleEntry)box;
-            return size + header.HeaderSize;
         }
 
         internal ulong ReadEntry(ulong boxSize, ulong readSize, string fourCC, out SampleGroupDescriptionEntry entry)
@@ -1380,9 +1339,8 @@ namespace SharpMP4
             ulong size = ReadUInt8(out tag);
             if(tag == 0)
             {
-                throw new Exception("Forbidden descriptor 0!!!");
-                //descriptor = null;
-                //return (ulong)8;
+                descriptor = null;
+                return (ulong)8;
             }
 
             size += ReadDescriptorSize(out int sizeOfInstance);
@@ -1401,6 +1359,13 @@ namespace SharpMP4
                     Debug.WriteLine($"Descriptor {tag} not fully read!");
             }
             size += readInstanceSizeBits;
+
+            ulong calculatedSize = descriptor.CalculateSize();
+            if (calculatedSize != sizeOfInstanceBits)
+            {
+                Debug.WriteLine($"---------Calculated descriptor \'{tag}\' size: {calculatedSize / 8}, read: {sizeOfInstanceBits / 8}");
+            }
+
             return size;
         }
 
@@ -1474,18 +1439,19 @@ namespace SharpMP4
         {
             ulong descriptorContentSize = descriptor.CalculateSize();
             ulong descriptorSizeLength = CalculatePackedNumberLength(descriptorContentSize >> 3);
-            return 8 + descriptorSizeLength + descriptorContentSize;
+            return 8 * (1 + descriptorSizeLength) + descriptorContentSize + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0);
         }
 
-        public static uint CalculatePackedNumberLength(ulong size)
+        public static uint CalculatePackedNumberLength(ulong sizeInBytes)
         {
-            uint sizeBytesCount = 0;
+            int size = (int)sizeInBytes;
+            int i = 0;
             while (size > 0)
             {
-                size = size >> 7;
-                sizeBytesCount++;
+                size = (int)((uint)size >> 7);
+                i++;
             }
-            return sizeBytesCount * 8;
+            return (uint)i;
         }
 
         internal void UnreadBytes(int count, byte[] lookahead)
