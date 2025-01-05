@@ -1452,7 +1452,17 @@ namespace SharpMP4
 
         internal static ulong CalculateDescriptors(Descriptor descriptor, int objectTypeIndication = -1)
         {
-            throw new NotImplementedException();
+            ulong size = 0;
+
+            if (descriptor.Children == null)
+                return 0;
+
+            foreach (var child in descriptor.Children)
+            {
+                size += CalculateDescriptorSize(child);
+            }
+
+            return size;
         }
 
         internal ulong WriteDescriptor(Descriptor descriptor)
@@ -1462,7 +1472,20 @@ namespace SharpMP4
 
         internal static ulong CalculateDescriptorSize(Descriptor descriptor)
         {
-            throw new NotImplementedException();
+            ulong descriptorContentSize = descriptor.CalculateSize();
+            ulong descriptorSizeLength = CalculatePackedNumberLength(descriptorContentSize >> 3);
+            return 8 + descriptorSizeLength + descriptorContentSize;
+        }
+
+        public static uint CalculatePackedNumberLength(ulong size)
+        {
+            uint sizeBytesCount = 0;
+            while (size > 0)
+            {
+                size = size >> 7;
+                sizeBytesCount++;
+            }
+            return sizeBytesCount * 8;
         }
 
         internal void UnreadBytes(int count, byte[] lookahead)
