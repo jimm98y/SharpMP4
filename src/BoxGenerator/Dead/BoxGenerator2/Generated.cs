@@ -1207,10 +1207,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)ns.Length * 8; // ns
-            boxSize += (ulong)schema_location.Length * 8; // schema_location
-            boxSize += (ulong)auxiliary_mime_types.Length * 8; // auxiliary_mime_types
-                                                               // boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateStringSize(ns); // ns
+            boxSize += IsoStream.CalculateStringSize(schema_location); // schema_location
+            boxSize += IsoStream.CalculateStringSize(auxiliary_mime_types); // auxiliary_mime_types
+                                                                            // boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
@@ -1269,10 +1269,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)content_encoding.Length * 8; // content_encoding
-            boxSize += (ulong)mime_format.Length * 8; // mime_format
-                                                      // boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
-                                                      // boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
+            boxSize += IsoStream.CalculateStringSize(content_encoding); // content_encoding
+            boxSize += IsoStream.CalculateStringSize(mime_format); // mime_format
+                                                                   // boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
+                                                                   // boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
@@ -1631,10 +1631,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)content_encoding.Length * 8; // content_encoding
-            boxSize += (ulong)mime_format.Length * 8; // mime_format
-                                                      // boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
-                                                      // boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
+            boxSize += IsoStream.CalculateStringSize(content_encoding); // content_encoding
+            boxSize += IsoStream.CalculateStringSize(mime_format); // mime_format
+                                                                   // boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
+                                                                   // boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
@@ -1919,7 +1919,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)locale_string.Length * 8; // locale_string
+            boxSize += IsoStream.CalculateStringSize(locale_string); // locale_string
             return boxSize;
         }
     }
@@ -6337,7 +6337,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(extended_language.Length + 1) * 8; // extended_language
+            boxSize += IsoStream.CalculateStringSize(extended_language); // extended_language
             return boxSize;
         }
     }
@@ -7810,7 +7810,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(text_config.Length + 1) * 8; // text_config
+            boxSize += IsoStream.CalculateStringSize(text_config); // text_config
             return boxSize;
         }
     }
@@ -7910,7 +7910,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 1; // pad
             boxSize += 15; // language
-            boxSize += (ulong)notice.Length * 8; // notice
+            boxSize += IsoStream.CalculateStringSize(notice); // notice
             return boxSize;
         }
     }
@@ -7958,8 +7958,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(schemeURI.Length + 1) * 8; // schemeURI
-            boxSize += (ulong)(value.Length + 1) * 8; // value
+            boxSize += IsoStream.CalculateStringSize(schemeURI); // schemeURI
+            boxSize += IsoStream.CalculateStringSize(value); // value
             return boxSize;
         }
     }
@@ -8423,7 +8423,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(location.Length + 1) * 8; // location
+            boxSize += IsoStream.CalculateStringSize(location); // location
             return boxSize;
         }
     }
@@ -8472,8 +8472,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(name.Length + 1) * 8; // name
-            boxSize += (ulong)(location.Length + 1) * 8; // location
+            boxSize += IsoStream.CalculateStringSize(name); // name
+            boxSize += IsoStream.CalculateStringSize(location); // location
             return boxSize;
         }
     }
@@ -9881,8 +9881,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(content_location.Length + 1) * 8; // content_location
-            boxSize += (ulong)(content_MD5.Length + 1) * 8; // content_MD5
+            boxSize += IsoStream.CalculateStringSize(content_location); // content_location
+            boxSize += IsoStream.CalculateStringSize(content_MD5); // content_MD5
             boxSize += 64; // content_length
             boxSize += 64; // transfer_length
             boxSize += 8; // entry_count
@@ -10697,7 +10697,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += 32; // group_ID
-                boxSize += (ulong)(group_name.Length + 1) * 8; // group_name
+                boxSize += IsoStream.CalculateStringSize(group_name); // group_name
             }
             return boxSize;
         }
@@ -10799,7 +10799,7 @@ namespace SharpMP4
             boxSize += 32; // pre_defined
             boxSize += 32; // handler_type
             boxSize += 3 * 32; // reserved
-            boxSize += (ulong)(name.Length + 1) * 8; // name
+            boxSize += IsoStream.CalculateStringSize(name); // name
             return boxSize;
         }
     }
@@ -11524,9 +11524,9 @@ namespace SharpMP4
             {
                 boxSize += 16; // item_ID
                 boxSize += 16; // item_protection_index
-                boxSize += (ulong)(item_name.Length + 1) * 8; // item_name
-                boxSize += (ulong)(content_type.Length + 1) * 8; // content_type
-                boxSize += (ulong)(content_encoding.Length + 1) * 8; // content_encoding
+                boxSize += IsoStream.CalculateStringSize(item_name); // item_name
+                boxSize += IsoStream.CalculateStringSize(content_type); // content_type
+                boxSize += IsoStream.CalculateStringSize(content_encoding); // content_encoding
             }
 
             if (version == 1)
@@ -11549,17 +11549,17 @@ namespace SharpMP4
                 }
                 boxSize += 16; // item_protection_index
                 boxSize += 32; // item_type
-                boxSize += (ulong)(item_name.Length + 1) * 8; // item_name
+                boxSize += IsoStream.CalculateStringSize(item_name); // item_name
 
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
-                    boxSize += (ulong)(content_type.Length + 1) * 8; // content_type
-                    boxSize += (ulong)(content_encoding.Length + 1) * 8; // content_encoding
+                    boxSize += IsoStream.CalculateStringSize(content_type); // content_type
+                    boxSize += IsoStream.CalculateStringSize(content_encoding); // content_encoding
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
                 {
-                    boxSize += (ulong)(item_uri_type.Length + 1) * 8; // item_uri_type
+                    boxSize += IsoStream.CalculateStringSize(item_uri_type); // item_uri_type
                 }
             }
             boxSize += IsoStream.CalculateBoxArray(this);
@@ -13601,7 +13601,7 @@ namespace SharpMP4
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += (ulong)(scheme_uri.Length + 1) * 8; // scheme_uri
+                boxSize += IsoStream.CalculateStringSize(scheme_uri); // scheme_uri
             }
             return boxSize;
         }
@@ -13676,7 +13676,7 @@ namespace SharpMP4
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += (ulong)(scheme_uri.Length + 1) * 8; // scheme_uri
+                boxSize += IsoStream.CalculateStringSize(scheme_uri); // scheme_uri
             }
             return boxSize;
         }
@@ -16839,7 +16839,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)xml.Length * 8; // xml
+            boxSize += IsoStream.CalculateStringSize(xml); // xml
             return boxSize;
         }
     }
@@ -16987,7 +16987,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(theURI.Length + 1) * 8; // theURI
+            boxSize += IsoStream.CalculateStringSize(theURI); // theURI
             return boxSize;
         }
     }
@@ -20443,7 +20443,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += 8; // statement_type
-                boxSize += (ulong)statement_namespace.Length * 8; // statement_namespace
+                boxSize += IsoStream.CalculateStringSize(statement_namespace); // statement_namespace
             }
             return boxSize;
         }
@@ -20528,7 +20528,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)config.Length * 8; // config
+            boxSize += IsoStream.CalculateStringSize(config); // config
             return boxSize;
         }
     }
@@ -20570,7 +20570,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)source_label.Length * 8; // source_label
+            boxSize += IsoStream.CalculateStringSize(source_label); // source_label
             return boxSize;
         }
     }
@@ -20666,7 +20666,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)aux_track_type.Length * 8; // aux_track_type
+            boxSize += IsoStream.CalculateStringSize(aux_track_type); // aux_track_type
             return boxSize;
         }
     }
@@ -21435,9 +21435,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(content_encoding.Length + 1) * 8; // content_encoding
-            boxSize += (ulong)ns.Length * 8; // ns
-            boxSize += (ulong)schema_location.Length * 8; // schema_location
+            boxSize += IsoStream.CalculateStringSize(content_encoding); // content_encoding
+            boxSize += IsoStream.CalculateStringSize(ns); // ns
+            boxSize += IsoStream.CalculateStringSize(schema_location); // schema_location
             return boxSize;
         }
     }
@@ -21491,9 +21491,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(content_encoding.Length + 1) * 8; // content_encoding
-            boxSize += (ulong)(mime_format.Length + 1) * 8; // mime_format
-                                                            // boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
+            boxSize += IsoStream.CalculateStringSize(content_encoding); // content_encoding
+            boxSize += IsoStream.CalculateStringSize(mime_format); // mime_format
+                                                                   // boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
@@ -29589,7 +29589,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)aux_type.Length * 8; // aux_type
+            boxSize += IsoStream.CalculateStringSize(aux_type); // aux_type
             boxSize += (ulong)aux_subtype.Length * 8; // aux_subtype
             return boxSize;
         }
@@ -30178,8 +30178,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(alt_text.Length + 1) * 8; // alt_text
-            boxSize += (ulong)(alt_lang.Length + 1) * 8; // alt_lang
+            boxSize += IsoStream.CalculateStringSize(alt_text); // alt_text
+            boxSize += IsoStream.CalculateStringSize(alt_lang); // alt_lang
             return boxSize;
         }
     }
@@ -30602,10 +30602,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(lang.Length + 1) * 8; // lang
-            boxSize += (ulong)(name.Length + 1) * 8; // name
-            boxSize += (ulong)(description.Length + 1) * 8; // description
-            boxSize += (ulong)(tags.Length + 1) * 8; // tags
+            boxSize += IsoStream.CalculateStringSize(lang); // lang
+            boxSize += IsoStream.CalculateStringSize(name); // name
+            boxSize += IsoStream.CalculateStringSize(description); // description
+            boxSize += IsoStream.CalculateStringSize(tags); // tags
             return boxSize;
         }
     }

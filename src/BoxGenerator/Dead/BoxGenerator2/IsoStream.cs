@@ -1434,6 +1434,21 @@ namespace SharpMP4
         {
             _stream.Seek(-20, SeekOrigin.Current);
         }
+
+        internal static ulong CalculateStringSize(string value)
+        {
+            return (ulong)Encoding.UTF8.GetByteCount(value) * 8;
+        }
+
+        internal static ulong CalculateStringSize(string[] value)
+        {
+            ulong size = 0;
+            foreach(var str in value)
+            {
+                size += CalculateStringSize(str);
+            }
+            return size;
+        }
     }
 
 #if !NET7_0_OR_GREATER
