@@ -127,6 +127,12 @@ namespace SharpMP4
 
         internal ulong ReadBoxArrayTillEnd(ulong boxSize, ulong readSize, Box box)
         {
+            if (box.Children != null)
+            {
+                Debug.WriteLine($"---Box reading {box.FourCC} repeated Children read");
+                return 0;
+            }
+
             box.Children = new List<Box>();
 
             ulong consumed = 0;
@@ -1400,6 +1406,12 @@ namespace SharpMP4
 
         internal ulong ReadDescriptorsTillEnd(ulong boxSize, ulong readSize, Descriptor descriptor, int objectTypeIndication = -1)
         {
+            if (descriptor.Children != null)
+            {
+                Debug.WriteLine($"---Descriptor reading repeated Children read");
+                return 0;
+            }
+
             descriptor.Children = new List<Descriptor>();
 
             ulong consumed = 0;

@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Pidgin;
+using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using static Pidgin.Parser;
 using static Pidgin.Parser<char>;
+using static Pidgin.Parser;
 
 namespace ConsoleApp;
 
@@ -820,6 +821,38 @@ partial class Program
                         result = DeduplicateBoxes(result);
                         foreach (var item in result)
                         {
+                            string[] ignoredBoxes = [
+                                    "IncompleteAVCSampleEntry",
+                                    "HEVCSampleEntry",
+                                    "LHEVCSampleEntry",
+                                    "AVCParameterSampleEntry",
+                                    "AVCSampleEntry",
+                                    "AVC2SampleEntry",
+                                    "MVCSampleEntry",
+                                    "MVCDSampleEntry",
+                                    "A3DSampleEntry",
+                                    "SVCSampleEntry",
+                                    "HEVCTileSampleEntry",
+                                    "LHEVCTileSampleEntry",
+                                    "HEVCTileSSHInfoSampleEntry",
+                                    "HEVCSliceSegmentDataSampleEntry",
+                                    "VvcSampleEntry",
+                                    "VvcSubpicSampleEntry",
+                                    "VvcNonVCLSampleEntry",
+                                    "EVCSampleEntry",
+                                    "EVCSliceComponentTrackSampleEntry",
+                                    "AV1SampleEntry",
+                                    "AVC2MVCSampleEntry",
+                                    "AVC2SVCSampleEntry",
+                                    "AVCMVCSampleEntry",
+                                    "AVCSVCSampleEntry",
+                                    "HEVCLHVCSampleEntry",
+                                    "OpusSampleEntry",
+                                ];
+
+                            if (ignoredBoxes.Contains(item.BoxName))
+                                continue;
+
                             if (item.BoxName == "AutoExposureBracketingEntry" ||
                                 item.BoxName == "FlashExposureBracketingEntry" ||
                                 item.BoxName == "AV1ForwardKeyFrameSampleGroupEntry" ||
@@ -972,40 +1005,64 @@ namespace SharpMP4
         }
         string[] visualSampleEntryTypes = new string[]
         {
-            "mp4v", "s263", "avc1", "avc3", "drmi", "hvc1", "hev1", "encv", "resv"
+            "mp4v", 
+            "s263", 
+            "drmi", 
+            "encv", 
+            "resv",
+            
+            "icpv",
+            "hvc1",
+            "hvc2",
+            "hvc3",
+            "lhv1",
+            "lhe1",
+            "hev1",
+            "hev2",
+            "hev3",
+            "avcp",
+            "mvc1",
+            "mvc2",
+            "mvc3",
+            "mvc4",
+            "mvd1",
+            "mvd2",
+            "mvd3",
+            "mvd4",
+            "a3d1",
+            "a3d2",
+            "a3d3",
+            "a3d4",
+            "svc1",
+            "svc2",
+            "hvt1",
+            "lht1",
+            "hvt3",
+            "hvt2",
+            "vvc1",
+            "vvi1",
+            "vvs1",
+            "vvcN",
+            "evc1",
+            "evs1",
+            "evs2",
+            "av01",
+            "avc1",
+            "avc2",
+            "avc3",
+            "avc4",
         };
         foreach (var type in visualSampleEntryTypes)
         {
             if (!fourccEntries.ContainsKey(type))
                 fourccEntries.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
         }
-        string[] sampleEntryTypes = new string[]
-        {
-            "mp4s"
-        };
-        foreach (var type in sampleEntryTypes)
-        {
-            if (!fourccEntries.ContainsKey(type))
-                fourccEntries.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value });
-        }
-        string[] referenceBox = new string[]
-        {
-            "dimg"
-        };
-        foreach (var type in referenceBox)
-        {
-            if (!fourccBoxes.ContainsKey(type))
-                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "SingleItemTypeReferenceBox").Value });
-        }
-        string[] referenceBox2 = new string[]
-        {
-            "cdsc"
-        };
-        foreach (var type in referenceBox2)
-        {
-            if (!fourccBoxes.ContainsKey(type))
-                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "TrackReferenceTypeBox").Value });
-        }
+        if (!fourccEntries.ContainsKey("mp4s"))
+            fourccEntries.Add("mp4s", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value });
+        if (!fourccBoxes.ContainsKey("dimg"))
+            fourccBoxes.Add("dimg", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "SingleItemTypeReferenceBox").Value });
+        if (!fourccBoxes.ContainsKey("cdsc"))
+            fourccBoxes.Add("cdsc", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "TrackReferenceTypeBox").Value });
 
         foreach (var item in fourccBoxes)
         {
@@ -1080,10 +1137,6 @@ namespace SharpMP4
                 if (
                     item.Value.First().BoxName == "MovieBox" ||
                     item.Value.First().BoxName == "MovieFragmentBox" ||
-                    item.Value.First().BoxName == "AVCMVCSampleEntry" ||
-                    item.Value.First().BoxName == "AVC2MVCSampleEntry" ||
-                    item.Value.First().BoxName == "AVCMVCSampleEntry_avc3" ||
-                    item.Value.First().BoxName == "AVC2MVCSampleEntry_avc4" ||
                     item.Value.First().BoxName == "SegmentIndexBox" ||
                     item.Value.First().BoxName == "trackhintinformation" ||
                     item.Value.First().BoxName == "ViewPriorityBox" ||
