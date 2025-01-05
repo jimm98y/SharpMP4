@@ -1394,7 +1394,7 @@ namespace SharpMP4
             string baseWrite = "\r\n\t\tboxSize += await base.WriteAsync(stream);";
             if (b.BoxName == "MetaBox")
             {
-                baseWrite = "\r\n\t\tif(IsQuickTime) boxSize += await base.WriteAsync(stream);";
+                baseWrite = "\r\n\t\tif(!IsQuickTime) boxSize += await base.WriteAsync(stream);";
             }
             cls += baseWrite;
         }
@@ -1428,7 +1428,7 @@ namespace SharpMP4
             string baseSize = "\r\n\t\tboxSize += base.CalculateSize();";
             if (b.BoxName == "MetaBox")
             {
-                baseSize = "\r\n\t\tif(IsQuickTime) boxSize += base.CalculateSize();";
+                baseSize += "\r\n\t\tif(IsQuickTime) boxSize = (ulong)(boxSize - 32);";
             }
             cls += baseSize;
         }

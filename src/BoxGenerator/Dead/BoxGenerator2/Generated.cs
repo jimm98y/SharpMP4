@@ -12270,7 +12270,7 @@ namespace SharpMP4
         public async override Task<ulong> WriteAsync(IsoStream stream)
         {
             ulong boxSize = 0;
-            if (IsQuickTime) boxSize += await base.WriteAsync(stream);
+            if (!IsQuickTime) boxSize += await base.WriteAsync(stream);
             // boxSize += stream.WriteBox( this.theHandler); 
             // boxSize += stream.WriteBox( this.primary_resource); // optional
             // boxSize += stream.WriteBox( this.file_locations); // optional
@@ -12288,7 +12288,8 @@ namespace SharpMP4
         public override ulong CalculateSize()
         {
             ulong boxSize = 0;
-            if (IsQuickTime) boxSize += base.CalculateSize();
+            boxSize += base.CalculateSize();
+            if (IsQuickTime) boxSize = (ulong)(boxSize - 32);
             // boxSize += IsoStream.CalculateBoxSize(theHandler); // theHandler
             // boxSize += IsoStream.CalculateBoxSize(primary_resource); // primary_resource
             // boxSize += IsoStream.CalculateBoxSize(file_locations); // file_locations
