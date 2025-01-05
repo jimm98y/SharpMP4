@@ -1337,6 +1337,26 @@ namespace SharpMP4
             return size;
         }
 
+        internal ulong WriteEntry(IMp4Serializable entry)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateEntrySize(IMp4Serializable entry)
+        {
+            return entry.CalculateSize();
+        }
+
+        internal static ulong CalculateEntrySize(IMp4Serializable[] entry)
+        {
+            ulong size = 0;
+            foreach (var e in entry)
+            {
+                size += e.CalculateSize();
+            }
+            return size;
+        }
+
         internal ulong ReadDescriptor(out ES_Descriptor descriptor)
         {
             Descriptor d;

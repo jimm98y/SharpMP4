@@ -14003,7 +14003,7 @@ namespace SharpMP4
                         boxSize += stream.WriteUInt32(this.description_length[i]);
                     }
                 }
-                boxSize += stream.WriteClass(this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
+                boxSize += stream.WriteEntry(this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
                 /*   that is appropriate and permitted for the media type */
             }
             return boxSize;
@@ -14038,7 +14038,7 @@ namespace SharpMP4
                         boxSize += 32; // description_length
                     }
                 }
-                boxSize += IsoStream.CalculateClassSize(SampleGroupDescriptionEntry); // SampleGroupDescriptionEntry
+                boxSize += IsoStream.CalculateEntrySize(SampleGroupDescriptionEntry); // SampleGroupDescriptionEntry
                 /*   that is appropriate and permitted for the media type */
             }
             return boxSize;
@@ -14780,7 +14780,7 @@ namespace SharpMP4
 
             for (int i = 0; i < entry_count; i++)
             {
-                // boxSize += stream.WriteBox( this.SampleEntry[i]); // an instance of a class derived from SampleEntry
+                boxSize += stream.WriteEntry(this.SampleEntry[i]); // an instance of a class derived from SampleEntry
             }
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
@@ -14795,7 +14795,7 @@ namespace SharpMP4
 
             for (int i = 0; i < entry_count; i++)
             {
-                // boxSize += IsoStream.CalculateBoxSize(SampleEntry); // SampleEntry
+                boxSize += IsoStream.CalculateEntrySize(SampleEntry); // SampleEntry
             }
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
@@ -30998,7 +30998,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            // boxSize += stream.WriteBox( this.sid_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.WriteEntry(this.sid_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -31006,7 +31006,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(sid_info); // sid_info
+            boxSize += IsoStream.CalculateEntrySize(sid_info); // sid_info
             return boxSize;
         }
     }
@@ -31041,7 +31041,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            // boxSize += stream.WriteBox( this.sor_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.WriteEntry(this.sor_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -31049,7 +31049,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(sor_info); // sor_info
+            boxSize += IsoStream.CalculateEntrySize(sor_info); // sor_info
             return boxSize;
         }
     }
