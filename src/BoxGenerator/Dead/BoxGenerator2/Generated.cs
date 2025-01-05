@@ -1760,7 +1760,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 32; // major_brand
             boxSize += 32; // minor_version
-            boxSize += 32; // compatible_brands
+            boxSize += (ulong)compatible_brands.Length * 32; // compatible_brands
             return boxSize;
         }
     }
@@ -7909,7 +7909,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 1; // pad
-            boxSize += 16; // language
+            boxSize += 15; // language
             boxSize += (ulong)notice.Length * 8; // notice
             return boxSize;
         }
@@ -8009,7 +8009,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32; // switch_group
-            boxSize += 32; // attribute_list
+            boxSize += (ulong)attribute_list.Length * 32; // attribute_list
             return boxSize;
         }
     }
@@ -10625,7 +10625,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 32; // major_brand
             boxSize += 32; // minor_version
-            boxSize += 32; // compatible_brands
+            boxSize += (ulong)compatible_brands.Length * 32; // compatible_brands
             return boxSize;
         }
     }
@@ -12066,7 +12066,7 @@ namespace SharpMP4
                 boxSize += 32; // duration
             }
             boxSize += 1; // pad
-            boxSize += 16; // language
+            boxSize += 15; // language
             boxSize += 16; // pre_defined
             return boxSize;
         }
@@ -14644,7 +14644,7 @@ namespace SharpMP4
             boxSize += 16; // switch_group
             boxSize += 16; // alternate_group
             boxSize += 32; // sub_track_ID
-            boxSize += 32; // attribute_list
+            boxSize += (ulong)attribute_list.Length * 32; // attribute_list
             return boxSize;
         }
     }
@@ -16599,7 +16599,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 32; // compatible_brands
+            boxSize += (ulong)compatible_brands.Length * 32; // compatible_brands
             return boxSize;
         }
     }
@@ -23492,7 +23492,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 32; // track_IDs
+            boxSize += (ulong)track_IDs.Length * 32; // track_IDs
             return boxSize;
         }
     }

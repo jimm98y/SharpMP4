@@ -53,7 +53,7 @@ namespace SharpMP4
 
         public virtual ulong CalculateSize()
         {
-            return IsoStream.CalculateBoxArray(this);
+            return (ulong)(32 + 32 + (size > uint.MaxValue ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(boxPadding != null ? 8 * boxPadding.Length : 0);
         }
     }
 

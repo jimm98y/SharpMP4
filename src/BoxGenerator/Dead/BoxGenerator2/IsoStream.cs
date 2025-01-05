@@ -1125,6 +1125,9 @@ namespace SharpMP4
         internal static ulong CalculateBoxSize(IEnumerable<Box> boxes)
         {
             ulong size = 0;
+            if (boxes == null)
+                return 0;
+
             foreach (Box box in boxes)
             {
                 size += box.CalculateSize();
@@ -1259,6 +1262,12 @@ namespace SharpMP4
                     throw new Exception("Box read through!");
                 }
             }
+
+            ulong calculatedSize = box.CalculateSize();
+            if (calculatedSize != header.BoxSize)
+            {
+                Debug.WriteLine($"---------Calculated \'{box.FourCC}\' size: {calculatedSize / 8}, read: {header.BoxSize / 8}");
+            }
         }
 
         internal ulong ReadEntry(ulong boxSize, ulong readSize, out SampleEntry entry)
@@ -1291,6 +1300,12 @@ namespace SharpMP4
                     Debug.WriteLine($"--!! Box \'{fourCC}\' read through!");
                     throw new Exception("Box read through!");
                 }
+            }
+
+            ulong calculatedSize = box.CalculateSize();
+            if (calculatedSize != header.BoxSize)
+            {
+                Debug.WriteLine($"---------Calculated '{fourCC}' size: {calculatedSize / 8}, read: {header.BoxSize / 8}");
             }
 
             entry = (SampleEntry)box;

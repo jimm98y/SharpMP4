@@ -2804,7 +2804,7 @@ namespace SharpMP4
             { "unsigned int(8)",                        "8" },
             { "unsigned int(7)",                        "7" },
             { "unsigned int(6)",                        "6" },
-            { "unsigned int(5)[3]",                     "16" }, // Iso639
+            { "unsigned int(5)[3]",                     "15" }, // Iso639
             { "unsigned int(5)",                        "5" },
             { "unsigned int(4)",                        "4" },
             { "unsigned int(3)",                        "3" },
@@ -3007,7 +3007,7 @@ namespace SharpMP4
             { "unsigned int(6)[i][j]",                  "6" },
             { "unsigned int(1)[i][j]",                  "1" },
             { "unsigned int(9)[i]",                     "9" },
-            { "unsigned int(32)[]",                     "32" },
+            { "unsigned int(32)[]",                     "(ulong)value.Length * 32" },
             { "unsigned int(32)[i]",                    "32" },
             { "unsigned int(32)[j]",                    "32" },
             { "unsigned int(8)[j][k]",                  "8" },
