@@ -278,6 +278,7 @@ partial class Program
             Try(String("unsigned int(10)")),
             Try(String("unsigned int(8)[length]")),
             Try(String("unsigned int(8)[32]")),
+            Try(String("unsigned int(8)[20]")),
             Try(String("unsigned int(8)[16]")),
             Try(String("unsigned int(9)")),
             Try(String("unsigned int(8)")),
@@ -477,6 +478,7 @@ partial class Program
             Try(String("j++")), // WORKAROUND
             Try(String("subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")), // WORKAROUND
             Try(String("totalPatternLength = 0")), // WORKAROUND
+            Try(String("samplerate = samplerate >> 16")), // WORKAROUND
             // descriptors
             Try(String("DecoderConfigDescriptor")),
             Try(String("SLConfigDescriptor")),
@@ -2178,6 +2180,10 @@ namespace SharpMP4
                 condition = condition.Replace("channelStructured", "1");
             if (condition.Contains("objectStructured"))
                 condition = condition.Replace("objectStructured", "2");
+
+            // fix for Apple extensions to AudioSampleEntry
+            if (condition.Contains("codingname"))
+                condition = condition.Replace("codingname", "IsoStream.FromFourCC(FourCC)");
         }
 
         if (!string.IsNullOrEmpty(condition))
@@ -2397,6 +2403,7 @@ namespace SharpMP4
             { "unsigned int(8)[ sample_count ]",        "stream.ReadBytes(sample_count, " },
             { "unsigned int(8)[length]",                "stream.ReadBytes(length, " },
             { "unsigned int(8)[32]",                    "stream.ReadBytes(32, " },
+            { "unsigned int(8)[20]",                    "stream.ReadBytes(32, " },
             { "unsigned int(8)[16]",                    "stream.ReadBytes(16, " },
             { "unsigned int(9)",                        "stream.ReadBits(9, " },
             { "unsigned int(8)",                        "stream.ReadUInt8(" },
@@ -2791,6 +2798,7 @@ namespace SharpMP4
             { "unsigned int(8)[ sample_count ]",        "(ulong)sample_count * 8" },
             { "unsigned int(8)[length]",                "(ulong)length * 8" },
             { "unsigned int(8)[32]",                    "32 * 8" },
+            { "unsigned int(8)[20]",                    "20 * 8" },
             { "unsigned int(8)[16]",                    "16 * 8" },
             { "unsigned int(9)",                        "9" },
             { "unsigned int(8)",                        "8" },
@@ -3184,6 +3192,7 @@ namespace SharpMP4
             { "unsigned int(8)[ sample_count ]",        "stream.WriteBytes(sample_count, " },
             { "unsigned int(8)[length]",                "stream.WriteBytes(length, " },
             { "unsigned int(8)[32]",                    "stream.WriteBytes(32, " },
+            { "unsigned int(8)[20]",                    "stream.WriteBytes(20, " },
             { "unsigned int(8)[16]",                    "stream.WriteBytes(16, " },
             { "unsigned int(9)",                        "stream.WriteBits(9, " },
             { "unsigned int(8)",                        "stream.WriteUInt8(" },
@@ -3550,6 +3559,7 @@ namespace SharpMP4
     {
         HashSet<string> map = new HashSet<string>
         {
+            "samplerate = samplerate >> 16",
             "int downmix_instructions_count = 1",
             "int i, j",
             "int i,j",
@@ -3621,6 +3631,7 @@ namespace SharpMP4
             { "unsigned int(8)[ sample_count ]",        "byte[]" },
             { "unsigned int(8)[length]",                "byte[]" },
             { "unsigned int(8)[32]",                    "byte[]" },
+            { "unsigned int(8)[20]",                    "byte[]" },
             { "unsigned int(8)[16]",                    "byte[]" },
             { "unsigned int(9)",                        "ushort" },
             { "unsigned int(8)",                        "byte" },

@@ -20857,16 +20857,34 @@ namespace SharpMP4
 
 
     /*
-    class AudioSampleEntry(codingname) extends SampleEntry (codingname){
-        const unsigned int(32)[2] reserved = 0;
+    class AudioSampleEntry(codingname) extends SampleEntry (codingname) {
+        unsigned int(16) soundversion = 0;
+        unsigned int(16) reserved1 = 0;
+        unsigned int(32) reserved2 = 0;
         unsigned int(16) channelcount;
         template unsigned int(16) samplesize = 16;
+
         unsigned int(16) pre_defined = 0;
-        const unsigned int(16) reserved = 0 ;
-        template unsigned int(32) samplerate = { default samplerate of media}<<16;
-        // optional boxes follow
-        Box ();		// further boxes as needed
+        const unsigned int(16) reserved = 0;
+        template unsigned int(32) samplerate;
+
+        if(codingname != 'mlpa') {
+            samplerate = samplerate >> 16;
+        }
+
+        if(soundversion == 1 || soundversion == 2) {
+           unsigned int(32) samplesPerPacket;
+           unsigned int(32) bytesPerPacket;
+           unsigned int(32) bytesPerFrame;
+           unsigned int(32) bytesPerSample;
+        }
+
+        if(soundversion == 2) {
+           unsigned int(8)[20] soundVersion2Data;
+        }
+
         ChannelLayout();
+        // we permit any number of DownMix or DRC boxes: 
         DownMixInstructions() [];
         DRCCoefficientsBasic() [];
         DRCInstructionsBasic() [];
@@ -20876,17 +20894,21 @@ namespace SharpMP4
         UniDrcConfigExtension();
         // optional boxes follow
         SamplingRateBox();
-        ChannelLayout();
+        Box (); // further boxes as needed
     }
-
-
     */
     public class AudioSampleEntry : SampleEntry
     {
 
 
-        protected uint[] reserved = [];
-        public uint[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
+        protected ushort soundversion = 0;
+        public ushort Soundversion { get { return this.soundversion; } set { this.soundversion = value; } }
+
+        protected ushort reserved1 = 0;
+        public ushort Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected uint reserved2 = 0;
+        public uint Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
         protected ushort channelcount;
         public ushort Channelcount { get { return this.channelcount; } set { this.channelcount = value; } }
@@ -20897,12 +20919,26 @@ namespace SharpMP4
         protected ushort pre_defined = 0;
         public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
 
-        protected ushort reserved0 = 0;
-        public ushort Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+        protected ushort reserved = 0;
+        public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        protected uint samplerate = 0; // = {if track_is_audio 0x0100 else 0}; //  optional boxes follow
+        protected uint samplerate;
         public uint Samplerate { get { return this.samplerate; } set { this.samplerate = value; } }
-        public Box _Box { get { return this.children.OfType<Box>().FirstOrDefault(); } }
+
+        protected uint samplesPerPacket;
+        public uint SamplesPerPacket { get { return this.samplesPerPacket; } set { this.samplesPerPacket = value; } }
+
+        protected uint bytesPerPacket;
+        public uint BytesPerPacket { get { return this.bytesPerPacket; } set { this.bytesPerPacket = value; } }
+
+        protected uint bytesPerFrame;
+        public uint BytesPerFrame { get { return this.bytesPerFrame; } set { this.bytesPerFrame = value; } }
+
+        protected uint bytesPerSample;
+        public uint BytesPerSample { get { return this.bytesPerSample; } set { this.bytesPerSample = value; } }
+
+        protected byte[] soundVersion2Data;
+        public byte[] SoundVersion2Data { get { return this.soundVersion2Data; } set { this.soundVersion2Data = value; } }
         public ChannelLayout _ChannelLayout { get { return this.children.OfType<ChannelLayout>().FirstOrDefault(); } }
         public IEnumerable<DownMixInstructions> _DownMixInstructions { get { return this.children.OfType<DownMixInstructions>(); } }
         public IEnumerable<DRCCoefficientsBasic> _DRCCoefficientsBasic { get { return this.children.OfType<DRCCoefficientsBasic>(); } }
@@ -20911,6 +20947,7 @@ namespace SharpMP4
         public IEnumerable<DRCInstructionsUniDRC> _DRCInstructionsUniDRC { get { return this.children.OfType<DRCInstructionsUniDRC>(); } }
         public UniDrcConfigExtension _UniDrcConfigExtension { get { return this.children.OfType<UniDrcConfigExtension>().FirstOrDefault(); } }
         public SamplingRateBox _SamplingRateBox { get { return this.children.OfType<SamplingRateBox>().FirstOrDefault(); } }
+        public Box _Box { get { return this.children.OfType<Box>().FirstOrDefault(); } }
 
         public AudioSampleEntry(string codingname = "") : base(codingname)
         {
@@ -20920,22 +20957,41 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadUInt32Array(2, out this.reserved);
+            boxSize += stream.ReadUInt16(out this.soundversion);
+            boxSize += stream.ReadUInt16(out this.reserved1);
+            boxSize += stream.ReadUInt32(out this.reserved2);
             boxSize += stream.ReadUInt16(out this.channelcount);
             boxSize += stream.ReadUInt16(out this.samplesize);
             boxSize += stream.ReadUInt16(out this.pre_defined);
-            boxSize += stream.ReadUInt16(out this.reserved0);
-            boxSize += stream.ReadUInt32(out this.samplerate); // optional boxes follow
-                                                               // boxSize += stream.ReadBox(boxSize, readSize,  out this.Box); // further boxes as needed
-                                                               // boxSize += stream.ReadBox(boxSize, readSize,  out this.ChannelLayout); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize,  out this.DownMixInstructions); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize,  out this.DRCCoefficientsBasic); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize,  out this.DRCInstructionsBasic); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize,  out this.DRCCoefficientsUniDRC); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize,  out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-                                                               // boxSize += stream.ReadBox(boxSize, readSize,  out this.UniDrcConfigExtension); // optional boxes follow
-                                                               // boxSize += stream.ReadBox(boxSize, readSize,  out this.SamplingRateBox); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize,  out this.ChannelLayout); 
+            boxSize += stream.ReadUInt16(out this.reserved);
+            boxSize += stream.ReadUInt32(out this.samplerate);
+
+            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
+            {
+                samplerate = samplerate >> 16;
+            }
+
+            if (soundversion == 1 || soundversion == 2)
+            {
+                boxSize += stream.ReadUInt32(out this.samplesPerPacket);
+                boxSize += stream.ReadUInt32(out this.bytesPerPacket);
+                boxSize += stream.ReadUInt32(out this.bytesPerFrame);
+                boxSize += stream.ReadUInt32(out this.bytesPerSample);
+            }
+
+            if (soundversion == 2)
+            {
+                boxSize += stream.ReadBytes(32, out this.soundVersion2Data);
+            }
+            // boxSize += stream.ReadBox(boxSize, readSize,  out this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
+            // boxSize += stream.ReadBox(boxSize, readSize,  out this.DownMixInstructions); 
+            // boxSize += stream.ReadBox(boxSize, readSize,  out this.DRCCoefficientsBasic); 
+            // boxSize += stream.ReadBox(boxSize, readSize,  out this.DRCInstructionsBasic); 
+            // boxSize += stream.ReadBox(boxSize, readSize,  out this.DRCCoefficientsUniDRC); 
+            // boxSize += stream.ReadBox(boxSize, readSize,  out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            // boxSize += stream.ReadBox(boxSize, readSize,  out this.UniDrcConfigExtension); // optional boxes follow
+            // boxSize += stream.ReadBox(boxSize, readSize,  out this.SamplingRateBox); 
+            // boxSize += stream.ReadBox(boxSize, readSize,  out this.Box); // further boxes as needed
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -20944,22 +21000,41 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt32Array(2, this.reserved);
+            boxSize += stream.WriteUInt16(this.soundversion);
+            boxSize += stream.WriteUInt16(this.reserved1);
+            boxSize += stream.WriteUInt32(this.reserved2);
             boxSize += stream.WriteUInt16(this.channelcount);
             boxSize += stream.WriteUInt16(this.samplesize);
             boxSize += stream.WriteUInt16(this.pre_defined);
-            boxSize += stream.WriteUInt16(this.reserved0);
-            boxSize += stream.WriteUInt32(this.samplerate); // optional boxes follow
-                                                            // boxSize += stream.WriteBox( this.Box); // further boxes as needed
-                                                            // boxSize += stream.WriteBox( this.ChannelLayout); 
-                                                            // boxSize += stream.WriteBox( this.DownMixInstructions); 
-                                                            // boxSize += stream.WriteBox( this.DRCCoefficientsBasic); 
-                                                            // boxSize += stream.WriteBox( this.DRCInstructionsBasic); 
-                                                            // boxSize += stream.WriteBox( this.DRCCoefficientsUniDRC); 
-                                                            // boxSize += stream.WriteBox( this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-                                                            // boxSize += stream.WriteBox( this.UniDrcConfigExtension); // optional boxes follow
-                                                            // boxSize += stream.WriteBox( this.SamplingRateBox); 
-                                                            // boxSize += stream.WriteBox( this.ChannelLayout); 
+            boxSize += stream.WriteUInt16(this.reserved);
+            boxSize += stream.WriteUInt32(this.samplerate);
+
+            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
+            {
+                samplerate = samplerate >> 16;
+            }
+
+            if (soundversion == 1 || soundversion == 2)
+            {
+                boxSize += stream.WriteUInt32(this.samplesPerPacket);
+                boxSize += stream.WriteUInt32(this.bytesPerPacket);
+                boxSize += stream.WriteUInt32(this.bytesPerFrame);
+                boxSize += stream.WriteUInt32(this.bytesPerSample);
+            }
+
+            if (soundversion == 2)
+            {
+                boxSize += stream.WriteBytes(20, this.soundVersion2Data);
+            }
+            // boxSize += stream.WriteBox( this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
+            // boxSize += stream.WriteBox( this.DownMixInstructions); 
+            // boxSize += stream.WriteBox( this.DRCCoefficientsBasic); 
+            // boxSize += stream.WriteBox( this.DRCInstructionsBasic); 
+            // boxSize += stream.WriteBox( this.DRCCoefficientsUniDRC); 
+            // boxSize += stream.WriteBox( this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            // boxSize += stream.WriteBox( this.UniDrcConfigExtension); // optional boxes follow
+            // boxSize += stream.WriteBox( this.SamplingRateBox); 
+            // boxSize += stream.WriteBox( this.Box); // further boxes as needed
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
@@ -20968,22 +21043,41 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 2 * 32; // reserved
+            boxSize += 16; // soundversion
+            boxSize += 16; // reserved1
+            boxSize += 32; // reserved2
             boxSize += 16; // channelcount
             boxSize += 16; // samplesize
             boxSize += 16; // pre_defined
-            boxSize += 16; // reserved0
+            boxSize += 16; // reserved
             boxSize += 32; // samplerate
-                           // boxSize += IsoStream.CalculateBoxSize(Box); // Box
-                           // boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
-                           // boxSize += IsoStream.CalculateBoxSize(DownMixInstructions); // DownMixInstructions
-                           // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
-                           // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsBasic); // DRCInstructionsBasic
-                           // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
-                           // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
-                           // boxSize += IsoStream.CalculateBoxSize(UniDrcConfigExtension); // UniDrcConfigExtension
-                           // boxSize += IsoStream.CalculateBoxSize(SamplingRateBox); // SamplingRateBox
-                           // boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
+
+            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
+            {
+                samplerate = samplerate >> 16;
+            }
+
+            if (soundversion == 1 || soundversion == 2)
+            {
+                boxSize += 32; // samplesPerPacket
+                boxSize += 32; // bytesPerPacket
+                boxSize += 32; // bytesPerFrame
+                boxSize += 32; // bytesPerSample
+            }
+
+            if (soundversion == 2)
+            {
+                boxSize += 20 * 8; // soundVersion2Data
+            }
+            // boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
+            // boxSize += IsoStream.CalculateBoxSize(DownMixInstructions); // DownMixInstructions
+            // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+            // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsBasic); // DRCInstructionsBasic
+            // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+            // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+            // boxSize += IsoStream.CalculateBoxSize(UniDrcConfigExtension); // UniDrcConfigExtension
+            // boxSize += IsoStream.CalculateBoxSize(SamplingRateBox); // SamplingRateBox
+            // boxSize += IsoStream.CalculateBoxSize(Box); // Box
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }

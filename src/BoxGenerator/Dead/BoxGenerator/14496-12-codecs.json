@@ -10,6 +10,13 @@
       "syntax": null
     },
     {
+      "fourcc": "mp4a",
+      "description": "MP4 Audio",
+      "type": "AudioSampleEntry",
+      "containers": [ "stsd" ],
+      "syntax": "class AudioSampleEntry(codingname) extends SampleEntry (codingname) {\r\n    unsigned int(16) soundversion = 0;\r\n    unsigned int(16) reserved1 = 0;\r\n    unsigned int(32) reserved2 = 0;\r\n    unsigned int(16) channelcount;\r\n    template unsigned int(16) samplesize = 16;\r\n\r\n    unsigned int(16) pre_defined = 0;\r\n    const unsigned int(16) reserved = 0;\r\n    template unsigned int(32) samplerate;\r\n\r\n    if(codingname != 'mlpa') {\r\n        samplerate = samplerate >> 16;\r\n    }\r\n\r\n    if(soundversion == 1 || soundversion == 2) {\r\n       unsigned int(32) samplesPerPacket;\r\n       unsigned int(32) bytesPerPacket;\r\n       unsigned int(32) bytesPerFrame;\r\n       unsigned int(32) bytesPerSample;\r\n    }\r\n\r\n    if(soundversion == 2) {\r\n       unsigned int(8)[20] soundVersion2Data;\r\n    }\r\n\r\n    ChannelLayout();\r\n    // we permit any number of DownMix or DRC boxes: \r\n    DownMixInstructions() [];\r\n    DRCCoefficientsBasic() [];\r\n    DRCInstructionsBasic() [];\r\n    DRCCoefficientsUniDRC() [];\r\n    DRCInstructionsUniDRC() [];\r\n    // we permit only one DRC Extension box:\r\n    UniDrcConfigExtension();\r\n    // optional boxes follow\r\n    SamplingRateBox();\r\n    Box (); // further boxes as needed\r\n}"
+    },
+    {
       "fourcc": "enca",
       "description": "Encrypted/Protected audio",
       "type": "AudioSampleEntry",

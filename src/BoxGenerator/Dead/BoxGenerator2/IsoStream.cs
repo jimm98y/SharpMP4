@@ -151,7 +151,7 @@ namespace SharpMP4
             }
 
             ulong remaining = readSize - boxSize;
-            while(consumed < remaining)
+            while(consumed < remaining && (remaining - consumed) >= 64) // box header is at least 8 bytes
             {
                 Box v;
                 consumed += ReadBox(consumed, readSize, box.FourCC, out v);
@@ -691,11 +691,11 @@ namespace SharpMP4
         internal static string ToFourCC(uint value)
         {
             byte[] buffer = {
-            (byte)(value >> 24 & 0xFF),
-            (byte)(value >> 16 & 0xFF),
-            (byte)(value >> 8 & 0xFF),
-            (byte)(value & 0xFF)
-        };
+                (byte)(value >> 24 & 0xFF),
+                (byte)(value >> 16 & 0xFF),
+                (byte)(value >> 8 & 0xFF),
+                (byte)(value & 0xFF)
+            };
             return Encoding.GetEncoding("ISO-8859-1").GetString(buffer);
         }
 
@@ -1210,7 +1210,11 @@ namespace SharpMP4
 
         public async Task<Box> ReadBoxAsync(Mp4BoxHeader header)
         {
-            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), null);
+            if (header.Header.Type == 0 && header.Header.Size == 0 && header.Header.Largesize == 0)
+                return null; // all zeros, looks like 8 zero bytes padding at the end of the file
+
+            string fourCC = ToFourCC(header.Header.Type);
+            var box = BoxFactory.CreateBox(fourCC, null);
             await ReadBoxAsync(header, box);
             return box;
         }
@@ -1235,7 +1239,7 @@ namespace SharpMP4
                 if(size < availableSize)
                 {
                     // TODO: Investigate and fix
-                    ReadBits((uint)(availableSize - size), out byte[] missing);
+                    size += ReadBits((uint)(availableSize - size), out byte[] missing);
                     box.BoxPadding = missing;
 
                     if (missing.FirstOrDefault(x => x != 0) == default(byte))
@@ -1252,7 +1256,7 @@ namespace SharpMP4
                 else
                 {
                     Debug.WriteLine($"--!! Box \'{box.FourCC}\' read through!");
-                    throw new OverflowException("Box read through!");
+                    throw new Exception("Box read through!");
                 }
             }
         }
@@ -1261,17 +1265,35 @@ namespace SharpMP4
         {
             var header = ReadBoxHeaderAsync().Result;
             string fourCC = ToFourCC(header.Header.Type);
-            var res = BoxFactory.CreateEntry(fourCC);
+            var box = BoxFactory.CreateEntry(fourCC);
             Debug.WriteLine($"--Parsed entry: {fourCC}");
             ulong availableSize = header.BoxSize - header.HeaderSize;
-            ulong size = res.ReadAsync(this, availableSize).Result;
-
-            if (header.BoxSize != 0 && size != availableSize)
+            ulong size = box.ReadAsync(this, availableSize).Result;
+            if (size != availableSize)
             {
-                throw new Exception();
+                if (size < availableSize)
+                {
+                    // TODO: Investigate and fix
+                    size += ReadBits((uint)(availableSize - size), out byte[] missing);
+                    //box.BoxPadding = missing;
+
+                    if (missing.FirstOrDefault(x => x != 0) == default(byte))
+                    {
+                        Debug.WriteLine($"-Entry \'{fourCC}\' has extra padding of {missing.Length} zero bytes");
+                    }
+                    else
+                    {
+                        throw new Exception("Entry not fully read!");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine($"--!! Box \'{fourCC}\' read through!");
+                    throw new Exception("Box read through!");
+                }
             }
 
-            entry = (SampleEntry)res;
+            entry = (SampleEntry)box;
             return size + header.HeaderSize;
         }
 
@@ -1326,7 +1348,7 @@ namespace SharpMP4
             if (readInstanceSizeBits != sizeOfInstanceBits)
             {
                 // TODO: Investigate and fix
-                ReadBits((uint)(sizeOfInstanceBits - readInstanceSizeBits), out byte[] missing);
+                size += ReadBits((uint)(sizeOfInstanceBits - readInstanceSizeBits), out byte[] missing);
                 descriptor.DescriptorPadding = missing;
 
                 if (missing.FirstOrDefault(x => x != 0) == default(byte))
