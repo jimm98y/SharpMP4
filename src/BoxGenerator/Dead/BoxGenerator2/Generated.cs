@@ -531,6 +531,7 @@ namespace SharpMP4
     */
     public class SymbolicMusicSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte version;  // version of this specification is 0b0000 
@@ -895,6 +896,7 @@ namespace SharpMP4
     */
     public abstract class SampleGroupDescriptionEntry : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         public SampleGroupDescriptionEntry(string grouping_type) : base()
@@ -1514,6 +1516,7 @@ namespace SharpMP4
     */
     public class ItemInfoExtension : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         public ItemInfoExtension(string extension_type) : base()
@@ -2063,6 +2066,7 @@ namespace SharpMP4
     */
     public class MetaDataAccessUnit : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected Box[] boxes;
@@ -2557,6 +2561,7 @@ namespace SharpMP4
     */
     public class DependencyInfo : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte subSeqDirectionFlag;
@@ -3053,6 +3058,7 @@ namespace SharpMP4
     */
     public class AVCDecoderConfigurationRecord : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -3296,6 +3302,7 @@ namespace SharpMP4
     */
     public class MVCDecoderConfigurationRecord : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -3464,6 +3471,7 @@ namespace SharpMP4
     */
     public class SVCDecoderConfigurationRecord : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -3641,6 +3649,7 @@ namespace SharpMP4
     */
     public class HEVCDecoderConfigurationRecord : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -3898,6 +3907,7 @@ namespace SharpMP4
     */
     public class VvcPTLRecord : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte reserved = 0;
@@ -4104,6 +4114,7 @@ namespace SharpMP4
     */
     public class VvcDecoderConfigurationRecord : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte reserved = 0b11111;
@@ -4340,6 +4351,7 @@ namespace SharpMP4
     */
     public class MVDDecoderConfigurationRecord : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -4536,6 +4548,7 @@ namespace SharpMP4
     */
     public class VvcOperatingPointsRecord : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte num_profile_tier_level_minus1;
@@ -4898,6 +4911,7 @@ namespace SharpMP4
     */
     public class EVCDecoderConfigurationRecord : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -5110,6 +5124,7 @@ namespace SharpMP4
     */
     public class LHEVCDecoderConfigurationRecord : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -11921,7 +11936,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadUInt8ArraySkip(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
@@ -16661,6 +16676,7 @@ namespace SharpMP4
     */
     public class BoxHeader : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected uint size;
@@ -32778,6 +32794,7 @@ namespace SharpMP4
     */
     public class AudioSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected GetAudioObjectType audioObjectType;
@@ -33504,6 +33521,7 @@ namespace SharpMP4
     */
     public class GetAudioObjectType : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte audioObjectType;
@@ -33598,6 +33616,7 @@ namespace SharpMP4
     */
     public class GASpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool frameLengthFlag;
@@ -33851,6 +33870,7 @@ namespace SharpMP4
     */
     public class program_config_element : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte element_instance_tag;
@@ -34204,6 +34224,7 @@ namespace SharpMP4
     */
     public class CelpSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool isBaseLayer;
@@ -34332,6 +34353,7 @@ namespace SharpMP4
     */
     public class CelpHeader : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool ExcitationMode;
@@ -34446,6 +34468,7 @@ namespace SharpMP4
     */
     public class CelpBWSenhHeader : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte BWS_configuration;
@@ -34490,6 +34513,7 @@ namespace SharpMP4
     */
     public class HvxcSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool isBaseLayer;
@@ -34555,6 +34579,7 @@ namespace SharpMP4
     */
     public class HVXCconfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool HVXCvarMode;
@@ -34623,6 +34648,7 @@ namespace SharpMP4
     */
     public class TTSSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected TTS_Sequence TTS_Sequence;
@@ -34673,6 +34699,7 @@ namespace SharpMP4
     */
     public class TTS_Sequence : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte TTS_Sequence_ID;
@@ -34775,6 +34802,7 @@ namespace SharpMP4
     */
     public class ErrorResilientCelpSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool isBaseLayer;
@@ -34904,6 +34932,7 @@ namespace SharpMP4
     */
     public class ER_SC_CelpHeader : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool ExcitationMode;
@@ -35030,6 +35059,7 @@ namespace SharpMP4
     */
     public class ErrorResilientHvxcSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool isBaseLayer;
@@ -35095,6 +35125,7 @@ namespace SharpMP4
     */
     public class ErHVXCconfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool HVXCvarMode;
@@ -35173,6 +35204,7 @@ namespace SharpMP4
     */
     public class ParametricSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool isBaseLayer;
@@ -35261,6 +35293,7 @@ namespace SharpMP4
     */
     public class PARAconfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte PARAmode;
@@ -35364,6 +35397,7 @@ namespace SharpMP4
     */
     public class HILNconfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool HILNquantMode;
@@ -35433,6 +35467,7 @@ namespace SharpMP4
     */
     public class HILNenexConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool HILNenhaLayer;
@@ -35501,6 +35536,7 @@ namespace SharpMP4
     */
     public class SSCSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte decoder_level;
@@ -35595,6 +35631,7 @@ namespace SharpMP4
     */
     public class MPEG_1_2_SpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool extension;
@@ -35638,6 +35675,7 @@ namespace SharpMP4
     */
     public class DSTSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool DSDDST_Coded;
@@ -35741,6 +35779,7 @@ namespace SharpMP4
     */
     public class ALSSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected uint als_id;
@@ -36094,6 +36133,7 @@ namespace SharpMP4
     */
     public class SLSSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte pcmWordLength;
@@ -36224,6 +36264,7 @@ namespace SharpMP4
     */
     public class ELDSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool frameLengthFlag;
@@ -36473,6 +36514,7 @@ namespace SharpMP4
     */
     public class ld_sbr_header : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected sbr_header[] sbr_header;
@@ -36623,6 +36665,7 @@ namespace SharpMP4
     */
     public class sbr_header : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool bs_amp_res;
@@ -36815,6 +36858,7 @@ namespace SharpMP4
     */
     public class ErrorProtectionSpecificConfig : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte number_of_predefined_set;
@@ -37235,6 +37279,7 @@ namespace SharpMP4
     */
     public class ChannelMappingTable : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected byte StreamCount;
@@ -37501,6 +37546,7 @@ namespace SharpMP4
     */
     public class AV1CodecConfigurationRecord : IMp4Serializable
     {
+        public byte[] Padding { get; set; }
 
 
         protected bool marker = true;

@@ -1177,16 +1177,16 @@ namespace SharpMP4
 
         cls += @$"public {optAbstract}class {b.BoxName}";
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
-            cls += $" : {b.Extended.BoxName}";
+        {
+            cls += $" : {b.Extended.BoxName}\r\n{{\r\n";
+        }
         else
         {
-            if(b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")
-                cls += $" : Descriptor";
+            if (b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")
+                cls += $" : Descriptor\r\n{{\r\n";
             else
-                cls += $" : IMp4Serializable";
+                cls += $" : IMp4Serializable\r\n{{\r\n\t\tpublic byte[] Padding {{ get; set; }}\r\n";
         }
-
-        cls += "\r\n{\r\n";
 
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.Extended.BoxType))
         {

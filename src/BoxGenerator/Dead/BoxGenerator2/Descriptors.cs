@@ -5,6 +5,9 @@ namespace SharpMP4
 {
     public class SpatialSpecificConfig : IMp4Serializable
     {
+        protected byte[] padding = null;
+        public byte[] Padding { get { return padding; } set { padding = value; } }
+
         public SpatialSpecificConfig()
         { }
 
@@ -26,6 +29,9 @@ namespace SharpMP4
 
     public class StructuredAudioSpecificConfig : IMp4Serializable
     {
+        protected byte[] padding = null;
+        public byte[] Padding { get { return padding; } set { padding = value; } }
+
         public StructuredAudioSpecificConfig()
         { }
 

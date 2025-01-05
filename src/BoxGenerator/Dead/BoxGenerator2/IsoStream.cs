@@ -353,9 +353,12 @@ namespace SharpMP4
             }
 
             ulong remaining = readSize - boxSize;
-            int count = (int)(remaining >> 3);
+            ulong count = (ulong)(remaining >> 3);
             value = new byte[count];
-            _stream.ReadExactly(value, 0, count); // optimization for mdat
+            if(count > int.MaxValue)
+                _stream.Seek((long)count, SeekOrigin.Current);
+            else
+                _stream.ReadExactly(value, 0, (int)count); 
             return (ulong)(count * 8);
         }
 
@@ -1243,7 +1246,7 @@ namespace SharpMP4
                 {
                     // TODO: Investigate and fix
                     size += ReadBits((uint)(availableSize - size), out byte[] missing);
-                    box.BoxPadding = missing;
+                    box.Padding = missing;
 
                     if (missing.FirstOrDefault(x => x != 0) == default(byte))
                     {
@@ -1284,7 +1287,7 @@ namespace SharpMP4
                 {
                     // TODO: Investigate and fix
                     size += ReadBits((uint)(availableSize - size), out byte[] missing);
-                    //box.BoxPadding = missing;
+                    box.Padding = missing;
 
                     if (missing.FirstOrDefault(x => x != 0) == default(byte))
                     {
@@ -1344,7 +1347,7 @@ namespace SharpMP4
 
         internal static ulong CalculateEntrySize(IMp4Serializable entry)
         {
-            return entry.CalculateSize();
+            return entry.CalculateSize() + 8 * (ulong)(entry.Padding != null ? entry.Padding.Length : 0);
         }
 
         internal static ulong CalculateEntrySize(IMp4Serializable[] entry)
@@ -1352,7 +1355,7 @@ namespace SharpMP4
             ulong size = 0;
             foreach (var e in entry)
             {
-                size += e.CalculateSize();
+                size += CalculateEntrySize(e);
             }
             return size;
         }
@@ -1384,7 +1387,7 @@ namespace SharpMP4
             {
                 // TODO: Investigate and fix
                 size += ReadBits((uint)(sizeOfInstanceBits - readInstanceSizeBits), out byte[] missing);
-                descriptor.DescriptorPadding = missing;
+                descriptor.Padding = missing;
 
                 if (missing.FirstOrDefault(x => x != 0) == default(byte))
                     Debug.WriteLine($"-Descriptor \'{tag}\' has extra padding of {missing.Length} zero bytes");

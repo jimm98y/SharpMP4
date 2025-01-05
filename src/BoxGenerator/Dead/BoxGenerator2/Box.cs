@@ -6,6 +6,8 @@ namespace SharpMP4
 {
     public interface IMp4Serializable
     {
+        byte[] Padding { get; set; }
+
         Task<ulong> ReadAsync(IsoStream stream, ulong readSize);
         Task<ulong> WriteAsync(IsoStream stream);
         ulong CalculateSize();
@@ -25,8 +27,8 @@ namespace SharpMP4
         public Box Parent { get { return parent; } set { parent = value; } }
         protected List<Box> children = null;
         public List<Box> Children { get { return children; } set { children = value; } }
-        protected byte[] boxPadding = null;
-        public byte[] BoxPadding { get { return boxPadding; } set { boxPadding = value; } }
+        protected byte[] padding = null;
+        public byte[] Padding { get { return padding; } set { padding = value; } }
 
         public Box() {  }
 
@@ -53,7 +55,7 @@ namespace SharpMP4
 
         public virtual ulong CalculateSize()
         {
-            return (ulong)(32 + 32 + (size > uint.MaxValue ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(boxPadding != null ? 8 * boxPadding.Length : 0);
+            return (ulong)(32 + 32 + (size > uint.MaxValue ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(padding != null ? 8 * padding.Length : 0);
         }
     }
 
@@ -128,12 +130,14 @@ namespace SharpMP4
     public class UnknownClass : IMp4Serializable
     {
         protected byte[] bytes;
+        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
+
+        protected byte[] padding = null;
+        public byte[] Padding { get { return padding; } set { padding = value; } }
 
         public UnknownClass()
         {
         }
-
-        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
 
         public virtual async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
