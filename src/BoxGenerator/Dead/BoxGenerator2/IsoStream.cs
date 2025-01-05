@@ -1336,9 +1336,9 @@ namespace SharpMP4
             ulong size = ReadUInt8(out tag);
             if(tag == 0)
             {
-                Debug.WriteLine("Forbidden descriptor 0!!!");
-                descriptor = null;
-                return (ulong)8;
+                throw new Exception("Forbidden descriptor 0!!!");
+                //descriptor = null;
+                //return (ulong)8;
             }
 
             size += ReadDescriptorSize(out int sizeOfInstance);

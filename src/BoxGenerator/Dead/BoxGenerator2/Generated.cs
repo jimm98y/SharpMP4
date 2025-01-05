@@ -31471,6 +31471,7 @@ namespace SharpMP4
      bit(timeStampLength) startDecodingTimeStamp;
      bit(timeStampLength) startCompositionTimeStamp;
      }
+     bit(8) ocr[]; // OCR stream flag, reserved, OCR_ES_id 
      }
     */
     public class SLConfigDescriptor : BaseDescriptor
@@ -31549,6 +31550,9 @@ namespace SharpMP4
         protected byte[] startCompositionTimeStamp;
         public byte[] StartCompositionTimeStamp { get { return this.startCompositionTimeStamp; } set { this.startCompositionTimeStamp = value; } }
 
+        protected byte[] ocr;  //  OCR stream flag, reserved, OCR_ES_id 
+        public byte[] Ocr { get { return this.ocr; } set { this.ocr = value; } }
+
         public SLConfigDescriptor() : base()
         {
         }
@@ -31593,6 +31597,7 @@ namespace SharpMP4
                 boxSize += stream.ReadBytes(timeStampLength, out this.startDecodingTimeStamp);
                 boxSize += stream.ReadBytes(timeStampLength, out this.startCompositionTimeStamp);
             }
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.ocr); // OCR stream flag, reserved, OCR_ES_id 
             return boxSize;
         }
 
@@ -31636,6 +31641,7 @@ namespace SharpMP4
                 boxSize += stream.WriteBytes(timeStampLength, this.startDecodingTimeStamp);
                 boxSize += stream.WriteBytes(timeStampLength, this.startCompositionTimeStamp);
             }
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.ocr); // OCR stream flag, reserved, OCR_ES_id 
             return boxSize;
         }
 
@@ -31679,6 +31685,7 @@ namespace SharpMP4
                 boxSize += (ulong)timeStampLength; // startDecodingTimeStamp
                 boxSize += (ulong)timeStampLength; // startCompositionTimeStamp
             }
+            boxSize += 8 * (ulong)ocr.Length; // ocr
             return boxSize;
         }
     }
