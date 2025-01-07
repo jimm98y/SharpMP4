@@ -1349,14 +1349,21 @@ namespace SharpMP4
             ulong readInstanceSizeBits = descriptor.ReadAsync(this, sizeOfInstanceBits).Result;
             if (readInstanceSizeBits != sizeOfInstanceBits)
             {
-                // TODO: Investigate and fix
-                size += ReadBits((uint)(sizeOfInstanceBits - readInstanceSizeBits), out byte[] missing);
-                descriptor.Padding = missing;
+                if (readInstanceSizeBits < sizeOfInstanceBits)
+                {
+                    // TODO: Investigate and fix
+                    size += ReadBits((uint)(sizeOfInstanceBits - readInstanceSizeBits), out byte[] missing);
+                    descriptor.Padding = missing;
 
-                if (missing.FirstOrDefault(x => x != 0) == default(byte))
-                    Debug.WriteLine($"-Descriptor \'{tag}\' has extra padding of {missing.Length} zero bytes");
+                    if (missing.FirstOrDefault(x => x != 0) == default(byte))
+                        Debug.WriteLine($"-Descriptor \'{tag}\' has extra padding of {missing.Length} zero bytes");
+                    else
+                        Debug.WriteLine($"Descriptor {tag} not fully read!");
+                }
                 else
-                    Debug.WriteLine($"Descriptor {tag} not fully read!");
+                {
+                    Debug.WriteLine($"Descriptor {tag} read through!");
+                }
             }
             size += readInstanceSizeBits;
 
@@ -1437,6 +1444,9 @@ namespace SharpMP4
 
         internal static ulong CalculateDescriptorSize(Descriptor descriptor)
         {
+            if (descriptor == null)
+                return 0;
+
             ulong descriptorContentSize = descriptor.CalculateSize();
             ulong descriptorSizeLength = CalculatePackedNumberLength(descriptorContentSize >> 3);
             return 8 * (1 + descriptorSizeLength) + descriptorContentSize + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0);
