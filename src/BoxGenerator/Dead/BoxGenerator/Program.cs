@@ -662,6 +662,7 @@ partial class Program
             Try(String("('cstg')")),
             Try(String("('alte')")),
             Try(String("(name)")),
+            Try(String("(uuid)")),
             Try(String("(property_type)")),
             Try(String("(samplingFrequencyIndex, channelConfiguration, audioObjectType)")),
             Try(String("(samplingFrequencyIndex,\r\n  channelConfiguration,\r\n  audioObjectType)")),
@@ -964,7 +965,7 @@ namespace SharpMP4
         string factory =
 @"   public class BoxFactory
     {
-        public static Box CreateBox(string fourCC, string parent)
+        public static Box CreateBox(string fourCC, string parent, byte[] uuid = null)
         {
             switch(fourCC)
             {
@@ -1068,15 +1069,23 @@ namespace SharpMP4
         {
             if (item.Value.Count == 1)
             {
-                string comment = "";
-                if (item.Value.Single().BoxName.Contains('_'))
-                    comment = " // TODO: fix duplicate";
-                string optParams = "";
-                if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" || 
-                    item.Value.Single().BoxName == "SingleItemTypeReferenceBox" || item.Value.Single().BoxName == "SingleItemTypeReferenceBoxLarge" ||
-                    item.Value.Single().BoxName ==  "TrackReferenceTypeBox")
-                    optParams = $"\"{item.Key}\"";
-                factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}({optParams});{comment}\r\n";
+                if (item.Key == "uuid")
+                {
+                    factory += $"               case \"{item.Key}\": return new UuidBox(uuid);\r\n";
+                }
+                else
+                {
+                    string comment = "";
+                    if (item.Value.Single().BoxName.Contains('_'))
+                        comment = " // TODO: fix duplicate";
+                    string optParams = "";
+                    if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" ||
+                        item.Value.Single().BoxName == "SingleItemTypeReferenceBox" || item.Value.Single().BoxName == "SingleItemTypeReferenceBoxLarge" ||
+                        item.Value.Single().BoxName == "TrackReferenceTypeBox")
+                        optParams = $"\"{item.Key}\"";
+
+                    factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}({optParams});{comment}\r\n";
+                }
             }
             else
             {
@@ -1340,6 +1349,10 @@ namespace SharpMP4
             {
                 base4ccparams = string.Join(", ", b.Extended.Parameters.Select(x => string.IsNullOrEmpty(x.Value) ? x.Name : x.Value));
             }
+            else if(b.BoxName == "UuidBox")
+            {
+                base4ccparams = "uuid";
+            }
             string base4ccseparator = "";
             if (!string.IsNullOrEmpty(base4cc) && !string.IsNullOrEmpty(base4ccparams))
                 base4ccseparator = ", ";
@@ -1479,6 +1492,7 @@ namespace SharpMP4
             { "('cstg')",                           "string boxtype = \"cstg\"" },
             { "('alte')",                           "string boxtype = \"alte\"" },
             { "(name)",                             "string name" },
+            { "(uuid)",                             "byte[] uuid" },
             { "(property_type)",                    "string property_type" },
             { "(channelConfiguration)",             "int channelConfiguration" },
             { "(num_sublayers)",                    "byte num_sublayers" },

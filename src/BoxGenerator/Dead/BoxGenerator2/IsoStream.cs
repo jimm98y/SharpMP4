@@ -188,7 +188,7 @@ namespace SharpMP4
         internal ulong ReadBox(ulong boxSize, ulong readSize, string parentFourCC, out Box value)
         {
             var header = ReadBoxHeaderAsync().Result;
-            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), parentFourCC);
+            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), parentFourCC, header.Header.Usertype);
             ReadBoxAsync(header, box).Wait();
             value = box;
             return header.BoxSize;
@@ -1226,7 +1226,7 @@ namespace SharpMP4
                 return null; // all zeros, looks like 8 zero bytes padding at the end of the file
 
             string fourCC = ToFourCC(header.Header.Type);
-            var box = BoxFactory.CreateBox(fourCC, null);
+            var box = BoxFactory.CreateBox(fourCC, null, header.Header.Usertype);
             await ReadBoxAsync(header, box);
             return box;
         }

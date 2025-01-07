@@ -7,7 +7,7 @@ namespace SharpMP4
 {
     public class BoxFactory
     {
-        public static Box CreateBox(string fourCC, string parent)
+        public static Box CreateBox(string fourCC, string parent, byte[] uuid = null)
         {
             switch (fourCC)
             {
@@ -203,7 +203,7 @@ namespace SharpMP4
                 case "mvex": return new MovieExtendsBox();
                 case "mvhd": return new MovieHeaderBox();
                 case "mvra": return new MultiviewRelationAttributeBox();
-                case "name": return new AppleNameBox_name(); // TODO: fix duplicate
+                case "name": return new AppleName2Box();
                 case "nmhd": return new NullMediaHeaderBox();
                 case "npck": return new hintPacketsSentNpck();
                 case "nump": return new hintPacketsSentNump();
@@ -330,7 +330,7 @@ namespace SharpMP4
                 case "uriI": return new URIInitBox();
                 case "url ": return new DataEntryUrlBox();
                 case "urn ": return new DataEntryUrnBox();
-                case "uuid": return new UuidBox();
+                case "uuid": return new UuidBox(uuid);
                 case "vipr": return new ViewPriorityBox();
                 case "vlab": return new WebVTTSourceLabelBox();
                 case "vmhd": return new VideoMediaHeaderBox();
@@ -35928,19 +35928,19 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class AppleNameBox() 
+    aligned(8) class AppleName2Box() 
     extends Box('name') {
      bit(8) data[];
      } 
     */
-    public class AppleNameBox_name : Box
+    public class AppleName2Box : Box
     {
         public const string TYPE = "name";
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleNameBox_name() : base("name")
+        public AppleName2Box() : base("name")
         {
         }
 
@@ -36014,7 +36014,7 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class UuidBox() 
+    aligned(8) class UuidBox(uuid) 
     extends Box('uuid') {
      bit(8) data[];
      } 
@@ -36026,7 +36026,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public UuidBox() : base("uuid")
+        public UuidBox(byte[] uuid) : base("uuid", uuid)
         {
         }
 

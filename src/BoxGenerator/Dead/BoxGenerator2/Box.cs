@@ -17,6 +17,9 @@ namespace SharpMP4
     {
         public virtual string FourCC { get; set; }
 
+        protected byte[] uuid = null;
+        public byte[] Uuid { get { return uuid; } set { uuid = value; } }
+
         protected ulong size = 0;
         public ulong Size { get { return size; } set { size = value; } }
 
@@ -37,6 +40,12 @@ namespace SharpMP4
             FourCC = boxType;    
         }
 
+        public Box(string boxType, byte[] uuid)
+        {
+            FourCC = boxType;
+            Uuid = uuid;    
+        }
+
         public Box(string boxType, ulong size) : this(boxType)
         {
             Size = size;
@@ -55,7 +64,7 @@ namespace SharpMP4
 
         public virtual ulong CalculateSize()
         {
-            return (ulong)(32 + 32 + ((ulong)(size >> 3) > uint.MaxValue ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(padding != null ? 8 * padding.Length : 0);
+            return (ulong)(32 + 32 + ((ulong)(size >> 3) > uint.MaxValue ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(padding != null ? 8 * padding.Length : 0) + 8 * (ulong)(uuid != null ? uuid.Length : 0);
         }
     }
 
