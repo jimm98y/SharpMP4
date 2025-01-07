@@ -1343,9 +1343,11 @@ namespace SharpMP4
                 return (ulong)8;
             }
 
-            size += ReadDescriptorSize(out int sizeOfInstance);
+            ulong sizeOfSize = ReadDescriptorSize(out int sizeOfInstance);
+            size += sizeOfSize;
             ulong sizeOfInstanceBits = (ulong)sizeOfInstance * 8;
             descriptor = DescriptorFactory.CreateDescriptor(tag);
+            descriptor.SizeOfSize = sizeOfSize;
             ulong readInstanceSizeBits = descriptor.ReadAsync(this, sizeOfInstanceBits).Result;
             if (readInstanceSizeBits != sizeOfInstanceBits)
             {
@@ -1448,15 +1450,15 @@ namespace SharpMP4
                 return 0;
 
             ulong descriptorContentSize = descriptor.CalculateSize();
-            ulong descriptorSizeLength = CalculatePackedNumberLength(descriptorContentSize >> 3);
+            ulong descriptorSizeLength = CalculatePackedNumberLength(descriptorContentSize >> 3, (int)(descriptor.SizeOfSize >> 3));
             return 8 * (1 + descriptorSizeLength) + descriptorContentSize + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0);
         }
 
-        public static uint CalculatePackedNumberLength(ulong sizeInBytes)
+        public static uint CalculatePackedNumberLength(ulong sizeInBytes, int sizeOfSize)
         {
             int size = (int)sizeInBytes;
             int i = 0;
-            while (size > 0)
+            while (size > 0 || i < (int)sizeOfSize) // i < (int)sizeOfSize => sometimes the descriptor size is aligned to 4 bytes, so this is to make sure we match the original length
             {
                 size = (int)((uint)size >> 7);
                 i++;

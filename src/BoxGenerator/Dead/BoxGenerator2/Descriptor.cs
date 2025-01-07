@@ -86,6 +86,12 @@ namespace SharpMP4
         protected byte[] padding = null;
         public byte[] Padding { get { return padding; } set { padding = value; } }
 
+        /// <summary>
+        /// This is here to store the original descriptor length size, because sometimes it is 
+        ///  aligned to 4 or 8 bytes instead of just using the shortest one to accommodate the value.
+        /// </summary>
+        public ulong SizeOfSize { get; set; } = 0;
+
         public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
             return Task.FromResult((ulong)0);
