@@ -3159,7 +3159,7 @@ namespace SharpMP4
                 boxSize += stream.ReadBytes(pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
             }
 
-            if (boxSize >= readSize && (readSize - boxSize) >= 4) return boxSize;
+            if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize;
             if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
         AVCProfileIndication == 122 || AVCProfileIndication == 144)
             {

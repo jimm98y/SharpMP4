@@ -2258,7 +2258,7 @@ namespace SharpMP4
                 // this condition is necessary, otherwise AVCDecoderConfigurationRecord can exceed its box size
                 if(methodType == MethodType.Read)
                 {
-                    ret += $"\r\n{spacing}if (boxSize >= readSize && (readSize - boxSize) >= 4) return boxSize;";
+                    ret += $"\r\n{spacing}if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize;";
                 }
                 else
                 {
