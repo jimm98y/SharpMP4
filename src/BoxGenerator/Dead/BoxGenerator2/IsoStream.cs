@@ -1276,7 +1276,8 @@ namespace SharpMP4
             ulong calculatedSize = box.CalculateSize();
             if (calculatedSize != header.BoxSize)
             {
-                Debug.WriteLine($"---------Calculated \'{box.FourCC}\' size: {calculatedSize / 8}, read: {header.BoxSize / 8}");
+                if(box.FourCC != "mdat")
+                    Debug.WriteLine($"---------Calculated \'{box.FourCC}\' size: {calculatedSize / 8}, read: {header.BoxSize / 8}");
             }
         }
 

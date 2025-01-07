@@ -2258,11 +2258,11 @@ namespace SharpMP4
                 // this condition is necessary, otherwise AVCDecoderConfigurationRecord can exceed its box size
                 if(methodType == MethodType.Read)
                 {
-                    ret += $"\r\n{spacing}if (boxSize >= readSize) return boxSize;";
+                    ret += $"\r\n{spacing}if (boxSize >= readSize && (readSize - boxSize) >= 4) return boxSize;";
                 }
                 else
                 {
-                    ret += $"\r\n{spacing}if (this.numOfSequenceParameterSetExt == 0) return boxSize;";
+                    ret += $"\r\n{spacing}if (reserved1 == 0 && chroma_format == 0 && reserved00 == 0 && bit_depth_luma_minus8 == 0 && reserved10 == 0 && bit_depth_chroma_minus8 == 0 && numOfSequenceParameterSetExt == 0) return boxSize;";
                 }
             }
         }
