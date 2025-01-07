@@ -2262,7 +2262,7 @@ namespace SharpMP4
                 }
                 else
                 {
-                    ret += $"\r\n{spacing}if (reserved1 == 0 && chroma_format == 0 && reserved00 == 0 && bit_depth_luma_minus8 == 0 && reserved10 == 0 && bit_depth_chroma_minus8 == 0 && numOfSequenceParameterSetExt == 0) return boxSize;";
+                    ret += $"\r\n{spacing}if (reserved1 == 0b111111 && chroma_format == 0 && reserved00 == 0b11111 && bit_depth_luma_minus8 == 0 && reserved10 == 0b11111 && bit_depth_chroma_minus8 == 0 && numOfSequenceParameterSetExt == 0) return boxSize;";
                 }
             }
         }
