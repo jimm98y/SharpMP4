@@ -17,6 +17,7 @@ namespace SharpMP4
                 case "©cmt": return new AppleCommentBox();
                 case "©cpy": return new AppleCopyright2Box();
                 case "©day": return new AppleRecordingYear2Box();
+                case "©enc": return new EncBox();
                 case "©gen": return new AppleGenreBox();
                 case "©nam": return new AppleNameBox();
                 case "©TIM": return new AppleTimBox();
@@ -38029,6 +38030,49 @@ namespace SharpMP4
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public TvshBox() : base("tvsh")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class EncBox() 
+    extends Box('©enc') {
+     bit(8) data[];
+     } 
+    */
+    public class EncBox : Box
+    {
+        public const string TYPE = "©enc";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public EncBox() : base("©enc")
         {
         }
 
