@@ -2311,7 +2311,7 @@ namespace SharpMP4
                     {
                         if (parts[0].Contains("num_sublayers-2") || parts[0].Contains("num_sublayers - 2"))
                         {
-                            variable = "num_sublayers - 2";
+                            variable = "num_sublayers - 1";
                         }
                         else if (parts[1] != " i< numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0")
                         {
@@ -2501,7 +2501,7 @@ namespace SharpMP4
             { "unsigned int((length_size_of_traf_num+1) * 8)", "stream.ReadBytes((ulong)(length_size_of_traf_num+1), " },
             { "unsigned int((length_size_of_trun_num+1) * 8)", "stream.ReadBytes((ulong)(length_size_of_trun_num+1), " },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.ReadBytes((ulong)(length_size_of_sample_num+1), " },
-            { "unsigned int(8*size-64)",                "stream.ReadBytes(size-64, " },
+            { "unsigned int(8*size-64)",                "stream.ReadBytes(size-8, " },
             { "unsigned int(subgroupIdLen)[i]",         "stream.ReadUInt32(" },
             { "const unsigned int(8)[6]",               "stream.ReadUInt8Array(6, " },
             { "const unsigned int(32)[2]",              "stream.ReadUInt32Array(2, " },
@@ -2547,7 +2547,7 @@ namespace SharpMP4
             { "bit(8*sequenceParameterSetLength)",      "stream.ReadBytes(sequenceParameterSetLength, " },
             { "bit(8*pictureParameterSetLength)",       "stream.ReadBytes(pictureParameterSetLength, " },
             { "bit(8*sequenceParameterSetExtLength)",   "stream.ReadBytes(sequenceParameterSetExtLength, " },
-            { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.ReadBytes((ulong)(num_bytes_constraint_info - 2), " },
+            { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.ReadBits((uint)(8*num_bytes_constraint_info - 2), " },
             { "bit(8*nal_unit_length)",                 "stream.ReadBytes(nal_unit_length, " },
             { "bit(timeStampLength)",                   "stream.ReadBytes(timeStampLength, " },
             { "utf8string",                             "stream.ReadStringZeroTerminated(boxSize, readSize, " },
@@ -2896,7 +2896,7 @@ namespace SharpMP4
             { "unsigned int((length_size_of_traf_num+1) * 8)", "(ulong)(length_size_of_traf_num+1) * 8" },
             { "unsigned int((length_size_of_trun_num+1) * 8)", "(ulong)(length_size_of_trun_num+1) * 8" },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "(ulong)(length_size_of_sample_num+1) * 8" },
-            { "unsigned int(8*size-64)",                "(ulong)(size - 64) * 8" },
+            { "unsigned int(8*size-64)",                "(ulong)(size - 8) * 8" },
             { "unsigned int(subgroupIdLen)[i]",         "32" },
             { "const unsigned int(8)[6]",               "6 * 8" },
             { "const unsigned int(32)[2]",              "2 * 32" },
@@ -2942,7 +2942,7 @@ namespace SharpMP4
             { "bit(8*sequenceParameterSetLength)",      "(ulong)sequenceParameterSetLength * 8" },
             { "bit(8*pictureParameterSetLength)",       "(ulong)pictureParameterSetLength * 8" },
             { "bit(8*sequenceParameterSetExtLength)",   "(ulong)sequenceParameterSetExtLength * 8" },
-            { "unsigned int(8*num_bytes_constraint_info - 2)", "(ulong)(num_bytes_constraint_info - 2)" },
+            { "unsigned int(8*num_bytes_constraint_info - 2)", "(uint)(8*num_bytes_constraint_info - 2)" },
             { "bit(8*nal_unit_length)",                 "(ulong)nal_unit_length * 8" },
             { "bit(timeStampLength)",                   "(ulong)timeStampLength" },
             { "utf8string",                             "IsoStream.CalculateStringSize(value)" },
@@ -3290,7 +3290,7 @@ namespace SharpMP4
             { "unsigned int((length_size_of_traf_num+1) * 8)", "stream.WriteBytes((ulong)(length_size_of_traf_num+1), " },
             { "unsigned int((length_size_of_trun_num+1) * 8)", "stream.WriteBytes((ulong)(length_size_of_trun_num+1), " },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.WriteBytes((ulong)(length_size_of_sample_num+1), " },
-            { "unsigned int(8*size-64)",                "stream.WriteBytes(size-64, " },
+            { "unsigned int(8*size-64)",                "stream.WriteBytes(size-8, " },
             { "unsigned int(subgroupIdLen)[i]",         "stream.WriteUInt32(" },
             { "const unsigned int(8)[6]",               "stream.WriteUInt8Array(6, " },
             { "const unsigned int(32)[2]",              "stream.WriteUInt32Array(2, " },
@@ -3336,7 +3336,7 @@ namespace SharpMP4
             { "bit(8*sequenceParameterSetLength)",      "stream.WriteBytes(sequenceParameterSetLength, " },
             { "bit(8*pictureParameterSetLength)",       "stream.WriteBytes(pictureParameterSetLength, " },
             { "bit(8*sequenceParameterSetExtLength)",   "stream.WriteBytes(sequenceParameterSetExtLength, " },
-            { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.WriteBytes((ulong)(num_bytes_constraint_info - 2), " },
+            { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.WriteBits((uint)(8*num_bytes_constraint_info - 2), " },
             { "bit(8*nal_unit_length)",                 "stream.WriteBytes(nal_unit_length, " },
             { "bit(timeStampLength)",                   "stream.WriteBytes(timeStampLength, " },
             { "utf8string",                             "stream.WriteStringZeroTerminated(" },

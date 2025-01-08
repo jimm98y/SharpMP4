@@ -3992,9 +3992,9 @@ namespace SharpMP4
             boxSize += stream.ReadUInt8(out this.general_level_idc);
             boxSize += stream.ReadBit(out this.ptl_frame_only_constraint_flag);
             boxSize += stream.ReadBit(out this.ptl_multi_layer_enabled_flag);
-            boxSize += stream.ReadBytes((ulong)(num_bytes_constraint_info - 2), out this.general_constraint_info);
+            boxSize += stream.ReadBits((uint)(8 * num_bytes_constraint_info - 2), out this.general_constraint_info);
 
-            this.ptl_sublayer_level_present_flag = new bool[num_sublayers - 2];
+            this.ptl_sublayer_level_present_flag = new bool[num_sublayers - 1];
             for (int i = num_sublayers - 2; i >= 0; i--)
             {
                 boxSize += stream.ReadBit(out this.ptl_sublayer_level_present_flag[i]);
@@ -4006,7 +4006,7 @@ namespace SharpMP4
                 boxSize += stream.ReadBit(out this.ptl_reserved_zero_bit[j]);
             }
 
-            this.sublayer_level_idc = new byte[num_sublayers - 2];
+            this.sublayer_level_idc = new byte[num_sublayers - 1];
             for (int i = num_sublayers - 2; i >= 0; i--)
             {
 
@@ -4035,7 +4035,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt8(this.general_level_idc);
             boxSize += stream.WriteBit(this.ptl_frame_only_constraint_flag);
             boxSize += stream.WriteBit(this.ptl_multi_layer_enabled_flag);
-            boxSize += stream.WriteBytes((ulong)(num_bytes_constraint_info - 2), this.general_constraint_info);
+            boxSize += stream.WriteBits((uint)(8 * num_bytes_constraint_info - 2), this.general_constraint_info);
 
             for (int i = num_sublayers - 2; i >= 0; i--)
             {
@@ -4074,7 +4074,7 @@ namespace SharpMP4
             boxSize += 8; // general_level_idc
             boxSize += 1; // ptl_frame_only_constraint_flag
             boxSize += 1; // ptl_multi_layer_enabled_flag
-            boxSize += (ulong)(num_bytes_constraint_info - 2); // general_constraint_info
+            boxSize += (uint)(8 * num_bytes_constraint_info - 2); // general_constraint_info
 
             for (int i = num_sublayers - 2; i >= 0; i--)
             {
@@ -19770,7 +19770,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadBytes(size - 64, out this.scalinfosei);
+            boxSize += stream.ReadBytes(size - 8, out this.scalinfosei);
             return boxSize;
         }
 
@@ -19778,7 +19778,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBytes(size - 64, this.scalinfosei);
+            boxSize += stream.WriteBytes(size - 8, this.scalinfosei);
             return boxSize;
         }
 
@@ -19786,7 +19786,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(size - 64) * 8; // scalinfosei
+            boxSize += (ulong)(size - 8) * 8; // scalinfosei
             return boxSize;
         }
     }
@@ -19863,7 +19863,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadBytes(size - 64, out this.mvcscalinfosei);
+            boxSize += stream.ReadBytes(size - 8, out this.mvcscalinfosei);
             return boxSize;
         }
 
@@ -19871,7 +19871,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBytes(size - 64, this.mvcscalinfosei);
+            boxSize += stream.WriteBytes(size - 8, this.mvcscalinfosei);
             return boxSize;
         }
 
@@ -19879,7 +19879,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(size - 64) * 8; // mvcscalinfosei
+            boxSize += (ulong)(size - 8) * 8; // mvcscalinfosei
             return boxSize;
         }
     }
@@ -19906,7 +19906,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadBytes(size - 64, out this.mvdscalinfosei);
+            boxSize += stream.ReadBytes(size - 8, out this.mvdscalinfosei);
             return boxSize;
         }
 
@@ -19914,7 +19914,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteBytes(size - 64, this.mvdscalinfosei);
+            boxSize += stream.WriteBytes(size - 8, this.mvdscalinfosei);
             return boxSize;
         }
 
@@ -19922,7 +19922,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(size - 64) * 8; // mvdscalinfosei
+            boxSize += (ulong)(size - 8) * 8; // mvdscalinfosei
             return boxSize;
         }
     }
