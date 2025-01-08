@@ -1448,7 +1448,7 @@ namespace SharpMP4
         internal static ulong CalculateDescriptorSize(Descriptor descriptor)
         {
             if (descriptor == null)
-                return 0;
+                return 8;
 
             ulong descriptorContentSize = descriptor.CalculateSize();
             ulong descriptorSizeLength = CalculatePackedNumberLength(descriptorContentSize >> 3, (int)(descriptor.SizeOfSize >> 3));
