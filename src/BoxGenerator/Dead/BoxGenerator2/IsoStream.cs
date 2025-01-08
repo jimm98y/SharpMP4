@@ -62,9 +62,12 @@ namespace SharpMP4
             int bytePos = _bitsPosition >> 3;
             if (_currentBytePosition != bytePos)
             {
-                WriteByte(_currentByte);
+                if (_currentBytePosition != -1) // special case for the first bit
+                {
+                    WriteByte(_currentByte);
+                    _currentByte = 0;
+                }
                 _currentBytePosition = bytePos;
-                _currentByte = 0;
             }
         }
 
@@ -715,7 +718,7 @@ namespace SharpMP4
             while (count > 0)
             {
                 int bits = (int)count - 1;
-                int mask = 0x1 << bits;
+                uint mask = 0x1u << bits;
                 WriteBit((int)((value & mask) >> bits));
                 count--;
             }
@@ -1032,7 +1035,7 @@ namespace SharpMP4
 
         internal ulong WriteStringZeroTerminated(byte[] value)
         {
-            if (value != null && value.Length > 0)
+            if (value == null || value.Length == 0)
                 return 0;
 
             byte[] buffer = value;
@@ -1040,8 +1043,7 @@ namespace SharpMP4
             {
                 WriteByte(buffer[i]);
             }
-            WriteByte(0);
-            return (ulong)(buffer.Length + 1) * 8;
+            return (ulong)buffer.Length * 8;
         }
 
         internal ulong WriteInt16(short value)
@@ -1071,14 +1073,14 @@ namespace SharpMP4
 
         internal ulong WriteUInt8(byte value)
         {
-            _stream.WriteByte(value);
-            return 1;
+            WriteByte(value);
+            return 8;
         }
 
         internal ulong WriteUInt8(ushort value)
         {
             _stream.WriteByte((byte)value);
-            return 1;
+            return 8;
         }
 
         internal ulong WriteUInt16(ushort value)
@@ -1092,7 +1094,7 @@ namespace SharpMP4
         {
             WriteByte((byte)(value >> 8 & 0xFF));
             WriteByte((byte)(value & 0xFF));
-            return 16; throw new NotImplementedException();
+            return 16; 
         }
 
         internal ulong WriteUInt24(uint value)
@@ -1245,12 +1247,14 @@ namespace SharpMP4
             {
                 throw new ArgumentException($"\"{value}\" value string must be 3 characters long!");
             }
+
             int bits = 0;
+            byte[] bytes = Encoding.UTF8.GetBytes(value);
             for (int i = 0; i < 3; i++)
             {
-                bits += Encoding.UTF8.GetBytes(value)[i] - 0x60 << (2 - i) * 5;
+                bits += bytes[i] - 0x60 << (2 - i) * 5;
             }
-            return WriteUInt16((ushort)bits);
+            return WriteBits(15, (ushort)bits);
         }
 
         internal ulong ReadIso639(out string value)
