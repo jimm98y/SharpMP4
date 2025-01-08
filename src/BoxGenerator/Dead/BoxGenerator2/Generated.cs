@@ -84,6 +84,7 @@ namespace SharpMP4
                 case "ctts": return new CompositionOffsetBox();
                 case "CTYP": return new CtypBox();
                 case "dac3": return new AC3SpecificBox();
+                case "ddts": return new DdtsBox();
                 case "desc": return new AppleDescriptionBox();
                 case "dhec": return new DefaultHevcExtractorConstructorBox();
                 case "dimg": return new SingleItemTypeReferenceBox("dimg");
@@ -38073,6 +38074,49 @@ namespace SharpMP4
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public EncBox() : base("©enc")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class DdtsBox() 
+    extends Box('ddts') {
+     bit(8) data[];
+     } 
+    */
+    public class DdtsBox : Box
+    {
+        public const string TYPE = "ddts";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public DdtsBox() : base("ddts")
         {
         }
 
