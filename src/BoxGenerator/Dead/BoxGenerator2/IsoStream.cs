@@ -718,26 +718,26 @@ namespace SharpMP4
             return WriteBytes(count / 8, value);
         }
 
-        internal ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out string value)
+        internal ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out byte[] value)
         {
             ulong remaining = readSize - boxSize;
             if (remaining == 0)
             {
-                value = "";
+                value = [];
                 return 0;
             }
 
             ulong read = ReadBytes(remaining >> 3, out byte[] buffer);
-            value = Encoding.UTF8.GetString(buffer);
+            value = buffer;
             return read;
         }
 
-        internal ulong ReadStringSizePrefixed(ulong boxSize, ulong readSize, out string value)
+        internal ulong ReadStringSizePrefixed(ulong boxSize, ulong readSize, out byte[] value)
         {
             ulong remaining = readSize - boxSize;
             if (remaining == 0)
             {
-                value = "";
+                value = [];
                 return 0;
             }
 
@@ -749,7 +749,7 @@ namespace SharpMP4
                 buffer.Add(ReadByte());
                 read++;
             }
-            value = Encoding.UTF8.GetString(buffer.ToArray());
+            value = buffer.ToArray();
             return (ulong)(read + 1) * 8;
         }
 
@@ -955,12 +955,12 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteStringZeroTerminated(string value)
+        internal ulong WriteStringZeroTerminated(byte[] value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (value != null && value.Length > 0)
                 return 0;
 
-            byte[] buffer = Encoding.UTF8.GetBytes(value);
+            byte[] buffer = value;
             for (int i = 0; i < buffer.Length; i++)
             {
                 WriteByte(buffer[i]);
@@ -1472,12 +1472,13 @@ namespace SharpMP4
             _stream.Seek(-20, SeekOrigin.Current);
         }
 
-        internal static ulong CalculateStringSize(string value)
+        internal static ulong CalculateStringSize(byte[] value)
         {
-            return (ulong)Encoding.UTF8.GetByteCount(value) * 8;
+            ulong count = (ulong)value.Length;
+            return count * 8;
         }
 
-        internal static ulong CalculateStringSize(string[] value)
+        internal static ulong CalculateStringSize(byte[][] value)
         {
             ulong size = 0;
             foreach(var str in value)
