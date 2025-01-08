@@ -11961,7 +11961,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadUInt8ArraySkip(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
@@ -28565,9 +28565,9 @@ namespace SharpMP4
     */
     public abstract class BaseDescriptor : Descriptor
     {
-        public byte Tag { get; set; } = 0;
+        public const byte TYPE = 0;
 
-        public BaseDescriptor() : base()
+        public BaseDescriptor(byte tag) : base(tag)
         {
         }
 
@@ -28602,9 +28602,9 @@ namespace SharpMP4
     */
     public abstract class DecoderSpecificInfo : BaseDescriptor
     {
-        public byte Tag { get; set; } = DescriptorTags.DecSpecificInfoTag;
+        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 
-        public DecoderSpecificInfo() : base()
+        public DecoderSpecificInfo() : base(DescriptorTags.DecSpecificInfoTag)
         {
         }
 
@@ -28662,7 +28662,7 @@ namespace SharpMP4
     */
     public class ES_Descriptor : BaseDescriptor
     {
-        public byte Tag { get; set; } = DescriptorTags.ES_DescrTag;
+        public const byte TYPE = DescriptorTags.ES_DescrTag;
 
         protected ushort ES_ID;
         public ushort ESID { get { return this.ES_ID; } set { this.ES_ID = value; } }
@@ -28700,7 +28700,7 @@ namespace SharpMP4
         public RegistrationDescriptor RegDescr { get { return this.children.OfType<RegistrationDescriptor>().FirstOrDefault(); } }
         public IEnumerable<ExtensionDescriptor> ExtDescr { get { return this.children.OfType<ExtensionDescriptor>(); } }
 
-        public ES_Descriptor() : base()
+        public ES_Descriptor() : base(DescriptorTags.ES_DescrTag)
         {
         }
 
@@ -28857,7 +28857,7 @@ namespace SharpMP4
     */
     public class SLConfigDescriptor : BaseDescriptor
     {
-        public byte Tag { get; set; } = DescriptorTags.SLConfigDescrTag;
+        public const byte TYPE = DescriptorTags.SLConfigDescrTag;
 
         protected byte predefined;
         public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
@@ -28934,7 +28934,7 @@ namespace SharpMP4
         protected byte[] ocr;  //  OCR stream flag, reserved, OCR_ES_id 
         public byte[] Ocr { get { return this.ocr; } set { this.ocr = value; } }
 
-        public SLConfigDescriptor() : base()
+        public SLConfigDescriptor() : base(DescriptorTags.SLConfigDescrTag)
         {
         }
 
@@ -29087,7 +29087,7 @@ namespace SharpMP4
     */
     public class DecoderConfigDescriptor : BaseDescriptor
     {
-        public byte Tag { get; set; } = DescriptorTags.DecoderConfigDescrTag;
+        public const byte TYPE = DescriptorTags.DecoderConfigDescrTag;
 
         protected byte objectTypeIndication;
         public byte ObjectTypeIndication { get { return this.objectTypeIndication; } set { this.objectTypeIndication = value; } }
@@ -29112,7 +29112,7 @@ namespace SharpMP4
         public IEnumerable<DecoderSpecificInfo> DecSpecificInfo { get { return this.children.OfType<DecoderSpecificInfo>(); } }
         public IEnumerable<ProfileLevelIndicationIndexDescriptor> ProfileLevelIndicationIndexDescr { get { return this.children.OfType<ProfileLevelIndicationIndexDescriptor>(); } }
 
-        public DecoderConfigDescriptor() : base()
+        public DecoderConfigDescriptor() : base(DescriptorTags.DecoderConfigDescrTag)
         {
         }
 
@@ -29177,12 +29177,12 @@ namespace SharpMP4
     */
     public class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
     {
-        public byte Tag { get; set; } = DescriptorTags.ProfileLevelIndicationIndexDescrTag;
+        public const byte TYPE = DescriptorTags.ProfileLevelIndicationIndexDescrTag;
 
         protected byte profileLevelIndicationIndex;
         public byte ProfileLevelIndicationIndex { get { return this.profileLevelIndicationIndex; } set { this.profileLevelIndicationIndex = value; } }
 
-        public ProfileLevelIndicationIndexDescriptor() : base()
+        public ProfileLevelIndicationIndexDescriptor() : base(DescriptorTags.ProfileLevelIndicationIndexDescrTag)
         {
         }
 
@@ -29219,12 +29219,12 @@ namespace SharpMP4
     */
     public class IPI_DescrPointer : BaseDescriptor
     {
-        public byte Tag { get; set; } = DescriptorTags.IPI_DescrPointerTag;
+        public const byte TYPE = DescriptorTags.IPI_DescrPointerTag;
 
         protected ushort IPI_ES_Id;
         public ushort IPIESId { get { return this.IPI_ES_Id; } set { this.IPI_ES_Id = value; } }
 
-        public IPI_DescrPointer() : base()
+        public IPI_DescrPointer() : base(DescriptorTags.IPI_DescrPointerTag)
         {
         }
 
@@ -29266,7 +29266,7 @@ namespace SharpMP4
         public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
         public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag;
 
-        public IP_IdentificationDataSet() : base()
+        public IP_IdentificationDataSet(byte tag) : base(tag)
         {
         }
 
@@ -29303,12 +29303,12 @@ namespace SharpMP4
     */
     public class IPMP_DescriptorPointer : BaseDescriptor
     {
-        public byte Tag { get; set; } = DescriptorTags.IPMP_DescrPointerTag;
+        public const byte TYPE = DescriptorTags.IPMP_DescrPointerTag;
 
         protected byte IPMP_DescriptorID;
         public byte IPMPDescriptorID { get { return this.IPMP_DescriptorID; } set { this.IPMP_DescriptorID = value; } }
 
-        public IPMP_DescriptorPointer() : base()
+        public IPMP_DescriptorPointer() : base(DescriptorTags.IPMP_DescrPointerTag)
         {
         }
 
@@ -29349,7 +29349,7 @@ namespace SharpMP4
         public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
         public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange;
 
-        public OCI_Descriptor() : base()
+        public OCI_Descriptor(byte tag) : base(tag)
         {
         }
 
@@ -29386,12 +29386,12 @@ namespace SharpMP4
     */
     public class LanguageDescriptor : OCI_Descriptor
     {
-        public byte Tag { get; set; } = DescriptorTags.LanguageDescrTag;
+        public const byte TYPE = DescriptorTags.LanguageDescrTag;
 
         protected uint languageCode;
         public uint LanguageCode { get { return this.languageCode; } set { this.languageCode = value; } }
 
-        public LanguageDescriptor() : base()
+        public LanguageDescriptor() : base(DescriptorTags.LanguageDescrTag)
         {
         }
 
@@ -29431,13 +29431,13 @@ namespace SharpMP4
     */
     public class QoS_Descriptor : BaseDescriptor
     {
-        public byte Tag { get; set; } = DescriptorTags.QoS_DescrTag;
+        public const byte TYPE = DescriptorTags.QoS_DescrTag;
 
         protected byte predefined;
         public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
         public IEnumerable<QoS_Qualifier> Qualifiers { get { return this.children.OfType<QoS_Qualifier>(); } }
 
-        public QoS_Descriptor() : base()
+        public QoS_Descriptor() : base(DescriptorTags.QoS_DescrTag)
         {
         }
 
@@ -29496,7 +29496,7 @@ namespace SharpMP4
         public byte TagMin { get; set; } = 0x01;
         public byte TagMax { get; set; } = 0xff;
 
-        public QoS_Qualifier() : base()
+        public QoS_Qualifier(byte tag) : base(tag)
         {
         }
 
@@ -29531,12 +29531,12 @@ namespace SharpMP4
     */
     public class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
     {
-        public byte Tag { get; set; } = 0x01;
+        public const byte TYPE = 0x01;
 
         protected uint MAX_DELAY;
         public uint MAXDELAY { get { return this.MAX_DELAY; } set { this.MAX_DELAY = value; } }
 
-        public QoS_Qualifier_MAX_DELAY() : base()
+        public QoS_Qualifier_MAX_DELAY() : base(0x01)
         {
         }
 
@@ -29574,12 +29574,12 @@ namespace SharpMP4
     */
     public class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
     {
-        public byte Tag { get; set; } = 0x02;
+        public const byte TYPE = 0x02;
 
         protected uint PREF_MAX_DELAY;
         public uint PREFMAXDELAY { get { return this.PREF_MAX_DELAY; } set { this.PREF_MAX_DELAY = value; } }
 
-        public QoS_Qualifier_PREF_MAX_DELAY() : base()
+        public QoS_Qualifier_PREF_MAX_DELAY() : base(0x02)
         {
         }
 
@@ -29617,12 +29617,12 @@ namespace SharpMP4
     */
     public class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
     {
-        public byte Tag { get; set; } = 0x03;
+        public const byte TYPE = 0x03;
 
         protected double LOSS_PROB;
         public double LOSSPROB { get { return this.LOSS_PROB; } set { this.LOSS_PROB = value; } }
 
-        public QoS_Qualifier_LOSS_PROB() : base()
+        public QoS_Qualifier_LOSS_PROB() : base(0x03)
         {
         }
 
@@ -29660,12 +29660,12 @@ namespace SharpMP4
     */
     public class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
     {
-        public byte Tag { get; set; } = 0x04;
+        public const byte TYPE = 0x04;
 
         protected uint MAX_GAP_LOSS;
         public uint MAXGAPLOSS { get { return this.MAX_GAP_LOSS; } set { this.MAX_GAP_LOSS = value; } }
 
-        public QoS_Qualifier_MAX_GAP_LOSS() : base()
+        public QoS_Qualifier_MAX_GAP_LOSS() : base(0x04)
         {
         }
 
@@ -29703,12 +29703,12 @@ namespace SharpMP4
     */
     public class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
     {
-        public byte Tag { get; set; } = 0x41;
+        public const byte TYPE = 0x41;
 
         protected uint MAX_AU_SIZE;
         public uint MAXAUSIZE { get { return this.MAX_AU_SIZE; } set { this.MAX_AU_SIZE = value; } }
 
-        public QoS_Qualifier_MAX_AU_SIZE() : base()
+        public QoS_Qualifier_MAX_AU_SIZE() : base(0x41)
         {
         }
 
@@ -29746,12 +29746,12 @@ namespace SharpMP4
     */
     public class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
     {
-        public byte Tag { get; set; } = 0x42;
+        public const byte TYPE = 0x42;
 
         protected uint AVG_AU_SIZE;
         public uint AVGAUSIZE { get { return this.AVG_AU_SIZE; } set { this.AVG_AU_SIZE = value; } }
 
-        public QoS_Qualifier_AVG_AU_SIZE() : base()
+        public QoS_Qualifier_AVG_AU_SIZE() : base(0x42)
         {
         }
 
@@ -29788,12 +29788,12 @@ namespace SharpMP4
     */
     public class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
     {
-        public byte Tag { get; set; } = 0x43;
+        public const byte TYPE = 0x43;
 
         protected uint MAX_AU_RATE;
         public uint MAXAURATE { get { return this.MAX_AU_RATE; } set { this.MAX_AU_RATE = value; } }
 
-        public QoS_Qualifier_MAX_AU_RATE() : base()
+        public QoS_Qualifier_MAX_AU_RATE() : base(0x43)
         {
         }
 
@@ -29831,7 +29831,7 @@ namespace SharpMP4
     */
     public class RegistrationDescriptor : BaseDescriptor
     {
-        public byte Tag { get; set; } = DescriptorTags.RegistrationDescrTag;
+        public const byte TYPE = DescriptorTags.RegistrationDescrTag;
 
         protected uint formatIdentifier;
         public uint FormatIdentifier { get { return this.formatIdentifier; } set { this.formatIdentifier = value; } }
@@ -29839,7 +29839,7 @@ namespace SharpMP4
         protected byte[] additionalIdentificationInfo;
         public byte[] AdditionalIdentificationInfo { get { return this.additionalIdentificationInfo; } set { this.additionalIdentificationInfo = value; } }
 
-        public RegistrationDescriptor() : base()
+        public RegistrationDescriptor() : base(DescriptorTags.RegistrationDescrTag)
         {
         }
 
@@ -29866,7 +29866,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32; // formatIdentifier
-            boxSize += (ulong)(sizeOfInstance - 4); // additionalIdentificationInfo
+            boxSize += (ulong)(sizeOfInstance - 4) * 8; // additionalIdentificationInfo
             return boxSize;
         }
     }
@@ -29882,7 +29882,7 @@ namespace SharpMP4
         public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
         public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange;
 
-        public ExtensionDescriptor() : base()
+        public ExtensionDescriptor(byte tag) : base(tag)
         {
         }
 

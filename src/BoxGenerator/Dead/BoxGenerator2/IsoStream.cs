@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 
 namespace SharpMP4
 {
-    public class IsoStream
+    public class IsoStream : IDisposable
     {
         private readonly Stream _stream;
         protected int _bitsPosition;
         protected int _currentBytePosition = -1;
         protected byte _currentByte = 0;
+        private bool _disposedValue;
 
         public IsoStream(Stream stream)
         {
@@ -67,6 +68,176 @@ namespace SharpMP4
             }
         }
 
+        internal ulong ReadBox(ulong boxSize, ulong readSize, out Box[] value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, out T[] value) where T : IMp4Serializable, new()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadDouble32(out double value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteDouble32(double value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteBits(uint count, short value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteBox(Box[] value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteClass(IMp4Serializable[] value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteString(string value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadStringArray(uint count, out string[] value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteStringArray(uint count, string[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateSize(string[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateByteAlignmentSize(byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadByteAlignment(out byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteByteAlignment(byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static int BitsToDecode()
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public async Task<ulong> WriteBoxAsync(Box box)
+        {
+            return WriteBox(box);
+        }
+
+        internal ulong WriteDescriptorsTillEnd(Descriptor descriptor, int objectTypeIndication = -1)
+        {
+            ulong size = 0;
+            foreach (var d in descriptor.Children)
+            {
+                size += WriteDescriptor(d);
+            }
+            return size;
+        }
+
+        internal ulong WriteDescriptor(Descriptor descriptor)
+        {
+            ulong size = 0;
+            size += WriteUInt8(descriptor.Tag);
+            if (descriptor.Tag == 0)
+            {
+                return size;
+            }
+
+            ulong sizeOfInstance = CalculateDescriptorSize(descriptor);
+            size += WriteDescriptorSize(sizeOfInstance, descriptor.SizeOfSize);
+            size += descriptor.WriteAsync(this).Result;
+
+            return size;
+        }
+
+        internal ulong WriteBox(Box value)
+        {
+            ulong writtenSize = WriteBoxHeaderAsync(value).Result;
+            writtenSize += value.WriteAsync(this).Result;
+            return writtenSize;
+        }
+
+        private async Task<ulong> WriteBoxHeaderAsync(Box value)
+        {
+            BoxHeader header = new BoxHeader();
+            ulong boxSizeBits = value.CalculateSize();
+            ulong boxSize = boxSizeBits >> 3;
+            if (boxSize > uint.MaxValue)
+            {
+                header.Size = 1;
+                header.Largesize = boxSize;
+            }
+            else
+            {
+                header.Size = (uint)boxSize;
+                header.Largesize = 0;
+            }
+            header.Usertype = value.Uuid;
+            header.Type = FromFourCC(value.FourCC);
+
+            ulong writtenSize = 0;
+            writtenSize += await header.WriteAsync(this);
+            return writtenSize;
+        }
+
+        internal ulong WriteClass(IMp4Serializable value)
+        {
+            ulong writtenSize = 0;
+            writtenSize += value.WriteAsync(this).Result;
+            return writtenSize;
+        }
+
+        internal ulong WriteEntry(IMp4Serializable entry)
+        {
+            ulong writtenSize = 0;
+            writtenSize += entry.WriteAsync(this).Result;
+            return writtenSize;
+        }
+
         private ulong ReadDescriptorSize(out int sizeOfInstance)
         {
             ulong sizeBytes = 0;
@@ -86,13 +257,13 @@ namespace SharpMP4
             return sizeBytes * 8;
         }
 
-        private ulong WriteDescriptorSize(int sizeOfInstance)
+        private ulong WriteDescriptorSize(ulong sizeOfInstance, ulong sizeOfSize)
         {
-            uint sizeBytesCount = CalculateDescriptorSizeLength(sizeOfInstance);
+            uint sizeBytesCount = CalculatePackedNumberLength(sizeOfInstance, sizeOfSize);
 
-            int i = 0;
+            ulong i = 0;
             byte[] buffer = new byte[sizeBytesCount];
-            while (sizeOfInstance > 0)
+            while (sizeOfInstance > 0 || i < sizeOfSize)
             {
                 i++;
                 if (sizeOfInstance > 0)
@@ -111,18 +282,7 @@ namespace SharpMP4
                 WriteByte(b);
             }
 
-            return sizeBytesCount;
-        }
-
-        private static uint CalculateDescriptorSizeLength(int sizeOfInstance)
-        {
-            uint sizeBytesCount = 0;
-            while (sizeOfInstance > 0)
-            {
-                sizeOfInstance = sizeOfInstance >> 7;
-                sizeBytesCount++;
-            }
-            return sizeBytesCount;
+            return sizeBytesCount * 8;
         }
 
         internal ulong ReadBoxArrayTillEnd(ulong boxSize, ulong readSize, Box box)
@@ -242,96 +402,11 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal ulong ReadBox(ulong boxSize, ulong readSize, out Box[] value)
-        {
-            throw new NotImplementedException();
-        }
-
         internal ulong ReadClass<T>(ulong boxSize, ulong readSize, T c, out T value) where T : IMp4Serializable
         {
             ulong size = c.ReadAsync(this, readSize - boxSize).Result;
             value = c;
             return size;
-        }
-
-        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, out T[] value) where T : IMp4Serializable, new()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadDouble32(out double value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteDouble32(double value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteBits(uint count, short value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteBox(Box value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteBox(Box[] value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteClass(IMp4Serializable value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteClass(IMp4Serializable[] value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteString(string value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadStringArray(uint count, out string[] value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteStringArray(uint count, string[] values)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static ulong CalculateSize(string[] values)
-        {
-            throw new NotImplementedException();
-        }        
-
-        internal static ulong CalculateByteAlignmentSize(byte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadByteAlignment(out byte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteByteAlignment(byte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static int BitsToDecode()
-        {
-            throw new NotImplementedException();
         }
 
         internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out byte[] value)
@@ -1139,12 +1214,17 @@ namespace SharpMP4
 
             foreach (Box box in boxes)
             {
-                size += box.CalculateSize();
+                size += CalculateBoxSize(box);
             }
             return size;
         }
 
         internal static ulong CalculateClassSize(IMp4Serializable value)
+        {
+            return value.CalculateSize();
+        }
+
+        internal static ulong CalculateBoxSize(Box value)
         {
             return value.CalculateSize();
         }
@@ -1306,14 +1386,9 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteEntry(IMp4Serializable entry)
-        {
-            throw new NotImplementedException();
-        }
-
         internal static ulong CalculateEntrySize(IMp4Serializable entry)
         {
-            return entry.CalculateSize() + 8 * (ulong)(entry.Padding != null ? entry.Padding.Length : 0);
+            return entry.CalculateSize();
         }
 
         internal static ulong CalculateEntrySize(IMp4Serializable[] entry)
@@ -1420,11 +1495,6 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal ulong WriteDescriptorsTillEnd(Descriptor descriptor, int objectTypeIndication = -1)
-        {
-            throw new NotImplementedException();
-        }
-
         internal static ulong CalculateDescriptors(Descriptor descriptor, int objectTypeIndication = -1)
         {
             ulong size = 0;
@@ -1440,22 +1510,17 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteDescriptor(Descriptor descriptor)
-        {
-            throw new NotImplementedException();
-        }
-
         internal static ulong CalculateDescriptorSize(Descriptor descriptor)
         {
             if (descriptor == null)
                 return 8;
 
             ulong descriptorContentSize = descriptor.CalculateSize();
-            ulong descriptorSizeLength = CalculatePackedNumberLength(descriptorContentSize >> 3, (int)(descriptor.SizeOfSize >> 3));
+            ulong descriptorSizeLength = CalculatePackedNumberLength(descriptorContentSize >> 3, descriptor.SizeOfSize >> 3);
             return 8 * (1 + descriptorSizeLength) + descriptorContentSize + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0);
         }
 
-        public static uint CalculatePackedNumberLength(ulong sizeInBytes, int sizeOfSize)
+        public static uint CalculatePackedNumberLength(ulong sizeInBytes, ulong sizeOfSize)
         {
             int size = (int)sizeInBytes;
             int i = 0;
@@ -1486,6 +1551,25 @@ namespace SharpMP4
                 size += CalculateStringSize(str);
             }
             return size;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                    _stream.Dispose();
+                }
+
+                _disposedValue = true;
+            }
+        }
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 

@@ -1263,7 +1263,7 @@ namespace SharpMP4
                 {
                     tag = "DescriptorTags." + tag;
                 }
-                cls += $"\tpublic byte Tag {{ get; set; }} = {tag};";
+                cls += $"\tpublic const byte TYPE = {tag};";
             }
             else
             {
@@ -1357,6 +1357,33 @@ namespace SharpMP4
             {
                 base4ccparams = "uuid";
             }
+            else if (b.Extended != null && !string.IsNullOrEmpty(b.Extended.DescriptorTag))
+            {
+                if (!b.Extended.DescriptorTag.Contains(".."))
+                {
+                    string tag = b.Extended.DescriptorTag.Replace("tag=", "");
+                    if (!tag.StartsWith("0"))
+                    {
+                        tag = "DescriptorTags." + tag;
+                    }
+
+                    if (b.BoxName == "BaseDescriptor")
+                    {
+                        ctorParams = "byte tag";
+                        base4ccparams = "tag";
+                    }
+                    else
+                    {
+                        base4ccparams = tag;
+                    }
+                }
+                else
+                {
+                    base4ccparams = "tag";
+                    ctorParams = "byte tag";
+                }
+            }
+
             string base4ccseparator = "";
             if (!string.IsNullOrEmpty(base4cc) && !string.IsNullOrEmpty(base4ccparams))
                 base4ccseparator = ", ";
@@ -3136,7 +3163,7 @@ namespace SharpMP4
             { "ProfileLevelIndicationIndexDescriptor[0..255]", "IsoStream.CalculateDescriptorSize(value)" },
             { "DecoderSpecificInfo[0 .. 1]",            "IsoStream.CalculateDescriptorSize(value)" },
             { "bit(8)[URLlength]",                      "(ulong)(URLlength * 8)" },
-            { "bit(8)[sizeOfInstance-4]",               "(ulong)(sizeOfInstance - 4)" },
+            { "bit(8)[sizeOfInstance-4]",               "(ulong)(sizeOfInstance - 4) * 8" },
             { "double(32)",                             "32" },
             { "QoS_Qualifier[]",                        "IsoStream.CalculateDescriptorSize(value)" },
             { "GetAudioObjectType()",                   "IsoStream.CalculateClassSize(value)" },

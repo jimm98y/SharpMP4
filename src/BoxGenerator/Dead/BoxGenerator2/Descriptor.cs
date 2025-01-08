@@ -86,6 +86,14 @@ namespace SharpMP4
         protected byte[] padding = null;
         public byte[] Padding { get { return padding; } set { padding = value; } }
 
+        protected byte tag = 0;
+        public byte Tag { get { return tag; } set { tag = value; } }
+
+        public Descriptor(byte tag)
+        {
+            Tag = tag;
+        }
+
         /// <summary>
         /// This is here to store the original descriptor length size, because sometimes it is 
         ///  aligned to 4 or 8 bytes instead of just using the shortest one to accommodate the value.
@@ -138,6 +146,9 @@ namespace SharpMP4
     {
         protected byte[] bytes = null;
         public byte[] Bytes { get { return bytes; } set { bytes = value; } }
+
+        public UnknownDescriptor(byte tag) : base(tag)
+        {  }
 
         public override async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
         {
