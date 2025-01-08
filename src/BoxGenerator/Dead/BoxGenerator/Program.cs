@@ -1332,6 +1332,10 @@ namespace SharpMP4
         {
             cls += "\r\npublic bool IsQuickTime { get; set; } = false;";
         }
+        else if(b.BoxName == "AVCDecoderConfigurationRecord")
+        {
+            cls += "\r\npublic bool HasExtensions { get; set; } = false;";
+        }
 
         string ctorParams = "";
         if (!string.IsNullOrEmpty(b.ClassType) || (b.Extended != null && b.Extended.Parameters != null))
@@ -2272,11 +2276,11 @@ namespace SharpMP4
                 // this condition is necessary, otherwise AVCDecoderConfigurationRecord can exceed its box size
                 if(methodType == MethodType.Read)
                 {
-                    ret += $"\r\n{spacing}if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize;";
+                    ret += $"\r\n{spacing}if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize; else HasExtensions = true;";
                 }
                 else
                 {
-                    ret += $"\r\n{spacing}if (reserved1 == 0b111111 && chroma_format == 0 && reserved00 == 0b11111 && bit_depth_luma_minus8 == 0 && reserved10 == 0b11111 && bit_depth_chroma_minus8 == 0 && numOfSequenceParameterSetExt == 0) return boxSize;";
+                    ret += $"\r\n{spacing}if (!HasExtensions) return boxSize;";
                 }
             }
         }

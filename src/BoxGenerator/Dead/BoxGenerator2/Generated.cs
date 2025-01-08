@@ -3125,6 +3125,7 @@ namespace SharpMP4
 
         protected byte[][] sequenceParameterSetExtNALUnit;
         public byte[][] SequenceParameterSetExtNALUnit { get { return this.sequenceParameterSetExtNALUnit; } set { this.sequenceParameterSetExtNALUnit = value; } }
+        public bool HasExtensions { get; set; } = false;
 
         public AVCDecoderConfigurationRecord() : base()
         {
@@ -3159,7 +3160,7 @@ namespace SharpMP4
                 boxSize += stream.ReadBytes(pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
             }
 
-            if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize;
+            if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize; else HasExtensions = true;
             if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
         AVCProfileIndication == 122 || AVCProfileIndication == 144)
             {
@@ -3207,7 +3208,7 @@ namespace SharpMP4
                 boxSize += stream.WriteBytes(pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
             }
 
-            if (reserved1 == 0b111111 && chroma_format == 0 && reserved00 == 0b11111 && bit_depth_luma_minus8 == 0 && reserved10 == 0b11111 && bit_depth_chroma_minus8 == 0 && numOfSequenceParameterSetExt == 0) return boxSize;
+            if (!HasExtensions) return boxSize;
             if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
         AVCProfileIndication == 122 || AVCProfileIndication == 144)
             {
@@ -3253,7 +3254,7 @@ namespace SharpMP4
                 boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
             }
 
-            if (reserved1 == 0b111111 && chroma_format == 0 && reserved00 == 0b11111 && bit_depth_luma_minus8 == 0 && reserved10 == 0b11111 && bit_depth_chroma_minus8 == 0 && numOfSequenceParameterSetExt == 0) return boxSize;
+            if (!HasExtensions) return boxSize;
             if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
         AVCProfileIndication == 122 || AVCProfileIndication == 144)
             {
