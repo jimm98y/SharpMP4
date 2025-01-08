@@ -132,6 +132,7 @@ namespace SharpMP4
                 case "gshh": return new GshhBox();
                 case "gspm": return new GspmBox();
                 case "gspu": return new GspuBox();
+                case "gssd": return new GssdBox();
                 case "gsst": return new GsstBox();
                 case "gstd": return new GstdBox();
                 case "hdlr": return new HandlerBox();
@@ -343,6 +344,7 @@ namespace SharpMP4
                 case "ttyp": return new TrackTypeBox();
                 case "tven": return new TvenBox();
                 case "tves": return new AppleTVEpisodeBox();
+                case "tvsh": return new TvshBox();
                 case "tvsn": return new AppleTVSeasonBox();
                 case "txtC": return new TextConfigBox();
                 case "tyco": return new TypeCombinationBox();
@@ -37154,6 +37156,49 @@ namespace SharpMP4
 
 
     /*
+    aligned(8) class GssdBox() 
+    extends Box('gssd') {
+     bit(8) data[];
+     } 
+    */
+    public class GssdBox : Box
+    {
+        public const string TYPE = "gssd";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public GssdBox() : base("gssd")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
     aligned(8) class GstdBox() 
     extends Box('gstd') {
      bit(8) data[];
@@ -37941,6 +37986,49 @@ namespace SharpMP4
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public FallBox() : base("fall")
+        {
+        }
+
+        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.ReadAsync(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public async override Task<ulong> WriteAsync(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += await base.WriteAsync(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TvshBox() 
+    extends Box('tvsh') {
+     bit(8) data[];
+     } 
+    */
+    public class TvshBox : Box
+    {
+        public const string TYPE = "tvsh";
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public TvshBox() : base("tvsh")
         {
         }
 
