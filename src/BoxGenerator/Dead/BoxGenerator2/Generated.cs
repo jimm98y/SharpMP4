@@ -343,7 +343,7 @@ namespace SharpMP4
                 case "ttyp": return new TrackTypeBox();
                 case "tven": return new TvenBox();
                 case "tves": return new AppleTVEpisodeBox();
-                case "tvsn": throw new NotSupportedException($"'tvsn' under '{parent}' is ambiguous in between AppleTVSeasonBox and TvsnBox");
+                case "tvsn": return new AppleTVSeasonBox();
                 case "txtC": return new TextConfigBox();
                 case "tyco": return new TypeCombinationBox();
                 case "udta": return new UserDataBox();
@@ -37425,49 +37425,6 @@ namespace SharpMP4
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public GshhBox() : base("gshh")
-        {
-        }
-
-        public async override Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.ReadAsync(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
-            return boxSize;
-        }
-
-        public async override Task<ulong> WriteAsync(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += await base.WriteAsync(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TvsnBox() 
-    extends Box('tvsn') {
-     bit(8) data[];
-     } 
-    */
-    public class TvsnBox : Box
-    {
-        public const string TYPE = "tvsn";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public TvsnBox() : base("tvsn")
         {
         }
 

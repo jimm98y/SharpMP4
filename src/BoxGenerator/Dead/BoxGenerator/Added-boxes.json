@@ -318,12 +318,6 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class TvsnBox() \r\nextends Box('tvsn') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "description": "Metadata sample entries",
-      "type": "Box",
       "syntax": "aligned(8) class TvenBox() \r\nextends Box('tven') {\r\n bit(8) data[];\r\n } "
     },
     {
