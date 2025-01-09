@@ -71,46 +71,6 @@ namespace SharpMP4
             }
         }
 
-        internal ulong ReadBox(ulong boxSize, ulong readSize, out Box[] value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, out T[] value) where T : IMp4Serializable, new()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadDouble32(out double value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteDouble32(double value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteBits(uint count, short value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteBox(Box[] value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteClass(IMp4Serializable[] value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteString(string value)
-        {
-            throw new NotImplementedException();
-        }
-
         internal ulong ReadStringArray(uint count, out string[] value)
         {
             throw new NotImplementedException();
@@ -122,6 +82,23 @@ namespace SharpMP4
         }
 
         internal static ulong CalculateSize(string[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        internal ulong ReadDouble32(out double value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteDouble32(double value)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        internal static int BitsToDecode()
         {
             throw new NotImplementedException();
         }
@@ -141,30 +118,83 @@ namespace SharpMP4
             throw new NotImplementedException();
         }
 
-        internal static int BitsToDecode()
+        internal ulong WriteBox(Box[] value)
         {
-            throw new NotImplementedException();
+            ulong size = 0;
+            foreach (var box in value)
+            {
+                size += WriteBox(box);
+            }
+            return size;
         }
 
+        internal ulong WriteClass(IMp4Serializable[] value)
+        {
+            ulong size = 0;
+            foreach (var cls in value)
+            {
+                size += WriteClass(cls);
+            }
+            return size;
+        }
 
+        internal ulong ReadBox(ulong boxSize, ulong readSize, out Box[] value)
+        {
+            ulong consumed = 0;
+            List<Box> values = new List<Box>();
 
+            if (readSize == 0)
+            {
+                // consume till the end of the stream
+                try
+                {
+                    while (true)
+                    {
+                        Box v;
+                        consumed += ReadBox(consumed, readSize, string.Empty, out v);
+                        values.Add(v);
+                    }
+                }
+                catch (EndOfStreamException)
+                { }
 
+                value = values.ToArray();
+                return consumed;
+            }
 
+            ulong remaining = readSize - boxSize;
+            while (consumed < remaining && (remaining - consumed) >= 64) // box header is at least 8 bytes
+            {
+                Box v;
+                consumed += ReadBox(consumed, readSize, string.Empty, out v);
+                if (consumed > readSize)
+                {
+                    throw new Exception("!!!!!!");
+                }
+                values.Add(v);
+            }
+            value = values.ToArray();
+            return consumed;
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, out T[] value) where T : IMp4Serializable, new()
+        {
+            ulong consumed = 0;
+            ulong remaining = readSize - boxSize;
+            List<T> ret = new List<T>();
+            while (consumed < remaining)
+            {
+                T c;
+                consumed += ReadClass<T>(boxSize + consumed, remaining, new T(), out c);
+                if (consumed > readSize)
+                {
+                    throw new Exception("!!!!!!");
+                }
+                ret.Add(c);
+            }
+            value = ret.ToArray();
+            return consumed;
+        }
 
         public async Task<ulong> WriteBoxAsync(Box box)
         {
@@ -708,6 +738,13 @@ namespace SharpMP4
             if (count > 16)
                 throw new ArgumentOutOfRangeException(nameof(count));
             return WriteBits(count, (uint)value);
+        }
+
+        internal ulong WriteBits(uint count, short value)
+        {
+            if (count > 16)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            return WriteBits(count, unchecked((ushort)value));
         }
 
         internal ulong WriteBits(uint count, uint value)
