@@ -21007,7 +21007,7 @@ namespace SharpMP4
 
             if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
             {
-                samplerate = samplerate >> 16;
+                // samplerate = samplerate >> 16;
             }
 
             if (soundversion == 1 || soundversion == 2)
@@ -21050,7 +21050,7 @@ namespace SharpMP4
 
             if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
             {
-                samplerate = samplerate >> 16;
+                // samplerate = samplerate >> 16;
             }
 
             if (soundversion == 1 || soundversion == 2)
@@ -21093,7 +21093,7 @@ namespace SharpMP4
 
             if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
             {
-                samplerate = samplerate >> 16;
+                // samplerate = samplerate >> 16;
             }
 
             if (soundversion == 1 || soundversion == 2)

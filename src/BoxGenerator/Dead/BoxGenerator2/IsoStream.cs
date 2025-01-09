@@ -191,7 +191,7 @@ namespace SharpMP4
             }
 
             ulong sizeOfInstance = CalculateDescriptorSize(descriptor);
-            size += WriteDescriptorSize(sizeOfInstance, descriptor.SizeOfSize);
+            size += WriteDescriptorSize(sizeOfInstance >> 3, descriptor.SizeOfSize >> 3);
             size += descriptor.WriteAsync(this).Result;
 
             return size;
