@@ -29,7 +29,7 @@ namespace SharpMP4
             return (byte)(read & 0xff);
         }
 
-        private byte WriteByte(byte value)
+        private ulong WriteByte(byte value)
         {
             _stream.WriteByte(value);
             return 8;
@@ -532,9 +532,9 @@ namespace SharpMP4
             }
 
             ulong remaining = readSize - boxSize;
-            int count = (int)(remaining >> 5);
+            uint count = (uint)(remaining >> 5);
             value = new uint[count];
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 consumed += ReadUInt32(out value[i]);
             }
@@ -1004,22 +1004,22 @@ namespace SharpMP4
             return 64;
         }
 
-        internal ulong ReadUInt16Array(int count, out ushort[] value)
+        internal ulong ReadUInt16Array(uint count, out ushort[] value)
         {
             ulong size = 0;
             value = new ushort[count];
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += ReadUInt16(out value[i]);
             }
             return size;
         }
 
-        internal ulong ReadUInt16Array(int count, out uint[] value)
+        internal ulong ReadUInt16Array(uint count, out uint[] value)
         {
             ulong size = 0;
             value = new uint[count];
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += ReadUInt16(out value[i]);
             }
@@ -1030,7 +1030,7 @@ namespace SharpMP4
         {
             ulong size = 0;
             value = new uint[count];
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += ReadUInt32(out value[i]);
             }
@@ -1041,7 +1041,7 @@ namespace SharpMP4
         {
             ulong size = 0;
             value = new ulong[count];
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += ReadUInt32(out value[i]);
             }
@@ -1052,7 +1052,7 @@ namespace SharpMP4
         {
             ulong size = 0;
             value = new ulong[count];
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += ReadUInt64(out value[i]);
             }
@@ -1063,7 +1063,7 @@ namespace SharpMP4
         {
             ulong size = 0;
             value = new byte[count];
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += ReadUInt8(out value[i]);
             }
@@ -1188,7 +1188,7 @@ namespace SharpMP4
         internal ulong WriteUInt16Array(uint count, ushort[] value)
         {
             ulong size = 0;
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += WriteUInt16(value[i]);
             }
@@ -1198,7 +1198,7 @@ namespace SharpMP4
         internal ulong WriteUInt16Array(uint count, uint[] value)
         {
             ulong size = 0;
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += WriteUInt16(value[i]);
             }
@@ -1208,7 +1208,7 @@ namespace SharpMP4
         internal ulong WriteUInt8Array(uint count, byte[] value)
         {
             ulong size = 0;
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += WriteUInt8(value[i]);
             }
@@ -1218,7 +1218,7 @@ namespace SharpMP4
         internal ulong WriteUInt32Array(uint count, uint[] value)
         {
             ulong size = 0;
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += WriteUInt32(value[i]);
             }
@@ -1228,7 +1228,7 @@ namespace SharpMP4
         internal ulong WriteUInt32Array(uint count, ulong[] value)
         {
             ulong size = 0;
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += WriteUInt32(value[i]);
             }
@@ -1238,7 +1238,7 @@ namespace SharpMP4
         internal ulong WriteUInt64Array(uint count, ulong[] value)
         {
             ulong size = 0;
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 size += WriteUInt64(value[i]);
             }
