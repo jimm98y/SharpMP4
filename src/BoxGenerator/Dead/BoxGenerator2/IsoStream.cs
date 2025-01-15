@@ -793,7 +793,7 @@ namespace SharpMP4
 
         internal ulong WriteBytes(ulong count, byte[] value)
         {
-            _stream.WriteAsync(value, 0, (int)count);
+            _stream.WriteAsync(value, 0, (int)count).Wait();
             return count * 8;
         }
 
@@ -881,14 +881,14 @@ namespace SharpMP4
 
         internal ulong ReadInt16(out short value)
         {
-            ulong count = unchecked(ReadUInt16(out ushort v));
+            ulong count = ReadUInt16(out ushort v);
             value = unchecked((short)v);
             return count;
         }
 
         internal ulong ReadInt32(out int value)
         {
-            ulong count = unchecked(ReadUInt32(out uint v));
+            ulong count = ReadUInt32(out uint v);
             value = unchecked((int)v);
             return count;
         }
@@ -1075,12 +1075,11 @@ namespace SharpMP4
             if (value == null || value.Length == 0)
                 return 0;
 
-            byte[] buffer = value;
-            for (int i = 0; i < buffer.Length; i++)
+            for (int i = 0; i < value.Length; i++)
             {
-                WriteByte(buffer[i]);
+                WriteByte(value[i]);
             }
-            return (ulong)buffer.Length * 8;
+            return (ulong)value.Length * 8;
         }
 
         internal ulong WriteInt16(short value)
