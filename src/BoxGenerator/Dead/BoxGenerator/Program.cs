@@ -1817,6 +1817,11 @@ namespace SharpMP4
                     value = "= []";
                 }
 
+                if(tt == "byte[]" && (b.BoxName == "MediaDataBox" || b.BoxName == "FreeSpaceBox_skip" || b.BoxName == "FreeSpaceBox"))
+                {
+                    tt = "StreamMarker";
+                }
+
                 if (!string.IsNullOrEmpty(value))
                 {
                     if (value.Contains("'b"))
@@ -2124,8 +2129,8 @@ namespace SharpMP4
                 return "downmix_instructions_count = 1;";
             else if (tt == "return audioObjectType;")
                 return "// return audioObjectType;";
-            else if (tt == "samplerate = samplerate >> 16;")
-                return "// samplerate = samplerate >> 16;";
+            else if (tt == "samplerate = samplerate >> 16")
+                return "// samplerate = samplerate >> 16";
             else
                 return $"{tt};";
         }

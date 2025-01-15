@@ -10529,8 +10529,8 @@ namespace SharpMP4
     {
         public const string TYPE = "free";
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected StreamMarker data;
+        public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
         public FreeSpaceBox() : base("free")
         {
@@ -11950,8 +11950,8 @@ namespace SharpMP4
     {
         public const string TYPE = "mdat";
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected StreamMarker data;
+        public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
         public MediaDataBox() : base("mdat")
         {
@@ -14187,8 +14187,8 @@ namespace SharpMP4
     {
         public const string TYPE = "skip";
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected StreamMarker data;
+        public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
         public FreeSpaceBox_skip() : base("skip")
         {
@@ -21007,7 +21007,7 @@ namespace SharpMP4
 
             if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
             {
-                // samplerate = samplerate >> 16;
+                // samplerate = samplerate >> 16
             }
 
             if (soundversion == 1 || soundversion == 2)
@@ -21050,7 +21050,7 @@ namespace SharpMP4
 
             if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
             {
-                // samplerate = samplerate >> 16;
+                // samplerate = samplerate >> 16
             }
 
             if (soundversion == 1 || soundversion == 2)
@@ -21093,7 +21093,7 @@ namespace SharpMP4
 
             if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
             {
-                // samplerate = samplerate >> 16;
+                // samplerate = samplerate >> 16
             }
 
             if (soundversion == 1 || soundversion == 2)

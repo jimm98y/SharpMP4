@@ -9,6 +9,19 @@ using System.Threading.Tasks;
 
 namespace SharpMP4
 {
+    public class StreamMarker
+    {
+        public long Position { get; set; }
+        public long Length { get; set; }
+        public IsoStream Stream { get; set; }
+        public StreamMarker(long position, long length, IsoStream stream)
+        {
+            Position = position;
+            Length = length;
+            Stream = stream;
+        }
+    }
+
     public class IsoStream : IDisposable
     {
         private readonly Stream _stream;
@@ -469,42 +482,52 @@ namespace SharpMP4
             ulong remaining = readSize - boxSize;
             ulong count = (ulong)(remaining >> 3);
             value = new byte[count];
-            if(count > int.MaxValue)
-                _stream.Seek((long)count, SeekOrigin.Current);
-            else
-                _stream.ReadExactly(value, 0, (int)count); 
+            _stream.ReadExactly(value, 0, (int)count); 
             return (ulong)(count * 8);
         }
 
-        internal ulong ReadUInt8ArraySkip(ulong boxSize, ulong readSize, out byte[] value)
+        internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out StreamMarker value)
         {
-            ulong consumed = 0;
-
+            StreamMarker marker;
             if (readSize == ulong.MaxValue)
             {
-                List<byte> values = new List<byte>();
-                // consume till the end of the stream
-                try
-                {
-                    while (true)
-                    {
-                        byte v;
-                        consumed += ReadUInt8(out v);
-                        values.Add(v);
-                    }
-                }
-                catch (EndOfStreamException)
-                { }
+                marker = new StreamMarker(_stream.Position, _stream.Length - _stream.Position, this);
+                _stream.Seek(0, SeekOrigin.End);
+                value = marker;
+                return (ulong)(marker.Length * 8);
+            }
+            else
+            {
+                long remaining = (long)(readSize - boxSize);
+                long count = remaining >> 3;
+                marker = new StreamMarker(_stream.Position, count, this);
+                _stream.Seek(count, SeekOrigin.Current);
+                value = marker;
+                return (ulong)(marker.Length * 8);
+            }
+        }
 
-                value = values.ToArray();
-                return consumed;
+        internal ulong WriteUInt8ArrayTillEnd(StreamMarker data)
+        {
+            IsoStream readStream = data.Stream;
+            readStream._stream.Seek(data.Position, SeekOrigin.Begin);
+            ulong size = 8 * CopyStream(readStream._stream, _stream, data.Length);
+            return size;
+        }
+
+        private static ulong CopyStream(Stream input, Stream output, long bytes)
+        {
+            byte[] buffer = new byte[32768];
+            int read;
+            ulong size = 0;
+            while (bytes > 0 && (read = input.Read(buffer, 0, (int)Math.Min(buffer.Length, bytes))) > 0)
+            {
+                output.Write(buffer, 0, read);
+                bytes -= read;
+                size += (ulong)read;
             }
 
-            ulong remaining = readSize - boxSize;
-            ulong count = (ulong)(remaining >> 3);
-            value = new byte[1];
-            _stream.Seek((long)count, SeekOrigin.Current); // optimization for mdat
-            return (ulong)(count * 8);
+            return size;
         }
 
         internal ulong ReadUInt32ArrayTillEnd(ulong boxSize, ulong readSize, out uint[] value)
@@ -1115,8 +1138,7 @@ namespace SharpMP4
 
         internal ulong WriteUInt8(ushort value)
         {
-            _stream.WriteByte((byte)value);
-            return 8;
+            return WriteByte((byte)value);
         }
 
         internal ulong WriteUInt16(ushort value)
