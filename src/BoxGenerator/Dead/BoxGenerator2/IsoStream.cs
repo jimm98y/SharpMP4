@@ -252,7 +252,7 @@ namespace SharpMP4
             BoxHeader header = new BoxHeader();
             ulong boxSizeBits = value.CalculateSize();
             ulong boxSize = boxSizeBits >> 3;
-            if (boxSize > uint.MaxValue)
+            if (boxSize > uint.MaxValue || value.HasLargeSize)
             {
                 header.Size = 1;
                 header.Largesize = boxSize;
@@ -1385,6 +1385,8 @@ namespace SharpMP4
             {
                 availableSize = header.BoxSize - header.HeaderSize;
             }
+
+            box.HasLargeSize = header.Header.Size == 1;
 
             ulong size = await box.ReadAsync(this, availableSize);
 

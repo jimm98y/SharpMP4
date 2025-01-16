@@ -23,6 +23,9 @@ namespace SharpMP4
         protected ulong size = 0;
         public ulong Size { get { return size; } set { size = value; } }
 
+        protected bool hasLargeSize = false;
+        public bool HasLargeSize { get { return hasLargeSize; } set { hasLargeSize = value; } }
+
         protected ulong offset = 0;
         public ulong Offset { get { return offset; } set { offset = value; } }
 
@@ -64,7 +67,7 @@ namespace SharpMP4
 
         public virtual ulong CalculateSize()
         {
-            return (ulong)(32 + 32 + ((ulong)(size >> 3) > uint.MaxValue ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(padding != null ? 8 * padding.Length : 0) + 8 * (ulong)(uuid != null ? uuid.Length : 0);
+            return (ulong)(32 + 32 + ((ulong)(size >> 3) > uint.MaxValue || hasLargeSize ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(padding != null ? 8 * padding.Length : 0) + 8 * (ulong)(uuid != null ? uuid.Length : 0);
         }
     }
 
