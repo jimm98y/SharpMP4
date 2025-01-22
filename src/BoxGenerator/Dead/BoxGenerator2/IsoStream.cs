@@ -235,19 +235,19 @@ namespace SharpMP4
 
             ulong sizeOfInstance = descriptor.CalculateSize() + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0); 
             size += WriteDescriptorSize(sizeOfInstance >> 3, descriptor.SizeOfSize >> 3);
-            size += descriptor.WriteAsync(this).Result;
+            size += descriptor.Write(this);
 
             return size;
         }
 
         internal ulong WriteBox(Box value)
         {
-            ulong writtenSize = WriteBoxHeaderAsync(value).Result;
-            writtenSize += value.WriteAsync(this).Result;
+            ulong writtenSize = WriteBoxHeader(value);
+            writtenSize += value.Write(this);
             return writtenSize;
         }
 
-        private async Task<ulong> WriteBoxHeaderAsync(Box value)
+        private ulong WriteBoxHeader(Box value)
         {
             BoxHeader header = new BoxHeader();
             ulong boxSizeBits = value.CalculateSize();
@@ -266,21 +266,21 @@ namespace SharpMP4
             header.Type = FromFourCC(value.FourCC);
 
             ulong writtenSize = 0;
-            writtenSize += await header.WriteAsync(this);
+            writtenSize += header.Write(this);
             return writtenSize;
         }
 
         internal ulong WriteClass(IMp4Serializable value)
         {
             ulong writtenSize = 0;
-            writtenSize += value.WriteAsync(this).Result;
+            writtenSize += value.Write(this);
             return writtenSize;
         }
 
         internal ulong WriteEntry(IMp4Serializable entry)
         {
             ulong writtenSize = 0;
-            writtenSize += entry.WriteAsync(this).Result;
+            writtenSize += entry.Write(this);
             return writtenSize;
         }
 
@@ -393,18 +393,18 @@ namespace SharpMP4
 
         internal ulong ReadBox(ulong boxSize, ulong readSize, string parentFourCC, out Box value)
         {
-            var header = ReadBoxHeaderAsync().Result;
+            var header = ReadBoxHeader();
             var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), parentFourCC, header.Header.Usertype);
-            ReadBoxAsync(header, box).Wait();
+            ReadBox(header, box);
             value = box;
             return header.BoxSize;
         }
 
         internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, out T value) where T: Box
         {
-            var header = ReadBoxHeaderAsync().Result;
+            var header = ReadBoxHeader();
             var box = factory(header);
-            ReadBoxAsync(header, box).Wait();
+            ReadBox(header, box);
             value = (T)box;
             return header.BoxSize;
         }
@@ -450,7 +450,7 @@ namespace SharpMP4
 
         internal ulong ReadClass<T>(ulong boxSize, ulong readSize, T c, out T value) where T : IMp4Serializable
         {
-            ulong size = c.ReadAsync(this, readSize - boxSize).Result;
+            ulong size = c.Read(this, readSize - boxSize);
             value = c;
             return size;
         }
@@ -1354,26 +1354,26 @@ namespace SharpMP4
             return _stream.Position;
         }
 
-        public async Task<Mp4BoxHeader> ReadBoxHeaderAsync()
+        public Mp4BoxHeader ReadBoxHeader()
         {
             BoxHeader header = new BoxHeader();
             long headerOffset = this.GetCurrentOffset();
-            ulong headerSize = await header.ReadAsync(this, 0);
+            ulong headerSize = header.Read(this, 0);
             return new Mp4BoxHeader(header, headerOffset, headerSize);
         }
 
-        public async Task<Box> ReadBoxAsync(Mp4BoxHeader header)
+        public Box ReadBox(Mp4BoxHeader header)
         {
             if (header.Header.Type == 0 && header.Header.Size == 0 && header.Header.Largesize == 0)
                 return null; // all zeros, looks like 8 zero bytes padding at the end of the file
 
             string fourCC = ToFourCC(header.Header.Type);
             var box = BoxFactory.CreateBox(fourCC, null, header.Header.Usertype);
-            await ReadBoxAsync(header, box);
+            ReadBox(header, box);
             return box;
         }
 
-        private async Task ReadBoxAsync(Mp4BoxHeader header, Box box)
+        private void ReadBox(Mp4BoxHeader header, Box box)
         {
             Debug.WriteLine($"--Parsed box: {box.FourCC}");
             ulong availableSize = 0;
@@ -1388,7 +1388,7 @@ namespace SharpMP4
 
             box.HasLargeSize = header.Header.Size == 1;
 
-            ulong size = await box.ReadAsync(this, availableSize);
+            ulong size = box.Read(this, availableSize);
 
             if (header.BoxSize != 0 && size != availableSize)
             {
@@ -1429,7 +1429,7 @@ namespace SharpMP4
         {
             var res = BoxFactory.CreateEntry(fourCC);
             Debug.WriteLine($"--Parsed entry: {fourCC}");
-            ulong size = res.ReadAsync(this, readSize).Result;
+            ulong size = res.Read(this, readSize);
             entry = (SampleGroupDescriptionEntry)res;
             return size;
         }
@@ -1488,7 +1488,7 @@ namespace SharpMP4
             ulong sizeOfInstanceBits = (ulong)sizeOfInstance * 8;
             descriptor = DescriptorFactory.CreateDescriptor(tag);
             descriptor.SizeOfSize = sizeOfSize;
-            ulong readInstanceSizeBits = descriptor.ReadAsync(this, sizeOfInstanceBits).Result;
+            ulong readInstanceSizeBits = descriptor.Read(this, sizeOfInstanceBits);
             if (readInstanceSizeBits != sizeOfInstanceBits)
             {
                 if (readInstanceSizeBits < sizeOfInstanceBits)

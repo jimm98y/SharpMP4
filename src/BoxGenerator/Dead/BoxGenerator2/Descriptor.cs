@@ -100,14 +100,14 @@ namespace SharpMP4
         /// </summary>
         public ulong SizeOfSize { get; set; } = 0;
 
-        public virtual Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        public virtual ulong Read(IsoStream stream, ulong readSize)
         {
-            return Task.FromResult((ulong)0);
+            return 0;
         }
 
-        public virtual Task<ulong> WriteAsync(IsoStream stream)
+        public virtual ulong Write(IsoStream stream)
         {
-            return Task.FromResult((ulong)0);
+            return (ulong)0;
         }
 
         public virtual ulong CalculateSize()
@@ -121,16 +121,16 @@ namespace SharpMP4
         protected byte[] bytes = null;
         public byte[] Bytes { get { return bytes; } set { bytes = value; } }
 
-        public override async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        public override ulong Read(IsoStream stream, ulong readSize)
         {
-            ulong boxSize = await base.ReadAsync(stream, readSize);
+            ulong boxSize = base.Read(stream, readSize);
             boxSize += stream.ReadUInt8Array((uint)(readSize >> 3), out bytes);
             return boxSize;
         }
 
-        public override async Task<ulong> WriteAsync(IsoStream stream)
+        public override ulong Write(IsoStream stream)
         {
-            ulong boxSize = await base.WriteAsync(stream);
+            ulong boxSize = base.Write(stream);
             boxSize += stream.WriteUInt8Array((uint)bytes.Length, bytes);
             return boxSize;
         }
@@ -150,16 +150,16 @@ namespace SharpMP4
         public UnknownDescriptor(byte tag) : base(tag)
         {  }
 
-        public override async Task<ulong> ReadAsync(IsoStream stream, ulong readSize)
+        public override ulong Read(IsoStream stream, ulong readSize)
         {
-            ulong boxSize = await base.ReadAsync(stream, readSize);
+            ulong boxSize = base.Read(stream, readSize);
             boxSize += stream.ReadUInt8Array((uint)(readSize >> 3), out bytes);
             return boxSize;
         }
 
-        public override async Task<ulong> WriteAsync(IsoStream stream)
+        public override ulong Write(IsoStream stream)
         {
-            ulong boxSize = await base.WriteAsync(stream);
+            ulong boxSize = base.Write(stream);
             boxSize += stream.WriteUInt8Array((uint)bytes.Length, bytes);
             return boxSize;
         }

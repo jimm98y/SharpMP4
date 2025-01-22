@@ -1395,15 +1395,15 @@ namespace SharpMP4
         cls += $"\t}}\r\n";
 
         bool shouldOverride = (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName)) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier";
-        cls += "\r\n\tpublic async " + (shouldOverride ? "override " : "virtual ") + "Task<ulong> ReadAsync(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;";
+        cls += "\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong Read(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;";
 
 
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
         {
-            string baseRead = "\r\n\t\tboxSize += await base.ReadAsync(stream, readSize);";
+            string baseRead = "\r\n\t\tboxSize += base.Read(stream, readSize);";
             if(b.BoxName == "MetaBox")
             {
-                baseRead = "\r\n\t\tstream.ReadBytes(20, out byte[] lookahead);\r\n            if (lookahead[4] == 'h' && lookahead[5] == 'd' && lookahead[6] == 'l' && lookahead[7] == 'r' &&\r\n                lookahead[16] == 'm' && lookahead[17] == 'd' && lookahead[18] == 't' && lookahead[19] == 'a')\r\n            {\r\n                IsQuickTime = true;\r\n            }\r\n            else\r\n            {\r\n                IsQuickTime = false;\r\n            }\r\n            stream.UnreadBytes(20, lookahead);\r\n            if (!IsQuickTime)\r\n            {\r\n                boxSize += await base.ReadAsync(stream, readSize);\r\n            }";
+                baseRead = "\r\n\t\tstream.ReadBytes(20, out byte[] lookahead);\r\n            if (lookahead[4] == 'h' && lookahead[5] == 'd' && lookahead[6] == 'l' && lookahead[7] == 'r' &&\r\n                lookahead[16] == 'm' && lookahead[17] == 'd' && lookahead[18] == 't' && lookahead[19] == 'a')\r\n            {\r\n                IsQuickTime = true;\r\n            }\r\n            else\r\n            {\r\n                IsQuickTime = false;\r\n            }\r\n            stream.UnreadBytes(20, lookahead);\r\n            if (!IsQuickTime)\r\n            {\r\n                boxSize += base.Read(stream, readSize);\r\n            }";
             }
             cls += baseRead;
         }
@@ -1431,14 +1431,14 @@ namespace SharpMP4
         cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
 
 
-        cls += "\r\n\tpublic async " + (shouldOverride ? "override " : "virtual ") + "Task<ulong> WriteAsync(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;";
+        cls += "\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong Write(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;";
 
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
         {
-            string baseWrite = "\r\n\t\tboxSize += await base.WriteAsync(stream);";
+            string baseWrite = "\r\n\t\tboxSize += base.Write(stream);";
             if (b.BoxName == "MetaBox")
             {
-                baseWrite = "\r\n\t\tif(!IsQuickTime) boxSize += await base.WriteAsync(stream);";
+                baseWrite = "\r\n\t\tif(!IsQuickTime) boxSize += base.Write(stream);";
             }
             cls += baseWrite;
         }
