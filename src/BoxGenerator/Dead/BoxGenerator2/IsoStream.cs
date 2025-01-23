@@ -22,6 +22,16 @@ namespace SharpMP4
         }
     }
 
+    public class IsoEndOfStreamException : EndOfStreamException
+    {
+        public byte[] Padding { get; set; }
+
+        public IsoEndOfStreamException(byte[] padding)
+        {
+            Padding = padding;
+        }
+    }
+
     public class IsoStream : IDisposable
     {
         private readonly Stream _stream;
@@ -814,9 +824,12 @@ namespace SharpMP4
                 return consumed;
             }
 
-            value = new byte[length];
-            _stream.ReadExactly(value, 0, (int)length);
-            return length << 3;
+            ulong correctedLength = Math.Min(length, (ulong)(_stream.Length - _stream.Position));
+            value = new byte[correctedLength];
+            _stream.ReadExactly(value, 0, (int)correctedLength);
+            if (correctedLength < length)
+                throw new IsoEndOfStreamException(value);
+            return correctedLength << 3;
         }
 
         internal ulong WriteBytes(ulong count, byte[] value)
