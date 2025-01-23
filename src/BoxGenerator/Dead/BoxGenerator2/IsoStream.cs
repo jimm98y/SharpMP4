@@ -300,7 +300,7 @@ namespace SharpMP4
             }
             sizeBytes = i;
 
-            return sizeBytes * 8;
+            return sizeBytes << 3;
         }
 
         private ulong WriteDescriptorSize(ulong sizeOfInstance, ulong sizeOfSize)
@@ -328,7 +328,7 @@ namespace SharpMP4
                 WriteByte(b);
             }
 
-            return sizeBytesCount * 8;
+            return sizeBytesCount << 3;
         }
 
         internal ulong ReadBoxArrayTillEnd(ulong boxSize, ulong readSize, Box box)
@@ -483,7 +483,7 @@ namespace SharpMP4
             ulong count = (ulong)(remaining >> 3);
             value = new byte[count];
             _stream.ReadExactly(value, 0, (int)count); 
-            return (ulong)(count * 8);
+            return (ulong)(count << 3);
         }
 
         internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out StreamMarker value)
@@ -491,19 +491,19 @@ namespace SharpMP4
             StreamMarker marker;
             if (readSize == ulong.MaxValue)
             {
-                marker = new StreamMarker(_stream.Position, _stream.Length - _stream.Position, this);
+                marker = new StreamMarker(GetCurrentOffset(), _stream.Length - GetCurrentOffset(), this);
                 _stream.Seek(0, SeekOrigin.End);
                 value = marker;
-                return (ulong)(marker.Length * 8);
+                return (ulong)(marker.Length << 3);
             }
             else
             {
                 long remaining = (long)(readSize - boxSize);
                 long count = remaining >> 3;
-                marker = new StreamMarker(_stream.Position, count, this);
+                marker = new StreamMarker(GetCurrentOffset(), count, this);
                 _stream.Seek(count, SeekOrigin.Current);
                 value = marker;
-                return (ulong)(marker.Length * 8);
+                return (ulong)(marker.Length << 3);
             }
         }
 
@@ -811,13 +811,13 @@ namespace SharpMP4
 
             value = new byte[length];
             _stream.ReadExactly(value, 0, (int)length);
-            return length * 8;
+            return length << 3;
         }
 
         internal ulong WriteBytes(ulong count, byte[] value)
         {
-            _stream.WriteAsync(value, 0, (int)count).Wait();
-            return count * 8;
+            _stream.Write(value, 0, (int)count);
+            return count << 3;
         }
 
         internal static uint FromFourCC(string input)
@@ -888,7 +888,7 @@ namespace SharpMP4
                 read++;
             }
             value = buffer.ToArray();
-            return (ulong)(read + 1) * 8;
+            return (ulong)(read + 1) << 3;
         }
 
         internal ulong WriteStringSizePrefixed(string value)
@@ -1102,7 +1102,7 @@ namespace SharpMP4
             {
                 WriteByte(value[i]);
             }
-            return (ulong)value.Length * 8;
+            return (ulong)value.Length << 3;
         }
 
         internal ulong WriteInt16(short value)
@@ -1358,7 +1358,18 @@ namespace SharpMP4
         {
             BoxHeader header = new BoxHeader();
             long headerOffset = this.GetCurrentOffset();
-            ulong headerSize = header.Read(this, 0);
+            ulong headerSize = 0;
+
+            // sometimes there can be a few bytes at the end of the mp4 file that are less than the header size
+            ulong remaining = (ulong)(_stream.Length - headerOffset);
+            if(remaining < 8)
+            {
+                byte[] remainingBytes = new byte[remaining];
+                _stream.ReadExactly(remainingBytes, 0, remainingBytes.Length);
+                return new Mp4BoxHeader(header, headerOffset, remaining, remainingBytes);
+            }
+
+            headerSize = header.Read(this, 0);
             return new Mp4BoxHeader(header, headerOffset, headerSize);
         }
 
@@ -1485,7 +1496,7 @@ namespace SharpMP4
 
             ulong sizeOfSize = ReadDescriptorSize(out int sizeOfInstance);
             size += sizeOfSize;
-            ulong sizeOfInstanceBits = (ulong)sizeOfInstance * 8;
+            ulong sizeOfInstanceBits = (ulong)sizeOfInstance << 3;
             descriptor = DescriptorFactory.CreateDescriptor(tag);
             descriptor.SizeOfSize = sizeOfSize;
             ulong readInstanceSizeBits = descriptor.Read(this, sizeOfInstanceBits);
@@ -1601,10 +1612,15 @@ namespace SharpMP4
             _stream.Seek(-20, SeekOrigin.Current);
         }
 
+        public ulong WritePadding(byte[] padding)
+        {
+            return WriteBytes((uint)padding.Length, padding);
+        }
+
         internal static ulong CalculateStringSize(byte[] value)
         {
             ulong count = (ulong)value.Length;
-            return count * 8;
+            return count << 3;
         }
 
         internal static ulong CalculateStringSize(byte[][] value)
@@ -1665,13 +1681,15 @@ namespace SharpMP4
         public long HeaderOffset { get; set; }
         public ulong HeaderSize { get; set; }
         public ulong BoxSize { get; set; }
+        public byte[] Padding { get; set; }
 
-        public Mp4BoxHeader(BoxHeader header, long headerOffset, ulong headerSize)
+        public Mp4BoxHeader(BoxHeader header, long headerOffset, ulong headerSize, byte[] padding = null)
         {
             this.Header = header;
             this.HeaderOffset = headerOffset;
             this.HeaderSize = headerSize;
             this.BoxSize = header.GetBoxSizeInBits();
+            this.Padding = padding;
         }
     }
 }
