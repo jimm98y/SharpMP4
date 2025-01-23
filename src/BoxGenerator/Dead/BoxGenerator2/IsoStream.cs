@@ -237,11 +237,11 @@ namespace SharpMP4
         internal ulong WriteDescriptor(Descriptor descriptor)
         {
             ulong size = 0;
-            size += WriteUInt8(descriptor.Tag);
-            if (descriptor.Tag == 0)
+            if (descriptor == null || descriptor.Tag == 0)
             {
                 return size;
             }
+            size += WriteUInt8(descriptor.Tag);
 
             ulong sizeOfInstance = descriptor.CalculateSize() + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0); 
             size += WriteDescriptorSize(sizeOfInstance >> 3, descriptor.SizeOfSize >> 3);
