@@ -352,7 +352,12 @@ namespace SharpMP4
                     while (true)
                     {
                         Box v;
-                        consumed += ReadBox(consumed, readSize, box.FourCC, out v);
+                        ulong readBoxSize = ReadBox(consumed, readSize, box.FourCC, out v);
+                        consumed += readBoxSize;
+                        
+                        if (readBoxSize == 0)
+                            break;
+
                         box.Children.Add(v);
                     }
                 }
