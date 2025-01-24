@@ -1708,15 +1708,13 @@ namespace SharpMP4
         public long HeaderOffset { get; set; }
         public ulong HeaderSize { get; set; }
         public ulong BoxSize { get; set; }
-        public byte[] Padding { get; set; }
 
-        public Mp4BoxHeader(BoxHeader header, long headerOffset, ulong headerSize, byte[] padding = null)
+        public Mp4BoxHeader(BoxHeader header, long headerOffset, ulong headerSize)
         {
             this.Header = header;
             this.HeaderOffset = headerOffset;
             this.HeaderSize = headerSize;
             this.BoxSize = header.GetBoxSizeInBits();
-            this.Padding = padding;
         }
     }
 }
