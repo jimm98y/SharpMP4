@@ -29956,16 +29956,14 @@ namespace SharpMP4
 
 
     /*
-    class MpegSampleEntry() extends SampleEntry ('mp4s'){
-     ES_Descriptor ES;
+    class MpegSampleEntry() extends SampleEntry ('mp4s') {
+     Box ES;
      }
     */
     public class MpegSampleEntry : SampleEntry
     {
         public const string TYPE = "mp4s";
-
-        protected ES_Descriptor ES;
-        public ES_Descriptor _ES { get { return this.ES; } set { this.ES = value; } }
+        public Box _ES { get { return this.children.OfType<Box>().FirstOrDefault(); } }
 
         public MpegSampleEntry() : base("mp4s")
         {
@@ -29975,7 +29973,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadDescriptor(out this.ES);
+            // boxSize += stream.ReadBox(boxSize, readSize,  out this.ES); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -29983,7 +29982,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteDescriptor(this.ES);
+            // boxSize += stream.WriteBox( this.ES); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -29991,7 +29991,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateDescriptorSize(ES); // ES
+            // boxSize += IsoStream.CalculateBoxSize(ES); // ES
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }

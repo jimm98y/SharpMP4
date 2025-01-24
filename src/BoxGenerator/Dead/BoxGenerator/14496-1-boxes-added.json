@@ -85,7 +85,7 @@
     {
       "type": "Box",
       "containers": [ "*" ],
-      "syntax": "class MpegSampleEntry() extends SampleEntry ('mp4s'){\r\n ES_Descriptor ES;\r\n }"
+      "syntax": "class MpegSampleEntry() extends SampleEntry ('mp4s') {\r\n Box ES;\r\n }"
     }
   ]
 }
