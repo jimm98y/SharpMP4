@@ -349,11 +349,14 @@ namespace SharpMP4
                 return 0;
             }
 
+            if (readSize == 0)
+                return 0;
+            
             box.Children = new List<Box>();
 
             ulong consumed = 0;
 
-            if (readSize == 0)
+            if (readSize == ulong.MaxValue)
             {
                 List<Box> values = new List<Box>();
                 // consume till the end of the stream
@@ -393,6 +396,9 @@ namespace SharpMP4
 
         internal ulong WriteBoxArrayTillEnd(Box box)
         {
+            if (box.Children == null)
+                return 0;
+
             ulong written = 0;
             foreach (var v in box.Children)
             {
@@ -1380,11 +1386,14 @@ namespace SharpMP4
 
             // sometimes there can be a few bytes at the end of the mp4 file that are less than the header size
             ulong remaining = (ulong)(_stream.Length - headerOffset);
+            if (remaining == 0)
+                throw new EndOfStreamException();
+
             if(remaining < 8)
             {
                 byte[] remainingBytes = new byte[remaining];
                 _stream.ReadExactly(remainingBytes, 0, remainingBytes.Length);
-                return new Mp4BoxHeader(header, headerOffset, remaining, remainingBytes);
+                throw new IsoEndOfStreamException(remainingBytes);
             }
 
             headerSize = header.Read(this, 0);
