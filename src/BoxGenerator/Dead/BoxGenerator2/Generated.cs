@@ -37296,8 +37296,8 @@ namespace SharpMP4
     {
         public const string TYPE = "0000";
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected StreamMarker data;
+        public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
         public ZeroBox() : base("0000")
         {
