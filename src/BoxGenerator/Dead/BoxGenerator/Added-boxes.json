@@ -12,6 +12,12 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
+      "syntax": "aligned(8) class AppleCameraModelBox() \r\nextends Box('©mod') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
       "syntax": "aligned(8) class AppleEncoderBox() \r\nextends Box('©too') {\r\n bit(8) data[];\r\n } "
     },
     {
@@ -19,6 +25,18 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class AppleWrtBox() \r\nextends Box('©wrt') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleSoftwareBox() \r\nextends Box('©swr') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleCreatorBox() \r\nextends Box('©swf') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],

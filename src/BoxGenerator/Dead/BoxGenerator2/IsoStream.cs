@@ -251,7 +251,10 @@ namespace SharpMP4
             ulong sizeOfInstance = descriptor.CalculateSize() + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0); 
             size += WriteDescriptorSize(sizeOfInstance >> 3, descriptor.SizeOfSize >> 3);
             size += descriptor.Write(this);
-
+            if (descriptor.Padding != null)
+            {
+                size += WriteBytes((ulong)descriptor.Padding.Length, descriptor.Padding);
+            }
             return size;
         }
 
@@ -259,6 +262,10 @@ namespace SharpMP4
         {
             ulong writtenSize = WriteBoxHeader(value);
             writtenSize += value.Write(this);
+            if (value.Padding != null)
+            {
+                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
+            }
             return writtenSize;
         }
 
@@ -289,13 +296,21 @@ namespace SharpMP4
         {
             ulong writtenSize = 0;
             writtenSize += value.Write(this);
+            if (value.Padding != null)
+            {
+                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
+            }
             return writtenSize;
         }
 
-        internal ulong WriteEntry(IMp4Serializable entry)
+        internal ulong WriteEntry(IMp4Serializable value)
         {
             ulong writtenSize = 0;
-            writtenSize += entry.Write(this);
+            writtenSize += value.Write(this);
+            if (value.Padding != null)
+            {
+                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
+            }
             return writtenSize;
         }
 
@@ -359,7 +374,17 @@ namespace SharpMP4
 
             if (readSize == 0)
                 return 0;
-            
+
+            if (box.FourCC == "ilst" 
+                && box.Parent != null && box.Parent.FourCC == "meta" && 
+                box.Parent.Parent != null && (box.Parent.Parent.FourCC == "trak" || box.Parent.Parent.FourCC == "udta"))
+            {
+                // this is very badly documented, but in case the Apple "ilst" box appears in "meta" inside "trak" or "udta", then the 
+                //  serialization is incompatible with ISOBMFF
+                //  see: https://www.academia.edu/66625880/Forensic_Analysis_of_Video_Files_Using_Metadata
+
+            }
+
             box.Children = new List<Box>();
 
             ulong consumed = 0;
@@ -424,8 +449,8 @@ namespace SharpMP4
         {
             var header = ReadBoxHeader();
             var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), parent.FourCC, header.Header.Usertype);
-            ReadBox(header, box);
             box.Parent = parent;
+            ReadBox(header, box);
             value = box;
             return header.BoxSize;
         }
@@ -434,8 +459,8 @@ namespace SharpMP4
         {
             var header = ReadBoxHeader();
             var box = factory(header);
-            ReadBox(header, box);
             box.Parent = parent;
+            ReadBox(header, box);
             value = (T)box;
             return header.BoxSize;
         }
