@@ -171,7 +171,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadBox(ulong boxSize, ulong readSize, out Box[] value)
+        internal ulong ReadBox(ulong boxSize, ulong readSize, IMp4Serializable serializable, out Box[] value)
         {
             ulong consumed = 0;
             List<Box> values = new List<Box>();
@@ -184,7 +184,7 @@ namespace SharpMP4
                     while (true)
                     {
                         Box v;
-                        consumed += ReadBox(consumed, readSize, string.Empty, out v);
+                        consumed += ReadBox(consumed, readSize, (Box)null, out v);
                         values.Add(v);
                     }
                 }
@@ -199,7 +199,7 @@ namespace SharpMP4
             while (consumed < remaining && (remaining - consumed) >= 64) // box header is at least 8 bytes
             {
                 Box v;
-                consumed += ReadBox(consumed, readSize, string.Empty, out v);
+                consumed += ReadBox(consumed, readSize, (Box)null, out v);
                 if (consumed > readSize)
                 {
                     throw new Exception("!!!!!!");
@@ -373,7 +373,7 @@ namespace SharpMP4
                     while (true)
                     {
                         Box v;
-                        ulong readBoxSize = ReadBox(consumed, readSize, box.FourCC, out v);
+                        ulong readBoxSize = ReadBox(consumed, readSize, box, out v);
                         consumed += readBoxSize;
                         
                         if (readBoxSize == 0)
@@ -392,7 +392,7 @@ namespace SharpMP4
             while(consumed < remaining && (remaining - consumed) >= 64) // box header is at least 8 bytes
             {
                 Box v;
-                consumed += ReadBox(consumed, readSize, box.FourCC, out v);
+                consumed += ReadBox(consumed, readSize, box, out v);
                 if(consumed > readSize)
                 {
                     throw new Exception("!!!!!!");
@@ -420,25 +420,27 @@ namespace SharpMP4
             return CalculateBoxSize(value.Children);
         }
 
-        internal ulong ReadBox(ulong boxSize, ulong readSize, string parentFourCC, out Box value)
+        internal ulong ReadBox(ulong boxSize, ulong readSize, Box parent, out Box value)
         {
             var header = ReadBoxHeader();
-            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), parentFourCC, header.Header.Usertype);
+            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), parent.FourCC, header.Header.Usertype);
             ReadBox(header, box);
+            box.Parent = parent;
             value = box;
             return header.BoxSize;
         }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, out T value) where T: Box
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, Box parent, out T value) where T: Box
         {
             var header = ReadBoxHeader();
             var box = factory(header);
             ReadBox(header, box);
+            box.Parent = parent;
             value = (T)box;
             return header.BoxSize;
         }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, out T[] value)  where T: Box
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, Box parent, out T[] value)  where T: Box
         {
             var boxes = new List<T>();
 
@@ -453,7 +455,7 @@ namespace SharpMP4
                     while (true)
                     {
                         T v;
-                        consumed += ReadBox<T>(consumed, readSize, factory, out v);
+                        consumed += ReadBox<T>(consumed, readSize, factory, parent, out v);
                         boxes.Add(v);
                     }
 
@@ -470,7 +472,7 @@ namespace SharpMP4
             while (consumed < remaining)
             {
                 T v;
-                consumed += ReadBox<T>(consumed, readSize, factory, out v);
+                consumed += ReadBox<T>(consumed, readSize, factory, parent, out v);
                 boxes.Add(v);
             }
             value = boxes.ToArray();
