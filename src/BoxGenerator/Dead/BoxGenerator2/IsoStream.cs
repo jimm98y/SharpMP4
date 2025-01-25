@@ -58,6 +58,16 @@ namespace SharpMP4
             return 8;
         }
 
+        internal ulong WriteBytes(ulong count, byte[] value)
+        {
+            //for (ulong i = 0; i < count; i++)
+            //{
+            //    WriteByte(value[i]);
+            //}
+            _stream.Write(value, 0, (int)count);
+            return count << 3;
+        }
+
         private int ReadBit()
         {
             int bytePos = _bitsPosition >> 3;
@@ -219,11 +229,6 @@ namespace SharpMP4
             return consumed;
         }
 
-        public async Task<ulong> WriteBoxAsync(Box box)
-        {
-            return WriteBox(box);
-        }
-
         internal ulong WriteDescriptorsTillEnd(Descriptor descriptor, int objectTypeIndication = -1)
         {
             ulong size = 0;
@@ -250,7 +255,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteBox(Box value)
+        public ulong WriteBox(Box value)
         {
             ulong writtenSize = WriteBoxHeader(value);
             writtenSize += value.Write(this);
@@ -319,18 +324,21 @@ namespace SharpMP4
 
             ulong i = 0;
             byte[] buffer = new byte[sizeBytesCount];
-            while (sizeOfInstance > 0 || i < sizeOfSize)
+            if (sizeOfInstance > 0)
             {
-                i++;
-                if (sizeOfInstance > 0)
+                while (sizeOfInstance > 0 || i < sizeOfSize)
                 {
-                    buffer[sizeBytesCount - i] = (byte)(sizeOfInstance & 0x7f);
+                    i++;
+                    if (sizeOfInstance > 0)
+                    {
+                        buffer[sizeBytesCount - i] = (byte)(sizeOfInstance & 0x7f);
+                    }
+                    else
+                    {
+                        buffer[sizeBytesCount - i] = 0x80;
+                    }
+                    sizeOfInstance = sizeOfInstance >> 7;
                 }
-                else
-                {
-                    buffer[sizeBytesCount - i] = 0x80;
-                }
-                sizeOfInstance = sizeOfInstance >> 7;
             }
 
             foreach (byte b in buffer)
@@ -836,12 +844,6 @@ namespace SharpMP4
             if (correctedLength < length)
                 throw new IsoEndOfStreamException(value);
             return correctedLength << 3;
-        }
-
-        internal ulong WriteBytes(ulong count, byte[] value)
-        {
-            _stream.Write(value, 0, (int)count);
-            return count << 3;
         }
 
         internal static uint FromFourCC(string input)
