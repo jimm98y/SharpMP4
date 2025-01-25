@@ -57,7 +57,6 @@ namespace SharpMP4
                 case "avc4": return new VisualSampleEntry("avc4");
                 case "avcC": return new AVCConfigurationBox();
                 case "avcp": return new VisualSampleEntry("avcp");
-                case "BCAB": return new BcabBox();
                 case "btrt": return new BitRateBox();
                 case "buff": return new BufferingBox();
                 case "bxml": return new BinaryXMLBox();
@@ -82,7 +81,6 @@ namespace SharpMP4
                 case "cslg": return new CompositionToDecodeBox();
                 case "cstg": return new TrackGroupTypeBox_cstg(); // TODO: fix duplicate
                 case "ctts": return new CompositionOffsetBox();
-                case "CTYP": return new CtypBox();
                 case "dac3": return new AC3SpecificBox();
                 case "ddts": return new DdtsBox();
                 case "desc": return new AppleDescriptionBox();
@@ -36941,93 +36939,6 @@ namespace SharpMP4
             return boxSize;
         }
     }
-
-
-    /*
-    aligned(8) class CtypBox() 
-    extends Box('CTYP') {
-     bit(8) data[];
-     } 
-    */
-    public class CtypBox : Box
-    {
-        public const string TYPE = "CTYP";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public CtypBox() : base("CTYP")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class BcabBox() 
-    extends Box('BCAB') {
-     bit(8) data[];
-     } 
-    */
-    public class BcabBox : Box
-    {
-        public const string TYPE = "BCAB";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public BcabBox() : base("BCAB")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
-            return boxSize;
-        }
-    }
-
 
     /*
     aligned(8) class Amf0Box() 

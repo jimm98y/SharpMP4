@@ -246,18 +246,6 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class CtypBox() \r\nextends Box('CTYP') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "description": "Metadata sample entries",
-      "type": "Box",
-      "syntax": "aligned(8) class BcabBox() \r\nextends Box('BCAB') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "description": "Metadata sample entries",
-      "type": "Box",
       "syntax": "aligned(8) class Amf0Box() \r\nextends Box('amf0') {\r\n bit(8) data[];\r\n } "
     },
     {
