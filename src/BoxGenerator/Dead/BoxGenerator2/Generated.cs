@@ -46,11 +46,13 @@ namespace SharpMP4
                 case "alis": return new AlisBox();
                 case "alou": return new AlbumLoudnessInfo();
                 case "alte": return new TrackGroupTypeBox_alte(); // TODO: fix duplicate
+                case "altt": return new AccessibilityTextProperty();
                 case "amf0": return new Amf0Box();
                 case "amgl": return new SubpicMultipleGroupsBox();
                 case "amve": return new AmbientViewingEnvironmentBox();
                 case "assp": return new AlternativeStartupSequencePropertiesBox();
                 case "auth": return new AuthorBox();
+                case "auxC": return new AuxiliaryTypeProperty();
                 case "auxi": return new AuxiliaryTypeInfoBox();
                 case "av01": return new VisualSampleEntry("av01");
                 case "av1C": return new AV1CodecConfigurationBox();
@@ -60,6 +62,7 @@ namespace SharpMP4
                 case "avc4": return new VisualSampleEntry("avc4");
                 case "avcC": return new AVCConfigurationBox();
                 case "avcp": return new VisualSampleEntry("avcp");
+                case "brnd": return new BrandProperty();
                 case "btrt": return new BitRateBox();
                 case "buff": return new BufferingBox();
                 case "bxml": return new BinaryXMLBox();
@@ -79,6 +82,7 @@ namespace SharpMP4
                 case "covr": return new CovrBox();
                 case "cpil": return new AppleCompilationBox();
                 case "cprt": if (parent == "ilst") return new AppleCopyrightBox(); else return new CopyrightBox();
+                case "crtt": return new CreationTimeProperty();
                 case "csch": return new CompatibleSchemeTypeBox();
                 case "csgp": return new CompactSampleToGroupBox();
                 case "cslg": return new CompositionToDecodeBox();
@@ -120,6 +124,7 @@ namespace SharpMP4
                 case "evs2": return new VisualSampleEntry("evs2");
                 case "evsC": return new EVCSliceComponentTrackConfigurationBox();
                 case "exte": return new MetaDataExtensionsBox();
+                case "fade": return new FadeTransitionEffectProperty();
                 case "fall": return new FallBox();
                 case "fecr": return new FECReservoirBox();
                 case "fiel": return new FielBox();
@@ -163,6 +168,7 @@ namespace SharpMP4
                 case "ilst": return new AppleItemListBox();
                 case "imda": return new IdentifiedMediaDataBox();
                 case "imdt": return new DataEntryImdaBox();
+                case "imir": return new ImageMirror();
                 case "infe": return new ItemInfoEntry();
                 case "iods": return new IodsBox();
                 case "ipco": return new ItemPropertyContainerBox();
@@ -171,6 +177,10 @@ namespace SharpMP4
                 case "iprp": return new ItemPropertiesBox();
                 case "iref": return new ItemReferenceBox();
                 case "iroi": return new IroiInfoBox();
+                case "irot": return new ImageRotation();
+                case "iscl": return new ImageScaling();
+                case "ispe": return new ImageSpatialExtentsProperty();
+                case "jpgC": return new JPEGConfigurationBox();
                 case "keyd": return new MetaDataKeyDeclarationBox();
                 case "keyi": return new MetaDataInlineKeysPresentBox();
                 case "keys": return new MetaDataKeyTableBox();
@@ -185,12 +195,14 @@ namespace SharpMP4
                 case "lhvC": return new LHEVCConfigurationBox();
                 case "load": return new LoadBox();
                 case "loca": return new MetaDataLocaleBox();
+                case "lsel": return new LayerSelectorProperty();
                 case "ludt": return new LoudnessBox();
                 case "m4ds": return new MPEG4ExtensionDescriptorsBox();
                 case "maxr": return new hintmaxrate();
                 case "md5i": return new MD5IntegrityBox();
                 case "mdat": return new MediaDataBox();
                 case "mdcv": return new MasteringDisplayColourVolumeBox();
+                case "mdft": return new ModificationTimeProperty();
                 case "mdhd": return new MediaHeaderBox();
                 case "mdia": return new MediaBox();
                 case "mdta": return new MdtaBox();
@@ -207,6 +219,7 @@ namespace SharpMP4
                 case "mp4s": return new MpegSampleEntry();
                 case "mp4v": return new VisualSampleEntry("mp4v");
                 case "mpod": return new MpodBox();
+                case "mskC": return new MaskConfigurationProperty();
                 case "msrc": return new TrackGroupTypeBox();
                 case "mstv": return new MVCSubTrackViewBox();
                 case "mvc1": return new VisualSampleEntry("mvc1");
@@ -230,6 +243,7 @@ namespace SharpMP4
                 case "nmhd": return new NullMediaHeaderBox();
                 case "npck": return new hintPacketsSentNpck();
                 case "nump": return new hintPacketsSentNump();
+                case "oinf": return new OperatingPointsInformationProperty();
                 case "opeg": return new OperatingPointGroupBox();
                 case "Opus": return new AudioSampleEntry("Opus");
                 case "otyp": return new OriginalFileTypeBox();
@@ -240,12 +254,15 @@ namespace SharpMP4
                 case "payt": return new hintpayloadID();
                 case "pdin": return new ProgressiveDownloadInfoBox();
                 case "pitm": return new PrimaryItemBox();
+                case "pixi": return new PixelInformationProperty();
                 case "pmax": return new hintlargestpacket();
                 case "prft": return new ProducerReferenceTimeBox();
                 case "qlif": return new SVCPriorityLayerInfoBox();
                 case "resa": return new AudioSampleEntry("resa");
                 case "resv": return new VisualSampleEntry("resv");
                 case "rinf": return new RestrictedSchemeInfoBox();
+                case "rloc": return new RelativeLocationProperty();
+                case "rref": return new RequiredReferenceTypesProperty();
                 case "rrgn": return new RectRegionBox();
                 case "rssr": return new ReceivedSsrcBox();
                 case "rtp ": return new rtpmoviehintinformation();
@@ -274,9 +291,13 @@ namespace SharpMP4
                 case "snim": return new DataEntrySeqNumImdaBox();
                 case "snro": return new sequenceoffset();
                 case "snut": return new TrackGroupTypeBox_snut(); // TODO: fix duplicate
+                case "spid": return new VvcSubpicIDProperty();
+                case "splt": return new SplitTransitionEffectProperty();
+                case "spor": return new VvcSubpicOrderProperty();
                 case "srat": return new SamplingRateBox();
                 case "srpp": return new SRTPProcessBox();
                 case "ssix": return new CompressedSubsegmentIndexBox();
+                case "ssld": return new SuggestedTimeDisplayDurationProperty();
                 case "sstl": return new SVCSubTrackLayerBox();
                 case "stbl": return new SampleTableBox();
                 case "stco": return new ChunkOffsetBox();
@@ -285,6 +306,7 @@ namespace SharpMP4
                 case "sthd": return new SubtitleMediaHeaderBox();
                 case "stik": return new AppleMediaTypeBox();
                 case "stmg": return new MVCSubTrackMultiviewGroupBox();
+                case "stpe": return new SuggestedTransitionPeriodProperty();
                 case "stpp": return new XMLSubtitleSampleEntry();
                 case "strd": return new SubTrackDefinitionBox();
                 case "stri": return new SubTrackInformationBox();
@@ -328,6 +350,7 @@ namespace SharpMP4
                 case "tmcd": return new TimeCodeBox();
                 case "tmin": return new hintminrelativetime();
                 case "tmpo": return new AppleTempoBox();
+                case "tols": return new TargetOlsProperty();
                 case "totl": return new hintBytesSentTotl();
                 case "tpay": return new hintBytesSentTpay();
                 case "tpyl": return new hintBytesSentTpyl();
@@ -352,6 +375,7 @@ namespace SharpMP4
                 case "tvsn": return new AppleTVSeasonBox();
                 case "txtC": return new TextConfigBox();
                 case "tyco": return new TypeCombinationBox();
+                case "udes": return new UserDescriptionProperty();
                 case "udta": return new UserDataBox();
                 case "uri ": return new URIBox();
                 case "uriI": return new URIInitBox();
@@ -372,9 +396,11 @@ namespace SharpMP4
                 case "vwdi": return new MultiviewSceneInfoBox();
                 case "vwid": return new ViewIdentifierBox();
                 case "wide": return new WideBox();
+                case "wipe": return new WipeTransitionEffectProperty();
                 case "wvtt": return new WVTTSampleEntry();
                 case "xml ": return new XMLBox();
                 case "Xtra": return new WindowsMediaXtraBox();
+                case "zoom": return new ZoomTransitionEffectProperty();
             }
 
             //throw new NotImplementedException(fourCC);
@@ -388,17 +414,13 @@ namespace SharpMP4
                 case "aebr": return new AutoExposureBracketingEntry();
                 case "afbr": return new FlashExposureBracketingEntry();
                 case "alst": return new AlternativeStartupEntry();
-                case "altt": return new AccessibilityTextProperty();
                 case "aud ": return new AUDSampleEntry();
-                case "auxC": return new AuxiliaryTypeProperty();
                 case "av1f": return new AV1ForwardKeyFrameSampleGroupEntry();
                 case "av1M": return new AV1MetadataSampleGroupEntry();
                 case "av1s": return new AV1SwitchFrameSampleGroupEntry();
                 case "avll": return new AVCLayerEntry();
                 case "avss": return new AVCSubSequenceEntry();
-                case "brnd": return new BrandProperty();
                 case "casg": return new CleanApertureEntry();
-                case "crtt": return new CreationTimeProperty();
                 case "dcfi": return new DecodingCapabilityInformation();
                 case "dobr": return new DepthOfFieldBracketingEntry();
                 case "drap": return new VisualDRAPEntry();
@@ -407,32 +429,22 @@ namespace SharpMP4
                 case "eob ": return new EndOfBitstreamSampleEntry();
                 case "eos ": return new EndOfSequenceSampleEntry();
                 case "eqiv": return new VisualEquivalenceEntry();
-                case "fade": return new FadeTransitionEffectProperty();
                 case "fdel": return new FDItemInfoExtension();
                 case "fdp ": return new FDHintSampleEntry();
                 case "fobr": return new FocusBracketingEntry();
-                case "imir": return new ImageMirror();
-                case "irot": return new ImageRotation();
-                case "iscl": return new ImageScaling();
-                case "ispe": return new ImageSpatialExtentsProperty();
-                case "jpgC": return new JPEGConfigurationBox();
                 case "lbli": return new LhvcExternalBaseLayerInfo();
                 case "linf": return new LayerInfoGroupEntry();
-                case "lsel": return new LayerSelectorProperty();
-                case "mdft": return new ModificationTimeProperty();
                 case "mebx": return new BoxedMetaDataSampleEntry();
                 case "mett": return new TextMetaDataSampleEntry();
                 case "metx": return new XMLMetaDataSampleEntry();
                 case "minp": return new VvcMixedNALUnitTypePicEntry();
-                case "mskC": return new MaskConfigurationProperty();
                 case "mvif": return new MultiviewGroupEntry();
                 case "nalm": return new NALUMapEntry();
-                case "oinf": throw new NotSupportedException("'oinf' is ambiguous in between OperatingPointsInformation and OperatingPointsInformationProperty");
+                case "oinf": return new OperatingPointsInformation();
                 case "opth": return new OperatingPointDecodeTimeHint();
                 case "pano": return new PanoramaEntry();
                 case "pase": return new ParameterSetNALUEntry();
                 case "pasr": return new PixelAspectRatioEntry();
-                case "pixi": return new PixelInformationProperty();
                 case "pm2t": return new ProtectedMPEG2TransportStreamSampleEntry();
                 case "prol": return new AudioPreRollEntry();
                 case "prtp": return new ProtectedRtpReceptionHintSampleEntry();
@@ -440,10 +452,8 @@ namespace SharpMP4
                 case "rap ": return new VisualRandomAccessEntry();
                 case "rash": return new RateShareEntry();
                 case "refs": return new DirectReferenceSamplesList();
-                case "rloc": return new RelativeLocationProperty();
                 case "rm2t": return new MPEG2TSReceptionSampleEntry();
                 case "roll": return new AudioRollRecoveryEntry();
-                case "rref": return new RequiredReferenceTypesProperty();
                 case "rror": return new VvcRectRegionOrderEntry();
                 case "rrtp": return new ReceivedRtpHintSampleEntry();
                 case "rsrp": return new ReceivedSrtpHintSampleEntry();
@@ -452,31 +462,24 @@ namespace SharpMP4
                 case "scif": return new ScalableGroupEntry();
                 case "scnm": return new ScalableNALUMapEntry();
                 case "sm2t": return new MPEG2TSServerSampleEntry();
-                case "spid": throw new NotSupportedException("'spid' is ambiguous in between VvcSubpicIDEntry and VvcSubpicIDProperty");
+                case "spid": return new VvcSubpicIDEntry();
                 case "spli": return new SubpicLevelInfoEntry();
-                case "splt": return new SplitTransitionEffectProperty();
-                case "spor": throw new NotSupportedException("'spor' is ambiguous in between VvcSubpicOrderEntry and VvcSubpicOrderProperty");
+                case "spor": return new VvcSubpicOrderEntry();
                 case "srtp": return new SrtpHintSampleEntry();
-                case "ssld": return new SuggestedTimeDisplayDurationProperty();
                 case "stmi": return new SampleToMetadataItemEntry();
-                case "stpe": return new SuggestedTransitionPeriodProperty();
                 case "stsa": return new StepwiseTemporalLayerEntry();
                 case "sulm": return new VvcSubpicLayoutMapEntry();
                 case "svcM": return new SVCMetaDataSampleEntry();
                 case "sync": return new SyncSampleEntry();
                 case "tele": return new TemporalLevelEntry();
-                case "tols": return new TargetOlsProperty();
                 case "trif": return new RectangularRegionGroupEntry();
                 case "tsas": return new TemporalSubLayerEntry();
                 case "tscl": return new TemporalLayerEntry();
-                case "udes": return new UserDescriptionProperty();
                 case "urim": return new URIMetaSampleEntry();
                 case "vipr": return new ViewPriorityEntry();
                 case "vopi": return new VvcOperatingPointsInformation();
                 case "vvcb": return new EntityToGroupBox_vvcb(); // TODO: fix duplicate
                 case "wbbr": return new WhiteBalanceBracketingEntry();
-                case "wipe": return new WipeTransitionEffectProperty();
-                case "zoom": return new ZoomTransitionEffectProperty();
             }
 
             //throw new NotImplementedException(fourCC);

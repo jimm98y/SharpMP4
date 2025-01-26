@@ -10,6 +10,8 @@ using static Pidgin.Parser;
 
 namespace ConsoleApp;
 
+#region Parser
+
 public enum ParsedBoxType
 {
     Box,
@@ -174,6 +176,8 @@ public class PseudoRepeatingBlock : PseudoCode
     public string Array { get; }
     public IEnumerable<PseudoCode> Content { get; }
 }
+
+#endregion // Parser
 
 partial class Program
 {
@@ -645,7 +649,6 @@ partial class Program
     public static Parser<char, PseudoCode> CodeBlock => Try(Block).Or(Try(RepeatingBlock).Or(Try(Method).Or(Try(Field).Or(Comment))));
     public static Parser<char, IEnumerable<PseudoCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
-
     public static Parser<char, string> ClassType =>
         OneOf(
             Try(String("()")),
@@ -734,7 +737,6 @@ partial class Program
 
     public static Parser<char, IEnumerable<PseudoClass>> Boxes => SkipWhitespaces.Then(Box.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
-
     static void Main(string[] args)
     {
         //var jds = File.ReadAllText("14496-3-added.js");
@@ -771,6 +773,7 @@ partial class Program
             "AVIF-boxes.json",
             "Added-boxes.json",
         };
+
         int success = 0;
         int duplicated = 0;
         int fail = 0;
@@ -782,7 +785,7 @@ partial class Program
         foreach (var file in jsonFiles)
         {
             ParsedBoxType parsedBoxType = ParsedBoxType.Group;
-            if (file.Contains("-boxes"))
+            if (file.Contains("-boxes") || file.Contains("-properties"))
                 parsedBoxType = ParsedBoxType.Box;
 
             using (var json = File.OpenRead(file))
