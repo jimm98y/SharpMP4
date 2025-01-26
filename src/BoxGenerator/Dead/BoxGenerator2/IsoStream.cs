@@ -555,8 +555,10 @@ namespace SharpMP4
         internal ulong WriteUInt8ArrayTillEnd(StreamMarker data)
         {
             IsoStream readStream = data.Stream;
+            long originalPosition = readStream._stream.Position;
             readStream._stream.Seek(data.Position, SeekOrigin.Begin);
             ulong size = 8 * CopyStream(readStream._stream, _stream, data.Length);
+            readStream._stream.Seek(originalPosition, SeekOrigin.Begin); // because in our test app we're reading and writing at the same time from the same thread, we have to restore the original position
             return size;
         }
 
