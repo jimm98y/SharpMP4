@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace SharpMP4
 {
@@ -48,6 +47,32 @@ namespace SharpMP4
         public virtual ulong CalculateSize()
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class GenericDecoderSpecificInfo : DecoderSpecificInfo
+    {
+        protected byte[] bytes = null;
+        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8Array((uint)(readSize >> 3), out bytes);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = base.Write(stream);
+            boxSize += stream.WriteUInt8Array((uint)bytes.Length, bytes);
+            return boxSize;
+        }
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = base.CalculateSize();
+            boxSize += (ulong)bytes.Length << 3;
+            return boxSize;
         }
     }
 }

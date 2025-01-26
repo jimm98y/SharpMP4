@@ -10,7 +10,7 @@ namespace SharpMP4
 {
     public class IsoStream : IDisposable
     {
-        private readonly Stream _stream;
+        protected readonly Stream _stream;
         protected int _bitsPosition;
         protected int _currentBytePosition = -1;
         protected byte _currentByte = 0;

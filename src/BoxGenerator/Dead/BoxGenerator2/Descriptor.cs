@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SharpMP4
 {
@@ -116,32 +114,6 @@ namespace SharpMP4
         }
     }
 
-    public class GenericDecoderSpecificInfo : DecoderSpecificInfo
-    {
-        protected byte[] bytes = null;
-        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)(readSize >> 3), out bytes);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = base.Write(stream);
-            boxSize += stream.WriteUInt8Array((uint)bytes.Length, bytes);
-            return boxSize;
-        }
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = base.CalculateSize();
-            boxSize += (ulong)bytes.Length * 8;
-            return boxSize;
-        }
-    }
-
     public class UnknownDescriptor : Descriptor
     {
         protected byte[] bytes = null;
@@ -166,7 +138,7 @@ namespace SharpMP4
         public override ulong CalculateSize()
         {
             ulong boxSize = base.CalculateSize();
-            boxSize += (ulong)bytes.Length * 8;
+            boxSize += (ulong)bytes.Length << 3;
             return boxSize;
         }
     }
