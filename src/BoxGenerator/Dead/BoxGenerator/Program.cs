@@ -1249,7 +1249,7 @@ namespace SharpMP4
             if (b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")
                 cls += $" : Descriptor\r\n{{\r\n";
             else
-                cls += $" : IMp4Serializable\r\n{{\r\n\t\tpublic byte[] Padding {{ get; set; }}\r\n";
+                cls += $" : IMp4Serializable\r\n{{\r\n\t\tpublic StreamMarker Padding {{ get; set; }}\r\n";
         }
 
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.Extended.BoxType))
@@ -3818,11 +3818,11 @@ namespace SharpMP4
             { "unsigned int(8*num_bytes_constraint_info - 2)", "byte[]" },
             { "bit(8*nal_unit_length)",                 "byte[]" },
             { "bit(timeStampLength)",                   "byte[]" },
-            { "utf8string",                             "BinaryUtf8String" },
-            { "utfstring",                              "BinaryUtf8String" },
-            { "utf8list",                               "BinaryUtf8String" },
-            { "boxstring",                              "BinaryUtf8String" },
-            { "string",                                 "BinaryUtf8String" },
+            { "utf8string",                             "BinaryUTF8String" },
+            { "utfstring",                              "BinaryUTF8String" },
+            { "utf8list",                               "BinaryUTF8String" },
+            { "boxstring",                              "BinaryUTF8String" },
+            { "string",                                 "BinaryUTF8String" },
             { "bit(32)[6]",                             "uint[]" },
             { "bit(32)",                                "uint" },
             { "uint(32)",                               "uint" },
@@ -3861,7 +3861,7 @@ namespace SharpMP4
             { "PartitionEntry[ entry_count ]",          "PartitionEntry[]" },
             { "FDSessionGroupBox",                      "FDSessionGroupBox" },
             { "GroupIdToNameBox",                       "GroupIdToNameBox" },
-            { "base64string",                           "BinaryUtf8String" },
+            { "base64string",                           "BinaryUTF8String" },
             { "ProtectionSchemeInfoBox",                "ProtectionSchemeInfoBox" },
             { "SingleItemTypeReferenceBox",             "SingleItemTypeReferenceBox" },
             { "SingleItemTypeReferenceBox[]",           "SingleItemTypeReferenceBox[]" },

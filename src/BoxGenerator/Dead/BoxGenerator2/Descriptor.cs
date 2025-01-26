@@ -81,8 +81,8 @@ namespace SharpMP4
         protected ulong sizeOfInstance;
         public ulong SizeOfInstance {  get { return sizeOfInstance; } set {  sizeOfInstance = value; } }
 
-        protected byte[] padding = null;
-        public byte[] Padding { get { return padding; } set { padding = value; } }
+        protected StreamMarker padding = null;
+        public StreamMarker Padding { get { return padding; } set { padding = value; } }
 
         protected byte tag = 0;
         public byte Tag { get { return tag; } set { tag = value; } }
@@ -116,8 +116,8 @@ namespace SharpMP4
 
     public class UnknownDescriptor : Descriptor
     {
-        protected byte[] bytes = null;
-        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
+        protected StreamMarker data = null;
+        public StreamMarker Data { get { return data; } set { data = value; } }
 
         public UnknownDescriptor(byte tag) : base(tag)
         {  }
@@ -125,20 +125,20 @@ namespace SharpMP4
         public override ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)(readSize >> 3), out bytes);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
         public override ulong Write(IsoStream stream)
         {
             ulong boxSize = base.Write(stream);
-            boxSize += stream.WriteUInt8Array((uint)bytes.Length, bytes);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
             return boxSize;
         }
         public override ulong CalculateSize()
         {
             ulong boxSize = base.CalculateSize();
-            boxSize += (ulong)bytes.Length << 3;
+            boxSize += (ulong)data.Length << 3;
             return boxSize;
         }
     }

@@ -28,12 +28,12 @@ namespace SharpMP4
             _stream.Seek(-1 * count, SeekOrigin.Current);
         }
 
-        private long GetCurrentOffset()
+        internal long GetCurrentOffset()
         {
             return _stream.Position;
         }
 
-        private long GetStreamLength()
+        internal long GetStreamLength()
         {
             return _stream.Length;
         }
@@ -131,10 +131,12 @@ namespace SharpMP4
             }
 
             ulong correctedLength = Math.Min(length, (ulong)(GetStreamLength() - GetCurrentOffset()));
+            if (correctedLength < length)
+                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength(), this));
+
             value = new byte[correctedLength];
             _stream.ReadExactly(value, 0, (int)correctedLength);
-            if (correctedLength < length)
-                throw new IsoEndOfStreamException(value);
+
             return correctedLength << 3;
         }
 
@@ -308,31 +310,11 @@ namespace SharpMP4
             return count;
         }
 
-        internal ulong ReadAlignedBits(uint count, out bool value)
-        {
-            return ReadBit(out value);
-        }
-
-        internal ulong WriteAlignedBits(uint count, bool value)
-        {
-            return WriteBit(value);
-        }
-
-        internal ulong ReadAlignedBits(uint count, out byte value)
-        {
-            return ReadBits(count, out value);
-        }
-
-        internal ulong WriteAlignedBits(uint count, byte value)
-        {
-            return WriteBits(count, value);
-        }
-
         #endregion // Bits
 
         #region Strings
 
-        internal ulong WriteStringZeroTerminated(BinaryUtf8String value)
+        internal ulong WriteStringZeroTerminated(BinaryUTF8String value)
         {
             if (value.Length == 0)
                 return 0;
@@ -345,17 +327,17 @@ namespace SharpMP4
             return (ulong)value.Length << 3;
         }
 
-        internal ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out BinaryUtf8String value)
+        internal ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out BinaryUTF8String value)
         {
             ulong remaining = readSize - boxSize;
             if (remaining == 0)
             {
-                value = new BinaryUtf8String();
+                value = new BinaryUTF8String();
                 return 0;
             }
 
             ulong read = ReadBytes(remaining >> 3, out byte[] buffer);
-            value = new BinaryUtf8String(buffer);
+            value = new BinaryUTF8String(buffer);
             return read;
         }
 
@@ -391,13 +373,13 @@ namespace SharpMP4
             return size;
         }
 
-        internal static ulong CalculateStringSize(BinaryUtf8String value)
+        internal static ulong CalculateStringSize(BinaryUTF8String value)
         {
             ulong count = (ulong)value.Length;
             return count << 3;
         }
 
-        internal static ulong CalculateStringSize(BinaryUtf8String[] value)
+        internal static ulong CalculateStringSize(BinaryUTF8String[] value)
         {
             ulong size = 0;
             foreach (var str in value)
@@ -455,7 +437,7 @@ namespace SharpMP4
             writtenSize += WriteBoxContent(value);
             if (value.Padding != null)
             {
-                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
+                writtenSize += WritePadding(value.Padding);
             }
             return writtenSize;
         }
@@ -473,9 +455,7 @@ namespace SharpMP4
 
             if (remaining < 8)
             {
-                byte[] remainingBytes;
-                ReadBytes(remaining, out remainingBytes);
-                throw new IsoEndOfStreamException(remainingBytes);
+                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength(), this));
             }
 
             headerSize = header.Read(this, 0);
@@ -573,7 +553,7 @@ namespace SharpMP4
                 consumed += ReadBox(consumed, readSize, (Box)null, out v);
                 if (consumed > readSize)
                 {
-                    throw new Exception("!!!!!!");
+                    throw new Exception($"Box \'{v.FourCC}\' read through!");
                 }
                 values.Add(v);
             }
@@ -634,7 +614,7 @@ namespace SharpMP4
         {
             if (box.Children != null)
             {
-                Debug.WriteLine($"---Box reading {box.FourCC} repeated Children read");
+                Debug.WriteLine($"Box reading {box.FourCC} repeated Children read");
                 return 0;
             }
 
@@ -676,7 +656,7 @@ namespace SharpMP4
                 consumed += ReadBox(consumed, readSize, box, out v);
                 if (consumed > readSize)
                 {
-                    throw new Exception("!!!!!!");
+                    throw new Exception($"Box \'{v.FourCC}\' read through!");
                 }
                 box.Children.Add(v);
             }
@@ -717,26 +697,14 @@ namespace SharpMP4
             {
                 if (size < availableSize)
                 {
-                    // TODO: Investigate and fix
-                    size += ReadBits((uint)(availableSize - size), out byte[] missing);
+                    StreamMarker missing;
+                    size += ReadPadding(size, availableSize, out missing);
                     box.Padding = missing;
-
-                    if (missing.FirstOrDefault(x => x != 0) == default(byte))
-                    {
-                        Debug.WriteLine($"Box \'{box.FourCC}\' has extra padding of {missing.Length} zero bytes");
-                    }
-                    else
-                    {
-                        // all the boxes with _count can contain junk at the end apparently
-                        if (box.FourCC != "stts" && box.FourCC != "stsc" && box.FourCC != "stsz" && box.FourCC != "co64" && box.FourCC != "ctts" && box.FourCC != "stss"
-                            && box.FourCC != "mp4s") // mp4s is due to descriptor parsing
-                            throw new Exception("Box not fully read!");
-                    }
+                    Debug.WriteLine($"Box \'{box.FourCC}\' has extra padding of {missing.Length} bytes");
                 }
                 else
                 {
-                    Debug.WriteLine($"Box \'{box.FourCC}\' read through!");
-                    throw new Exception("Box read through!");
+                    throw new Exception($"Box \'{box.FourCC}\' read through!");
                 }
             }
 
@@ -761,16 +729,6 @@ namespace SharpMP4
             return size;
         }
 
-        internal static ulong CalculateBoxSize(Box value)
-        {
-            return value.CalculateSize();
-        }
-
-        internal static ulong CalculateBoxArray(Box value)
-        {
-            return CalculateBoxSize(value.Children);
-        }
-
         #endregion // Boxes
 
         #region Classes
@@ -793,7 +751,7 @@ namespace SharpMP4
                 consumed += ReadClass<T>(boxSize + consumed, remaining, new T(), out c);
                 if (consumed > readSize)
                 {
-                    throw new Exception("!!!!!!");
+                    throw new Exception($"Class read through!");
                 }
                 ret.Add(c);
             }
@@ -807,7 +765,7 @@ namespace SharpMP4
             writtenSize += value.Write(this);
             if (value.Padding != null)
             {
-                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
+                writtenSize += WritePadding(value.Padding);
             }
             return writtenSize;
         }
@@ -820,11 +778,6 @@ namespace SharpMP4
                 size += WriteClass(cls);
             }
             return size;
-        }
-
-        internal static ulong CalculateClassSize(IMp4Serializable value)
-        {
-            return value.CalculateSize();
         }
 
         internal static ulong CalculateClassSize(IMp4Serializable[] value)
@@ -847,7 +800,7 @@ namespace SharpMP4
             writtenSize += value.Write(this);
             if (value.Padding != null)
             {
-                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
+                writtenSize += WritePadding(value.Padding);
             }
             return writtenSize;
         }
@@ -875,11 +828,6 @@ namespace SharpMP4
             ulong size = ReadEntry(boxSize, readSize, VvcSubpicIDEntry.TYPE, out ge);
             sampleGroupDescriptionEntry = (VvcSubpicIDEntry)ge;
             return size;
-        }
-
-        internal static ulong CalculateEntrySize(IMp4Serializable entry)
-        {
-            return entry.CalculateSize();
         }
 
         internal static ulong CalculateEntrySize(IMp4Serializable[] entry)
@@ -925,17 +873,15 @@ namespace SharpMP4
                 if (readInstanceSizeBits < sizeOfInstanceBits)
                 {
                     // TODO: Investigate and fix
-                    size += ReadBits((uint)(sizeOfInstanceBits - readInstanceSizeBits), out byte[] missing);
+                    //size += ReadBits((uint)(sizeOfInstanceBits - readInstanceSizeBits), out byte[] missing);
+                    StreamMarker missing;
+                    size += ReadPadding(sizeOfInstanceBits, readInstanceSizeBits, out missing);
                     descriptor.Padding = missing;
-
-                    if (missing.FirstOrDefault(x => x != 0) == default(byte))
-                        Debug.WriteLine($"Descriptor \'{tag}\' has extra padding of {missing.Length} zero bytes");
-                    else
-                        Debug.WriteLine($"Descriptor {tag} not fully read!");
+                    Debug.WriteLine($"Descriptor \'{tag}\' has extra padding of {missing.Length} bytes");
                 }
                 else
                 {
-                    Debug.WriteLine($"Descriptor {tag} read through!");
+                    Debug.WriteLine($"Descriptor \'{tag}\' read through!");
                 }
             }
             size += readInstanceSizeBits;
@@ -1039,7 +985,7 @@ namespace SharpMP4
             size += descriptor.Write(this);
             if (descriptor.Padding != null)
             {
-                size += WriteBytes((ulong)descriptor.Padding.Length, descriptor.Padding);
+                size += WritePadding(descriptor.Padding);
             }
             return size;
         }
@@ -1157,11 +1103,6 @@ namespace SharpMP4
             return ReadBytes(count, out value);
         }
 
-        internal ulong WriteUInt8ArrayTillEnd(byte[] value)
-        {
-            return WriteUInt8Array((uint)value.Length, value);
-        }
-
         internal ulong ReadUInt32ArrayTillEnd(ulong boxSize, ulong readSize, out uint[] value)
         {
             ulong consumed = 0;
@@ -1194,21 +1135,6 @@ namespace SharpMP4
                 consumed += ReadUInt32(out value[i]);
             }
             return consumed;
-        }
-
-        internal ulong WriteUInt32ArrayTillEnd(uint[] value)
-        {
-            return WriteUInt32Array((uint)value.Length, value);
-        }
-
-        internal ulong ReadUInt8Array(uint count, out byte[] value)
-        {
-            return ReadBytes(count, out value);
-        }
-
-        internal ulong WriteUInt8Array(uint count, byte[] value)
-        {
-            return WriteBytes(count, value);
         }
 
         internal ulong ReadUInt16Array(uint count, out ushort[] value)
@@ -1584,6 +1510,76 @@ namespace SharpMP4
 
         #region Proxy
 
+        internal ulong ReadPadding(ulong size, ulong availableSize, out StreamMarker padding)
+        {
+            return ReadUInt8ArrayTillEnd(size, availableSize, out padding);
+        }
+
+        public ulong WritePadding(StreamMarker padding)
+        {
+            return WriteUInt8ArrayTillEnd(padding);
+        }
+
+        internal ulong ReadAlignedBits(uint count, out bool value)
+        {
+            return ReadBit(out value);
+        }
+
+        internal ulong WriteAlignedBits(uint count, bool value)
+        {
+            return WriteBit(value);
+        }
+
+        internal ulong ReadAlignedBits(uint count, out byte value)
+        {
+            return ReadBits(count, out value);
+        }
+
+        internal ulong WriteAlignedBits(uint count, byte value)
+        {
+            return WriteBits(count, value);
+        }
+
+        internal static ulong CalculateEntrySize(IMp4Serializable entry)
+        {
+            return entry.CalculateSize();
+        }
+
+        internal static ulong CalculateClassSize(IMp4Serializable value)
+        {
+            return value.CalculateSize();
+        }
+
+        internal static ulong CalculateBoxSize(Box value)
+        {
+            return value.CalculateSize();
+        }
+
+        internal static ulong CalculateBoxArray(Box value)
+        {
+            return CalculateBoxSize(value.Children);
+        }
+
+        internal ulong WriteUInt8ArrayTillEnd(byte[] value)
+        {
+            return WriteUInt8Array((uint)value.Length, value);
+        }
+
+        internal ulong WriteUInt32ArrayTillEnd(uint[] value)
+        {
+            return WriteUInt32Array((uint)value.Length, value);
+        }
+
+        internal ulong ReadUInt8Array(uint count, out byte[] value)
+        {
+            return ReadBytes(count, out value);
+        }
+
+        internal ulong WriteUInt8Array(uint count, byte[] value)
+        {
+            return WriteBytes(count, value);
+        }
+
         internal ulong ReadBslbf(ulong count, out ushort value)
         {
             return ReadBits((uint)count, out value);
@@ -1771,23 +1767,23 @@ namespace SharpMP4
 
     public class IsoEndOfStreamException : EndOfStreamException
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
-        public IsoEndOfStreamException(byte[] padding)
+        public IsoEndOfStreamException(StreamMarker padding)
         {
             Padding = padding;
         }
     }
 
-    public struct BinaryUtf8String
+    public struct BinaryUTF8String
     {
         public int Length { get { return Bytes == null ? 0 : Bytes.Length; } }
         public byte[] Bytes { get; set; }
-        public BinaryUtf8String(byte[] bytes)
+        public BinaryUTF8String(byte[] bytes)
         {
             this.Bytes = bytes;
         }
-        public BinaryUtf8String(string text)
+        public BinaryUTF8String(string text)
         {
             Bytes = Encoding.UTF8.GetBytes(text);
         }

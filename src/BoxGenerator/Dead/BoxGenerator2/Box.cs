@@ -1,18 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SharpMP4
 {
+    public interface IHasBoxChildren
+    {
+        List<Box> Children { get; set; }
+    }
+
     public interface IMp4Serializable
     {
-        byte[] Padding { get; set; }
+        StreamMarker Padding { get; set; }
 
         ulong Read(IsoStream stream, ulong readSize);
         ulong Write(IsoStream stream);
         ulong CalculateSize();
     }
 
-    public abstract class Box : IMp4Serializable
+    public abstract class Box : IMp4Serializable, IHasBoxChildren
     {
         public virtual string FourCC { get; set; }
 
@@ -32,8 +36,8 @@ namespace SharpMP4
         public Box Parent { get { return parent; } set { parent = value; } }
         protected List<Box> children = null;
         public List<Box> Children { get { return children; } set { children = value; } }
-        protected byte[] padding = null;
-        public byte[] Padding { get { return padding; } set { padding = value; } }
+        protected StreamMarker padding = null;
+        public StreamMarker Padding { get { return padding; } set { padding = value; } }
 
         public Box() {  }
 
@@ -57,7 +61,6 @@ namespace SharpMP4
         {
             return 0;
         }
-
 
         public virtual ulong Write(IsoStream stream)
         {
@@ -107,73 +110,75 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)data.Length * 8; // data
+            boxSize += (ulong)data.Length << 3; // data
             return boxSize;
         }
     }
 
     public class UnknownEntry : SampleEntry
     {
-        protected byte[] bytes;
+        protected StreamMarker data;
+        public StreamMarker Data { get { return data; } set { data = value; } }
 
         public UnknownEntry(string format) : base(format)
         {
         }
 
-        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
-
         public override ulong Read(IsoStream stream, ulong readSize)
         {
-            ulong boxSize = base.Read(stream, readSize);
-            boxSize += stream.ReadBytes((readSize - boxSize) >> 3, out bytes);
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
         public override ulong Write(IsoStream stream)
         {
-            ulong boxSize = base.Write(stream);
-            boxSize += stream.WriteBytes((uint)bytes.Length, bytes);
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
             return boxSize;
         }
 
         public override ulong CalculateSize()
         {
-            ulong boxSize = base.CalculateSize();
-            boxSize += (ulong)(bytes.Length * 8);
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)data.Length << 3; // data
             return boxSize;
         }
     }
 
     public class UnknownClass : IMp4Serializable
     {
-        protected byte[] bytes;
-        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
+        protected StreamMarker data;
+        public StreamMarker Data { get { return data; } set { data = value; } }
 
-        protected byte[] padding = null;
-        public byte[] Padding { get { return padding; } set { padding = value; } }
+        protected StreamMarker padding = null;
+        public StreamMarker Padding { get { return padding; } set { padding = value; } }
 
         public UnknownClass()
         {
         }
 
-        public virtual ulong Read(IsoStream stream, ulong readSize)
+        public ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadBytes(readSize >> 3, out bytes);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
-        public virtual ulong Write(IsoStream stream)
+        public ulong Write(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteBytes((uint)bytes.Length, bytes);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
             return boxSize;
         }
 
-        public virtual ulong CalculateSize()
+        public ulong CalculateSize()
         {
             ulong boxSize = 0;
-            boxSize += (ulong)(bytes.Length * 8);
+            boxSize += (ulong)data.Length << 3; // data
             return boxSize;
         }
     }

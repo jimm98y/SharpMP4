@@ -1,21 +1,120 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 
 namespace SharpMP4
 {
-    public class Mp4
+    public class Mp4 : IMp4Serializable
     {
-        private IsoStream _stream;
-        public IsoStream Stream { get { return _stream; } }
+        public StreamMarker Padding { get; set; }
+        public Mp4BoxHeader PaddingHeader { get; set; }
 
-        public Mp4(Stream stream)
+        public List<Box> Children { get; set; } = new List<Box>();
+
+        public ulong Read(IsoStream stream, ulong readSize = 0)
         {
-            this._stream = new IsoStream(stream);
+            Children.Clear();
+            Padding = null;
+            PaddingHeader = null;
+
+            Mp4BoxHeader header = null;
+            Box box = null;
+            ulong size = 0;
+
+            try
+            {
+                while (true)
+                {
+                    header = null;
+                    box = null;
+
+                    header = stream.ReadBoxHeader();
+                    ulong boxSize = header.Header.GetBoxSizeInBits();
+
+                    box = stream.ReadBoxContent(header);
+                    if(box == null)
+                    {
+                        // header from 0 bytes
+                        this.PaddingHeader = header;
+                        this.Padding = new StreamMarker(stream.GetCurrentOffset(), stream.GetStreamLength() - stream.GetCurrentOffset(), stream);
+                        break;
+                    }
+                    
+                    ulong calculatedSize = box.CalculateSize();
+                    if (boxSize != calculatedSize)
+                    {
+                        Debug.WriteLine($"Box size mismatch - calculated: {calculatedSize >> 3}, read: {boxSize >> 3}");
+                    }
+
+                    Children.Add(box);
+                    size += boxSize;
+                }
+            }
+            catch (IsoEndOfStreamException ie)
+            {
+                if (header == null)
+                {
+                    Padding = ie.Padding;
+                }
+                else if (header.Header != null)
+                {
+                    PaddingHeader = header;
+                    Padding = ie.Padding;
+                }
+            }
+            catch (EndOfStreamException) 
+            {
+                // This is to be expected
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error: {ex.Message}");
+            }
+
+            return size;
         }
 
-        public static Mp4 Create(Stream stream)
+        public ulong Write(IsoStream stream)
         {
-            Mp4 mp4 = new Mp4(stream);
-            return mp4;
+            ulong size = 0;
+            for (int i = 0; i < Children.Count; i++)
+            {
+                size += stream.WriteBox(Children[i]);
+            }
+
+            if(this.PaddingHeader != null && this.PaddingHeader.Header != null)
+            {
+                size += this.PaddingHeader.Header.Write(stream);
+            }
+
+            if(this.Padding != null)
+            {
+                size += stream.WritePadding(this.Padding);
+            }
+
+            return size;
+        }
+
+        public ulong CalculateSize()
+        {
+            ulong size = 0;
+            for (int i = 0; i < Children.Count; i++)
+            {
+                size += Children[i].CalculateSize();
+            }
+
+            if (this.PaddingHeader != null && this.PaddingHeader.Header != null)
+            {
+                size += this.PaddingHeader.HeaderSize;
+            }
+
+            if (this.Padding != null)
+            {
+                size += (ulong)(this.Padding.Length << 3);
+            }
+
+            return size;
         }
     }
 }

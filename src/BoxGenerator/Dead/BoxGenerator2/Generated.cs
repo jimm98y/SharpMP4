@@ -559,7 +559,7 @@ namespace SharpMP4
     */
     public class SymbolicMusicSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte version;  // version of this specification is 0b0000 
@@ -924,7 +924,7 @@ namespace SharpMP4
     */
     public abstract class SampleGroupDescriptionEntry : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         public SampleGroupDescriptionEntry(string grouping_type) : base()
@@ -1195,14 +1195,14 @@ namespace SharpMP4
     {
         public const string TYPE = "stpp";
 
-        protected BinaryUtf8String ns;
-        public BinaryUtf8String Ns { get { return this.ns; } set { this.ns = value; } }
+        protected BinaryUTF8String ns;
+        public BinaryUTF8String Ns { get { return this.ns; } set { this.ns = value; } }
 
-        protected BinaryUtf8String schema_location;  //  optional 
-        public BinaryUtf8String SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
+        protected BinaryUTF8String schema_location;  //  optional 
+        public BinaryUTF8String SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
 
-        protected BinaryUtf8String auxiliary_mime_types;  //  optional, required if auxiliary resources are present 
-        public BinaryUtf8String AuxiliaryMimeTypes { get { return this.auxiliary_mime_types; } set { this.auxiliary_mime_types = value; } }
+        protected BinaryUTF8String auxiliary_mime_types;  //  optional, required if auxiliary resources are present 
+        public BinaryUTF8String AuxiliaryMimeTypes { get { return this.auxiliary_mime_types; } set { this.auxiliary_mime_types = value; } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
 
         public XMLSubtitleSampleEntry() : base("stpp")
@@ -1259,11 +1259,11 @@ namespace SharpMP4
     {
         public const string TYPE = "sbtt";
 
-        protected BinaryUtf8String content_encoding;  //  optional 
-        public BinaryUtf8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+        protected BinaryUTF8String content_encoding;  //  optional 
+        public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
-        protected BinaryUtf8String mime_format;
-        public BinaryUtf8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
+        protected BinaryUTF8String mime_format;
+        public BinaryUTF8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
         public TextConfigBox _TextConfigBox { get { return this.children.OfType<TextConfigBox>().FirstOrDefault(); } }
 
@@ -1544,7 +1544,7 @@ namespace SharpMP4
     */
     public class ItemInfoExtension : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         public ItemInfoExtension(string extension_type) : base()
@@ -1622,11 +1622,11 @@ namespace SharpMP4
     {
         public const string TYPE = "stxt";
 
-        protected BinaryUtf8String content_encoding;  //  optional 
-        public BinaryUtf8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+        protected BinaryUTF8String content_encoding;  //  optional 
+        public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
-        protected BinaryUtf8String mime_format;
-        public BinaryUtf8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
+        protected BinaryUTF8String mime_format;
+        public BinaryUTF8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
         public TextConfigBox _TextConfigBox { get { return this.children.OfType<TextConfigBox>().FirstOrDefault(); } }
 
@@ -1923,8 +1923,8 @@ namespace SharpMP4
     {
         public const string TYPE = "loca";
 
-        protected BinaryUtf8String locale_string;
-        public BinaryUtf8String LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
+        protected BinaryUTF8String locale_string;
+        public BinaryUTF8String LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
 
         public MetaDataLocaleBox() : base("loca")
         {
@@ -2094,7 +2094,7 @@ namespace SharpMP4
     */
     public class MetaDataAccessUnit : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected Box[] boxes;
@@ -2589,7 +2589,7 @@ namespace SharpMP4
     */
     public class DependencyInfo : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte subSeqDirectionFlag;
@@ -3086,7 +3086,7 @@ namespace SharpMP4
     */
     public class AVCDecoderConfigurationRecord : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -3331,7 +3331,7 @@ namespace SharpMP4
     */
     public class MVCDecoderConfigurationRecord : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -3500,7 +3500,7 @@ namespace SharpMP4
     */
     public class SVCDecoderConfigurationRecord : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -3678,7 +3678,7 @@ namespace SharpMP4
     */
     public class HEVCDecoderConfigurationRecord : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -3936,7 +3936,7 @@ namespace SharpMP4
     */
     public class VvcPTLRecord : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte reserved = 0;
@@ -4143,7 +4143,7 @@ namespace SharpMP4
     */
     public class VvcDecoderConfigurationRecord : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte reserved = 0b11111;
@@ -4380,7 +4380,7 @@ namespace SharpMP4
     */
     public class MVDDecoderConfigurationRecord : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -4577,7 +4577,7 @@ namespace SharpMP4
     */
     public class VvcOperatingPointsRecord : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte num_profile_tier_level_minus1;
@@ -4940,7 +4940,7 @@ namespace SharpMP4
     */
     public class EVCDecoderConfigurationRecord : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -5153,7 +5153,7 @@ namespace SharpMP4
     */
     public class LHEVCDecoderConfigurationRecord : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte configurationVersion = 1;
@@ -6354,8 +6354,8 @@ namespace SharpMP4
     {
         public const string TYPE = "elng";
 
-        protected BinaryUtf8String extended_language;
-        public BinaryUtf8String ExtendedLanguage { get { return this.extended_language; } set { this.extended_language = value; } }
+        protected BinaryUTF8String extended_language;
+        public BinaryUTF8String ExtendedLanguage { get { return this.extended_language; } set { this.extended_language = value; } }
 
         public ExtendedLanguageBox() : base("elng", 0, 0)
         {
@@ -7827,8 +7827,8 @@ namespace SharpMP4
     {
         public const string TYPE = "txtC";
 
-        protected BinaryUtf8String text_config;
-        public BinaryUtf8String TextConfig { get { return this.text_config; } set { this.text_config = value; } }
+        protected BinaryUTF8String text_config;
+        public BinaryUTF8String TextConfig { get { return this.text_config; } set { this.text_config = value; } }
 
         public TextConfigBox() : base("txtC", 0, 0)
         {
@@ -7921,8 +7921,8 @@ namespace SharpMP4
         protected string language;  //  ISO-639-2/T language code
         public string Language { get { return this.language; } set { this.language = value; } }
 
-        protected BinaryUtf8String notice;
-        public BinaryUtf8String Notice { get { return this.notice; } set { this.notice = value; } }
+        protected BinaryUTF8String notice;
+        public BinaryUTF8String Notice { get { return this.notice; } set { this.notice = value; } }
 
         public CopyrightBox() : base("cprt", 0, 0)
         {
@@ -7970,11 +7970,11 @@ namespace SharpMP4
     {
         public const string TYPE = "kind";
 
-        protected BinaryUtf8String schemeURI;
-        public BinaryUtf8String SchemeURI { get { return this.schemeURI; } set { this.schemeURI = value; } }
+        protected BinaryUTF8String schemeURI;
+        public BinaryUTF8String SchemeURI { get { return this.schemeURI; } set { this.schemeURI = value; } }
 
-        protected BinaryUtf8String value;
-        public BinaryUtf8String Value { get { return this.value; } set { this.value = value; } }
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
         public KindBox() : base("kind", 0, 0)
         {
@@ -8440,8 +8440,8 @@ namespace SharpMP4
     {
         public const string TYPE = "url ";
 
-        protected BinaryUtf8String location;
-        public BinaryUtf8String Location { get { return this.location; } set { this.location = value; } }
+        protected BinaryUTF8String location;
+        public BinaryUTF8String Location { get { return this.location; } set { this.location = value; } }
 
         public DataEntryUrlBox(uint flags = 0) : base("url ", flags)
         {
@@ -8484,11 +8484,11 @@ namespace SharpMP4
     {
         public const string TYPE = "urn ";
 
-        protected BinaryUtf8String name;
-        public BinaryUtf8String Name { get { return this.name; } set { this.name = value; } }
+        protected BinaryUTF8String name;
+        public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
 
-        protected BinaryUtf8String location;
-        public BinaryUtf8String Location { get { return this.location; } set { this.location = value; } }
+        protected BinaryUTF8String location;
+        public BinaryUTF8String Location { get { return this.location; } set { this.location = value; } }
 
         public DataEntryUrnBox(uint flags = 0) : base("urn ", flags)
         {
@@ -9864,11 +9864,11 @@ namespace SharpMP4
     {
         public const string TYPE = "fdel";
 
-        protected BinaryUtf8String content_location;
-        public BinaryUtf8String ContentLocation { get { return this.content_location; } set { this.content_location = value; } }
+        protected BinaryUTF8String content_location;
+        public BinaryUTF8String ContentLocation { get { return this.content_location; } set { this.content_location = value; } }
 
-        protected BinaryUtf8String content_MD5;
-        public BinaryUtf8String ContentMD5 { get { return this.content_MD5; } set { this.content_MD5 = value; } }
+        protected BinaryUTF8String content_MD5;
+        public BinaryUTF8String ContentMD5 { get { return this.content_MD5; } set { this.content_MD5 = value; } }
 
         protected ulong content_length;
         public ulong ContentLength { get { return this.content_length; } set { this.content_length = value; } }
@@ -10381,8 +10381,8 @@ namespace SharpMP4
         protected ushort max_number_of_encoding_symbols;
         public ushort MaxNumberOfEncodingSymbols { get { return this.max_number_of_encoding_symbols; } set { this.max_number_of_encoding_symbols = value; } }
 
-        protected BinaryUtf8String scheme_specific_info;
-        public BinaryUtf8String SchemeSpecificInfo { get { return this.scheme_specific_info; } set { this.scheme_specific_info = value; } }
+        protected BinaryUTF8String scheme_specific_info;
+        public BinaryUTF8String SchemeSpecificInfo { get { return this.scheme_specific_info; } set { this.scheme_specific_info = value; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10695,8 +10695,8 @@ namespace SharpMP4
         protected uint[] group_ID;
         public uint[] GroupID { get { return this.group_ID; } set { this.group_ID = value; } }
 
-        protected BinaryUtf8String[] group_name;
-        public BinaryUtf8String[] GroupName { get { return this.group_name; } set { this.group_name = value; } }
+        protected BinaryUTF8String[] group_name;
+        public BinaryUTF8String[] GroupName { get { return this.group_name; } set { this.group_name = value; } }
 
         public GroupIdToNameBox() : base("gitn", 0, 0)
         {
@@ -10709,7 +10709,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.entry_count);
 
             this.group_ID = new uint[entry_count];
-            this.group_name = new BinaryUtf8String[entry_count];
+            this.group_name = new BinaryUTF8String[entry_count];
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.ReadUInt32(out this.group_ID[i]);
@@ -10807,8 +10807,8 @@ namespace SharpMP4
         protected uint[] reserved = [];
         public uint[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        protected BinaryUtf8String name;
-        public BinaryUtf8String Name { get { return this.name; } set { this.name = value; } }
+        protected BinaryUTF8String name;
+        public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
 
         public HandlerBox() : base("hdlr", 0, 0)
         {
@@ -11432,14 +11432,14 @@ namespace SharpMP4
         protected ushort item_protection_index;
         public ushort ItemProtectionIndex { get { return this.item_protection_index; } set { this.item_protection_index = value; } }
 
-        protected BinaryUtf8String item_name;
-        public BinaryUtf8String ItemName { get { return this.item_name; } set { this.item_name = value; } }
+        protected BinaryUTF8String item_name;
+        public BinaryUTF8String ItemName { get { return this.item_name; } set { this.item_name = value; } }
 
-        protected BinaryUtf8String content_type;
-        public BinaryUtf8String ContentType { get { return this.content_type; } set { this.content_type = value; } }
+        protected BinaryUTF8String content_type;
+        public BinaryUTF8String ContentType { get { return this.content_type; } set { this.content_type = value; } }
 
-        protected BinaryUtf8String content_encoding;  // optional
-        public BinaryUtf8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+        protected BinaryUTF8String content_encoding;  // optional
+        public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
         protected uint extension_type;  // optional
         public uint ExtensionType { get { return this.extension_type; } set { this.extension_type = value; } }
@@ -11450,8 +11450,8 @@ namespace SharpMP4
         protected uint item_type;
         public uint ItemType { get { return this.item_type; } set { this.item_type = value; } }
 
-        protected BinaryUtf8String item_uri_type;
-        public BinaryUtf8String ItemUriType { get { return this.item_uri_type; } set { this.item_uri_type = value; } }
+        protected BinaryUTF8String item_uri_type;
+        public BinaryUTF8String ItemUriType { get { return this.item_uri_type; } set { this.item_uri_type = value; } }
 
         public ItemInfoEntry(byte version = 0, uint flags = 0) : base("infe", version, flags)
         {
@@ -13602,8 +13602,8 @@ namespace SharpMP4
         protected uint scheme_version;  //  scheme version
         public uint SchemeVersion { get { return this.scheme_version; } set { this.scheme_version = value; } }
 
-        protected BinaryUtf8String scheme_uri;  //  browser uri
-        public BinaryUtf8String SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
+        protected BinaryUTF8String scheme_uri;  //  browser uri
+        public BinaryUTF8String SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
 
         public SchemeTypeBox(uint flags = 0) : base("schm", 0, flags)
         {
@@ -13674,8 +13674,8 @@ namespace SharpMP4
         protected uint scheme_version;  //  scheme version 
         public uint SchemeVersion { get { return this.scheme_version; } set { this.scheme_version = value; } }
 
-        protected BinaryUtf8String scheme_uri;  //  browser uri
-        public BinaryUtf8String SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
+        protected BinaryUTF8String scheme_uri;  //  browser uri
+        public BinaryUTF8String SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
 
         public CompatibleSchemeTypeBox(uint flags = 0) : base("csch", 0, flags)
         {
@@ -16703,7 +16703,7 @@ namespace SharpMP4
     */
     public class BoxHeader : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected uint size;
@@ -16855,8 +16855,8 @@ namespace SharpMP4
     {
         public const string TYPE = "xml ";
 
-        protected BinaryUtf8String xml;
-        public BinaryUtf8String Xml { get { return this.xml; } set { this.xml = value; } }
+        protected BinaryUTF8String xml;
+        public BinaryUTF8String Xml { get { return this.xml; } set { this.xml = value; } }
 
         public XMLBox() : base("xml ", 0, 0)
         {
@@ -17003,8 +17003,8 @@ namespace SharpMP4
     {
         public const string TYPE = "uri ";
 
-        protected BinaryUtf8String theURI;
-        public BinaryUtf8String TheURI { get { return this.theURI; } set { this.theURI = value; } }
+        protected BinaryUTF8String theURI;
+        public BinaryUTF8String TheURI { get { return this.theURI; } set { this.theURI = value; } }
 
         public URIBox() : base("uri ", 0, 0)
         {
@@ -20425,8 +20425,8 @@ namespace SharpMP4
         protected byte[] statement_type;  //  from the user extension ranges
         public byte[] StatementType { get { return this.statement_type; } set { this.statement_type = value; } }
 
-        protected BinaryUtf8String[] statement_namespace;
-        public BinaryUtf8String[] StatementNamespace { get { return this.statement_namespace; } set { this.statement_namespace = value; } }
+        protected BinaryUTF8String[] statement_namespace;
+        public BinaryUTF8String[] StatementNamespace { get { return this.statement_namespace; } set { this.statement_namespace = value; } }
 
         public SVCMetadataSampleConfigBox() : base("svmC")
         {
@@ -20444,7 +20444,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt8(out this.entry_count);
 
             this.statement_type = new byte[entry_count];
-            this.statement_namespace = new BinaryUtf8String[entry_count];
+            this.statement_namespace = new BinaryUTF8String[entry_count];
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.ReadUInt8(out this.statement_type[i]); // from the user extension ranges
@@ -20544,8 +20544,8 @@ namespace SharpMP4
     {
         public const string TYPE = "vttC";
 
-        protected BinaryUtf8String config;
-        public BinaryUtf8String Config { get { return this.config; } set { this.config = value; } }
+        protected BinaryUTF8String config;
+        public BinaryUTF8String Config { get { return this.config; } set { this.config = value; } }
 
         public WebVTTConfigurationBox() : base("vttC")
         {
@@ -20586,8 +20586,8 @@ namespace SharpMP4
     {
         public const string TYPE = "vlab";
 
-        protected BinaryUtf8String source_label;
-        public BinaryUtf8String SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
+        protected BinaryUTF8String source_label;
+        public BinaryUTF8String SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
 
         public WebVTTSourceLabelBox() : base("vlab")
         {
@@ -20682,8 +20682,8 @@ namespace SharpMP4
     {
         public const string TYPE = "auxi";
 
-        protected BinaryUtf8String aux_track_type;
-        public BinaryUtf8String AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
+        protected BinaryUTF8String aux_track_type;
+        public BinaryUTF8String AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
 
         public AuxiliaryTypeInfoBox() : base("auxi", 0, 0)
         {
@@ -21441,14 +21441,14 @@ namespace SharpMP4
     {
         public const string TYPE = "metx";
 
-        protected BinaryUtf8String content_encoding;  //  optional
-        public BinaryUtf8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+        protected BinaryUTF8String content_encoding;  //  optional
+        public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
-        protected BinaryUtf8String ns;
-        public BinaryUtf8String Ns { get { return this.ns; } set { this.ns = value; } }
+        protected BinaryUTF8String ns;
+        public BinaryUTF8String Ns { get { return this.ns; } set { this.ns = value; } }
 
-        protected BinaryUtf8String schema_location;  //  optional
-        public BinaryUtf8String SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
+        protected BinaryUTF8String schema_location;  //  optional
+        public BinaryUTF8String SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
 
         public XMLMetaDataSampleEntry() : base("metx")
         {
@@ -21497,11 +21497,11 @@ namespace SharpMP4
     {
         public const string TYPE = "mett";
 
-        protected BinaryUtf8String content_encoding;  //  optional
-        public BinaryUtf8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+        protected BinaryUTF8String content_encoding;  //  optional
+        public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
-        protected BinaryUtf8String mime_format;
-        public BinaryUtf8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
+        protected BinaryUTF8String mime_format;
+        public BinaryUTF8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
         public TextConfigBox _TextConfigBox { get { return this.children.OfType<TextConfigBox>().FirstOrDefault(); } }
 
         public TextMetaDataSampleEntry() : base("mett")
@@ -26942,8 +26942,8 @@ namespace SharpMP4
     {
         public const string TYPE = "auxC";
 
-        protected BinaryUtf8String aux_type;
-        public BinaryUtf8String AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
+        protected BinaryUTF8String aux_type;
+        public BinaryUTF8String AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
 
         protected byte[] aux_subtype;  //  until the end of the box, the semantics depend on the aux_type value
         public byte[] AuxSubtype { get { return this.aux_subtype; } set { this.aux_subtype = value; } }
@@ -27531,11 +27531,11 @@ namespace SharpMP4
     {
         public const string TYPE = "altt";
 
-        protected BinaryUtf8String alt_text;
-        public BinaryUtf8String AltText { get { return this.alt_text; } set { this.alt_text = value; } }
+        protected BinaryUTF8String alt_text;
+        public BinaryUTF8String AltText { get { return this.alt_text; } set { this.alt_text = value; } }
 
-        protected BinaryUtf8String alt_lang;
-        public BinaryUtf8String AltLang { get { return this.alt_lang; } set { this.alt_lang = value; } }
+        protected BinaryUTF8String alt_lang;
+        public BinaryUTF8String AltLang { get { return this.alt_lang; } set { this.alt_lang = value; } }
 
         public AccessibilityTextProperty() : base("altt", 0, 0)
         {
@@ -27945,17 +27945,17 @@ namespace SharpMP4
     {
         public const string TYPE = "udes";
 
-        protected BinaryUtf8String lang;
-        public BinaryUtf8String Lang { get { return this.lang; } set { this.lang = value; } }
+        protected BinaryUTF8String lang;
+        public BinaryUTF8String Lang { get { return this.lang; } set { this.lang = value; } }
 
-        protected BinaryUtf8String name;
-        public BinaryUtf8String Name { get { return this.name; } set { this.name = value; } }
+        protected BinaryUTF8String name;
+        public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
 
-        protected BinaryUtf8String description;
-        public BinaryUtf8String Description { get { return this.description; } set { this.description = value; } }
+        protected BinaryUTF8String description;
+        public BinaryUTF8String Description { get { return this.description; } set { this.description = value; } }
 
-        protected BinaryUtf8String tags;
-        public BinaryUtf8String Tags { get { return this.tags; } set { this.tags = value; } }
+        protected BinaryUTF8String tags;
+        public BinaryUTF8String Tags { get { return this.tags; } set { this.tags = value; } }
 
         public UserDescriptionProperty() : base("udes", 0, 0)
         {
@@ -30164,7 +30164,7 @@ namespace SharpMP4
     */
     public class AudioSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected GetAudioObjectType audioObjectType;
@@ -30891,7 +30891,7 @@ namespace SharpMP4
     */
     public class GetAudioObjectType : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte audioObjectType;
@@ -30986,7 +30986,7 @@ namespace SharpMP4
     */
     public class GASpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool frameLengthFlag;
@@ -31240,7 +31240,7 @@ namespace SharpMP4
     */
     public class program_config_element : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte element_instance_tag;
@@ -31594,7 +31594,7 @@ namespace SharpMP4
     */
     public class CelpSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool isBaseLayer;
@@ -31723,7 +31723,7 @@ namespace SharpMP4
     */
     public class CelpHeader : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool ExcitationMode;
@@ -31838,7 +31838,7 @@ namespace SharpMP4
     */
     public class CelpBWSenhHeader : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte BWS_configuration;
@@ -31883,7 +31883,7 @@ namespace SharpMP4
     */
     public class HvxcSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool isBaseLayer;
@@ -31949,7 +31949,7 @@ namespace SharpMP4
     */
     public class HVXCconfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool HVXCvarMode;
@@ -32018,7 +32018,7 @@ namespace SharpMP4
     */
     public class TTSSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected TTS_Sequence TTS_Sequence;
@@ -32069,7 +32069,7 @@ namespace SharpMP4
     */
     public class TTS_Sequence : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte TTS_Sequence_ID;
@@ -32172,7 +32172,7 @@ namespace SharpMP4
     */
     public class ErrorResilientCelpSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool isBaseLayer;
@@ -32302,7 +32302,7 @@ namespace SharpMP4
     */
     public class ER_SC_CelpHeader : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool ExcitationMode;
@@ -32429,7 +32429,7 @@ namespace SharpMP4
     */
     public class ErrorResilientHvxcSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool isBaseLayer;
@@ -32495,7 +32495,7 @@ namespace SharpMP4
     */
     public class ErHVXCconfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool HVXCvarMode;
@@ -32574,7 +32574,7 @@ namespace SharpMP4
     */
     public class ParametricSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool isBaseLayer;
@@ -32663,7 +32663,7 @@ namespace SharpMP4
     */
     public class PARAconfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte PARAmode;
@@ -32767,7 +32767,7 @@ namespace SharpMP4
     */
     public class HILNconfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool HILNquantMode;
@@ -32837,7 +32837,7 @@ namespace SharpMP4
     */
     public class HILNenexConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool HILNenhaLayer;
@@ -32906,7 +32906,7 @@ namespace SharpMP4
     */
     public class SSCSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte decoder_level;
@@ -33001,7 +33001,7 @@ namespace SharpMP4
     */
     public class MPEG_1_2_SpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool extension;
@@ -33045,7 +33045,7 @@ namespace SharpMP4
     */
     public class DSTSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool DSDDST_Coded;
@@ -33149,7 +33149,7 @@ namespace SharpMP4
     */
     public class ALSSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected uint als_id;
@@ -33503,7 +33503,7 @@ namespace SharpMP4
     */
     public class SLSSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte pcmWordLength;
@@ -33634,7 +33634,7 @@ namespace SharpMP4
     */
     public class ELDSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool frameLengthFlag;
@@ -33884,7 +33884,7 @@ namespace SharpMP4
     */
     public class ld_sbr_header : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected sbr_header[] sbr_header;
@@ -34035,7 +34035,7 @@ namespace SharpMP4
     */
     public class sbr_header : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool bs_amp_res;
@@ -34228,7 +34228,7 @@ namespace SharpMP4
     */
     public class ErrorProtectionSpecificConfig : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte number_of_predefined_set;
@@ -34606,7 +34606,7 @@ namespace SharpMP4
     */
     public class ChannelMappingTable : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected byte StreamCount;
@@ -34827,7 +34827,7 @@ namespace SharpMP4
     */
     public class AV1CodecConfigurationRecord : IMp4Serializable
     {
-        public byte[] Padding { get; set; }
+        public StreamMarker Padding { get; set; }
 
 
         protected bool marker = true;

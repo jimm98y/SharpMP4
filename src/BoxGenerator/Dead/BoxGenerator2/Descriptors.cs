@@ -4,8 +4,8 @@ namespace SharpMP4
 {
     public class SpatialSpecificConfig : IMp4Serializable
     {
-        protected byte[] padding = null;
-        public byte[] Padding { get { return padding; } set { padding = value; } }
+        protected StreamMarker padding = null;
+        public StreamMarker Padding { get { return padding; } set { padding = value; } }
 
         public SpatialSpecificConfig()
         { }
@@ -28,8 +28,8 @@ namespace SharpMP4
 
     public class StructuredAudioSpecificConfig : IMp4Serializable
     {
-        protected byte[] padding = null;
-        public byte[] Padding { get { return padding; } set { padding = value; } }
+        protected StreamMarker padding = null;
+        public StreamMarker Padding { get { return padding; } set { padding = value; } }
 
         public StructuredAudioSpecificConfig()
         { }
@@ -52,26 +52,27 @@ namespace SharpMP4
 
     public class GenericDecoderSpecificInfo : DecoderSpecificInfo
     {
-        protected byte[] bytes = null;
-        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
+        protected StreamMarker data = null;
+        public StreamMarker Data { get { return data; } set { data = value; } }
 
         public override ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)(readSize >> 3), out bytes);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
         public override ulong Write(IsoStream stream)
         {
             ulong boxSize = base.Write(stream);
-            boxSize += stream.WriteUInt8Array((uint)bytes.Length, bytes);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
             return boxSize;
         }
+
         public override ulong CalculateSize()
         {
             ulong boxSize = base.CalculateSize();
-            boxSize += (ulong)bytes.Length << 3;
+            boxSize += (ulong)data.Length << 3;
             return boxSize;
         }
     }
