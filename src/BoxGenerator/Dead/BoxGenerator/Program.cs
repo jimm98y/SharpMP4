@@ -1403,6 +1403,11 @@ namespace SharpMP4
             string baseRead = "\r\n\t\tboxSize += base.Read(stream, readSize);";
             if(b.BoxName == "MetaBox")
             {
+                // This is very badly documented, but in case the Apple "ilst" box appears in "meta" inside "trak" or "udta", then the 
+                //  serialization is incompatible with ISOBMFF as it uses the "Quicktime atom format".
+                //  see: https://www.academia.edu/66625880/Forensic_Analysis_of_Video_Files_Using_Metadata
+                //  see: https://web.archive.org/web/20220126080109/https://leo-van-stee.github.io/
+                // TODO: maybe instead of lookahead, we just have to check the parents
                 baseRead = "\r\n\t\tstream.ReadBytes(20, out byte[] lookahead);\r\n            if (lookahead[4] == 'h' && lookahead[5] == 'd' && lookahead[6] == 'l' && lookahead[7] == 'r' &&\r\n                lookahead[16] == 'm' && lookahead[17] == 'd' && lookahead[18] == 't' && lookahead[19] == 'a')\r\n            {\r\n                IsQuickTime = true;\r\n            }\r\n            else\r\n            {\r\n                IsQuickTime = false;\r\n            }\r\n            stream.UnreadBytes(20, lookahead);\r\n            if (!IsQuickTime)\r\n            {\r\n                boxSize += base.Read(stream, readSize);\r\n            }";
             }
             cls += baseRead;

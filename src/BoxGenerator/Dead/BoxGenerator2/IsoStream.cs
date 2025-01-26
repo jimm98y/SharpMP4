@@ -375,16 +375,6 @@ namespace SharpMP4
             if (readSize == 0)
                 return 0;
 
-            if (box.FourCC == "ilst" 
-                && box.Parent != null && box.Parent.FourCC == "meta" && 
-                box.Parent.Parent != null && (box.Parent.Parent.FourCC == "trak" || box.Parent.Parent.FourCC == "udta"))
-            {
-                // this is very badly documented, but in case the Apple "ilst" box appears in "meta" inside "trak" or "udta", then the 
-                //  serialization is incompatible with ISOBMFF
-                //  see: https://www.academia.edu/66625880/Forensic_Analysis_of_Video_Files_Using_Metadata
-
-            }
-
             box.Children = new List<Box>();
 
             ulong consumed = 0;

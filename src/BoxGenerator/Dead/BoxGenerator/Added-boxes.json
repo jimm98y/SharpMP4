@@ -24,7 +24,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleWrtBox() \r\nextends Box('©wrt') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleComposersBox() \r\nextends Box('©wrt') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -415,6 +415,12 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class DdtsBox() \r\nextends Box('ddts') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class NikonExifBox() \r\nextends Box('NCTG') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
