@@ -8,29 +8,6 @@ using System.Text;
 
 namespace SharpMP4
 {
-    public class StreamMarker
-    {
-        public long Position { get; set; }
-        public long Length { get; set; }
-        public IsoStream Stream { get; set; }
-        public StreamMarker(long position, long length, IsoStream stream)
-        {
-            Position = position;
-            Length = length;
-            Stream = stream;
-        }
-    }
-
-    public class IsoEndOfStreamException : EndOfStreamException
-    {
-        public byte[] Padding { get; set; }
-
-        public IsoEndOfStreamException(byte[] padding)
-        {
-            Padding = padding;
-        }
-    }
-
     public class IsoStream : IDisposable
     {
         private readonly Stream _stream;
@@ -44,28 +21,41 @@ namespace SharpMP4
             _stream = stream;
         }
 
-        private byte ReadByte()
+        #region Stream operations
+
+        internal long GetCurrentOffset()
         {
-            int read = _stream.ReadByte();
-            if (read == -1) throw new EndOfStreamException();
-            return (byte)(read & 0xff);
+            return _stream.Position;
         }
 
-        private ulong WriteByte(byte value)
+        internal long GetStreamLength()
         {
-            _stream.WriteByte(value);
-            return 8;
+            return _stream.Length;
         }
 
-        internal ulong WriteBytes(ulong count, byte[] value)
+        internal void UnreadBytes(int count, byte[] lookahead)
         {
-            //for (ulong i = 0; i < count; i++)
-            //{
-            //    WriteByte(value[i]);
-            //}
-            _stream.Write(value, 0, (int)count);
-            return count << 3;
+            _stream.Seek(-1 * count, SeekOrigin.Current);
         }
+
+        private void SeekFromEnd(long offset)
+        {
+            _stream.Seek(offset, SeekOrigin.End);
+        }
+
+        private void SeekFromCurrent(long count)
+        {
+            _stream.Seek(count, SeekOrigin.Current);
+        }
+
+        private void SeekFromBegining(long offset)
+        {
+            _stream.Seek(offset, SeekOrigin.Begin);
+        }
+
+        #endregion // Stream operations
+
+        #region Basic read/write operations
 
         private int ReadBit()
         {
@@ -103,408 +93,24 @@ namespace SharpMP4
             }
         }
 
-        internal ulong ReadStringArray(uint count, out string[] value)
+        private byte ReadByte()
         {
-            throw new NotImplementedException();
+            int read = _stream.ReadByte();
+            if (read == -1) throw new EndOfStreamException();
+            return (byte)(read & 0xff);
         }
 
-        internal ulong WriteStringArray(uint count, string[] values)
+        private ulong WriteByte(byte value)
         {
-            throw new NotImplementedException();
+            _stream.WriteByte(value);
+            return 8;
         }
 
-        internal static ulong CalculateSize(string[] values)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        internal ulong ReadDouble32(out double value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteDouble32(double value)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        internal static int BitsToDecode()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static ulong CalculateByteAlignmentSize(byte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadByteAlignment(out byte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteByteAlignment(byte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteBox(Box[] value)
-        {
-            ulong size = 0;
-            foreach (var box in value)
-            {
-                size += WriteBox(box);
-            }
-            return size;
-        }
-
-        internal ulong WriteClass(IMp4Serializable[] value)
-        {
-            ulong size = 0;
-            foreach (var cls in value)
-            {
-                size += WriteClass(cls);
-            }
-            return size;
-        }
-
-        internal ulong ReadBox(ulong boxSize, ulong readSize, IMp4Serializable serializable, out Box[] value)
-        {
-            ulong consumed = 0;
-            List<Box> values = new List<Box>();
-
-            if (readSize == 0)
-            {
-                // consume till the end of the stream
-                try
-                {
-                    while (true)
-                    {
-                        Box v;
-                        consumed += ReadBox(consumed, readSize, (Box)null, out v);
-                        values.Add(v);
-                    }
-                }
-                catch (EndOfStreamException)
-                { }
-
-                value = values.ToArray();
-                return consumed;
-            }
-
-            ulong remaining = readSize - boxSize;
-            while (consumed < remaining && (remaining - consumed) >= 64) // box header is at least 8 bytes
-            {
-                Box v;
-                consumed += ReadBox(consumed, readSize, (Box)null, out v);
-                if (consumed > readSize)
-                {
-                    throw new Exception("!!!!!!");
-                }
-                values.Add(v);
-            }
-            value = values.ToArray();
-            return consumed;
-        }
-
-        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, out T[] value) where T : IMp4Serializable, new()
-        {
-            ulong consumed = 0;
-            ulong remaining = readSize - boxSize;
-            List<T> ret = new List<T>();
-            while (consumed < remaining)
-            {
-                T c;
-                consumed += ReadClass<T>(boxSize + consumed, remaining, new T(), out c);
-                if (consumed > readSize)
-                {
-                    throw new Exception("!!!!!!");
-                }
-                ret.Add(c);
-            }
-            value = ret.ToArray();
-            return consumed;
-        }
-
-        internal ulong WriteDescriptorsTillEnd(Descriptor descriptor, int objectTypeIndication = -1)
-        {
-            ulong size = 0;
-            foreach (var d in descriptor.Children)
-            {
-                size += WriteDescriptor(d);
-            }
-            return size;
-        }
-
-        internal ulong WriteDescriptor(Descriptor descriptor)
-        {
-            ulong size = 0;
-            if (descriptor == null || descriptor.Tag == 0)
-            {
-                return size;
-            }
-            size += WriteUInt8(descriptor.Tag);
-
-            ulong sizeOfInstance = descriptor.CalculateSize() + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0); 
-            size += WriteDescriptorSize(sizeOfInstance >> 3, descriptor.SizeOfSize >> 3);
-            size += descriptor.Write(this);
-            if (descriptor.Padding != null)
-            {
-                size += WriteBytes((ulong)descriptor.Padding.Length, descriptor.Padding);
-            }
-            return size;
-        }
-
-        public ulong WriteBox(Box value)
-        {
-            ulong writtenSize = WriteBoxHeader(value);
-            writtenSize += value.Write(this);
-            if (value.Padding != null)
-            {
-                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
-            }
-            return writtenSize;
-        }
-
-        private ulong WriteBoxHeader(Box value)
-        {
-            BoxHeader header = new BoxHeader();
-            ulong boxSizeBits = value.CalculateSize();
-            ulong boxSize = boxSizeBits >> 3;
-            if (boxSize > uint.MaxValue || value.HasLargeSize)
-            {
-                header.Size = 1;
-                header.Largesize = boxSize;
-            }
-            else
-            {
-                header.Size = (uint)boxSize;
-                header.Largesize = 0;
-            }
-            header.Usertype = value.Uuid;
-            header.Type = FromFourCC(value.FourCC);
-
-            ulong writtenSize = 0;
-            writtenSize += header.Write(this);
-            return writtenSize;
-        }
-
-        internal ulong WriteClass(IMp4Serializable value)
-        {
-            ulong writtenSize = 0;
-            writtenSize += value.Write(this);
-            if (value.Padding != null)
-            {
-                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
-            }
-            return writtenSize;
-        }
-
-        internal ulong WriteEntry(IMp4Serializable value)
-        {
-            ulong writtenSize = 0;
-            writtenSize += value.Write(this);
-            if (value.Padding != null)
-            {
-                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
-            }
-            return writtenSize;
-        }
-
-        private ulong ReadDescriptorSize(out int sizeOfInstance)
-        {
-            ulong sizeBytes = 0;
-
-            uint i = 0;
-            byte tmp = ReadByte();
-            i++;
-            sizeOfInstance = tmp & 0x7f;
-            while (((uint)tmp >> 7) == 1)
-            {
-                tmp = ReadByte();
-                i++;
-                sizeOfInstance = sizeOfInstance << 7 | tmp & 0x7f;
-            }
-            sizeBytes = i;
-
-            return sizeBytes << 3;
-        }
-
-        private ulong WriteDescriptorSize(ulong sizeOfInstance, ulong sizeOfSize)
-        {
-            uint sizeBytesCount = CalculatePackedNumberLength(sizeOfInstance, sizeOfSize);
-
-            ulong i = 0;
-            byte[] buffer = new byte[sizeBytesCount];
-            if (sizeOfInstance > 0)
-            {
-                while (sizeOfInstance > 0 || i < sizeOfSize)
-                {
-                    i++;
-                    if (sizeOfInstance > 0)
-                    {
-                        buffer[sizeBytesCount - i] = (byte)(sizeOfInstance & 0x7f);
-                    }
-                    else
-                    {
-                        buffer[sizeBytesCount - i] = 0x80;
-                    }
-                    sizeOfInstance = sizeOfInstance >> 7;
-                }
-            }
-
-            foreach (byte b in buffer)
-            {
-                WriteByte(b);
-            }
-
-            return sizeBytesCount << 3;
-        }
-
-        internal ulong ReadBoxArrayTillEnd(ulong boxSize, ulong readSize, Box box)
-        {
-            if (box.Children != null)
-            {
-                Debug.WriteLine($"---Box reading {box.FourCC} repeated Children read");
-                return 0;
-            }
-
-            if (readSize == 0)
-                return 0;
-
-            box.Children = new List<Box>();
-
-            ulong consumed = 0;
-
-            if (readSize == ulong.MaxValue)
-            {
-                List<Box> values = new List<Box>();
-                // consume till the end of the stream
-                try
-                {
-                    while (true)
-                    {
-                        Box v;
-                        ulong readBoxSize = ReadBox(consumed, readSize, box, out v);
-                        consumed += readBoxSize;
-                        
-                        if (readBoxSize == 0)
-                            break;
-
-                        box.Children.Add(v);
-                    }
-                }
-                catch (EndOfStreamException)
-                { }
-
-                return consumed;
-            }
-
-            ulong remaining = readSize - boxSize;
-            while(consumed < remaining && (remaining - consumed) >= 64) // box header is at least 8 bytes
-            {
-                Box v;
-                consumed += ReadBox(consumed, readSize, box, out v);
-                if(consumed > readSize)
-                {
-                    throw new Exception("!!!!!!");
-                }
-                box.Children.Add(v);
-            }
-            return consumed;
-        }
-
-        internal ulong WriteBoxArrayTillEnd(Box box)
-        {
-            if (box.Children == null)
-                return 0;
-
-            ulong written = 0;
-            foreach (var v in box.Children)
-            {
-                written += WriteBox(v);
-            }
-            return written;
-        }
-
-        internal static ulong CalculateBoxArray(Box value)
-        {
-            return CalculateBoxSize(value.Children);
-        }
-
-        internal ulong ReadBox(ulong boxSize, ulong readSize, Box parent, out Box value)
-        {
-            var header = ReadBoxHeader();
-            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), parent.FourCC, header.Header.Usertype);
-            box.Parent = parent;
-            ReadBox(header, box);
-            value = box;
-            return header.BoxSize;
-        }
-
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, Box parent, out T value) where T: Box
-        {
-            var header = ReadBoxHeader();
-            var box = factory(header);
-            box.Parent = parent;
-            ReadBox(header, box);
-            value = (T)box;
-            return header.BoxSize;
-        }
-
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, Box parent, out T[] value)  where T: Box
-        {
-            var boxes = new List<T>();
-
-            ulong consumed = 0;
-
-            if (readSize == 0)
-            {
-                List<Box> values = new List<Box>();
-                // consume till the end of the stream
-                try
-                {
-                    while (true)
-                    {
-                        T v;
-                        consumed += ReadBox<T>(consumed, readSize, factory, parent, out v);
-                        boxes.Add(v);
-                    }
-
-                }
-                catch (EndOfStreamException)
-                { }
-
-                value = boxes.ToArray();
-
-                return consumed;
-            }
-
-            ulong remaining = readSize - boxSize;
-            while (consumed < remaining)
-            {
-                T v;
-                consumed += ReadBox<T>(consumed, readSize, factory, parent, out v);
-                boxes.Add(v);
-            }
-            value = boxes.ToArray();
-            return consumed;
-        }
-
-        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, T c, out T value) where T : IMp4Serializable
-        {
-            ulong size = c.Read(this, readSize - boxSize);
-            value = c;
-            return size;
-        }
-
-        internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out byte[] value)
+        internal ulong ReadBytes(ulong length, out byte[] value)
         {
             ulong consumed = 0;
 
-            if (readSize == ulong.MaxValue)
+            if (length == (ulong.MaxValue >> 3))
             {
                 List<byte> values = new List<byte>();
                 // consume till the end of the stream
@@ -524,45 +130,25 @@ namespace SharpMP4
                 return consumed;
             }
 
-            ulong remaining = readSize - boxSize;
-            ulong count = (ulong)(remaining >> 3);
-            value = new byte[count];
-            _stream.ReadExactly(value, 0, (int)count); 
-            return (ulong)(count << 3);
+            ulong correctedLength = Math.Min(length, (ulong)(GetStreamLength() - GetCurrentOffset()));
+            value = new byte[correctedLength];
+            _stream.ReadExactly(value, 0, (int)correctedLength);
+            if (correctedLength < length)
+                throw new IsoEndOfStreamException(value);
+            return correctedLength << 3;
         }
 
-        internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out StreamMarker value)
+        public ulong WriteBytes(ulong count, byte[] value)
         {
-            StreamMarker marker;
-            if (readSize == ulong.MaxValue)
-            {
-                marker = new StreamMarker(GetCurrentOffset(), _stream.Length - GetCurrentOffset(), this);
-                _stream.Seek(0, SeekOrigin.End);
-                value = marker;
-                return (ulong)(marker.Length << 3);
-            }
-            else
-            {
-                long remaining = (long)(readSize - boxSize);
-                long count = remaining >> 3;
-                marker = new StreamMarker(GetCurrentOffset(), count, this);
-                _stream.Seek(count, SeekOrigin.Current);
-                value = marker;
-                return (ulong)(marker.Length << 3);
-            }
+            //for (ulong i = 0; i < count; i++)
+            //{
+            //    WriteByte(value[i]);
+            //}
+            _stream.Write(value, 0, (int)count);
+            return count << 3;
         }
 
-        internal ulong WriteUInt8ArrayTillEnd(StreamMarker data)
-        {
-            IsoStream readStream = data.Stream;
-            long originalPosition = readStream._stream.Position;
-            readStream._stream.Seek(data.Position, SeekOrigin.Begin);
-            ulong size = 8 * CopyStream(readStream._stream, _stream, data.Length);
-            readStream._stream.Seek(originalPosition, SeekOrigin.Begin); // because in our test app we're reading and writing at the same time from the same thread, we have to restore the original position
-            return size;
-        }
-
-        private static ulong CopyStream(Stream input, Stream output, long bytes)
+        internal static ulong CopyStream(Stream input, Stream output, long bytes)
         {
             byte[] buffer = new byte[32768];
             int read;
@@ -577,146 +163,9 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadUInt32ArrayTillEnd(ulong boxSize, ulong readSize, out uint[] value)
-        {
-            ulong consumed = 0;
+        #endregion // Basic read/write operations
 
-            if (readSize == ulong.MaxValue)
-            {
-                List<uint> values = new List<uint>();
-                // consume till the end of the stream
-                try
-                {
-                    while(true)
-                    {
-                        uint v;
-                        consumed += ReadUInt32(out v);
-                        values.Add(v);
-                    }
-                }
-                catch (EndOfStreamException)
-                { }
-
-                value = values.ToArray();
-                return consumed;
-            }
-
-            ulong remaining = readSize - boxSize;
-            uint count = (uint)(remaining >> 5);
-            value = new uint[count];
-            for (uint i = 0; i < count; i++)
-            {
-                consumed += ReadUInt32(out value[i]);
-            }
-            return consumed;
-        }
-
-        internal ulong WriteUInt8ArrayTillEnd(byte[] value)
-        {
-            return WriteUInt8Array((uint)value.Length, value);
-        }
-
-        internal ulong WriteUInt32ArrayTillEnd(uint[] value)
-        {
-            return WriteUInt32Array((uint)value.Length, value);
-        }
-
-        internal ulong ReadBslbf(ulong count, out ushort value)
-        {
-            return ReadBits((uint)count, out value);
-        }
-
-        internal ulong WriteBslbf(ulong count, ushort value)
-        {
-            return WriteBits((uint)count, value);
-        }
-
-        internal ulong ReadBslbf(ulong count, out byte value)
-        {
-            return ReadBits((uint)count, out value);
-        }
-
-        internal ulong WriteBslbf(ulong count, byte value)
-        {
-            return WriteBits((uint)count, value);
-        }
-
-        internal ulong ReadUimsbf(ulong count, out byte value)
-        {
-            return ReadBits((uint)count, out value);
-        }
-
-        internal ulong WriteUimsbf(ulong count, byte value)
-        {
-            return WriteBits((uint)count, value);
-        }
-
-        internal ulong ReadUimsbf(ulong count, out ushort value)
-        {
-            return ReadBits((uint)count, out value);
-        }
-
-        internal ulong WriteUimsbf(ulong count, ushort value)
-        {
-            return WriteBits((uint)count, value);
-        }
-
-        internal ulong ReadUimsbf(ulong count, out uint value)
-        {
-            return ReadBits((uint)count, out value);
-        }
-
-        internal ulong WriteUimsbf(ulong count, uint value)
-        {
-            return WriteBits((uint)count, value);
-        }
-
-        internal ulong ReadBits(uint count, out byte[] value)
-        {
-            value = new byte[(count >> 3) + (count % 8)];
-            int i = 0;
-            int c = (int)count;
-            while (i < value.Length && c > 0)
-            {
-                byte v = 0;
-                c -= (int)ReadBits((uint)Math.Min(c, 8), out v);
-                value[i] = v;
-                i++;
-            }
-            return count;
-        }
-
-        internal ulong WriteBits(uint count, byte[] value)
-        {
-            int c = (int)count;
-            int i = 0;
-            while (i < value.Length && c > 0)
-            {
-                c -= (int)WriteBits((uint)Math.Min(c, 8), value[i]);
-                i++;
-            }
-            return count;
-        }
-
-        internal ulong ReadUimsbf(out bool value)
-        {
-            return ReadBit(out value);
-        }
-
-        internal ulong WriteUimsbf(bool value)
-        {
-            return WriteBit(value);
-        }
-
-        internal ulong ReadBslbf(out bool value)
-        {
-            return ReadBit(out value);
-        }
-
-        internal ulong WriteBslbf(bool value)
-        {
-            return WriteBit(value);
-        }
+        #region Bits
 
         internal ulong ReadBit(out bool value)
         {
@@ -832,72 +281,67 @@ namespace SharpMP4
             return originalCount;
         }
 
-        internal ulong ReadBytes(ulong length, out byte[] value)
+        internal ulong ReadBits(uint count, out byte[] value)
         {
-            ulong consumed = 0;
-
-            if (length == (ulong.MaxValue >> 3))
+            value = new byte[(count >> 3) + (count % 8)];
+            int i = 0;
+            int c = (int)count;
+            while (i < value.Length && c > 0)
             {
-                List<byte> values = new List<byte>();
-                // consume till the end of the stream
-                try
-                {
-                    while (true)
-                    {
-                        byte v;
-                        consumed += ReadUInt8(out v);
-                        values.Add(v);
-                    }
-                }
-                catch (EndOfStreamException)
-                { }
-
-                value = values.ToArray();
-                return consumed;
+                byte v = 0;
+                c -= (int)ReadBits((uint)Math.Min(c, 8), out v);
+                value[i] = v;
+                i++;
             }
-
-            ulong correctedLength = Math.Min(length, (ulong)(_stream.Length - _stream.Position));
-            value = new byte[correctedLength];
-            _stream.ReadExactly(value, 0, (int)correctedLength);
-            if (correctedLength < length)
-                throw new IsoEndOfStreamException(value);
-            return correctedLength << 3;
+            return count;
         }
 
-        internal static uint FromFourCC(string input)
+        internal ulong WriteBits(uint count, byte[] value)
         {
-            if(string.IsNullOrEmpty(input))
+            int c = (int)count;
+            int i = 0;
+            while (i < value.Length && c > 0)
+            {
+                c -= (int)WriteBits((uint)Math.Min(c, 8), value[i]);
+                i++;
+            }
+            return count;
+        }
+
+        internal ulong ReadAlignedBits(uint count, out bool value)
+        {
+            return ReadBit(out value);
+        }
+
+        internal ulong WriteAlignedBits(uint count, bool value)
+        {
+            return WriteBit(value);
+        }
+
+        internal ulong ReadAlignedBits(uint count, out byte value)
+        {
+            return ReadBits(count, out value);
+        }
+
+        internal ulong WriteAlignedBits(uint count, byte value)
+        {
+            return WriteBits(count, value);
+        }
+
+        #endregion // Bits
+
+        #region Strings
+
+        internal ulong WriteStringZeroTerminated(byte[] value)
+        {
+            if (value == null || value.Length == 0)
                 return 0;
-            byte[] buffer = Encoding.GetEncoding("ISO-8859-1").GetBytes(input);
-            if (buffer.Length != 4)
-                throw new Exception("Invalid 4cc!");
-            return (uint)(
-                ((uint)buffer[0] << 24) +
-                ((uint)buffer[1] << 16) +
-                ((uint)buffer[2] << 8) +
-                ((uint)buffer[3] << 0)
-            );
-        }
 
-        internal static string ToFourCC(uint value)
-        {
-            byte[] buffer = {
-                (byte)(value >> 24 & 0xFF),
-                (byte)(value >> 16 & 0xFF),
-                (byte)(value >> 8 & 0xFF),
-                (byte)(value & 0xFF)
-            };
-            return Encoding.GetEncoding("ISO-8859-1").GetString(buffer);
-        }
-
-        internal ulong ReadBslbf(ulong count, out byte[] value)
-        {
-            return ReadBytes(count / 8, out value);
-        }
-
-        internal ulong WriteBslbf(ulong count, byte[] value)
-        {
-            return WriteBytes(count / 8, value);
+            for (int i = 0; i < value.Length; i++)
+            {
+                WriteByte(value[i]);
+            }
+            return (ulong)value.Length << 3;
         }
 
         internal ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out byte[] value)
@@ -946,456 +390,239 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadInt16(out short value)
+        internal static ulong CalculateStringSize(byte[] value)
         {
-            ulong count = ReadUInt16(out ushort v);
-            value = unchecked((short)v);
-            return count;
+            ulong count = (ulong)value.Length;
+            return count << 3;
         }
 
-        internal ulong ReadInt32(out int value)
-        {
-            ulong count = ReadUInt32(out uint v);
-            value = unchecked((int)v);
-            return count;
-        }
-
-        internal ulong ReadInt32(out long value)
-        {
-            ulong count = unchecked(ReadUInt32(out uint v));
-            value = unchecked((int)v);
-            return count;
-        }
-
-        internal ulong ReadInt64(out long value)
-        {
-            ulong count = unchecked(ReadUInt64(out ulong v));
-            value = unchecked((long)v);
-            return count;
-        }
-
-        internal ulong ReadInt8(out sbyte value)
-        {
-            ulong count = unchecked(ReadUInt8(out byte v));
-            value = unchecked((sbyte)v);
-            return count;
-        }
-
-        internal ulong ReadUInt8(out byte value)
-        {
-            value = ReadByte();
-            return 8;
-        }
-
-        internal ulong ReadUInt8(out ushort value)
-        {
-            value = ReadByte();
-            return 8;
-        }
-
-        internal ulong ReadUInt16(out ushort value)
-        {
-            value = (ushort)(
-                ((ushort)ReadByte() << 8) +
-                ((ushort)ReadByte() << 0)
-            );
-            return 16;
-        }
-
-        internal ulong ReadUInt16(out uint value)
-        {
-            value = (uint)(
-                ((uint)ReadByte() << 8) +
-                ((uint)ReadByte() << 0)
-            );
-            return 16;
-        }
-
-        internal ulong ReadUInt24(out uint value)
-        {
-            value = (uint)(
-                ((uint)ReadByte() << 16) +
-                ((uint)ReadByte() << 8) +
-                ((uint)ReadByte() << 0)
-            );
-            return 24;
-        }
-
-        internal ulong ReadUInt32(out uint value)
-        {
-            value = (uint)(
-                ((uint)ReadByte() << 24) +
-                ((uint)ReadByte() << 16) +
-                ((uint)ReadByte() << 8) +
-                ((uint)ReadByte() << 0)
-            );
-            return 32;
-        }
-
-        internal ulong ReadUInt32(out ulong value)
-        {
-            value = (uint)(
-                ((uint)ReadByte() << 24) +
-                ((uint)ReadByte() << 16) +
-                ((uint)ReadByte() << 8) +
-                ((uint)ReadByte() << 0)
-            );
-            return 32;
-        }
-
-        internal ulong ReadUInt48(out ulong value)
-        {
-            value = (ulong)(
-                ((ulong)ReadByte() << 40) +
-                ((ulong)ReadByte() << 32) +
-                ((ulong)ReadByte() << 24) +
-                ((ulong)ReadByte() << 16) +
-                ((ulong)ReadByte() << 8) +
-                ((ulong)ReadByte() << 0)
-            );
-            return 48;
-        }
-
-        internal ulong ReadUInt64(out ulong value)
-        {
-            value = (ulong)(
-                ((ulong)ReadByte() << 56) +
-                ((ulong)ReadByte() << 48) +
-                ((ulong)ReadByte() << 40) +
-                ((ulong)ReadByte() << 32) +
-                ((ulong)ReadByte() << 24) +
-                ((ulong)ReadByte() << 16) +
-                ((ulong)ReadByte() << 8) +
-                ((ulong)ReadByte() << 0)
-            );
-            return 64;
-        }
-
-        internal ulong ReadUInt16Array(uint count, out ushort[] value)
+        internal static ulong CalculateStringSize(byte[][] value)
         {
             ulong size = 0;
-            value = new ushort[count];
-            for (uint i = 0; i < count; i++)
+            foreach (var str in value)
             {
-                size += ReadUInt16(out value[i]);
+                size += CalculateStringSize(str);
             }
             return size;
         }
 
-        internal ulong ReadUInt16Array(uint count, out uint[] value)
+        #endregion // Strings
+
+        #region FourCC
+
+        internal static uint FromFourCC(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return 0;
+            byte[] buffer = Encoding.GetEncoding("ISO-8859-1").GetBytes(input);
+            if (buffer.Length != 4)
+                throw new Exception("Invalid 4cc!");
+            return (uint)(
+                ((uint)buffer[0] << 24) +
+                ((uint)buffer[1] << 16) +
+                ((uint)buffer[2] << 8) +
+                ((uint)buffer[3] << 0)
+            );
+        }
+
+        internal static string ToFourCC(uint value)
+        {
+            byte[] buffer = {
+                (byte)(value >> 24 & 0xFF),
+                (byte)(value >> 16 & 0xFF),
+                (byte)(value >> 8 & 0xFF),
+                (byte)(value & 0xFF)
+            };
+            return Encoding.GetEncoding("ISO-8859-1").GetString(buffer);
+        }
+
+        #endregion // FourCC
+
+        #region Boxes
+
+        internal ulong ReadBox(ulong boxSize, ulong readSize, Box parent, out Box value)
+        {
+            var header = ReadBoxHeader();
+            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), parent.FourCC, header.Header.Usertype);
+            box.Parent = parent;
+            ReadBox(header, box);
+            value = box;
+            return header.BoxSize;
+        }
+
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, Box parent, out T value) where T : Box
+        {
+            var header = ReadBoxHeader();
+            var box = factory(header);
+            box.Parent = parent;
+            ReadBox(header, box);
+            value = (T)box;
+            return header.BoxSize;
+        }
+
+        public ulong WriteBox(Box value)
+        {
+            ulong writtenSize = WriteBoxHeader(value);
+            writtenSize += value.Write(this);
+            if (value.Padding != null)
+            {
+                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
+            }
+            return writtenSize;
+        }
+
+        internal ulong ReadBox(ulong boxSize, ulong readSize, IMp4Serializable serializable, out Box[] value)
+        {
+            ulong consumed = 0;
+            List<Box> values = new List<Box>();
+
+            if (readSize == 0)
+            {
+                // consume till the end of the stream
+                try
+                {
+                    while (true)
+                    {
+                        Box v;
+                        consumed += ReadBox(consumed, readSize, (Box)null, out v);
+                        values.Add(v);
+                    }
+                }
+                catch (EndOfStreamException)
+                { }
+
+                value = values.ToArray();
+                return consumed;
+            }
+
+            ulong remaining = readSize - boxSize;
+            while (consumed < remaining && (remaining - consumed) >= 64) // box header is at least 8 bytes
+            {
+                Box v;
+                consumed += ReadBox(consumed, readSize, (Box)null, out v);
+                if (consumed > readSize)
+                {
+                    throw new Exception("!!!!!!");
+                }
+                values.Add(v);
+            }
+            value = values.ToArray();
+            return consumed;
+        }
+
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, Box parent, out T[] value) where T : Box
+        {
+            var boxes = new List<T>();
+
+            ulong consumed = 0;
+
+            if (readSize == 0)
+            {
+                List<Box> values = new List<Box>();
+                // consume till the end of the stream
+                try
+                {
+                    while (true)
+                    {
+                        T v;
+                        consumed += ReadBox<T>(consumed, readSize, factory, parent, out v);
+                        boxes.Add(v);
+                    }
+
+                }
+                catch (EndOfStreamException)
+                { }
+
+                value = boxes.ToArray();
+
+                return consumed;
+            }
+
+            ulong remaining = readSize - boxSize;
+            while (consumed < remaining)
+            {
+                T v;
+                consumed += ReadBox<T>(consumed, readSize, factory, parent, out v);
+                boxes.Add(v);
+            }
+            value = boxes.ToArray();
+            return consumed;
+        }
+
+        internal ulong WriteBox(Box[] value)
         {
             ulong size = 0;
-            value = new uint[count];
-            for (uint i = 0; i < count; i++)
+            foreach (var box in value)
             {
-                size += ReadUInt16(out value[i]);
+                size += WriteBox(box);
             }
             return size;
         }
 
-        internal ulong ReadUInt32Array(uint count, out uint[] value)
+        internal ulong ReadBoxArrayTillEnd(ulong boxSize, ulong readSize, Box box)
         {
-            ulong size = 0;
-            value = new uint[count];
-            for (uint i = 0; i < count; i++)
+            if (box.Children != null)
             {
-                size += ReadUInt32(out value[i]);
+                Debug.WriteLine($"---Box reading {box.FourCC} repeated Children read");
+                return 0;
             }
-            return size;
-        }
 
-        internal ulong ReadUInt32Array(uint count, out ulong[] value)
-        {
-            ulong size = 0;
-            value = new ulong[count];
-            for (uint i = 0; i < count; i++)
-            {
-                size += ReadUInt32(out value[i]);
-            }
-            return size;
-        }
-
-        internal ulong ReadUInt64Array(uint count, out ulong[] value)
-        {
-            ulong size = 0;
-            value = new ulong[count];
-            for (uint i = 0; i < count; i++)
-            {
-                size += ReadUInt64(out value[i]);
-            }
-            return size;
-        }
-
-        internal ulong ReadUInt8Array(uint count, out byte[] value)
-        {
-            ulong size = 0;
-            value = new byte[count];
-            for (uint i = 0; i < count; i++)
-            {
-                size += ReadUInt8(out value[i]);
-            }
-            return size;
-        }
-
-        internal ulong WriteStringZeroTerminated(byte[] value)
-        {
-            if (value == null || value.Length == 0)
+            if (readSize == 0)
                 return 0;
 
-            for (int i = 0; i < value.Length; i++)
+            box.Children = new List<Box>();
+
+            ulong consumed = 0;
+
+            if (readSize == ulong.MaxValue)
             {
-                WriteByte(value[i]);
+                List<Box> values = new List<Box>();
+                // consume till the end of the stream
+                try
+                {
+                    while (true)
+                    {
+                        Box v;
+                        ulong readBoxSize = ReadBox(consumed, readSize, box, out v);
+                        consumed += readBoxSize;
+
+                        if (readBoxSize == 0)
+                            break;
+
+                        box.Children.Add(v);
+                    }
+                }
+                catch (EndOfStreamException)
+                { }
+
+                return consumed;
             }
-            return (ulong)value.Length << 3;
-        }
 
-        internal ulong WriteInt16(short value)
-        {
-            return WriteUInt16(unchecked((ushort)value));
-        }
-
-        internal ulong WriteInt32(int value)
-        {
-            return WriteUInt32(unchecked((uint)value));
-        }
-
-        internal ulong WriteInt32(long value)
-        {
-            return WriteUInt32(unchecked((uint)value));
-        }
-
-        internal ulong WriteInt64(long value)
-        {
-            return WriteUInt64(unchecked((ulong)value));
-        }
-
-        internal ulong WriteInt8(sbyte value)
-        {
-            return WriteUInt8(unchecked((byte)value));
-        }
-
-        internal ulong WriteUInt8(byte value)
-        {
-            WriteByte(value);
-            return 8;
-        }
-
-        internal ulong WriteUInt8(ushort value)
-        {
-            return WriteByte((byte)value);
-        }
-
-        internal ulong WriteUInt16(ushort value)
-        {
-            WriteByte((byte)(value >> 8 & 0xFF));
-            WriteByte((byte)(value & 0xFF));
-            return 16;
-        }
-
-        internal ulong WriteUInt16(uint value)
-        {
-            WriteByte((byte)(value >> 8 & 0xFF));
-            WriteByte((byte)(value & 0xFF));
-            return 16; 
-        }
-
-        internal ulong WriteUInt24(uint value)
-        {
-            value = value & 0xFFFFFF;
-            WriteByte((byte)(value >> 16 & 0xFF));
-            WriteByte((byte)(value >> 8 & 0xFF));
-            WriteByte((byte)(value & 0xFF));
-            return 24;
-        }
-
-        internal ulong WriteUInt32(uint value)
-        {
-            WriteByte((byte)(value >> 24 & 0xFF));
-            WriteByte((byte)(value >> 16 & 0xFF));
-            WriteByte((byte)(value >> 8 & 0xFF));
-            WriteByte((byte)(value & 0xFF));
-            return 32;
-        }
-
-        internal ulong WriteUInt32(ulong value)
-        {
-            WriteByte((byte)(value >> 24 & 0xFF));
-            WriteByte((byte)(value >> 16 & 0xFF));
-            WriteByte((byte)(value >> 8 & 0xFF));
-            WriteByte((byte)(value & 0xFF));
-            return 32;
-        }
-
-        internal ulong WriteUInt48(ulong value)
-        {
-            WriteByte((byte)(value >> 40 & 0xFF));
-            WriteByte((byte)(value >> 32 & 0xFF));
-            WriteByte((byte)(value >> 24 & 0xFF));
-            WriteByte((byte)(value >> 16 & 0xFF));
-            WriteByte((byte)(value >> 8 & 0xFF));
-            WriteByte((byte)(value & 0xFF));
-            return 48;
-        }
-
-        internal ulong WriteUInt64(ulong value)
-        {
-            WriteByte((byte)(value >> 56 & 0xFF));
-            WriteByte((byte)(value >> 48 & 0xFF));
-            WriteByte((byte)(value >> 40 & 0xFF));
-            WriteByte((byte)(value >> 32 & 0xFF));
-            WriteByte((byte)(value >> 24 & 0xFF));
-            WriteByte((byte)(value >> 16 & 0xFF));
-            WriteByte((byte)(value >> 8 & 0xFF));
-            WriteByte((byte)(value & 0xFF));
-            return 64;
-        }
-
-        internal ulong WriteUInt16Array(uint count, ushort[] value)
-        {
-            ulong size = 0;
-            for (uint i = 0; i < count; i++)
+            ulong remaining = readSize - boxSize;
+            while (consumed < remaining && (remaining - consumed) >= 64) // box header is at least 8 bytes
             {
-                size += WriteUInt16(value[i]);
+                Box v;
+                consumed += ReadBox(consumed, readSize, box, out v);
+                if (consumed > readSize)
+                {
+                    throw new Exception("!!!!!!");
+                }
+                box.Children.Add(v);
             }
-            return size;
+            return consumed;
         }
 
-        internal ulong WriteUInt16Array(uint count, uint[] value)
+        internal ulong WriteBoxArrayTillEnd(Box box)
         {
-            ulong size = 0;
-            for (uint i = 0; i < count; i++)
-            {
-                size += WriteUInt16(value[i]);
-            }
-            return size;
-        }
-
-        internal ulong WriteUInt8Array(uint count, byte[] value)
-        {
-            ulong size = 0;
-            for (uint i = 0; i < count; i++)
-            {
-                size += WriteUInt8(value[i]);
-            }
-            return size;
-        }
-
-        internal ulong WriteUInt32Array(uint count, uint[] value)
-        {
-            ulong size = 0;
-            for (uint i = 0; i < count; i++)
-            {
-                size += WriteUInt32(value[i]);
-            }
-            return size;
-        }
-
-        internal ulong WriteUInt32Array(uint count, ulong[] value)
-        {
-            ulong size = 0;
-            for (uint i = 0; i < count; i++)
-            {
-                size += WriteUInt32(value[i]);
-            }
-            return size;
-        }
-
-        internal ulong WriteUInt64Array(uint count, ulong[] value)
-        {
-            ulong size = 0;
-            for (uint i = 0; i < count; i++)
-            {
-                size += WriteUInt64(value[i]);
-            }
-            return size;
-        }
-
-        internal static ulong CalculateBoxSize(IEnumerable<Box> boxes)
-        {
-            ulong size = 0;
-            if (boxes == null)
+            if (box.Children == null)
                 return 0;
 
-            foreach (Box box in boxes)
+            ulong written = 0;
+            foreach (var v in box.Children)
             {
-                size += CalculateBoxSize(box);
+                written += WriteBox(v);
             }
-            return size;
-        }
-
-        internal static ulong CalculateClassSize(IMp4Serializable value)
-        {
-            return value.CalculateSize();
-        }
-
-        internal static ulong CalculateBoxSize(Box value)
-        {
-            return value.CalculateSize();
-        }
-
-        internal static ulong CalculateClassSize(IMp4Serializable[] value)
-        {
-            ulong size = 0;
-            foreach (IMp4Serializable c in value)
-            {
-                size += c.CalculateSize();
-            }
-            return size;
-        }
-
-        internal ulong WriteIso639(string value)
-        {
-            if (Encoding.UTF8.GetBytes(value).Length != 3)
-            {
-                throw new ArgumentException($"\"{value}\" value string must be 3 characters long!");
-            }
-
-            int bits = 0;
-            byte[] bytes = Encoding.UTF8.GetBytes(value);
-            for (int i = 0; i < 3; i++)
-            {
-                bits += bytes[i] - 0x60 << (2 - i) * 5;
-            }
-            return WriteBits(15, (ushort)bits);
-        }
-
-        internal ulong ReadIso639(out string value)
-        {
-            ushort bits;
-            ulong read = ReadBits(15, out bits);
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < 3; i++)
-            {
-                int c = bits >> (2 - i) * 5 & 0x1f;
-                result.Append((char)(c + 0x60));
-            }
-            value = result.ToString();
-            return read;
-        }
-
-        internal ulong ReadAlignedBits(uint count, out bool value)
-        {
-            return ReadBit(out value);
-        }
-
-        internal ulong WriteAlignedBits(uint count, bool value)
-        {
-            return WriteBit(value);
-        }
-
-        internal ulong ReadAlignedBits(uint count, out byte value)
-        {
-            return ReadBits(count, out value);
-        }
-
-        internal ulong WriteAlignedBits(uint count, byte value)
-        {
-            return WriteBits(count, value);
-        }
-
-        internal long GetCurrentOffset()
-        {
-            return _stream.Position;
+            return written;
         }
 
         public Box ReadBox()
@@ -1413,19 +640,42 @@ namespace SharpMP4
             ulong headerSize = 0;
 
             // sometimes there can be a few bytes at the end of the mp4 file that are less than the header size
-            ulong remaining = (ulong)(_stream.Length - headerOffset);
+            ulong remaining = (ulong)(GetStreamLength() - headerOffset);
             if (remaining == 0)
                 throw new EndOfStreamException();
 
-            if(remaining < 8)
+            if (remaining < 8)
             {
-                byte[] remainingBytes = new byte[remaining];
-                _stream.ReadExactly(remainingBytes, 0, remainingBytes.Length);
+                byte[] remainingBytes;
+                ReadBytes(remaining, out remainingBytes);
                 throw new IsoEndOfStreamException(remainingBytes);
             }
 
             headerSize = header.Read(this, 0);
             return new Mp4BoxHeader(header, headerOffset, headerSize);
+        }
+
+        private ulong WriteBoxHeader(Box value)
+        {
+            BoxHeader header = new BoxHeader();
+            ulong boxSizeBits = value.CalculateSize();
+            ulong boxSize = boxSizeBits >> 3;
+            if (boxSize > uint.MaxValue || value.HasLargeSize)
+            {
+                header.Size = 1;
+                header.Largesize = boxSize;
+            }
+            else
+            {
+                header.Size = (uint)boxSize;
+                header.Largesize = 0;
+            }
+            header.Usertype = value.Uuid;
+            header.Type = FromFourCC(value.FourCC);
+
+            ulong writtenSize = 0;
+            writtenSize += header.Write(this);
+            return writtenSize;
         }
 
         public Box ReadBoxContent(Mp4BoxHeader header)
@@ -1441,13 +691,13 @@ namespace SharpMP4
 
         private void ReadBox(Mp4BoxHeader header, Box box)
         {
-            Debug.WriteLine($"--Parsed box: {box.FourCC}");
+            Debug.WriteLine($"Parsed box: {box.FourCC}");
             ulong availableSize = 0;
-            if (header.BoxSize == 0) 
+            if (header.BoxSize == 0)
             {
                 availableSize = ulong.MaxValue;
             }
-            else 
+            else
             {
                 availableSize = header.BoxSize - header.HeaderSize;
             }
@@ -1458,7 +708,7 @@ namespace SharpMP4
 
             if (header.BoxSize != 0 && size != availableSize)
             {
-                if(size < availableSize)
+                if (size < availableSize)
                 {
                     // TODO: Investigate and fix
                     size += ReadBits((uint)(availableSize - size), out byte[] missing);
@@ -1466,7 +716,7 @@ namespace SharpMP4
 
                     if (missing.FirstOrDefault(x => x != 0) == default(byte))
                     {
-                        Debug.WriteLine($"-Box \'{box.FourCC}\' has extra padding of {missing.Length} zero bytes");
+                        Debug.WriteLine($"Box \'{box.FourCC}\' has extra padding of {missing.Length} zero bytes");
                     }
                     else
                     {
@@ -1478,7 +728,7 @@ namespace SharpMP4
                 }
                 else
                 {
-                    Debug.WriteLine($"--!! Box \'{box.FourCC}\' read through!");
+                    Debug.WriteLine($"Box \'{box.FourCC}\' read through!");
                     throw new Exception("Box read through!");
                 }
             }
@@ -1486,15 +736,119 @@ namespace SharpMP4
             ulong calculatedSize = box.CalculateSize();
             if (calculatedSize != header.BoxSize)
             {
-                if(box.FourCC != "mdat")
-                    Debug.WriteLine($"---------Calculated \'{box.FourCC}\' size: {calculatedSize / 8}, read: {header.BoxSize / 8}");
+                if (box.FourCC != "mdat")
+                    Debug.WriteLine($"Calculated \'{box.FourCC}\' size: {calculatedSize / 8}, read: {header.BoxSize / 8}");
             }
+        }
+
+        internal static ulong CalculateBoxSize(IEnumerable<Box> boxes)
+        {
+            ulong size = 0;
+            if (boxes == null)
+                return 0;
+
+            foreach (Box box in boxes)
+            {
+                size += CalculateBoxSize(box);
+            }
+            return size;
+        }
+
+        internal static ulong CalculateBoxSize(Box value)
+        {
+            return value.CalculateSize();
+        }
+
+        internal static ulong CalculateBoxArray(Box value)
+        {
+            return CalculateBoxSize(value.Children);
+        }
+
+        #endregion // Boxes
+
+        #region Classes
+
+        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, T c, out T value) where T : IMp4Serializable
+        {
+            ulong size = c.Read(this, readSize - boxSize);
+            value = c;
+            return size;
+        }
+
+        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, out T[] value) where T : IMp4Serializable, new()
+        {
+            ulong consumed = 0;
+            ulong remaining = readSize - boxSize;
+            List<T> ret = new List<T>();
+            while (consumed < remaining)
+            {
+                T c;
+                consumed += ReadClass<T>(boxSize + consumed, remaining, new T(), out c);
+                if (consumed > readSize)
+                {
+                    throw new Exception("!!!!!!");
+                }
+                ret.Add(c);
+            }
+            value = ret.ToArray();
+            return consumed;
+        }
+
+        internal ulong WriteClass(IMp4Serializable value)
+        {
+            ulong writtenSize = 0;
+            writtenSize += value.Write(this);
+            if (value.Padding != null)
+            {
+                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
+            }
+            return writtenSize;
+        }
+
+        internal ulong WriteClass(IMp4Serializable[] value)
+        {
+            ulong size = 0;
+            foreach (var cls in value)
+            {
+                size += WriteClass(cls);
+            }
+            return size;
+        }
+
+        internal static ulong CalculateClassSize(IMp4Serializable value)
+        {
+            return value.CalculateSize();
+        }
+
+        internal static ulong CalculateClassSize(IMp4Serializable[] value)
+        {
+            ulong size = 0;
+            foreach (IMp4Serializable c in value)
+            {
+                size += c.CalculateSize();
+            }
+            return size;
+        }
+
+        #endregion // Classes
+
+        #region Entries
+
+        internal ulong WriteEntry(IMp4Serializable value)
+        {
+            ulong writtenSize = 0;
+            writtenSize += value.Write(this);
+            if (value.Padding != null)
+            {
+                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
+            }
+            return writtenSize;
         }
 
         internal ulong ReadEntry(ulong boxSize, ulong readSize, string fourCC, out SampleGroupDescriptionEntry entry)
         {
             var res = BoxFactory.CreateEntry(fourCC);
-            Debug.WriteLine($"--Parsed entry: {fourCC}");
+            Debug.WriteLine($"Parsed entry: {fourCC}");
             ulong size = res.Read(this, readSize);
             entry = (SampleGroupDescriptionEntry)res;
             return size;
@@ -1531,6 +885,10 @@ namespace SharpMP4
             return size;
         }
 
+        #endregion // Entries
+
+        #region Descriptors
+
         internal ulong ReadDescriptor(out ES_Descriptor descriptor)
         {
             Descriptor d;
@@ -1543,7 +901,7 @@ namespace SharpMP4
         {
             byte tag;
             ulong size = ReadUInt8(out tag);
-            if(tag == 0)
+            if (tag == 0)
             {
                 descriptor = null;
                 return (ulong)8;
@@ -1564,7 +922,7 @@ namespace SharpMP4
                     descriptor.Padding = missing;
 
                     if (missing.FirstOrDefault(x => x != 0) == default(byte))
-                        Debug.WriteLine($"-Descriptor \'{tag}\' has extra padding of {missing.Length} zero bytes");
+                        Debug.WriteLine($"Descriptor \'{tag}\' has extra padding of {missing.Length} zero bytes");
                     else
                         Debug.WriteLine($"Descriptor {tag} not fully read!");
                 }
@@ -1578,7 +936,7 @@ namespace SharpMP4
             ulong calculatedSize = descriptor.CalculateSize();
             if (calculatedSize != sizeOfInstanceBits)
             {
-                Debug.WriteLine($"---------Calculated descriptor \'{tag}\' size: {calculatedSize / 8}, read: {sizeOfInstanceBits / 8}");
+                Debug.WriteLine($"Calculated descriptor \'{tag}\' size: {calculatedSize / 8}, read: {sizeOfInstanceBits / 8}");
             }
 
             return size;
@@ -1588,7 +946,7 @@ namespace SharpMP4
         {
             if (descriptor.Children != null)
             {
-                Debug.WriteLine($"---Descriptor reading repeated Children read");
+                Debug.WriteLine($"Descriptor reading repeated Children read");
                 return 0;
             }
 
@@ -1650,7 +1008,86 @@ namespace SharpMP4
             return 8 * (1 + descriptorSizeLength) + descriptorContentSize + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0);
         }
 
-        public static uint CalculatePackedNumberLength(ulong sizeInBytes, ulong sizeOfSize)
+        internal ulong WriteDescriptorsTillEnd(Descriptor descriptor, int objectTypeIndication = -1)
+        {
+            ulong size = 0;
+            foreach (var d in descriptor.Children)
+            {
+                size += WriteDescriptor(d);
+            }
+            return size;
+        }
+
+        internal ulong WriteDescriptor(Descriptor descriptor)
+        {
+            ulong size = 0;
+            if (descriptor == null || descriptor.Tag == 0)
+            {
+                return size;
+            }
+            size += WriteUInt8(descriptor.Tag);
+
+            ulong sizeOfInstance = descriptor.CalculateSize() + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0);
+            size += WriteDescriptorSize(sizeOfInstance >> 3, descriptor.SizeOfSize >> 3);
+            size += descriptor.Write(this);
+            if (descriptor.Padding != null)
+            {
+                size += WriteBytes((ulong)descriptor.Padding.Length, descriptor.Padding);
+            }
+            return size;
+        }
+
+        private ulong ReadDescriptorSize(out int sizeOfInstance)
+        {
+            ulong sizeBytes = 0;
+
+            uint i = 0;
+            byte tmp = ReadByte();
+            i++;
+            sizeOfInstance = tmp & 0x7f;
+            while (((uint)tmp >> 7) == 1)
+            {
+                tmp = ReadByte();
+                i++;
+                sizeOfInstance = sizeOfInstance << 7 | tmp & 0x7f;
+            }
+            sizeBytes = i;
+
+            return sizeBytes << 3;
+        }
+
+        private ulong WriteDescriptorSize(ulong sizeOfInstance, ulong sizeOfSize)
+        {
+            uint sizeBytesCount = CalculatePackedNumberLength(sizeOfInstance, sizeOfSize);
+
+            ulong i = 0;
+            byte[] buffer = new byte[sizeBytesCount];
+            if (sizeOfInstance > 0)
+            {
+                while (sizeOfInstance > 0 || i < sizeOfSize)
+                {
+                    i++;
+                    if (sizeOfInstance > 0)
+                    {
+                        buffer[sizeBytesCount - i] = (byte)(sizeOfInstance & 0x7f);
+                    }
+                    else
+                    {
+                        buffer[sizeBytesCount - i] = 0x80;
+                    }
+                    sizeOfInstance = sizeOfInstance >> 7;
+                }
+            }
+
+            foreach (byte b in buffer)
+            {
+                WriteByte(b);
+            }
+
+            return sizeBytesCount << 3;
+        }
+
+        private static uint CalculatePackedNumberLength(ulong sizeInBytes, ulong sizeOfSize)
         {
             int size = (int)sizeInBytes;
             int i = 0;
@@ -1662,31 +1099,597 @@ namespace SharpMP4
             return (uint)i;
         }
 
-        internal void UnreadBytes(int count, byte[] lookahead)
+        #endregion // Descriptors
+
+        #region Long number arrays
+
+        internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out StreamMarker value)
         {
-            _stream.Seek(-20, SeekOrigin.Current);
+            StreamMarker marker;
+            if (readSize == ulong.MaxValue)
+            {
+                marker = new StreamMarker(GetCurrentOffset(), GetStreamLength() - GetCurrentOffset(), this);
+                SeekFromEnd(0);
+                value = marker;
+                return (ulong)(marker.Length << 3);
+            }
+            else
+            {
+                long remaining = (long)(readSize - boxSize);
+                long count = remaining >> 3;
+                marker = new StreamMarker(GetCurrentOffset(), count, this);
+                SeekFromCurrent(count);
+                value = marker;
+                return (ulong)(marker.Length << 3);
+            }
         }
 
-        public ulong WritePadding(byte[] padding)
+        internal ulong WriteUInt8ArrayTillEnd(StreamMarker data)
         {
-            return WriteBytes((uint)padding.Length, padding);
+            IsoStream readStream = data.Stream;
+            long originalPosition = readStream.GetCurrentOffset();
+            readStream.SeekFromBegining(data.Position);
+            ulong size = CopyStream(readStream._stream, _stream, data.Length) << 3;
+            readStream.SeekFromBegining(originalPosition); // because in our test app we're reading and writing at the same time from the same thread, we have to restore the original position
+            return size;
         }
 
-        internal static ulong CalculateStringSize(byte[] value)
+        #endregion // Long number arrays
+
+        #region Number arrays
+
+        internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out byte[] value)
         {
-            ulong count = (ulong)value.Length;
+            ulong consumed = 0;
+
+            if (readSize == ulong.MaxValue)
+            {
+                List<byte> values = new List<byte>();
+                // consume till the end of the stream
+                try
+                {
+                    while (true)
+                    {
+                        byte v;
+                        consumed += ReadUInt8(out v);
+                        values.Add(v);
+                    }
+                }
+                catch (EndOfStreamException)
+                { }
+
+                value = values.ToArray();
+                return consumed;
+            }
+
+            ulong remaining = readSize - boxSize;
+            ulong count = (ulong)(remaining >> 3);
+            value = new byte[count];
+            _stream.ReadExactly(value, 0, (int)count); 
             return count << 3;
         }
 
-        internal static ulong CalculateStringSize(byte[][] value)
+        internal ulong WriteUInt8ArrayTillEnd(byte[] value)
+        {
+            return WriteUInt8Array((uint)value.Length, value);
+        }
+
+        internal ulong ReadUInt32ArrayTillEnd(ulong boxSize, ulong readSize, out uint[] value)
+        {
+            ulong consumed = 0;
+
+            if (readSize == ulong.MaxValue)
+            {
+                List<uint> values = new List<uint>();
+
+                try
+                {
+                    while (true)
+                    {
+                        uint v;
+                        consumed += ReadUInt32(out v);
+                        values.Add(v);
+                    }
+                }
+                catch (EndOfStreamException)
+                { }
+
+                value = values.ToArray();
+                return consumed;
+            }
+
+            ulong remaining = readSize - boxSize;
+            uint count = (uint)(remaining >> 5);
+            value = new uint[count];
+            for (uint i = 0; i < count; i++)
+            {
+                consumed += ReadUInt32(out value[i]);
+            }
+            return consumed;
+        }
+
+        internal ulong WriteUInt32ArrayTillEnd(uint[] value)
+        {
+            return WriteUInt32Array((uint)value.Length, value);
+        }
+
+        internal ulong ReadUInt8Array(uint count, out byte[] value)
         {
             ulong size = 0;
-            foreach(var str in value)
+            value = new byte[count];
+            for (uint i = 0; i < count; i++)
             {
-                size += CalculateStringSize(str);
+                size += ReadUInt8(out value[i]);
             }
             return size;
         }
+
+        internal ulong WriteUInt8Array(uint count, byte[] value)
+        {
+            ulong size = 0;
+            for (uint i = 0; i < count; i++)
+            {
+                size += WriteUInt8(value[i]);
+            }
+            return size;
+        }
+
+        internal ulong ReadUInt16Array(uint count, out ushort[] value)
+        {
+            ulong size = 0;
+            value = new ushort[count];
+            for (uint i = 0; i < count; i++)
+            {
+                size += ReadUInt16(out value[i]);
+            }
+            return size;
+        }
+
+        internal ulong WriteUInt16Array(uint count, ushort[] value)
+        {
+            ulong size = 0;
+            for (uint i = 0; i < count; i++)
+            {
+                size += WriteUInt16(value[i]);
+            }
+            return size;
+        }
+
+        internal ulong ReadUInt16Array(uint count, out uint[] value)
+        {
+            ulong size = 0;
+            value = new uint[count];
+            for (uint i = 0; i < count; i++)
+            {
+                size += ReadUInt16(out value[i]);
+            }
+            return size;
+        }
+        
+        internal ulong WriteUInt16Array(uint count, uint[] value)
+        {
+            ulong size = 0;
+            for (uint i = 0; i < count; i++)
+            {
+                size += WriteUInt16(value[i]);
+            }
+            return size;
+        }
+
+        internal ulong ReadUInt32Array(uint count, out uint[] value)
+        {
+            ulong size = 0;
+            value = new uint[count];
+            for (uint i = 0; i < count; i++)
+            {
+                size += ReadUInt32(out value[i]);
+            }
+            return size;
+        }
+
+        internal ulong WriteUInt32Array(uint count, uint[] value)
+        {
+            ulong size = 0;
+            for (uint i = 0; i < count; i++)
+            {
+                size += WriteUInt32(value[i]);
+            }
+            return size;
+        }
+
+        internal ulong ReadUInt32Array(uint count, out ulong[] value)
+        {
+            ulong size = 0;
+            value = new ulong[count];
+            for (uint i = 0; i < count; i++)
+            {
+                size += ReadUInt32(out value[i]);
+            }
+            return size;
+        }
+
+        internal ulong WriteUInt32Array(uint count, ulong[] value)
+        {
+            ulong size = 0;
+            for (uint i = 0; i < count; i++)
+            {
+                size += WriteUInt32(value[i]);
+            }
+            return size;
+        }
+
+        internal ulong ReadUInt64Array(uint count, out ulong[] value)
+        {
+            ulong size = 0;
+            value = new ulong[count];
+            for (uint i = 0; i < count; i++)
+            {
+                size += ReadUInt64(out value[i]);
+            }
+            return size;
+        }
+
+        internal ulong WriteUInt64Array(uint count, ulong[] value)
+        {
+            ulong size = 0;
+            for (uint i = 0; i < count; i++)
+            {
+                size += WriteUInt64(value[i]);
+            }
+            return size;
+        }
+
+        #endregion // Number arrays
+
+        #region Numbers 
+
+        internal ulong ReadInt8(out sbyte value)
+        {
+            ulong count = unchecked(ReadUInt8(out byte v));
+            value = unchecked((sbyte)v);
+            return count;
+        }
+
+        internal ulong WriteInt8(sbyte value)
+        {
+            return WriteUInt8(unchecked((byte)value));
+        }
+
+        internal ulong ReadUInt8(out byte value)
+        {
+            value = ReadByte();
+            return 8;
+        }
+
+        internal ulong WriteUInt8(byte value)
+        {
+            WriteByte(value);
+            return 8;
+        }
+
+        internal ulong ReadUInt8(out ushort value)
+        {
+            value = ReadByte();
+            return 8;
+        }
+
+        internal ulong WriteUInt8(ushort value)
+        {
+            return WriteByte((byte)value);
+        }
+
+        internal ulong ReadInt16(out short value)
+        {
+            ulong count = ReadUInt16(out ushort v);
+            value = unchecked((short)v);
+            return count;
+        }
+
+        internal ulong WriteInt16(short value)
+        {
+            return WriteUInt16(unchecked((ushort)value));
+        }
+
+        internal ulong ReadUInt16(out ushort value)
+        {
+            value = (ushort)(
+                ((ushort)ReadByte() << 8) +
+                ((ushort)ReadByte() << 0)
+            );
+            return 16;
+        }
+
+        internal ulong WriteUInt16(ushort value)
+        {
+            WriteByte((byte)(value >> 8 & 0xFF));
+            WriteByte((byte)(value & 0xFF));
+            return 16;
+        }
+
+        internal ulong ReadUInt16(out uint value)
+        {
+            value = (uint)(
+                ((uint)ReadByte() << 8) +
+                ((uint)ReadByte() << 0)
+            );
+            return 16;
+        }
+
+        internal ulong WriteUInt16(uint value)
+        {
+            WriteByte((byte)(value >> 8 & 0xFF));
+            WriteByte((byte)(value & 0xFF));
+            return 16;
+        }
+
+        internal ulong ReadUInt24(out uint value)
+        {
+            value = (uint)(
+                ((uint)ReadByte() << 16) +
+                ((uint)ReadByte() << 8) +
+                ((uint)ReadByte() << 0)
+            );
+            return 24;
+        }
+
+        internal ulong WriteUInt24(uint value)
+        {
+            value = value & 0xFFFFFF;
+            WriteByte((byte)(value >> 16 & 0xFF));
+            WriteByte((byte)(value >> 8 & 0xFF));
+            WriteByte((byte)(value & 0xFF));
+            return 24;
+        }
+
+        internal ulong ReadInt32(out int value)
+        {
+            ulong count = ReadUInt32(out uint v);
+            value = unchecked((int)v);
+            return count;
+        }
+
+        internal ulong WriteInt32(int value)
+        {
+            return WriteUInt32(unchecked((uint)value));
+        }
+
+        internal ulong ReadInt32(out long value)
+        {
+            ulong count = unchecked(ReadUInt32(out uint v));
+            value = unchecked((int)v);
+            return count;
+        }
+
+        internal ulong WriteInt32(long value)
+        {
+            return WriteUInt32(unchecked((uint)value));
+        }
+
+        internal ulong ReadUInt32(out uint value)
+        {
+            value = (uint)(
+                ((uint)ReadByte() << 24) +
+                ((uint)ReadByte() << 16) +
+                ((uint)ReadByte() << 8) +
+                ((uint)ReadByte() << 0)
+            );
+            return 32;
+        }
+
+        internal ulong WriteUInt32(uint value)
+        {
+            WriteByte((byte)(value >> 24 & 0xFF));
+            WriteByte((byte)(value >> 16 & 0xFF));
+            WriteByte((byte)(value >> 8 & 0xFF));
+            WriteByte((byte)(value & 0xFF));
+            return 32;
+        }
+
+        internal ulong ReadUInt32(out ulong value)
+        {
+            value = (uint)(
+                ((uint)ReadByte() << 24) +
+                ((uint)ReadByte() << 16) +
+                ((uint)ReadByte() << 8) +
+                ((uint)ReadByte() << 0)
+            );
+            return 32;
+        }
+
+        internal ulong WriteUInt32(ulong value)
+        {
+            WriteByte((byte)(value >> 24 & 0xFF));
+            WriteByte((byte)(value >> 16 & 0xFF));
+            WriteByte((byte)(value >> 8 & 0xFF));
+            WriteByte((byte)(value & 0xFF));
+            return 32;
+        }
+
+        internal ulong ReadUInt48(out ulong value)
+        {
+            value = (ulong)(
+                ((ulong)ReadByte() << 40) +
+                ((ulong)ReadByte() << 32) +
+                ((ulong)ReadByte() << 24) +
+                ((ulong)ReadByte() << 16) +
+                ((ulong)ReadByte() << 8) +
+                ((ulong)ReadByte() << 0)
+            );
+            return 48;
+        }
+
+        internal ulong WriteUInt48(ulong value)
+        {
+            WriteByte((byte)(value >> 40 & 0xFF));
+            WriteByte((byte)(value >> 32 & 0xFF));
+            WriteByte((byte)(value >> 24 & 0xFF));
+            WriteByte((byte)(value >> 16 & 0xFF));
+            WriteByte((byte)(value >> 8 & 0xFF));
+            WriteByte((byte)(value & 0xFF));
+            return 48;
+        }
+
+        internal ulong ReadInt64(out long value)
+        {
+            ulong count = unchecked(ReadUInt64(out ulong v));
+            value = unchecked((long)v);
+            return count;
+        }
+
+        internal ulong WriteInt64(long value)
+        {
+            return WriteUInt64(unchecked((ulong)value));
+        }
+
+        internal ulong ReadUInt64(out ulong value)
+        {
+            value = (ulong)(
+                ((ulong)ReadByte() << 56) +
+                ((ulong)ReadByte() << 48) +
+                ((ulong)ReadByte() << 40) +
+                ((ulong)ReadByte() << 32) +
+                ((ulong)ReadByte() << 24) +
+                ((ulong)ReadByte() << 16) +
+                ((ulong)ReadByte() << 8) +
+                ((ulong)ReadByte() << 0)
+            );
+            return 64;
+        }
+
+        internal ulong WriteUInt64(ulong value)
+        {
+            WriteByte((byte)(value >> 56 & 0xFF));
+            WriteByte((byte)(value >> 48 & 0xFF));
+            WriteByte((byte)(value >> 40 & 0xFF));
+            WriteByte((byte)(value >> 32 & 0xFF));
+            WriteByte((byte)(value >> 24 & 0xFF));
+            WriteByte((byte)(value >> 16 & 0xFF));
+            WriteByte((byte)(value >> 8 & 0xFF));
+            WriteByte((byte)(value & 0xFF));
+            return 64;
+        }
+
+        #endregion // Numbers
+
+        #region Iso639
+
+        internal ulong ReadIso639(out string value)
+        {
+            ushort bits;
+            ulong read = ReadBits(15, out bits);
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < 3; i++)
+            {
+                int c = bits >> (2 - i) * 5 & 0x1f;
+                result.Append((char)(c + 0x60));
+            }
+            value = result.ToString();
+            return read;
+        }
+
+        internal ulong WriteIso639(string value)
+        {
+            if (Encoding.UTF8.GetBytes(value).Length != 3)
+            {
+                throw new ArgumentException($"\"{value}\" value string must be 3 characters long!");
+            }
+
+            int bits = 0;
+            byte[] bytes = Encoding.UTF8.GetBytes(value);
+            for (int i = 0; i < 3; i++)
+            {
+                bits += bytes[i] - 0x60 << (2 - i) * 5;
+            }
+            return WriteBits(15, (ushort)bits);
+        }
+
+        #endregion // Iso639
+
+        #region Proxy
+
+        internal ulong ReadBslbf(ulong count, out ushort value)
+        {
+            return ReadBits((uint)count, out value);
+        }
+
+        internal ulong WriteBslbf(ulong count, ushort value)
+        {
+            return WriteBits((uint)count, value);
+        }
+
+        internal ulong ReadBslbf(ulong count, out byte value)
+        {
+            return ReadBits((uint)count, out value);
+        }
+
+        internal ulong WriteBslbf(ulong count, byte value)
+        {
+            return WriteBits((uint)count, value);
+        }
+
+        internal ulong ReadUimsbf(ulong count, out byte value)
+        {
+            return ReadBits((uint)count, out value);
+        }
+
+        internal ulong WriteUimsbf(ulong count, byte value)
+        {
+            return WriteBits((uint)count, value);
+        }
+
+        internal ulong ReadUimsbf(ulong count, out ushort value)
+        {
+            return ReadBits((uint)count, out value);
+        }
+
+        internal ulong WriteUimsbf(ulong count, ushort value)
+        {
+            return WriteBits((uint)count, value);
+        }
+
+        internal ulong ReadUimsbf(ulong count, out uint value)
+        {
+            return ReadBits((uint)count, out value);
+        }
+
+        internal ulong WriteUimsbf(ulong count, uint value)
+        {
+            return WriteBits((uint)count, value);
+        }
+
+        internal ulong ReadUimsbf(out bool value)
+        {
+            return ReadBit(out value);
+        }
+
+        internal ulong WriteUimsbf(bool value)
+        {
+            return WriteBit(value);
+        }
+
+        internal ulong ReadBslbf(out bool value)
+        {
+            return ReadBit(out value);
+        }
+
+        internal ulong WriteBslbf(bool value)
+        {
+            return WriteBit(value);
+        }
+
+        internal ulong ReadBslbf(ulong count, out byte[] value)
+        {
+            return ReadBytes(count / 8, out value);
+        }
+
+        internal ulong WriteBslbf(ulong count, byte[] value)
+        {
+            return WriteBytes(count / 8, value);
+        }
+
+        #endregion Proxy
+
+        #region IDispoable
 
         protected virtual void Dispose(bool disposing)
         {
@@ -1701,10 +1704,101 @@ namespace SharpMP4
                 _disposedValue = true;
             }
         }
+
         public void Dispose()
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        #endregion // IDisposable
+
+        #region TODO
+
+        internal ulong ReadStringArray(uint count, out string[] value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteStringArray(uint count, string[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateSize(string[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadDouble32(out double value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteDouble32(double value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static int BitsToDecode()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateByteAlignmentSize(byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadByteAlignment(out byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteByteAlignment(byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion // TODO
+    }
+
+    public class Mp4BoxHeader
+    {
+        public BoxHeader Header { get; set; }
+        public long HeaderOffset { get; set; }
+        public ulong HeaderSize { get; set; }
+        public ulong BoxSize { get; set; }
+
+        public Mp4BoxHeader(BoxHeader header, long headerOffset, ulong headerSize)
+        {
+            this.Header = header;
+            this.HeaderOffset = headerOffset;
+            this.HeaderSize = headerSize;
+            this.BoxSize = header.GetBoxSizeInBits();
+        }
+    }
+
+    public class StreamMarker
+    {
+        public long Position { get; set; }
+        public long Length { get; set; }
+        public IsoStream Stream { get; set; }
+        public StreamMarker(long position, long length, IsoStream stream)
+        {
+            Position = position;
+            Length = length;
+            Stream = stream;
+        }
+    }
+
+    public class IsoEndOfStreamException : EndOfStreamException
+    {
+        public byte[] Padding { get; set; }
+
+        public IsoEndOfStreamException(byte[] padding)
+        {
+            Padding = padding;
         }
     }
 
@@ -1729,20 +1823,4 @@ namespace SharpMP4
         }
     }
 #endif
-
-    public class Mp4BoxHeader
-    {
-        public BoxHeader Header { get; set; }
-        public long HeaderOffset { get; set; }
-        public ulong HeaderSize { get; set; }
-        public ulong BoxSize { get; set; }
-
-        public Mp4BoxHeader(BoxHeader header, long headerOffset, ulong headerSize)
-        {
-            this.Header = header;
-            this.HeaderOffset = headerOffset;
-            this.HeaderSize = headerSize;
-            this.BoxSize = header.GetBoxSizeInBits();
-        }
-    }
 }
