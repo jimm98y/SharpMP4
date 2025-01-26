@@ -23,19 +23,19 @@ namespace SharpMP4
 
         #region Stream operations
 
-        internal long GetCurrentOffset()
+        internal void UnreadBytes(int count, byte[] lookahead)
+        {
+            _stream.Seek(-1 * count, SeekOrigin.Current);
+        }
+
+        private long GetCurrentOffset()
         {
             return _stream.Position;
         }
 
-        internal long GetStreamLength()
+        private long GetStreamLength()
         {
             return _stream.Length;
-        }
-
-        internal void UnreadBytes(int count, byte[] lookahead)
-        {
-            _stream.Seek(-1 * count, SeekOrigin.Current);
         }
 
         private void SeekFromEnd(long offset)
@@ -148,7 +148,7 @@ namespace SharpMP4
             return count << 3;
         }
 
-        internal static ulong CopyStream(Stream input, Stream output, long bytes)
+        private static ulong CopyStream(Stream input, Stream output, long bytes)
         {
             byte[] buffer = new byte[32768];
             int read;
@@ -440,6 +440,87 @@ namespace SharpMP4
 
         #region Boxes
 
+        public Box ReadBox()
+        {
+            Mp4BoxHeader header = ReadBoxHeader();
+            ulong readSize = header.Header.GetBoxSizeInBits();
+            Box box = ReadBoxContent(header);
+            return box;
+        }
+
+        public ulong WriteBox(Box value)
+        {
+            ulong writtenSize = WriteBoxHeader(value);
+            writtenSize += WriteBoxContent(value);
+            if (value.Padding != null)
+            {
+                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
+            }
+            return writtenSize;
+        }
+
+        public Mp4BoxHeader ReadBoxHeader()
+        {
+            BoxHeader header = new BoxHeader();
+            long headerOffset = this.GetCurrentOffset();
+            ulong headerSize = 0;
+
+            // sometimes there can be a few bytes at the end of the mp4 file that are less than the header size
+            ulong remaining = (ulong)(GetStreamLength() - headerOffset);
+            if (remaining == 0)
+                throw new EndOfStreamException();
+
+            if (remaining < 8)
+            {
+                byte[] remainingBytes;
+                ReadBytes(remaining, out remainingBytes);
+                throw new IsoEndOfStreamException(remainingBytes);
+            }
+
+            headerSize = header.Read(this, 0);
+            return new Mp4BoxHeader(header, headerOffset, headerSize);
+        }
+
+        private ulong WriteBoxHeader(Box value)
+        {
+            BoxHeader header = new BoxHeader();
+            ulong boxSizeBits = value.CalculateSize();
+            ulong boxSize = boxSizeBits >> 3;
+            if (boxSize > uint.MaxValue || value.HasLargeSize)
+            {
+                header.Size = 1;
+                header.Largesize = boxSize;
+            }
+            else
+            {
+                header.Size = (uint)boxSize;
+                header.Largesize = 0;
+            }
+            header.Usertype = value.Uuid;
+            header.Type = FromFourCC(value.FourCC);
+
+            ulong writtenSize = 0;
+            writtenSize += header.Write(this);
+            return writtenSize;
+        }
+
+        public Box ReadBoxContent(Mp4BoxHeader header)
+        {
+            if (header.Header.Type == 0 && header.Header.Size == 0 && header.Header.Largesize == 0)
+                return null; // all zeros, looks like 8 zero bytes padding at the end of the file
+
+            string fourCC = ToFourCC(header.Header.Type);
+            var box = BoxFactory.CreateBox(fourCC, null, header.Header.Usertype);
+            ReadBox(header, box);
+            return box;
+        }
+
+        private ulong WriteBoxContent(Box box)
+        {
+            ulong size = box.Write(this);
+            return size;
+        }
+
         internal ulong ReadBox(ulong boxSize, ulong readSize, Box parent, out Box value)
         {
             var header = ReadBoxHeader();
@@ -458,17 +539,6 @@ namespace SharpMP4
             ReadBox(header, box);
             value = (T)box;
             return header.BoxSize;
-        }
-
-        public ulong WriteBox(Box value)
-        {
-            ulong writtenSize = WriteBoxHeader(value);
-            writtenSize += value.Write(this);
-            if (value.Padding != null)
-            {
-                writtenSize += WriteBytes((ulong)value.Padding.Length, value.Padding);
-            }
-            return writtenSize;
         }
 
         internal ulong ReadBox(ulong boxSize, ulong readSize, IMp4Serializable serializable, out Box[] value)
@@ -623,70 +693,6 @@ namespace SharpMP4
                 written += WriteBox(v);
             }
             return written;
-        }
-
-        public Box ReadBox()
-        {
-            Mp4BoxHeader header = ReadBoxHeader();
-            ulong readSize = header.Header.GetBoxSizeInBits();
-            Box box = ReadBoxContent(header);
-            return box;
-        }
-
-        public Mp4BoxHeader ReadBoxHeader()
-        {
-            BoxHeader header = new BoxHeader();
-            long headerOffset = this.GetCurrentOffset();
-            ulong headerSize = 0;
-
-            // sometimes there can be a few bytes at the end of the mp4 file that are less than the header size
-            ulong remaining = (ulong)(GetStreamLength() - headerOffset);
-            if (remaining == 0)
-                throw new EndOfStreamException();
-
-            if (remaining < 8)
-            {
-                byte[] remainingBytes;
-                ReadBytes(remaining, out remainingBytes);
-                throw new IsoEndOfStreamException(remainingBytes);
-            }
-
-            headerSize = header.Read(this, 0);
-            return new Mp4BoxHeader(header, headerOffset, headerSize);
-        }
-
-        private ulong WriteBoxHeader(Box value)
-        {
-            BoxHeader header = new BoxHeader();
-            ulong boxSizeBits = value.CalculateSize();
-            ulong boxSize = boxSizeBits >> 3;
-            if (boxSize > uint.MaxValue || value.HasLargeSize)
-            {
-                header.Size = 1;
-                header.Largesize = boxSize;
-            }
-            else
-            {
-                header.Size = (uint)boxSize;
-                header.Largesize = 0;
-            }
-            header.Usertype = value.Uuid;
-            header.Type = FromFourCC(value.FourCC);
-
-            ulong writtenSize = 0;
-            writtenSize += header.Write(this);
-            return writtenSize;
-        }
-
-        public Box ReadBoxContent(Mp4BoxHeader header)
-        {
-            if (header.Header.Type == 0 && header.Header.Size == 0 && header.Header.Largesize == 0)
-                return null; // all zeros, looks like 8 zero bytes padding at the end of the file
-
-            string fourCC = ToFourCC(header.Header.Type);
-            var box = BoxFactory.CreateBox(fourCC, null, header.Header.Usertype);
-            ReadBox(header, box);
-            return box;
         }
 
         private void ReadBox(Mp4BoxHeader header, Box box)
@@ -936,7 +942,7 @@ namespace SharpMP4
             ulong calculatedSize = descriptor.CalculateSize();
             if (calculatedSize != sizeOfInstanceBits)
             {
-                Debug.WriteLine($"Calculated descriptor \'{tag}\' size: {calculatedSize / 8}, read: {sizeOfInstanceBits / 8}");
+                Debug.WriteLine($"Calculated descriptor \'{tag}\' size: {calculatedSize >> 3}, read: {sizeOfInstanceBits >> 3}");
             }
 
             return size;
@@ -1140,33 +1146,14 @@ namespace SharpMP4
 
         internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out byte[] value)
         {
-            ulong consumed = 0;
-
             if (readSize == ulong.MaxValue)
             {
-                List<byte> values = new List<byte>();
-                // consume till the end of the stream
-                try
-                {
-                    while (true)
-                    {
-                        byte v;
-                        consumed += ReadUInt8(out v);
-                        values.Add(v);
-                    }
-                }
-                catch (EndOfStreamException)
-                { }
-
-                value = values.ToArray();
-                return consumed;
+                return ReadBytes(readSize >> 3, out value);
             }
 
             ulong remaining = readSize - boxSize;
-            ulong count = (ulong)(remaining >> 3);
-            value = new byte[count];
-            _stream.ReadExactly(value, 0, (int)count); 
-            return count << 3;
+            ulong count = remaining >> 3;
+            return ReadBytes(count, out value);
         }
 
         internal ulong WriteUInt8ArrayTillEnd(byte[] value)
@@ -1215,23 +1202,12 @@ namespace SharpMP4
 
         internal ulong ReadUInt8Array(uint count, out byte[] value)
         {
-            ulong size = 0;
-            value = new byte[count];
-            for (uint i = 0; i < count; i++)
-            {
-                size += ReadUInt8(out value[i]);
-            }
-            return size;
+            return ReadBytes(count, out value);
         }
 
         internal ulong WriteUInt8Array(uint count, byte[] value)
         {
-            ulong size = 0;
-            for (uint i = 0; i < count; i++)
-            {
-                size += WriteUInt8(value[i]);
-            }
-            return size;
+            return WriteBytes(count, value);
         }
 
         internal ulong ReadUInt16Array(uint count, out ushort[] value)
@@ -1679,17 +1655,17 @@ namespace SharpMP4
 
         internal ulong ReadBslbf(ulong count, out byte[] value)
         {
-            return ReadBytes(count / 8, out value);
+            return ReadBytes(count >> 3, out value);
         }
 
         internal ulong WriteBslbf(ulong count, byte[] value)
         {
-            return WriteBytes(count / 8, value);
+            return WriteBytes(count >> 3, value);
         }
 
         #endregion Proxy
 
-        #region IDispoable
+        #region IDisposable
 
         protected virtual void Dispose(bool disposing)
         {
