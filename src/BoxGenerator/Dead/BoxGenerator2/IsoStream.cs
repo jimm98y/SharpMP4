@@ -1398,6 +1398,14 @@ namespace SharpMP4
             return _stream.Position;
         }
 
+        public Box ReadBox()
+        {
+            Mp4BoxHeader header = ReadBoxHeader();
+            ulong readSize = header.Header.GetBoxSizeInBits();
+            Box box = ReadBoxContent(header);
+            return box;
+        }
+
         public Mp4BoxHeader ReadBoxHeader()
         {
             BoxHeader header = new BoxHeader();
@@ -1420,7 +1428,7 @@ namespace SharpMP4
             return new Mp4BoxHeader(header, headerOffset, headerSize);
         }
 
-        public Box ReadBox(Mp4BoxHeader header)
+        public Box ReadBoxContent(Mp4BoxHeader header)
         {
             if (header.Header.Type == 0 && header.Header.Size == 0 && header.Header.Largesize == 0)
                 return null; // all zeros, looks like 8 zero bytes padding at the end of the file
