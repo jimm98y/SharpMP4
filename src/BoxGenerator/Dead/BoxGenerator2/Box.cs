@@ -70,9 +70,14 @@ namespace SharpMP4
         }
     }
 
+    /// <summary>
+    /// Unknown box - basically a pass-through.
+    /// </summary>
     public class UnknownBox : Box
     {
-        protected byte[] bytes;
+        // use the StreamMarker so that de do not allocate large amounts of memory in case we have invalid input data
+        protected StreamMarker data;
+        public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
         public UnknownBox()
         {                
@@ -82,26 +87,27 @@ namespace SharpMP4
         {
         }
 
-        public byte[] Bytes { get { return bytes; } set { bytes = value; } }
-
         public override ulong Read(IsoStream stream, ulong readSize)
         {
-            ulong boxSize = base.Read(stream, readSize);
-            boxSize += stream.ReadBytes(readSize >> 3, out bytes);
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
 
         public override ulong Write(IsoStream stream)
         {
-            ulong boxSize = base.Write(stream);
-            boxSize += stream.WriteBytes((uint)bytes.Length, bytes);
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
             return boxSize;
         }
 
         public override ulong CalculateSize()
         {
-            ulong boxSize = base.CalculateSize();
-            boxSize += (ulong)(bytes.Length * 8);
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)data.Length * 8; // data
             return boxSize;
         }
     }

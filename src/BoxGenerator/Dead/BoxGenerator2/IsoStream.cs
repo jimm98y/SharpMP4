@@ -332,29 +332,30 @@ namespace SharpMP4
 
         #region Strings
 
-        internal ulong WriteStringZeroTerminated(byte[] value)
+        internal ulong WriteStringZeroTerminated(BinaryUtf8String value)
         {
-            if (value == null || value.Length == 0)
+            if (value.Length == 0)
                 return 0;
 
+            byte[] buffer = value.Bytes;
             for (int i = 0; i < value.Length; i++)
             {
-                WriteByte(value[i]);
+                WriteByte(buffer[i]);
             }
             return (ulong)value.Length << 3;
         }
 
-        internal ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out byte[] value)
+        internal ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out BinaryUtf8String value)
         {
             ulong remaining = readSize - boxSize;
             if (remaining == 0)
             {
-                value = [];
+                value = new BinaryUtf8String();
                 return 0;
             }
 
             ulong read = ReadBytes(remaining >> 3, out byte[] buffer);
-            value = buffer;
+            value = new BinaryUtf8String(buffer);
             return read;
         }
 
@@ -390,13 +391,13 @@ namespace SharpMP4
             return size;
         }
 
-        internal static ulong CalculateStringSize(byte[] value)
+        internal static ulong CalculateStringSize(BinaryUtf8String value)
         {
             ulong count = (ulong)value.Length;
             return count << 3;
         }
 
-        internal static ulong CalculateStringSize(byte[][] value)
+        internal static ulong CalculateStringSize(BinaryUtf8String[] value)
         {
             ulong size = 0;
             foreach (var str in value)
@@ -1775,6 +1776,24 @@ namespace SharpMP4
         public IsoEndOfStreamException(byte[] padding)
         {
             Padding = padding;
+        }
+    }
+
+    public struct BinaryUtf8String
+    {
+        public int Length { get { return Bytes == null ? 0 : Bytes.Length; } }
+        public byte[] Bytes { get; set; }
+        public BinaryUtf8String(byte[] bytes)
+        {
+            this.Bytes = bytes;
+        }
+        public BinaryUtf8String(string text)
+        {
+            Bytes = Encoding.UTF8.GetBytes(text);
+        }
+        public override string ToString()
+        {
+            return Encoding.UTF8.GetString(Bytes);
         }
     }
 

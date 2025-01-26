@@ -1195,14 +1195,14 @@ namespace SharpMP4
     {
         public const string TYPE = "stpp";
 
-        protected byte[] ns;
-        public byte[] Ns { get { return this.ns; } set { this.ns = value; } }
+        protected BinaryUtf8String ns;
+        public BinaryUtf8String Ns { get { return this.ns; } set { this.ns = value; } }
 
-        protected byte[] schema_location;  //  optional 
-        public byte[] SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
+        protected BinaryUtf8String schema_location;  //  optional 
+        public BinaryUtf8String SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
 
-        protected byte[] auxiliary_mime_types;  //  optional, required if auxiliary resources are present 
-        public byte[] AuxiliaryMimeTypes { get { return this.auxiliary_mime_types; } set { this.auxiliary_mime_types = value; } }
+        protected BinaryUtf8String auxiliary_mime_types;  //  optional, required if auxiliary resources are present 
+        public BinaryUtf8String AuxiliaryMimeTypes { get { return this.auxiliary_mime_types; } set { this.auxiliary_mime_types = value; } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
 
         public XMLSubtitleSampleEntry() : base("stpp")
@@ -1259,11 +1259,11 @@ namespace SharpMP4
     {
         public const string TYPE = "sbtt";
 
-        protected byte[] content_encoding;  //  optional 
-        public byte[] ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+        protected BinaryUtf8String content_encoding;  //  optional 
+        public BinaryUtf8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
-        protected byte[] mime_format;
-        public byte[] MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
+        protected BinaryUtf8String mime_format;
+        public BinaryUtf8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
         public TextConfigBox _TextConfigBox { get { return this.children.OfType<TextConfigBox>().FirstOrDefault(); } }
 
@@ -1622,11 +1622,11 @@ namespace SharpMP4
     {
         public const string TYPE = "stxt";
 
-        protected byte[] content_encoding;  //  optional 
-        public byte[] ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+        protected BinaryUtf8String content_encoding;  //  optional 
+        public BinaryUtf8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
-        protected byte[] mime_format;
-        public byte[] MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
+        protected BinaryUtf8String mime_format;
+        public BinaryUtf8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
         public TextConfigBox _TextConfigBox { get { return this.children.OfType<TextConfigBox>().FirstOrDefault(); } }
 
@@ -1923,8 +1923,8 @@ namespace SharpMP4
     {
         public const string TYPE = "loca";
 
-        protected byte[] locale_string;
-        public byte[] LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
+        protected BinaryUtf8String locale_string;
+        public BinaryUtf8String LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
 
         public MetaDataLocaleBox() : base("loca")
         {
@@ -6354,8 +6354,8 @@ namespace SharpMP4
     {
         public const string TYPE = "elng";
 
-        protected byte[] extended_language;
-        public byte[] ExtendedLanguage { get { return this.extended_language; } set { this.extended_language = value; } }
+        protected BinaryUtf8String extended_language;
+        public BinaryUtf8String ExtendedLanguage { get { return this.extended_language; } set { this.extended_language = value; } }
 
         public ExtendedLanguageBox() : base("elng", 0, 0)
         {
@@ -7827,8 +7827,8 @@ namespace SharpMP4
     {
         public const string TYPE = "txtC";
 
-        protected byte[] text_config;
-        public byte[] TextConfig { get { return this.text_config; } set { this.text_config = value; } }
+        protected BinaryUtf8String text_config;
+        public BinaryUtf8String TextConfig { get { return this.text_config; } set { this.text_config = value; } }
 
         public TextConfigBox() : base("txtC", 0, 0)
         {
@@ -7921,8 +7921,8 @@ namespace SharpMP4
         protected string language;  //  ISO-639-2/T language code
         public string Language { get { return this.language; } set { this.language = value; } }
 
-        protected byte[] notice;
-        public byte[] Notice { get { return this.notice; } set { this.notice = value; } }
+        protected BinaryUtf8String notice;
+        public BinaryUtf8String Notice { get { return this.notice; } set { this.notice = value; } }
 
         public CopyrightBox() : base("cprt", 0, 0)
         {
@@ -7970,11 +7970,11 @@ namespace SharpMP4
     {
         public const string TYPE = "kind";
 
-        protected byte[] schemeURI;
-        public byte[] SchemeURI { get { return this.schemeURI; } set { this.schemeURI = value; } }
+        protected BinaryUtf8String schemeURI;
+        public BinaryUtf8String SchemeURI { get { return this.schemeURI; } set { this.schemeURI = value; } }
 
-        protected byte[] value;
-        public byte[] Value { get { return this.value; } set { this.value = value; } }
+        protected BinaryUtf8String value;
+        public BinaryUtf8String Value { get { return this.value; } set { this.value = value; } }
 
         public KindBox() : base("kind", 0, 0)
         {
@@ -8440,8 +8440,8 @@ namespace SharpMP4
     {
         public const string TYPE = "url ";
 
-        protected byte[] location;
-        public byte[] Location { get { return this.location; } set { this.location = value; } }
+        protected BinaryUtf8String location;
+        public BinaryUtf8String Location { get { return this.location; } set { this.location = value; } }
 
         public DataEntryUrlBox(uint flags = 0) : base("url ", flags)
         {
@@ -8484,11 +8484,11 @@ namespace SharpMP4
     {
         public const string TYPE = "urn ";
 
-        protected byte[] name;
-        public byte[] Name { get { return this.name; } set { this.name = value; } }
+        protected BinaryUtf8String name;
+        public BinaryUtf8String Name { get { return this.name; } set { this.name = value; } }
 
-        protected byte[] location;
-        public byte[] Location { get { return this.location; } set { this.location = value; } }
+        protected BinaryUtf8String location;
+        public BinaryUtf8String Location { get { return this.location; } set { this.location = value; } }
 
         public DataEntryUrnBox(uint flags = 0) : base("urn ", flags)
         {
@@ -9864,11 +9864,11 @@ namespace SharpMP4
     {
         public const string TYPE = "fdel";
 
-        protected byte[] content_location;
-        public byte[] ContentLocation { get { return this.content_location; } set { this.content_location = value; } }
+        protected BinaryUtf8String content_location;
+        public BinaryUtf8String ContentLocation { get { return this.content_location; } set { this.content_location = value; } }
 
-        protected byte[] content_MD5;
-        public byte[] ContentMD5 { get { return this.content_MD5; } set { this.content_MD5 = value; } }
+        protected BinaryUtf8String content_MD5;
+        public BinaryUtf8String ContentMD5 { get { return this.content_MD5; } set { this.content_MD5 = value; } }
 
         protected ulong content_length;
         public ulong ContentLength { get { return this.content_length; } set { this.content_length = value; } }
@@ -10381,8 +10381,8 @@ namespace SharpMP4
         protected ushort max_number_of_encoding_symbols;
         public ushort MaxNumberOfEncodingSymbols { get { return this.max_number_of_encoding_symbols; } set { this.max_number_of_encoding_symbols = value; } }
 
-        protected byte[] scheme_specific_info;
-        public byte[] SchemeSpecificInfo { get { return this.scheme_specific_info; } set { this.scheme_specific_info = value; } }
+        protected BinaryUtf8String scheme_specific_info;
+        public BinaryUtf8String SchemeSpecificInfo { get { return this.scheme_specific_info; } set { this.scheme_specific_info = value; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10695,8 +10695,8 @@ namespace SharpMP4
         protected uint[] group_ID;
         public uint[] GroupID { get { return this.group_ID; } set { this.group_ID = value; } }
 
-        protected byte[][] group_name;
-        public byte[][] GroupName { get { return this.group_name; } set { this.group_name = value; } }
+        protected BinaryUtf8String[] group_name;
+        public BinaryUtf8String[] GroupName { get { return this.group_name; } set { this.group_name = value; } }
 
         public GroupIdToNameBox() : base("gitn", 0, 0)
         {
@@ -10709,7 +10709,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.entry_count);
 
             this.group_ID = new uint[entry_count];
-            this.group_name = new byte[entry_count][];
+            this.group_name = new BinaryUtf8String[entry_count];
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.ReadUInt32(out this.group_ID[i]);
@@ -10807,8 +10807,8 @@ namespace SharpMP4
         protected uint[] reserved = [];
         public uint[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        protected byte[] name;
-        public byte[] Name { get { return this.name; } set { this.name = value; } }
+        protected BinaryUtf8String name;
+        public BinaryUtf8String Name { get { return this.name; } set { this.name = value; } }
 
         public HandlerBox() : base("hdlr", 0, 0)
         {
@@ -11432,14 +11432,14 @@ namespace SharpMP4
         protected ushort item_protection_index;
         public ushort ItemProtectionIndex { get { return this.item_protection_index; } set { this.item_protection_index = value; } }
 
-        protected byte[] item_name;
-        public byte[] ItemName { get { return this.item_name; } set { this.item_name = value; } }
+        protected BinaryUtf8String item_name;
+        public BinaryUtf8String ItemName { get { return this.item_name; } set { this.item_name = value; } }
 
-        protected byte[] content_type;
-        public byte[] ContentType { get { return this.content_type; } set { this.content_type = value; } }
+        protected BinaryUtf8String content_type;
+        public BinaryUtf8String ContentType { get { return this.content_type; } set { this.content_type = value; } }
 
-        protected byte[] content_encoding;  // optional
-        public byte[] ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+        protected BinaryUtf8String content_encoding;  // optional
+        public BinaryUtf8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
         protected uint extension_type;  // optional
         public uint ExtensionType { get { return this.extension_type; } set { this.extension_type = value; } }
@@ -11450,8 +11450,8 @@ namespace SharpMP4
         protected uint item_type;
         public uint ItemType { get { return this.item_type; } set { this.item_type = value; } }
 
-        protected byte[] item_uri_type;
-        public byte[] ItemUriType { get { return this.item_uri_type; } set { this.item_uri_type = value; } }
+        protected BinaryUtf8String item_uri_type;
+        public BinaryUtf8String ItemUriType { get { return this.item_uri_type; } set { this.item_uri_type = value; } }
 
         public ItemInfoEntry(byte version = 0, uint flags = 0) : base("infe", version, flags)
         {
@@ -13602,8 +13602,8 @@ namespace SharpMP4
         protected uint scheme_version;  //  scheme version
         public uint SchemeVersion { get { return this.scheme_version; } set { this.scheme_version = value; } }
 
-        protected byte[] scheme_uri;  //  browser uri
-        public byte[] SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
+        protected BinaryUtf8String scheme_uri;  //  browser uri
+        public BinaryUtf8String SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
 
         public SchemeTypeBox(uint flags = 0) : base("schm", 0, flags)
         {
@@ -13674,8 +13674,8 @@ namespace SharpMP4
         protected uint scheme_version;  //  scheme version 
         public uint SchemeVersion { get { return this.scheme_version; } set { this.scheme_version = value; } }
 
-        protected byte[] scheme_uri;  //  browser uri
-        public byte[] SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
+        protected BinaryUtf8String scheme_uri;  //  browser uri
+        public BinaryUtf8String SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
 
         public CompatibleSchemeTypeBox(uint flags = 0) : base("csch", 0, flags)
         {
@@ -16855,8 +16855,8 @@ namespace SharpMP4
     {
         public const string TYPE = "xml ";
 
-        protected byte[] xml;
-        public byte[] Xml { get { return this.xml; } set { this.xml = value; } }
+        protected BinaryUtf8String xml;
+        public BinaryUtf8String Xml { get { return this.xml; } set { this.xml = value; } }
 
         public XMLBox() : base("xml ", 0, 0)
         {
@@ -17003,8 +17003,8 @@ namespace SharpMP4
     {
         public const string TYPE = "uri ";
 
-        protected byte[] theURI;
-        public byte[] TheURI { get { return this.theURI; } set { this.theURI = value; } }
+        protected BinaryUtf8String theURI;
+        public BinaryUtf8String TheURI { get { return this.theURI; } set { this.theURI = value; } }
 
         public URIBox() : base("uri ", 0, 0)
         {
@@ -20425,8 +20425,8 @@ namespace SharpMP4
         protected byte[] statement_type;  //  from the user extension ranges
         public byte[] StatementType { get { return this.statement_type; } set { this.statement_type = value; } }
 
-        protected byte[][] statement_namespace;
-        public byte[][] StatementNamespace { get { return this.statement_namespace; } set { this.statement_namespace = value; } }
+        protected BinaryUtf8String[] statement_namespace;
+        public BinaryUtf8String[] StatementNamespace { get { return this.statement_namespace; } set { this.statement_namespace = value; } }
 
         public SVCMetadataSampleConfigBox() : base("svmC")
         {
@@ -20444,7 +20444,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt8(out this.entry_count);
 
             this.statement_type = new byte[entry_count];
-            this.statement_namespace = new byte[entry_count][];
+            this.statement_namespace = new BinaryUtf8String[entry_count];
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.ReadUInt8(out this.statement_type[i]); // from the user extension ranges
@@ -20544,8 +20544,8 @@ namespace SharpMP4
     {
         public const string TYPE = "vttC";
 
-        protected byte[] config;
-        public byte[] Config { get { return this.config; } set { this.config = value; } }
+        protected BinaryUtf8String config;
+        public BinaryUtf8String Config { get { return this.config; } set { this.config = value; } }
 
         public WebVTTConfigurationBox() : base("vttC")
         {
@@ -20586,8 +20586,8 @@ namespace SharpMP4
     {
         public const string TYPE = "vlab";
 
-        protected byte[] source_label;
-        public byte[] SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
+        protected BinaryUtf8String source_label;
+        public BinaryUtf8String SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
 
         public WebVTTSourceLabelBox() : base("vlab")
         {
@@ -20682,8 +20682,8 @@ namespace SharpMP4
     {
         public const string TYPE = "auxi";
 
-        protected byte[] aux_track_type;
-        public byte[] AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
+        protected BinaryUtf8String aux_track_type;
+        public BinaryUtf8String AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
 
         public AuxiliaryTypeInfoBox() : base("auxi", 0, 0)
         {
@@ -21441,14 +21441,14 @@ namespace SharpMP4
     {
         public const string TYPE = "metx";
 
-        protected byte[] content_encoding;  //  optional
-        public byte[] ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+        protected BinaryUtf8String content_encoding;  //  optional
+        public BinaryUtf8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
-        protected byte[] ns;
-        public byte[] Ns { get { return this.ns; } set { this.ns = value; } }
+        protected BinaryUtf8String ns;
+        public BinaryUtf8String Ns { get { return this.ns; } set { this.ns = value; } }
 
-        protected byte[] schema_location;  //  optional
-        public byte[] SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
+        protected BinaryUtf8String schema_location;  //  optional
+        public BinaryUtf8String SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
 
         public XMLMetaDataSampleEntry() : base("metx")
         {
@@ -21497,11 +21497,11 @@ namespace SharpMP4
     {
         public const string TYPE = "mett";
 
-        protected byte[] content_encoding;  //  optional
-        public byte[] ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+        protected BinaryUtf8String content_encoding;  //  optional
+        public BinaryUtf8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
 
-        protected byte[] mime_format;
-        public byte[] MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
+        protected BinaryUtf8String mime_format;
+        public BinaryUtf8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
         public TextConfigBox _TextConfigBox { get { return this.children.OfType<TextConfigBox>().FirstOrDefault(); } }
 
         public TextMetaDataSampleEntry() : base("mett")
@@ -26942,8 +26942,8 @@ namespace SharpMP4
     {
         public const string TYPE = "auxC";
 
-        protected byte[] aux_type;
-        public byte[] AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
+        protected BinaryUtf8String aux_type;
+        public BinaryUtf8String AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
 
         protected byte[] aux_subtype;  //  until the end of the box, the semantics depend on the aux_type value
         public byte[] AuxSubtype { get { return this.aux_subtype; } set { this.aux_subtype = value; } }
@@ -27531,11 +27531,11 @@ namespace SharpMP4
     {
         public const string TYPE = "altt";
 
-        protected byte[] alt_text;
-        public byte[] AltText { get { return this.alt_text; } set { this.alt_text = value; } }
+        protected BinaryUtf8String alt_text;
+        public BinaryUtf8String AltText { get { return this.alt_text; } set { this.alt_text = value; } }
 
-        protected byte[] alt_lang;
-        public byte[] AltLang { get { return this.alt_lang; } set { this.alt_lang = value; } }
+        protected BinaryUtf8String alt_lang;
+        public BinaryUtf8String AltLang { get { return this.alt_lang; } set { this.alt_lang = value; } }
 
         public AccessibilityTextProperty() : base("altt", 0, 0)
         {
@@ -27945,17 +27945,17 @@ namespace SharpMP4
     {
         public const string TYPE = "udes";
 
-        protected byte[] lang;
-        public byte[] Lang { get { return this.lang; } set { this.lang = value; } }
+        protected BinaryUtf8String lang;
+        public BinaryUtf8String Lang { get { return this.lang; } set { this.lang = value; } }
 
-        protected byte[] name;
-        public byte[] Name { get { return this.name; } set { this.name = value; } }
+        protected BinaryUtf8String name;
+        public BinaryUtf8String Name { get { return this.name; } set { this.name = value; } }
 
-        protected byte[] description;
-        public byte[] Description { get { return this.description; } set { this.description = value; } }
+        protected BinaryUtf8String description;
+        public BinaryUtf8String Description { get { return this.description; } set { this.description = value; } }
 
-        protected byte[] tags;
-        public byte[] Tags { get { return this.tags; } set { this.tags = value; } }
+        protected BinaryUtf8String tags;
+        public BinaryUtf8String Tags { get { return this.tags; } set { this.tags = value; } }
 
         public UserDescriptionProperty() : base("udes", 0, 0)
         {
