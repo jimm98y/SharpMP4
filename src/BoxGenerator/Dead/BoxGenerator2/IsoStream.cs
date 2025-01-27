@@ -3,54 +3,194 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace SharpMP4
 {
-    public class IsoStream : IDisposable
+    public interface IStorage : IDisposable
     {
-        protected readonly Stream _stream;
-        protected int _bitsPosition;
-        protected int _currentBytePosition = -1;
-        protected byte _currentByte = 0;
+        bool CanStreamSeek();
+        void Flush();
+        long GetLength();
+        long GetPosition();
+        long SeekFromCurrent(long offset);
+        long SeekFromEnd(long offset);
+        long SeekFromBeginning(long offset);
+        void ReadExactly(byte[] data, int offset, int length);
+        void Write(byte[] buffer, int offset, int length);
+        int ReadByte();
+        void WriteByte(byte value);
+        int Read(byte[] buffer, int offset, int length);
+    }
+
+    public class StreamWrapper : IStorage
+    {
+        public Stream _stream;
         private bool _disposedValue;
 
-        public IsoStream(Stream stream)
+        public StreamWrapper(Stream stream)
         {
-            _stream = stream;
+            _stream = stream ?? throw new ArgumentNullException(nameof(stream));
         }
 
-        #region Stream operations
-
-        internal void UnreadBytes(int count, byte[] lookahead)
+        public void Flush()
         {
-            _stream.Seek(-1 * count, SeekOrigin.Current);
+            _stream.Flush();
         }
 
-        internal long GetCurrentOffset()
-        {
-            return _stream.Position;
-        }
-
-        internal long GetStreamLength()
+        public long GetLength()
         {
             return _stream.Length;
         }
 
+        public long GetPosition()
+        {
+            return _stream.Position;
+        }
+
+        public int ReadByte()
+        {
+            return _stream.ReadByte();
+        }
+
+        public void ReadExactly(byte[] data, int offset, int length)
+        {
+            _stream.ReadExactly(data, offset, length);
+        }
+
+        public long SeekFromBeginning(long offset)
+        {
+            return _stream.Seek(offset, SeekOrigin.Begin);
+        }
+
+        public long SeekFromCurrent(long offset)
+        {
+            return _stream.Seek(offset, SeekOrigin.Current);
+        }
+
+        public long SeekFromEnd(long offset)
+        {
+            return _stream.Seek(offset, SeekOrigin.End);
+        }
+
+        public void Write(byte[] buffer, int offset, int length)
+        {
+            _stream.Write(buffer, offset, length);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _stream.Dispose();
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        public bool CanStreamSeek()
+        {
+            return _stream.CanSeek;
+        }
+
+        public void WriteByte(byte value)
+        {
+            _stream.WriteByte(value);
+        }
+
+        public int Read(byte[] buffer, int offset, int length)
+        {
+            return _stream.Read(buffer, offset, length);   
+        }
+    }
+
+    public class IsoStream : IDisposable
+    {
+        protected readonly IStorage _stream;
+        protected int _bitsPosition;
+        protected int _currentBytePosition = -1;
+        protected byte _currentByte = 0;
+        private bool _disposedValue;
+        private ITemporaryStorageFactory _storageFactory;
+        private IsoStream _temp;
+
+        public IsoStream(Stream stream, ITemporaryStorageFactory storageFactory = null) : this(new StreamWrapper(stream), storageFactory)
+        { }
+
+        public IsoStream(IStorage stream, ITemporaryStorageFactory storageFactory = null)
+        {
+            _stream = stream;
+            _storageFactory = storageFactory ?? new TemporaryMemoryStorageFactory();
+        }
+
+        private IsoStream GetOrCreateTemporaryStorage()
+        {
+            if (_temp == null)
+                _temp = new IsoStream(_storageFactory.Create());
+            return _temp;
+        }
+
+        #region Stream operations
+
+        internal bool CanStreamSeek()
+        {
+            return _stream.CanStreamSeek();
+        }
+
+        internal long GetCurrentOffset()
+        {
+            try
+            {
+                if (CanStreamSeek())
+                    return _stream.GetPosition();
+                else
+                    return -1;
+            }
+            catch (Exception e) 
+            {
+                Debug.WriteLine($"Getting the current stream offset failed: {e.Message}");
+                return -1;
+            }
+        }
+
+        internal long GetStreamLength()
+        {
+            try
+            {
+                if (CanStreamSeek())
+                    return _stream.GetLength();
+                else
+                    return -1;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Getting the current stream length failed: {e.Message}");
+                return -1;
+            }
+        }
+
         private void SeekFromEnd(long offset)
         {
-            _stream.Seek(offset, SeekOrigin.End);
+            _stream.SeekFromEnd(offset);
         }
 
-        private void SeekFromCurrent(long count)
+        private void SeekFromCurrent(long offset)
         {
-            _stream.Seek(count, SeekOrigin.Current);
+            _stream.SeekFromCurrent(offset);
         }
 
-        private void SeekFromBegining(long offset)
+        private void SeekFromBeginning(long offset)
         {
-            _stream.Seek(offset, SeekOrigin.Begin);
+            _stream.SeekFromBeginning(offset);
         }
 
         #endregion // Stream operations
@@ -108,31 +248,16 @@ namespace SharpMP4
 
         internal ulong ReadBytes(ulong length, out byte[] value)
         {
-            ulong consumed = 0;
-
-            if (length == (ulong.MaxValue >> 3))
+            ulong correctedLength = length;
+            if (CanStreamSeek())
             {
-                List<byte> values = new List<byte>();
-                // consume till the end of the stream
-                try
-                {
-                    while (true)
-                    {
-                        byte v;
-                        consumed += ReadUInt8(out v);
-                        values.Add(v);
-                    }
-                }
-                catch (EndOfStreamException)
-                { }
-
-                value = values.ToArray();
-                return consumed;
+                correctedLength = Math.Min(length, (ulong)(GetStreamLength() - GetCurrentOffset()));
             }
 
-            ulong correctedLength = Math.Min(length, (ulong)(GetStreamLength() - GetCurrentOffset()));
             if (correctedLength < length)
+            {
                 throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength(), this));
+            }
 
             value = new byte[correctedLength];
             _stream.ReadExactly(value, 0, (int)correctedLength);
@@ -150,7 +275,7 @@ namespace SharpMP4
             return count << 3;
         }
 
-        private static ulong CopyStream(Stream input, Stream output, long bytes)
+        private static ulong CopyStream(IStorage input, IStorage output, long bytes)
         {
             byte[] buffer = new byte[32768];
             int read;
@@ -445,15 +570,17 @@ namespace SharpMP4
         public Mp4BoxHeader ReadBoxHeader()
         {
             BoxHeader header = new BoxHeader();
-            long headerOffset = this.GetCurrentOffset();
+            long headerOffset = 0;
             ulong headerSize = 0;
+
+            headerOffset = this.GetCurrentOffset();
 
             // sometimes there can be a few bytes at the end of the mp4 file that are less than the header size
             ulong remaining = (ulong)(GetStreamLength() - headerOffset);
-            if (remaining == 0)
+            if (headerOffset > 0 && remaining == 0)
                 throw new EndOfStreamException();
 
-            if (remaining < 8)
+            if (remaining > 0 && remaining < 8)
             {
                 throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength(), this));
             }
@@ -1059,21 +1186,65 @@ namespace SharpMP4
         internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out StreamMarker value)
         {
             StreamMarker marker;
-            if (readSize == ulong.MaxValue)
+            if (CanStreamSeek())
             {
-                marker = new StreamMarker(GetCurrentOffset(), GetStreamLength() - GetCurrentOffset(), this);
-                SeekFromEnd(0);
-                value = marker;
-                return (ulong)(marker.Length << 3);
+                if (readSize == ulong.MaxValue)
+                {
+                    marker = new StreamMarker(GetCurrentOffset(), GetStreamLength() - GetCurrentOffset(), this);
+                    SeekFromEnd(0);
+                    value = marker;
+                    return (ulong)(marker.Length << 3);
+                }
+                else
+                {
+                    long remaining = (long)(readSize - boxSize);
+                    long count = remaining >> 3;
+                    marker = new StreamMarker(GetCurrentOffset(), count, this);
+                    SeekFromCurrent(count);
+                    value = marker;
+                    return (ulong)(marker.Length << 3);
+                }
             }
             else
             {
-                long remaining = (long)(readSize - boxSize);
-                long count = remaining >> 3;
-                marker = new StreamMarker(GetCurrentOffset(), count, this);
-                SeekFromCurrent(count);
-                value = marker;
-                return (ulong)(marker.Length << 3);
+                // we cannot seek, use the temporary storage for offloading
+                var storage = GetOrCreateTemporaryStorage();
+                storage.SeekFromEnd(0); // move at the end of our storage
+                long offset = storage.GetCurrentOffset();
+
+                if (readSize == ulong.MaxValue)
+                {
+                    long count = 0;
+                    try
+                    {
+                        // read and write all data into our temporary storage
+                        while (true)
+                        {
+                            int b = storage.ReadByte();
+                            if (b == -1) break;
+                            count++;
+                            storage.WriteByte((byte)b);
+                        }
+                    }
+                    catch(EndOfStreamException)
+                    { }
+
+                    marker = new StreamMarker(offset, count, storage);
+                    value = marker;
+
+                    return (ulong)(count << 3);
+                }
+                else
+                {
+                    long remaining = (long)(readSize - boxSize);
+                    long count = remaining >> 3;
+                    ulong copied = CopyStream(_stream, storage._stream, count);
+
+                    marker = new StreamMarker(offset, count, storage);
+                    value = marker;
+
+                    return copied << 3;
+                }
             }
         }
 
@@ -1081,9 +1252,9 @@ namespace SharpMP4
         {
             IsoStream readStream = data.Stream;
             long originalPosition = readStream.GetCurrentOffset();
-            readStream.SeekFromBegining(data.Position);
+            readStream.SeekFromBeginning(data.Position);
             ulong size = CopyStream(readStream._stream, _stream, data.Length) << 3;
-            readStream.SeekFromBegining(originalPosition); // because in our test app we're reading and writing at the same time from the same thread, we have to restore the original position
+            readStream.SeekFromBeginning(originalPosition); // because in our test app we're reading and writing at the same time from the same thread, we have to restore the original position
             return size;
         }
 
@@ -1370,11 +1541,39 @@ namespace SharpMP4
 
         internal ulong ReadUInt32(out uint value)
         {
+            byte b1;
+
+            try
+            {
+                b1 = ReadByte();
+            }
+            catch(EndOfStreamException)
+            {
+                throw new IsoEndOfStreamException(new byte[] { b1 });
+            }
+
+            byte b2;
+
+            try
+            {
+                b2 = ReadByte();
+            }
+            catch(EndOfStreamException)
+            {
+                throw new IsoEndOfStreamException(new byte[] { b1, b2 });
+            }
+
+            byte b3;
+            b3 = ReadByte();
+
+            byte b4;
+            b4 = ReadByte();
+
             value = (uint)(
-                ((uint)ReadByte() << 24) +
-                ((uint)ReadByte() << 16) +
-                ((uint)ReadByte() << 8) +
-                ((uint)ReadByte() << 0)
+                ((uint)b1 << 24) +
+                ((uint)b2 << 16) +
+                ((uint)b3 << 8) +
+                ((uint)b4 << 0)
             );
             return 32;
         }
