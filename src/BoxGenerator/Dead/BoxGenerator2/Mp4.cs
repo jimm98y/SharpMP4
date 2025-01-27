@@ -8,6 +8,7 @@ namespace SharpMP4
     public class Mp4 : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
+        public byte[] PaddingBytes { get; set; }
         public Mp4BoxHeader PaddingHeader { get; set; }
 
         public List<Box> Children { get; set; } = new List<Box>();
@@ -56,11 +57,13 @@ namespace SharpMP4
                 if (header == null)
                 {
                     Padding = ie.Padding;
+                    PaddingBytes = ie.PaddingBytes;
                 }
                 else if (header.Header != null)
                 {
                     PaddingHeader = header;
                     Padding = ie.Padding;
+                    PaddingBytes = ie.PaddingBytes;
                 }
             }
             catch (EndOfStreamException) 
@@ -91,6 +94,10 @@ namespace SharpMP4
             if(this.Padding != null)
             {
                 size += stream.WritePadding(this.Padding);
+            }
+            else if(this.PaddingBytes != null)
+            {
+                size += stream.WritePadding(this.PaddingBytes);
             }
 
             return size;

@@ -233,9 +233,14 @@ namespace SharpMP4
             }
         }
 
+        private int ReadByteInternal()
+        {
+            return _stream.ReadByte();
+        }
+
         private byte ReadByte()
         {
-            int read = _stream.ReadByte();
+            int read = ReadByteInternal();
             if (read == -1) throw new EndOfStreamException();
             return (byte)(read & 0xff);
         }
@@ -529,7 +534,7 @@ namespace SharpMP4
                 ((uint)buffer[0] << 24) +
                 ((uint)buffer[1] << 16) +
                 ((uint)buffer[2] << 8) +
-                ((uint)buffer[3] << 0)
+                ((uint)buffer[3])
             );
         }
 
@@ -1466,9 +1471,21 @@ namespace SharpMP4
 
         internal ulong ReadUInt16(out ushort value)
         {
+            int b1 = ReadByteInternal();
+            if(b1 == -1)
+            {
+                throw new EndOfStreamException();
+            }
+
+            int b2 = ReadByteInternal();
+            if (b2 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1 });
+            }
+
             value = (ushort)(
-                ((ushort)ReadByte() << 8) +
-                ((ushort)ReadByte() << 0)
+                ((ushort)b1 << 8) +
+                ((ushort)b2)
             );
             return 16;
         }
@@ -1482,11 +1499,10 @@ namespace SharpMP4
 
         internal ulong ReadUInt16(out uint value)
         {
-            value = (uint)(
-                ((uint)ReadByte() << 8) +
-                ((uint)ReadByte() << 0)
-            );
-            return 16;
+            ushort v;
+            ulong size = ReadUInt16(out v);
+            value = v;
+            return size;
         }
 
         internal ulong WriteUInt16(uint value)
@@ -1498,10 +1514,28 @@ namespace SharpMP4
 
         internal ulong ReadUInt24(out uint value)
         {
+            int b1 = ReadByteInternal();
+            if(b1 == -1)
+            {
+                throw new EndOfStreamException();
+            }
+
+            int b2 = ReadByteInternal();
+            if(b2 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1 });
+            }
+
+            int b3 = ReadByteInternal();
+            if (b3 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2 });
+            }
+
             value = (uint)(
-                ((uint)ReadByte() << 16) +
-                ((uint)ReadByte() << 8) +
-                ((uint)ReadByte() << 0)
+                ((uint)b1 << 16) +
+                ((uint)b2 << 8) +
+                ((uint)b3)
             );
             return 24;
         }
@@ -1541,39 +1575,35 @@ namespace SharpMP4
 
         internal ulong ReadUInt32(out uint value)
         {
-            byte b1;
-
-            try
-            {
-                b1 = ReadByte();
-            }
-            catch(EndOfStreamException)
-            {
-                throw new IsoEndOfStreamException(new byte[] { b1 });
+            int b1 = ReadByteInternal();
+            if(b1 == -1) 
+            { 
+                throw new EndOfStreamException();
             }
 
-            byte b2;
-
-            try
+            int b2 = ReadByteInternal();
+            if(b2 == -1)
             {
-                b2 = ReadByte();
-            }
-            catch(EndOfStreamException)
-            {
-                throw new IsoEndOfStreamException(new byte[] { b1, b2 });
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1 });
             }
 
-            byte b3;
-            b3 = ReadByte();
+            int b3 = ReadByteInternal();
+            if (b3 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2 });
+            }
 
-            byte b4;
-            b4 = ReadByte();
+            int b4 = ReadByteInternal();
+            if (b4 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2, (byte)b3 });
+            }
 
             value = (uint)(
                 ((uint)b1 << 24) +
                 ((uint)b2 << 16) +
                 ((uint)b3 << 8) +
-                ((uint)b4 << 0)
+                ((uint)b4)
             );
             return 32;
         }
@@ -1589,13 +1619,10 @@ namespace SharpMP4
 
         internal ulong ReadUInt32(out ulong value)
         {
-            value = (uint)(
-                ((uint)ReadByte() << 24) +
-                ((uint)ReadByte() << 16) +
-                ((uint)ReadByte() << 8) +
-                ((uint)ReadByte() << 0)
-            );
-            return 32;
+            uint v;
+            ulong size = ReadUInt32(out v);
+            value = v;
+            return size;
         }
 
         internal ulong WriteUInt32(ulong value)
@@ -1609,13 +1636,49 @@ namespace SharpMP4
 
         internal ulong ReadUInt48(out ulong value)
         {
+            int b1 = ReadByteInternal();
+            if (b1 == -1)
+            {
+                throw new EndOfStreamException();
+            }
+
+            int b2 = ReadByteInternal();
+            if (b2 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1 });
+            }
+
+            int b3 = ReadByteInternal();
+            if (b3 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2 });
+            }
+
+            int b4 = ReadByteInternal();
+            if (b4 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2, (byte)b3 });
+            }
+
+            int b5 = ReadByteInternal();
+            if (b5 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2, (byte)b3, (byte)b4 });
+            }
+
+            int b6 = ReadByteInternal();
+            if (b6 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2, (byte)b3, (byte)b4, (byte)b5 });
+            }
+
             value = (ulong)(
-                ((ulong)ReadByte() << 40) +
-                ((ulong)ReadByte() << 32) +
-                ((ulong)ReadByte() << 24) +
-                ((ulong)ReadByte() << 16) +
-                ((ulong)ReadByte() << 8) +
-                ((ulong)ReadByte() << 0)
+                ((ulong)b1 << 40) +
+                ((ulong)b2 << 32) +
+                ((ulong)b3 << 24) +
+                ((ulong)b4 << 16) +
+                ((ulong)b5 << 8) +
+                ((ulong)b6)
             );
             return 48;
         }
@@ -1645,15 +1708,63 @@ namespace SharpMP4
 
         internal ulong ReadUInt64(out ulong value)
         {
+            int b1 = ReadByteInternal();
+            if (b1 == -1)
+            {
+                throw new EndOfStreamException();
+            }
+
+            int b2 = ReadByteInternal();
+            if (b2 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1 });
+            }
+
+            int b3 = ReadByteInternal();
+            if (b3 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2 });
+            }
+
+            int b4 = ReadByteInternal();
+            if (b4 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2, (byte)b3 });
+            }
+
+            int b5 = ReadByteInternal();
+            if (b5 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2, (byte)b3, (byte)b4 });
+            }
+
+            int b6 = ReadByteInternal();
+            if (b6 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2, (byte)b3, (byte)b4, (byte)b5 });
+            }
+
+            int b7 = ReadByteInternal();
+            if (b7 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2, (byte)b3, (byte)b4, (byte)b5, (byte)b6 });
+            }
+
+            int b8 = ReadByteInternal();
+            if (b8 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2, (byte)b3, (byte)b4, (byte)b5, (byte)b6, (byte)b7 });
+            }
+
             value = (ulong)(
-                ((ulong)ReadByte() << 56) +
-                ((ulong)ReadByte() << 48) +
-                ((ulong)ReadByte() << 40) +
-                ((ulong)ReadByte() << 32) +
-                ((ulong)ReadByte() << 24) +
-                ((ulong)ReadByte() << 16) +
-                ((ulong)ReadByte() << 8) +
-                ((ulong)ReadByte() << 0)
+                ((ulong)b1 << 56) +
+                ((ulong)b2 << 48) +
+                ((ulong)b3 << 40) +
+                ((ulong)b4 << 32) +
+                ((ulong)b5 << 24) +
+                ((ulong)b6 << 16) +
+                ((ulong)b7 << 8) +
+                ((ulong)b8)
             );
             return 64;
         }
@@ -1715,6 +1826,11 @@ namespace SharpMP4
         }
 
         public ulong WritePadding(StreamMarker padding)
+        {
+            return WriteUInt8ArrayTillEnd(padding);
+        }
+
+        public ulong WritePadding(byte[] padding)
         {
             return WriteUInt8ArrayTillEnd(padding);
         }
@@ -1967,10 +2083,16 @@ namespace SharpMP4
     public class IsoEndOfStreamException : EndOfStreamException
     {
         public StreamMarker Padding { get; set; }
+        public byte[] PaddingBytes { get; set; }
 
         public IsoEndOfStreamException(StreamMarker padding)
         {
             Padding = padding;
+        }
+
+        public IsoEndOfStreamException(byte[] padding)
+        {
+            PaddingBytes = padding;
         }
     }
 
