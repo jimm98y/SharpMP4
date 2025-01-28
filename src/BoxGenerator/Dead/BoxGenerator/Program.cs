@@ -1408,6 +1408,10 @@ namespace SharpMP4
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
         {
             string baseRead = "\r\n\t\tboxSize += base.Read(stream, readSize);";
+            if (b.BoxName == "MetaBox")
+            {
+                baseRead = "\r\n\t\tif(IsQuickTime) boxSize += base.Read(stream, readSize);";
+            }
             cls += baseRead;
         }
 
@@ -1475,7 +1479,7 @@ namespace SharpMP4
             string baseSize = "\r\n\t\tboxSize += base.CalculateSize();";
             if (b.BoxName == "MetaBox")
             {
-                baseSize += "\r\n\t\tif(!IsQuickTime) boxSize = (ulong)(boxSize - 32);";
+                baseSize = "\r\n\t\tif(IsQuickTime) boxSize += base.CalculateSize();";
             }
             cls += baseSize;
         }
@@ -2636,10 +2640,10 @@ namespace SharpMP4
             { "GroupIdToNameBox",                       "stream.ReadBox(boxSize, readSize, this, " },
             { "base64string",                           "stream.ReadStringZeroTerminated(boxSize, readSize, " },
             { "ProtectionSchemeInfoBox",                "stream.ReadBox(boxSize, readSize, this, " },
-            { "SingleItemTypeReferenceBox",             "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Header.Type)), this, " },
-            { "SingleItemTypeReferenceBox[]",           "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Header.Type)), this, " },
-            { "SingleItemTypeReferenceBoxLarge",        "stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Header.Type)), this, " },
-            { "SingleItemTypeReferenceBoxLarge[]",      "stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Header.Type)), this, " },
+            { "SingleItemTypeReferenceBox",             "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Type)), this, " },
+            { "SingleItemTypeReferenceBox[]",           "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Type)), this, " },
+            { "SingleItemTypeReferenceBoxLarge",        "stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Type)), this, " },
+            { "SingleItemTypeReferenceBoxLarge[]",      "stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Type)), this, " },
             { "HandlerBox(handler_type)",               "stream.ReadBox(boxSize, readSize, this, " },
             { "PrimaryItemBox",                         "stream.ReadBox(boxSize, readSize, this, " },
             { "DataInformationBox",                     "stream.ReadBox(boxSize, readSize, this, " },

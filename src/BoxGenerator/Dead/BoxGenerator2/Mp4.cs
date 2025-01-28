@@ -9,7 +9,7 @@ namespace SharpMP4
     {
         public StreamMarker Padding { get; set; }
         public byte[] PaddingBytes { get; set; }
-        public BoxHeader PaddingHeader { get; set; }
+        public SafeBoxHeader PaddingHeader { get; set; }
 
         public List<Box> Children { get; set; } = new List<Box>();
 
@@ -19,7 +19,7 @@ namespace SharpMP4
             Padding = null;
             PaddingHeader = null;
 
-            BoxHeader header = null;
+            SafeBoxHeader header = null;
             Box box = null;
             ulong size = 0;
 

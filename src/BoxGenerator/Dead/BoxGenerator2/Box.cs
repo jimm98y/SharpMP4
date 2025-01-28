@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace SharpMP4
 {
@@ -20,7 +23,7 @@ namespace SharpMP4
     {
         public virtual string FourCC { get; set; }
 
-        public BoxHeader Header { get; set; } 
+        public SafeBoxHeader Header { get; set; } 
 
 
         protected byte[] uuid = null;
@@ -73,6 +76,79 @@ namespace SharpMP4
         public virtual ulong CalculateSize()
         {
             return (ulong)(32 + 32 + ((ulong)(size >> 3) > uint.MaxValue || hasLargeSize ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(padding != null ? 8 * padding.Length : 0) + 8 * (ulong)(uuid != null ? uuid.Length : 0);
+        }
+    }
+
+    public class SafeBoxHeader : BoxHeader
+    {
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            byte[] bytes = new byte[32];
+            // reading it byte after byte so that we can "roll back" in case of forward-only reading
+            int i = 0;
+            int j = 0;
+            for (i = 0; i < 8; i++)
+            {
+                int tmp = stream.ReadByteInternal();
+                if (tmp == -1)
+                    throw new IsoEndOfStreamException(bytes.Take(i).ToArray());
+                bytes[i] = (byte)tmp;
+            }
+
+            size = (uint)(
+                ((uint)bytes[0] << 24) +
+                ((uint)bytes[1] << 16) +
+                ((uint)bytes[2] << 8) +
+                ((uint)bytes[3])
+            );
+
+            type = (uint)(
+                ((uint)bytes[4] << 24) +
+                ((uint)bytes[5] << 16) +
+                ((uint)bytes[6] << 8) +
+                ((uint)bytes[7])
+            );
+
+            if (size == 1)
+            {
+                for (i = 8; i < 16; i++)
+                {
+                    int tmp = stream.ReadByteInternal();
+                    if (tmp == -1)
+                        throw new IsoEndOfStreamException(bytes.Take(i).ToArray());
+                    bytes[i] = (byte)tmp;
+                }
+
+                largesize = (ulong)(
+                    ((ulong)bytes[8] << 56) +
+                    ((ulong)bytes[9] << 48) +
+                    ((ulong)bytes[10] << 40) +
+                    ((ulong)bytes[11] << 32) +
+                    ((ulong)bytes[12] << 24) +
+                    ((ulong)bytes[13] << 16) +
+                    ((ulong)bytes[14] << 8) +
+                    ((ulong)bytes[15])
+                );
+            }
+
+            else if (size == 0)
+            {
+                /*  box extends to end of file */
+            }
+
+            if (type == IsoStream.FromFourCC("uuid"))
+            {
+                usertype = new byte[16];
+                for (j = 0; j < 16; j++)
+                {
+                    int tmp = stream.ReadByteInternal();
+                    if (tmp == -1)
+                        throw new IsoEndOfStreamException(bytes.Take(i + j).ToArray());
+                    bytes[i + j] = (byte)tmp;
+                    usertype[j] = (byte)tmp;
+                }
+            }
+            return (ulong)((i + j) << 3);
         }
     }
 

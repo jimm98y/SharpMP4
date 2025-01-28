@@ -233,7 +233,7 @@ namespace SharpMP4
             }
         }
 
-        private int ReadByteInternal()
+        public int ReadByteInternal()
         {
             return _stream.ReadByte();
         }
@@ -555,7 +555,7 @@ namespace SharpMP4
 
         public Box ReadBox()
         {
-            BoxHeader header = ReadBoxHeader();
+            SafeBoxHeader header = ReadBoxHeader();
             ulong readSize = header.GetBoxSizeInBits();
             Box box = ReadBoxContent(header);
             return box;
@@ -572,9 +572,9 @@ namespace SharpMP4
             return writtenSize;
         }
 
-        public BoxHeader ReadBoxHeader()
+        public SafeBoxHeader ReadBoxHeader()
         {
-            BoxHeader header = new BoxHeader();
+            SafeBoxHeader header = new SafeBoxHeader();
             long headerOffset = 0;
             ulong headerSize = 0;
 
@@ -583,7 +583,9 @@ namespace SharpMP4
             // sometimes there can be a few bytes at the end of the mp4 file that are less than the header size
             ulong remaining = (ulong)(GetStreamLength() - headerOffset);
             if (headerOffset > 0 && remaining == 0)
+            {
                 throw new EndOfStreamException();
+            }
 
             if (remaining > 0 && remaining < 8)
             {
@@ -596,10 +598,10 @@ namespace SharpMP4
 
         private ulong WriteBoxHeader(Box value)
         {
-            BoxHeader header;
+            SafeBoxHeader header;
             if(value.Header == null)
             {
-                header = new BoxHeader();
+                header = new SafeBoxHeader();
                 ulong boxSizeBits = value.CalculateSize();
                 ulong boxSize = boxSizeBits >> 3;
                 if (boxSize > uint.MaxValue || value.HasLargeSize)
@@ -627,7 +629,7 @@ namespace SharpMP4
             return writtenSize;
         }
 
-        public Box ReadBoxContent(BoxHeader header)
+        public Box ReadBoxContent(SafeBoxHeader header)
         {
             if (header.Type == 0 && header.Size == 0 && header.Largesize == 0)
                 return null; // all zeros, looks like 8 zero bytes padding at the end of the file
@@ -654,7 +656,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<BoxHeader, Box> factory, Box parent, out T value) where T : Box
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, Box parent, out T value) where T : Box
         {
             var header = ReadBoxHeader();
             var box = factory(header);
@@ -703,7 +705,7 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<BoxHeader, Box> factory, Box parent, out T[] value) where T : Box
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, Box parent, out T[] value) where T : Box
         {
             var boxes = new List<T>();
 
@@ -818,7 +820,7 @@ namespace SharpMP4
             return written;
         }
 
-        private static ulong GetBoxSize(BoxHeader header)
+        private static ulong GetBoxSize(SafeBoxHeader header)
         {
             if (header.Size == 0)
             {
@@ -830,12 +832,12 @@ namespace SharpMP4
             }
         }
 
-        private static ulong GetHeaderSize(BoxHeader header)
+        private static ulong GetHeaderSize(SafeBoxHeader header)
         {
             return header.GetHeaderSizeInBits();
         }
 
-        private ulong ReadBox(BoxHeader header, Box box)
+        private ulong ReadBox(SafeBoxHeader header, Box box)
         {
             Debug.WriteLine($"Parsed box: {box.FourCC}");
             ulong availableSize = 0;
@@ -1255,7 +1257,7 @@ namespace SharpMP4
                         // read and write all data into our temporary storage
                         while (true)
                         {
-                            int b = storage.ReadByte();
+                            int b = _stream.ReadByte();
                             if (b == -1) break;
                             count++;
                             storage.WriteByte((byte)b);

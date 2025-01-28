@@ -12268,7 +12268,7 @@ namespace SharpMP4
         public override ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
+            if (IsQuickTime) boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.theHandler); 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.primary_resource); // optional
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.file_locations); // optional
@@ -12304,8 +12304,7 @@ namespace SharpMP4
         public override ulong CalculateSize()
         {
             ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            if (!IsQuickTime) boxSize = (ulong)(boxSize - 32);
+            if (IsQuickTime) boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(theHandler); // theHandler
             // boxSize += IsoStream.CalculateBoxSize(primary_resource); // primary_resource
             // boxSize += IsoStream.CalculateBoxSize(file_locations); // file_locations
