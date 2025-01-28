@@ -677,7 +677,6 @@ namespace SharpMP4
 
             if (readSize == ulong.MaxValue)
             {
-                List<Box> values = new List<Box>();
                 // consume till the end of the stream
                 try
                 {
@@ -747,6 +746,7 @@ namespace SharpMP4
         {
             Debug.WriteLine($"Parsed box: {box.FourCC}");
             ulong availableSize = 0;
+
             if (GetBoxSize(header) == 0)
             {
                 availableSize = ulong.MaxValue;
@@ -929,7 +929,7 @@ namespace SharpMP4
             if (tag == 0)
             {
                 descriptor = null;
-                return (ulong)8;
+                return 8;
             }
 
             ulong sizeOfSize = ReadDescriptorSize(out int sizeOfInstance);
@@ -942,8 +942,6 @@ namespace SharpMP4
             {
                 if (readInstanceSizeBits < sizeOfInstanceBits)
                 {
-                    // TODO: Investigate and fix
-                    //size += ReadBits((uint)(sizeOfInstanceBits - readInstanceSizeBits), out byte[] missing);
                     StreamMarker missing;
                     size += ReadPadding(sizeOfInstanceBits, readInstanceSizeBits, out missing);
                     descriptor.Padding = missing;
@@ -979,7 +977,6 @@ namespace SharpMP4
 
             if (readSize == ulong.MaxValue)
             {
-                List<Box> values = new List<Box>();
                 // consume till the end of the stream
                 try
                 {
@@ -1162,7 +1159,7 @@ namespace SharpMP4
                     marker = new StreamMarker(offset, (long)count, storage);
                     value = marker;
 
-                    return (ulong)(count << 3);
+                    return count << 3;
                 }
                 else
                 {
@@ -1399,7 +1396,7 @@ namespace SharpMP4
             int b1 = ReadByteInternal();
             if(b1 == -1)
             {
-                throw new EndOfStreamException();
+                throw new IsoEndOfStreamException();
             }
 
             int b2 = ReadByteInternal();
@@ -1442,7 +1439,7 @@ namespace SharpMP4
             int b1 = ReadByteInternal();
             if(b1 == -1)
             {
-                throw new EndOfStreamException();
+                throw new IsoEndOfStreamException();
             }
 
             int b2 = ReadByteInternal();
@@ -1503,7 +1500,7 @@ namespace SharpMP4
             int b1 = ReadByteInternal();
             if(b1 == -1) 
             { 
-                throw new EndOfStreamException();
+                throw new IsoEndOfStreamException();
             }
 
             int b2 = ReadByteInternal();
@@ -1564,7 +1561,7 @@ namespace SharpMP4
             int b1 = ReadByteInternal();
             if (b1 == -1)
             {
-                throw new EndOfStreamException();
+                throw new IsoEndOfStreamException();
             }
 
             int b2 = ReadByteInternal();
@@ -1636,7 +1633,7 @@ namespace SharpMP4
             int b1 = ReadByteInternal();
             if (b1 == -1)
             {
-                throw new EndOfStreamException();
+                throw new IsoEndOfStreamException();
             }
 
             int b2 = ReadByteInternal();
@@ -1993,6 +1990,11 @@ namespace SharpMP4
     {
         public StreamMarker Padding { get; set; }
         public byte[] PaddingBytes { get; set; }
+
+        public IsoEndOfStreamException()
+        {
+            
+        }
 
         public IsoEndOfStreamException(StreamMarker padding)
         {
