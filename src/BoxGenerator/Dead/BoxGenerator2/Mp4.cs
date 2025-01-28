@@ -9,7 +9,7 @@ namespace SharpMP4
     {
         public StreamMarker Padding { get; set; }
         public byte[] PaddingBytes { get; set; }
-        public Mp4BoxHeader PaddingHeader { get; set; }
+        public BoxHeader PaddingHeader { get; set; }
 
         public List<Box> Children { get; set; } = new List<Box>();
 
@@ -19,7 +19,7 @@ namespace SharpMP4
             Padding = null;
             PaddingHeader = null;
 
-            Mp4BoxHeader header = null;
+            BoxHeader header = null;
             Box box = null;
             ulong size = 0;
 
@@ -31,7 +31,7 @@ namespace SharpMP4
                     box = null;
 
                     header = stream.ReadBoxHeader();
-                    ulong boxSize = header.Header.GetBoxSizeInBits();
+                    ulong boxSize = header.GetBoxSizeInBits();
 
                     box = stream.ReadBoxContent(header);
                     if(box == null)
@@ -59,7 +59,7 @@ namespace SharpMP4
                     Padding = ie.Padding;
                     PaddingBytes = ie.PaddingBytes;
                 }
-                else if (header.Header != null)
+                else
                 {
                     PaddingHeader = header;
                     Padding = ie.Padding;
@@ -86,9 +86,9 @@ namespace SharpMP4
                 size += stream.WriteBox(Children[i]);
             }
 
-            if(this.PaddingHeader != null && this.PaddingHeader.Header != null)
+            if(this.PaddingHeader != null && this.PaddingHeader != null)
             {
-                size += this.PaddingHeader.Header.Write(stream);
+                size += this.PaddingHeader.Write(stream);
             }
 
             if(this.Padding != null)
@@ -111,9 +111,9 @@ namespace SharpMP4
                 size += Children[i].CalculateSize();
             }
 
-            if (this.PaddingHeader != null && this.PaddingHeader.Header != null)
+            if (this.PaddingHeader != null)
             {
-                size += this.PaddingHeader.HeaderSize;
+                size += this.PaddingHeader.GetHeaderSizeInBits();
             }
 
             if (this.Padding != null)

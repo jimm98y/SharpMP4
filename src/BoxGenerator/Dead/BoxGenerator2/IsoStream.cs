@@ -555,8 +555,8 @@ namespace SharpMP4
 
         public Box ReadBox()
         {
-            Mp4BoxHeader header = ReadBoxHeader();
-            ulong readSize = header.Header.GetBoxSizeInBits();
+            BoxHeader header = ReadBoxHeader();
+            ulong readSize = header.GetBoxSizeInBits();
             Box box = ReadBoxContent(header);
             return box;
         }
@@ -572,7 +572,7 @@ namespace SharpMP4
             return writtenSize;
         }
 
-        public Mp4BoxHeader ReadBoxHeader()
+        public BoxHeader ReadBoxHeader()
         {
             BoxHeader header = new BoxHeader();
             long headerOffset = 0;
@@ -591,39 +591,49 @@ namespace SharpMP4
             }
 
             headerSize = header.Read(this, 0);
-            return new Mp4BoxHeader(header, headerOffset, headerSize);
+            return header;
         }
 
         private ulong WriteBoxHeader(Box value)
         {
-            BoxHeader header = new BoxHeader();
-            ulong boxSizeBits = value.CalculateSize();
-            ulong boxSize = boxSizeBits >> 3;
-            if (boxSize > uint.MaxValue || value.HasLargeSize)
+            BoxHeader header;
+            if(value.Header == null)
             {
-                header.Size = 1;
-                header.Largesize = boxSize;
+                header = new BoxHeader();
+                ulong boxSizeBits = value.CalculateSize();
+                ulong boxSize = boxSizeBits >> 3;
+                if (boxSize > uint.MaxValue || value.HasLargeSize)
+                {
+                    header.Size = 1;
+                    header.Largesize = boxSize;
+                }
+                else
+                {
+                    header.Size = (uint)boxSize;
+                    header.Largesize = 0;
+                }
+                header.Usertype = value.Uuid;
+                header.Type = FromFourCC(value.FourCC);
+                value.Header = header;
             }
             else
             {
-                header.Size = (uint)boxSize;
-                header.Largesize = 0;
-            }
-            header.Usertype = value.Uuid;
-            header.Type = FromFourCC(value.FourCC);
+                // write the header "as is"
+                header = value.Header;
+            }        
 
             ulong writtenSize = 0;
             writtenSize += header.Write(this);
             return writtenSize;
         }
 
-        public Box ReadBoxContent(Mp4BoxHeader header)
+        public Box ReadBoxContent(BoxHeader header)
         {
-            if (header.Header.Type == 0 && header.Header.Size == 0 && header.Header.Largesize == 0)
+            if (header.Type == 0 && header.Size == 0 && header.Largesize == 0)
                 return null; // all zeros, looks like 8 zero bytes padding at the end of the file
 
-            string fourCC = ToFourCC(header.Header.Type);
-            var box = BoxFactory.CreateBox(fourCC, null, header.Header.Usertype);
+            string fourCC = ToFourCC(header.Type);
+            var box = BoxFactory.CreateBox(fourCC, null, header.Usertype);
             ReadBox(header, box);
             return box;
         }
@@ -637,21 +647,21 @@ namespace SharpMP4
         internal ulong ReadBox(ulong boxSize, ulong readSize, Box parent, out Box value)
         {
             var header = ReadBoxHeader();
-            var box = BoxFactory.CreateBox(ToFourCC(header.Header.Type), parent.FourCC, header.Header.Usertype);
+            var box = BoxFactory.CreateBox(ToFourCC(header.Type), parent.FourCC, header.Usertype);
             box.Parent = parent;
-            ReadBox(header, box);
+            ulong size = ReadBox(header, box);
             value = box;
-            return header.BoxSize;
+            return size;
         }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, Box parent, out T value) where T : Box
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<BoxHeader, Box> factory, Box parent, out T value) where T : Box
         {
             var header = ReadBoxHeader();
             var box = factory(header);
             box.Parent = parent;
-            ReadBox(header, box);
+            ulong size = ReadBox(header, box);
             value = (T)box;
-            return header.BoxSize;
+            return size;
         }
 
         internal ulong ReadBox(ulong boxSize, ulong readSize, IMp4Serializable serializable, out Box[] value)
@@ -693,7 +703,7 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<Mp4BoxHeader, Box> factory, Box parent, out T[] value) where T : Box
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<BoxHeader, Box> factory, Box parent, out T[] value) where T : Box
         {
             var boxes = new List<T>();
 
@@ -808,24 +818,42 @@ namespace SharpMP4
             return written;
         }
 
-        private void ReadBox(Mp4BoxHeader header, Box box)
+        private static ulong GetBoxSize(BoxHeader header)
+        {
+            if (header.Size == 0)
+            {
+                return ulong.MaxValue; // to the end of the file
+            }
+            else
+            {
+                return header.GetBoxSizeInBits();
+            }
+        }
+
+        private static ulong GetHeaderSize(BoxHeader header)
+        {
+            return header.GetHeaderSizeInBits();
+        }
+
+        private ulong ReadBox(BoxHeader header, Box box)
         {
             Debug.WriteLine($"Parsed box: {box.FourCC}");
             ulong availableSize = 0;
-            if (header.BoxSize == 0)
+            if (GetBoxSize(header) == 0)
             {
                 availableSize = ulong.MaxValue;
             }
             else
             {
-                availableSize = header.BoxSize - header.HeaderSize;
+                availableSize = GetBoxSize(header) - GetHeaderSize(header);
             }
 
-            box.HasLargeSize = header.Header.Size == 1;
+            box.HasLargeSize = header.Size == 1;
+            box.Header = header;
 
             ulong size = box.Read(this, availableSize);
 
-            if (header.BoxSize != 0 && size != availableSize)
+            if (GetBoxSize(header) != 0 && size != availableSize)
             {
                 if (size < availableSize)
                 {
@@ -841,11 +869,13 @@ namespace SharpMP4
             }
 
             ulong calculatedSize = box.CalculateSize();
-            if (calculatedSize != header.BoxSize)
+            if (calculatedSize != GetBoxSize(header))
             {
                 if (box.FourCC != "mdat")
-                    Debug.WriteLine($"Calculated \'{box.FourCC}\' size: {calculatedSize / 8}, read: {header.BoxSize / 8}");
+                    Debug.WriteLine($"Calculated \'{box.FourCC}\' size: {calculatedSize / 8}, read: {GetBoxSize(header) / 8}");
             }
+
+            return size + GetHeaderSize(header);
         }
 
         internal static ulong CalculateBoxSize(IEnumerable<Box> boxes)
@@ -2049,22 +2079,6 @@ namespace SharpMP4
         }
 
         #endregion // TODO
-    }
-
-    public class Mp4BoxHeader
-    {
-        public BoxHeader Header { get; set; }
-        public long HeaderOffset { get; set; }
-        public ulong HeaderSize { get; set; }
-        public ulong BoxSize { get; set; }
-
-        public Mp4BoxHeader(BoxHeader header, long headerOffset, ulong headerSize)
-        {
-            this.Header = header;
-            this.HeaderOffset = headerOffset;
-            this.HeaderSize = headerSize;
-            this.BoxSize = header.GetBoxSizeInBits();
-        }
     }
 
     public class StreamMarker

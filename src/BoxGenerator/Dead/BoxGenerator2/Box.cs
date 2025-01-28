@@ -20,6 +20,9 @@ namespace SharpMP4
     {
         public virtual string FourCC { get; set; }
 
+        public BoxHeader Header { get; set; } 
+
+
         protected byte[] uuid = null;
         public byte[] Uuid { get { return uuid; } set { uuid = value; } }
 

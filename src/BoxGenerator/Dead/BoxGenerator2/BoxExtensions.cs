@@ -10,5 +10,10 @@
             ulong size = (ulong)header.Size << 3;
             return size;
         }
+
+        public static ulong GetHeaderSizeInBits(this BoxHeader header)
+        {
+            return header.CalculateSize();
+        }
     }
 }
