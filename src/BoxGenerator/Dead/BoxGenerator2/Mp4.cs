@@ -38,7 +38,16 @@ namespace SharpMP4
                     {
                         // header from 0 bytes
                         this.PaddingHeader = header;
-                        this.Padding = new StreamMarker(stream.GetCurrentOffset(), stream.GetStreamLength() - stream.GetCurrentOffset(), stream);
+                        if (stream.CanStreamSeek())
+                        {
+                            this.Padding = new StreamMarker(stream.GetCurrentOffset(), stream.GetStreamLength() - stream.GetCurrentOffset(), stream);
+                        }
+                        else
+                        {
+                            StreamMarker marker;
+                            stream.ReadPadding(0, ulong.MaxValue, out marker);
+                            this.Padding = marker;
+                        }
                         break;
                     }
                     
