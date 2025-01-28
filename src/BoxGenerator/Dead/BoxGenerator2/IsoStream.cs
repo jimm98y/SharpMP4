@@ -1255,12 +1255,13 @@ namespace SharpMP4
                     try
                     {
                         // read and write all data into our temporary storage
+                        byte[] buffer = new byte[4096];
                         while (true)
                         {
-                            int b = _stream.ReadByte();
-                            if (b == -1) break;
-                            count++;
-                            storage.WriteByte((byte)b);
+                            int b = _stream.Read(buffer, 0, buffer.Length);
+                            if (b <= 0) break;
+                            count += b;
+                            storage.WriteBytes((ulong)b, buffer);
                         }
                     }
                     catch(EndOfStreamException)
