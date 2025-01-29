@@ -194,6 +194,9 @@ namespace SharpMP4
         }
     }
 
+    public class InvalidBox : UnknownBox
+    {  }
+
     public class UnknownEntry : SampleEntry
     {
         protected StreamMarker data;
