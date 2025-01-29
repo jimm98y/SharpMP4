@@ -502,7 +502,7 @@ namespace SharpMP4
             return header;
         }
 
-        private ulong WriteBoxHeader(Box value)
+        public ulong WriteBoxHeader(Box value)
         {
             SafeBoxHeader header;
             if(value.Header == null)
@@ -546,13 +546,13 @@ namespace SharpMP4
             return box;
         }
 
-        private ulong WriteBoxContent(Box box)
+        public ulong WriteBoxContent(Box box)
         {
             ulong size = box.Write(this);
             return size;
         }
 
-        internal ulong ReadBox(ulong boxSize, ulong readSize, Box parent, out Box value)
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T value) where T : Box
         {
             var header = ReadBoxHeader();
             ulong availableSize = readSize - boxSize - GetHeaderSize(header);
@@ -565,70 +565,43 @@ namespace SharpMP4
                 box = new InvalidBox();
                 box.Parent = parent;
                 box.Header = header;
-                size = box.Read(this, availableSize) + GetHeaderSize(header); 
+                Debug.WriteLine($"BOX:{GetIndentation(box)}\'{box.FourCC}\'");
+                size = box.Read(this, availableSize) + GetHeaderSize(header);
             }
             else
             {
-                box = BoxFactory.CreateBox(ToFourCC(header.Type), parent.FourCC, header.Usertype);
+                box = factory(header);
                 box.Parent = parent;
+                Debug.WriteLine($"BOX:{GetIndentation(box)}\'{box.FourCC}\'");
                 size = ReadBox(header, box, availableSize);
             }
-            
-            value = box;
-            return size;
-        }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, Box parent, out T value) where T : Box
-        {
-            ulong availableSize = readSize - boxSize;
-            var header = ReadBoxHeader();
-            var box = factory(header);
-            box.Parent = parent;
-            ulong size = ReadBox(header, box, availableSize);
             value = (T)box;
             return size;
         }
 
-        internal ulong ReadBox(ulong boxSize, ulong readSize, IMp4Serializable serializable, out Box[] value)
+        private static Box DefaultBoxFactory(IMp4Serializable parent, SafeBoxHeader header)
         {
-            ulong consumed = 0;
-            List<Box> values = new List<Box>();
-
-            if (readSize == 0)
-            {
-                // consume till the end of the stream
-                try
-                {
-                    while (true)
-                    {
-                        Box v;
-                        consumed += ReadBox(consumed, readSize, (Box)null, out v);
-                        values.Add(v);
-                    }
-                }
-                catch (EndOfStreamException)
-                { }
-
-                value = values.ToArray();
-                return consumed;
-            }
-
-            ulong remaining = readSize - boxSize;
-            while (consumed < remaining && (remaining - consumed) >= 64) // box header is at least 8 bytes
-            {
-                Box v;
-                consumed += ReadBox(consumed, readSize, (Box)null, out v);
-                if (consumed > readSize)
-                {
-                    throw new Exception($"Box \'{v.FourCC}\' read through!");
-                }
-                values.Add(v);
-            }
-            value = values.ToArray();
-            return consumed;
+            return BoxFactory.CreateBox(ToFourCC(header.Type), (parent as Box)?.FourCC, header.Usertype);
         }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, Box parent, out T[] value) where T : Box
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T value) where T : Box
+        {
+            return ReadBox(boxSize, readSize, 
+                (header) => DefaultBoxFactory(parent, header),
+                parent,
+                out value);    
+        }
+
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] value) where T : Box
+        {
+            return ReadBox<T>(boxSize, readSize,
+                (header) => DefaultBoxFactory(parent, header),
+                parent,
+                out value);
+        }
+
+        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T[] value) where T : Box
         {
             var boxes = new List<T>();
 
@@ -762,8 +735,6 @@ namespace SharpMP4
 
         private ulong ReadBox(SafeBoxHeader header, Box box, ulong readSize)
         {
-            Debug.WriteLine($"Box:{GetIndentation(box)}{box.FourCC}");
-
             ulong availableSize = 0;
 
             if (GetBoxSize(header) == ulong.MaxValue)
@@ -837,15 +808,16 @@ namespace SharpMP4
 
         #region Classes
 
-        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, T c, out T value) where T : IMp4Serializable
+        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, T c, out T value) where T : IMp4Serializable
         {
             ulong size = c.Read(this, readSize - boxSize);
             value = c;
-            Debug.WriteLine($"Class:{GetIndentation(c)}{c.DisplayName}");
+            c.Parent = parent;
+            Debug.WriteLine($"CLS:{GetIndentation(c)}{c.DisplayName}");
             return size;
         }
 
-        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, out T[] value) where T : IMp4Serializable, new()
+        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] value) where T : IMp4Serializable, new()
         {
             ulong consumed = 0;
             ulong remaining = readSize - boxSize;
@@ -853,11 +825,12 @@ namespace SharpMP4
             while (consumed < remaining)
             {
                 T c;
-                consumed += ReadClass<T>(boxSize + consumed, remaining, new T(), out c);
+                consumed += ReadClass<T>(boxSize + consumed, remaining, parent, new T(), out c);
                 if (consumed > readSize)
                 {
                     throw new Exception($"Class read through!");
                 }
+                c.Parent = parent;
                 ret.Add(c);
             }
             value = ret.ToArray();
@@ -910,10 +883,11 @@ namespace SharpMP4
             return writtenSize;
         }
 
-        internal ulong ReadEntry<T>(ulong boxSize, ulong readSize, string fourCC, out T entry) where T : SampleGroupDescriptionEntry
+        internal ulong ReadEntry<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, string fourCC, out T entry) where T : SampleGroupDescriptionEntry
         {
             var res = BoxFactory.CreateEntry(fourCC);
-            Debug.WriteLine($"Entry:{GetIndentation(res)}{res.DisplayName}");
+            res.Parent = parent;
+            Debug.WriteLine($"ENT:{GetIndentation(res)}\'{res.DisplayName}\'");
             ulong size = res.Read(this, readSize);
             entry = (T)res;
             return size;
@@ -961,11 +935,13 @@ namespace SharpMP4
             if (availableSize < sizeOfInstanceBits)
             {
                 descriptor = new InvalidDescriptor(tag) as T;
-                Debug.WriteLine($"Descriptor:{GetIndentation(descriptor)}{descriptor.DisplayName}");
+                Debug.WriteLine($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
                 size += descriptor.Read(this, (ulong) availableSize);
                 return size;
             }
-                        
+
+            Debug.WriteLine($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
+
             ulong readInstanceSizeBits = descriptor.Read(this, (ulong)sizeOfInstanceBits);
             if (readInstanceSizeBits != (ulong)sizeOfInstanceBits)
             {

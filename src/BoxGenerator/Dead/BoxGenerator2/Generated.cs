@@ -403,7 +403,7 @@ namespace SharpMP4
             }
 
             //throw new NotImplementedException(fourCC);
-            System.Diagnostics.Debug.WriteLine($"--Unknown box: {fourCC}");
+            System.Diagnostics.Debug.WriteLine($"--Unknown box: '{fourCC}'");
             return new UnknownBox(fourCC);
         }
         public static IMp4Serializable CreateEntry(string fourCC)
@@ -482,7 +482,7 @@ namespace SharpMP4
             }
 
             //throw new NotImplementedException(fourCC);
-            System.Diagnostics.Debug.WriteLine($"--Unknown entry: {fourCC}");
+            System.Diagnostics.Debug.WriteLine($"--Unknown entry: '{fourCC}'");
             return new UnknownEntry(fourCC);
         }
     }
@@ -2736,7 +2736,7 @@ namespace SharpMP4
                 boxSize += stream.ReadUInt16(out this.avgFrameRate);
             }
             boxSize += stream.ReadUInt8(out this.numReferences);
-            boxSize += stream.ReadClass(boxSize, readSize, out this.dependency);
+            boxSize += stream.ReadClass(boxSize, readSize, this, out this.dependency);
             return boxSize;
         }
 
@@ -4254,7 +4254,7 @@ namespace SharpMP4
                 boxSize += stream.ReadBits(2, out this.chroma_format_idc);
                 boxSize += stream.ReadBits(3, out this.bit_depth_minus8);
                 boxSize += stream.ReadBits(5, out this.reserved0);
-                boxSize += stream.ReadClass(boxSize, readSize, new VvcPTLRecord(num_sublayers), out this.native_ptl);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord(num_sublayers), out this.native_ptl);
                 boxSize += stream.ReadUInt16(out this.max_picture_width);
                 boxSize += stream.ReadUInt16(out this.max_picture_height);
                 boxSize += stream.ReadUInt16(out this.avg_frame_rate);
@@ -4709,7 +4709,7 @@ namespace SharpMP4
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
                 boxSize += stream.ReadUInt8(out this.ptl_max_temporal_id[i]);
-                boxSize += stream.ReadClass(boxSize, readSize, new VvcPTLRecord((byte)(ptl_max_temporal_id[i] + 1)), out this.ptl[i]);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord((byte)(ptl_max_temporal_id[i] + 1)), out this.ptl[i]);
             }
             boxSize += stream.ReadBit(out this.all_independent_layers_flag);
             boxSize += stream.ReadBits(7, out this.reserved);
@@ -6907,12 +6907,12 @@ namespace SharpMP4
 
             else if (colour_type == IsoStream.FromFourCC("rICC"))
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ICC_profile(), out this.ICC_profile); // restricted ICC profile
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ICC_profile(), out this.ICC_profile); // restricted ICC profile
             }
 
             else if (colour_type == IsoStream.FromFourCC("prof"))
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ICC_profile(), out this.ICC_profile); // unrestricted ICC profile
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ICC_profile(), out this.ICC_profile); // unrestricted ICC profile
             }
             return boxSize;
         }
@@ -11588,7 +11588,7 @@ namespace SharpMP4
             if (version == 1)
             {
                 boxSize += stream.ReadUInt32(out this.extension_type); //optional
-                boxSize += stream.ReadClass(boxSize, readSize, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), out this.ItemInfoExtension); //optional
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), out this.ItemInfoExtension); //optional
             }
 
             if (version >= 2)
@@ -14144,7 +14144,7 @@ namespace SharpMP4
                         boxSize += stream.ReadUInt32(out this.description_length[i]);
                     }
                 }
-                boxSize += stream.ReadEntry(boxSize, readSize, IsoStream.ToFourCC(grouping_type), out this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
+                boxSize += stream.ReadEntry(boxSize, readSize, this, IsoStream.ToFourCC(grouping_type), out this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
                 /*   that is appropriate and permitted for the media type */
             }
             return boxSize;
@@ -19421,7 +19421,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new MVDDecoderConfigurationRecord(), out this.MVDConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new MVDDecoderConfigurationRecord(), out this.MVDConfig);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdDepthRes); //Optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -19472,7 +19472,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new MVDDecoderConfigurationRecord(), out this.MVDConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new MVDDecoderConfigurationRecord(), out this.MVDConfig);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdDepthRes); //Optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -19721,7 +19721,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new MVCDecoderConfigurationRecord(), out this.MVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new MVCDecoderConfigurationRecord(), out this.MVCConfig);
             return boxSize;
         }
 
@@ -19764,7 +19764,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new AVCDecoderConfigurationRecord(), out this.AVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new AVCDecoderConfigurationRecord(), out this.AVCConfig);
             return boxSize;
         }
 
@@ -19807,7 +19807,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new HEVCDecoderConfigurationRecord(), out this.HEVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new HEVCDecoderConfigurationRecord(), out this.HEVCConfig);
             return boxSize;
         }
 
@@ -19850,7 +19850,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new LHEVCDecoderConfigurationRecord(), out this.LHEVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new LHEVCDecoderConfigurationRecord(), out this.LHEVCConfig);
             return boxSize;
         }
 
@@ -19893,7 +19893,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadClass(boxSize, readSize, new Descriptor(),  out this.Descr); 
+            // boxSize += stream.ReadClass(boxSize, readSize, this, new Descriptor(),  out this.Descr); 
             return boxSize;
         }
 
@@ -19936,7 +19936,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new SVCDecoderConfigurationRecord(), out this.SVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new SVCDecoderConfigurationRecord(), out this.SVCConfig);
             return boxSize;
         }
 
@@ -20213,7 +20213,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new HEVCTileTierLevelConfigurationRecord(), out this.HEVCTileTierLevelConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new HEVCTileTierLevelConfigurationRecord(), out this.HEVCTileTierLevelConfig);
             return boxSize;
         }
 
@@ -20256,7 +20256,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new EVCDecoderConfigurationRecord(), out this.EVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new EVCDecoderConfigurationRecord(), out this.EVCConfig);
             return boxSize;
         }
 
@@ -20388,7 +20388,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new VvcDecoderConfigurationRecord(), out this.VvcConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new VvcDecoderConfigurationRecord(), out this.VvcConfig);
             return boxSize;
         }
 
@@ -20731,7 +20731,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new EVCSliceComponentTrackConfigurationRecord(), out this.config);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new EVCSliceComponentTrackConfigurationRecord(), out this.config);
             return boxSize;
         }
 
@@ -24227,7 +24227,7 @@ namespace SharpMP4
             this.opeg_ptl = new VvcPTLRecord[num_profile_tier_level_minus1 + 1];
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new VvcPTLRecord(0), out this.opeg_ptl[i]);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord(0), out this.opeg_ptl[i]);
             }
             boxSize += stream.ReadBits(6, out this.reserved);
             boxSize += stream.ReadBit(out this.incomplete_operating_points_flag);
@@ -25604,7 +25604,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new OperatingPointsRecord(), out this.oinf);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new OperatingPointsRecord(), out this.oinf);
             return boxSize;
         }
 
@@ -25875,7 +25875,7 @@ namespace SharpMP4
 
             if (subpic_id_info_flag)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
             }
             return boxSize;
         }
@@ -26427,7 +26427,7 @@ namespace SharpMP4
 
             if (subpic_id_info_flag)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
             }
             return boxSize;
         }
@@ -27051,7 +27051,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new VvcOperatingPointsRecord(), out this.oinf);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new VvcOperatingPointsRecord(), out this.oinf);
             return boxSize;
         }
 
@@ -27535,7 +27535,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new OperatingPointsRecord(), out this.op_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadClass(boxSize, readSize, this, new OperatingPointsRecord(), out this.op_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -28695,7 +28695,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadEntry(boxSize, readSize, TYPE, out this.sid_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadEntry(boxSize, readSize, this, TYPE, out this.sid_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -28739,7 +28739,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadEntry(boxSize, readSize, TYPE, out this.sor_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadEntry(boxSize, readSize, this, TYPE, out this.sor_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -30614,7 +30614,7 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadClass(boxSize, readSize, new GetAudioObjectType(), out this.audioObjectType);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new GetAudioObjectType(), out this.audioObjectType);
             boxSize += stream.ReadBslbf(4, out this.samplingFrequencyIndex);
 
             if (samplingFrequencyIndex == 0xf)
@@ -30640,7 +30640,7 @@ namespace SharpMP4
                 {
                     boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency);
                 }
-                boxSize += stream.ReadClass(boxSize, readSize, new GetAudioObjectType(), out this.audioObjectType);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new GetAudioObjectType(), out this.audioObjectType);
 
                 if (audioObjectType.AudioObjectType == 22)
                 {
@@ -30667,62 +30667,62 @@ namespace SharpMP4
                 case 21:
                 case 22:
                 case 23:
-                    boxSize += stream.ReadClass(boxSize, readSize, new GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.GASpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.GASpecificConfig);
                     break;
                 case 8:
-                    boxSize += stream.ReadClass(boxSize, readSize, new CelpSpecificConfig(samplingFrequencyIndex), out this.CelpSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new CelpSpecificConfig(samplingFrequencyIndex), out this.CelpSpecificConfig);
                     break;
                 case 9:
-                    boxSize += stream.ReadClass(boxSize, readSize, new HvxcSpecificConfig(), out this.HvxcSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new HvxcSpecificConfig(), out this.HvxcSpecificConfig);
                     break;
                 case 12:
-                    boxSize += stream.ReadClass(boxSize, readSize, new TTSSpecificConfig(), out this.TTSSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new TTSSpecificConfig(), out this.TTSSpecificConfig);
                     break;
                 case 13:
                 case 14:
                 case 15:
                 case 16:
-                    boxSize += stream.ReadClass(boxSize, readSize, new StructuredAudioSpecificConfig(), out this.StructuredAudioSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new StructuredAudioSpecificConfig(), out this.StructuredAudioSpecificConfig);
                     break;
                 case 24:
-                    boxSize += stream.ReadClass(boxSize, readSize, new ErrorResilientCelpSpecificConfig(samplingFrequencyIndex), out this.ErrorResilientCelpSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorResilientCelpSpecificConfig(samplingFrequencyIndex), out this.ErrorResilientCelpSpecificConfig);
                     break;
                 case 25:
-                    boxSize += stream.ReadClass(boxSize, readSize, new ErrorResilientHvxcSpecificConfig(), out this.ErrorResilientHvxcSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorResilientHvxcSpecificConfig(), out this.ErrorResilientHvxcSpecificConfig);
                     break;
                 case 26:
                 case 27:
-                    boxSize += stream.ReadClass(boxSize, readSize, new ParametricSpecificConfig(), out this.ParametricSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new ParametricSpecificConfig(), out this.ParametricSpecificConfig);
                     break;
                 case 28:
-                    boxSize += stream.ReadClass(boxSize, readSize, new SSCSpecificConfig(channelConfiguration), out this.SSCSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new SSCSpecificConfig(channelConfiguration), out this.SSCSpecificConfig);
                     break;
                 case 30:
                     boxSize += stream.ReadUimsbf(out this.sacPayloadEmbedding);
-                    boxSize += stream.ReadClass(boxSize, readSize, new SpatialSpecificConfig(), out this.SpatialSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new SpatialSpecificConfig(), out this.SpatialSpecificConfig);
                     break;
                 case 32:
                 case 33:
                 case 34:
-                    boxSize += stream.ReadClass(boxSize, readSize, new MPEG_1_2_SpecificConfig(), out this.MPEG_1_2_SpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new MPEG_1_2_SpecificConfig(), out this.MPEG_1_2_SpecificConfig);
                     break;
                 case 35:
-                    boxSize += stream.ReadClass(boxSize, readSize, new DSTSpecificConfig(channelConfiguration), out this.DSTSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new DSTSpecificConfig(channelConfiguration), out this.DSTSpecificConfig);
                     break;
                 case 36:
                     boxSize += stream.ReadBslbf(5, out this.fillBits);
-                    boxSize += stream.ReadClass(boxSize, readSize, new ALSSpecificConfig(), out this.ALSSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new ALSSpecificConfig(), out this.ALSSpecificConfig);
                     break;
                 case 37:
                 case 38:
-                    boxSize += stream.ReadClass(boxSize, readSize, new SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.SLSSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.SLSSpecificConfig);
                     break;
                 case 39:
-                    boxSize += stream.ReadClass(boxSize, readSize, new ELDSpecificConfig(channelConfiguration), out this.ELDSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new ELDSpecificConfig(channelConfiguration), out this.ELDSpecificConfig);
                     break;
                 case 40:
                 case 41:
-                    boxSize += stream.ReadClass(boxSize, readSize, new SymbolicMusicSpecificConfig(), out this.SymbolicMusicSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new SymbolicMusicSpecificConfig(), out this.SymbolicMusicSpecificConfig);
                     break;
                 default:
                     /* reserved */
@@ -30746,7 +30746,7 @@ namespace SharpMP4
 
                     if (epConfig == 2 || epConfig == 3)
                     {
-                        boxSize += stream.ReadClass(boxSize, readSize, new ErrorProtectionSpecificConfig(), out this.ErrorProtectionSpecificConfig);
+                        boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorProtectionSpecificConfig(), out this.ErrorProtectionSpecificConfig);
                     }
 
                     if (epConfig == 3)
@@ -30767,7 +30767,7 @@ namespace SharpMP4
 
                 if (syncExtensionType == 0x2b7)
                 {
-                    boxSize += stream.ReadClass(boxSize, readSize, new GetAudioObjectType(), out this.extensionAudioObjectType);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new GetAudioObjectType(), out this.extensionAudioObjectType);
 
                     if (extensionAudioObjectType.AudioObjectType == 5)
                     {
@@ -31401,7 +31401,7 @@ namespace SharpMP4
 
             if (channelConfiguration == 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new program_config_element(), out this.program_config_element);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new program_config_element(), out this.program_config_element);
             }
 
             if ((audioObjectType == 6) || (audioObjectType == 20))
@@ -31975,7 +31975,7 @@ namespace SharpMP4
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new CelpHeader(samplingFrequencyIndex), out this.CelpHeader);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new CelpHeader(samplingFrequencyIndex), out this.CelpHeader);
             }
 
             else
@@ -31984,7 +31984,7 @@ namespace SharpMP4
 
                 if (isBWSLayer)
                 {
-                    boxSize += stream.ReadClass(boxSize, readSize, new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
                 }
 
                 else
@@ -32254,7 +32254,7 @@ namespace SharpMP4
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new HVXCconfig(), out this.HVXCconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new HVXCconfig(), out this.HVXCconfig);
             }
             return boxSize;
         }
@@ -32384,7 +32384,7 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadClass(boxSize, readSize, new TTS_Sequence(), out this.TTS_Sequence);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new TTS_Sequence(), out this.TTS_Sequence);
             return boxSize;
         }
 
@@ -32560,7 +32560,7 @@ namespace SharpMP4
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ER_SC_CelpHeader(samplingFrequencyIndex), out this.ER_SC_CelpHeader);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ER_SC_CelpHeader(samplingFrequencyIndex), out this.ER_SC_CelpHeader);
             }
 
             else
@@ -32569,7 +32569,7 @@ namespace SharpMP4
 
                 if (isBWSLayer)
                 {
-                    boxSize += stream.ReadClass(boxSize, readSize, new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
                 }
 
                 else
@@ -32806,7 +32806,7 @@ namespace SharpMP4
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ErHVXCconfig(), out this.ErHVXCconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ErHVXCconfig(), out this.ErHVXCconfig);
             }
             return boxSize;
         }
@@ -32956,12 +32956,12 @@ namespace SharpMP4
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new PARAconfig(), out this.PARAconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new PARAconfig(), out this.PARAconfig);
             }
 
             else
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new HILNenexConfig(), out this.HILNenexConfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new HILNenexConfig(), out this.HILNenexConfig);
             }
             return boxSize;
         }
@@ -33049,12 +33049,12 @@ namespace SharpMP4
 
             if (PARAmode != 1)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ErHVXCconfig(), out this.ErHVXCconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ErHVXCconfig(), out this.ErHVXCconfig);
             }
 
             if (PARAmode != 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new HILNconfig(), out this.HILNconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new HILNconfig(), out this.HILNconfig);
             }
             boxSize += stream.ReadUimsbf(out this.PARAextensionFlag);
 
@@ -33918,7 +33918,7 @@ namespace SharpMP4
 
             if (channelConfiguration == 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new program_config_element(), out this.program_config_element);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new program_config_element(), out this.program_config_element);
             }
             return boxSize;
         }
@@ -34069,7 +34069,7 @@ namespace SharpMP4
             {
                 boxSize += stream.ReadBslbf(out this.ldSbrSamplingRate);
                 boxSize += stream.ReadBslbf(out this.ldSbrCrcFlag);
-                boxSize += stream.ReadClass(boxSize, readSize, new ld_sbr_header(channelConfiguration), out this.ld_sbr_header);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ld_sbr_header(channelConfiguration), out this.ld_sbr_header);
             }
             boxSize += stream.ReadBslbf(4, out this.eldExtType);
 
@@ -34298,7 +34298,7 @@ namespace SharpMP4
             this.sbr_header = new sbr_header[numSbrHeader];
             for (int el = 0; el < numSbrHeader; el++)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new sbr_header(), out this.sbr_header[el]);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new sbr_header(), out this.sbr_header[el]);
             }
             return boxSize;
         }
@@ -35083,7 +35083,7 @@ namespace SharpMP4
 
             if (ChannelMappingFamily != 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ChannelMappingTable(_OutputChannelCount), out this.ChannelMappingTable);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ChannelMappingTable(_OutputChannelCount), out this.ChannelMappingTable);
             }
             return boxSize;
         }
@@ -35150,7 +35150,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new AV1CodecConfigurationRecord(), out this.av1Config);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new AV1CodecConfigurationRecord(), out this.av1Config);
             return boxSize;
         }
 
