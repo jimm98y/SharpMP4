@@ -73,8 +73,9 @@ namespace SharpMP4
         }
     }
 
-    public class Descriptor : IMp4Serializable
+    public abstract class Descriptor : IMp4Serializable
     {
+        public abstract string DisplayName { get; }
         protected List<Descriptor> children = null;
         public List<Descriptor> Children { get { return children; } set { children = value; } }
 
@@ -97,6 +98,8 @@ namespace SharpMP4
         ///  aligned to 4 or 8 bytes instead of just using the shortest one to accommodate the value.
         /// </summary>
         public ulong SizeOfSize { get; set; } = 0;
+
+        public IMp4Serializable Parent { get; set; }
 
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
@@ -123,6 +126,7 @@ namespace SharpMP4
 
     public class UnknownDescriptor : Descriptor
     {
+        public override string DisplayName { get { return nameof(UnknownDescriptor); } }
         protected StreamMarker data = null;
         public StreamMarker Data { get { return data; } set { data = value; } }
 

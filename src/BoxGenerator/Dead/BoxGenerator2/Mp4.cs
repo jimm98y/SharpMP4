@@ -7,6 +7,9 @@ namespace SharpMP4
 {
     public class Mp4 : IMp4Serializable
     {
+        public virtual string DisplayName { get { return nameof(Mp4); } }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
         public StreamMarker Padding { get; set; }
         public byte[] PaddingBytes { get; set; }
         public SafeBoxHeader PaddingHeader { get; set; }

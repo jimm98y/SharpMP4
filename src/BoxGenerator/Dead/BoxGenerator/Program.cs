@@ -1249,12 +1249,12 @@ namespace SharpMP4
             if (b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")
                 cls += $" : Descriptor\r\n{{\r\n";
             else
-                cls += $" : IMp4Serializable\r\n{{\r\n\t\tpublic StreamMarker Padding {{ get; set; }}\r\n";
+                cls += $" : IMp4Serializable\r\n{{\r\n\t\tpublic StreamMarker Padding {{ get; set; }}\r\n\t\tpublic IMp4Serializable Parent {{ get; set; }}\r\n";
         }
 
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.Extended.BoxType))
         {
-            cls += $"\tpublic const string TYPE = \"{b.Extended.BoxType}\";";
+            cls += $"\tpublic const string TYPE = \"{b.Extended.BoxType}\";\r\n";
         }
         else if(b.Extended != null && !string.IsNullOrEmpty(b.Extended.DescriptorTag))
         {
@@ -1265,7 +1265,7 @@ namespace SharpMP4
                 {
                     tag = "DescriptorTags." + tag;
                 }
-                cls += $"\tpublic const byte TYPE = {tag};";
+                cls += $"\tpublic const byte TYPE = {tag};\r\n";
             }
             else
             {
@@ -1282,6 +1282,9 @@ namespace SharpMP4
                 cls += $"\tpublic byte TagMax {{ get; set; }} = {tags[1]};";
             }
         }
+
+        string ov = ((b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName)) || (b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")) ? "override " : "virtual ";
+        cls += $"\tpublic {ov}string DisplayName {{ get {{ return \"{b.BoxName}\"; }} }}";
 
         string ctorContent = "";
         var fields = FlattenFields(b.Fields);
@@ -1337,7 +1340,7 @@ namespace SharpMP4
             //  see: https://www.academia.edu/66625880/Forensic_Analysis_of_Video_Files_Using_Metadata
             //  see: https://web.archive.org/web/20220126080109/https://leo-van-stee.github.io/
             // TODO: maybe instead of lookahead, we just have to check the parents
-            cls += "\r\npublic bool IsQuickTime { get { return (Parent != null && (Parent.FourCC == \"udta\" || Parent.FourCC == \"trak\")); } }";
+            cls += "\r\npublic bool IsQuickTime { get { return (Parent != null && (((Box)Parent).FourCC == \"udta\" || ((Box)Parent).FourCC == \"trak\")); } }";
         }
         else if(b.BoxName == "AVCDecoderConfigurationRecord")
         {
@@ -2677,8 +2680,8 @@ namespace SharpMP4
             { "WebVTTConfigurationBox",                 "stream.ReadBox(boxSize, readSize, this, " },
             { "WebVTTSourceLabelBox",                   "stream.ReadBox(boxSize, readSize, this, " },
             { "OperatingPointsRecord",                  "stream.ReadClass(boxSize, readSize, new OperatingPointsRecord(), " },
-            { "VvcSubpicIDEntry",                       "stream.ReadEntry(boxSize, readSize, " },
-            { "VvcSubpicOrderEntry",                    "stream.ReadEntry(boxSize, readSize, " },
+            { "VvcSubpicIDEntry",                       "stream.ReadEntry(boxSize, readSize, TYPE, " },
+            { "VvcSubpicOrderEntry",                    "stream.ReadEntry(boxSize, readSize, TYPE, " },
             { "URIInitBox",                             "stream.ReadBox(boxSize, readSize, this, " },
             { "URIBox",                                 "stream.ReadBox(boxSize, readSize, this, " },
             { "CleanApertureBox",                       "stream.ReadBox(boxSize, readSize, this, " },

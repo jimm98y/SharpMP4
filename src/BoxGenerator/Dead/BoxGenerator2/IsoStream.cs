@@ -762,7 +762,8 @@ namespace SharpMP4
 
         private ulong ReadBox(SafeBoxHeader header, Box box, ulong readSize)
         {
-            Debug.WriteLine($"Parsed box: {box.FourCC}");
+            Debug.WriteLine($"Box:{GetIndentation(box)}{box.FourCC}");
+
             ulong availableSize = 0;
 
             if (GetBoxSize(header) == ulong.MaxValue)
@@ -808,6 +809,17 @@ namespace SharpMP4
             return size + GetHeaderSize(header);
         }
 
+        private static string GetIndentation(IMp4Serializable b, string c = "-")
+        {
+            string indent = "";
+            while (b != null)
+            { 
+                b = b.Parent; 
+                indent += c;
+            }
+            return indent;
+        }
+
         internal static ulong CalculateBoxSize(IEnumerable<Box> boxes)
         {
             ulong size = 0;
@@ -829,6 +841,7 @@ namespace SharpMP4
         {
             ulong size = c.Read(this, readSize - boxSize);
             value = c;
+            Debug.WriteLine($"Class:{GetIndentation(c)}{c.DisplayName}");
             return size;
         }
 
@@ -897,28 +910,12 @@ namespace SharpMP4
             return writtenSize;
         }
 
-        internal ulong ReadEntry(ulong boxSize, ulong readSize, string fourCC, out SampleGroupDescriptionEntry entry)
+        internal ulong ReadEntry<T>(ulong boxSize, ulong readSize, string fourCC, out T entry) where T : SampleGroupDescriptionEntry
         {
             var res = BoxFactory.CreateEntry(fourCC);
-            Debug.WriteLine($"Parsed entry: {fourCC}");
+            Debug.WriteLine($"Entry:{GetIndentation(res)}{res.DisplayName}");
             ulong size = res.Read(this, readSize);
-            entry = (SampleGroupDescriptionEntry)res;
-            return size;
-        }
-
-        internal ulong ReadEntry(ulong boxSize, ulong readSize, out VvcSubpicOrderEntry sampleGroupDescriptionEntry)
-        {
-            SampleGroupDescriptionEntry ge;
-            ulong size = ReadEntry(boxSize, readSize, VvcSubpicOrderEntry.TYPE, out ge);
-            sampleGroupDescriptionEntry = (VvcSubpicOrderEntry)ge;
-            return size;
-        }
-
-        internal ulong ReadEntry(ulong boxSize, ulong readSize, out VvcSubpicIDEntry sampleGroupDescriptionEntry)
-        {
-            SampleGroupDescriptionEntry ge;
-            ulong size = ReadEntry(boxSize, readSize, VvcSubpicIDEntry.TYPE, out ge);
-            sampleGroupDescriptionEntry = (VvcSubpicIDEntry)ge;
+            entry = (T)res;
             return size;
         }
 
@@ -958,12 +955,13 @@ namespace SharpMP4
             long sizeOfInstanceBits = (long)sizeOfInstance << 3;
             descriptor = (T)DescriptorFactory.CreateDescriptor(tag);
             descriptor.SizeOfSize = sizeOfSize;
+            descriptor.Parent = parent;
 
             availableSize -= (long)size;
             if (availableSize < sizeOfInstanceBits)
             {
-                var invalid = new InvalidDescriptor(tag);
-                descriptor = invalid as T;
+                descriptor = new InvalidDescriptor(tag) as T;
+                Debug.WriteLine($"Descriptor:{GetIndentation(descriptor)}{descriptor.DisplayName}");
                 size += descriptor.Read(this, (ulong) availableSize);
                 return size;
             }

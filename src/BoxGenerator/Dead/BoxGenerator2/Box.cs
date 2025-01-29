@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpMP4
@@ -13,6 +11,8 @@ namespace SharpMP4
     public interface IMp4Serializable
     {
         StreamMarker Padding { get; set; }
+        IMp4Serializable Parent { get; set; }
+        string DisplayName { get; }
 
         ulong Read(IsoStream stream, ulong readSize);
         ulong Write(IsoStream stream);
@@ -22,6 +22,7 @@ namespace SharpMP4
     public abstract class Box : IMp4Serializable, IHasBoxChildren
     {
         public virtual string FourCC { get; set; }
+        public abstract string DisplayName { get; }
 
         public SafeBoxHeader Header { get; set; } 
 
@@ -38,8 +39,8 @@ namespace SharpMP4
         protected ulong offset = 0;
         public ulong Offset { get { return offset; } set { offset = value; } }
 
-        protected Box parent = null;
-        public Box Parent { get { return parent; } set { parent = value; } }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
         protected List<Box> children = null;
         public List<Box> Children { get { return children; } set { children = value; } }
         protected StreamMarker padding = null;
@@ -157,6 +158,8 @@ namespace SharpMP4
     /// </summary>
     public class UnknownBox : Box
     {
+        public override string DisplayName { get { return nameof(UnknownBox); } }
+
         // use the StreamMarker so that de do not allocate large amounts of memory in case we have invalid input data
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
@@ -199,6 +202,8 @@ namespace SharpMP4
 
     public class UnknownEntry : SampleEntry
     {
+        public override string DisplayName { get { return nameof(UnknownEntry); } }
+
         protected StreamMarker data;
         public StreamMarker Data { get { return data; } set { data = value; } }
 
@@ -233,11 +238,16 @@ namespace SharpMP4
 
     public class UnknownClass : IMp4Serializable
     {
+        public virtual string DisplayName { get { return nameof(UnknownClass); } }
+
         protected StreamMarker data;
         public StreamMarker Data { get { return data; } set { data = value; } }
 
         protected StreamMarker padding = null;
         public StreamMarker Padding { get { return padding; } set { padding = value; } }
+
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
 
         public UnknownClass()
         {

@@ -560,7 +560,8 @@ namespace SharpMP4
     public class SymbolicMusicSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SymbolicMusicSpecificConfig"; } }
 
         protected byte version;  // version of this specification is 0b0000 
         public byte Version { get { return this.version; } set { this.version = value; } }
@@ -873,7 +874,7 @@ namespace SharpMP4
     */
     public class FullBox : Box
     {
-
+        public override string DisplayName { get { return "FullBox"; } }
 
         protected byte version; // = v
         public byte Version { get { return this.version; } set { this.version = value; } }
@@ -925,7 +926,8 @@ namespace SharpMP4
     public abstract class SampleGroupDescriptionEntry : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SampleGroupDescriptionEntry"; } }
 
         public SampleGroupDescriptionEntry(string grouping_type) : base()
         {
@@ -961,7 +963,7 @@ namespace SharpMP4
     */
     public abstract class VisualSampleGroupEntry : SampleGroupDescriptionEntry
     {
-
+        public override string DisplayName { get { return "VisualSampleGroupEntry"; } }
 
         public VisualSampleGroupEntry(string grouping_type) : base(grouping_type)
         {
@@ -1000,7 +1002,7 @@ namespace SharpMP4
     */
     public abstract class AudioSampleGroupEntry : SampleGroupDescriptionEntry
     {
-
+        public override string DisplayName { get { return "AudioSampleGroupEntry"; } }
 
         public AudioSampleGroupEntry(string grouping_type) : base(grouping_type)
         {
@@ -1039,7 +1041,7 @@ namespace SharpMP4
     */
     public abstract class HintSampleGroupEntry : SampleGroupDescriptionEntry
     {
-
+        public override string DisplayName { get { return "HintSampleGroupEntry"; } }
 
         public HintSampleGroupEntry(string grouping_type) : base(grouping_type)
         {
@@ -1078,7 +1080,7 @@ namespace SharpMP4
     */
     public abstract class SubtitleSampleGroupEntry : SampleGroupDescriptionEntry
     {
-
+        public override string DisplayName { get { return "SubtitleSampleGroupEntry"; } }
 
         public SubtitleSampleGroupEntry(string grouping_type) : base(grouping_type)
         {
@@ -1115,7 +1117,7 @@ namespace SharpMP4
     */
     public abstract class TextSampleGroupEntry : SampleGroupDescriptionEntry
     {
-
+        public override string DisplayName { get { return "TextSampleGroupEntry"; } }
 
         public TextSampleGroupEntry(string grouping_type) : base(grouping_type)
         {
@@ -1152,7 +1154,7 @@ namespace SharpMP4
     */
     public class SubtitleSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "SubtitleSampleEntry"; } }
 
         public SubtitleSampleEntry(string codingname = "") : base(codingname)
         {
@@ -1194,6 +1196,7 @@ namespace SharpMP4
     public class XMLSubtitleSampleEntry : SubtitleSampleEntry
     {
         public const string TYPE = "stpp";
+        public override string DisplayName { get { return "XMLSubtitleSampleEntry"; } }
 
         protected BinaryUTF8String ns;
         public BinaryUTF8String Ns { get { return this.ns; } set { this.ns = value; } }
@@ -1258,6 +1261,7 @@ namespace SharpMP4
     public class TextSubtitleSampleEntry : SubtitleSampleEntry
     {
         public const string TYPE = "sbtt";
+        public override string DisplayName { get { return "TextSubtitleSampleEntry"; } }
 
         protected BinaryUTF8String content_encoding;  //  optional 
         public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -1331,7 +1335,7 @@ namespace SharpMP4
     */
     public class LoudnessBaseBox : FullBox
     {
-
+        public override string DisplayName { get { return "LoudnessBaseBox"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -1464,7 +1468,7 @@ namespace SharpMP4
     */
     public class MPEG2TSSampleEntry : HintSampleEntry
     {
-
+        public override string DisplayName { get { return "MPEG2TSSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -1545,7 +1549,8 @@ namespace SharpMP4
     public class ItemInfoExtension : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ItemInfoExtension"; } }
 
         public ItemInfoExtension(string extension_type) : base()
         {
@@ -1578,7 +1583,7 @@ namespace SharpMP4
     */
     public class PlainTextSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "PlainTextSampleEntry"; } }
 
         public PlainTextSampleEntry(string codingname = "") : base(codingname)
         {
@@ -1621,6 +1626,7 @@ namespace SharpMP4
     public class SimpleTextSampleEntry : PlainTextSampleEntry
     {
         public const string TYPE = "stxt";
+        public override string DisplayName { get { return "SimpleTextSampleEntry"; } }
 
         protected BinaryUTF8String content_encoding;  //  optional 
         public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -1678,7 +1684,7 @@ namespace SharpMP4
     */
     public class ItemProperty : Box
     {
-
+        public override string DisplayName { get { return "ItemProperty"; } }
 
         public ItemProperty(string property_type) : base(property_type)
         {
@@ -1712,7 +1718,7 @@ namespace SharpMP4
     */
     public class ItemFullProperty : FullBox
     {
-
+        public override string DisplayName { get { return "ItemFullProperty"; } }
 
         public ItemFullProperty(string property_type, byte version, uint flags) : base(property_type, version, flags)
         {
@@ -1750,7 +1756,7 @@ namespace SharpMP4
     */
     public class GeneralTypeBox : Box
     {
-
+        public override string DisplayName { get { return "GeneralTypeBox"; } }
 
         protected uint major_brand;
         public uint MajorBrand { get { return this.major_brand; } set { this.major_brand = value; } }
@@ -1809,7 +1815,7 @@ namespace SharpMP4
     */
     public class MetaDataKeyBox : Box
     {
-
+        public override string DisplayName { get { return "MetaDataKeyBox"; } }
         public MetaDataKeyDeclarationBox _MetaDataKeyDeclarationBox { get { return this.children.OfType<MetaDataKeyDeclarationBox>().FirstOrDefault(); } }
         public MetaDataDatatypeBox _MetaDataDatatypeBox { get { return this.children.OfType<MetaDataDatatypeBox>().FirstOrDefault(); } }
         public MetaDataLocaleBox _MetaDataLocaleBox { get { return this.children.OfType<MetaDataLocaleBox>().FirstOrDefault(); } }
@@ -1872,6 +1878,7 @@ namespace SharpMP4
     public class MetaDataKeyDeclarationBox : Box
     {
         public const string TYPE = "keyd";
+        public override string DisplayName { get { return "MetaDataKeyDeclarationBox"; } }
 
         protected uint key_namespace;
         public uint KeyNamespace { get { return this.key_namespace; } set { this.key_namespace = value; } }
@@ -1922,6 +1929,7 @@ namespace SharpMP4
     public class MetaDataLocaleBox : Box
     {
         public const string TYPE = "loca";
+        public override string DisplayName { get { return "MetaDataLocaleBox"; } }
 
         protected BinaryUTF8String locale_string;
         public BinaryUTF8String LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
@@ -1965,6 +1973,7 @@ namespace SharpMP4
     public class MetaDataSetupBox : Box
     {
         public const string TYPE = "setu";
+        public override string DisplayName { get { return "MetaDataSetupBox"; } }
 
         public MetaDataSetupBox() : base("setu")
         {
@@ -2006,6 +2015,7 @@ namespace SharpMP4
     public class MetaDataExtensionsBox : Box
     {
         public const string TYPE = "exte";
+        public override string DisplayName { get { return "MetaDataExtensionsBox"; } }
         public IEnumerable<Box> Extensions { get { return this.children.OfType<Box>(); } }
 
         public MetaDataExtensionsBox() : base("exte")
@@ -2051,6 +2061,7 @@ namespace SharpMP4
     public class MetaDataInlineKeysPresentBox : Box
     {
         public const string TYPE = "keyi";
+        public override string DisplayName { get { return "MetaDataInlineKeysPresentBox"; } }
 
         protected byte inlineKeyValueBoxesPresent;
         public byte InlineKeyValueBoxesPresent { get { return this.inlineKeyValueBoxesPresent; } set { this.inlineKeyValueBoxesPresent = value; } }
@@ -2095,7 +2106,8 @@ namespace SharpMP4
     public class MetaDataAccessUnit : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "MetaDataAccessUnit"; } }
 
         protected Box[] boxes;
         public Box[] Boxes { get { return this.boxes; } set { this.boxes = value; } }
@@ -2135,7 +2147,7 @@ namespace SharpMP4
     */
     public class MetaDataAUBox : Box
     {
-
+        public override string DisplayName { get { return "MetaDataAUBox"; } }
 
         public MetaDataAUBox(string local_key_id) : base(local_key_id)
         {
@@ -2173,7 +2185,7 @@ namespace SharpMP4
     */
     public abstract class SampleEntry : Box
     {
-
+        public override string DisplayName { get { return "SampleEntry"; } }
 
         protected byte[] reserved = [];
         public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -2242,6 +2254,7 @@ namespace SharpMP4
     public class SegmentIndexBox : FullBox
     {
         public const string TYPE = "sidx";
+        public override string DisplayName { get { return "SegmentIndexBox"; } }
 
         protected uint reference_ID;
         public uint ReferenceID { get { return this.reference_ID; } set { this.reference_ID = value; } }
@@ -2397,6 +2410,7 @@ namespace SharpMP4
     public class MovieBox : Box
     {
         public const string TYPE = "moov";
+        public override string DisplayName { get { return "MovieBox"; } }
 
         public MovieBox() : base("moov")
         {
@@ -2435,6 +2449,7 @@ namespace SharpMP4
     public class MovieFragmentBox : Box
     {
         public const string TYPE = "moof";
+        public override string DisplayName { get { return "MovieFragmentBox"; } }
 
         public MovieFragmentBox() : base("moof")
         {
@@ -2474,7 +2489,7 @@ namespace SharpMP4
     */
     public class DataEntryBaseBox : FullBox
     {
-
+        public override string DisplayName { get { return "DataEntryBaseBox"; } }
 
         public DataEntryBaseBox(string entry_type, uint flags) : base(entry_type, 0, flags)
         {
@@ -2517,6 +2532,7 @@ namespace SharpMP4
     public class ViewPriorityBox : Box
     {
         public const string TYPE = "vipr";
+        public override string DisplayName { get { return "ViewPriorityBox"; } }
 
         protected byte[] reserved;
         public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -2590,7 +2606,8 @@ namespace SharpMP4
     public class DependencyInfo : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "DependencyInfo"; } }
 
         protected byte subSeqDirectionFlag;
         public byte SubSeqDirectionFlag { get { return this.subSeqDirectionFlag; } set { this.subSeqDirectionFlag = value; } }
@@ -2658,6 +2675,7 @@ namespace SharpMP4
     public class AVCSubSequenceEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "avss";
+        public override string DisplayName { get { return "AVCSubSequenceEntry"; } }
 
         protected ushort subSequenceIdentifer;
         public ushort SubSequenceIdentifer { get { return this.subSequenceIdentifer; } set { this.subSequenceIdentifer = value; } }
@@ -2799,6 +2817,7 @@ namespace SharpMP4
     public class IntrinsicCameraParametersBox : FullBox
     {
         public const string TYPE = "icam";
+        public override string DisplayName { get { return "IntrinsicCameraParametersBox"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -2936,6 +2955,7 @@ namespace SharpMP4
     public class ExtrinsicCameraParametersBox : FullBox
     {
         public const string TYPE = "ecam";
+        public override string DisplayName { get { return "ExtrinsicCameraParametersBox"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -3087,7 +3107,8 @@ namespace SharpMP4
     public class AVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "AVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -3332,7 +3353,8 @@ namespace SharpMP4
     public class MVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "MVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -3501,7 +3523,8 @@ namespace SharpMP4
     public class SVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -3679,7 +3702,8 @@ namespace SharpMP4
     public class HEVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "HEVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -3937,7 +3961,8 @@ namespace SharpMP4
     public class VvcPTLRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "VvcPTLRecord"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -4144,7 +4169,8 @@ namespace SharpMP4
     public class VvcDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "VvcDecoderConfigurationRecord"; } }
 
         protected byte reserved = 0b11111;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -4381,7 +4407,8 @@ namespace SharpMP4
     public class MVDDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "MVDDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -4578,7 +4605,8 @@ namespace SharpMP4
     public class VvcOperatingPointsRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "VvcOperatingPointsRecord"; } }
 
         protected byte num_profile_tier_level_minus1;
         public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }
@@ -4941,7 +4969,8 @@ namespace SharpMP4
     public class EVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "EVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -5154,7 +5183,8 @@ namespace SharpMP4
     public class LHEVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "LHEVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -5406,6 +5436,7 @@ namespace SharpMP4
     public class ReceivedSsrcBox : Box
     {
         public const string TYPE = "rssr";
+        public override string DisplayName { get { return "ReceivedSsrcBox"; } }
 
         protected uint SSRC;
         public uint _SSRC { get { return this.SSRC; } set { this.SSRC = value; } }
@@ -5449,6 +5480,7 @@ namespace SharpMP4
     public class timestampsynchrony : Box
     {
         public const string TYPE = "tssy";
+        public override string DisplayName { get { return "timestampsynchrony"; } }
 
         protected byte reserved;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -5499,6 +5531,7 @@ namespace SharpMP4
     public class timescaleentry : Box
     {
         public const string TYPE = "tims";
+        public override string DisplayName { get { return "timescaleentry"; } }
 
         protected uint timescale;
         public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }
@@ -5543,6 +5576,7 @@ namespace SharpMP4
     public class timeoffset : Box
     {
         public const string TYPE = "tsro";
+        public override string DisplayName { get { return "timeoffset"; } }
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
@@ -5585,6 +5619,7 @@ namespace SharpMP4
     public class sequenceoffset : Box
     {
         public const string TYPE = "snro";
+        public override string DisplayName { get { return "sequenceoffset"; } }
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
@@ -5627,6 +5662,7 @@ namespace SharpMP4
     public class hintBytesSentTrpy : Box
     {
         public const string TYPE = "trpy";
+        public override string DisplayName { get { return "hintBytesSentTrpy"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5669,6 +5705,7 @@ namespace SharpMP4
     public class hintPacketsSentNump : Box
     {
         public const string TYPE = "nump";
+        public override string DisplayName { get { return "hintPacketsSentNump"; } }
 
         protected ulong packetssent;
         public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
@@ -5710,6 +5747,7 @@ namespace SharpMP4
     public class hintBytesSentTpyl : Box
     {
         public const string TYPE = "tpyl";
+        public override string DisplayName { get { return "hintBytesSentTpyl"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5752,6 +5790,7 @@ namespace SharpMP4
     public class hintBytesSentTotl : Box
     {
         public const string TYPE = "totl";
+        public override string DisplayName { get { return "hintBytesSentTotl"; } }
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5794,6 +5833,7 @@ namespace SharpMP4
     public class hintPacketsSentNpck : Box
     {
         public const string TYPE = "npck";
+        public override string DisplayName { get { return "hintPacketsSentNpck"; } }
 
         protected uint packetssent;
         public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
@@ -5835,6 +5875,7 @@ namespace SharpMP4
     public class hintBytesSentTpay : Box
     {
         public const string TYPE = "tpay";
+        public override string DisplayName { get { return "hintBytesSentTpay"; } }
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5877,6 +5918,7 @@ namespace SharpMP4
     public class hintmaxrate : Box
     {
         public const string TYPE = "maxr";
+        public override string DisplayName { get { return "hintmaxrate"; } }
 
         protected uint period;  //  in milliseconds
         public uint Period { get { return this.period; } set { this.period = value; } }
@@ -5928,6 +5970,7 @@ namespace SharpMP4
     public class hintmediaBytesSent : Box
     {
         public const string TYPE = "dmed";
+        public override string DisplayName { get { return "hintmediaBytesSent"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5970,6 +6013,7 @@ namespace SharpMP4
     public class hintimmediateBytesSent : Box
     {
         public const string TYPE = "dimm";
+        public override string DisplayName { get { return "hintimmediateBytesSent"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -6011,6 +6055,7 @@ namespace SharpMP4
     public class hintrepeatedBytesSent : Box
     {
         public const string TYPE = "drep";
+        public override string DisplayName { get { return "hintrepeatedBytesSent"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -6053,6 +6098,7 @@ namespace SharpMP4
     public class hintminrelativetime : Box
     {
         public const string TYPE = "tmin";
+        public override string DisplayName { get { return "hintminrelativetime"; } }
 
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
@@ -6094,6 +6140,7 @@ namespace SharpMP4
     public class hintmaxrelativetime : Box
     {
         public const string TYPE = "tmax";
+        public override string DisplayName { get { return "hintmaxrelativetime"; } }
 
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
@@ -6136,6 +6183,7 @@ namespace SharpMP4
     public class hintlargestpacket : Box
     {
         public const string TYPE = "pmax";
+        public override string DisplayName { get { return "hintlargestpacket"; } }
 
         protected uint bytes;
         public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
@@ -6177,6 +6225,7 @@ namespace SharpMP4
     public class hintlongestpacket : Box
     {
         public const string TYPE = "dmax";
+        public override string DisplayName { get { return "hintlongestpacket"; } }
 
         protected uint time;
         public uint Time { get { return this.time; } set { this.time = value; } }
@@ -6220,6 +6269,7 @@ namespace SharpMP4
     public class hintpayloadID : Box
     {
         public const string TYPE = "payt";
+        public override string DisplayName { get { return "hintpayloadID"; } }
 
         protected uint payloadID;  //  payload ID used in RTP packets
         public uint PayloadID { get { return this.payloadID; } set { this.payloadID = value; } }
@@ -6280,6 +6330,7 @@ namespace SharpMP4
     public class StereoVideoBox : FullBox
     {
         public const string TYPE = "stvi";
+        public override string DisplayName { get { return "StereoVideoBox"; } }
 
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -6353,6 +6404,7 @@ namespace SharpMP4
     public class ExtendedLanguageBox : FullBox
     {
         public const string TYPE = "elng";
+        public override string DisplayName { get { return "ExtendedLanguageBox"; } }
 
         protected BinaryUTF8String extended_language;
         public BinaryUTF8String ExtendedLanguage { get { return this.extended_language; } set { this.extended_language = value; } }
@@ -6397,6 +6449,7 @@ namespace SharpMP4
     public class BitRateBox : Box
     {
         public const string TYPE = "btrt";
+        public override string DisplayName { get { return "BitRateBox"; } }
 
         protected uint bufferSizeDB;
         public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
@@ -6452,6 +6505,7 @@ namespace SharpMP4
     public class PixelAspectRatioBox : Box
     {
         public const string TYPE = "pasp";
+        public override string DisplayName { get { return "PixelAspectRatioBox"; } }
 
         protected uint hSpacing;
         public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
@@ -6513,6 +6567,7 @@ namespace SharpMP4
     public class CleanApertureBox : Box
     {
         public const string TYPE = "clap";
+        public override string DisplayName { get { return "CleanApertureBox"; } }
 
         protected uint cleanApertureWidthN;
         public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
@@ -6615,6 +6670,7 @@ namespace SharpMP4
     public class ContentColourVolumeBox : Box
     {
         public const string TYPE = "cclv";
+        public override string DisplayName { get { return "ContentColourVolumeBox"; } }
 
         protected bool reserved1 = false;  //  ccv_cancel_flag
         public bool Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -6803,6 +6859,7 @@ namespace SharpMP4
     public class ColourInformationBox : Box
     {
         public const string TYPE = "colr";
+        public override string DisplayName { get { return "ColourInformationBox"; } }
 
         protected uint colour_type;
         public uint ColourType { get { return this.colour_type; } set { this.colour_type = value; } }
@@ -6933,6 +6990,7 @@ namespace SharpMP4
     public class ContentLightLevelBox : Box
     {
         public const string TYPE = "clli";
+        public override string DisplayName { get { return "ContentLightLevelBox"; } }
 
         protected ushort max_content_light_level;
         public ushort MaxContentLightLevel { get { return this.max_content_light_level; } set { this.max_content_light_level = value; } }
@@ -6988,6 +7046,7 @@ namespace SharpMP4
     public class MasteringDisplayColourVolumeBox : Box
     {
         public const string TYPE = "mdcv";
+        public override string DisplayName { get { return "MasteringDisplayColourVolumeBox"; } }
 
         protected ushort[] display_primaries_x;
         public ushort[] DisplayPrimariesx { get { return this.display_primaries_x; } set { this.display_primaries_x = value; } }
@@ -7075,6 +7134,7 @@ namespace SharpMP4
     public class ScrambleSchemeInfoBox : Box
     {
         public const string TYPE = "scrb";
+        public override string DisplayName { get { return "ScrambleSchemeInfoBox"; } }
         public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
         public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }
 
@@ -7171,6 +7231,7 @@ namespace SharpMP4
     public class ChannelLayout : FullBox
     {
         public const string TYPE = "chnl";
+        public override string DisplayName { get { return "ChannelLayout"; } }
 
         protected byte stream_structure;
         public byte StreamStructure { get { return this.stream_structure; } set { this.stream_structure = value; } }
@@ -7531,6 +7592,7 @@ namespace SharpMP4
     public class DownMixInstructions : FullBox
     {
         public const string TYPE = "dmix";
+        public override string DisplayName { get { return "DownMixInstructions"; } }
 
         protected bool reserved = false;
         public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -7784,6 +7846,7 @@ namespace SharpMP4
     public class SamplingRateBox : FullBox
     {
         public const string TYPE = "srat";
+        public override string DisplayName { get { return "SamplingRateBox"; } }
 
         protected uint sampling_rate;
         public uint SamplingRate { get { return this.sampling_rate; } set { this.sampling_rate = value; } }
@@ -7826,6 +7889,7 @@ namespace SharpMP4
     public class TextConfigBox : FullBox
     {
         public const string TYPE = "txtC";
+        public override string DisplayName { get { return "TextConfigBox"; } }
 
         protected BinaryUTF8String text_config;
         public BinaryUTF8String TextConfig { get { return this.text_config; } set { this.text_config = value; } }
@@ -7869,6 +7933,7 @@ namespace SharpMP4
     public class URIInitBox : FullBox
     {
         public const string TYPE = "uriI";
+        public override string DisplayName { get { return "URIInitBox"; } }
 
         protected byte[] uri_initialization_data;
         public byte[] UriInitializationData { get { return this.uri_initialization_data; } set { this.uri_initialization_data = value; } }
@@ -7914,6 +7979,7 @@ namespace SharpMP4
     public class CopyrightBox : FullBox
     {
         public const string TYPE = "cprt";
+        public override string DisplayName { get { return "CopyrightBox"; } }
 
         protected bool pad = false;
         public bool Pad { get { return this.pad; } set { this.pad = value; } }
@@ -7969,6 +8035,7 @@ namespace SharpMP4
     public class KindBox : FullBox
     {
         public const string TYPE = "kind";
+        public override string DisplayName { get { return "KindBox"; } }
 
         protected BinaryUTF8String schemeURI;
         public BinaryUTF8String SchemeURI { get { return this.schemeURI; } set { this.schemeURI = value; } }
@@ -8019,6 +8086,7 @@ namespace SharpMP4
     public class TrackSelectionBox : FullBox
     {
         public const string TYPE = "tsel";
+        public override string DisplayName { get { return "TrackSelectionBox"; } }
 
         protected int switch_group = 0;
         public int SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
@@ -8066,6 +8134,7 @@ namespace SharpMP4
     public class SubTrackBox : Box
     {
         public const string TYPE = "strk";
+        public override string DisplayName { get { return "SubTrackBox"; } }
 
         public SubTrackBox() : base("strk")
         {
@@ -8106,6 +8175,7 @@ namespace SharpMP4
     public class trackhintinformation : Box
     {
         public const string TYPE = "hnti";
+        public override string DisplayName { get { return "trackhintinformation"; } }
 
         public trackhintinformation() : base("hnti")
         {
@@ -8145,6 +8215,7 @@ namespace SharpMP4
     public class rtptracksdphintinformation : Box
     {
         public const string TYPE = "sdp ";
+        public override string DisplayName { get { return "rtptracksdphintinformation"; } }
 
         protected byte[] sdptext;
         public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
@@ -8188,6 +8259,7 @@ namespace SharpMP4
     public class moviehintinformation : Box
     {
         public const string TYPE = "hnti";
+        public override string DisplayName { get { return "moviehintinformation"; } }
 
         public moviehintinformation() : base("hnti")
         {
@@ -8228,6 +8300,7 @@ namespace SharpMP4
     public class rtpmoviehintinformation : Box
     {
         public const string TYPE = "rtp ";
+        public override string DisplayName { get { return "rtpmoviehintinformation"; } }
 
         protected uint descriptionformat = IsoStream.FromFourCC("sdp ");
         public uint Descriptionformat { get { return this.descriptionformat; } set { this.descriptionformat = value; } }
@@ -8278,6 +8351,7 @@ namespace SharpMP4
     public class hintstatisticsbox : Box
     {
         public const string TYPE = "hinf";
+        public override string DisplayName { get { return "hintstatisticsbox"; } }
 
         public hintstatisticsbox() : base("hinf")
         {
@@ -8320,6 +8394,7 @@ namespace SharpMP4
     public class LoudnessBox : Box
     {
         public const string TYPE = "ludt";
+        public override string DisplayName { get { return "LoudnessBox"; } }
         public IEnumerable<TrackLoudnessInfo> Loudness { get { return this.children.OfType<TrackLoudnessInfo>(); } }
         public IEnumerable<AlbumLoudnessInfo> AlbumLoudness { get { return this.children.OfType<AlbumLoudnessInfo>(); } }
 
@@ -8368,6 +8443,7 @@ namespace SharpMP4
     public class TrackLoudnessInfo : LoudnessBaseBox
     {
         public const string TYPE = "tlou";
+        public override string DisplayName { get { return "TrackLoudnessInfo"; } }
 
         public TrackLoudnessInfo() : base("tlou")
         {
@@ -8402,6 +8478,7 @@ namespace SharpMP4
     public class AlbumLoudnessInfo : LoudnessBaseBox
     {
         public const string TYPE = "alou";
+        public override string DisplayName { get { return "AlbumLoudnessInfo"; } }
 
         public AlbumLoudnessInfo() : base("alou")
         {
@@ -8439,6 +8516,7 @@ namespace SharpMP4
     public class DataEntryUrlBox : DataEntryBaseBox
     {
         public const string TYPE = "url ";
+        public override string DisplayName { get { return "DataEntryUrlBox"; } }
 
         protected BinaryUTF8String location;
         public BinaryUTF8String Location { get { return this.location; } set { this.location = value; } }
@@ -8483,6 +8561,7 @@ namespace SharpMP4
     public class DataEntryUrnBox : DataEntryBaseBox
     {
         public const string TYPE = "urn ";
+        public override string DisplayName { get { return "DataEntryUrnBox"; } }
 
         protected BinaryUTF8String name;
         public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
@@ -8532,6 +8611,7 @@ namespace SharpMP4
     public class DataEntryImdaBox : DataEntryBaseBox
     {
         public const string TYPE = "imdt";
+        public override string DisplayName { get { return "DataEntryImdaBox"; } }
 
         protected uint imda_ref_identifier;
         public uint ImdaRefIdentifier { get { return this.imda_ref_identifier; } set { this.imda_ref_identifier = value; } }
@@ -8574,6 +8654,7 @@ namespace SharpMP4
     public class DataEntrySeqNumImdaBox : DataEntryBaseBox
     {
         public const string TYPE = "snim";
+        public override string DisplayName { get { return "DataEntrySeqNumImdaBox"; } }
 
         public DataEntrySeqNumImdaBox(uint flags = 0) : base("snim", flags)
         {
@@ -8615,6 +8696,7 @@ namespace SharpMP4
     public class ItemPropertyContainerBox : Box
     {
         public const string TYPE = "ipco";
+        public override string DisplayName { get { return "ItemPropertyContainerBox"; } }
         public IEnumerable<Box> Properties { get { return this.children.OfType<Box>(); } }
 
         public ItemPropertyContainerBox() : base("ipco")
@@ -8681,6 +8763,7 @@ namespace SharpMP4
     public class ItemPropertyAssociationBox : FullBox
     {
         public const string TYPE = "ipma";
+        public override string DisplayName { get { return "ItemPropertyAssociationBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -8833,6 +8916,7 @@ namespace SharpMP4
     public class ItemPropertiesBox : Box
     {
         public const string TYPE = "iprp";
+        public override string DisplayName { get { return "ItemPropertiesBox"; } }
         public ItemPropertyContainerBox PropertyContainer { get { return this.children.OfType<ItemPropertyContainerBox>().FirstOrDefault(); } }
         public IEnumerable<ItemPropertyAssociationBox> Association { get { return this.children.OfType<ItemPropertyAssociationBox>(); } }
 
@@ -8889,6 +8973,7 @@ namespace SharpMP4
     public class AlternativeStartupSequencePropertiesBox : FullBox
     {
         public const string TYPE = "assp";
+        public override string DisplayName { get { return "AlternativeStartupSequencePropertiesBox"; } }
 
         protected int min_initial_alt_startup_offset;
         public int MinInitialAltStartupOffset { get { return this.min_initial_alt_startup_offset; } set { this.min_initial_alt_startup_offset = value; } }
@@ -8988,6 +9073,7 @@ namespace SharpMP4
     public class BinaryXMLBox : FullBox
     {
         public const string TYPE = "bxml";
+        public override string DisplayName { get { return "BinaryXMLBox"; } }
 
         protected byte[] data;  //  to end of box
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -9030,6 +9116,7 @@ namespace SharpMP4
     public class CompleteTrackInfoBox : Box
     {
         public const string TYPE = "cinf";
+        public override string DisplayName { get { return "CompleteTrackInfoBox"; } }
         public OriginalFormatBox OriginalFormat { get { return this.children.OfType<OriginalFormatBox>().FirstOrDefault(); } }
 
         public CompleteTrackInfoBox(string fmt = "") : base("cinf")
@@ -9077,6 +9164,7 @@ namespace SharpMP4
     public class ChunkLargeOffsetBox : FullBox
     {
         public const string TYPE = "co64";
+        public override string DisplayName { get { return "ChunkLargeOffsetBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9157,6 +9245,7 @@ namespace SharpMP4
     public class CompactSampleToGroupBox : FullBox
     {
         public const string TYPE = "csgp";
+        public override string DisplayName { get { return "CompactSampleToGroupBox"; } }
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -9311,6 +9400,7 @@ namespace SharpMP4
     public class CompositionToDecodeBox : FullBox
     {
         public const string TYPE = "cslg";
+        public override string DisplayName { get { return "CompositionToDecodeBox"; } }
 
         protected long compositionToDTSShift;
         public long CompositionToDTSShift { get { return this.compositionToDTSShift; } set { this.compositionToDTSShift = value; } }
@@ -9430,6 +9520,7 @@ namespace SharpMP4
     public class CompositionOffsetBox : FullBox
     {
         public const string TYPE = "ctts";
+        public override string DisplayName { get { return "CompositionOffsetBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9546,6 +9637,7 @@ namespace SharpMP4
     public class DataInformationBox : Box
     {
         public const string TYPE = "dinf";
+        public override string DisplayName { get { return "DataInformationBox"; } }
 
         public DataInformationBox() : base("dinf")
         {
@@ -9589,6 +9681,7 @@ namespace SharpMP4
     public class DataReferenceBox : FullBox
     {
         public const string TYPE = "dref";
+        public override string DisplayName { get { return "DataReferenceBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9649,6 +9742,7 @@ namespace SharpMP4
     public class EditBox : Box
     {
         public const string TYPE = "edts";
+        public override string DisplayName { get { return "EditBox"; } }
 
         public EditBox() : base("edts")
         {
@@ -9699,6 +9793,7 @@ namespace SharpMP4
     public class EditListBox : FullBox
     {
         public const string TYPE = "elst";
+        public override string DisplayName { get { return "EditListBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9814,6 +9909,7 @@ namespace SharpMP4
     public class ExtendedTypeBox : Box
     {
         public const string TYPE = "etyp";
+        public override string DisplayName { get { return "ExtendedTypeBox"; } }
         public IEnumerable<TypeCombinationBox> CompatibleCombinations { get { return this.children.OfType<TypeCombinationBox>(); } }
 
         public ExtendedTypeBox() : base("etyp")
@@ -9863,6 +9959,7 @@ namespace SharpMP4
     public class FDItemInfoExtension : ItemInfoExtension
     {
         public const string TYPE = "fdel";
+        public override string DisplayName { get { return "FDItemInfoExtension"; } }
 
         protected BinaryUTF8String content_location;
         public BinaryUTF8String ContentLocation { get { return this.content_location; } set { this.content_location = value; } }
@@ -9961,6 +10058,7 @@ namespace SharpMP4
     public class FECReservoirBox : FullBox
     {
         public const string TYPE = "fecr";
+        public override string DisplayName { get { return "FECReservoirBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10087,6 +10185,7 @@ namespace SharpMP4
     public class PartitionEntry : Box
     {
         public const string TYPE = "paen";
+        public override string DisplayName { get { return "PartitionEntry"; } }
         public FilePartitionBox BlocksAndSymbols { get { return this.children.OfType<FilePartitionBox>().FirstOrDefault(); } }
         public FECReservoirBox FECSymbolLocations { get { return this.children.OfType<FECReservoirBox>().FirstOrDefault(); } }
         public FileReservoirBox FileSymbolLocations { get { return this.children.OfType<FileReservoirBox>().FirstOrDefault(); } }
@@ -10142,6 +10241,7 @@ namespace SharpMP4
     public class FDItemInformationBox : FullBox
     {
         public const string TYPE = "fiin";
+        public override string DisplayName { get { return "FDItemInformationBox"; } }
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10212,6 +10312,7 @@ namespace SharpMP4
     public class FileReservoirBox : FullBox
     {
         public const string TYPE = "fire";
+        public override string DisplayName { get { return "FileReservoirBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10356,6 +10457,7 @@ namespace SharpMP4
     public class FilePartitionBox : FullBox
     {
         public const string TYPE = "fpar";
+        public override string DisplayName { get { return "FilePartitionBox"; } }
 
         protected uint item_ID;
         public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -10532,6 +10634,7 @@ namespace SharpMP4
     public class FreeSpaceBox : Box
     {
         public const string TYPE = "free";
+        public override string DisplayName { get { return "FreeSpaceBox"; } }
 
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
@@ -10577,6 +10680,7 @@ namespace SharpMP4
     public class OriginalFormatBox : Box
     {
         public const string TYPE = "frma";
+        public override string DisplayName { get { return "OriginalFormatBox"; } }
 
         protected uint data_format; // = codingname
         public uint DataFormat { get { return this.data_format; } set { this.data_format = value; } }
@@ -10629,6 +10733,7 @@ namespace SharpMP4
     public class FileTypeBox : Box
     {
         public const string TYPE = "ftyp";
+        public override string DisplayName { get { return "FileTypeBox"; } }
 
         protected uint major_brand;
         public uint MajorBrand { get { return this.major_brand; } set { this.major_brand = value; } }
@@ -10688,6 +10793,7 @@ namespace SharpMP4
     public class GroupIdToNameBox : FullBox
     {
         public const string TYPE = "gitn";
+        public override string DisplayName { get { return "GroupIdToNameBox"; } }
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10755,6 +10861,7 @@ namespace SharpMP4
     public class GroupsListBox : Box
     {
         public const string TYPE = "grpl";
+        public override string DisplayName { get { return "GroupsListBox"; } }
 
         public GroupsListBox() : base("grpl")
         {
@@ -10797,6 +10904,7 @@ namespace SharpMP4
     public class HandlerBox : FullBox
     {
         public const string TYPE = "hdlr";
+        public override string DisplayName { get { return "HandlerBox"; } }
 
         protected uint pre_defined = 0;
         public uint PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -10862,6 +10970,7 @@ namespace SharpMP4
     public class HintMediaHeaderBox : FullBox
     {
         public const string TYPE = "hmhd";
+        public override string DisplayName { get { return "HintMediaHeaderBox"; } }
 
         protected ushort maxPDUsize;
         public ushort MaxPDUsize { get { return this.maxPDUsize; } set { this.maxPDUsize = value; } }
@@ -10928,6 +11037,7 @@ namespace SharpMP4
     public class ItemDataBox : Box
     {
         public const string TYPE = "idat";
+        public override string DisplayName { get { return "ItemDataBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -10976,6 +11086,7 @@ namespace SharpMP4
     public class ItemInfoBox : FullBox
     {
         public const string TYPE = "iinf";
+        public override string DisplayName { get { return "ItemInfoBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -11085,6 +11196,7 @@ namespace SharpMP4
     public class ItemLocationBox : FullBox
     {
         public const string TYPE = "iloc";
+        public override string DisplayName { get { return "ItemLocationBox"; } }
 
         protected byte offset_size;
         public byte OffsetSize { get { return this.offset_size; } set { this.offset_size = value; } }
@@ -11350,6 +11462,7 @@ namespace SharpMP4
     public class IdentifiedMediaDataBox : Box
     {
         public const string TYPE = "imda";
+        public override string DisplayName { get { return "IdentifiedMediaDataBox"; } }
 
         protected uint imda_identifier;
         public uint ImdaIdentifier { get { return this.imda_identifier; } set { this.imda_identifier = value; } }
@@ -11425,6 +11538,7 @@ namespace SharpMP4
     public class ItemInfoEntry : FullBox
     {
         public const string TYPE = "infe";
+        public override string DisplayName { get { return "ItemInfoEntry"; } }
 
         protected uint item_ID;
         public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -11624,6 +11738,7 @@ namespace SharpMP4
     public class ItemProtectionBox : FullBox
     {
         public const string TYPE = "ipro";
+        public override string DisplayName { get { return "ItemProtectionBox"; } }
 
         protected ushort protection_count;
         public ushort ProtectionCount { get { return this.protection_count; } set { this.protection_count = value; } }
@@ -11689,6 +11804,7 @@ namespace SharpMP4
     public class ItemReferenceBox : FullBox
     {
         public const string TYPE = "iref";
+        public override string DisplayName { get { return "ItemReferenceBox"; } }
 
         protected SingleItemTypeReferenceBox[] references;
         public SingleItemTypeReferenceBox[] References { get { return this.references; } set { this.references = value; } }
@@ -11785,6 +11901,7 @@ namespace SharpMP4
     public class LevelAssignmentBox : FullBox
     {
         public const string TYPE = "leva";
+        public override string DisplayName { get { return "LevelAssignmentBox"; } }
 
         protected byte level_count;
         public byte LevelCount { get { return this.level_count; } set { this.level_count = value; } }
@@ -11953,6 +12070,7 @@ namespace SharpMP4
     public class MediaDataBox : Box
     {
         public const string TYPE = "mdat";
+        public override string DisplayName { get { return "MediaDataBox"; } }
 
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
@@ -12008,6 +12126,7 @@ namespace SharpMP4
     public class MediaHeaderBox : FullBox
     {
         public const string TYPE = "mdhd";
+        public override string DisplayName { get { return "MediaHeaderBox"; } }
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -12124,6 +12243,7 @@ namespace SharpMP4
     public class MediaBox : Box
     {
         public const string TYPE = "mdia";
+        public override string DisplayName { get { return "MediaBox"; } }
 
         public MediaBox() : base("mdia")
         {
@@ -12167,6 +12287,7 @@ namespace SharpMP4
     public class MovieExtendsHeaderBox : FullBox
     {
         public const string TYPE = "mehd";
+        public override string DisplayName { get { return "MovieExtendsHeaderBox"; } }
 
         protected ulong fragment_duration;
         public ulong FragmentDuration { get { return this.fragment_duration; } set { this.fragment_duration = value; } }
@@ -12249,6 +12370,7 @@ namespace SharpMP4
     public class MetaBox : FullBox
     {
         public const string TYPE = "meta";
+        public override string DisplayName { get { return "MetaBox"; } }
         public HandlerBox TheHandler { get { return this.children.OfType<HandlerBox>().FirstOrDefault(); } }
         public PrimaryItemBox PrimaryResource { get { return this.children.OfType<PrimaryItemBox>().FirstOrDefault(); } }
         public DataInformationBox FileLocations { get { return this.children.OfType<DataInformationBox>().FirstOrDefault(); } }
@@ -12259,7 +12381,7 @@ namespace SharpMP4
         public ItemReferenceBox ItemRefs { get { return this.children.OfType<ItemReferenceBox>().FirstOrDefault(); } }
         public ItemDataBox ItemData { get { return this.children.OfType<ItemDataBox>().FirstOrDefault(); } }
         public IEnumerable<Box> OtherBoxes { get { return this.children.OfType<Box>(); } }
-        public bool IsQuickTime { get { return (Parent != null && (Parent.FourCC == "udta" || Parent.FourCC == "trak")); } }
+        public bool IsQuickTime { get { return (Parent != null && (((Box)Parent).FourCC == "udta" || ((Box)Parent).FourCC == "trak")); } }
 
         public MetaBox(string handler_type = "") : base("meta", 0, 0)
         {
@@ -12330,6 +12452,7 @@ namespace SharpMP4
     public class MovieFragmentHeaderBox : FullBox
     {
         public const string TYPE = "mfhd";
+        public override string DisplayName { get { return "MovieFragmentHeaderBox"; } }
 
         protected uint sequence_number;
         public uint SequenceNumber { get { return this.sequence_number; } set { this.sequence_number = value; } }
@@ -12373,6 +12496,7 @@ namespace SharpMP4
     public class MovieFragmentRandomAccessBox : Box
     {
         public const string TYPE = "mfra";
+        public override string DisplayName { get { return "MovieFragmentRandomAccessBox"; } }
 
         public MovieFragmentRandomAccessBox() : base("mfra")
         {
@@ -12413,6 +12537,7 @@ namespace SharpMP4
     public class MovieFragmentRandomAccessOffsetBox : FullBox
     {
         public const string TYPE = "mfro";
+        public override string DisplayName { get { return "MovieFragmentRandomAccessOffsetBox"; } }
 
         protected uint parent_size;
         public uint ParentSize { get { return this.parent_size; } set { this.parent_size = value; } }
@@ -12454,6 +12579,7 @@ namespace SharpMP4
     public class MediaInformationBox : Box
     {
         public const string TYPE = "minf";
+        public override string DisplayName { get { return "MediaInformationBox"; } }
 
         public MediaInformationBox() : base("minf")
         {
@@ -12494,6 +12620,7 @@ namespace SharpMP4
     public class CompressedMovieFragmentBox : CompressedBox
     {
         public const string TYPE = "moof";
+        public override string DisplayName { get { return "CompressedMovieFragmentBox"; } }
 
         public CompressedMovieFragmentBox() : base("moof")
         {
@@ -12533,6 +12660,7 @@ namespace SharpMP4
     public class CompressedMovieBox : CompressedBox
     {
         public const string TYPE = "moov";
+        public override string DisplayName { get { return "CompressedMovieBox"; } }
 
         public CompressedMovieBox() : base("moov")
         {
@@ -12571,6 +12699,7 @@ namespace SharpMP4
     public class MovieExtendsBox : Box
     {
         public const string TYPE = "mvex";
+        public override string DisplayName { get { return "MovieExtendsBox"; } }
 
         public MovieExtendsBox() : base("mvex")
         {
@@ -12629,6 +12758,7 @@ namespace SharpMP4
     public class MovieHeaderBox : FullBox
     {
         public const string TYPE = "mvhd";
+        public override string DisplayName { get { return "MovieHeaderBox"; } }
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -12771,6 +12901,7 @@ namespace SharpMP4
     public class NullMediaHeaderBox : FullBox
     {
         public const string TYPE = "nmhd";
+        public override string DisplayName { get { return "NullMediaHeaderBox"; } }
 
         public NullMediaHeaderBox(uint flags = 0) : base("nmhd", 0, flags)
         {
@@ -12806,6 +12937,7 @@ namespace SharpMP4
     public class OriginalFileTypeBox : Box
     {
         public const string TYPE = "otyp";
+        public override string DisplayName { get { return "OriginalFileTypeBox"; } }
 
         public OriginalFileTypeBox() : base("otyp")
         {
@@ -12852,6 +12984,7 @@ namespace SharpMP4
     public class PaddingBitsBox : FullBox
     {
         public const string TYPE = "padb";
+        public override string DisplayName { get { return "PaddingBitsBox"; } }
 
         protected uint sample_count;
         public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
@@ -12941,6 +13074,7 @@ namespace SharpMP4
     public class ProgressiveDownloadInfoBox : FullBox
     {
         public const string TYPE = "pdin";
+        public override string DisplayName { get { return "ProgressiveDownloadInfoBox"; } }
 
         protected uint[] rate;
         public uint[] Rate { get { return this.rate; } set { this.rate = value; } }
@@ -13009,6 +13143,7 @@ namespace SharpMP4
     public class PrimaryItemBox : FullBox
     {
         public const string TYPE = "pitm";
+        public override string DisplayName { get { return "PrimaryItemBox"; } }
 
         protected uint item_ID;
         public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -13085,6 +13220,7 @@ namespace SharpMP4
     public class ProducerReferenceTimeBox : FullBox
     {
         public const string TYPE = "prft";
+        public override string DisplayName { get { return "ProducerReferenceTimeBox"; } }
 
         protected uint reference_track_ID;
         public uint ReferenceTrackID { get { return this.reference_track_ID; } set { this.reference_track_ID = value; } }
@@ -13168,6 +13304,7 @@ namespace SharpMP4
     public class RestrictedSchemeInfoBox : Box
     {
         public const string TYPE = "rinf";
+        public override string DisplayName { get { return "RestrictedSchemeInfoBox"; } }
         public OriginalFormatBox OriginalFormat { get { return this.children.OfType<OriginalFormatBox>().FirstOrDefault(); } }
         public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
         public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }
@@ -13231,6 +13368,7 @@ namespace SharpMP4
     public class SampleAuxiliaryInformationOffsetsBox : FullBox
     {
         public const string TYPE = "saio";
+        public override string DisplayName { get { return "SampleAuxiliaryInformationOffsetsBox"; } }
 
         protected uint aux_info_type;
         public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
@@ -13340,6 +13478,7 @@ namespace SharpMP4
     public class SampleAuxiliaryInformationSizesBox : FullBox
     {
         public const string TYPE = "saiz";
+        public override string DisplayName { get { return "SampleAuxiliaryInformationSizesBox"; } }
 
         protected uint aux_info_type;
         public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
@@ -13441,6 +13580,7 @@ namespace SharpMP4
     public class SampleToGroupBox : FullBox
     {
         public const string TYPE = "sbgp";
+        public override string DisplayName { get { return "SampleToGroupBox"; } }
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -13533,6 +13673,7 @@ namespace SharpMP4
     public class SchemeInformationBox : Box
     {
         public const string TYPE = "schi";
+        public override string DisplayName { get { return "SchemeInformationBox"; } }
         public IEnumerable<Box> SchemeSpecificData { get { return this.children.OfType<Box>(); } }
 
         public SchemeInformationBox() : base("schi")
@@ -13580,6 +13721,7 @@ namespace SharpMP4
     public class SchemeTypeBox : FullBox
     {
         public const string TYPE = "schm";
+        public override string DisplayName { get { return "SchemeTypeBox"; } }
 
         protected uint scheme_type;  //  4CC identifying the scheme
         public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
@@ -13652,6 +13794,7 @@ namespace SharpMP4
     public class CompatibleSchemeTypeBox : FullBox
     {
         public const string TYPE = "csch";
+        public override string DisplayName { get { return "CompatibleSchemeTypeBox"; } }
 
         protected uint scheme_type;  //  4CC identifying the scheme
         public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
@@ -13727,6 +13870,7 @@ namespace SharpMP4
     public class SampleDependencyTypeBox : FullBox
     {
         public const string TYPE = "sdtp";
+        public override string DisplayName { get { return "SampleDependencyTypeBox"; } }
 
         protected byte[] is_leading;
         public byte[] IsLeading { get { return this.is_leading; } set { this.is_leading = value; } }
@@ -13819,6 +13963,7 @@ namespace SharpMP4
     public class FDSessionGroupBox : Box
     {
         public const string TYPE = "segr";
+        public override string DisplayName { get { return "FDSessionGroupBox"; } }
 
         protected ushort num_session_groups;
         public ushort NumSessionGroups { get { return this.num_session_groups; } set { this.num_session_groups = value; } }
@@ -13944,6 +14089,7 @@ namespace SharpMP4
     public class SampleGroupDescriptionBox : FullBox
     {
         public const string TYPE = "sgpd";
+        public override string DisplayName { get { return "SampleGroupDescriptionBox"; } }
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -14085,6 +14231,7 @@ namespace SharpMP4
     public class CompressedSegmentIndexBox : CompressedBox
     {
         public const string TYPE = "sidx";
+        public override string DisplayName { get { return "CompressedSegmentIndexBox"; } }
 
         public CompressedSegmentIndexBox() : base("sidx")
         {
@@ -14124,6 +14271,7 @@ namespace SharpMP4
     public class ProtectionSchemeInfoBox : Box
     {
         public const string TYPE = "sinf";
+        public override string DisplayName { get { return "ProtectionSchemeInfoBox"; } }
         public OriginalFormatBox OriginalFormat { get { return this.children.OfType<OriginalFormatBox>().FirstOrDefault(); } }
         public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
         public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }
@@ -14175,6 +14323,7 @@ namespace SharpMP4
     public class FreeSpaceBox_skip : Box
     {
         public const string TYPE = "skip";
+        public override string DisplayName { get { return "FreeSpaceBox_skip"; } }
 
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
@@ -14219,6 +14368,7 @@ namespace SharpMP4
     public class SoundMediaHeaderBox : FullBox
     {
         public const string TYPE = "smhd";
+        public override string DisplayName { get { return "SoundMediaHeaderBox"; } }
 
         protected short balance = 0;
         public short Balance { get { return this.balance; } set { this.balance = value; } }
@@ -14272,6 +14422,7 @@ namespace SharpMP4
     public class SRTPProcessBox : FullBox
     {
         public const string TYPE = "srpp";
+        public override string DisplayName { get { return "SRTPProcessBox"; } }
 
         protected uint encryption_algorithm_rtp;
         public uint EncryptionAlgorithmRtp { get { return this.encryption_algorithm_rtp; } set { this.encryption_algorithm_rtp = value; } }
@@ -14343,6 +14494,7 @@ namespace SharpMP4
     public class CompressedSubsegmentIndexBox : CompressedBox
     {
         public const string TYPE = "ssix";
+        public override string DisplayName { get { return "CompressedSubsegmentIndexBox"; } }
 
         public CompressedSubsegmentIndexBox() : base("ssix")
         {
@@ -14378,6 +14530,7 @@ namespace SharpMP4
     public class SampleTableBox : Box
     {
         public const string TYPE = "stbl";
+        public override string DisplayName { get { return "SampleTableBox"; } }
 
         public SampleTableBox() : base("stbl")
         {
@@ -14421,6 +14574,7 @@ namespace SharpMP4
     public class ChunkOffsetBox : FullBox
     {
         public const string TYPE = "stco";
+        public override string DisplayName { get { return "ChunkOffsetBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14486,6 +14640,7 @@ namespace SharpMP4
     public class DegradationPriorityBox : FullBox
     {
         public const string TYPE = "stdp";
+        public override string DisplayName { get { return "DegradationPriorityBox"; } }
 
         protected ushort[] priority;
         public ushort[] Priority { get { return this.priority; } set { this.priority = value; } }
@@ -14550,6 +14705,7 @@ namespace SharpMP4
     public class SubtitleMediaHeaderBox : FullBox
     {
         public const string TYPE = "sthd";
+        public override string DisplayName { get { return "SubtitleMediaHeaderBox"; } }
 
         public SubtitleMediaHeaderBox() : base("sthd", 0, 0)
         {
@@ -14585,6 +14741,7 @@ namespace SharpMP4
     public class SubTrackDefinitionBox : Box
     {
         public const string TYPE = "strd";
+        public override string DisplayName { get { return "SubTrackDefinitionBox"; } }
 
         public SubTrackDefinitionBox() : base("strd")
         {
@@ -14628,6 +14785,7 @@ namespace SharpMP4
     public class SubTrackInformationBox : FullBox
     {
         public const string TYPE = "stri";
+        public override string DisplayName { get { return "SubTrackInformationBox"; } }
 
         protected short switch_group = 0;
         public short SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
@@ -14694,6 +14852,7 @@ namespace SharpMP4
     public class SampleToChunkBox : FullBox
     {
         public const string TYPE = "stsc";
+        public override string DisplayName { get { return "SampleToChunkBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14774,6 +14933,7 @@ namespace SharpMP4
     public class SampleDescriptionBox : FullBox
     {
         public const string TYPE = "stsd";
+        public override string DisplayName { get { return "SampleDescriptionBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14842,6 +15002,7 @@ namespace SharpMP4
     public class SubTrackSampleGroupBox : FullBox
     {
         public const string TYPE = "stsg";
+        public override string DisplayName { get { return "SubTrackSampleGroupBox"; } }
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -14915,6 +15076,7 @@ namespace SharpMP4
     public class ShadowSyncSampleBox : FullBox
     {
         public const string TYPE = "stsh";
+        public override string DisplayName { get { return "ShadowSyncSampleBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14991,6 +15153,7 @@ namespace SharpMP4
     public class SyncSampleBox : FullBox
     {
         public const string TYPE = "stss";
+        public override string DisplayName { get { return "SyncSampleBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -15061,6 +15224,7 @@ namespace SharpMP4
     public class SampleSizeBox : FullBox
     {
         public const string TYPE = "stsz";
+        public override string DisplayName { get { return "SampleSizeBox"; } }
 
         protected uint sample_size;
         public uint SampleSize { get { return this.sample_size; } set { this.sample_size = value; } }
@@ -15146,6 +15310,7 @@ namespace SharpMP4
     public class TimeToSampleBox : FullBox
     {
         public const string TYPE = "stts";
+        public override string DisplayName { get { return "TimeToSampleBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -15216,6 +15381,7 @@ namespace SharpMP4
     public class SegmentTypeBox : GeneralTypeBox
     {
         public const string TYPE = "styp";
+        public override string DisplayName { get { return "SegmentTypeBox"; } }
 
         public SegmentTypeBox() : base("styp")
         {
@@ -15258,6 +15424,7 @@ namespace SharpMP4
     public class CompactSampleSizeBox : FullBox
     {
         public const string TYPE = "stz2";
+        public override string DisplayName { get { return "CompactSampleSizeBox"; } }
 
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -15352,6 +15519,7 @@ namespace SharpMP4
     public class SubSampleInformationBox : FullBox
     {
         public const string TYPE = "subs";
+        public override string DisplayName { get { return "SubSampleInformationBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -15511,6 +15679,7 @@ namespace SharpMP4
     public class TrackFragmentBaseMediaDecodeTimeBox : FullBox
     {
         public const string TYPE = "tfdt";
+        public override string DisplayName { get { return "TrackFragmentBaseMediaDecodeTimeBox"; } }
 
         protected ulong baseMediaDecodeTime;
         public ulong BaseMediaDecodeTime { get { return this.baseMediaDecodeTime; } set { this.baseMediaDecodeTime = value; } }
@@ -15601,6 +15770,7 @@ namespace SharpMP4
     public class TrackFragmentHeaderBox : FullBox
     {
         public const string TYPE = "tfhd";
+        public override string DisplayName { get { return "TrackFragmentHeaderBox"; } }
 
         protected uint track_ID;  //  all the following are optional fields
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -15754,6 +15924,7 @@ namespace SharpMP4
     public class TrackFragmentRandomAccessBox : FullBox
     {
         public const string TYPE = "tfra";
+        public override string DisplayName { get { return "TrackFragmentRandomAccessBox"; } }
 
         protected uint track_ID;
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -15926,6 +16097,7 @@ namespace SharpMP4
     public class TrackHeaderBox : FullBox
     {
         public const string TYPE = "tkhd";
+        public override string DisplayName { get { return "TrackHeaderBox"; } }
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -16085,6 +16257,7 @@ namespace SharpMP4
     public class TrackFragmentBox : Box
     {
         public const string TYPE = "traf";
+        public override string DisplayName { get { return "TrackFragmentBox"; } }
 
         public TrackFragmentBox() : base("traf")
         {
@@ -16123,6 +16296,7 @@ namespace SharpMP4
     public class TrackBox : Box
     {
         public const string TYPE = "trak";
+        public override string DisplayName { get { return "TrackBox"; } }
 
         public TrackBox() : base("trak")
         {
@@ -16162,6 +16336,7 @@ namespace SharpMP4
     public class TrackReferenceBox : Box
     {
         public const string TYPE = "tref";
+        public override string DisplayName { get { return "TrackReferenceBox"; } }
         public IEnumerable<TrackReferenceTypeBox> _TrackReferenceTypeBox { get { return this.children.OfType<TrackReferenceTypeBox>(); } }
 
         public TrackReferenceBox() : base("tref")
@@ -16206,6 +16381,7 @@ namespace SharpMP4
     public class TrackExtensionPropertiesBox : FullBox
     {
         public const string TYPE = "trep";
+        public override string DisplayName { get { return "TrackExtensionPropertiesBox"; } }
 
         protected uint track_ID;  //  Any number of boxes may follow
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -16255,6 +16431,7 @@ namespace SharpMP4
     public class TrackExtendsBox : FullBox
     {
         public const string TYPE = "trex";
+        public override string DisplayName { get { return "TrackExtendsBox"; } }
 
         protected uint track_ID;
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -16320,6 +16497,7 @@ namespace SharpMP4
     public class TrackGroupBox : Box
     {
         public const string TYPE = "trgr";
+        public override string DisplayName { get { return "TrackGroupBox"; } }
 
         public TrackGroupBox() : base("trgr")
         {
@@ -16386,6 +16564,7 @@ namespace SharpMP4
     public class TrackRunBox : FullBox
     {
         public const string TYPE = "trun";
+        public override string DisplayName { get { return "TrackRunBox"; } }
 
         protected uint sample_count;  //  the following are optional fields
         public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
@@ -16562,6 +16741,7 @@ namespace SharpMP4
     public class TrackTypeBox : GeneralTypeBox
     {
         public const string TYPE = "ttyp";
+        public override string DisplayName { get { return "TrackTypeBox"; } }
 
         public TrackTypeBox() : base("ttyp")
         {
@@ -16598,6 +16778,7 @@ namespace SharpMP4
     public class TypeCombinationBox : Box
     {
         public const string TYPE = "tyco";
+        public override string DisplayName { get { return "TypeCombinationBox"; } }
 
         protected uint[] compatible_brands;  //  to end of the box
         public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
@@ -16639,6 +16820,7 @@ namespace SharpMP4
     public class UserDataBox : Box
     {
         public const string TYPE = "udta";
+        public override string DisplayName { get { return "UserDataBox"; } }
 
         public UserDataBox() : base("udta")
         {
@@ -16689,7 +16871,8 @@ namespace SharpMP4
     public class BoxHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "BoxHeader"; } }
 
         protected uint size;
         public uint Size { get { return this.size; } set { this.size = value; } }
@@ -16790,6 +16973,7 @@ namespace SharpMP4
     public class VideoMediaHeaderBox : FullBox
     {
         public const string TYPE = "vmhd";
+        public override string DisplayName { get { return "VideoMediaHeaderBox"; } }
 
         protected ushort graphicsmode = 0;  //  copy, see below
         public ushort Graphicsmode { get { return this.graphicsmode; } set { this.graphicsmode = value; } }
@@ -16839,6 +17023,7 @@ namespace SharpMP4
     public class XMLBox : FullBox
     {
         public const string TYPE = "xml ";
+        public override string DisplayName { get { return "XMLBox"; } }
 
         protected BinaryUTF8String xml;
         public BinaryUTF8String Xml { get { return this.xml; } set { this.xml = value; } }
@@ -16883,6 +17068,7 @@ namespace SharpMP4
     public class AmbientViewingEnvironmentBox : Box
     {
         public const string TYPE = "amve";
+        public override string DisplayName { get { return "AmbientViewingEnvironmentBox"; } }
 
         protected uint ambient_illuminance;
         public uint AmbientIlluminance { get { return this.ambient_illuminance; } set { this.ambient_illuminance = value; } }
@@ -16938,6 +17124,7 @@ namespace SharpMP4
     public class MetaDataKeyTableBox : FullBox
     {
         public const string TYPE = "keys";
+        public override string DisplayName { get { return "MetaDataKeyTableBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -16987,6 +17174,7 @@ namespace SharpMP4
     public class URIBox : FullBox
     {
         public const string TYPE = "uri ";
+        public override string DisplayName { get { return "URIBox"; } }
 
         protected BinaryUTF8String theURI;
         public BinaryUTF8String TheURI { get { return this.theURI; } set { this.theURI = value; } }
@@ -17042,6 +17230,7 @@ namespace SharpMP4
     public class IroiInfoBox : Box
     {
         public const string TYPE = "iroi";
+        public override string DisplayName { get { return "IroiInfoBox"; } }
 
         protected byte iroi_type;
         public byte IroiType { get { return this.iroi_type; } set { this.iroi_type = value; } }
@@ -17167,6 +17356,7 @@ namespace SharpMP4
     public class TierDependencyBox : Box
     {
         public const string TYPE = "ldep";
+        public override string DisplayName { get { return "TierDependencyBox"; } }
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -17235,6 +17425,7 @@ namespace SharpMP4
     public class SVCDependencyRangeBox : Box
     {
         public const string TYPE = "svdr";
+        public override string DisplayName { get { return "SVCDependencyRangeBox"; } }
 
         protected byte min_dependency_id;
         public byte MinDependencyId { get { return this.min_dependency_id; } set { this.min_dependency_id = value; } }
@@ -17324,6 +17515,7 @@ namespace SharpMP4
     public class InitialParameterSetBox : Box
     {
         public const string TYPE = "svip";
+        public override string DisplayName { get { return "InitialParameterSetBox"; } }
 
         protected byte sps_id_count;
         public byte SpsIdCount { get { return this.sps_id_count; } set { this.sps_id_count = value; } }
@@ -17413,6 +17605,7 @@ namespace SharpMP4
     public class PriorityRangeBox : Box
     {
         public const string TYPE = "svpr";
+        public override string DisplayName { get { return "PriorityRangeBox"; } }
 
         protected byte reserved1 = 0;
         public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -17486,6 +17679,7 @@ namespace SharpMP4
     public class TranscodingInfoBox : Box
     {
         public const string TYPE = "tran";
+        public override string DisplayName { get { return "TranscodingInfoBox"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -17614,6 +17808,7 @@ namespace SharpMP4
     public class RectRegionBox : Box
     {
         public const string TYPE = "rrgn";
+        public override string DisplayName { get { return "RectRegionBox"; } }
 
         protected ushort base_region_tierID;
         public ushort BaseRegionTierID { get { return this.base_region_tierID; } set { this.base_region_tierID = value; } }
@@ -17711,6 +17906,7 @@ namespace SharpMP4
     public class BufferingBox : Box
     {
         public const string TYPE = "buff";
+        public override string DisplayName { get { return "BufferingBox"; } }
 
         protected ushort operating_point_count;
         public ushort OperatingPointCount { get { return this.operating_point_count; } set { this.operating_point_count = value; } }
@@ -17806,6 +18002,7 @@ namespace SharpMP4
     public class MVCSubTrackViewBox : FullBox
     {
         public const string TYPE = "mstv";
+        public override string DisplayName { get { return "MVCSubTrackViewBox"; } }
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -17906,6 +18103,7 @@ namespace SharpMP4
     public class MultiviewGroupBox : FullBox
     {
         public const string TYPE = "mvcg";
+        public override string DisplayName { get { return "MultiviewGroupBox"; } }
 
         protected uint multiview_group_id;
         public uint MultiviewGroupId { get { return this.multiview_group_id; } set { this.multiview_group_id = value; } }
@@ -18102,6 +18300,7 @@ namespace SharpMP4
     public class MultiviewInformationBox : FullBox
     {
         public const string TYPE = "mvci";
+        public override string DisplayName { get { return "MultiviewInformationBox"; } }
 
         public MultiviewInformationBox(uint flags = 0) : base("mvci", 0, flags)
         {
@@ -18155,6 +18354,7 @@ namespace SharpMP4
     public class MVDDepthResolutionBox : Box
     {
         public const string TYPE = "3dpr";
+        public override string DisplayName { get { return "MVDDepthResolutionBox"; } }
 
         protected ushort depth_width;
         public ushort DepthWidth { get { return this.depth_width; } set { this.depth_width = value; } }
@@ -18286,6 +18486,7 @@ namespace SharpMP4
     public class MultiviewRelationAttributeBox : FullBox
     {
         public const string TYPE = "mvra";
+        public override string DisplayName { get { return "MultiviewRelationAttributeBox"; } }
 
         protected ushort reserved1 = 0;
         public ushort Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -18397,6 +18598,7 @@ namespace SharpMP4
     public class SampleDependencyBox : FullBox
     {
         public const string TYPE = "sdep";
+        public override string DisplayName { get { return "SampleDependencyBox"; } }
 
         protected ushort[] dependency_count;
         public ushort[] DependencyCount { get { return this.dependency_count; } set { this.dependency_count = value; } }
@@ -18485,6 +18687,7 @@ namespace SharpMP4
     public class SeiInformationBox : Box
     {
         public const string TYPE = "seii";
+        public override string DisplayName { get { return "SeiInformationBox"; } }
 
         protected ushort numRequiredSEIs;
         public ushort NumRequiredSEIs { get { return this.numRequiredSEIs; } set { this.numRequiredSEIs = value; } }
@@ -18582,6 +18785,7 @@ namespace SharpMP4
     public class SVCSubTrackLayerBox : FullBox
     {
         public const string TYPE = "sstl";
+        public override string DisplayName { get { return "SVCSubTrackLayerBox"; } }
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -18696,6 +18900,7 @@ namespace SharpMP4
     public class MVCSubTrackMultiviewGroupBox : FullBox
     {
         public const string TYPE = "stmg";
+        public override string DisplayName { get { return "MVCSubTrackMultiviewGroupBox"; } }
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -18761,6 +18966,7 @@ namespace SharpMP4
     public class SubTrackTierBox : FullBox
     {
         public const string TYPE = "stti";
+        public override string DisplayName { get { return "SubTrackTierBox"; } }
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -18825,6 +19031,7 @@ namespace SharpMP4
     public class MultiviewGroupRelationBox : FullBox
     {
         public const string TYPE = "swtc";
+        public override string DisplayName { get { return "MultiviewGroupRelationBox"; } }
 
         protected uint num_entries;
         public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
@@ -18899,6 +19106,7 @@ namespace SharpMP4
     public class TierBitRateBox : Box
     {
         public const string TYPE = "tibr";
+        public override string DisplayName { get { return "TierBitRateBox"; } }
 
         protected uint baseBitRate;
         public uint BaseBitRate { get { return this.baseBitRate; } set { this.baseBitRate = value; } }
@@ -18983,6 +19191,7 @@ namespace SharpMP4
     public class TierInfoBox : Box
     {
         public const string TYPE = "tiri";
+        public override string DisplayName { get { return "TierInfoBox"; } }
 
         protected ushort tierID;
         public ushort TierID { get { return this.tierID; } set { this.tierID = value; } }
@@ -19091,6 +19300,7 @@ namespace SharpMP4
     public class TileSubTrackGroupBox : FullBox
     {
         public const string TYPE = "tstb";
+        public override string DisplayName { get { return "TileSubTrackGroupBox"; } }
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -19153,6 +19363,7 @@ namespace SharpMP4
     public class MultiviewSceneInfoBox : Box
     {
         public const string TYPE = "vwdi";
+        public override string DisplayName { get { return "MultiviewSceneInfoBox"; } }
 
         protected byte max_disparity;
         public byte MaxDisparity { get { return this.max_disparity; } set { this.max_disparity = value; } }
@@ -19196,6 +19407,7 @@ namespace SharpMP4
     public class MVCDConfigurationBox : Box
     {
         public const string TYPE = "mvdC";
+        public override string DisplayName { get { return "MVCDConfigurationBox"; } }
 
         protected MVDDecoderConfigurationRecord MVDConfig;
         public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
@@ -19246,6 +19458,7 @@ namespace SharpMP4
     public class A3DConfigurationBox : Box
     {
         public const string TYPE = "a3dC";
+        public override string DisplayName { get { return "A3DConfigurationBox"; } }
 
         protected MVDDecoderConfigurationRecord MVDConfig;
         public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
@@ -19316,6 +19529,7 @@ namespace SharpMP4
     public class ViewIdentifierBox : FullBox
     {
         public const string TYPE = "vwid";
+        public override string DisplayName { get { return "ViewIdentifierBox"; } }
 
         protected byte reserved6 = 0;
         public byte Reserved6 { get { return this.reserved6; } set { this.reserved6 = value; } }
@@ -19494,6 +19708,7 @@ namespace SharpMP4
     public class MVCConfigurationBox : Box
     {
         public const string TYPE = "mvcC";
+        public override string DisplayName { get { return "MVCConfigurationBox"; } }
 
         protected MVCDecoderConfigurationRecord MVCConfig;
         public MVCDecoderConfigurationRecord _MVCConfig { get { return this.MVCConfig; } set { this.MVCConfig = value; } }
@@ -19536,6 +19751,7 @@ namespace SharpMP4
     public class AVCConfigurationBox : Box
     {
         public const string TYPE = "avcC";
+        public override string DisplayName { get { return "AVCConfigurationBox"; } }
 
         protected AVCDecoderConfigurationRecord AVCConfig;
         public AVCDecoderConfigurationRecord _AVCConfig { get { return this.AVCConfig; } set { this.AVCConfig = value; } }
@@ -19578,6 +19794,7 @@ namespace SharpMP4
     public class HEVCConfigurationBox : Box
     {
         public const string TYPE = "hvcC";
+        public override string DisplayName { get { return "HEVCConfigurationBox"; } }
 
         protected HEVCDecoderConfigurationRecord HEVCConfig;
         public HEVCDecoderConfigurationRecord _HEVCConfig { get { return this.HEVCConfig; } set { this.HEVCConfig = value; } }
@@ -19620,6 +19837,7 @@ namespace SharpMP4
     public class LHEVCConfigurationBox : Box
     {
         public const string TYPE = "lhvC";
+        public override string DisplayName { get { return "LHEVCConfigurationBox"; } }
 
         protected LHEVCDecoderConfigurationRecord LHEVCConfig;
         public LHEVCDecoderConfigurationRecord _LHEVCConfig { get { return this.LHEVCConfig; } set { this.LHEVCConfig = value; } }
@@ -19662,6 +19880,7 @@ namespace SharpMP4
     public class MPEG4ExtensionDescriptorsBox : Box
     {
         public const string TYPE = "m4ds";
+        public override string DisplayName { get { return "MPEG4ExtensionDescriptorsBox"; } }
 
         protected Descriptor[] Descr;
         public Descriptor[] _Descr { get { return this.Descr; } set { this.Descr = value; } }
@@ -19704,6 +19923,7 @@ namespace SharpMP4
     public class SVCConfigurationBox : Box
     {
         public const string TYPE = "svcC";
+        public override string DisplayName { get { return "SVCConfigurationBox"; } }
 
         protected SVCDecoderConfigurationRecord SVCConfig;
         public SVCDecoderConfigurationRecord _SVCConfig { get { return this.SVCConfig; } set { this.SVCConfig = value; } }
@@ -19747,6 +19967,7 @@ namespace SharpMP4
     public class ScalabilityInformationSEIBox : Box
     {
         public const string TYPE = "seib";
+        public override string DisplayName { get { return "ScalabilityInformationSEIBox"; } }
 
         protected byte[] scalinfosei;
         public byte[] Scalinfosei { get { return this.scalinfosei; } set { this.scalinfosei = value; } }
@@ -19791,6 +20012,7 @@ namespace SharpMP4
     public class SVCPriorityAssignmentBox : Box
     {
         public const string TYPE = "svcP";
+        public override string DisplayName { get { return "SVCPriorityAssignmentBox"; } }
 
         protected byte method_count;
         public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
@@ -19840,6 +20062,7 @@ namespace SharpMP4
     public class ViewScalabilityInformationSEIBox : Box
     {
         public const string TYPE = "vsib";
+        public override string DisplayName { get { return "ViewScalabilityInformationSEIBox"; } }
 
         protected byte[] mvcscalinfosei;
         public byte[] Mvcscalinfosei { get { return this.mvcscalinfosei; } set { this.mvcscalinfosei = value; } }
@@ -19883,6 +20106,7 @@ namespace SharpMP4
     public class MVDScalabilityInformationSEIBox : Box
     {
         public const string TYPE = "3sib";
+        public override string DisplayName { get { return "MVDScalabilityInformationSEIBox"; } }
 
         protected byte[] mvdscalinfosei;
         public byte[] Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
@@ -19927,6 +20151,7 @@ namespace SharpMP4
     public class MVCViewPriorityAssignmentBox : Box
     {
         public const string TYPE = "mvcP";
+        public override string DisplayName { get { return "MVCViewPriorityAssignmentBox"; } }
 
         protected byte method_count;
         public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
@@ -19975,6 +20200,7 @@ namespace SharpMP4
     public class HEVCTileConfigurationBox : Box
     {
         public const string TYPE = "hvtC";
+        public override string DisplayName { get { return "HEVCTileConfigurationBox"; } }
 
         protected HEVCTileTierLevelConfigurationRecord HEVCTileTierLevelConfig;
         public HEVCTileTierLevelConfigurationRecord _HEVCTileTierLevelConfig { get { return this.HEVCTileTierLevelConfig; } set { this.HEVCTileTierLevelConfig = value; } }
@@ -20017,6 +20243,7 @@ namespace SharpMP4
     public class EVCConfigurationBox : Box
     {
         public const string TYPE = "evcC";
+        public override string DisplayName { get { return "EVCConfigurationBox"; } }
 
         protected EVCDecoderConfigurationRecord EVCConfig;
         public EVCDecoderConfigurationRecord _EVCConfig { get { return this.EVCConfig; } set { this.EVCConfig = value; } }
@@ -20065,6 +20292,7 @@ namespace SharpMP4
     public class SVCPriorityLayerInfoBox : Box
     {
         public const string TYPE = "qlif";
+        public override string DisplayName { get { return "SVCPriorityLayerInfoBox"; } }
 
         protected byte pr_layer_num;
         public byte PrLayerNum { get { return this.pr_layer_num; } set { this.pr_layer_num = value; } }
@@ -20147,6 +20375,7 @@ namespace SharpMP4
     public class VvcConfigurationBox : FullBox
     {
         public const string TYPE = "vvcC";
+        public override string DisplayName { get { return "VvcConfigurationBox"; } }
 
         protected VvcDecoderConfigurationRecord VvcConfig;
         public VvcDecoderConfigurationRecord _VvcConfig { get { return this.VvcConfig; } set { this.VvcConfig = value; } }
@@ -20190,6 +20419,7 @@ namespace SharpMP4
     public class VvcNALUConfigBox : FullBox
     {
         public const string TYPE = "vvnC";
+        public override string DisplayName { get { return "VvcNALUConfigBox"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -20250,6 +20480,7 @@ namespace SharpMP4
     public class DefaultHevcExtractorConstructorBox : FullBox
     {
         public const string TYPE = "dhec";
+        public override string DisplayName { get { return "DefaultHevcExtractorConstructorBox"; } }
 
         protected uint num_entries;
         public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
@@ -20394,6 +20625,7 @@ namespace SharpMP4
     public class SVCMetadataSampleConfigBox : FullBox
     {
         public const string TYPE = "svmC";
+        public override string DisplayName { get { return "SVCMetadataSampleConfigBox"; } }
 
         protected byte sample_statement_type;
         public byte SampleStatementType { get { return this.sample_statement_type; } set { this.sample_statement_type = value; } }
@@ -20486,6 +20718,7 @@ namespace SharpMP4
     public class EVCSliceComponentTrackConfigurationBox : Box
     {
         public const string TYPE = "evsC";
+        public override string DisplayName { get { return "EVCSliceComponentTrackConfigurationBox"; } }
 
         protected EVCSliceComponentTrackConfigurationRecord config;
         public EVCSliceComponentTrackConfigurationRecord Config { get { return this.config; } set { this.config = value; } }
@@ -20528,6 +20761,7 @@ namespace SharpMP4
     public class WebVTTConfigurationBox : Box
     {
         public const string TYPE = "vttC";
+        public override string DisplayName { get { return "WebVTTConfigurationBox"; } }
 
         protected BinaryUTF8String config;
         public BinaryUTF8String Config { get { return this.config; } set { this.config = value; } }
@@ -20570,6 +20804,7 @@ namespace SharpMP4
     public class WebVTTSourceLabelBox : Box
     {
         public const string TYPE = "vlab";
+        public override string DisplayName { get { return "WebVTTSourceLabelBox"; } }
 
         protected BinaryUTF8String source_label;
         public BinaryUTF8String SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
@@ -20614,6 +20849,7 @@ namespace SharpMP4
     public class WVTTSampleEntry : PlainTextSampleEntry
     {
         public const string TYPE = "wvtt";
+        public override string DisplayName { get { return "WVTTSampleEntry"; } }
         public WebVTTConfigurationBox Config { get { return this.children.OfType<WebVTTConfigurationBox>().FirstOrDefault(); } }
         public WebVTTSourceLabelBox Label { get { return this.children.OfType<WebVTTSourceLabelBox>().FirstOrDefault(); } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
@@ -20666,6 +20902,7 @@ namespace SharpMP4
     public class AuxiliaryTypeInfoBox : FullBox
     {
         public const string TYPE = "auxi";
+        public override string DisplayName { get { return "AuxiliaryTypeInfoBox"; } }
 
         protected BinaryUTF8String aux_track_type;
         public BinaryUTF8String AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
@@ -20712,6 +20949,7 @@ namespace SharpMP4
     public class CodingConstraintsBox : FullBox
     {
         public const string TYPE = "ccst";
+        public override string DisplayName { get { return "CodingConstraintsBox"; } }
 
         protected bool all_ref_pics_intra;
         public bool AllRefPicsIntra { get { return this.all_ref_pics_intra; } set { this.all_ref_pics_intra = value; } }
@@ -20783,6 +21021,7 @@ namespace SharpMP4
     public class MD5IntegrityBox : FullBox
     {
         public const string TYPE = "md5i";
+        public override string DisplayName { get { return "MD5IntegrityBox"; } }
 
         protected byte[] input_MD5;
         public byte[] InputMD5 { get { return this.input_MD5; } set { this.input_MD5 = value; } }
@@ -20927,7 +21166,7 @@ namespace SharpMP4
     */
     public class AudioSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "AudioSampleEntry"; } }
 
         protected ushort soundversion = 0;
         public ushort Soundversion { get { return this.soundversion; } set { this.soundversion = value; } }
@@ -21139,7 +21378,7 @@ namespace SharpMP4
     */
     public class AudioSampleEntryV1 : SampleEntry
     {
-
+        public override string DisplayName { get { return "AudioSampleEntryV1"; } }
 
         protected ushort entry_version;  //  shall be 1, 
         public ushort EntryVersion { get { return this.entry_version; } set { this.entry_version = value; } }
@@ -21262,7 +21501,7 @@ namespace SharpMP4
     */
     public class FontSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "FontSampleEntry"; } }
 
         public FontSampleEntry(string codingname = "") : base(codingname)
         {
@@ -21300,7 +21539,7 @@ namespace SharpMP4
     */
     public class MetaDataSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "MetaDataSampleEntry"; } }
 
         public MetaDataSampleEntry(string codingname = "") : base(codingname)
         {
@@ -21348,6 +21587,7 @@ namespace SharpMP4
     public class GenericSampleEntry : Box
     {
         public const string TYPE = "encv";
+        public override string DisplayName { get { return "GenericSampleEntry"; } }
 
         public GenericSampleEntry() : base("encv")
         {
@@ -21425,6 +21665,7 @@ namespace SharpMP4
     public class XMLMetaDataSampleEntry : MetaDataSampleEntry
     {
         public const string TYPE = "metx";
+        public override string DisplayName { get { return "XMLMetaDataSampleEntry"; } }
 
         protected BinaryUTF8String content_encoding;  //  optional
         public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -21481,6 +21722,7 @@ namespace SharpMP4
     public class TextMetaDataSampleEntry : MetaDataSampleEntry
     {
         public const string TYPE = "mett";
+        public override string DisplayName { get { return "TextMetaDataSampleEntry"; } }
 
         protected BinaryUTF8String content_encoding;  //  optional
         public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -21537,6 +21779,7 @@ namespace SharpMP4
     public class URIMetaSampleEntry : MetaDataSampleEntry
     {
         public const string TYPE = "urim";
+        public override string DisplayName { get { return "URIMetaSampleEntry"; } }
         public URIBox TheLabel { get { return this.children.OfType<URIBox>().FirstOrDefault(); } }
         public URIInitBox Init { get { return this.children.OfType<URIInitBox>().FirstOrDefault(); } }
 
@@ -21586,6 +21829,7 @@ namespace SharpMP4
     public class BoxedMetaDataSampleEntry : MetaDataSampleEntry
     {
         public const string TYPE = "mebx";
+        public override string DisplayName { get { return "BoxedMetaDataSampleEntry"; } }
         public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return this.children.OfType<MetaDataKeyTableBox>().FirstOrDefault(); } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
 
@@ -21636,6 +21880,7 @@ namespace SharpMP4
     public class FDHintSampleEntry : HintSampleEntry
     {
         public const string TYPE = "fdp ";
+        public override string DisplayName { get { return "FDHintSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -21700,6 +21945,7 @@ namespace SharpMP4
     public class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEntry
     {
         public const string TYPE = "pm2t";
+        public override string DisplayName { get { return "ProtectedMPEG2TransportStreamSampleEntry"; } }
         public ProtectionSchemeInfoBox _SchemeInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
 
         public ProtectedMPEG2TransportStreamSampleEntry() : base("pm2t")
@@ -21744,6 +21990,7 @@ namespace SharpMP4
     public class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
     {
         public const string TYPE = "prtp";
+        public override string DisplayName { get { return "ProtectedRtpReceptionHintSampleEntry"; } }
         public ProtectionSchemeInfoBox _SchemeInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
 
         public ProtectedRtpReceptionHintSampleEntry() : base("prtp")
@@ -21785,6 +22032,7 @@ namespace SharpMP4
     public class MPEG2TSReceptionSampleEntry : MPEG2TSSampleEntry
     {
         public const string TYPE = "rm2t";
+        public override string DisplayName { get { return "MPEG2TSReceptionSampleEntry"; } }
 
         public MPEG2TSReceptionSampleEntry() : base("rm2t")
         {
@@ -21823,6 +22071,7 @@ namespace SharpMP4
     public class ReceivedRtpHintSampleEntry : HintSampleEntry
     {
         public const string TYPE = "rrtp";
+        public override string DisplayName { get { return "ReceivedRtpHintSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -21882,6 +22131,7 @@ namespace SharpMP4
     public class ReceivedSrtpHintSampleEntry : HintSampleEntry
     {
         public const string TYPE = "rsrp";
+        public override string DisplayName { get { return "ReceivedSrtpHintSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -21934,7 +22184,7 @@ namespace SharpMP4
     */
     public class HintSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "HintSampleEntry"; } }
 
         public HintSampleEntry(string protocol) : base(protocol)
         {
@@ -21969,6 +22219,7 @@ namespace SharpMP4
     public class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
     {
         public const string TYPE = "sm2t";
+        public override string DisplayName { get { return "MPEG2TSServerSampleEntry"; } }
 
         public MPEG2TSServerSampleEntry() : base("sm2t")
         {
@@ -22007,6 +22258,7 @@ namespace SharpMP4
     public class SrtpHintSampleEntry : HintSampleEntry
     {
         public const string TYPE = "srtp";
+        public override string DisplayName { get { return "SrtpHintSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -22064,7 +22316,7 @@ namespace SharpMP4
     */
     public class HapticSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "HapticSampleEntry"; } }
         public IEnumerable<Box> Otherboxes { get { return this.children.OfType<Box>(); } }
 
         public HapticSampleEntry(string codingname = "") : base(codingname)
@@ -22109,7 +22361,7 @@ namespace SharpMP4
     */
     public class VolumetricVisualSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "VolumetricVisualSampleEntry"; } }
 
         protected byte[] compressorname;  //  other boxes from derived specifications
         public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
@@ -22166,7 +22418,7 @@ namespace SharpMP4
     */
     public class VisualSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "VisualSampleEntry"; } }
 
         protected ushort pre_defined = 0;
         public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -22288,6 +22540,7 @@ namespace SharpMP4
     public class RtpHintSampleEntry : HintSampleEntry
     {
         public const string TYPE = "rtp ";
+        public override string DisplayName { get { return "RtpHintSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -22349,7 +22602,7 @@ namespace SharpMP4
     */
     public class EntityToGroupBox : FullBox
     {
-
+        public override string DisplayName { get { return "EntityToGroupBox"; } }
 
         protected uint group_id;
         public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
@@ -22416,6 +22669,7 @@ namespace SharpMP4
     public class BrandProperty : GeneralTypeBox
     {
         public const string TYPE = "brnd";
+        public override string DisplayName { get { return "BrandProperty"; } }
 
         public BrandProperty() : base("brnd")
         {
@@ -22458,7 +22712,7 @@ namespace SharpMP4
     */
     public class SingleItemTypeReferenceBox : Box
     {
-
+        public override string DisplayName { get { return "SingleItemTypeReferenceBox"; } }
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
@@ -22529,7 +22783,7 @@ namespace SharpMP4
     */
     public class SingleItemTypeReferenceBoxLarge : Box
     {
-
+        public override string DisplayName { get { return "SingleItemTypeReferenceBoxLarge"; } }
 
         protected uint from_item_ID;
         public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
@@ -22607,6 +22861,7 @@ namespace SharpMP4
     public class AlternativeStartupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "alst";
+        public override string DisplayName { get { return "AlternativeStartupEntry"; } }
 
         protected ushort roll_count;
         public ushort RollCount { get { return this.roll_count; } set { this.roll_count = value; } }
@@ -22709,6 +22964,7 @@ namespace SharpMP4
     public class VisualDRAPEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "drap";
+        public override string DisplayName { get { return "VisualDRAPEntry"; } }
 
         protected byte DRAP_type;
         public byte DRAPType { get { return this.DRAP_type; } set { this.DRAP_type = value; } }
@@ -22758,6 +23014,7 @@ namespace SharpMP4
     public class AudioPreRollEntry : AudioSampleGroupEntry
     {
         public const string TYPE = "prol";
+        public override string DisplayName { get { return "AudioPreRollEntry"; } }
 
         protected short roll_distance;
         public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
@@ -22802,6 +23059,7 @@ namespace SharpMP4
     public class VisualRandomAccessEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "rap ";
+        public override string DisplayName { get { return "VisualRandomAccessEntry"; } }
 
         protected bool num_leading_samples_known;
         public bool NumLeadingSamplesKnown { get { return this.num_leading_samples_known; } set { this.num_leading_samples_known = value; } }
@@ -22862,6 +23120,7 @@ namespace SharpMP4
     public class RateShareEntry : SampleGroupDescriptionEntry
     {
         public const string TYPE = "rash";
+        public override string DisplayName { get { return "RateShareEntry"; } }
 
         protected ushort operation_point_count;
         public ushort OperationPointCount { get { return this.operation_point_count; } set { this.operation_point_count = value; } }
@@ -22979,6 +23238,7 @@ namespace SharpMP4
     public class AudioRollRecoveryEntry : AudioSampleGroupEntry
     {
         public const string TYPE = "roll";
+        public override string DisplayName { get { return "AudioRollRecoveryEntry"; } }
 
         protected short roll_distance;
         public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
@@ -23024,6 +23284,7 @@ namespace SharpMP4
     public class SAPEntry : SampleGroupDescriptionEntry
     {
         public const string TYPE = "sap ";
+        public override string DisplayName { get { return "SAPEntry"; } }
 
         protected bool dependent_flag;
         public bool DependentFlag { get { return this.dependent_flag; } set { this.dependent_flag = value; } }
@@ -23083,6 +23344,7 @@ namespace SharpMP4
     public class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
     {
         public const string TYPE = "stmi";
+        public override string DisplayName { get { return "SampleToMetadataItemEntry"; } }
 
         protected uint meta_box_handler_type;
         public uint MetaBoxHandlerType { get { return this.meta_box_handler_type; } set { this.meta_box_handler_type = value; } }
@@ -23152,6 +23414,7 @@ namespace SharpMP4
     public class TemporalLevelEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "tele";
+        public override string DisplayName { get { return "TemporalLevelEntry"; } }
 
         protected bool level_independently_decodable;
         public bool LevelIndependentlyDecodable { get { return this.level_independently_decodable; } set { this.level_independently_decodable = value; } }
@@ -23201,6 +23464,7 @@ namespace SharpMP4
     public class PixelAspectRatioEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "pasr";
+        public override string DisplayName { get { return "PixelAspectRatioEntry"; } }
 
         protected uint hSpacing;
         public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
@@ -23262,6 +23526,7 @@ namespace SharpMP4
     public class CleanApertureEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "casg";
+        public override string DisplayName { get { return "CleanApertureEntry"; } }
 
         protected uint cleanApertureWidthN;
         public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
@@ -23349,6 +23614,7 @@ namespace SharpMP4
     public class TrackGroupTypeBox : FullBox
     {
         public const string TYPE = "msrc";
+        public override string DisplayName { get { return "TrackGroupTypeBox"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -23396,6 +23662,7 @@ namespace SharpMP4
     public class StereoVideoGroupBox : TrackGroupTypeBox
     {
         public const string TYPE = "ster";
+        public override string DisplayName { get { return "StereoVideoGroupBox"; } }
 
         protected bool left_view_flag;
         public bool LeftViewFlag { get { return this.left_view_flag; } set { this.left_view_flag = value; } }
@@ -23443,7 +23710,7 @@ namespace SharpMP4
     */
     public class TrackReferenceTypeBox : Box
     {
-
+        public override string DisplayName { get { return "TrackReferenceTypeBox"; } }
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
@@ -23489,6 +23756,7 @@ namespace SharpMP4
     public class SVCMetaDataSampleEntry : MetaDataSampleEntry
     {
         public const string TYPE = "svcM";
+        public override string DisplayName { get { return "SVCMetaDataSampleEntry"; } }
         public SVCMetadataSampleConfigBox Config { get { return this.children.OfType<SVCMetadataSampleConfigBox>().FirstOrDefault(); } }
         public SVCPriorityAssignmentBox Methods { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
         public SVCPriorityLayerInfoBox Priorities { get { return this.children.OfType<SVCPriorityLayerInfoBox>().FirstOrDefault(); } }
@@ -23547,6 +23815,7 @@ namespace SharpMP4
     public class SubpicCommonGroupBox : EntityToGroupBox
     {
         public const string TYPE = "acgl";
+        public override string DisplayName { get { return "SubpicCommonGroupBox"; } }
 
         protected bool level_is_present_flag;
         public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }
@@ -23656,6 +23925,7 @@ namespace SharpMP4
     public class SubpicMultipleGroupsBox : EntityToGroupBox
     {
         public const string TYPE = "amgl";
+        public override string DisplayName { get { return "SubpicMultipleGroupsBox"; } }
 
         protected bool level_is_present_flag;
         public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }
@@ -23843,6 +24113,7 @@ namespace SharpMP4
     public class OperatingPointGroupBox : EntityToGroupBox
     {
         public const string TYPE = "opeg";
+        public override string DisplayName { get { return "OperatingPointGroupBox"; } }
 
         protected byte num_profile_tier_level_minus1;
         public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }
@@ -24230,6 +24501,7 @@ namespace SharpMP4
     public class SwitchableTracks : EntityToGroupBox
     {
         public const string TYPE = "swtk";
+        public override string DisplayName { get { return "SwitchableTracks"; } }
 
         protected ushort[] track_switch_hierarchy_id;
         public ushort[] TrackSwitchHierarchyId { get { return this.track_switch_hierarchy_id; } set { this.track_switch_hierarchy_id = value; } }
@@ -24290,6 +24562,7 @@ namespace SharpMP4
     public class EntityToGroupBox_vvcb : FullBox
     {
         public const string TYPE = "vvcb";
+        public override string DisplayName { get { return "EntityToGroupBox_vvcb"; } }
 
         protected uint group_id;
         public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
@@ -24358,6 +24631,7 @@ namespace SharpMP4
     public class AUDSampleEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "aud ";
+        public override string DisplayName { get { return "AUDSampleEntry"; } }
 
         protected uint audNalUnit;
         public uint AudNalUnit { get { return this.audNalUnit; } set { this.audNalUnit = value; } }
@@ -24405,6 +24679,7 @@ namespace SharpMP4
     public class AVCLayerEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "avll";
+        public override string DisplayName { get { return "AVCLayerEntry"; } }
 
         protected byte layerNumber;
         public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
@@ -24472,6 +24747,7 @@ namespace SharpMP4
     public class DecodingCapabilityInformation : VisualSampleGroupEntry
     {
         public const string TYPE = "dcfi";
+        public override string DisplayName { get { return "DecodingCapabilityInformation"; } }
 
         protected ushort dci_nal_unit_length;
         public ushort DciNalUnitLength { get { return this.dci_nal_unit_length; } set { this.dci_nal_unit_length = value; } }
@@ -24524,6 +24800,7 @@ namespace SharpMP4
     public class DecodeRetimingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "dtrt";
+        public override string DisplayName { get { return "DecodeRetimingEntry"; } }
 
         protected byte tierCount;
         public byte TierCount { get { return this.tierCount; } set { this.tierCount = value; } }
@@ -24593,6 +24870,7 @@ namespace SharpMP4
     public class EndOfBitstreamSampleEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "eob ";
+        public override string DisplayName { get { return "EndOfBitstreamSampleEntry"; } }
 
         protected ushort eobNalUnit;
         public ushort EobNalUnit { get { return this.eobNalUnit; } set { this.eobNalUnit = value; } }
@@ -24638,6 +24916,7 @@ namespace SharpMP4
     public class EndOfSequenceSampleEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "eos ";
+        public override string DisplayName { get { return "EndOfSequenceSampleEntry"; } }
 
         protected byte num_eos_nal_unit_minus1;
         public byte NumEosNalUnitMinus1 { get { return this.num_eos_nal_unit_minus1; } set { this.num_eos_nal_unit_minus1 = value; } }
@@ -24703,6 +24982,7 @@ namespace SharpMP4
     public class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
     {
         public const string TYPE = "lbli";
+        public override string DisplayName { get { return "LhvcExternalBaseLayerInfo"; } }
 
         protected bool reserved = true;
         public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -24774,6 +25054,7 @@ namespace SharpMP4
     public class LayerInfoGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "linf";
+        public override string DisplayName { get { return "LayerInfoGroupEntry"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -24897,6 +25178,7 @@ namespace SharpMP4
     public class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "minp";
+        public override string DisplayName { get { return "VvcMixedNALUnitTypePicEntry"; } }
 
         protected ushort num_mix_nalu_pic_idx;
         public ushort NumMixNaluPicIdx { get { return this.num_mix_nalu_pic_idx; } set { this.num_mix_nalu_pic_idx = value; } }
@@ -24997,6 +25279,7 @@ namespace SharpMP4
     public class MultiviewGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "mvif";
+        public override string DisplayName { get { return "MultiviewGroupEntry"; } }
 
         protected byte groupID;
         public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -25155,6 +25438,7 @@ namespace SharpMP4
     public class NALUMapEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "nalm";
+        public override string DisplayName { get { return "NALUMapEntry"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -25307,6 +25591,7 @@ namespace SharpMP4
     public class OperatingPointsInformation : VisualSampleGroupEntry
     {
         public const string TYPE = "oinf";
+        public override string DisplayName { get { return "OperatingPointsInformation"; } }
 
         protected OperatingPointsRecord oinf;
         public OperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
@@ -25352,6 +25637,7 @@ namespace SharpMP4
     public class OperatingPointDecodeTimeHint : VisualSampleGroupEntry
     {
         public const string TYPE = "opth";
+        public override string DisplayName { get { return "OperatingPointDecodeTimeHint"; } }
 
         protected int delta_time;
         public int DeltaTime { get { return this.delta_time; } set { this.delta_time = value; } }
@@ -25396,6 +25682,7 @@ namespace SharpMP4
     public class ParameterSetNALUEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "pase";
+        public override string DisplayName { get { return "ParameterSetNALUEntry"; } }
 
         protected ushort ps_nalu_length;
         public ushort PsNaluLength { get { return this.ps_nalu_length; } set { this.ps_nalu_length = value; } }
@@ -25448,6 +25735,7 @@ namespace SharpMP4
     public class PSSampleGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "pss1";
+        public override string DisplayName { get { return "PSSampleGroupEntry"; } }
 
         protected bool sps_present;
         public bool SpsPresent { get { return this.sps_present; } set { this.sps_present = value; } }
@@ -25522,6 +25810,7 @@ namespace SharpMP4
     public class VvcRectRegionOrderEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "rror";
+        public override string DisplayName { get { return "VvcRectRegionOrderEntry"; } }
 
         protected bool subpic_id_info_flag;
         public bool SubpicIdInfoFlag { get { return this.subpic_id_info_flag; } set { this.subpic_id_info_flag = value; } }
@@ -25690,6 +25979,7 @@ namespace SharpMP4
     public class ScalableGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "scif";
+        public override string DisplayName { get { return "ScalableGroupEntry"; } }
 
         protected byte groupID;
         public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -25865,6 +26155,7 @@ namespace SharpMP4
     public class ScalableNALUMapEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "scnm";
+        public override string DisplayName { get { return "ScalableNALUMapEntry"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -25942,6 +26233,7 @@ namespace SharpMP4
     public class VvcSubpicIDEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "spid";
+        public override string DisplayName { get { return "VvcSubpicIDEntry"; } }
 
         protected bool rect_region_flag;
         public bool RectRegionFlag { get { return this.rect_region_flag; } set { this.rect_region_flag = value; } }
@@ -26053,6 +26345,7 @@ namespace SharpMP4
     public class SubpicLevelInfoEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "spli";
+        public override string DisplayName { get { return "SubpicLevelInfoEntry"; } }
 
         protected byte level_idc;
         public byte LevelIdc { get { return this.level_idc; } set { this.level_idc = value; } }
@@ -26101,6 +26394,7 @@ namespace SharpMP4
     public class VvcSubpicOrderEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "spor";
+        public override string DisplayName { get { return "VvcSubpicOrderEntry"; } }
 
         protected bool subpic_id_info_flag;
         public bool SubpicIdInfoFlag { get { return this.subpic_id_info_flag; } set { this.subpic_id_info_flag = value; } }
@@ -26186,6 +26480,7 @@ namespace SharpMP4
     public class StepwiseTemporalLayerEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "stsa";
+        public override string DisplayName { get { return "StepwiseTemporalLayerEntry"; } }
 
         public StepwiseTemporalLayerEntry() : base("stsa")
         {
@@ -26225,6 +26520,7 @@ namespace SharpMP4
     public class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "sulm";
+        public override string DisplayName { get { return "VvcSubpicLayoutMapEntry"; } }
 
         protected uint groupID_info_4cc;
         public uint GroupIDInfo4cc { get { return this.groupID_info_4cc; } set { this.groupID_info_4cc = value; } }
@@ -26294,6 +26590,7 @@ namespace SharpMP4
     public class SyncSampleEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "sync";
+        public override string DisplayName { get { return "SyncSampleEntry"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -26364,6 +26661,7 @@ namespace SharpMP4
     public class RectangularRegionGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "trif";
+        public override string DisplayName { get { return "RectangularRegionGroupEntry"; } }
 
         protected ushort groupID;
         public ushort GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -26545,6 +26843,7 @@ namespace SharpMP4
     public class TemporalSubLayerEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "tsas";
+        public override string DisplayName { get { return "TemporalSubLayerEntry"; } }
 
         public TemporalSubLayerEntry() : base("tsas")
         {
@@ -26592,6 +26891,7 @@ namespace SharpMP4
     public class TemporalLayerEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "tscl";
+        public override string DisplayName { get { return "TemporalLayerEntry"; } }
 
         protected byte temporalLayerId;
         public byte TemporalLayerId { get { return this.temporalLayerId; } set { this.temporalLayerId = value; } }
@@ -26695,6 +26995,7 @@ namespace SharpMP4
     public class ViewPriorityEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "vipr";
+        public override string DisplayName { get { return "ViewPriorityEntry"; } }
 
         protected ViewPriorityBox ViewPriorityBox;
         public ViewPriorityBox _ViewPriorityBox { get { return this.ViewPriorityBox; } set { this.ViewPriorityBox = value; } }
@@ -26737,6 +27038,7 @@ namespace SharpMP4
     public class VvcOperatingPointsInformation : VisualSampleGroupEntry
     {
         public const string TYPE = "vopi";
+        public override string DisplayName { get { return "VvcOperatingPointsInformation"; } }
 
         protected VvcOperatingPointsRecord oinf;
         public VvcOperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
@@ -26782,6 +27084,7 @@ namespace SharpMP4
     public class TrackGroupTypeBox_alte : FullBox
     {
         public const string TYPE = "alte";
+        public override string DisplayName { get { return "TrackGroupTypeBox_alte"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -26830,6 +27133,7 @@ namespace SharpMP4
     public class TrackGroupTypeBox_cstg : FullBox
     {
         public const string TYPE = "cstg";
+        public override string DisplayName { get { return "TrackGroupTypeBox_cstg"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -26878,6 +27182,7 @@ namespace SharpMP4
     public class TrackGroupTypeBox_snut : FullBox
     {
         public const string TYPE = "snut";
+        public override string DisplayName { get { return "TrackGroupTypeBox_snut"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -26926,6 +27231,7 @@ namespace SharpMP4
     public class AuxiliaryTypeProperty : ItemFullProperty
     {
         public const string TYPE = "auxC";
+        public override string DisplayName { get { return "AuxiliaryTypeProperty"; } }
 
         protected BinaryUTF8String aux_type;
         public BinaryUTF8String AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
@@ -26976,6 +27282,7 @@ namespace SharpMP4
     public class ImageMirror : ItemProperty
     {
         public const string TYPE = "imir";
+        public override string DisplayName { get { return "ImageMirror"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -27026,6 +27333,7 @@ namespace SharpMP4
     public class ImageRotation : ItemProperty
     {
         public const string TYPE = "irot";
+        public override string DisplayName { get { return "ImageRotation"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -27077,6 +27385,7 @@ namespace SharpMP4
     public class ImageSpatialExtentsProperty : ItemFullProperty
     {
         public const string TYPE = "ispe";
+        public override string DisplayName { get { return "ImageSpatialExtentsProperty"; } }
 
         protected uint image_width;
         public uint ImageWidth { get { return this.image_width; } set { this.image_width = value; } }
@@ -27125,6 +27434,7 @@ namespace SharpMP4
     public class JPEGConfigurationBox : Box
     {
         public const string TYPE = "jpgC";
+        public override string DisplayName { get { return "JPEGConfigurationBox"; } }
 
         protected byte[] JPEGprefix;
         public byte[] _JPEGprefix { get { return this.JPEGprefix; } set { this.JPEGprefix = value; } }
@@ -27168,6 +27478,7 @@ namespace SharpMP4
     public class LayerSelectorProperty : ItemProperty
     {
         public const string TYPE = "lsel";
+        public override string DisplayName { get { return "LayerSelectorProperty"; } }
 
         protected ushort layer_id;
         public ushort LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
@@ -27211,6 +27522,7 @@ namespace SharpMP4
     public class OperatingPointsInformationProperty : ItemFullProperty
     {
         public const string TYPE = "oinf";
+        public override string DisplayName { get { return "OperatingPointsInformationProperty"; } }
 
         protected OperatingPointsRecord op_info;  //  specified in ISO/IEC 14496-15
         public OperatingPointsRecord OpInfo { get { return this.op_info; } set { this.op_info = value; } }
@@ -27257,6 +27569,7 @@ namespace SharpMP4
     public class PixelInformationProperty : ItemFullProperty
     {
         public const string TYPE = "pixi";
+        public override string DisplayName { get { return "PixelInformationProperty"; } }
 
         protected byte num_channels;
         public byte NumChannels { get { return this.num_channels; } set { this.num_channels = value; } }
@@ -27321,6 +27634,7 @@ namespace SharpMP4
     public class RelativeLocationProperty : ItemFullProperty
     {
         public const string TYPE = "rloc";
+        public override string DisplayName { get { return "RelativeLocationProperty"; } }
 
         protected uint horizontal_offset;
         public uint HorizontalOffset { get { return this.horizontal_offset; } set { this.horizontal_offset = value; } }
@@ -27370,6 +27684,7 @@ namespace SharpMP4
     public class TargetOlsProperty : ItemFullProperty
     {
         public const string TYPE = "tols";
+        public override string DisplayName { get { return "TargetOlsProperty"; } }
 
         protected ushort target_ols_idx;
         public ushort TargetOlsIdx { get { return this.target_ols_idx; } set { this.target_ols_idx = value; } }
@@ -27414,6 +27729,7 @@ namespace SharpMP4
     public class AutoExposureBracketingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "aebr";
+        public override string DisplayName { get { return "AutoExposureBracketingEntry"; } }
 
         protected sbyte exposure_step;
         public sbyte ExposureStep { get { return this.exposure_step; } set { this.exposure_step = value; } }
@@ -27464,6 +27780,7 @@ namespace SharpMP4
     public class FlashExposureBracketingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "afbr";
+        public override string DisplayName { get { return "FlashExposureBracketingEntry"; } }
 
         protected sbyte flash_exposure_numerator;
         public sbyte FlashExposureNumerator { get { return this.flash_exposure_numerator; } set { this.flash_exposure_numerator = value; } }
@@ -27515,6 +27832,7 @@ namespace SharpMP4
     public class AccessibilityTextProperty : ItemFullProperty
     {
         public const string TYPE = "altt";
+        public override string DisplayName { get { return "AccessibilityTextProperty"; } }
 
         protected BinaryUTF8String alt_text;
         public BinaryUTF8String AltText { get { return this.alt_text; } set { this.alt_text = value; } }
@@ -27565,6 +27883,7 @@ namespace SharpMP4
     public class CreationTimeProperty : ItemFullProperty
     {
         public const string TYPE = "crtt";
+        public override string DisplayName { get { return "CreationTimeProperty"; } }
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -27609,6 +27928,7 @@ namespace SharpMP4
     public class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "dobr";
+        public override string DisplayName { get { return "DepthOfFieldBracketingEntry"; } }
 
         protected sbyte f_stop_numerator;
         public sbyte fStopNumerator { get { return this.f_stop_numerator; } set { this.f_stop_numerator = value; } }
@@ -27659,6 +27979,7 @@ namespace SharpMP4
     public class FocusBracketingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "fobr";
+        public override string DisplayName { get { return "FocusBracketingEntry"; } }
 
         protected ushort focus_distance_numerator;
         public ushort FocusDistanceNumerator { get { return this.focus_distance_numerator; } set { this.focus_distance_numerator = value; } }
@@ -27711,6 +28032,7 @@ namespace SharpMP4
     public class ImageScaling : ItemFullProperty
     {
         public const string TYPE = "iscl";
+        public override string DisplayName { get { return "ImageScaling"; } }
 
         protected ushort target_width_numerator;
         public ushort TargetWidthNumerator { get { return this.target_width_numerator; } set { this.target_width_numerator = value; } }
@@ -27773,6 +28095,7 @@ namespace SharpMP4
     public class ModificationTimeProperty : ItemFullProperty
     {
         public const string TYPE = "mdft";
+        public override string DisplayName { get { return "ModificationTimeProperty"; } }
 
         protected ulong modification_time;
         public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }
@@ -27817,6 +28140,7 @@ namespace SharpMP4
     public class PanoramaEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "pano";
+        public override string DisplayName { get { return "PanoramaEntry"; } }
 
         protected ushort frame_number;
         public ushort FrameNumber { get { return this.frame_number; } set { this.frame_number = value; } }
@@ -27863,6 +28187,7 @@ namespace SharpMP4
     public class RequiredReferenceTypesProperty : ItemFullProperty
     {
         public const string TYPE = "rref";
+        public override string DisplayName { get { return "RequiredReferenceTypesProperty"; } }
 
         protected byte reference_type_count;
         public byte ReferenceTypeCount { get { return this.reference_type_count; } set { this.reference_type_count = value; } }
@@ -27929,6 +28254,7 @@ namespace SharpMP4
     public class UserDescriptionProperty : ItemFullProperty
     {
         public const string TYPE = "udes";
+        public override string DisplayName { get { return "UserDescriptionProperty"; } }
 
         protected BinaryUTF8String lang;
         public BinaryUTF8String Lang { get { return this.lang; } set { this.lang = value; } }
@@ -27991,6 +28317,7 @@ namespace SharpMP4
     public class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "wbbr";
+        public override string DisplayName { get { return "WhiteBalanceBracketingEntry"; } }
 
         protected ushort blue_amber;
         public ushort BlueAmber { get { return this.blue_amber; } set { this.blue_amber = value; } }
@@ -28040,6 +28367,7 @@ namespace SharpMP4
     public class WipeTransitionEffectProperty : ItemFullProperty
     {
         public const string TYPE = "wipe";
+        public override string DisplayName { get { return "WipeTransitionEffectProperty"; } }
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -28084,6 +28412,7 @@ namespace SharpMP4
     public class ZoomTransitionEffectProperty : ItemFullProperty
     {
         public const string TYPE = "zoom";
+        public override string DisplayName { get { return "ZoomTransitionEffectProperty"; } }
 
         protected bool transition_direction;
         public bool TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -28133,6 +28462,7 @@ namespace SharpMP4
     public class FadeTransitionEffectProperty : ItemFullProperty
     {
         public const string TYPE = "fade";
+        public override string DisplayName { get { return "FadeTransitionEffectProperty"; } }
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -28176,6 +28506,7 @@ namespace SharpMP4
     public class SplitTransitionEffectProperty : ItemFullProperty
     {
         public const string TYPE = "splt";
+        public override string DisplayName { get { return "SplitTransitionEffectProperty"; } }
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -28219,6 +28550,7 @@ namespace SharpMP4
     public class SuggestedTransitionPeriodProperty : ItemFullProperty
     {
         public const string TYPE = "stpe";
+        public override string DisplayName { get { return "SuggestedTransitionPeriodProperty"; } }
 
         protected byte transition_period;
         public byte TransitionPeriod { get { return this.transition_period; } set { this.transition_period = value; } }
@@ -28262,6 +28594,7 @@ namespace SharpMP4
     public class SuggestedTimeDisplayDurationProperty : ItemFullProperty
     {
         public const string TYPE = "ssld";
+        public override string DisplayName { get { return "SuggestedTimeDisplayDurationProperty"; } }
 
         protected ushort duration;
         public ushort Duration { get { return this.duration; } set { this.duration = value; } }
@@ -28305,6 +28638,7 @@ namespace SharpMP4
     public class MaskConfigurationProperty : ItemFullProperty
     {
         public const string TYPE = "mskC";
+        public override string DisplayName { get { return "MaskConfigurationProperty"; } }
 
         protected byte bits_per_pixel;
         public byte BitsPerPixel { get { return this.bits_per_pixel; } set { this.bits_per_pixel = value; } }
@@ -28348,6 +28682,7 @@ namespace SharpMP4
     public class VvcSubpicIDProperty : ItemFullProperty
     {
         public const string TYPE = "spid";
+        public override string DisplayName { get { return "VvcSubpicIDProperty"; } }
 
         protected VvcSubpicIDEntry sid_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicIDEntry SidInfo { get { return this.sid_info; } set { this.sid_info = value; } }
@@ -28360,7 +28695,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadEntry(boxSize, readSize, out this.sid_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadEntry(boxSize, readSize, TYPE, out this.sid_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -28391,6 +28726,7 @@ namespace SharpMP4
     public class VvcSubpicOrderProperty : ItemFullProperty
     {
         public const string TYPE = "spor";
+        public override string DisplayName { get { return "VvcSubpicOrderProperty"; } }
 
         protected VvcSubpicOrderEntry sor_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicOrderEntry SorInfo { get { return this.sor_info; } set { this.sor_info = value; } }
@@ -28403,7 +28739,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadEntry(boxSize, readSize, out this.sor_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadEntry(boxSize, readSize, TYPE, out this.sor_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -28435,6 +28771,7 @@ namespace SharpMP4
     public class VisualEquivalenceEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "eqiv";
+        public override string DisplayName { get { return "VisualEquivalenceEntry"; } }
 
         protected short time_offset;
         public short TimeOffset { get { return this.time_offset; } set { this.time_offset = value; } }
@@ -28488,6 +28825,7 @@ namespace SharpMP4
     public class DirectReferenceSamplesList : VisualSampleGroupEntry
     {
         public const string TYPE = "refs";
+        public override string DisplayName { get { return "DirectReferenceSamplesList"; } }
 
         protected uint sample_id;
         public uint SampleId { get { return this.sample_id; } set { this.sample_id = value; } }
@@ -28555,6 +28893,7 @@ namespace SharpMP4
     public abstract class BaseDescriptor : Descriptor
     {
         public const byte TYPE = 0;
+        public override string DisplayName { get { return "BaseDescriptor"; } }
 
         public BaseDescriptor(byte tag) : base(tag)
         {
@@ -28592,6 +28931,7 @@ namespace SharpMP4
     public abstract class DecoderSpecificInfo : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+        public override string DisplayName { get { return "DecoderSpecificInfo"; } }
 
         public DecoderSpecificInfo() : base(DescriptorTags.DecSpecificInfoTag)
         {
@@ -28652,6 +28992,7 @@ namespace SharpMP4
     public class ES_Descriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.ES_DescrTag;
+        public override string DisplayName { get { return "ES_Descriptor"; } }
 
         protected ushort ES_ID;
         public ushort ESID { get { return this.ES_ID; } set { this.ES_ID = value; } }
@@ -28847,6 +29188,7 @@ namespace SharpMP4
     public class SLConfigDescriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.SLConfigDescrTag;
+        public override string DisplayName { get { return "SLConfigDescriptor"; } }
 
         protected byte predefined;
         public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
@@ -29077,6 +29419,7 @@ namespace SharpMP4
     public class DecoderConfigDescriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.DecoderConfigDescrTag;
+        public override string DisplayName { get { return "DecoderConfigDescriptor"; } }
 
         protected byte objectTypeIndication;
         public byte ObjectTypeIndication { get { return this.objectTypeIndication; } set { this.objectTypeIndication = value; } }
@@ -29167,6 +29510,7 @@ namespace SharpMP4
     public class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.ProfileLevelIndicationIndexDescrTag;
+        public override string DisplayName { get { return "ProfileLevelIndicationIndexDescriptor"; } }
 
         protected byte profileLevelIndicationIndex;
         public byte ProfileLevelIndicationIndex { get { return this.profileLevelIndicationIndex; } set { this.profileLevelIndicationIndex = value; } }
@@ -29209,6 +29553,7 @@ namespace SharpMP4
     public class IPI_DescrPointer : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.IPI_DescrPointerTag;
+        public override string DisplayName { get { return "IPI_DescrPointer"; } }
 
         protected ushort IPI_ES_Id;
         public ushort IPIESId { get { return this.IPI_ES_Id; } set { this.IPI_ES_Id = value; } }
@@ -29253,7 +29598,7 @@ namespace SharpMP4
     public abstract class IP_IdentificationDataSet : BaseDescriptor
     {
         public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
-        public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag;
+        public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag; public override string DisplayName { get { return "IP_IdentificationDataSet"; } }
 
         public IP_IdentificationDataSet(byte tag) : base(tag)
         {
@@ -29293,6 +29638,7 @@ namespace SharpMP4
     public class IPMP_DescriptorPointer : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.IPMP_DescrPointerTag;
+        public override string DisplayName { get { return "IPMP_DescriptorPointer"; } }
 
         protected byte IPMP_DescriptorID;
         public byte IPMPDescriptorID { get { return this.IPMP_DescriptorID; } set { this.IPMP_DescriptorID = value; } }
@@ -29336,7 +29682,7 @@ namespace SharpMP4
     public abstract class OCI_Descriptor : BaseDescriptor
     {
         public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
-        public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange;
+        public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange; public override string DisplayName { get { return "OCI_Descriptor"; } }
 
         public OCI_Descriptor(byte tag) : base(tag)
         {
@@ -29376,6 +29722,7 @@ namespace SharpMP4
     public class LanguageDescriptor : OCI_Descriptor
     {
         public const byte TYPE = DescriptorTags.LanguageDescrTag;
+        public override string DisplayName { get { return "LanguageDescriptor"; } }
 
         protected uint languageCode;
         public uint LanguageCode { get { return this.languageCode; } set { this.languageCode = value; } }
@@ -29421,6 +29768,7 @@ namespace SharpMP4
     public class QoS_Descriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.QoS_DescrTag;
+        public override string DisplayName { get { return "QoS_Descriptor"; } }
 
         protected byte predefined;
         public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
@@ -29483,7 +29831,7 @@ namespace SharpMP4
     public abstract class QoS_Qualifier : Descriptor
     {
         public byte TagMin { get; set; } = 0x01;
-        public byte TagMax { get; set; } = 0xff;
+        public byte TagMax { get; set; } = 0xff; public override string DisplayName { get { return "QoS_Qualifier"; } }
 
         public QoS_Qualifier(byte tag) : base(tag)
         {
@@ -29521,6 +29869,7 @@ namespace SharpMP4
     public class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
     {
         public const byte TYPE = 0x01;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_DELAY"; } }
 
         protected uint MAX_DELAY;
         public uint MAXDELAY { get { return this.MAX_DELAY; } set { this.MAX_DELAY = value; } }
@@ -29564,6 +29913,7 @@ namespace SharpMP4
     public class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
     {
         public const byte TYPE = 0x02;
+        public override string DisplayName { get { return "QoS_Qualifier_PREF_MAX_DELAY"; } }
 
         protected uint PREF_MAX_DELAY;
         public uint PREFMAXDELAY { get { return this.PREF_MAX_DELAY; } set { this.PREF_MAX_DELAY = value; } }
@@ -29607,6 +29957,7 @@ namespace SharpMP4
     public class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
     {
         public const byte TYPE = 0x03;
+        public override string DisplayName { get { return "QoS_Qualifier_LOSS_PROB"; } }
 
         protected double LOSS_PROB;
         public double LOSSPROB { get { return this.LOSS_PROB; } set { this.LOSS_PROB = value; } }
@@ -29650,6 +30001,7 @@ namespace SharpMP4
     public class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
     {
         public const byte TYPE = 0x04;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_GAP_LOSS"; } }
 
         protected uint MAX_GAP_LOSS;
         public uint MAXGAPLOSS { get { return this.MAX_GAP_LOSS; } set { this.MAX_GAP_LOSS = value; } }
@@ -29693,6 +30045,7 @@ namespace SharpMP4
     public class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
     {
         public const byte TYPE = 0x41;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_AU_SIZE"; } }
 
         protected uint MAX_AU_SIZE;
         public uint MAXAUSIZE { get { return this.MAX_AU_SIZE; } set { this.MAX_AU_SIZE = value; } }
@@ -29736,6 +30089,7 @@ namespace SharpMP4
     public class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
     {
         public const byte TYPE = 0x42;
+        public override string DisplayName { get { return "QoS_Qualifier_AVG_AU_SIZE"; } }
 
         protected uint AVG_AU_SIZE;
         public uint AVGAUSIZE { get { return this.AVG_AU_SIZE; } set { this.AVG_AU_SIZE = value; } }
@@ -29778,6 +30132,7 @@ namespace SharpMP4
     public class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
     {
         public const byte TYPE = 0x43;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_AU_RATE"; } }
 
         protected uint MAX_AU_RATE;
         public uint MAXAURATE { get { return this.MAX_AU_RATE; } set { this.MAX_AU_RATE = value; } }
@@ -29821,6 +30176,7 @@ namespace SharpMP4
     public class RegistrationDescriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.RegistrationDescrTag;
+        public override string DisplayName { get { return "RegistrationDescriptor"; } }
 
         protected uint formatIdentifier;
         public uint FormatIdentifier { get { return this.formatIdentifier; } set { this.formatIdentifier = value; } }
@@ -29869,7 +30225,7 @@ namespace SharpMP4
     public abstract class ExtensionDescriptor : BaseDescriptor
     {
         public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
-        public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange;
+        public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange; public override string DisplayName { get { return "ExtensionDescriptor"; } }
 
         public ExtensionDescriptor(byte tag) : base(tag)
         {
@@ -29910,6 +30266,7 @@ namespace SharpMP4
     public class ESDBox : FullBox
     {
         public const string TYPE = "esds";
+        public override string DisplayName { get { return "ESDBox"; } }
 
         protected ES_Descriptor ES;
         public ES_Descriptor _ES { get { return this.ES; } set { this.ES = value; } }
@@ -29952,6 +30309,7 @@ namespace SharpMP4
     public class MpegSampleEntry : SampleEntry
     {
         public const string TYPE = "mp4s";
+        public override string DisplayName { get { return "MpegSampleEntry"; } }
         public Box _ES { get { return this.children.OfType<Box>().FirstOrDefault(); } }
 
         public MpegSampleEntry() : base("mp4s")
@@ -30150,7 +30508,8 @@ namespace SharpMP4
     public class AudioSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "AudioSpecificConfig"; } }
 
         protected GetAudioObjectType audioObjectType;
         public GetAudioObjectType AudioObjectType { get { return this.audioObjectType; } set { this.audioObjectType = value; } }
@@ -30877,7 +31236,8 @@ namespace SharpMP4
     public class GetAudioObjectType : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "GetAudioObjectType"; } }
 
         protected byte audioObjectType;
         public byte AudioObjectType { get { return this.audioObjectType; } set { this.audioObjectType = value; } }
@@ -30972,7 +31332,8 @@ namespace SharpMP4
     public class GASpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "GASpecificConfig"; } }
 
         protected bool frameLengthFlag;
         public bool FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
@@ -31226,7 +31587,8 @@ namespace SharpMP4
     public class program_config_element : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "program_config_element"; } }
 
         protected byte element_instance_tag;
         public byte ElementInstanceTag { get { return this.element_instance_tag; } set { this.element_instance_tag = value; } }
@@ -31580,7 +31942,8 @@ namespace SharpMP4
     public class CelpSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "CelpSpecificConfig"; } }
 
         protected bool isBaseLayer;
         public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
@@ -31709,7 +32072,8 @@ namespace SharpMP4
     public class CelpHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "CelpHeader"; } }
 
         protected bool ExcitationMode;
         public bool _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
@@ -31824,7 +32188,8 @@ namespace SharpMP4
     public class CelpBWSenhHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "CelpBWSenhHeader"; } }
 
         protected byte BWS_configuration;
         public byte BWSConfiguration { get { return this.BWS_configuration; } set { this.BWS_configuration = value; } }
@@ -31869,7 +32234,8 @@ namespace SharpMP4
     public class HvxcSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "HvxcSpecificConfig"; } }
 
         protected bool isBaseLayer;
         public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
@@ -31935,7 +32301,8 @@ namespace SharpMP4
     public class HVXCconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "HVXCconfig"; } }
 
         protected bool HVXCvarMode;
         public bool _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
@@ -32004,7 +32371,8 @@ namespace SharpMP4
     public class TTSSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "TTSSpecificConfig"; } }
 
         protected TTS_Sequence TTS_Sequence;
         public TTS_Sequence TTSSequence { get { return this.TTS_Sequence; } set { this.TTS_Sequence = value; } }
@@ -32055,7 +32423,8 @@ namespace SharpMP4
     public class TTS_Sequence : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "TTS_Sequence"; } }
 
         protected byte TTS_Sequence_ID;
         public byte TTSSequenceID { get { return this.TTS_Sequence_ID; } set { this.TTS_Sequence_ID = value; } }
@@ -32158,7 +32527,8 @@ namespace SharpMP4
     public class ErrorResilientCelpSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ErrorResilientCelpSpecificConfig"; } }
 
         protected bool isBaseLayer;
         public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
@@ -32288,7 +32658,8 @@ namespace SharpMP4
     public class ER_SC_CelpHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ER_SC_CelpHeader"; } }
 
         protected bool ExcitationMode;
         public bool _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
@@ -32415,7 +32786,8 @@ namespace SharpMP4
     public class ErrorResilientHvxcSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ErrorResilientHvxcSpecificConfig"; } }
 
         protected bool isBaseLayer;
         public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
@@ -32481,7 +32853,8 @@ namespace SharpMP4
     public class ErHVXCconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ErHVXCconfig"; } }
 
         protected bool HVXCvarMode;
         public bool _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
@@ -32560,7 +32933,8 @@ namespace SharpMP4
     public class ParametricSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ParametricSpecificConfig"; } }
 
         protected bool isBaseLayer;
         public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
@@ -32649,7 +33023,8 @@ namespace SharpMP4
     public class PARAconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "PARAconfig"; } }
 
         protected byte PARAmode;
         public byte _PARAmode { get { return this.PARAmode; } set { this.PARAmode = value; } }
@@ -32753,7 +33128,8 @@ namespace SharpMP4
     public class HILNconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "HILNconfig"; } }
 
         protected bool HILNquantMode;
         public bool _HILNquantMode { get { return this.HILNquantMode; } set { this.HILNquantMode = value; } }
@@ -32823,7 +33199,8 @@ namespace SharpMP4
     public class HILNenexConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "HILNenexConfig"; } }
 
         protected bool HILNenhaLayer;
         public bool _HILNenhaLayer { get { return this.HILNenhaLayer; } set { this.HILNenhaLayer = value; } }
@@ -32892,7 +33269,8 @@ namespace SharpMP4
     public class SSCSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SSCSpecificConfig"; } }
 
         protected byte decoder_level;
         public byte DecoderLevel { get { return this.decoder_level; } set { this.decoder_level = value; } }
@@ -32987,7 +33365,8 @@ namespace SharpMP4
     public class MPEG_1_2_SpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "MPEG_1_2_SpecificConfig"; } }
 
         protected bool extension;
         public bool Extension { get { return this.extension; } set { this.extension = value; } }
@@ -33031,7 +33410,8 @@ namespace SharpMP4
     public class DSTSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "DSTSpecificConfig"; } }
 
         protected bool DSDDST_Coded;
         public bool DSDDSTCoded { get { return this.DSDDST_Coded; } set { this.DSDDST_Coded = value; } }
@@ -33135,7 +33515,8 @@ namespace SharpMP4
     public class ALSSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ALSSpecificConfig"; } }
 
         protected uint als_id;
         public uint AlsId { get { return this.als_id; } set { this.als_id = value; } }
@@ -33489,7 +33870,8 @@ namespace SharpMP4
     public class SLSSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SLSSpecificConfig"; } }
 
         protected byte pcmWordLength;
         public byte PcmWordLength { get { return this.pcmWordLength; } set { this.pcmWordLength = value; } }
@@ -33620,7 +34002,8 @@ namespace SharpMP4
     public class ELDSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ELDSpecificConfig"; } }
 
         protected bool frameLengthFlag;
         public bool FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
@@ -33870,7 +34253,8 @@ namespace SharpMP4
     public class ld_sbr_header : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ld_sbr_header"; } }
 
         protected sbr_header[] sbr_header;
         public sbr_header[] SbrHeader { get { return this.sbr_header; } set { this.sbr_header = value; } }
@@ -34021,7 +34405,8 @@ namespace SharpMP4
     public class sbr_header : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "sbr_header"; } }
 
         protected bool bs_amp_res;
         public bool BsAmpRes { get { return this.bs_amp_res; } set { this.bs_amp_res = value; } }
@@ -34214,7 +34599,8 @@ namespace SharpMP4
     public class ErrorProtectionSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ErrorProtectionSpecificConfig"; } }
 
         protected byte number_of_predefined_set;
         public byte NumberOfPredefinedSet { get { return this.number_of_predefined_set; } set { this.number_of_predefined_set = value; } }
@@ -34592,7 +34978,8 @@ namespace SharpMP4
     public class ChannelMappingTable : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ChannelMappingTable"; } }
 
         protected byte StreamCount;
         public byte _StreamCount { get { return this.StreamCount; } set { this.StreamCount = value; } }
@@ -34656,6 +35043,7 @@ namespace SharpMP4
     public class OpusSpecificBox : Box
     {
         public const string TYPE = "dOps";
+        public override string DisplayName { get { return "OpusSpecificBox"; } }
 
         protected byte Version;
         public byte _Version { get { return this.Version; } set { this.Version = value; } }
@@ -34749,6 +35137,7 @@ namespace SharpMP4
     public class AV1CodecConfigurationBox : Box
     {
         public const string TYPE = "av1C";
+        public override string DisplayName { get { return "AV1CodecConfigurationBox"; } }
 
         protected AV1CodecConfigurationRecord av1Config;
         public AV1CodecConfigurationRecord Av1Config { get { return this.av1Config; } set { this.av1Config = value; } }
@@ -34813,7 +35202,8 @@ namespace SharpMP4
     public class AV1CodecConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "AV1CodecConfigurationRecord"; } }
 
         protected bool marker = true;
         public bool Marker { get { return this.marker; } set { this.marker = value; } }
@@ -34970,6 +35360,7 @@ namespace SharpMP4
     public class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "av1f";
+        public override string DisplayName { get { return "AV1ForwardKeyFrameSampleGroupEntry"; } }
 
         protected byte fwd_distance;
         public byte FwdDistance { get { return this.fwd_distance; } set { this.fwd_distance = value; } }
@@ -35014,6 +35405,7 @@ namespace SharpMP4
     public class AV1SwitchFrameSampleGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "av1s";
+        public override string DisplayName { get { return "AV1SwitchFrameSampleGroupEntry"; } }
 
         public AV1SwitchFrameSampleGroupEntry() : base("av1s")
         {
@@ -35052,6 +35444,7 @@ namespace SharpMP4
     public class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "av1M";
+        public override string DisplayName { get { return "AV1MetadataSampleGroupEntry"; } }
 
         public AV1MetadataSampleGroupEntry() : base("av1M")
         {
@@ -35089,6 +35482,7 @@ namespace SharpMP4
     public class OperatingPointSelectorProperty : ItemProperty
     {
         public const string TYPE = "a1op";
+        public override string DisplayName { get { return "OperatingPointSelectorProperty"; } }
 
         protected byte op_index;
         public byte OpIndex { get { return this.op_index; } set { this.op_index = value; } }
@@ -35138,6 +35532,7 @@ namespace SharpMP4
     public class AV1LayeredImageIndexingProperty : ItemProperty
     {
         public const string TYPE = "a1lx";
+        public override string DisplayName { get { return "AV1LayeredImageIndexingProperty"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -35220,6 +35615,7 @@ namespace SharpMP4
     public class AppleItemListBox : Box
     {
         public const string TYPE = "ilst";
+        public override string DisplayName { get { return "AppleItemListBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleItemListBox() : base("ilst")
@@ -35264,6 +35660,7 @@ namespace SharpMP4
     public class AppleCameraModelBox : Box
     {
         public const string TYPE = "©mod";
+        public override string DisplayName { get { return "AppleCameraModelBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35307,6 +35704,7 @@ namespace SharpMP4
     public class AppleEncoderBox : Box
     {
         public const string TYPE = "©too";
+        public override string DisplayName { get { return "AppleEncoderBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35350,6 +35748,7 @@ namespace SharpMP4
     public class AppleComposersBox : Box
     {
         public const string TYPE = "©wrt";
+        public override string DisplayName { get { return "AppleComposersBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35393,6 +35792,7 @@ namespace SharpMP4
     public class AppleSoftwareBox : Box
     {
         public const string TYPE = "©swr";
+        public override string DisplayName { get { return "AppleSoftwareBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35436,6 +35836,7 @@ namespace SharpMP4
     public class AppleCreatorBox : Box
     {
         public const string TYPE = "©swf";
+        public override string DisplayName { get { return "AppleCreatorBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35479,6 +35880,7 @@ namespace SharpMP4
     public class AppleCommentBox : Box
     {
         public const string TYPE = "©cmt";
+        public override string DisplayName { get { return "AppleCommentBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35522,6 +35924,7 @@ namespace SharpMP4
     public class AppleTimBox : Box
     {
         public const string TYPE = "©TIM";
+        public override string DisplayName { get { return "AppleTimBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35565,6 +35968,7 @@ namespace SharpMP4
     public class AppleTscBox : Box
     {
         public const string TYPE = "©TSC";
+        public override string DisplayName { get { return "AppleTscBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35608,6 +36012,7 @@ namespace SharpMP4
     public class AppleTszBox : Box
     {
         public const string TYPE = "©TSZ";
+        public override string DisplayName { get { return "AppleTszBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35651,6 +36056,7 @@ namespace SharpMP4
     public class AppleNameBox : Box
     {
         public const string TYPE = "©nam";
+        public override string DisplayName { get { return "AppleNameBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35694,6 +36100,7 @@ namespace SharpMP4
     public class AppleAlbumBox : Box
     {
         public const string TYPE = "©alb";
+        public override string DisplayName { get { return "AppleAlbumBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35737,6 +36144,7 @@ namespace SharpMP4
     public class AppleArtistBox : Box
     {
         public const string TYPE = "©ART";
+        public override string DisplayName { get { return "AppleArtistBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35780,6 +36188,7 @@ namespace SharpMP4
     public class AppleArtist2Box : Box
     {
         public const string TYPE = "aART";
+        public override string DisplayName { get { return "AppleArtist2Box"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35823,6 +36232,7 @@ namespace SharpMP4
     public class AppleCopyrightBox : Box
     {
         public const string TYPE = "cprt";
+        public override string DisplayName { get { return "AppleCopyrightBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35866,6 +36276,7 @@ namespace SharpMP4
     public class AppleCopyright2Box : Box
     {
         public const string TYPE = "©cpy";
+        public override string DisplayName { get { return "AppleCopyright2Box"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35909,6 +36320,7 @@ namespace SharpMP4
     public class AppleRecordingYear2Box : Box
     {
         public const string TYPE = "©day";
+        public override string DisplayName { get { return "AppleRecordingYear2Box"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35952,6 +36364,7 @@ namespace SharpMP4
     public class AppleGenreBox : Box
     {
         public const string TYPE = "©gen";
+        public override string DisplayName { get { return "AppleGenreBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35995,6 +36408,7 @@ namespace SharpMP4
     public class AppleGPSCoordinatesBox : Box
     {
         public const string TYPE = "©xyz";
+        public override string DisplayName { get { return "AppleGPSCoordinatesBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36038,6 +36452,7 @@ namespace SharpMP4
     public class AppleCompilationBox : Box
     {
         public const string TYPE = "cpil";
+        public override string DisplayName { get { return "AppleCompilationBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36081,6 +36496,7 @@ namespace SharpMP4
     public class AppleName2Box : Box
     {
         public const string TYPE = "name";
+        public override string DisplayName { get { return "AppleName2Box"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36124,6 +36540,7 @@ namespace SharpMP4
     public class AppleDescriptionBox : Box
     {
         public const string TYPE = "desc";
+        public override string DisplayName { get { return "AppleDescriptionBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36167,6 +36584,7 @@ namespace SharpMP4
     public class UuidBox : Box
     {
         public const string TYPE = "uuid";
+        public override string DisplayName { get { return "UuidBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36210,6 +36628,7 @@ namespace SharpMP4
     public class IodsBox : Box
     {
         public const string TYPE = "iods";
+        public override string DisplayName { get { return "IodsBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36253,6 +36672,7 @@ namespace SharpMP4
     public class TitlBox : Box
     {
         public const string TYPE = "titl";
+        public override string DisplayName { get { return "TitlBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36296,6 +36716,7 @@ namespace SharpMP4
     public class AuthorBox : Box
     {
         public const string TYPE = "auth";
+        public override string DisplayName { get { return "AuthorBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36339,6 +36760,7 @@ namespace SharpMP4
     public class TextMediaBox : Box
     {
         public const string TYPE = "text";
+        public override string DisplayName { get { return "TextMediaBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36382,6 +36804,7 @@ namespace SharpMP4
     public class WindowsMediaXtraBox : Box
     {
         public const string TYPE = "Xtra";
+        public override string DisplayName { get { return "WindowsMediaXtraBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36425,6 +36848,7 @@ namespace SharpMP4
     public class AC3SpecificBox : Box
     {
         public const string TYPE = "dac3";
+        public override string DisplayName { get { return "AC3SpecificBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36468,6 +36892,7 @@ namespace SharpMP4
     public class DescriptionBox : Box
     {
         public const string TYPE = "dscp";
+        public override string DisplayName { get { return "DescriptionBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36511,6 +36936,7 @@ namespace SharpMP4
     public class GenericMediaHeaderAtom : Box
     {
         public const string TYPE = "gmhd";
+        public override string DisplayName { get { return "GenericMediaHeaderAtom"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36554,6 +36980,7 @@ namespace SharpMP4
     public class KeywordsBox : Box
     {
         public const string TYPE = "kywd";
+        public override string DisplayName { get { return "KeywordsBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36597,6 +37024,7 @@ namespace SharpMP4
     public class AppleMediaTypeBox : Box
     {
         public const string TYPE = "stik";
+        public override string DisplayName { get { return "AppleMediaTypeBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36640,6 +37068,7 @@ namespace SharpMP4
     public class TimeCodeBox : Box
     {
         public const string TYPE = "tmcd";
+        public override string DisplayName { get { return "TimeCodeBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36683,6 +37112,7 @@ namespace SharpMP4
     public class AppleTempoBox : Box
     {
         public const string TYPE = "tmpo";
+        public override string DisplayName { get { return "AppleTempoBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36726,6 +37156,7 @@ namespace SharpMP4
     public class AppleTVEpisodeBox : Box
     {
         public const string TYPE = "tves";
+        public override string DisplayName { get { return "AppleTVEpisodeBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36769,6 +37200,7 @@ namespace SharpMP4
     public class AppleTVSeasonBox : Box
     {
         public const string TYPE = "tvsn";
+        public override string DisplayName { get { return "AppleTVSeasonBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36812,6 +37244,7 @@ namespace SharpMP4
     public class HdvdBox : Box
     {
         public const string TYPE = "hdvd";
+        public override string DisplayName { get { return "HdvdBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36855,6 +37288,7 @@ namespace SharpMP4
     public class SyncBox : Box
     {
         public const string TYPE = "sync";
+        public override string DisplayName { get { return "SyncBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36898,6 +37332,7 @@ namespace SharpMP4
     public class DiskBox : Box
     {
         public const string TYPE = "disk";
+        public override string DisplayName { get { return "DiskBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36941,6 +37376,7 @@ namespace SharpMP4
     public class HintBox : Box
     {
         public const string TYPE = "hint";
+        public override string DisplayName { get { return "HintBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36984,6 +37420,7 @@ namespace SharpMP4
     public class WideBox : Box
     {
         public const string TYPE = "wide";
+        public override string DisplayName { get { return "WideBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37027,6 +37464,7 @@ namespace SharpMP4
     public class FielBox : Box
     {
         public const string TYPE = "fiel";
+        public override string DisplayName { get { return "FielBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37070,6 +37508,7 @@ namespace SharpMP4
     public class Amf0Box : Box
     {
         public const string TYPE = "amf0";
+        public override string DisplayName { get { return "Amf0Box"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37113,6 +37552,7 @@ namespace SharpMP4
     public class MpodBox : Box
     {
         public const string TYPE = "mpod";
+        public override string DisplayName { get { return "MpodBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37156,6 +37596,7 @@ namespace SharpMP4
     public class GsstBox : Box
     {
         public const string TYPE = "gsst";
+        public override string DisplayName { get { return "GsstBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37199,6 +37640,7 @@ namespace SharpMP4
     public class GssdBox : Box
     {
         public const string TYPE = "gssd";
+        public override string DisplayName { get { return "GssdBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37242,6 +37684,7 @@ namespace SharpMP4
     public class GstdBox : Box
     {
         public const string TYPE = "gstd";
+        public override string DisplayName { get { return "GstdBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37285,6 +37728,7 @@ namespace SharpMP4
     public class TrknBox : Box
     {
         public const string TYPE = "trkn";
+        public override string DisplayName { get { return "TrknBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37328,6 +37772,7 @@ namespace SharpMP4
     public class ZeroBox : Box
     {
         public const string TYPE = "0000";
+        public override string DisplayName { get { return "ZeroBox"; } }
 
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
@@ -37371,6 +37816,7 @@ namespace SharpMP4
     public class DpndBox : Box
     {
         public const string TYPE = "dpnd";
+        public override string DisplayName { get { return "DpndBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37414,6 +37860,7 @@ namespace SharpMP4
     public class GspuBox : Box
     {
         public const string TYPE = "gspu";
+        public override string DisplayName { get { return "GspuBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37457,6 +37904,7 @@ namespace SharpMP4
     public class GspmBox : Box
     {
         public const string TYPE = "gspm";
+        public override string DisplayName { get { return "GspmBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37500,6 +37948,7 @@ namespace SharpMP4
     public class GshhBox : Box
     {
         public const string TYPE = "gshh";
+        public override string DisplayName { get { return "GshhBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37543,6 +37992,7 @@ namespace SharpMP4
     public class TvenBox : Box
     {
         public const string TYPE = "tven";
+        public override string DisplayName { get { return "TvenBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37586,6 +38036,7 @@ namespace SharpMP4
     public class CovrBox : Box
     {
         public const string TYPE = "covr";
+        public override string DisplayName { get { return "CovrBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37629,6 +38080,7 @@ namespace SharpMP4
     public class LoadBox : Box
     {
         public const string TYPE = "load";
+        public override string DisplayName { get { return "LoadBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37672,6 +38124,7 @@ namespace SharpMP4
     public class AlisBox : Box
     {
         public const string TYPE = "alis";
+        public override string DisplayName { get { return "AlisBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37715,6 +38168,7 @@ namespace SharpMP4
     public class ChanBox : Box
     {
         public const string TYPE = "chan";
+        public override string DisplayName { get { return "ChanBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37758,6 +38212,7 @@ namespace SharpMP4
     public class MdtaBox : Box
     {
         public const string TYPE = "mdta";
+        public override string DisplayName { get { return "MdtaBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37801,6 +38256,7 @@ namespace SharpMP4
     public class ChapBox : Box
     {
         public const string TYPE = "chap";
+        public override string DisplayName { get { return "ChapBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37844,6 +38300,7 @@ namespace SharpMP4
     public class ChplBox : Box
     {
         public const string TYPE = "chpl";
+        public override string DisplayName { get { return "ChplBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37887,6 +38344,7 @@ namespace SharpMP4
     public class KeywBox : Box
     {
         public const string TYPE = "keyw";
+        public override string DisplayName { get { return "KeywBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37930,6 +38388,7 @@ namespace SharpMP4
     public class ClfnBox : Box
     {
         public const string TYPE = "clfn";
+        public override string DisplayName { get { return "ClfnBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37973,6 +38432,7 @@ namespace SharpMP4
     public class ThmbBox : Box
     {
         public const string TYPE = "thmb";
+        public override string DisplayName { get { return "ThmbBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -38016,6 +38476,7 @@ namespace SharpMP4
     public class FallBox : Box
     {
         public const string TYPE = "fall";
+        public override string DisplayName { get { return "FallBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -38059,6 +38520,7 @@ namespace SharpMP4
     public class TvshBox : Box
     {
         public const string TYPE = "tvsh";
+        public override string DisplayName { get { return "TvshBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -38102,6 +38564,7 @@ namespace SharpMP4
     public class EncBox : Box
     {
         public const string TYPE = "©enc";
+        public override string DisplayName { get { return "EncBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -38145,6 +38608,7 @@ namespace SharpMP4
     public class DdtsBox : Box
     {
         public const string TYPE = "ddts";
+        public override string DisplayName { get { return "DdtsBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -38188,6 +38652,7 @@ namespace SharpMP4
     public class NikonExifBox : Box
     {
         public const string TYPE = "NCTG";
+        public override string DisplayName { get { return "NikonExifBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -38231,6 +38696,7 @@ namespace SharpMP4
     public class CustomBox : Box
     {
         public const string TYPE = "----";
+        public override string DisplayName { get { return "CustomBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
