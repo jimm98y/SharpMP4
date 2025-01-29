@@ -114,6 +114,13 @@ namespace SharpMP4
         }
     }
 
+    public class InvalidDescriptor : UnknownDescriptor
+    {
+        public InvalidDescriptor(byte tag) : base(tag)
+        {
+        }
+    }
+
     public class UnknownDescriptor : Descriptor
     {
         protected StreamMarker data = null;

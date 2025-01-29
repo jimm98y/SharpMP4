@@ -28718,15 +28718,15 @@ namespace SharpMP4
             {
                 boxSize += stream.ReadUInt16(out this.OCR_ES_Id);
             }
-            // boxSize += stream.ReadDescriptor( out this.decConfigDescr); 
-            // boxSize += stream.ReadDescriptor( out this.slConfigDescr); 
-            // boxSize += stream.ReadDescriptor( out this.ipiPtr); 
-            // boxSize += stream.ReadDescriptor( out this.ipIDS); 
-            // boxSize += stream.ReadDescriptor( out this.ipmpDescrPtr); 
-            // boxSize += stream.ReadDescriptor( out this.langDescr); 
-            // boxSize += stream.ReadDescriptor( out this.qosDescr); 
-            // boxSize += stream.ReadDescriptor( out this.regDescr); 
-            // boxSize += stream.ReadDescriptor( out this.extDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.decConfigDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.slConfigDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipiPtr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipIDS); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipmpDescrPtr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.langDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.qosDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.regDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.extDescr); 
             boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -29116,8 +29116,8 @@ namespace SharpMP4
             boxSize += stream.ReadBits(24, out this.bufferSizeDB);
             boxSize += stream.ReadUInt32(out this.maxBitrate);
             boxSize += stream.ReadUInt32(out this.avgBitrate);
-            // boxSize += stream.ReadDescriptor( out this.decSpecificInfo); 
-            // boxSize += stream.ReadDescriptor( out this.profileLevelIndicationIndexDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.decSpecificInfo); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.profileLevelIndicationIndexDescr); 
             boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this, objectTypeIndication);
             return boxSize;
         }
@@ -29438,7 +29438,7 @@ namespace SharpMP4
 
             if (predefined == 0)
             {
-                // boxSize += stream.ReadDescriptor( out this.qualifiers); 
+                // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.qualifiers); 
             }
             boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -29922,7 +29922,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadDescriptor(out this.ES);
+            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.ES);
             return boxSize;
         }
 

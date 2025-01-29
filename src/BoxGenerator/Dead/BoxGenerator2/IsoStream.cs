@@ -936,16 +936,15 @@ namespace SharpMP4
 
         #region Descriptors
 
-        internal ulong ReadDescriptor(out ES_Descriptor descriptor)
+        internal ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T descriptor) where T : Descriptor
         {
-            Descriptor d;
-            ulong size = ReadDescriptor(out d);
-            descriptor = (ES_Descriptor)d;
-            return size;
-        }
+            long availableSize = (long)readSize - (long)boxSize;
+            if(availableSize == 0)
+            {
+                descriptor = null;
+                return 0;
+            }
 
-        internal ulong ReadDescriptor(out Descriptor descriptor)
-        {
             byte tag;
             ulong size = ReadUInt8(out tag);
             if (tag == 0)
@@ -956,16 +955,26 @@ namespace SharpMP4
 
             ulong sizeOfSize = ReadDescriptorSize(out int sizeOfInstance);
             size += sizeOfSize;
-            ulong sizeOfInstanceBits = (ulong)sizeOfInstance << 3;
-            descriptor = DescriptorFactory.CreateDescriptor(tag);
+            long sizeOfInstanceBits = (long)sizeOfInstance << 3;
+            descriptor = (T)DescriptorFactory.CreateDescriptor(tag);
             descriptor.SizeOfSize = sizeOfSize;
-            ulong readInstanceSizeBits = descriptor.Read(this, sizeOfInstanceBits);
-            if (readInstanceSizeBits != sizeOfInstanceBits)
+
+            availableSize -= (long)size;
+            if (availableSize < sizeOfInstanceBits)
             {
-                if (readInstanceSizeBits < sizeOfInstanceBits)
+                var invalid = new InvalidDescriptor(tag);
+                descriptor = invalid as T;
+                size += descriptor.Read(this, (ulong) availableSize);
+                return size;
+            }
+                        
+            ulong readInstanceSizeBits = descriptor.Read(this, (ulong)sizeOfInstanceBits);
+            if (readInstanceSizeBits != (ulong)sizeOfInstanceBits)
+            {
+                if (readInstanceSizeBits < (ulong)sizeOfInstanceBits)
                 {
                     StreamMarker missing;
-                    size += ReadPadding(sizeOfInstanceBits, readInstanceSizeBits, out missing);
+                    size += ReadPadding((ulong)sizeOfInstanceBits, readInstanceSizeBits, out missing);
                     descriptor.Padding = missing;
                     Debug.WriteLine($"Descriptor \'{tag}\' has extra padding of {missing.Length} bytes");
                 }
@@ -977,7 +986,7 @@ namespace SharpMP4
             size += readInstanceSizeBits;
 
             ulong calculatedSize = descriptor.CalculateSize();
-            if (calculatedSize != sizeOfInstanceBits)
+            if (calculatedSize != (ulong)sizeOfInstanceBits)
             {
                 Debug.WriteLine($"Calculated descriptor \'{tag}\' size: {calculatedSize >> 3}, read: {sizeOfInstanceBits >> 3}");
             }
@@ -1005,7 +1014,7 @@ namespace SharpMP4
                     while (true)
                     {
                         Descriptor v;
-                        consumed += ReadDescriptor(out v);
+                        consumed += ReadDescriptor(consumed, readSize, descriptor, out v);
                         descriptor.Children.Add(v);
                     }
                 }
@@ -1019,7 +1028,7 @@ namespace SharpMP4
             while (consumed < remaining)
             {
                 Descriptor v;
-                consumed += ReadDescriptor(out v);
+                consumed += ReadDescriptor(consumed, remaining, descriptor, out v);
                 descriptor.Children.Add(v);
             }
             return consumed;
