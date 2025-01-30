@@ -1118,7 +1118,7 @@ namespace SharpMP4
 @"          }
 
             //throw new NotImplementedException(fourCC);
-            System.Diagnostics.Debug.WriteLine($""--Unknown box: '{fourCC}'"");
+            Log.Debug($""Unknown box: '{fourCC}'"");
             return new UnknownBox(fourCC);
         }";
 
@@ -1168,7 +1168,7 @@ namespace SharpMP4
 @"          }
 
             //throw new NotImplementedException(fourCC);
-            System.Diagnostics.Debug.WriteLine($""--Unknown entry: '{fourCC}'"");
+            Log.Debug($""Unknown entry: '{fourCC}'"");
             return new UnknownEntry(fourCC);
         }";
 

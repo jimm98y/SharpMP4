@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -51,7 +50,7 @@ namespace SharpMP4
             }
             catch (Exception e) 
             {
-                Debug.WriteLine($"Getting the current stream offset failed: {e.Message}");
+                Log.Debug($"Getting the current stream offset failed: {e.Message}");
                 return -1;
             }
         }
@@ -67,7 +66,7 @@ namespace SharpMP4
             }
             catch (Exception e)
             {
-                Debug.WriteLine($"Getting the current stream length failed: {e.Message}");
+                Log.Debug($"Getting the current stream length failed: {e.Message}");
                 return -1;
             }
         }
@@ -374,6 +373,8 @@ namespace SharpMP4
 
             ulong read = ReadBytes(remaining >> 3, out byte[] buffer);
             value = new BinaryUTF8String(buffer);
+            Log.Debug($"ReadString: {value}");
+            Log.Debug("");
             return read;
         }
 
@@ -565,14 +566,14 @@ namespace SharpMP4
                 box = new InvalidBox();
                 box.Parent = parent;
                 box.Header = header;
-                Debug.WriteLine($"BOX:{GetIndentation(box)}\'{box.FourCC}\'");
+                Log.Debug($"BOX:{GetIndentation(box)}\'{box.FourCC}\'");
                 size = box.Read(this, availableSize) + GetHeaderSize(header);
             }
             else
             {
                 box = factory(header);
                 box.Parent = parent;
-                Debug.WriteLine($"BOX:{GetIndentation(box)}\'{box.FourCC}\'");
+                Log.Debug($"BOX:{GetIndentation(box)}\'{box.FourCC}\'");
                 size = ReadBox(header, box, availableSize);
             }
 
@@ -654,7 +655,7 @@ namespace SharpMP4
         {
             if (box.Children != null)
             {
-                Debug.WriteLine($"Box reading {box.FourCC} repeated Children read");
+                Log.Debug($"Box reading {box.FourCC} repeated Children read");
                 return 0;
             }
 
@@ -695,7 +696,7 @@ namespace SharpMP4
                 consumed += ReadBox(consumed, remaining, box, out v);
                 if (consumed > readSize)
                 {
-                    Debug.WriteLine($"Box \'{v.FourCC}\' read through!");
+                    Log.Debug($"Box \'{v.FourCC}\' read through!");
                     break;
                 }
                 box.Children.Add(v);
@@ -762,7 +763,7 @@ namespace SharpMP4
                     StreamMarker missing;
                     size += ReadPadding(size, availableSize, out missing);
                     box.Padding = missing;
-                    Debug.WriteLine($"Box \'{box.FourCC}\' has extra padding of {missing.Length} bytes");
+                    Log.Debug($"Box \'{box.FourCC}\' has extra padding of {missing.Length} bytes");
                 }
                 else
                 {
@@ -774,7 +775,7 @@ namespace SharpMP4
             if (calculatedSize != GetBoxSize(header))
             {
                 if (box.FourCC != "mdat")
-                    Debug.WriteLine($"Calculated \'{box.FourCC}\' size: {calculatedSize / 8}, read: {GetBoxSize(header) / 8}");
+                    Log.Debug($"Calculated \'{box.FourCC}\' size: {calculatedSize / 8}, read: {GetBoxSize(header) / 8}");
             }
 
             return size + GetHeaderSize(header);
@@ -813,7 +814,7 @@ namespace SharpMP4
             ulong size = c.Read(this, readSize - boxSize);
             value = c;
             c.Parent = parent;
-            Debug.WriteLine($"CLS:{GetIndentation(c)}{c.DisplayName}");
+            Log.Debug($"CLS:{GetIndentation(c)}{c.DisplayName}");
             return size;
         }
 
@@ -887,7 +888,7 @@ namespace SharpMP4
         {
             var res = BoxFactory.CreateEntry(fourCC);
             res.Parent = parent;
-            Debug.WriteLine($"ENT:{GetIndentation(res)}\'{res.DisplayName}\'");
+            Log.Debug($"ENT:{GetIndentation(res)}\'{res.DisplayName}\'");
             ulong size = res.Read(this, readSize);
             entry = (T)res;
             return size;
@@ -935,12 +936,12 @@ namespace SharpMP4
             if (availableSize < sizeOfInstanceBits)
             {
                 descriptor = new InvalidDescriptor(tag) as T;
-                Debug.WriteLine($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
+                Log.Debug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
                 size += descriptor.Read(this, (ulong) availableSize);
                 return size;
             }
 
-            Debug.WriteLine($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
+            Log.Debug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
 
             ulong readInstanceSizeBits = descriptor.Read(this, (ulong)sizeOfInstanceBits);
             if (readInstanceSizeBits != (ulong)sizeOfInstanceBits)
@@ -950,11 +951,11 @@ namespace SharpMP4
                     StreamMarker missing;
                     size += ReadPadding((ulong)sizeOfInstanceBits, readInstanceSizeBits, out missing);
                     descriptor.Padding = missing;
-                    Debug.WriteLine($"Descriptor \'{tag}\' has extra padding of {missing.Length} bytes");
+                    Log.Debug($"Descriptor \'{tag}\' has extra padding of {missing.Length} bytes");
                 }
                 else
                 {
-                    Debug.WriteLine($"Descriptor \'{tag}\' read through!");
+                    Log.Debug($"Descriptor \'{tag}\' read through!");
                 }
             }
             size += readInstanceSizeBits;
@@ -962,7 +963,7 @@ namespace SharpMP4
             ulong calculatedSize = descriptor.CalculateSize();
             if (calculatedSize != (ulong)sizeOfInstanceBits)
             {
-                Debug.WriteLine($"Calculated descriptor \'{tag}\' size: {calculatedSize >> 3}, read: {sizeOfInstanceBits >> 3}");
+                Log.Debug($"Calculated descriptor \'{tag}\' size: {calculatedSize >> 3}, read: {sizeOfInstanceBits >> 3}");
             }
 
             return size;
@@ -972,7 +973,7 @@ namespace SharpMP4
         {
             if (descriptor.Children != null)
             {
-                Debug.WriteLine($"Descriptor reading repeated Children read");
+                Log.Debug($"Descriptor reading repeated Children read");
                 return 0;
             }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace SharpMP4
@@ -57,7 +56,7 @@ namespace SharpMP4
                     ulong calculatedSize = box.CalculateSize();
                     if (boxSize != calculatedSize)
                     {
-                        Debug.WriteLine($"Box size mismatch - calculated: {calculatedSize >> 3}, read: {boxSize >> 3}");
+                        Log.Debug($"Box size mismatch - calculated: {calculatedSize >> 3}, read: {boxSize >> 3}");
                     }
 
                     Children.Add(box);
@@ -84,7 +83,7 @@ namespace SharpMP4
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error: {ex.Message}");
+                Log.Debug($"Error: {ex.Message}");
             }
 
             return size;
