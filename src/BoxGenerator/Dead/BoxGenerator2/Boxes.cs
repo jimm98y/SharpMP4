@@ -1,23 +1,18 @@
 ﻿namespace SharpMP4
 {
-    public sealed class TrunEntry
+    /// <summary>
+    /// Apple ilst->data dataType.
+    /// </summary>
+    public enum DataType : int
     {
-        public uint SampleDuration;
-        public uint SampleSize;
-        public uint SampleFlags;
-        public uint SampleCompositionTimeOffset0;
-        public int SampleCompositionTimeOffset;
-
-        public TrunEntry(uint sampleDuration, uint sampleSize, uint sampleFlags, int sampleCompositionTimeOffset)
-        {
-            SampleDuration = sampleDuration;
-            SampleSize = sampleSize;
-            SampleFlags = sampleFlags;
-            SampleCompositionTimeOffset = sampleCompositionTimeOffset;
-        }
-
-        public TrunEntry()
-        { }
+        DataTypeBinary = 0,
+        DataTypeStringUTF8 = 1,
+        DataTypeStringUTF16 = 2,
+        DataTypeStringMac = 3,
+        DataTypeStringJPEG = 14,
+        DataTypeSignedIntBigEndian = 21,
+        DataTypeFloat32BigEndian = 22,
+        DataTypeFloat64BigEndian = 23,
     }
 
     public class IlstKey : Box
@@ -55,6 +50,26 @@
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
+    }
+
+    public sealed class TrunEntry
+    {
+        public uint SampleDuration;
+        public uint SampleSize;
+        public uint SampleFlags;
+        public uint SampleCompositionTimeOffset0;
+        public int SampleCompositionTimeOffset;
+
+        public TrunEntry(uint sampleDuration, uint sampleSize, uint sampleFlags, int sampleCompositionTimeOffset)
+        {
+            SampleDuration = sampleDuration;
+            SampleSize = sampleSize;
+            SampleFlags = sampleFlags;
+            SampleCompositionTimeOffset = sampleCompositionTimeOffset;
+        }
+
+        public TrunEntry()
+        { }
     }
 
     public abstract class CompressedBox : Box 
