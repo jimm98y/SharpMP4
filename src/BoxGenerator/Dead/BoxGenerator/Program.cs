@@ -1117,6 +1117,11 @@ namespace SharpMP4
         factory +=
 @"          }
 
+            if(parent == ""ilst"")
+            {
+                if (fourCC[0] == '\0') return new IlstKey(fourCC);
+            }
+
             //throw new NotImplementedException(fourCC);
             Log.Debug($""Unknown box: '{fourCC}'"");
             return new UnknownBox(fourCC);

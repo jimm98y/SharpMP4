@@ -420,6 +420,12 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
+      "syntax": "aligned(8) class DataBox() \r\nextends Box('data') {\r\nunsigned int(32) dataType; unsigned int(32) dataLang; bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
       "syntax": "aligned(8) class NikonExifBox() \r\nextends Box('NCTG') {\r\n bit(8) data[];\r\n } "
     },
     {

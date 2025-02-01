@@ -88,6 +88,7 @@ namespace SharpMP4
                 case "cstg": return new TrackGroupTypeBox_cstg(); // TODO: fix duplicate
                 case "ctts": return new CompositionOffsetBox();
                 case "dac3": return new AC3SpecificBox();
+                case "data": return new DataBox();
                 case "ddts": return new DdtsBox();
                 case "desc": return new AppleDescriptionBox();
                 case "dhec": return new DefaultHevcExtractorConstructorBox();
@@ -400,6 +401,11 @@ namespace SharpMP4
                 case "xml ": return new XMLBox();
                 case "Xtra": return new WindowsMediaXtraBox();
                 case "zoom": return new ZoomTransitionEffectProperty();
+            }
+
+            if (parent == "ilst")
+            {
+                if (fourCC[0] == '\0') return new IlstKey(fourCC);
             }
 
             //throw new NotImplementedException(fourCC);
@@ -38637,6 +38643,62 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class DataBox() 
+    extends Box('data') {
+    unsigned int(32) dataType; unsigned int(32) dataLang; bit(8) data[];
+     } 
+    */
+    public class DataBox : Box
+    {
+        public const string TYPE = "data";
+        public override string DisplayName { get { return "DataBox"; } }
+
+        protected uint dataType;
+        public uint DataType { get { return this.dataType; } set { this.dataType = value; } }
+
+        protected uint dataLang;
+        public uint DataLang { get { return this.dataLang; } set { this.dataLang = value; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public DataBox() : base("data")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.dataType);
+            boxSize += stream.ReadUInt32(out this.dataLang);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.dataType);
+            boxSize += stream.WriteUInt32(this.dataLang);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // dataType
+            boxSize += 32; // dataLang
             boxSize += 8 * (ulong)data.Length; // data
             return boxSize;
         }

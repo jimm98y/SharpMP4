@@ -198,7 +198,11 @@ namespace SharpMP4
     }
 
     public class InvalidBox : UnknownBox
-    {  }
+    {
+        public InvalidBox(string fourCC) : base(fourCC)
+        {
+        }
+    }
 
     public class UnknownEntry : SampleEntry
     {
