@@ -567,21 +567,24 @@ namespace SharpMP4
                 box = new InvalidBox(ToFourCC(header.Type));
                 box.Parent = parent;
                 box.Header = header;
-                string fourCC = string.Concat(box.FourCC.Select(c => (char.IsControl(c) ? $"\\{(int)c:X}" : c.ToString())).ToArray());
-                Log.Debug($"BOX:{GetIndentation(box)}\'{fourCC}\'");
+                Log.Debug($"BOX:{GetIndentation(box)}\'{EscapeString(box.FourCC)}\'");
                 size = box.Read(this, availableSize) + GetHeaderSize(header);
             }
             else
             {
                 box = factory(header);
                 box.Parent = parent;
-                string fourCC = string.Concat(box.FourCC.Select(c => (char.IsControl(c) ? $"\\{(int)c:X}" : c.ToString())).ToArray());
-                Log.Debug($"BOX:{GetIndentation(box)}\'{fourCC}\'");
+                Log.Debug($"BOX:{GetIndentation(box)}\'{EscapeString(box.FourCC)}\'");
                 size = ReadBox(header, box, availableSize);
             }
 
             value = (T)box;
             return size;
+        }
+
+        private static string EscapeString(string text)
+        {
+            return string.Concat(text.Select(c => char.IsControl(c) ? $"\\{(int)c:X}" : $"{c}").ToArray());
         }
 
         private static Box DefaultBoxFactory(IMp4Serializable parent, SafeBoxHeader header)
