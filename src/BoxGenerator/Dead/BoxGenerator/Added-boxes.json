@@ -18,7 +18,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleEncoderBox() \r\nextends Box('©too') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEncoderBox() \r\nextends Box('©too') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -42,7 +42,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleCommentBox() \r\nextends Box('©cmt') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleCommentBox() \r\nextends Box('©cmt') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -66,7 +66,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleNameBox() \r\nextends Box('©nam') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleNameBox() \r\nextends Box('©nam') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -78,7 +78,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleArtistBox() \r\nextends Box('©ART') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleArtistBox() \r\nextends Box('©ART') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -102,13 +102,13 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleRecordingYear2Box() \r\nextends Box('©day') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleRecordingYear2Box() \r\nextends Box('©day') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleGenreBox() \r\nextends Box('©gen') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleGenreBox() \r\nextends Box('©gen') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -420,7 +420,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class DataBox() \r\nextends Box('data') {\r\nunsigned int(32) dataType; unsigned int(32) dataLang; bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class DataBox() \r\nextends Box('data') {\r\nunsigned int(32) dataType;\r\n unsigned int(32) dataLang;\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
