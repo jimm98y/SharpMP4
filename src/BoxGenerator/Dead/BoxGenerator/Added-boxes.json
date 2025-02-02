@@ -132,7 +132,13 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleDescriptionBox() \r\nextends Box('desc') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleDescriptionBox() \r\nextends Box('desc') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleLongDescriptionBox() \r\nextends Box('ldes') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -210,19 +216,19 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleTempoBox() \r\nextends Box('tmpo') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleBeatsPerMinuteBox() \r\nextends Box('tmpo') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleTVEpisodeBox() \r\nextends Box('tves') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleTVEpisodeBox() \r\nextends Box('tves') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleTVSeasonBox() \r\nextends Box('tvsn') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleTVSeasonBox() \r\nextends Box('tvsn') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -240,7 +246,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class DiskBox() \r\nextends Box('disk') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class DiskNumberBox() \r\nextends Box('disk') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -294,7 +300,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class TrknBox() \r\nextends Box('trkn') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class TrackNumberBox() \r\nextends Box('trkn') {\r\n Box boxes[]; \r\n } "
     },
     {
       "containers": [ "*" ],
@@ -330,7 +336,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class TvenBox() \r\nextends Box('tven') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class TVEpisodeIDBox() \r\nextends Box('tven') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -402,7 +408,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class TvshBox() \r\nextends Box('tvsh') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class TVShowBox() \r\nextends Box('tvsh') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
