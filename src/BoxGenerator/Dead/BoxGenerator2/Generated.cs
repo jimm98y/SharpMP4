@@ -36744,7 +36744,8 @@ namespace SharpMP4
     /*
     aligned(8) class ThreeGPPTitleBox() 
     extends Box('titl') {
-        unsigned int(5)[3] language;
+        bit(1) reserved;
+     unsigned int(5)[3] language;
         string value;
     } 
     */
@@ -36752,6 +36753,9 @@ namespace SharpMP4
     {
         public const string TYPE = "titl";
         public override string DisplayName { get { return "ThreeGPPTitleBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected string language;
         public string Language { get { return this.language; } set { this.language = value; } }
@@ -36767,6 +36771,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
             boxSize += stream.ReadIso639(out this.language);
             boxSize += stream.ReadString(boxSize, readSize, out this.value);
             return boxSize;
@@ -36776,6 +36781,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
             boxSize += stream.WriteIso639(this.language);
             boxSize += stream.WriteString(this.value);
             return boxSize;
@@ -36785,6 +36791,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
             boxSize += 15; // language
             boxSize += IsoStream.CalculateStringSize(value); // value
             return boxSize;
@@ -36795,7 +36802,8 @@ namespace SharpMP4
     /*
     aligned(8) class ThreeGPPAuthorBox() 
     extends Box('auth') {
-        unsigned int(5)[3] language;
+        bit(1) reserved;
+     unsigned int(5)[3] language;
         string value;
     } 
     */
@@ -36803,6 +36811,9 @@ namespace SharpMP4
     {
         public const string TYPE = "auth";
         public override string DisplayName { get { return "ThreeGPPAuthorBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected string language;
         public string Language { get { return this.language; } set { this.language = value; } }
@@ -36818,6 +36829,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
             boxSize += stream.ReadIso639(out this.language);
             boxSize += stream.ReadString(boxSize, readSize, out this.value);
             return boxSize;
@@ -36827,6 +36839,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
             boxSize += stream.WriteIso639(this.language);
             boxSize += stream.WriteString(this.value);
             return boxSize;
@@ -36836,6 +36849,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
             boxSize += 15; // language
             boxSize += IsoStream.CalculateStringSize(value); // value
             return boxSize;
@@ -36978,7 +36992,8 @@ namespace SharpMP4
     /*
     aligned(8) class ThreeGPPDescriptionBox() 
     extends Box('dscp') {
-        unsigned int(5)[3] language;
+        bit(1) reserved;
+    unsigned int(5)[3] language;
         string value;
     } 
     */
@@ -36986,6 +37001,9 @@ namespace SharpMP4
     {
         public const string TYPE = "dscp";
         public override string DisplayName { get { return "ThreeGPPDescriptionBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected string language;
         public string Language { get { return this.language; } set { this.language = value; } }
@@ -37001,6 +37019,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
             boxSize += stream.ReadIso639(out this.language);
             boxSize += stream.ReadString(boxSize, readSize, out this.value);
             return boxSize;
@@ -37010,6 +37029,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
             boxSize += stream.WriteIso639(this.language);
             boxSize += stream.WriteString(this.value);
             return boxSize;
@@ -37019,6 +37039,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
             boxSize += 15; // language
             boxSize += IsoStream.CalculateStringSize(value); // value
             return boxSize;
@@ -37073,7 +37094,8 @@ namespace SharpMP4
     /*
     aligned(8) class ThreeGPPKeywordsBox() 
     extends Box('kywd') {
-        unsigned int(5)[3] language;
+        bit(1) reserved;
+    unsigned int(5)[3] language;
         string value;
         unsigned int(8) count;
          ThreeGPPKeyword keywords[]; }
@@ -37083,6 +37105,9 @@ namespace SharpMP4
     {
         public const string TYPE = "kywd";
         public override string DisplayName { get { return "ThreeGPPKeywordsBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
         protected string language;
         public string Language { get { return this.language; } set { this.language = value; } }
@@ -37104,6 +37129,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
             boxSize += stream.ReadIso639(out this.language);
             boxSize += stream.ReadString(boxSize, readSize, out this.value);
             boxSize += stream.ReadUInt8(out this.count);
@@ -37115,6 +37141,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
             boxSize += stream.WriteIso639(this.language);
             boxSize += stream.WriteString(this.value);
             boxSize += stream.WriteUInt8(this.count);
@@ -37126,6 +37153,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
             boxSize += 15; // language
             boxSize += IsoStream.CalculateStringSize(value); // value
             boxSize += 8; // count

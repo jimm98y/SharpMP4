@@ -156,13 +156,13 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPTitleBox() \r\nextends Box('titl') {\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPTitleBox() \r\nextends Box('titl') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPAuthorBox() \r\nextends Box('auth') {\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPAuthorBox() \r\nextends Box('auth') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
@@ -186,7 +186,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPDescriptionBox() \r\nextends Box('dscp') {\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPDescriptionBox() \r\nextends Box('dscp') {\r\n\tbit(1) reserved;\r\nunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
@@ -198,7 +198,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPKeywordsBox() \r\nextends Box('kywd') {\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n\tunsigned int(8) count;\r\n\t ThreeGPPKeyword keywords[]; }\r\n aligned(8) class ThreeGPPKeyword()\r\n{\r\n unsigned int(8) count;\r\nchar text[count];\r\n }\r\n"
+      "syntax": "aligned(8) class ThreeGPPKeywordsBox() \r\nextends Box('kywd') {\r\n\tbit(1) reserved;\r\nunsigned int(5)[3] language;\r\n\tstring value;\r\n\tunsigned int(8) count;\r\n\t ThreeGPPKeyword keywords[]; }\r\n aligned(8) class ThreeGPPKeyword()\r\n{\r\n unsigned int(8) count;\r\nchar text[count];\r\n }\r\n"
     },
     {
       "containers": [ "*" ],
