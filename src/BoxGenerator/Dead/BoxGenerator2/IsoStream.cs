@@ -374,8 +374,7 @@ namespace SharpMP4
 
             ulong read = ReadBytes(remaining >> 3, out byte[] buffer);
             value = new BinaryUTF8String(buffer);
-            Log.Debug($"ReadString: {value}");
-            Log.Debug("");
+            Log.Debug($"ReadString: {EscapeString(value.ToString())}");
             return read;
         }
 
@@ -402,8 +401,7 @@ namespace SharpMP4
 
                 BinaryUTF8String str = new BinaryUTF8String(bytes);
 
-                Log.Debug($"ReadString ({lang}): {str}");
-                Log.Debug("");
+                Log.Debug($"ReadString ({lang}): {EscapeString(str.ToString())}");
 
                 MultiLanguageString item = new MultiLanguageString(lang, length, str);
                 items.Add(item);
