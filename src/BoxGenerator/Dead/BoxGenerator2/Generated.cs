@@ -19913,7 +19913,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadClass(boxSize, readSize, this, new Descriptor(),  out this.Descr); 
+            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.Descr);
             return boxSize;
         }
 
@@ -19921,7 +19921,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteClass(this.Descr);
+            boxSize += stream.WriteDescriptor(this.Descr);
             return boxSize;
         }
 
@@ -19929,7 +19929,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateClassSize(Descr); // Descr
+            boxSize += IsoStream.CalculateDescriptorSize(Descr); // Descr
             return boxSize;
         }
     }
@@ -36699,7 +36699,7 @@ namespace SharpMP4
     /*
     aligned(8) class AppleInitialObjectDescriptorBox() 
     extends Box('iods') {
-     bit(8) data[];
+     Descriptor descriptor;
      } 
     */
     public class AppleInitialObjectDescriptorBox : Box
@@ -36707,8 +36707,8 @@ namespace SharpMP4
         public const string TYPE = "iods";
         public override string DisplayName { get { return "AppleInitialObjectDescriptorBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected Descriptor descriptor;
+        public Descriptor Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
 
         public AppleInitialObjectDescriptorBox() : base("iods")
         {
@@ -36718,7 +36718,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.descriptor);
             return boxSize;
         }
 
@@ -36726,7 +36726,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteDescriptor(this.descriptor);
             return boxSize;
         }
 
@@ -36734,7 +36734,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
             return boxSize;
         }
     }

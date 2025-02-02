@@ -1004,6 +1004,45 @@ namespace SharpMP4
             return size;
         }
 
+        internal ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] descriptor) where T : Descriptor
+        {
+            ulong consumed = 0;
+
+            List<T> descriptors = new List<T>();
+
+            if (readSize == ulong.MaxValue)
+            {
+                // consume till the end of the stream
+                try
+                {
+                    while (true)
+                    {
+                        T v;
+                        consumed += ReadDescriptor(consumed, readSize, parent, out v);
+                        descriptors.Add(v);
+                    }
+                }
+                catch (EndOfStreamException)
+                { }
+
+                descriptor = descriptors.ToArray();
+
+                return consumed;
+            }
+
+            ulong remaining = readSize - boxSize;
+            while (consumed < remaining)
+            {
+                T v;
+                consumed += ReadDescriptor(consumed, remaining, parent, out v);
+                descriptors.Add(v);
+            }
+
+            descriptor = descriptors.ToArray();
+
+            return consumed;
+        }
+
         internal ulong ReadDescriptorsTillEnd(ulong boxSize, ulong readSize, Descriptor descriptor, int objectTypeIndication = -1)
         {
             if (descriptor.Children != null)
@@ -1069,6 +1108,20 @@ namespace SharpMP4
             return 8 * (1 + descriptorSizeLength) + descriptorContentSize + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0);
         }
 
+        internal static ulong CalculateDescriptorSize(Descriptor[] descriptor)
+        {
+            if (descriptor == null || descriptor.Length == 0)
+                return 0;
+
+            ulong size = 0;
+            for (int i = 0; i < descriptor.Length; i++)
+            {
+                size += CalculateDescriptorSize(descriptor[i]);
+            }
+
+            return size;
+        }
+
         internal ulong WriteDescriptorsTillEnd(Descriptor descriptor, int objectTypeIndication = -1)
         {
             ulong size = 0;
@@ -1095,6 +1148,22 @@ namespace SharpMP4
             {
                 size += WritePadding(descriptor.Padding);
             }
+            return size;
+        }
+
+        internal ulong WriteDescriptor(Descriptor[] descriptor)
+        {
+            ulong size = 0;
+            if (descriptor == null || descriptor.Length == 0)
+            {
+                return size;
+            }
+            
+            for (int i = 0; i < descriptor.Length; i++)
+            {
+                size += WriteDescriptor(descriptor[i]);
+            }
+
             return size;
         }
 

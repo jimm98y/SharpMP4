@@ -150,7 +150,7 @@
       "containers": [ "*" ],
       "description": "TODO",
       "type": "Box",
-      "syntax": "aligned(8) class AppleInitialObjectDescriptorBox() \r\nextends Box('iods') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleInitialObjectDescriptorBox() \r\nextends Box('iods') {\r\n Descriptor descriptor;\r\n } "
     },
     {
       "containers": [ "*" ],

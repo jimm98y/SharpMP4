@@ -1337,7 +1337,7 @@ namespace SharpMP4
         }
 
         bool hasBoxes = fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "ItemReferenceBox";
-        bool hasDescriptors = fields.Select(x => GetReadMethod(x.Type).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry";
+        bool hasDescriptors = fields.Select(x => GetReadMethod(x.Type).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox";
 
         foreach (var field in fields)
         {
@@ -1894,7 +1894,7 @@ namespace SharpMP4
 
                 string readMethod = GetReadMethod((field as PseudoField)?.Type);
                 if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox"
-                    && b.BoxName != "ViewPriorityEntry" && b.BoxName != "MultiviewGroupEntry" && b.BoxName != "ScalableGroupEntry" && b.BoxName != "ItemReferenceBox")
+                    && b.BoxName != "ViewPriorityEntry" && b.BoxName != "MultiviewGroupEntry" && b.BoxName != "ScalableGroupEntry" && b.BoxName != "ItemReferenceBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox")
                 {
                     string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
                     string ttttt = tt.Replace("[]", "");
@@ -2176,7 +2176,9 @@ namespace SharpMP4
             boxSize = "";
 
         // comment out all ReadBox/ReadDescriptor, WriteBox/WriteDescriptor and Calculate* methods
-        if (((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit") || (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ItemReferenceBox")
+        if (((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit") || 
+            (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox")) &&
+            b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ItemReferenceBox")
         {
             spacing += "// ";
         }
@@ -2690,8 +2692,8 @@ namespace SharpMP4
             { "VvcDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, this, new VvcDecoderConfigurationRecord(), " },
             { "EVCSliceComponentTrackConfigurationRecord()", "stream.ReadClass(boxSize, readSize, this, new EVCSliceComponentTrackConfigurationRecord(), " },
             { "SampleGroupDescriptionEntry(grouping_type)", "stream.ReadEntry(boxSize, readSize, this, IsoStream.ToFourCC(grouping_type), " },
-            { "Descriptor[0 .. 255]",                   "stream.ReadClass(boxSize, readSize, this, new Descriptor(), " },
-            { "Descriptor",                             "stream.ReadClass(boxSize, readSize, this, new Descriptor(), " },
+            { "Descriptor[0 .. 255]",                   "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "Descriptor",                             "stream.ReadDescriptor(boxSize, readSize, this, " },
             { "WebVTTConfigurationBox",                 "stream.ReadBox(boxSize, readSize, this, " },
             { "WebVTTSourceLabelBox",                   "stream.ReadBox(boxSize, readSize, this, " },
             { "OperatingPointsRecord",                  "stream.ReadClass(boxSize, readSize, this, new OperatingPointsRecord(), " },
@@ -3086,8 +3088,8 @@ namespace SharpMP4
             { "VvcDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
             { "EVCSliceComponentTrackConfigurationRecord()", "IsoStream.CalculateClassSize(value)" },
             { "SampleGroupDescriptionEntry (grouping_type)", "IsoStream.CalculateEntrySize(value)" },
-            { "Descriptor[0 .. 255]",                   "IsoStream.CalculateClassSize(value)" },
-            { "Descriptor",                             "IsoStream.CalculateClassSize(value)" },
+            { "Descriptor[0 .. 255]",                   "IsoStream.CalculateDescriptorSize(value)" },
+            { "Descriptor",                             "IsoStream.CalculateDescriptorSize(value)" },
             { "WebVTTConfigurationBox",                 "IsoStream.CalculateBoxSize(value)" },
             { "WebVTTSourceLabelBox",                   "IsoStream.CalculateBoxSize(value)" },
             { "OperatingPointsRecord",                  "IsoStream.CalculateClassSize(value)" },
@@ -3482,8 +3484,8 @@ namespace SharpMP4
             { "VvcDecoderConfigurationRecord()",        "stream.WriteClass(" },
             { "EVCSliceComponentTrackConfigurationRecord()", "stream.WriteClass(" },
             { "SampleGroupDescriptionEntry (grouping_type)", "stream.WriteEntry(" },
-            { "Descriptor[0 .. 255]",                   "stream.WriteClass(" },
-            { "Descriptor",                             "stream.WriteClass(" },
+            { "Descriptor[0 .. 255]",                   "stream.WriteDescriptor(" },
+            { "Descriptor",                             "stream.WriteDescriptor(" },
             { "WebVTTConfigurationBox",                 "stream.WriteBox(" },
             { "WebVTTSourceLabelBox",                   "stream.WriteBox(" },
             { "OperatingPointsRecord",                  "stream.WriteClass(" },
