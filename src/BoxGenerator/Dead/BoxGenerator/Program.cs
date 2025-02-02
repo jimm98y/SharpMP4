@@ -486,6 +486,7 @@ partial class Program
             Try(String("samplerate = samplerate >> 16")), // WORKAROUND
             // added
             Try(String("MultiLanguageString")), 
+            Try(String("AdobeChapterRecord")), 
             // descriptors
             Try(String("DecoderConfigDescriptor")),
             Try(String("SLConfigDescriptor")),
@@ -2896,6 +2897,7 @@ namespace SharpMP4
             { "case 0b111: ",                           "case 0b111: boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
             { "unsigned int(16)[3]",                    "stream.ReadUInt16Array(3, " },
             { "MultiLanguageString[]",                  "stream.ReadStringSizeLangPrefixed(boxSize, readSize, " },
+            { "AdobeChapterRecord[]",                        "stream.ReadClass(boxSize, readSize, this, " },
         };
         return map[type];
     }
@@ -3291,6 +3293,7 @@ namespace SharpMP4
             { "case 0b111: ",                           "case 0b111: boxSize += (ulong)((uint)(8 * chunk_length))" },
             { "unsigned int(16)[3]",                    "3 * 16" },
             { "MultiLanguageString[]",                  "IsoStream.CalculateStringSizeLangPrefixed(value)" },
+            { "AdobeChapterRecord[]",                        "IsoStream.CalculateClassSize(value)" },
        };
         return map[type];
     }
@@ -3686,6 +3689,7 @@ namespace SharpMP4
             { "case 0b111: ",                           "case 0b111: boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
             { "unsigned int(16)[3]",                    "stream.WriteUInt16Array(3, " },
             { "MultiLanguageString[]",                  "stream.WriteStringSizeLangPrefixed(" },
+            { "AdobeChapterRecord[]",                        "stream.WriteClass(" },
         };
         return map[type];
     }
@@ -4126,6 +4130,7 @@ namespace SharpMP4
             { "case 0b111: ",                           "byte[]" },
             { "unsigned int(16)[3]",                    "ushort[]" },
             { "MultiLanguageString[]",                  "MultiLanguageString[]" },
+            { "AdobeChapterRecord[]",                        "AdobeChapterRecord[]" },
        };
         return map[type];
     }

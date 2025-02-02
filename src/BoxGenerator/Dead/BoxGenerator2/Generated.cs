@@ -72,7 +72,7 @@ namespace SharpMP4
                 case "chan": return new ChanBox();
                 case "chap": return new ChapBox();
                 case "chnl": return new ChannelLayout();
-                case "chpl": return new ChplBox();
+                case "chpl": return new AdobeChapterBox();
                 case "cinf": return new CompleteTrackInfoBox();
                 case "clap": return new CleanApertureBox();
                 case "clef": return new AppleCleanApertureDimensionsBox();
@@ -38867,20 +38867,28 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class ChplBox() 
-    extends Box('chpl') {
-     bit(8) data[];
-     } 
+    aligned(8) class AdobeChapterBox() 
+    extends FullBox('chpl', version = 0, 0) {
+     unsigned int(32) unknown; unsigned int(8) count;
+     AdobeChapterRecord chapters[]; 
+     }
+
     */
-    public class ChplBox : Box
+    public class AdobeChapterBox : FullBox
     {
         public const string TYPE = "chpl";
-        public override string DisplayName { get { return "ChplBox"; } }
+        public override string DisplayName { get { return "AdobeChapterBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected uint unknown;
+        public uint Unknown { get { return this.unknown; } set { this.unknown = value; } }
 
-        public ChplBox() : base("chpl")
+        protected byte count;
+        public byte Count { get { return this.count; } set { this.count = value; } }
+
+        protected AdobeChapterRecord[] chapters;
+        public AdobeChapterRecord[] Chapters { get { return this.chapters; } set { this.chapters = value; } }
+
+        public AdobeChapterBox() : base("chpl", 0, 0)
         {
         }
 
@@ -38888,7 +38896,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt32(out this.unknown);
+            boxSize += stream.ReadUInt8(out this.count);
+            boxSize += stream.ReadClass(boxSize, readSize, this, out this.chapters);
             return boxSize;
         }
 
@@ -38896,7 +38906,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt32(this.unknown);
+            boxSize += stream.WriteUInt8(this.count);
+            boxSize += stream.WriteClass(this.chapters);
             return boxSize;
         }
 
@@ -38904,7 +38916,63 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 32; // unknown
+            boxSize += 8; // count
+            boxSize += IsoStream.CalculateClassSize(chapters); // chapters
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AdobeChapterRecord() {
+     unsigned int(64) timestamp;
+     unsigned int(8) count; char title[count];
+     }
+    */
+    public class AdobeChapterRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "AdobeChapterRecord"; } }
+
+        protected ulong timestamp;
+        public ulong Timestamp { get { return this.timestamp; } set { this.timestamp = value; } }
+
+        protected byte count;
+        public byte Count { get { return this.count; } set { this.count = value; } }
+
+        protected byte[] title;
+        public byte[] Title { get { return this.title; } set { this.title = value; } }
+
+        public AdobeChapterRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt64(out this.timestamp);
+            boxSize += stream.ReadUInt8(out this.count);
+            boxSize += stream.ReadUInt8Array((uint)count, out this.title);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt64(this.timestamp);
+            boxSize += stream.WriteUInt8(this.count);
+            boxSize += stream.WriteUInt8Array((uint)count, this.title);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 64; // timestamp
+            boxSize += 8; // count
+            boxSize += (ulong)count * 8; // title
             return boxSize;
         }
     }

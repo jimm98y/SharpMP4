@@ -450,7 +450,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class ChplBox() \r\nextends Box('chpl') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AdobeChapterBox() \r\nextends FullBox('chpl', version = 0, 0) {\r\n unsigned int(32) unknown; unsigned int(8) count;\r\n AdobeChapterRecord chapters[]; \r\n }\r\n aligned(8) class AdobeChapterRecord() {\r\n unsigned int(64) timestamp;\r\n unsigned int(8) count; char title[count];\r\n }"
     },
     {
       "containers": [ "*" ],
