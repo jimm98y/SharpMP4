@@ -67,8 +67,11 @@ namespace SharpMP4
                     return new SLConfigDescriptor();
 
                 default:
-                    throw new System.NotImplementedException();
-                    //return new UnknownDescriptor();
+                    {
+                        //throw new System.NotImplementedException();
+                        Log.Debug($"Unknown descriptor: '{tag}'");
+                        return new UnknownDescriptor(tag);
+                    }
             }
         }
     }

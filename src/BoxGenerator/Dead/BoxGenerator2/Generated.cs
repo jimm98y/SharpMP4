@@ -36699,17 +36699,17 @@ namespace SharpMP4
 
     /*
     aligned(8) class AppleInitialObjectDescriptorBox() 
-    extends Box('iods') {
-     Descriptor descriptor;
+    extends FullBox('iods') {
+     Descriptor descriptor[0 .. 255];
      } 
     */
-    public class AppleInitialObjectDescriptorBox : Box
+    public class AppleInitialObjectDescriptorBox : FullBox
     {
         public const string TYPE = "iods";
         public override string DisplayName { get { return "AppleInitialObjectDescriptorBox"; } }
 
-        protected Descriptor descriptor;
-        public Descriptor Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
+        protected Descriptor[] descriptor;
+        public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
 
         public AppleInitialObjectDescriptorBox() : base("iods")
         {
