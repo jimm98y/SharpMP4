@@ -436,8 +436,7 @@ namespace SharpMP4
             foreach (var str in value)
             {
                 size += 16;
-                size += 1;
-                size += 15;
+                size += 16;
                 size += CalculateStringSize(str.Value);
             }
             return size;
