@@ -487,6 +487,7 @@ partial class Program
             // added
             Try(String("MultiLanguageString")), 
             Try(String("AdobeChapterRecord")), 
+            Try(String("ThreeGPPKeyword")), 
             // descriptors
             Try(String("DecoderConfigDescriptor")),
             Try(String("SLConfigDescriptor")),
@@ -2899,7 +2900,8 @@ namespace SharpMP4
             { "case 0b111: ",                           "case 0b111: boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
             { "unsigned int(16)[3]",                    "stream.ReadUInt16Array(3, " },
             { "MultiLanguageString[]",                  "stream.ReadStringSizeLangPrefixed(boxSize, readSize, " },
-            { "AdobeChapterRecord[]",                        "stream.ReadClass(boxSize, readSize, this, " },
+            { "AdobeChapterRecord[]",                   "stream.ReadClass(boxSize, readSize, this, " },
+            { "ThreeGPPKeyword[]",                      "stream.ReadClass(boxSize, readSize, this, " },
         };
         return map[type];
     }
@@ -3295,7 +3297,8 @@ namespace SharpMP4
             { "case 0b111: ",                           "case 0b111: boxSize += (ulong)((uint)(8 * chunk_length))" },
             { "unsigned int(16)[3]",                    "3 * 16" },
             { "MultiLanguageString[]",                  "IsoStream.CalculateStringSizeLangPrefixed(value)" },
-            { "AdobeChapterRecord[]",                        "IsoStream.CalculateClassSize(value)" },
+            { "AdobeChapterRecord[]",                   "IsoStream.CalculateClassSize(value)" },
+            { "ThreeGPPKeyword[]",                      "IsoStream.CalculateClassSize(value)" },
        };
         return map[type];
     }
@@ -3691,7 +3694,8 @@ namespace SharpMP4
             { "case 0b111: ",                           "case 0b111: boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
             { "unsigned int(16)[3]",                    "stream.WriteUInt16Array(3, " },
             { "MultiLanguageString[]",                  "stream.WriteStringSizeLangPrefixed(" },
-            { "AdobeChapterRecord[]",                        "stream.WriteClass(" },
+            { "AdobeChapterRecord[]",                   "stream.WriteClass(" },
+            { "ThreeGPPKeyword[]",                      "stream.WriteClass(" },
         };
         return map[type];
     }
@@ -4132,8 +4136,9 @@ namespace SharpMP4
             { "case 0b111: ",                           "byte[]" },
             { "unsigned int(16)[3]",                    "ushort[]" },
             { "MultiLanguageString[]",                  "MultiLanguageString[]" },
-            { "AdobeChapterRecord[]",                        "AdobeChapterRecord[]" },
-       };
+            { "AdobeChapterRecord[]",                   "AdobeChapterRecord[]" },
+            { "ThreeGPPKeyword[]",                      "ThreeGPPKeyword[]" },
+        };
         return map[type];
     }
 

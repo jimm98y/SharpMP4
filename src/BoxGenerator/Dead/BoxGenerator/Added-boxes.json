@@ -18,7 +18,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleEncoderBox() \r\nextends Box('©too') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleEncoderToolBox() \r\nextends Box('©too') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -120,7 +120,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleCompilationBox() \r\nextends Box('cpil') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleCompilationBox() \r\nextends Box('cpil') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -156,13 +156,13 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleTitleBox() \r\nextends Box('titl') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ThreeGPPTitleBox() \r\nextends Box('titl') {\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleAuthorBox() \r\nextends Box('auth') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ThreeGPPAuthorBox() \r\nextends Box('auth') {\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
@@ -186,7 +186,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class DescriptionBox() \r\nextends Box('dscp') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ThreeGPPDescriptionBox() \r\nextends Box('dscp') {\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
@@ -198,7 +198,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleKeywordsBox() \r\nextends Box('kywd') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ThreeGPPKeywordsBox() \r\nextends Box('kywd') {\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n\tunsigned int(8) count;\r\n\t ThreeGPPKeyword keywords[]; }\r\n aligned(8) class ThreeGPPKeyword()\r\n{\r\n unsigned int(8) count;\r\nchar text[count];\r\n }\r\n"
     },
     {
       "containers": [ "*" ],
@@ -300,19 +300,19 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class GsstBox() \r\nextends Box('gsst') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class GoogleStartTimeBox() \r\nextends Box('gsst') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class GssdBox() \r\nextends Box('gssd') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class GoogleSourceDataBox() \r\nextends Box('gssd') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class GstdBox() \r\nextends Box('gstd') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class GoogleTrackDurationBox() \r\nextends Box('gstd') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -336,19 +336,19 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class GspuBox() \r\nextends Box('gspu') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class GooglePingUrlBox() \r\nextends Box('gspu') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class GspmBox() \r\nextends Box('gspm') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class GooglePingMessageBox() \r\nextends Box('gspm') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class GshhBox() \r\nextends Box('gshh') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class GooglesHostHeaderBox() \r\nextends Box('gshh') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -456,7 +456,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class KeywBox() \r\nextends Box('keyw') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleKeywordBox() \r\nextends Box('keyw') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -486,7 +486,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class EncBox() \r\nextends Box('©enc') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEncoderNameBox() \r\nextends Box('©enc') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
