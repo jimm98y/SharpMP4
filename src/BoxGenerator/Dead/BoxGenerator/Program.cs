@@ -484,6 +484,8 @@ partial class Program
             Try(String("subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")), // WORKAROUND
             Try(String("totalPatternLength = 0")), // WORKAROUND
             Try(String("samplerate = samplerate >> 16")), // WORKAROUND
+            // added
+            Try(String("MultiLanguageString")), 
             // descriptors
             Try(String("DecoderConfigDescriptor")),
             Try(String("SLConfigDescriptor")),
@@ -2602,11 +2604,11 @@ namespace SharpMP4
             { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.ReadBits((uint)(8*num_bytes_constraint_info - 2), " },
             { "bit(8*nal_unit_length)",                 "stream.ReadUInt8Array((uint)nal_unit_length, " },
             { "bit(timeStampLength)",                   "stream.ReadUInt8Array((uint)timeStampLength, " },
-            { "utf8string",                             "stream.ReadStringZeroTerminated(boxSize, readSize, " },
-            { "utfstring",                              "stream.ReadStringZeroTerminated(boxSize, readSize, " },
-            { "utf8list",                               "stream.ReadStringZeroTerminated(boxSize, readSize, " },
-            { "boxstring",                              "stream.ReadStringZeroTerminated(boxSize, readSize, " },
-            { "string",                                 "stream.ReadStringZeroTerminated(boxSize, readSize, " },
+            { "utf8string",                             "stream.ReadString(boxSize, readSize, " },
+            { "utfstring",                              "stream.ReadString(boxSize, readSize, " },
+            { "utf8list",                               "stream.ReadString(boxSize, readSize, " },
+            { "boxstring",                              "stream.ReadString(boxSize, readSize, " },
+            { "string",                                 "stream.ReadString(boxSize, readSize, " },
             { "bit(32)[6]",                             "stream.ReadUInt32Array(6, " },
             { "bit(32)",                                "stream.ReadUInt32(" },
             { "uint(32)",                               "stream.ReadUInt32(" },
@@ -2646,7 +2648,7 @@ namespace SharpMP4
             { "PartitionEntry[ entry_count ]",          "stream.ReadBox(boxSize, readSize, this, entry_count, " },
             { "FDSessionGroupBox",                      "stream.ReadBox(boxSize, readSize, this, " },
             { "GroupIdToNameBox",                       "stream.ReadBox(boxSize, readSize, this, " },
-            { "base64string",                           "stream.ReadStringZeroTerminated(boxSize, readSize, " },
+            { "base64string",                           "stream.ReadString(boxSize, readSize, " },
             { "ProtectionSchemeInfoBox",                "stream.ReadBox(boxSize, readSize, this, " },
             { "SingleItemTypeReferenceBox",             "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Type)), this, " },
             { "SingleItemTypeReferenceBox[]",           "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Type)), this, " },
@@ -2886,6 +2888,7 @@ namespace SharpMP4
             { "case 0b110: ",                           "case 0b110: boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
             { "case 0b111: ",                           "case 0b111: boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
             { "unsigned int(16)[3]",                    "stream.ReadUInt16Array(3, " },
+            { "MultiLanguageString[]",                  "stream.ReadStringSizeLangPrefixed(boxSize, readSize, " },
         };
         return map[type];
     }
@@ -3280,6 +3283,7 @@ namespace SharpMP4
             { "case 0b110: ",                           "case 0b110: boxSize += (ulong)((uint)(8 * chunk_length))" },
             { "case 0b111: ",                           "case 0b111: boxSize += (ulong)((uint)(8 * chunk_length))" },
             { "unsigned int(16)[3]",                    "3 * 16" },
+            { "MultiLanguageString[]",                  "IsoStream.CalculateStringSizeLangPrefixed(value)" },
        };
         return map[type];
     }
@@ -3391,11 +3395,11 @@ namespace SharpMP4
             { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.WriteBits((uint)(8*num_bytes_constraint_info - 2), " },
             { "bit(8*nal_unit_length)",                 "stream.WriteUInt8Array((uint)nal_unit_length, " },
             { "bit(timeStampLength)",                   "stream.WriteUInt8Array((uint)timeStampLength, " },
-            { "utf8string",                             "stream.WriteStringZeroTerminated(" },
-            { "utfstring",                              "stream.WriteStringZeroTerminated(" },
-            { "utf8list",                               "stream.WriteStringZeroTerminated(" },
-            { "boxstring",                              "stream.WriteStringZeroTerminated(" },
-            { "string",                                 "stream.WriteStringZeroTerminated(" },
+            { "utf8string",                             "stream.WriteString(" },
+            { "utfstring",                              "stream.WriteString(" },
+            { "utf8list",                               "stream.WriteString(" },
+            { "boxstring",                              "stream.WriteString(" },
+            { "string",                                 "stream.WriteString(" },
             { "bit(32)[6]",                             "stream.WriteUInt32Array(6, " },
             { "bit(32)",                                "stream.WriteUInt32(" },
             { "uint(32)",                               "stream.WriteUInt32(" },
@@ -3434,7 +3438,7 @@ namespace SharpMP4
             { "PartitionEntry[ entry_count ]",          "stream.WriteBox(entry_count, " },
             { "FDSessionGroupBox",                      "stream.WriteBox(" },
             { "GroupIdToNameBox",                       "stream.WriteBox(" },
-            { "base64string",                           "stream.WriteStringZeroTerminated(" },
+            { "base64string",                           "stream.WriteString(" },
             { "ProtectionSchemeInfoBox",                "stream.WriteBox(" },
             { "SingleItemTypeReferenceBox",             "stream.WriteBox(" },
             { "SingleItemTypeReferenceBox[]",           "stream.WriteBox(" },
@@ -3674,6 +3678,7 @@ namespace SharpMP4
             { "case 0b110: ",                           "case 0b110: boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
             { "case 0b111: ",                           "case 0b111: boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
             { "unsigned int(16)[3]",                    "stream.WriteUInt16Array(3, " },
+            { "MultiLanguageString[]",                  "stream.WriteStringSizeLangPrefixed(" },
         };
         return map[type];
     }
@@ -4113,6 +4118,7 @@ namespace SharpMP4
             { "case 0b110: ",                           "byte[]" },
             { "case 0b111: ",                           "byte[]" },
             { "unsigned int(16)[3]",                    "ushort[]" },
+            { "MultiLanguageString[]",                  "MultiLanguageString[]" },
        };
         return map[type];
     }

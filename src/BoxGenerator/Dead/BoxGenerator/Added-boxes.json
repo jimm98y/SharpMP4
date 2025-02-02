@@ -48,19 +48,19 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleTimBox() \r\nextends Box('©TIM') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class StartTimecode() \r\nextends Box('©TIM') {\r\n MultiLanguageString value[]; \r\n } "
     },
     {
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleTscBox() \r\nextends Box('©TSC') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class StartTimeScale() \r\nextends Box('©TSC') {\r\n MultiLanguageString value[]; \r\n } "
     },
     {
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleTszBox() \r\nextends Box('©TSZ') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class StartTimeSampleSize() \r\nextends Box('©TSZ') {\r\n MultiLanguageString value[]; \r\n } "
     },
     {
       "containers": [ "*" ],

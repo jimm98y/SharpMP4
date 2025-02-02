@@ -22,10 +22,10 @@ namespace SharpMP4
                 case "©nam": return new AppleNameBox();
                 case "©swf": return new AppleCreatorBox();
                 case "©swr": return new AppleSoftwareBox();
-                case "©TIM": return new AppleTimBox();
+                case "©TIM": return new StartTimecode();
                 case "©too": return new AppleEncoderBox();
-                case "©TSC": return new AppleTscBox();
-                case "©TSZ": return new AppleTszBox();
+                case "©TSC": return new StartTimeScale();
+                case "©TSZ": return new StartTimeSampleSize();
                 case "©wrt": return new AppleComposersBox();
                 case "©xyz": return new AppleGPSCoordinatesBox();
                 case "0000": return new ZeroBox();
@@ -1222,10 +1222,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.ns);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.schema_location); // optional 
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
-                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); 
+            boxSize += stream.ReadString(boxSize, readSize, out this.ns);
+            boxSize += stream.ReadString(boxSize, readSize, out this.schema_location); // optional 
+            boxSize += stream.ReadString(boxSize, readSize, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+                                                                                            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -1234,10 +1234,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.ns);
-            boxSize += stream.WriteStringZeroTerminated(this.schema_location); // optional 
-            boxSize += stream.WriteStringZeroTerminated(this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
-                                                                                    // boxSize += stream.WriteBox( this.BitRateBox); 
+            boxSize += stream.WriteString(this.ns);
+            boxSize += stream.WriteString(this.schema_location); // optional 
+            boxSize += stream.WriteString(this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+                                                                      // boxSize += stream.WriteBox( this.BitRateBox); 
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
@@ -1285,8 +1285,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional 
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.mime_format);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional 
+            boxSize += stream.ReadString(boxSize, readSize, out this.mime_format);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -1297,8 +1297,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional 
-            boxSize += stream.WriteStringZeroTerminated(this.mime_format);
+            boxSize += stream.WriteString(this.content_encoding); // optional 
+            boxSize += stream.WriteString(this.mime_format);
             // boxSize += stream.WriteBox( this.BitRateBox); // optional 
             // boxSize += stream.WriteBox( this.TextConfigBox); // optional 
             boxSize += stream.WriteBoxArrayTillEnd(this);
@@ -1650,8 +1650,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional 
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.mime_format);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional 
+            boxSize += stream.ReadString(boxSize, readSize, out this.mime_format);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -1662,8 +1662,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional 
-            boxSize += stream.WriteStringZeroTerminated(this.mime_format);
+            boxSize += stream.WriteString(this.content_encoding); // optional 
+            boxSize += stream.WriteString(this.mime_format);
             // boxSize += stream.WriteBox( this.BitRateBox); // optional 
             // boxSize += stream.WriteBox( this.TextConfigBox); // optional 
             boxSize += stream.WriteBoxArrayTillEnd(this);
@@ -1948,7 +1948,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.locale_string);
+            boxSize += stream.ReadString(boxSize, readSize, out this.locale_string);
             return boxSize;
         }
 
@@ -1956,7 +1956,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.locale_string);
+            boxSize += stream.WriteString(this.locale_string);
             return boxSize;
         }
 
@@ -6423,7 +6423,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.extended_language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.extended_language);
             return boxSize;
         }
 
@@ -6431,7 +6431,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.extended_language);
+            boxSize += stream.WriteString(this.extended_language);
             return boxSize;
         }
 
@@ -7908,7 +7908,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.text_config);
+            boxSize += stream.ReadString(boxSize, readSize, out this.text_config);
             return boxSize;
         }
 
@@ -7916,7 +7916,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.text_config);
+            boxSize += stream.WriteString(this.text_config);
             return boxSize;
         }
 
@@ -8006,7 +8006,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadBit(out this.pad);
             boxSize += stream.ReadIso639(out this.language); // ISO-639-2/T language code
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.notice);
+            boxSize += stream.ReadString(boxSize, readSize, out this.notice);
             return boxSize;
         }
 
@@ -8016,7 +8016,7 @@ namespace SharpMP4
             boxSize += base.Write(stream);
             boxSize += stream.WriteBit(this.pad);
             boxSize += stream.WriteIso639(this.language); // ISO-639-2/T language code
-            boxSize += stream.WriteStringZeroTerminated(this.notice);
+            boxSize += stream.WriteString(this.notice);
             return boxSize;
         }
 
@@ -8057,8 +8057,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.schemeURI);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.value);
+            boxSize += stream.ReadString(boxSize, readSize, out this.schemeURI);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -8066,8 +8066,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.schemeURI);
-            boxSize += stream.WriteStringZeroTerminated(this.value);
+            boxSize += stream.WriteString(this.schemeURI);
+            boxSize += stream.WriteString(this.value);
             return boxSize;
         }
 
@@ -8535,7 +8535,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.location);
+            boxSize += stream.ReadString(boxSize, readSize, out this.location);
             return boxSize;
         }
 
@@ -8543,7 +8543,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.location);
+            boxSize += stream.WriteString(this.location);
             return boxSize;
         }
 
@@ -8583,8 +8583,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.name);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.location);
+            boxSize += stream.ReadString(boxSize, readSize, out this.name);
+            boxSize += stream.ReadString(boxSize, readSize, out this.location);
             return boxSize;
         }
 
@@ -8592,8 +8592,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.name);
-            boxSize += stream.WriteStringZeroTerminated(this.location);
+            boxSize += stream.WriteString(this.name);
+            boxSize += stream.WriteString(this.location);
             return boxSize;
         }
 
@@ -9993,8 +9993,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_location);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_MD5);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_location);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_MD5);
             boxSize += stream.ReadUInt64(out this.content_length);
             boxSize += stream.ReadUInt64(out this.transfer_length);
             boxSize += stream.ReadUInt8(out this.entry_count);
@@ -10011,8 +10011,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_location);
-            boxSize += stream.WriteStringZeroTerminated(this.content_MD5);
+            boxSize += stream.WriteString(this.content_location);
+            boxSize += stream.WriteString(this.content_MD5);
             boxSize += stream.WriteUInt64(this.content_length);
             boxSize += stream.WriteUInt64(this.transfer_length);
             boxSize += stream.WriteUInt8(this.entry_count);
@@ -10526,7 +10526,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.max_source_block_length);
             boxSize += stream.ReadUInt16(out this.encoding_symbol_length);
             boxSize += stream.ReadUInt16(out this.max_number_of_encoding_symbols);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.scheme_specific_info);
+            boxSize += stream.ReadString(boxSize, readSize, out this.scheme_specific_info);
 
             if (version == 0)
             {
@@ -10569,7 +10569,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt16(this.max_source_block_length);
             boxSize += stream.WriteUInt16(this.encoding_symbol_length);
             boxSize += stream.WriteUInt16(this.max_number_of_encoding_symbols);
-            boxSize += stream.WriteStringZeroTerminated(this.scheme_specific_info);
+            boxSize += stream.WriteString(this.scheme_specific_info);
 
             if (version == 0)
             {
@@ -10825,7 +10825,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.ReadUInt32(out this.group_ID[i]);
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.group_name[i]);
+                boxSize += stream.ReadString(boxSize, readSize, out this.group_name[i]);
             }
             return boxSize;
         }
@@ -10839,7 +10839,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.WriteUInt32(this.group_ID[i]);
-                boxSize += stream.WriteStringZeroTerminated(this.group_name[i]);
+                boxSize += stream.WriteString(this.group_name[i]);
             }
             return boxSize;
         }
@@ -10935,7 +10935,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(out this.pre_defined);
             boxSize += stream.ReadUInt32(out this.handler_type);
             boxSize += stream.ReadUInt32Array(3, out this.reserved);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.name);
+            boxSize += stream.ReadString(boxSize, readSize, out this.name);
             return boxSize;
         }
 
@@ -10946,7 +10946,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt32(this.pre_defined);
             boxSize += stream.WriteUInt32(this.handler_type);
             boxSize += stream.WriteUInt32Array(3, this.reserved);
-            boxSize += stream.WriteStringZeroTerminated(this.name);
+            boxSize += stream.WriteString(this.name);
             return boxSize;
         }
 
@@ -11586,9 +11586,9 @@ namespace SharpMP4
             {
                 boxSize += stream.ReadUInt16(out this.item_ID);
                 boxSize += stream.ReadUInt16(out this.item_protection_index);
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.item_name);
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_type);
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); //optional
+                boxSize += stream.ReadString(boxSize, readSize, out this.item_name);
+                boxSize += stream.ReadString(boxSize, readSize, out this.content_type);
+                boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); //optional
             }
 
             if (version == 1)
@@ -11611,17 +11611,17 @@ namespace SharpMP4
                 }
                 boxSize += stream.ReadUInt16(out this.item_protection_index);
                 boxSize += stream.ReadUInt32(out this.item_type);
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.item_name);
+                boxSize += stream.ReadString(boxSize, readSize, out this.item_name);
 
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
-                    boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_type);
-                    boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); //optional
+                    boxSize += stream.ReadString(boxSize, readSize, out this.content_type);
+                    boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); //optional
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
                 {
-                    boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.item_uri_type);
+                    boxSize += stream.ReadString(boxSize, readSize, out this.item_uri_type);
                 }
             }
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -11637,9 +11637,9 @@ namespace SharpMP4
             {
                 boxSize += stream.WriteUInt16(this.item_ID);
                 boxSize += stream.WriteUInt16(this.item_protection_index);
-                boxSize += stream.WriteStringZeroTerminated(this.item_name);
-                boxSize += stream.WriteStringZeroTerminated(this.content_type);
-                boxSize += stream.WriteStringZeroTerminated(this.content_encoding); //optional
+                boxSize += stream.WriteString(this.item_name);
+                boxSize += stream.WriteString(this.content_type);
+                boxSize += stream.WriteString(this.content_encoding); //optional
             }
 
             if (version == 1)
@@ -11662,17 +11662,17 @@ namespace SharpMP4
                 }
                 boxSize += stream.WriteUInt16(this.item_protection_index);
                 boxSize += stream.WriteUInt32(this.item_type);
-                boxSize += stream.WriteStringZeroTerminated(this.item_name);
+                boxSize += stream.WriteString(this.item_name);
 
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
-                    boxSize += stream.WriteStringZeroTerminated(this.content_type);
-                    boxSize += stream.WriteStringZeroTerminated(this.content_encoding); //optional
+                    boxSize += stream.WriteString(this.content_type);
+                    boxSize += stream.WriteString(this.content_encoding); //optional
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
                 {
-                    boxSize += stream.WriteStringZeroTerminated(this.item_uri_type);
+                    boxSize += stream.WriteString(this.item_uri_type);
                 }
             }
             boxSize += stream.WriteBoxArrayTillEnd(this);
@@ -13751,7 +13751,7 @@ namespace SharpMP4
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.scheme_uri); // browser uri
+                boxSize += stream.ReadString(boxSize, readSize, out this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -13765,7 +13765,7 @@ namespace SharpMP4
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.WriteStringZeroTerminated(this.scheme_uri); // browser uri
+                boxSize += stream.WriteString(this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -13825,7 +13825,7 @@ namespace SharpMP4
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.scheme_uri); // browser uri
+                boxSize += stream.ReadString(boxSize, readSize, out this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -13840,7 +13840,7 @@ namespace SharpMP4
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.WriteStringZeroTerminated(this.scheme_uri); // browser uri
+                boxSize += stream.WriteString(this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -17042,7 +17042,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.xml);
+            boxSize += stream.ReadString(boxSize, readSize, out this.xml);
             return boxSize;
         }
 
@@ -17050,7 +17050,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.xml);
+            boxSize += stream.WriteString(this.xml);
             return boxSize;
         }
 
@@ -17193,7 +17193,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.theURI);
+            boxSize += stream.ReadString(boxSize, readSize, out this.theURI);
             return boxSize;
         }
 
@@ -17201,7 +17201,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.theURI);
+            boxSize += stream.WriteString(this.theURI);
             return boxSize;
         }
 
@@ -20671,7 +20671,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.ReadUInt8(out this.statement_type[i]); // from the user extension ranges
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.statement_namespace[i]);
+                boxSize += stream.ReadString(boxSize, readSize, out this.statement_namespace[i]);
             }
             return boxSize;
         }
@@ -20690,7 +20690,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.WriteUInt8(this.statement_type[i]); // from the user extension ranges
-                boxSize += stream.WriteStringZeroTerminated(this.statement_namespace[i]);
+                boxSize += stream.WriteString(this.statement_namespace[i]);
             }
             return boxSize;
         }
@@ -20780,7 +20780,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.config);
+            boxSize += stream.ReadString(boxSize, readSize, out this.config);
             return boxSize;
         }
 
@@ -20788,7 +20788,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.config);
+            boxSize += stream.WriteString(this.config);
             return boxSize;
         }
 
@@ -20823,7 +20823,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.source_label);
+            boxSize += stream.ReadString(boxSize, readSize, out this.source_label);
             return boxSize;
         }
 
@@ -20831,7 +20831,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.source_label);
+            boxSize += stream.WriteString(this.source_label);
             return boxSize;
         }
 
@@ -20921,7 +20921,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.aux_track_type);
+            boxSize += stream.ReadString(boxSize, readSize, out this.aux_track_type);
             return boxSize;
         }
 
@@ -20929,7 +20929,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.aux_track_type);
+            boxSize += stream.WriteString(this.aux_track_type);
             return boxSize;
         }
 
@@ -21690,9 +21690,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.ns);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.schema_location); // optional
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional
+            boxSize += stream.ReadString(boxSize, readSize, out this.ns);
+            boxSize += stream.ReadString(boxSize, readSize, out this.schema_location); // optional
             return boxSize;
         }
 
@@ -21700,9 +21700,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional
-            boxSize += stream.WriteStringZeroTerminated(this.ns);
-            boxSize += stream.WriteStringZeroTerminated(this.schema_location); // optional
+            boxSize += stream.WriteString(this.content_encoding); // optional
+            boxSize += stream.WriteString(this.ns);
+            boxSize += stream.WriteString(this.schema_location); // optional
             return boxSize;
         }
 
@@ -21745,8 +21745,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.mime_format);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional
+            boxSize += stream.ReadString(boxSize, readSize, out this.mime_format);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -21756,8 +21756,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional
-            boxSize += stream.WriteStringZeroTerminated(this.mime_format);
+            boxSize += stream.WriteString(this.content_encoding); // optional
+            boxSize += stream.WriteString(this.mime_format);
             // boxSize += stream.WriteBox( this.TextConfigBox); // optional
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
@@ -27253,7 +27253,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.aux_type);
+            boxSize += stream.ReadString(boxSize, readSize, out this.aux_type);
             boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
             return boxSize;
         }
@@ -27262,7 +27262,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.aux_type);
+            boxSize += stream.WriteString(this.aux_type);
             boxSize += stream.WriteUInt8ArrayTillEnd(this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
             return boxSize;
         }
@@ -27854,8 +27854,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.alt_text);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.alt_lang);
+            boxSize += stream.ReadString(boxSize, readSize, out this.alt_text);
+            boxSize += stream.ReadString(boxSize, readSize, out this.alt_lang);
             return boxSize;
         }
 
@@ -27863,8 +27863,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.alt_text);
-            boxSize += stream.WriteStringZeroTerminated(this.alt_lang);
+            boxSize += stream.WriteString(this.alt_text);
+            boxSize += stream.WriteString(this.alt_lang);
             return boxSize;
         }
 
@@ -28282,10 +28282,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.lang);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.name);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.description);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.tags);
+            boxSize += stream.ReadString(boxSize, readSize, out this.lang);
+            boxSize += stream.ReadString(boxSize, readSize, out this.name);
+            boxSize += stream.ReadString(boxSize, readSize, out this.description);
+            boxSize += stream.ReadString(boxSize, readSize, out this.tags);
             return boxSize;
         }
 
@@ -28293,10 +28293,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.lang);
-            boxSize += stream.WriteStringZeroTerminated(this.name);
-            boxSize += stream.WriteStringZeroTerminated(this.description);
-            boxSize += stream.WriteStringZeroTerminated(this.tags);
+            boxSize += stream.WriteString(this.lang);
+            boxSize += stream.WriteString(this.name);
+            boxSize += stream.WriteString(this.description);
+            boxSize += stream.WriteString(this.tags);
             return boxSize;
         }
 
@@ -35922,20 +35922,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class AppleTimBox() 
+    aligned(8) class StartTimecode() 
     extends Box('©TIM') {
-     bit(8) data[];
+     MultiLanguageString value[]; 
      } 
     */
-    public class AppleTimBox : Box
+    public class StartTimecode : Box
     {
         public const string TYPE = "©TIM";
-        public override string DisplayName { get { return "AppleTimBox"; } }
+        public override string DisplayName { get { return "StartTimecode"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected MultiLanguageString[] value;
+        public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public AppleTimBox() : base("©TIM")
+        public StartTimecode() : base("©TIM")
         {
         }
 
@@ -35943,7 +35943,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadStringSizeLangPrefixed(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -35951,7 +35951,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteStringSizeLangPrefixed(this.value);
             return boxSize;
         }
 
@@ -35959,27 +35959,27 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += IsoStream.CalculateStringSizeLangPrefixed(value); // value
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class AppleTscBox() 
+    aligned(8) class StartTimeScale() 
     extends Box('©TSC') {
-     bit(8) data[];
+     MultiLanguageString value[]; 
      } 
     */
-    public class AppleTscBox : Box
+    public class StartTimeScale : Box
     {
         public const string TYPE = "©TSC";
-        public override string DisplayName { get { return "AppleTscBox"; } }
+        public override string DisplayName { get { return "StartTimeScale"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected MultiLanguageString[] value;
+        public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public AppleTscBox() : base("©TSC")
+        public StartTimeScale() : base("©TSC")
         {
         }
 
@@ -35987,7 +35987,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadStringSizeLangPrefixed(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -35995,7 +35995,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteStringSizeLangPrefixed(this.value);
             return boxSize;
         }
 
@@ -36003,27 +36003,27 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += IsoStream.CalculateStringSizeLangPrefixed(value); // value
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class AppleTszBox() 
+    aligned(8) class StartTimeSampleSize() 
     extends Box('©TSZ') {
-     bit(8) data[];
+     MultiLanguageString value[]; 
      } 
     */
-    public class AppleTszBox : Box
+    public class StartTimeSampleSize : Box
     {
         public const string TYPE = "©TSZ";
-        public override string DisplayName { get { return "AppleTszBox"; } }
+        public override string DisplayName { get { return "StartTimeSampleSize"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected MultiLanguageString[] value;
+        public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public AppleTszBox() : base("©TSZ")
+        public StartTimeSampleSize() : base("©TSZ")
         {
         }
 
@@ -36031,7 +36031,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadStringSizeLangPrefixed(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -36039,7 +36039,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteStringSizeLangPrefixed(this.value);
             return boxSize;
         }
 
@@ -36047,7 +36047,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += IsoStream.CalculateStringSizeLangPrefixed(value); // value
             return boxSize;
         }
     }

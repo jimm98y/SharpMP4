@@ -350,7 +350,7 @@ namespace SharpMP4
 
         #region Strings
 
-        internal ulong WriteStringZeroTerminated(BinaryUTF8String value)
+        internal ulong WriteString(BinaryUTF8String value)
         {
             if (value.Length == 0)
                 return 0;
@@ -363,7 +363,7 @@ namespace SharpMP4
             return (ulong)value.Length << 3;
         }
 
-        internal ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out BinaryUTF8String value)
+        internal ulong ReadString(ulong boxSize, ulong readSize, out BinaryUTF8String value)
         {
             ulong remaining = readSize - boxSize;
             if (remaining == 0)
@@ -379,7 +379,7 @@ namespace SharpMP4
             return read;
         }
 
-        internal ulong ReadStringSizePrefixed(ulong boxSize, ulong readSize, out byte[] value)
+        internal ulong ReadStringSizeLangPrefixed(ulong boxSize, ulong readSize, out MultiLanguageString[] value)
         {
             ulong remaining = readSize - boxSize;
             if (remaining == 0)
@@ -388,26 +388,58 @@ namespace SharpMP4
                 return 0;
             }
 
-            List<byte> buffer = new List<byte>();
-            int size = ReadByte();
-            int read = 0;
-            while (read < size && (read + 1 < (int)(remaining >> 3)))
+            List<MultiLanguageString> items = new List<MultiLanguageString>();
+
+            ulong size = 0;
+            while (size < remaining)
             {
-                buffer.Add(ReadByte());
-                read++;
+                ushort length;
+                size += ReadUInt16(out length);
+                ushort lang;
+                size += ReadUInt16(out lang);
+                byte[] bytes;
+                size += ReadBytes(length, out bytes);
+
+                BinaryUTF8String str = new BinaryUTF8String(bytes);
+
+                Log.Debug($"ReadString ({lang}): {str}");
+                Log.Debug("");
+
+                MultiLanguageString item = new MultiLanguageString(lang, length, str);
+                items.Add(item);
             }
-            value = buffer.ToArray();
-            return (ulong)(read + 1) << 3;
+
+            value = items.ToArray();
+
+            return size;
         }
 
-        internal ulong WriteStringSizePrefixed(string value)
+        internal ulong WriteStringSizeLangPrefixed(MultiLanguageString[] value)
+        {
+            if (value == null || value.Length == 0)
+                return 0;
+
+            ulong size = 0;
+            foreach (var item in value)
+            {
+                size += WriteUInt16(item.Length);
+                size += WriteUInt16(item.Language);
+                size += WriteString(item.Value);
+            }
+
+            return size;
+        }
+
+        internal static ulong CalculateStringSizeLangPrefixed(MultiLanguageString[] value)
         {
             ulong size = 0;
-            byte[] bytes = Encoding.UTF8.GetBytes(value);
-            if (bytes.Length > 255)
-                throw new ArgumentOutOfRangeException(nameof(value));
-            size += WriteByte((byte)bytes.Length);
-            size += WriteBytes((ulong)bytes.Length, bytes);
+            foreach (var str in value)
+            {
+                size += 16;
+                size += 1;
+                size += 15;
+                size += CalculateStringSize(str.Value);
+            }
             return size;
         }
 
@@ -2034,6 +2066,20 @@ namespace SharpMP4
         public override string ToString()
         {
             return Encoding.UTF8.GetString(Bytes);
+        }
+    }
+
+    public class MultiLanguageString
+    {
+        public ushort Language { get; set; }
+        public ushort Length { get; set; }
+        public BinaryUTF8String Value { get; set; }
+
+        public MultiLanguageString(ushort language, ushort length, BinaryUTF8String value)
+        {
+            this.Language = language;
+            this.Length = length;
+            this.Value = value;
         }
     }
 
