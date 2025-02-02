@@ -613,7 +613,7 @@ namespace SharpMP4
 
         public static string EscapeString(string text)
         {
-            return string.Concat(text.Select(c => char.IsControl(c) ? $"\\{(int)c:X}" : $"{c}").ToArray());
+            return string.Concat(text.Select(c => char.IsControl(c) ? $"\\x{((int)c).ToString("X2")}" : $"{c}").ToArray());
         }
 
         private static Box DefaultBoxFactory(IMp4Serializable parent, SafeBoxHeader header)
