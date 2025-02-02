@@ -49,6 +49,7 @@ namespace SharpMP4
                 case "amf0": return new Amf0Box();
                 case "amgl": return new SubpicMultipleGroupsBox();
                 case "amve": return new AmbientViewingEnvironmentBox();
+                case "apmd": return new AppleApertureModeBox();
                 case "assp": return new AlternativeStartupSequencePropertiesBox();
                 case "auth": return new AuthorBox();
                 case "auxC": return new AuxiliaryTypeProperty();
@@ -74,6 +75,7 @@ namespace SharpMP4
                 case "chpl": return new ChplBox();
                 case "cinf": return new CompleteTrackInfoBox();
                 case "clap": return new CleanApertureBox();
+                case "clef": return new AppleCleanApertureDimensionsBox();
                 case "clfn": return new ClfnBox();
                 case "clli": return new ContentLightLevelBox();
                 case "cnID": return new AppleStoreCatalogIDBox();
@@ -117,6 +119,8 @@ namespace SharpMP4
                 case "elst": return new EditListBox();
                 case "enca": return new AudioSampleEntry("enca");
                 case "encv": return new VisualSampleEntry("encv");
+                case "enda": return new AppleEndiannessBox();
+                case "enof": return new AppleEncodedPixelsDimensionsBox();
                 case "esds": return new ESDBox();
                 case "etyp": return new ExtendedTypeBox();
                 case "evc1": return new VisualSampleEntry("evc1");
@@ -133,7 +137,7 @@ namespace SharpMP4
                 case "fire": return new FileReservoirBox();
                 case "fpar": return new FilePartitionBox();
                 case "free": return new FreeSpaceBox();
-                case "frma": return new OriginalFormatBox();
+                case "frma": throw new NotSupportedException($"'frma' under '{parent}' is ambiguous in between OriginalFormatBox and ApplePurchaseFileFormatBox");
                 case "ftyp": return new FileTypeBox();
                 case "gitn": return new GroupIdToNameBox();
                 case "gmhd": return new GenericMediaHeaderAtom();
@@ -151,6 +155,7 @@ namespace SharpMP4
                 case "hev3": return new VisualSampleEntry("hev3");
                 case "hinf": return new hintstatisticsbox();
                 case "hint": return new HintBox();
+                case "hinv": return new AppleHintVersionBox();
                 case "hmhd": return new HintMediaHeaderBox();
                 case "hnti": return new trackhintinformation(); // TODO: box is ambiguous in between trackhintinformation and moviehintinformation
                 case "hvc1": return new VisualSampleEntry("hvc1");
@@ -260,6 +265,7 @@ namespace SharpMP4
                 case "pixi": return new PixelInformationProperty();
                 case "pmax": return new hintlargestpacket();
                 case "prft": return new ProducerReferenceTimeBox();
+                case "prof": return new AppleProductionApertureDimensionsBox();
                 case "qlif": return new SVCPriorityLayerInfoBox();
                 case "resa": return new AudioSampleEntry("resa");
                 case "resv": return new VisualSampleEntry("resv");
@@ -339,6 +345,7 @@ namespace SharpMP4
                 case "swtc": return new MultiviewGroupRelationBox();
                 case "swtk": return new SwitchableTracks();
                 case "sync": return new SyncBox();
+                case "tapt": return new AppleTrackApertureBox();
                 case "text": return new TextMediaBox();
                 case "tfdt": return new TrackFragmentBaseMediaDecodeTimeBox();
                 case "tfhd": return new TrackFragmentHeaderBox();
@@ -399,6 +406,7 @@ namespace SharpMP4
                 case "vvs1": return new VisualSampleEntry("vvs1");
                 case "vwdi": return new MultiviewSceneInfoBox();
                 case "vwid": return new ViewIdentifierBox();
+                case "wave": return new AppleWaveBox();
                 case "wide": return new WideBox();
                 case "wipe": return new WipeTransitionEffectProperty();
                 case "wvtt": return new WVTTSampleEntry();
@@ -38321,6 +38329,404 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleHintVersionBox() 
+    extends Box('hinv') {
+     string version;
+     } 
+    */
+    public class AppleHintVersionBox : Box
+    {
+        public const string TYPE = "hinv";
+        public override string DisplayName { get { return "AppleHintVersionBox"; } }
+
+        protected BinaryUTF8String version;
+        public BinaryUTF8String Version { get { return this.version; } set { this.version = value; } }
+
+        public AppleHintVersionBox() : base("hinv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.version);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.version);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(version); // version
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleTrackApertureBox() 
+    extends Box('tapt') {
+     Box boxes[];
+     } 
+    */
+    public class AppleTrackApertureBox : Box
+    {
+        public const string TYPE = "tapt";
+        public override string DisplayName { get { return "AppleTrackApertureBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleTrackApertureBox() : base("tapt")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleCleanApertureDimensionsBox() 
+    extends Box('clef') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleCleanApertureDimensionsBox : Box
+    {
+        public const string TYPE = "clef";
+        public override string DisplayName { get { return "AppleCleanApertureDimensionsBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleCleanApertureDimensionsBox() : base("clef")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleEncodedPixelsDimensionsBox() 
+    extends Box('enof') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleEncodedPixelsDimensionsBox : Box
+    {
+        public const string TYPE = "enof";
+        public override string DisplayName { get { return "AppleEncodedPixelsDimensionsBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleEncodedPixelsDimensionsBox() : base("enof")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleProductionApertureDimensionsBox() 
+    extends Box('prof') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleProductionApertureDimensionsBox : Box
+    {
+        public const string TYPE = "prof";
+        public override string DisplayName { get { return "AppleProductionApertureDimensionsBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleProductionApertureDimensionsBox() : base("prof")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleApertureModeBox() 
+    extends Box('apmd') {
+     string mode;
+     } 
+    */
+    public class AppleApertureModeBox : Box
+    {
+        public const string TYPE = "apmd";
+        public override string DisplayName { get { return "AppleApertureModeBox"; } }
+
+        protected BinaryUTF8String mode;
+        public BinaryUTF8String Mode { get { return this.mode; } set { this.mode = value; } }
+
+        public AppleApertureModeBox() : base("apmd")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.mode);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.mode);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(mode); // mode
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleWaveBox() 
+    extends Box('wave') {
+     Box boxes[];
+     } 
+    */
+    public class AppleWaveBox : Box
+    {
+        public const string TYPE = "wave";
+        public override string DisplayName { get { return "AppleWaveBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleWaveBox() : base("wave")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleEndiannessBox() 
+    extends Box('enda') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleEndiannessBox : Box
+    {
+        public const string TYPE = "enda";
+        public override string DisplayName { get { return "AppleEndiannessBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleEndiannessBox() : base("enda")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ApplePurchaseFileFormatBox() 
+    extends Box('frma') {
+     string format;
+     } 
+    */
+    public class ApplePurchaseFileFormatBox : Box
+    {
+        public const string TYPE = "frma";
+        public override string DisplayName { get { return "ApplePurchaseFileFormatBox"; } }
+
+        protected BinaryUTF8String format;
+        public BinaryUTF8String Format { get { return this.format; } set { this.format = value; } }
+
+        public ApplePurchaseFileFormatBox() : base("frma")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.format);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.format);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(format); // format
             return boxSize;
         }
     }

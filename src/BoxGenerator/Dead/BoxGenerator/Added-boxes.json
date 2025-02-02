@@ -372,6 +372,67 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
+      "syntax": "aligned(8) class AppleHintVersionBox() \r\nextends Box('hinv') {\r\n string version;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleTrackApertureBox() \r\nextends Box('tapt') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleCleanApertureDimensionsBox() \r\nextends Box('clef') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleEncodedPixelsDimensionsBox() \r\nextends Box('enof') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleProductionApertureDimensionsBox() \r\nextends Box('prof') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleApertureModeBox() \r\nextends Box('apmd') {\r\n string mode;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleHintVersionBox() \r\nextends Box('hinv') {\r\n string hint;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleWaveBox() \r\nextends Box('wave') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleEndiannessBox() \r\nextends Box('enda') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ApplePurchaseFileFormatBox() \r\nextends Box('frma') {\r\n string format;\r\n } "
+    },
+
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
       "syntax": "aligned(8) class AlisBox() \r\nextends Box('alis') {\r\n bit(8) data[];\r\n } "
     },
     {
