@@ -326,6 +326,7 @@ namespace SharpMP4
                 case "stsd": return new SampleDescriptionBox();
                 case "stsg": return new SubTrackSampleGroupBox();
                 case "stsh": return new ShadowSyncSampleBox();
+                case "stsl": return new SampleScaleBox();
                 case "stss": return new SyncSampleBox();
                 case "stsz": return new SampleSizeBox();
                 case "stti": return new SubTrackTierBox();
@@ -39429,6 +39430,76 @@ namespace SharpMP4
             {
                 boxSize += 32; // sample_number
             }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class SampleScaleBox() 
+    extends FullBox('stsl', version = 0, 0) {
+        bit(7)	reserved;
+        bit(1) constrained; unsigned int(8) scaleMethod; signed int(16) displayCenterX; signed int(16) displayCenterY;
+        }
+
+    */
+    public class SampleScaleBox : FullBox
+    {
+        public const string TYPE = "stsl";
+        public override string DisplayName { get { return "SampleScaleBox"; } }
+
+        protected byte reserved;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool constrained;
+        public bool Constrained { get { return this.constrained; } set { this.constrained = value; } }
+
+        protected byte scaleMethod;
+        public byte ScaleMethod { get { return this.scaleMethod; } set { this.scaleMethod = value; } }
+
+        protected short displayCenterX;
+        public short DisplayCenterX { get { return this.displayCenterX; } set { this.displayCenterX = value; } }
+
+        protected short displayCenterY;
+        public short DisplayCenterY { get { return this.displayCenterY; } set { this.displayCenterY = value; } }
+
+        public SampleScaleBox() : base("stsl", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBits(7, out this.reserved);
+            boxSize += stream.ReadBit(out this.constrained);
+            boxSize += stream.ReadUInt8(out this.scaleMethod);
+            boxSize += stream.ReadInt16(out this.displayCenterX);
+            boxSize += stream.ReadInt16(out this.displayCenterY);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBits(7, this.reserved);
+            boxSize += stream.WriteBit(this.constrained);
+            boxSize += stream.WriteUInt8(this.scaleMethod);
+            boxSize += stream.WriteInt16(this.displayCenterX);
+            boxSize += stream.WriteInt16(this.displayCenterY);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 7; // reserved
+            boxSize += 1; // constrained
+            boxSize += 8; // scaleMethod
+            boxSize += 16; // displayCenterX
+            boxSize += 16; // displayCenterY
             return boxSize;
         }
     }
