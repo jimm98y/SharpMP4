@@ -35,7 +35,10 @@ namespace SharpMP4
                     header = stream.ReadBoxHeader();
                     ulong boxSize = header.GetBoxSizeInBits();
 
+                    Log.Debug($"BOX:-\'{IsoStream.EscapeString(IsoStream.ToFourCC(header.Type))}\'");
+
                     box = stream.ReadBoxContent(header);
+
                     if(box == null)
                     {
                         // header from 0 bytes
@@ -52,7 +55,7 @@ namespace SharpMP4
                         }
                         break;
                     }
-                    
+
                     ulong calculatedSize = box.CalculateSize();
                     if (boxSize != calculatedSize)
                     {

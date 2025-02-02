@@ -582,7 +582,7 @@ namespace SharpMP4
             return size;
         }
 
-        private static string EscapeString(string text)
+        public static string EscapeString(string text)
         {
             return string.Concat(text.Select(c => char.IsControl(c) ? $"\\{(int)c:X}" : $"{c}").ToArray());
         }
