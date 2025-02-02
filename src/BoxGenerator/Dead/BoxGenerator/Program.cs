@@ -1071,6 +1071,8 @@ namespace SharpMP4
 
         foreach (var item in fourccBoxes)
         {
+            string optCondition = "";
+
             if (item.Value.Count == 1)
             {
                 if (item.Key == "uuid")
@@ -1088,7 +1090,12 @@ namespace SharpMP4
                         item.Value.Single().BoxName == "TrackReferenceTypeBox")
                         optParams = $"\"{item.Key}\"";
 
-                    factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}({optParams});{comment}\r\n";
+                    // for instance "mp4a" box can be also under the "wave" box where it has a different syntax
+                    if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" || item.Value.Single().BoxName == "MpegSampleEntry")
+                        optCondition = "if(parent == \"stsd\") ";
+
+
+                    factory += $"               case \"{item.Key}\": {optCondition} return new {item.Value.Single().BoxName}({optParams});{(optCondition != "" ? "break;" : "")}{comment}\r\n";
                 }
             }
             else

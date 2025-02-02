@@ -22,10 +22,10 @@ namespace SharpMP4
                 case "©nam": return new AppleNameBox();
                 case "©swf": return new AppleCreatorBox();
                 case "©swr": return new AppleSoftwareBox();
-                case "©TIM": return new StartTimecode();
+                case "©TIM": return new AppleStartTimecode();
                 case "©too": return new AppleEncoderBox();
-                case "©TSC": return new StartTimeScale();
-                case "©TSZ": return new StartTimeSampleSize();
+                case "©TSC": return new AppleStartTimeScale();
+                case "©TSZ": return new AppleStartTimeSampleSize();
                 case "©wrt": return new AppleComposersBox();
                 case "©xyz": return new AppleGPSCoordinatesBox();
                 case "0000": return new ZeroBox();
@@ -33,15 +33,15 @@ namespace SharpMP4
                 case "3sib": return new MVDScalabilityInformationSEIBox();
                 case "a1lx": return new AV1LayeredImageIndexingProperty();
                 case "a1op": return new OperatingPointSelectorProperty();
-                case "a3d1": return new VisualSampleEntry("a3d1");
-                case "a3d2": return new VisualSampleEntry("a3d2");
-                case "a3d3": return new VisualSampleEntry("a3d3");
-                case "a3d4": return new VisualSampleEntry("a3d4");
+                case "a3d1": if (parent == "stsd") return new VisualSampleEntry("a3d1"); break;
+                case "a3d2": if (parent == "stsd") return new VisualSampleEntry("a3d2"); break;
+                case "a3d3": if (parent == "stsd") return new VisualSampleEntry("a3d3"); break;
+                case "a3d4": if (parent == "stsd") return new VisualSampleEntry("a3d4"); break;
                 case "a3dC": return new A3DConfigurationBox();
                 case "aART": return new AppleArtist2Box();
-                case "ac-3": return new AudioSampleEntry("ac-3");
+                case "ac-3": if (parent == "stsd") return new AudioSampleEntry("ac-3"); break;
                 case "acgl": return new SubpicCommonGroupBox();
-                case "alac": return new AudioSampleEntry("alac");
+                case "alac": if (parent == "stsd") return new AudioSampleEntry("alac"); break;
                 case "alis": return new AlisBox();
                 case "alou": return new AlbumLoudnessInfo();
                 case "alte": return new TrackGroupTypeBox_alte(); // TODO: fix duplicate
@@ -51,17 +51,17 @@ namespace SharpMP4
                 case "amve": return new AmbientViewingEnvironmentBox();
                 case "apmd": return new AppleApertureModeBox();
                 case "assp": return new AlternativeStartupSequencePropertiesBox();
-                case "auth": return new AuthorBox();
+                case "auth": return new AppleAuthorBox();
                 case "auxC": return new AuxiliaryTypeProperty();
                 case "auxi": return new AuxiliaryTypeInfoBox();
-                case "av01": return new VisualSampleEntry("av01");
+                case "av01": if (parent == "stsd") return new VisualSampleEntry("av01"); break;
                 case "av1C": return new AV1CodecConfigurationBox();
-                case "avc1": return new VisualSampleEntry("avc1");
-                case "avc2": return new VisualSampleEntry("avc2");
-                case "avc3": return new VisualSampleEntry("avc3");
-                case "avc4": return new VisualSampleEntry("avc4");
+                case "avc1": if (parent == "stsd") return new VisualSampleEntry("avc1"); break;
+                case "avc2": if (parent == "stsd") return new VisualSampleEntry("avc2"); break;
+                case "avc3": if (parent == "stsd") return new VisualSampleEntry("avc3"); break;
+                case "avc4": if (parent == "stsd") return new VisualSampleEntry("avc4"); break;
                 case "avcC": return new AVCConfigurationBox();
-                case "avcp": return new VisualSampleEntry("avcp");
+                case "avcp": if (parent == "stsd") return new VisualSampleEntry("avcp"); break;
                 case "brnd": return new BrandProperty();
                 case "btrt": return new BitRateBox();
                 case "buff": return new BufferingBox();
@@ -106,27 +106,27 @@ namespace SharpMP4
                 case "dpnd": return new DpndBox();
                 case "dref": return new DataReferenceBox();
                 case "drep": return new hintrepeatedBytesSent();
-                case "drmi": return new VisualSampleEntry("drmi");
-                case "drms": return new AudioSampleEntry("drms");
+                case "drmi": if (parent == "stsd") return new VisualSampleEntry("drmi"); break;
+                case "drms": if (parent == "stsd") return new AudioSampleEntry("drms"); break;
                 case "dscp": return new DescriptionBox();
-                case "dtse": return new AudioSampleEntry("dtse");
-                case "dtsh": return new AudioSampleEntry("dtsh");
-                case "dtsl": return new AudioSampleEntry("dtsl");
-                case "ec-3": return new AudioSampleEntry("ec-3");
+                case "dtse": if (parent == "stsd") return new AudioSampleEntry("dtse"); break;
+                case "dtsh": if (parent == "stsd") return new AudioSampleEntry("dtsh"); break;
+                case "dtsl": if (parent == "stsd") return new AudioSampleEntry("dtsl"); break;
+                case "ec-3": if (parent == "stsd") return new AudioSampleEntry("ec-3"); break;
                 case "ecam": return new ExtrinsicCameraParametersBox();
                 case "edts": return new EditBox();
                 case "elng": return new ExtendedLanguageBox();
                 case "elst": return new EditListBox();
-                case "enca": return new AudioSampleEntry("enca");
-                case "encv": return new VisualSampleEntry("encv");
+                case "enca": if (parent == "stsd") return new AudioSampleEntry("enca"); break;
+                case "encv": if (parent == "stsd") return new VisualSampleEntry("encv"); break;
                 case "enda": return new AppleEndiannessBox();
                 case "enof": return new AppleEncodedPixelsDimensionsBox();
                 case "esds": return new ESDBox();
                 case "etyp": return new ExtendedTypeBox();
-                case "evc1": return new VisualSampleEntry("evc1");
+                case "evc1": if (parent == "stsd") return new VisualSampleEntry("evc1"); break;
                 case "evcC": return new EVCConfigurationBox();
-                case "evs1": return new VisualSampleEntry("evs1");
-                case "evs2": return new VisualSampleEntry("evs2");
+                case "evs1": if (parent == "stsd") return new VisualSampleEntry("evs1"); break;
+                case "evs2": if (parent == "stsd") return new VisualSampleEntry("evs2"); break;
                 case "evsC": return new EVCSliceComponentTrackConfigurationBox();
                 case "exte": return new MetaDataExtensionsBox();
                 case "fade": return new FadeTransitionEffectProperty();
@@ -137,7 +137,7 @@ namespace SharpMP4
                 case "fire": return new FileReservoirBox();
                 case "fpar": return new FilePartitionBox();
                 case "free": return new FreeSpaceBox();
-                case "frma": throw new NotSupportedException($"'frma' under '{parent}' is ambiguous in between OriginalFormatBox and ApplePurchaseFileFormatBox");
+                case "frma": return new OriginalFormatBox();
                 case "ftyp": return new FileTypeBox();
                 case "gitn": return new GroupIdToNameBox();
                 case "gmhd": return new GenericMediaHeaderAtom();
@@ -150,24 +150,24 @@ namespace SharpMP4
                 case "gstd": return new GstdBox();
                 case "hdlr": return new HandlerBox();
                 case "hdvd": return new HdvdBox();
-                case "hev1": return new VisualSampleEntry("hev1");
-                case "hev2": return new VisualSampleEntry("hev2");
-                case "hev3": return new VisualSampleEntry("hev3");
+                case "hev1": if (parent == "stsd") return new VisualSampleEntry("hev1"); break;
+                case "hev2": if (parent == "stsd") return new VisualSampleEntry("hev2"); break;
+                case "hev3": if (parent == "stsd") return new VisualSampleEntry("hev3"); break;
                 case "hinf": return new hintstatisticsbox();
                 case "hint": return new HintBox();
                 case "hinv": return new AppleHintVersionBox();
                 case "hmhd": return new HintMediaHeaderBox();
                 case "hnti": return new trackhintinformation(); // TODO: box is ambiguous in between trackhintinformation and moviehintinformation
-                case "hvc1": return new VisualSampleEntry("hvc1");
-                case "hvc2": return new VisualSampleEntry("hvc2");
-                case "hvc3": return new VisualSampleEntry("hvc3");
+                case "hvc1": if (parent == "stsd") return new VisualSampleEntry("hvc1"); break;
+                case "hvc2": if (parent == "stsd") return new VisualSampleEntry("hvc2"); break;
+                case "hvc3": if (parent == "stsd") return new VisualSampleEntry("hvc3"); break;
                 case "hvcC": return new HEVCConfigurationBox();
-                case "hvt1": return new VisualSampleEntry("hvt1");
-                case "hvt2": return new VisualSampleEntry("hvt2");
-                case "hvt3": return new VisualSampleEntry("hvt3");
+                case "hvt1": if (parent == "stsd") return new VisualSampleEntry("hvt1"); break;
+                case "hvt2": if (parent == "stsd") return new VisualSampleEntry("hvt2"); break;
+                case "hvt3": if (parent == "stsd") return new VisualSampleEntry("hvt3"); break;
                 case "hvtC": return new HEVCTileConfigurationBox();
                 case "icam": return new IntrinsicCameraParametersBox();
-                case "icpv": return new VisualSampleEntry("icpv");
+                case "icpv": if (parent == "stsd") return new VisualSampleEntry("icpv"); break;
                 case "idat": return new ItemDataBox();
                 case "iinf": return new ItemInfoBox();
                 case "iloc": return new ItemLocationBox();
@@ -176,7 +176,7 @@ namespace SharpMP4
                 case "imdt": return new DataEntryImdaBox();
                 case "imir": return new ImageMirror();
                 case "infe": return new ItemInfoEntry();
-                case "iods": return new IodsBox();
+                case "iods": return new AppleInitialObjectDescriptorBox();
                 case "ipco": return new ItemPropertyContainerBox();
                 case "ipma": return new ItemPropertyAssociationBox();
                 case "ipro": return new ItemProtectionBox();
@@ -192,13 +192,13 @@ namespace SharpMP4
                 case "keys": return new MetaDataKeyTableBox();
                 case "keyw": return new KeywBox();
                 case "kind": return new KindBox();
-                case "kywd": return new KeywordsBox();
+                case "kywd": return new AppleKeywordsBox();
                 case "ldep": return new TierDependencyBox();
                 case "ldes": return new AppleLongDescriptionBox();
                 case "leva": return new LevelAssignmentBox();
-                case "lhe1": return new VisualSampleEntry("lhe1");
-                case "lht1": return new VisualSampleEntry("lht1");
-                case "lhv1": return new VisualSampleEntry("lhv1");
+                case "lhe1": if (parent == "stsd") return new VisualSampleEntry("lhe1"); break;
+                case "lht1": if (parent == "stsd") return new VisualSampleEntry("lht1"); break;
+                case "lhv1": if (parent == "stsd") return new VisualSampleEntry("lhv1"); break;
                 case "lhvC": return new LHEVCConfigurationBox();
                 case "load": return new LoadBox();
                 case "loca": return new MetaDataLocaleBox();
@@ -219,28 +219,28 @@ namespace SharpMP4
                 case "mfra": return new MovieFragmentRandomAccessBox();
                 case "mfro": return new MovieFragmentRandomAccessOffsetBox();
                 case "minf": return new MediaInformationBox();
-                case "mlpa": return new AudioSampleEntry("mlpa");
+                case "mlpa": if (parent == "stsd") return new AudioSampleEntry("mlpa"); break;
                 case "moof": return new MovieFragmentBox(); // TODO: box is ambiguous in between MovieFragmentBox and CompressedMovieFragmentBox
                 case "moov": return new MovieBox(); // TODO: box is ambiguous in between MovieBox and CompressedMovieBox
-                case "mp4a": return new AudioSampleEntry("mp4a");
-                case "mp4s": return new MpegSampleEntry();
-                case "mp4v": return new VisualSampleEntry("mp4v");
+                case "mp4a": if (parent == "stsd") return new AudioSampleEntry("mp4a"); break;
+                case "mp4s": if (parent == "stsd") return new MpegSampleEntry(); break;
+                case "mp4v": if (parent == "stsd") return new VisualSampleEntry("mp4v"); break;
                 case "mpod": return new MpodBox();
                 case "mskC": return new MaskConfigurationProperty();
                 case "msrc": return new TrackGroupTypeBox();
                 case "mstv": return new MVCSubTrackViewBox();
-                case "mvc1": return new VisualSampleEntry("mvc1");
-                case "mvc2": return new VisualSampleEntry("mvc2");
-                case "mvc3": return new VisualSampleEntry("mvc3");
-                case "mvc4": return new VisualSampleEntry("mvc4");
+                case "mvc1": if (parent == "stsd") return new VisualSampleEntry("mvc1"); break;
+                case "mvc2": if (parent == "stsd") return new VisualSampleEntry("mvc2"); break;
+                case "mvc3": if (parent == "stsd") return new VisualSampleEntry("mvc3"); break;
+                case "mvc4": if (parent == "stsd") return new VisualSampleEntry("mvc4"); break;
                 case "mvcC": return new MVCConfigurationBox();
                 case "mvcg": return new MultiviewGroupBox();
                 case "mvci": return new MultiviewInformationBox();
                 case "mvcP": return new MVCViewPriorityAssignmentBox();
-                case "mvd1": return new VisualSampleEntry("mvd1");
-                case "mvd2": return new VisualSampleEntry("mvd2");
-                case "mvd3": return new VisualSampleEntry("mvd3");
-                case "mvd4": return new VisualSampleEntry("mvd4");
+                case "mvd1": if (parent == "stsd") return new VisualSampleEntry("mvd1"); break;
+                case "mvd2": if (parent == "stsd") return new VisualSampleEntry("mvd2"); break;
+                case "mvd3": if (parent == "stsd") return new VisualSampleEntry("mvd3"); break;
+                case "mvd4": if (parent == "stsd") return new VisualSampleEntry("mvd4"); break;
                 case "mvdC": return new MVCDConfigurationBox();
                 case "mvex": return new MovieExtendsBox();
                 case "mvhd": return new MovieHeaderBox();
@@ -252,9 +252,9 @@ namespace SharpMP4
                 case "nump": return new hintPacketsSentNump();
                 case "oinf": return new OperatingPointsInformationProperty();
                 case "opeg": return new OperatingPointGroupBox();
-                case "Opus": return new AudioSampleEntry("Opus");
+                case "Opus": if (parent == "stsd") return new AudioSampleEntry("Opus"); break;
                 case "otyp": return new OriginalFileTypeBox();
-                case "owma": return new AudioSampleEntry("owma");
+                case "owma": if (parent == "stsd") return new AudioSampleEntry("owma"); break;
                 case "padb": return new PaddingBitsBox();
                 case "paen": return new PartitionEntry();
                 case "pasp": return new PixelAspectRatioBox();
@@ -267,8 +267,8 @@ namespace SharpMP4
                 case "prft": return new ProducerReferenceTimeBox();
                 case "prof": return new AppleProductionApertureDimensionsBox();
                 case "qlif": return new SVCPriorityLayerInfoBox();
-                case "resa": return new AudioSampleEntry("resa");
-                case "resv": return new VisualSampleEntry("resv");
+                case "resa": if (parent == "stsd") return new AudioSampleEntry("resa"); break;
+                case "resv": if (parent == "stsd") return new VisualSampleEntry("resv"); break;
                 case "rinf": return new RestrictedSchemeInfoBox();
                 case "rloc": return new RelativeLocationProperty();
                 case "rref": return new RequiredReferenceTypesProperty();
@@ -276,11 +276,11 @@ namespace SharpMP4
                 case "rssr": return new ReceivedSsrcBox();
                 case "rtng": return new AppleRatingBox();
                 case "rtp ": return new rtpmoviehintinformation();
-                case "s263": return new VisualSampleEntry("s263");
+                case "s263": if (parent == "stsd") return new VisualSampleEntry("s263"); break;
                 case "saio": return new SampleAuxiliaryInformationOffsetsBox();
                 case "saiz": return new SampleAuxiliaryInformationSizesBox();
-                case "samr": return new AudioSampleEntry("samr");
-                case "sawb": return new AudioSampleEntry("sawb");
+                case "samr": if (parent == "stsd") return new AudioSampleEntry("samr"); break;
+                case "sawb": if (parent == "stsd") return new AudioSampleEntry("sawb"); break;
                 case "sbgp": return new SampleToGroupBox();
                 case "sbtt": return new TextSubtitleSampleEntry();
                 case "schi": return new SchemeInformationBox();
@@ -318,6 +318,7 @@ namespace SharpMP4
                 case "stmg": return new MVCSubTrackMultiviewGroupBox();
                 case "stpe": return new SuggestedTransitionPeriodProperty();
                 case "stpp": return new XMLSubtitleSampleEntry();
+                case "stps": return new ApplePartialSyncSamplesBox();
                 case "strd": return new SubTrackDefinitionBox();
                 case "stri": return new SubTrackInformationBox();
                 case "strk": return new SubTrackBox();
@@ -334,8 +335,8 @@ namespace SharpMP4
                 case "styp": return new SegmentTypeBox();
                 case "stz2": return new CompactSampleSizeBox();
                 case "subs": return new SubSampleInformationBox();
-                case "svc1": return new VisualSampleEntry("svc1");
-                case "svc2": return new VisualSampleEntry("svc2");
+                case "svc1": if (parent == "stsd") return new VisualSampleEntry("svc1"); break;
+                case "svc2": if (parent == "stsd") return new VisualSampleEntry("svc2"); break;
                 case "svcC": return new SVCConfigurationBox();
                 case "svcP": return new SVCPriorityAssignmentBox();
                 case "svdr": return new SVCDependencyRangeBox();
@@ -354,7 +355,7 @@ namespace SharpMP4
                 case "tibr": return new TierBitRateBox();
                 case "tims": return new timescaleentry();
                 case "tiri": return new TierInfoBox();
-                case "titl": return new TitlBox();
+                case "titl": return new AppleTitleBox();
                 case "tkhd": return new TrackHeaderBox();
                 case "tlou": return new TrackLoudnessInfo();
                 case "tmax": return new hintmaxrelativetime();
@@ -398,12 +399,12 @@ namespace SharpMP4
                 case "vmhd": return new VideoMediaHeaderBox();
                 case "vsib": return new ViewScalabilityInformationSEIBox();
                 case "vttC": return new WebVTTConfigurationBox();
-                case "vvc1": return new VisualSampleEntry("vvc1");
+                case "vvc1": if (parent == "stsd") return new VisualSampleEntry("vvc1"); break;
                 case "vvcC": return new VvcConfigurationBox();
-                case "vvcN": return new VisualSampleEntry("vvcN");
-                case "vvi1": return new VisualSampleEntry("vvi1");
+                case "vvcN": if (parent == "stsd") return new VisualSampleEntry("vvcN"); break;
+                case "vvi1": if (parent == "stsd") return new VisualSampleEntry("vvi1"); break;
                 case "vvnC": return new VvcNALUConfigBox();
-                case "vvs1": return new VisualSampleEntry("vvs1");
+                case "vvs1": if (parent == "stsd") return new VisualSampleEntry("vvs1"); break;
                 case "vwdi": return new MultiviewSceneInfoBox();
                 case "vwid": return new ViewIdentifierBox();
                 case "wave": return new AppleWaveBox();
@@ -35937,20 +35938,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class StartTimecode() 
+    aligned(8) class AppleStartTimecode() 
     extends Box('©TIM') {
      MultiLanguageString value[]; 
      } 
     */
-    public class StartTimecode : Box
+    public class AppleStartTimecode : Box
     {
         public const string TYPE = "©TIM";
-        public override string DisplayName { get { return "StartTimecode"; } }
+        public override string DisplayName { get { return "AppleStartTimecode"; } }
 
         protected MultiLanguageString[] value;
         public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public StartTimecode() : base("©TIM")
+        public AppleStartTimecode() : base("©TIM")
         {
         }
 
@@ -35981,20 +35982,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class StartTimeScale() 
+    aligned(8) class AppleStartTimeScale() 
     extends Box('©TSC') {
      MultiLanguageString value[]; 
      } 
     */
-    public class StartTimeScale : Box
+    public class AppleStartTimeScale : Box
     {
         public const string TYPE = "©TSC";
-        public override string DisplayName { get { return "StartTimeScale"; } }
+        public override string DisplayName { get { return "AppleStartTimeScale"; } }
 
         protected MultiLanguageString[] value;
         public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public StartTimeScale() : base("©TSC")
+        public AppleStartTimeScale() : base("©TSC")
         {
         }
 
@@ -36025,20 +36026,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class StartTimeSampleSize() 
+    aligned(8) class AppleStartTimeSampleSize() 
     extends Box('©TSZ') {
      MultiLanguageString value[]; 
      } 
     */
-    public class StartTimeSampleSize : Box
+    public class AppleStartTimeSampleSize : Box
     {
         public const string TYPE = "©TSZ";
-        public override string DisplayName { get { return "StartTimeSampleSize"; } }
+        public override string DisplayName { get { return "AppleStartTimeSampleSize"; } }
 
         protected MultiLanguageString[] value;
         public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public StartTimeSampleSize() : base("©TSZ")
+        public AppleStartTimeSampleSize() : base("©TSZ")
         {
         }
 
@@ -36695,20 +36696,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class IodsBox() 
+    aligned(8) class AppleInitialObjectDescriptorBox() 
     extends Box('iods') {
      bit(8) data[];
      } 
     */
-    public class IodsBox : Box
+    public class AppleInitialObjectDescriptorBox : Box
     {
         public const string TYPE = "iods";
-        public override string DisplayName { get { return "IodsBox"; } }
+        public override string DisplayName { get { return "AppleInitialObjectDescriptorBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public IodsBox() : base("iods")
+        public AppleInitialObjectDescriptorBox() : base("iods")
         {
         }
 
@@ -36739,20 +36740,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class TitlBox() 
+    aligned(8) class AppleTitleBox() 
     extends Box('titl') {
      bit(8) data[];
      } 
     */
-    public class TitlBox : Box
+    public class AppleTitleBox : Box
     {
         public const string TYPE = "titl";
-        public override string DisplayName { get { return "TitlBox"; } }
+        public override string DisplayName { get { return "AppleTitleBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public TitlBox() : base("titl")
+        public AppleTitleBox() : base("titl")
         {
         }
 
@@ -36783,20 +36784,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class AuthorBox() 
+    aligned(8) class AppleAuthorBox() 
     extends Box('auth') {
      bit(8) data[];
      } 
     */
-    public class AuthorBox : Box
+    public class AppleAuthorBox : Box
     {
         public const string TYPE = "auth";
-        public override string DisplayName { get { return "AuthorBox"; } }
+        public override string DisplayName { get { return "AppleAuthorBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AuthorBox() : base("auth")
+        public AppleAuthorBox() : base("auth")
         {
         }
 
@@ -37047,20 +37048,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class KeywordsBox() 
+    aligned(8) class AppleKeywordsBox() 
     extends Box('kywd') {
      bit(8) data[];
      } 
     */
-    public class KeywordsBox : Box
+    public class AppleKeywordsBox : Box
     {
         public const string TYPE = "kywd";
-        public override string DisplayName { get { return "KeywordsBox"; } }
+        public override string DisplayName { get { return "AppleKeywordsBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public KeywordsBox() : base("kywd")
+        public AppleKeywordsBox() : base("kywd")
         {
         }
 
@@ -38689,50 +38690,6 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class ApplePurchaseFileFormatBox() 
-    extends Box('frma') {
-     string format;
-     } 
-    */
-    public class ApplePurchaseFileFormatBox : Box
-    {
-        public const string TYPE = "frma";
-        public override string DisplayName { get { return "ApplePurchaseFileFormatBox"; } }
-
-        protected BinaryUTF8String format;
-        public BinaryUTF8String Format { get { return this.format; } set { this.format = value; } }
-
-        public ApplePurchaseFileFormatBox() : base("frma")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadString(boxSize, readSize, out this.format);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteString(this.format);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateStringSize(format); // format
-            return boxSize;
-        }
-    }
-
-
-    /*
     aligned(8) class AlisBox() 
     extends Box('alis') {
      bit(8) data[];
@@ -39402,6 +39359,76 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ApplePartialSyncSamplesBox() 
+    extends FullBox('stps', version = 0, 0) {
+        unsigned int(32)	entry_count;
+        int i;
+        for (i=0; i < entry_count; i++) {
+            unsigned int(32)	sample_number;
+        }
+    }
+    */
+    public class ApplePartialSyncSamplesBox : FullBox
+    {
+        public const string TYPE = "stps";
+        public override string DisplayName { get { return "ApplePartialSyncSamplesBox"; } }
+
+        protected uint entry_count;
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
+
+        protected uint[] sample_number;
+        public uint[] SampleNumber { get { return this.sample_number; } set { this.sample_number = value; } }
+
+        public ApplePartialSyncSamplesBox() : base("stps", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.entry_count);
+
+
+            this.sample_number = new uint[entry_count];
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += stream.ReadUInt32(out this.sample_number[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.entry_count);
+
+
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += stream.WriteUInt32(this.sample_number[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += 32; // sample_number
+            }
             return boxSize;
         }
     }
