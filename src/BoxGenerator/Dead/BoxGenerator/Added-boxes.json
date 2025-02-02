@@ -276,7 +276,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class WideBox() \r\nextends Box('wide') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class FreeSpaceBox() \r\nextends Box('wide') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],

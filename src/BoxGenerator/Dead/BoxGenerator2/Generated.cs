@@ -409,7 +409,7 @@ namespace SharpMP4
                 case "vwdi": return new MultiviewSceneInfoBox();
                 case "vwid": return new ViewIdentifierBox();
                 case "wave": return new AppleWaveBox();
-                case "wide": return new WideBox();
+                case "wide": return new FreeSpaceBox_wide(); // TODO: fix duplicate
                 case "wipe": return new WipeTransitionEffectProperty();
                 case "wvtt": return new WVTTSampleEntry();
                 case "xml ": return new XMLBox();
@@ -37630,20 +37630,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class WideBox() 
+    aligned(8) class FreeSpaceBox() 
     extends Box('wide') {
      bit(8) data[];
      } 
     */
-    public class WideBox : Box
+    public class FreeSpaceBox_wide : Box
     {
         public const string TYPE = "wide";
-        public override string DisplayName { get { return "WideBox"; } }
+        public override string DisplayName { get { return "FreeSpaceBox_wide"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public WideBox() : base("wide")
+        public FreeSpaceBox_wide() : base("wide")
         {
         }
 
