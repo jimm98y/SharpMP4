@@ -204,7 +204,25 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleMediaTypeBox() \r\nextends Box('stik') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleMediaTypeBox() \r\nextends Box('stik') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleRatingBox() \r\nextends Box('rtng') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ApplePlayGapBox() \r\nextends Box('pgap') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AppleStoreCatalogIDBox() \r\nextends Box('cnID') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -234,7 +252,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class HdvdBox() \r\nextends Box('hdvd') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class HdvdBox() \r\nextends Box('hdvd') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -342,7 +360,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class CovrBox() \r\nextends Box('covr') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleCoverArtBox() \r\nextends Box('covr') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
