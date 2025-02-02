@@ -186,7 +186,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPDescriptionBox() \r\nextends Box('dscp') {\r\n\tbit(1) reserved;\r\nunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPDescriptionBox() \r\nextends Box('dscp') {\r\n\tbit(1) reserved;\r\nunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -198,7 +198,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPKeywordsBox() \r\nextends Box('kywd') {\r\n\tbit(1) reserved;\r\nunsigned int(5)[3] language;\r\n\tstring value;\r\n\tunsigned int(8) count;\r\n\t ThreeGPPKeyword keywords[]; }\r\n aligned(8) class ThreeGPPKeyword()\r\n{\r\n unsigned int(8) count;\r\nchar text[count];\r\n }\r\n"
+      "syntax": "aligned(8) class ThreeGPPKeywordsBox() \r\nextends Box('kywd') {\r\n\tbit(1) reserved;\r\nunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -523,6 +523,12 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class SampleScaleBox() \r\nextends FullBox('stsl', version = 0, 0) {\n\tbit(7)\treserved;\n\tbit(1) constrained; unsigned int(8) scaleMethod; signed int(16) displayCenterX; signed int(16) displayCenterY;\n\t}\n}"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {\r\nunsigned int(16) odid; unsigned int(8) odProfileLevel;\r\n unsigned int(8) sceneProfileLevel;\r\n\tunsigned int(8) audioProfileId;\r\n\tunsigned int(8) videoProfileId;\r\n\tunsigned int(8) graphicsProfileLevel;\r\n\tIodsSample samples[];\r\n }\r\n aligned(8) class IodsSample() {\r\n\tunsigned int(8) incTag;\r\n\tunsigned int(8) length;\r\n\tunsigned int(32) trackId;\r\n } "
     }
   ]
 }

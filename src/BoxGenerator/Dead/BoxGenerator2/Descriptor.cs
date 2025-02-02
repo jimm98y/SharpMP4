@@ -66,6 +66,9 @@ namespace SharpMP4
                 case DescriptorTags.SLConfigDescrTag:
                     return new SLConfigDescriptor();
 
+                case DescriptorTags.MP4_IOD_Tag:
+                    return new IOD_Descriptor();
+
                 default:
                     {
                         //throw new System.NotImplementedException();

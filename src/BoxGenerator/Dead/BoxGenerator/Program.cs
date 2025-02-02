@@ -488,6 +488,7 @@ partial class Program
             Try(String("MultiLanguageString")), 
             Try(String("AdobeChapterRecord")), 
             Try(String("ThreeGPPKeyword")), 
+            Try(String("IodsSample")), 
             // descriptors
             Try(String("DecoderConfigDescriptor")),
             Try(String("SLConfigDescriptor")),
@@ -710,6 +711,7 @@ partial class Program
            Try(String("tag=RegistrationDescrTag")),
            Try(String("tag=ExtDescrTagStartRange..ExtDescrTagEndRange")),
            Try(String("tag=OCIDescrTagStartRange..OCIDescrTagEndRange")),
+           Try(String("tag=MP4_IOD_Tag")),
            Try(String("tag=0"))
            ).Labelled("descriptor tag");
 
@@ -2902,6 +2904,7 @@ namespace SharpMP4
             { "MultiLanguageString[]",                  "stream.ReadStringSizeLangPrefixed(boxSize, readSize, " },
             { "AdobeChapterRecord[]",                   "stream.ReadClass(boxSize, readSize, this, " },
             { "ThreeGPPKeyword[]",                      "stream.ReadClass(boxSize, readSize, this, " },
+            { "IodsSample[]",                           "stream.ReadClass(boxSize, readSize, this, " },
         };
         return map[type];
     }
@@ -3299,6 +3302,7 @@ namespace SharpMP4
             { "MultiLanguageString[]",                  "IsoStream.CalculateStringSizeLangPrefixed(value)" },
             { "AdobeChapterRecord[]",                   "IsoStream.CalculateClassSize(value)" },
             { "ThreeGPPKeyword[]",                      "IsoStream.CalculateClassSize(value)" },
+            { "IodsSample[]",                           "IsoStream.CalculateClassSize(value)" },
        };
         return map[type];
     }
@@ -3696,6 +3700,7 @@ namespace SharpMP4
             { "MultiLanguageString[]",                  "stream.WriteStringSizeLangPrefixed(" },
             { "AdobeChapterRecord[]",                   "stream.WriteClass(" },
             { "ThreeGPPKeyword[]",                      "stream.WriteClass(" },
+            { "IodsSample[]",                           "stream.WriteClass(" },
         };
         return map[type];
     }
@@ -4138,6 +4143,7 @@ namespace SharpMP4
             { "MultiLanguageString[]",                  "MultiLanguageString[]" },
             { "AdobeChapterRecord[]",                   "AdobeChapterRecord[]" },
             { "ThreeGPPKeyword[]",                      "ThreeGPPKeyword[]" },
+            { "IodsSample[]",                           "IodsSample[]" },
         };
         return map[type];
     }
