@@ -177,6 +177,7 @@ namespace SharpMP4
                 case "ilst": return new AppleItemListBox();
                 case "imda": return new IdentifiedMediaDataBox();
                 case "imdt": return new DataEntryImdaBox();
+                case "imif": return new IPMPInfoBox();
                 case "imir": return new ImageMirror();
                 case "infe": return new ItemInfoEntry();
                 case "iods": return new AppleInitialObjectDescriptorBox();
@@ -40007,7 +40008,7 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class IPMPControlBox () 
+    aligned(8) class IPMPControlBox() 
     extends FullBox('ipmc') {
      Descriptor toollist;
      unsigned int(8) count; Descriptor descriptor[count];
@@ -40058,6 +40059,51 @@ namespace SharpMP4
             boxSize += IsoStream.CalculateDescriptorSize(toollist); // toollist
             boxSize += 8; // count
             boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class IPMPInfoBox() 
+    extends FullBox('imif') {
+     Descriptor descriptor[0 .. 255];
+     }
+    */
+    public class IPMPInfoBox : FullBox
+    {
+        public const string TYPE = "imif";
+        public override string DisplayName { get { return "IPMPInfoBox"; } }
+        public IEnumerable<Descriptor> Descriptor { get { return this.children.OfType<Descriptor>(); } }
+
+        public IPMPInfoBox() : base("imif")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.descriptor); 
+            boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteDescriptor( this.descriptor); 
+            boxSize += stream.WriteDescriptorsTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
+            boxSize += IsoStream.CalculateDescriptors(this);
             return boxSize;
         }
     }

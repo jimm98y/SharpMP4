@@ -558,7 +558,13 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class IPMPControlBox () \r\nextends FullBox('ipmc') {\r\n Descriptor toollist;\r\n unsigned int(8) count; Descriptor descriptor[count];\r\n }"
+      "syntax": "aligned(8) class IPMPControlBox() \r\nextends FullBox('ipmc') {\r\n Descriptor toollist;\r\n unsigned int(8) count; Descriptor descriptor[count];\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class IPMPInfoBox() \r\nextends FullBox('imif') {\r\n Descriptor descriptor[0 .. 255];\r\n }"
     }
   ]
 }
