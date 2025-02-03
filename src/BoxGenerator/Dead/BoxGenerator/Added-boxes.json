@@ -601,6 +601,120 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class FairPlayPrivateKeyBox() \r\nextends Box('priv') {\r\n bit(8) data[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class MetaBoxRelationBox() \r\nextends FullBox('mere') {\r\n unsigned int(32) firstMetaBoxHandlerType;\r\n unsigned int(32) secondMetaBoxHandlerType;\r\n bit(8) metaboxRelation; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ID3TagBox() \r\nextends FullBox('id32') {\r\n bit(8) data[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ITunesMetadataMeanBox() \r\nextends FullBox('mean') {\r\n string domain; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AlbumArtistSortBox() \r\nextends Box('soaa') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AlbumSortBox() \r\nextends Box('soal') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ArtistSortBox() \r\nextends Box('soar') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class CategoryBox() \r\nextends Box('catg') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ComposerSortBox() \r\nextends Box('soco') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class EpisodeGlobalUniqueIdBox() \r\nextends Box('egid') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ITunesPurchaseAccountBox() \r\nextends Box('apID') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ITunesAccountTypeBox() \r\nextends Box('akID') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ITunesCountryCodeBox() \r\nextends Box('sfID') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class PodcastBox() \r\nextends Box('pcst') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class PodcastUrlBox() \r\nextends Box('purl') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class PurchaseDateBox() \r\nextends Box('purd') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class TrackSortBox() \r\nextends Box('sonm') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class TVNetworkNameBox() \r\nextends Box('tvnn') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class TVShowSortBox() \r\nextends Box('sosn') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ThreeGPPAlbumBox() \r\nextends Box('albm') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value;\r\n bit(8) trackNumber; // optional\r\n} "
     }
   ]
 }
