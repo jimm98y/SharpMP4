@@ -94,7 +94,6 @@
     public abstract class InlineConstructor : Box { }
     public abstract class NALUStartInlineConstructor : Box { }
     public abstract class SampleConstructorFromTrackGroup : Box { }
-    public abstract class IPMPControlBox : Box { }
     public class HEVCTileTierLevelConfigurationRecord : UnknownClass {  }
     public class EVCSliceComponentTrackConfigurationRecord : UnknownClass {  }
     public class VVCSubpicIDRewritingInfomationStruct : UnknownClass { }

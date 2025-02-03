@@ -69,6 +69,12 @@ namespace SharpMP4
                 case DescriptorTags.MP4_IOD_Tag:
                     return new IOD_Descriptor();
 
+                case DescriptorTags.IPMP_DescrTag:
+                    return new IPMP_Descriptor();
+
+                case DescriptorTags.IPMP_DescrPointerTag:
+                    return new IPMP_DescriptorPointer();
+
                 default:
                     {
                         //throw new System.NotImplementedException();

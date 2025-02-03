@@ -547,6 +547,18 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {\r\nunsigned int(16) odid; unsigned int(8) odProfileLevel;\r\n unsigned int(8) sceneProfileLevel;\r\n\tunsigned int(8) audioProfileId;\r\n\tunsigned int(8) videoProfileId;\r\n\tunsigned int(8) graphicsProfileLevel;\r\n\tIodsSample samples[];\r\n }\r\n aligned(8) class IodsSample() {\r\n\tunsigned int(8) incTag;\r\n\tunsigned int(8) length;\r\n\tunsigned int(32) trackId;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "class IPMP_Descriptor() extends BaseDescriptor : bit(8) tag=IPMP_DescrTag {\r\n bit(8) IPMP_DescriptorID;\r\n unsigned int(16)\r\n IPMPS_Type;\r\n if (IPMPS_Type == 0) {\r\n bit(8) URLString[sizeOfInstance-3];\r\n } else {\r\n bit(8) IPMP_data[sizeOfInstance-3];\r\n }\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class IPMPControlBox () \r\nextends FullBox('ipmc') {\r\n Descriptor toollist;\r\n unsigned int(8) count; Descriptor descriptor[count];\r\n }"
     }
   ]
 }
