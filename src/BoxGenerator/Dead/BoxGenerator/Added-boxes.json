@@ -144,12 +144,6 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class AppleName2Box() \r\nextends Box('name') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "description": "Metadata sample entries",
-      "type": "Box",
       "syntax": "aligned(8) class AppleDescriptionBox() \r\nextends Box('desc') {\r\n Box boxes[];\r\n } "
     },
     {
@@ -565,6 +559,42 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class IPMPInfoBox() \r\nextends FullBox('imif') {\r\n Descriptor descriptor[0 .. 255];\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class GenreBox() \r\nextends FullBox('gnre') {\r\n Box boxes[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class FairPlayUserIDBox() \r\nextends Box('user') {\r\n bit(8) data[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class FairPlayUserNameBox() \r\nextends Box('name') {\r\n bit(8) data[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class FairPlayUserKeyBox() \r\nextends Box('key ') {\r\n bit(8) data[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class FairPlayIvBox() \r\nextends Box('iviv') {\r\n bit(8) data[]; \r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class FairPlayPrivateKeyBox() \r\nextends Box('priv') {\r\n bit(8) data[]; \r\n }"
     }
   ]
 }

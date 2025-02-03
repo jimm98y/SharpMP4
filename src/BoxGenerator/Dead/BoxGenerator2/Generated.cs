@@ -144,6 +144,7 @@ namespace SharpMP4
                 case "ftyp": return new FileTypeBox();
                 case "gitn": return new GroupIdToNameBox();
                 case "gmhd": return new GenericMediaHeaderAtom();
+                case "gnre": return new GenreBox();
                 case "grpl": return new GroupsListBox();
                 case "gshh": return new GooglesHostHeaderBox();
                 case "gspm": return new GooglePingMessageBox();
@@ -191,7 +192,9 @@ namespace SharpMP4
                 case "irot": return new ImageRotation();
                 case "iscl": return new ImageScaling();
                 case "ispe": return new ImageSpatialExtentsProperty();
+                case "iviv": return new FairPlayIvBox();
                 case "jpgC": return new JPEGConfigurationBox();
+                case "key ": return new FairPlayUserKeyBox();
                 case "keyd": return new MetaDataKeyDeclarationBox();
                 case "keyi": return new MetaDataInlineKeysPresentBox();
                 case "keys": return new MetaDataKeyTableBox();
@@ -250,7 +253,7 @@ namespace SharpMP4
                 case "mvex": return new MovieExtendsBox();
                 case "mvhd": return new MovieHeaderBox();
                 case "mvra": return new MultiviewRelationAttributeBox();
-                case "name": return new AppleName2Box();
+                case "name": return new FairPlayUserNameBox();
                 case "NCTG": return new NikonExifBox();
                 case "nmhd": return new NullMediaHeaderBox();
                 case "npck": return new hintPacketsSentNpck();
@@ -270,6 +273,7 @@ namespace SharpMP4
                 case "pixi": return new PixelInformationProperty();
                 case "pmax": return new hintlargestpacket();
                 case "prft": return new ProducerReferenceTimeBox();
+                case "priv": return new FairPlayPrivateKeyBox();
                 case "prof": return new AppleProductionApertureDimensionsBox();
                 case "qlif": return new SVCPriorityLayerInfoBox();
                 case "resa": if (parent == "stsd") return new AudioSampleEntry("resa"); break;
@@ -399,6 +403,7 @@ namespace SharpMP4
                 case "uriI": return new URIInitBox();
                 case "url ": return new DataEntryUrlBox();
                 case "urn ": return new DataEntryUrnBox();
+                case "user": return new FairPlayUserIDBox();
                 case "uuid": return new UuidBox(uuid);
                 case "vipr": return new ViewPriorityBox();
                 case "vlab": return new WebVTTSourceLabelBox();
@@ -36659,50 +36664,6 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class AppleName2Box() 
-    extends Box('name') {
-     bit(8) data[];
-     } 
-    */
-    public class AppleName2Box : Box
-    {
-        public const string TYPE = "name";
-        public override string DisplayName { get { return "AppleName2Box"; } }
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public AppleName2Box() : base("name")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
-            return boxSize;
-        }
-    }
-
-
-    /*
     aligned(8) class AppleDescriptionBox() 
     extends Box('desc') {
      Box boxes[];
@@ -40103,6 +40064,271 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class GenreBox() 
+    extends FullBox('gnre') {
+     Box boxes[]; 
+     }
+    */
+    public class GenreBox : FullBox
+    {
+        public const string TYPE = "gnre";
+        public override string DisplayName { get { return "GenreBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public GenreBox() : base("gnre")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FairPlayUserIDBox() 
+    extends Box('user') {
+     bit(8) data[]; 
+     }
+    */
+    public class FairPlayUserIDBox : Box
+    {
+        public const string TYPE = "user";
+        public override string DisplayName { get { return "FairPlayUserIDBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public FairPlayUserIDBox() : base("user")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FairPlayUserNameBox() 
+    extends Box('name') {
+     bit(8) data[]; 
+     }
+    */
+    public class FairPlayUserNameBox : Box
+    {
+        public const string TYPE = "name";
+        public override string DisplayName { get { return "FairPlayUserNameBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public FairPlayUserNameBox() : base("name")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FairPlayUserKeyBox() 
+    extends Box('key ') {
+     bit(8) data[]; 
+     }
+    */
+    public class FairPlayUserKeyBox : Box
+    {
+        public const string TYPE = "key ";
+        public override string DisplayName { get { return "FairPlayUserKeyBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public FairPlayUserKeyBox() : base("key ")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FairPlayIvBox() 
+    extends Box('iviv') {
+     bit(8) data[]; 
+     }
+    */
+    public class FairPlayIvBox : Box
+    {
+        public const string TYPE = "iviv";
+        public override string DisplayName { get { return "FairPlayIvBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public FairPlayIvBox() : base("iviv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FairPlayPrivateKeyBox() 
+    extends Box('priv') {
+     bit(8) data[]; 
+     }
+    */
+    public class FairPlayPrivateKeyBox : Box
+    {
+        public const string TYPE = "priv";
+        public override string DisplayName { get { return "FairPlayPrivateKeyBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public FairPlayPrivateKeyBox() : base("priv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
             return boxSize;
         }
     }
