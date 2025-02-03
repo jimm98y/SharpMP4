@@ -40074,7 +40074,9 @@ namespace SharpMP4
     {
         public const string TYPE = "imif";
         public override string DisplayName { get { return "IPMPInfoBox"; } }
-        public IEnumerable<Descriptor> Descriptor { get { return this.children.OfType<Descriptor>(); } }
+
+        protected Descriptor[] descriptor;
+        public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
 
         public IPMPInfoBox() : base("imif")
         {
@@ -40084,8 +40086,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.descriptor); 
-            boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
+            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.descriptor);
             return boxSize;
         }
 
@@ -40093,8 +40094,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            // boxSize += stream.WriteDescriptor( this.descriptor); 
-            boxSize += stream.WriteDescriptorsTillEnd(this);
+            boxSize += stream.WriteDescriptor(this.descriptor);
             return boxSize;
         }
 
@@ -40102,8 +40102,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
-            boxSize += IsoStream.CalculateDescriptors(this);
+            boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
             return boxSize;
         }
     }
