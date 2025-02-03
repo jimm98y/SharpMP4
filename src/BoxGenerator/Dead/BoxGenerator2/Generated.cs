@@ -253,7 +253,7 @@ namespace SharpMP4
                 case "mvex": return new MovieExtendsBox();
                 case "mvhd": return new MovieHeaderBox();
                 case "mvra": return new MultiviewRelationAttributeBox();
-                case "name": return new FairPlayUserNameBox();
+                case "name": return new AppleName2Box(); // TODO: box is ambiguous in between AppleName2Box and FairPlayUserNameBox
                 case "NCTG": return new NikonExifBox();
                 case "nmhd": return new NullMediaHeaderBox();
                 case "npck": return new hintPacketsSentNpck();
@@ -36658,6 +36658,50 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
             boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleName2Box() 
+    extends Box('name') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleName2Box : Box
+    {
+        public const string TYPE = "name";
+        public override string DisplayName { get { return "AppleName2Box"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleName2Box() : base("name")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
             return boxSize;
         }
     }

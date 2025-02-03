@@ -1111,7 +1111,8 @@ namespace SharpMP4
                     item.Value.First().BoxName == "SegmentIndexBox" ||
                     item.Value.First().BoxName == "trackhintinformation" ||
                     item.Value.First().BoxName == "ViewPriorityBox" ||
-                    item.Value.First().BoxName == "rtpmoviehintinformation"
+                    item.Value.First().BoxName == "rtpmoviehintinformation" ||
+                    item.Value.First().BoxName == "AppleName2Box"
                     )
                 {
                     string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
@@ -1170,7 +1171,7 @@ namespace SharpMP4
                     item.Value.First().BoxName == "SegmentIndexBox" ||
                     item.Value.First().BoxName == "trackhintinformation" ||
                     item.Value.First().BoxName == "ViewPriorityBox" ||
-                    item.Value.First().BoxName == "rtpmoviehintinformation"
+                    item.Value.First().BoxName == "rtpmoviehintinformation" 
                     )
                 {
                     string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";

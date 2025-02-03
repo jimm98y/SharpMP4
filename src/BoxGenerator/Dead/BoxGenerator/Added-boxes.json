@@ -144,6 +144,12 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
+      "syntax": "aligned(8) class AppleName2Box() \r\nextends Box('name') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
       "syntax": "aligned(8) class AppleDescriptionBox() \r\nextends Box('desc') {\r\n Box boxes[];\r\n } "
     },
     {
