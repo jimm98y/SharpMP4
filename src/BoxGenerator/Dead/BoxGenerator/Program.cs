@@ -2911,6 +2911,9 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "stream.ReadClass(boxSize, readSize, this, " },
             { "ThreeGPPKeyword[]",                      "stream.ReadClass(boxSize, readSize, this, " },
             { "IodsSample[]",                           "stream.ReadClass(boxSize, readSize, this, " },
+            { "unsigned int(8)[contentIDLength]",       "stream.ReadUInt8Array((uint)contentIDLength, " },
+            { "unsigned int(8)[rightsIssuerLength]",    "stream.ReadUInt8Array((uint)rightsIssuerLength, " },
+            { "unsigned int(8)[textualHeadersLength]",  "stream.ReadUInt8Array((uint)textualHeadersLength, " },
         };
         return map[type];
     }
@@ -3312,6 +3315,9 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "IsoStream.CalculateClassSize(value)" },
             { "ThreeGPPKeyword[]",                      "IsoStream.CalculateClassSize(value)" },
             { "IodsSample[]",                           "IsoStream.CalculateClassSize(value)" },
+            { "unsigned int(8)[contentIDLength]",       "(uint)contentIDLength * 8" },
+            { "unsigned int(8)[rightsIssuerLength]",    "(uint)rightsIssuerLength * 8" },
+            { "unsigned int(8)[textualHeadersLength]",  "(uint)textualHeadersLength * 8" },
        };
         return map[type];
     }
@@ -3713,6 +3719,9 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "stream.WriteClass(" },
             { "ThreeGPPKeyword[]",                      "stream.WriteClass(" },
             { "IodsSample[]",                           "stream.WriteClass(" },
+            { "unsigned int(8)[contentIDLength]",       "stream.WriteUInt8Array((uint)contentIDLength, " },
+            { "unsigned int(8)[rightsIssuerLength]",    "stream.WriteUInt8Array((uint)rightsIssuerLength, " },
+            { "unsigned int(8)[textualHeadersLength]",  "stream.WriteUInt8Array((uint)textualHeadersLength, " },
         };
         return map[type];
     }
@@ -4159,6 +4168,9 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "AdobeChapterRecord[]" },
             { "ThreeGPPKeyword[]",                      "ThreeGPPKeyword[]" },
             { "IodsSample[]",                           "IodsSample[]" },
+            { "unsigned int(8)[contentIDLength]",       "byte[]" },
+            { "unsigned int(8)[rightsIssuerLength]",    "byte[]" },
+            { "unsigned int(8)[textualHeadersLength]",  "byte[]" },
         };
         return map[type];
     }

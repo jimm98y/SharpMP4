@@ -268,6 +268,8 @@ namespace SharpMP4
                 case "nmhd": return new NullMediaHeaderBox();
                 case "npck": return new hintPacketsSentNpck();
                 case "nump": return new hintPacketsSentNump();
+                case "odaf": return new OMAAccessUnitFormatBox();
+                case "ohdr": return new OMACommonHeadersBox();
                 case "oinf": return new OperatingPointsInformationProperty();
                 case "opeg": return new OperatingPointGroupBox();
                 case "Opus": if (parent == "stsd") return new AudioSampleEntry("Opus"); break;
@@ -41514,7 +41516,8 @@ namespace SharpMP4
         bit(1) reserved;
      unsigned int(5)[3] language;
         string value; 
-     unsigned int(16) year; } 
+     unsigned int(16) year;
+     } 
     */
     public class ThreeGPPRecordingYearBox : Box
     {
@@ -41567,6 +41570,171 @@ namespace SharpMP4
             boxSize += 15; // language
             boxSize += IsoStream.CalculateStringSize(value); // value
             boxSize += 16; // year
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAAccessUnitFormatBox() 
+    extends FullBox('odaf') {
+         bit(7) reserved;
+     bit(1) selectiveEncrypted;
+     unsigned int(8) keyIndicatorLength;
+     unsigned int(8) initialVectorLength;
+     } 
+    */
+    public class OMAAccessUnitFormatBox : FullBox
+    {
+        public const string TYPE = "odaf";
+        public override string DisplayName { get { return "OMAAccessUnitFormatBox"; } }
+
+        protected byte reserved;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool selectiveEncrypted;
+        public bool SelectiveEncrypted { get { return this.selectiveEncrypted; } set { this.selectiveEncrypted = value; } }
+
+        protected byte keyIndicatorLength;
+        public byte KeyIndicatorLength { get { return this.keyIndicatorLength; } set { this.keyIndicatorLength = value; } }
+
+        protected byte initialVectorLength;
+        public byte InitialVectorLength { get { return this.initialVectorLength; } set { this.initialVectorLength = value; } }
+
+        public OMAAccessUnitFormatBox() : base("odaf")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBits(7, out this.reserved);
+            boxSize += stream.ReadBit(out this.selectiveEncrypted);
+            boxSize += stream.ReadUInt8(out this.keyIndicatorLength);
+            boxSize += stream.ReadUInt8(out this.initialVectorLength);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBits(7, this.reserved);
+            boxSize += stream.WriteBit(this.selectiveEncrypted);
+            boxSize += stream.WriteUInt8(this.keyIndicatorLength);
+            boxSize += stream.WriteUInt8(this.initialVectorLength);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 7; // reserved
+            boxSize += 1; // selectiveEncrypted
+            boxSize += 8; // keyIndicatorLength
+            boxSize += 8; // initialVectorLength
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMACommonHeadersBox () 
+    extends FullBox('ohdr') {
+         unsigned int(8) encryptionMethod;
+     unsigned int(8) paddingScheme;
+     unsigned int(64) plaintextLength;
+     unsigned int(16) contentIDLength;
+     unsigned int(16) rightsIssuerLength;
+     unsigned int(16) textualHeaderLength;
+     unsigned int(8) contentID[contentIDLength];
+     unsigned int(8) rightsIssuerURL[rightsIssuerLength];
+     unsigned int(8) textualHeaders[textualHeadersLength];
+     } 
+    */
+    public class OMACommonHeadersBox : FullBox
+    {
+        public const string TYPE = "ohdr";
+        public override string DisplayName { get { return "OMACommonHeadersBox"; } }
+
+        protected byte encryptionMethod;
+        public byte EncryptionMethod { get { return this.encryptionMethod; } set { this.encryptionMethod = value; } }
+
+        protected byte paddingScheme;
+        public byte PaddingScheme { get { return this.paddingScheme; } set { this.paddingScheme = value; } }
+
+        protected ulong plaintextLength;
+        public ulong PlaintextLength { get { return this.plaintextLength; } set { this.plaintextLength = value; } }
+
+        protected ushort contentIDLength;
+        public ushort ContentIDLength { get { return this.contentIDLength; } set { this.contentIDLength = value; } }
+
+        protected ushort rightsIssuerLength;
+        public ushort RightsIssuerLength { get { return this.rightsIssuerLength; } set { this.rightsIssuerLength = value; } }
+
+        protected ushort textualHeaderLength;
+        public ushort TextualHeaderLength { get { return this.textualHeaderLength; } set { this.textualHeaderLength = value; } }
+
+        protected byte[] contentID;
+        public byte[] ContentID { get { return this.contentID; } set { this.contentID = value; } }
+
+        protected byte[] rightsIssuerURL;
+        public byte[] RightsIssuerURL { get { return this.rightsIssuerURL; } set { this.rightsIssuerURL = value; } }
+
+        protected byte[] textualHeaders;
+        public byte[] TextualHeaders { get { return this.textualHeaders; } set { this.textualHeaders = value; } }
+
+        public OMACommonHeadersBox() : base("ohdr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.encryptionMethod);
+            boxSize += stream.ReadUInt8(out this.paddingScheme);
+            boxSize += stream.ReadUInt64(out this.plaintextLength);
+            boxSize += stream.ReadUInt16(out this.contentIDLength);
+            boxSize += stream.ReadUInt16(out this.rightsIssuerLength);
+            boxSize += stream.ReadUInt16(out this.textualHeaderLength);
+            boxSize += stream.ReadUInt8Array((uint)contentIDLength, out this.contentID[contentIDLength]);
+            boxSize += stream.ReadUInt8Array((uint)rightsIssuerLength, out this.rightsIssuerURL[rightsIssuerLength]);
+            boxSize += stream.ReadUInt8Array((uint)textualHeadersLength, out this.textualHeaders[textualHeadersLength]);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.encryptionMethod);
+            boxSize += stream.WriteUInt8(this.paddingScheme);
+            boxSize += stream.WriteUInt64(this.plaintextLength);
+            boxSize += stream.WriteUInt16(this.contentIDLength);
+            boxSize += stream.WriteUInt16(this.rightsIssuerLength);
+            boxSize += stream.WriteUInt16(this.textualHeaderLength);
+            boxSize += stream.WriteUInt8Array((uint)contentIDLength, this.contentID[contentIDLength]);
+            boxSize += stream.WriteUInt8Array((uint)rightsIssuerLength, this.rightsIssuerURL[rightsIssuerLength]);
+            boxSize += stream.WriteUInt8Array((uint)textualHeadersLength, this.textualHeaders[textualHeadersLength]);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // encryptionMethod
+            boxSize += 8; // paddingScheme
+            boxSize += 64; // plaintextLength
+            boxSize += 16; // contentIDLength
+            boxSize += 16; // rightsIssuerLength
+            boxSize += 16; // textualHeaderLength
+            boxSize += (uint)contentIDLength * 8; // contentID
+            boxSize += (uint)rightsIssuerLength * 8; // rightsIssuerURL
+            boxSize += (uint)textualHeadersLength * 8; // textualHeaders
             return boxSize;
         }
     }
