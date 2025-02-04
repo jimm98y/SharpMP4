@@ -750,7 +750,7 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "aligned(8) class OMACommonHeadersBox () \r\nextends FullBox('ohdr') {\r\n\t unsigned int(8) encryptionMethod;\r\n unsigned int(8) paddingScheme;\r\n unsigned int(64) plaintextLength;\r\n unsigned int(16) contentIDLength;\r\n unsigned int(16) rightsIssuerLength;\r\n unsigned int(16) textualHeaderLength;\r\n unsigned int(8) contentID[contentIDLength];\r\n unsigned int(8) rightsIssuerURL[rightsIssuerLength];\r\n unsigned int(8) textualHeaders[textualHeadersLength];\r\n } "
+      "syntax": "aligned(8) class OMACommonHeadersBox () \r\nextends FullBox('ohdr') {\r\n\t unsigned int(8) encryptionMethod;\r\n unsigned int(8) paddingScheme;\r\n unsigned int(64) plaintextLength;\r\n unsigned int(16) contentIDLength;\r\n unsigned int(16) rightsIssuerLength;\r\n unsigned int(16) textualHeadersLength;\r\n unsigned int(8) contentID[contentIDLength];\r\n unsigned int(8) rightsIssuerURL[rightsIssuerLength];\r\n unsigned int(8) textualHeaders[textualHeadersLength];\r\n } "
     }
   ]
 }

@@ -2239,7 +2239,8 @@ namespace SharpMP4
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]")
+            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" &&
+            value != "[contentIDLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]")
         {
             return value;
         }

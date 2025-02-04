@@ -41648,7 +41648,7 @@ namespace SharpMP4
      unsigned int(64) plaintextLength;
      unsigned int(16) contentIDLength;
      unsigned int(16) rightsIssuerLength;
-     unsigned int(16) textualHeaderLength;
+     unsigned int(16) textualHeadersLength;
      unsigned int(8) contentID[contentIDLength];
      unsigned int(8) rightsIssuerURL[rightsIssuerLength];
      unsigned int(8) textualHeaders[textualHeadersLength];
@@ -41674,8 +41674,8 @@ namespace SharpMP4
         protected ushort rightsIssuerLength;
         public ushort RightsIssuerLength { get { return this.rightsIssuerLength; } set { this.rightsIssuerLength = value; } }
 
-        protected ushort textualHeaderLength;
-        public ushort TextualHeaderLength { get { return this.textualHeaderLength; } set { this.textualHeaderLength = value; } }
+        protected ushort textualHeadersLength;
+        public ushort TextualHeadersLength { get { return this.textualHeadersLength; } set { this.textualHeadersLength = value; } }
 
         protected byte[] contentID;
         public byte[] ContentID { get { return this.contentID; } set { this.contentID = value; } }
@@ -41699,10 +41699,10 @@ namespace SharpMP4
             boxSize += stream.ReadUInt64(out this.plaintextLength);
             boxSize += stream.ReadUInt16(out this.contentIDLength);
             boxSize += stream.ReadUInt16(out this.rightsIssuerLength);
-            boxSize += stream.ReadUInt16(out this.textualHeaderLength);
-            boxSize += stream.ReadUInt8Array((uint)contentIDLength, out this.contentID[contentIDLength]);
-            boxSize += stream.ReadUInt8Array((uint)rightsIssuerLength, out this.rightsIssuerURL[rightsIssuerLength]);
-            boxSize += stream.ReadUInt8Array((uint)textualHeadersLength, out this.textualHeaders[textualHeadersLength]);
+            boxSize += stream.ReadUInt16(out this.textualHeadersLength);
+            boxSize += stream.ReadUInt8Array((uint)contentIDLength, out this.contentID);
+            boxSize += stream.ReadUInt8Array((uint)rightsIssuerLength, out this.rightsIssuerURL);
+            boxSize += stream.ReadUInt8Array((uint)textualHeadersLength, out this.textualHeaders);
             return boxSize;
         }
 
@@ -41715,10 +41715,10 @@ namespace SharpMP4
             boxSize += stream.WriteUInt64(this.plaintextLength);
             boxSize += stream.WriteUInt16(this.contentIDLength);
             boxSize += stream.WriteUInt16(this.rightsIssuerLength);
-            boxSize += stream.WriteUInt16(this.textualHeaderLength);
-            boxSize += stream.WriteUInt8Array((uint)contentIDLength, this.contentID[contentIDLength]);
-            boxSize += stream.WriteUInt8Array((uint)rightsIssuerLength, this.rightsIssuerURL[rightsIssuerLength]);
-            boxSize += stream.WriteUInt8Array((uint)textualHeadersLength, this.textualHeaders[textualHeadersLength]);
+            boxSize += stream.WriteUInt16(this.textualHeadersLength);
+            boxSize += stream.WriteUInt8Array((uint)contentIDLength, this.contentID);
+            boxSize += stream.WriteUInt8Array((uint)rightsIssuerLength, this.rightsIssuerURL);
+            boxSize += stream.WriteUInt8Array((uint)textualHeadersLength, this.textualHeaders);
             return boxSize;
         }
 
@@ -41731,7 +41731,7 @@ namespace SharpMP4
             boxSize += 64; // plaintextLength
             boxSize += 16; // contentIDLength
             boxSize += 16; // rightsIssuerLength
-            boxSize += 16; // textualHeaderLength
+            boxSize += 16; // textualHeadersLength
             boxSize += (uint)contentIDLength * 8; // contentID
             boxSize += (uint)rightsIssuerLength * 8; // rightsIssuerURL
             boxSize += (uint)textualHeadersLength * 8; // textualHeaders
