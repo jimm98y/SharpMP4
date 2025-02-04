@@ -85,6 +85,7 @@ namespace SharpMP4
                 case "clef": return new AppleCleanApertureDimensionsBox();
                 case "clfn": return new ClfnBox();
                 case "clli": return new ContentLightLevelBox();
+                case "clsf": return new ThreeGPPClassificationBox();
                 case "cnID": return new AppleStoreCatalogIDBox();
                 case "co64": return new ChunkLargeOffsetBox();
                 case "colr": return new ColourInformationBox();
@@ -216,6 +217,7 @@ namespace SharpMP4
                 case "lhvC": return new LHEVCConfigurationBox();
                 case "load": return new LoadBox();
                 case "loca": return new MetaDataLocaleBox();
+                case "loci": return new ThreeGPPLocationInformationBox();
                 case "lsel": return new LayerSelectorProperty();
                 case "ludt": return new LoudnessBox();
                 case "m4ds": return new MPEG4ExtensionDescriptorsBox();
@@ -277,6 +279,7 @@ namespace SharpMP4
                 case "payt": return new hintpayloadID();
                 case "pcst": return new PodcastBox();
                 case "pdin": return new ProgressiveDownloadInfoBox();
+                case "perf": return new ThreeGPPPerformerBox();
                 case "pgap": return new ApplePlayGapBox();
                 case "pitm": return new PrimaryItemBox();
                 case "pixi": return new PixelInformationProperty();
@@ -443,6 +446,7 @@ namespace SharpMP4
                 case "wvtt": return new WVTTSampleEntry();
                 case "xml ": return new XMLBox();
                 case "Xtra": return new WindowsMediaXtraBox();
+                case "yrrc": return new ThreeGPPRecordingYearBox();
                 case "zoom": return new ZoomTransitionEffectProperty();
             }
 
@@ -41278,6 +41282,291 @@ namespace SharpMP4
             boxSize += 15; // language
             boxSize += IsoStream.CalculateStringSize(value); // value
             boxSize += 8; // trackNumber
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ThreeGPPClassificationBox() 
+    extends Box('clsf') {
+        bit(1) reserved;
+     unsigned int(5)[3] language;
+        string value; 
+    } 
+    */
+    public class ThreeGPPClassificationBox : Box
+    {
+        public const string TYPE = "clsf";
+        public override string DisplayName { get { return "ThreeGPPClassificationBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        public ThreeGPPClassificationBox() : base("clsf")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ThreeGPPLocationInformationBox() 
+    extends Box('loci') {
+        bit(1) reserved;
+     unsigned int(5)[3] language;
+        string value;
+     string placeName; unsigned int(8) role; fixedpoint1616 longitude;
+     fixedpoint1616 latitude;
+     fixedpoint1616 altitude;
+     string astronomicalBody;
+     string additionalNotes;
+     }
+    */
+    public class ThreeGPPLocationInformationBox : Box
+    {
+        public const string TYPE = "loci";
+        public override string DisplayName { get { return "ThreeGPPLocationInformationBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        protected BinaryUTF8String placeName;
+        public BinaryUTF8String PlaceName { get { return this.placeName; } set { this.placeName = value; } }
+
+        protected byte role;
+        public byte Role { get { return this.role; } set { this.role = value; } }
+
+        protected double longitude;
+        public double Longitude { get { return this.longitude; } set { this.longitude = value; } }
+
+        protected double latitude;
+        public double Latitude { get { return this.latitude; } set { this.latitude = value; } }
+
+        protected double altitude;
+        public double Altitude { get { return this.altitude; } set { this.altitude = value; } }
+
+        protected BinaryUTF8String astronomicalBody;
+        public BinaryUTF8String AstronomicalBody { get { return this.astronomicalBody; } set { this.astronomicalBody = value; } }
+
+        protected BinaryUTF8String additionalNotes;
+        public BinaryUTF8String AdditionalNotes { get { return this.additionalNotes; } set { this.additionalNotes = value; } }
+
+        public ThreeGPPLocationInformationBox() : base("loci")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
+            boxSize += stream.ReadString(boxSize, readSize, out this.placeName);
+            boxSize += stream.ReadUInt8(out this.role);
+            boxSize += stream.ReadFixedPoint1616(out this.longitude);
+            boxSize += stream.ReadFixedPoint1616(out this.latitude);
+            boxSize += stream.ReadFixedPoint1616(out this.altitude);
+            boxSize += stream.ReadString(boxSize, readSize, out this.astronomicalBody);
+            boxSize += stream.ReadString(boxSize, readSize, out this.additionalNotes);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
+            boxSize += stream.WriteString(this.placeName);
+            boxSize += stream.WriteUInt8(this.role);
+            boxSize += stream.WriteFixedPoint1616(this.longitude);
+            boxSize += stream.WriteFixedPoint1616(this.latitude);
+            boxSize += stream.WriteFixedPoint1616(this.altitude);
+            boxSize += stream.WriteString(this.astronomicalBody);
+            boxSize += stream.WriteString(this.additionalNotes);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
+            boxSize += IsoStream.CalculateStringSize(placeName); // placeName
+            boxSize += 8; // role
+            boxSize += 32; // longitude
+            boxSize += 32; // latitude
+            boxSize += 32; // altitude
+            boxSize += IsoStream.CalculateStringSize(astronomicalBody); // astronomicalBody
+            boxSize += IsoStream.CalculateStringSize(additionalNotes); // additionalNotes
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ThreeGPPPerformerBox() 
+    extends Box('perf') {
+        bit(1) reserved;
+     unsigned int(5)[3] language;
+        string value; 
+    } 
+    */
+    public class ThreeGPPPerformerBox : Box
+    {
+        public const string TYPE = "perf";
+        public override string DisplayName { get { return "ThreeGPPPerformerBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        public ThreeGPPPerformerBox() : base("perf")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ThreeGPPRecordingYearBox() 
+    extends Box('yrrc') {
+        bit(1) reserved;
+     unsigned int(5)[3] language;
+        string value; 
+     unsigned int(16) year; } 
+    */
+    public class ThreeGPPRecordingYearBox : Box
+    {
+        public const string TYPE = "yrrc";
+        public override string DisplayName { get { return "ThreeGPPRecordingYearBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        protected ushort year;
+        public ushort Year { get { return this.year; } set { this.year = value; } }
+
+        public ThreeGPPRecordingYearBox() : base("yrrc")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
+            boxSize += stream.ReadUInt16(out this.year);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
+            boxSize += stream.WriteUInt16(this.year);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
+            boxSize += 16; // year
             return boxSize;
         }
     }

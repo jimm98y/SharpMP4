@@ -715,6 +715,31 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class ThreeGPPAlbumBox() \r\nextends Box('albm') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value;\r\n bit(8) trackNumber; // optional\r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ThreeGPPClassificationBox() \r\nextends Box('clsf') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value; \r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ThreeGPPLocationInformationBox() \r\nextends Box('loci') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value;\r\n string placeName; unsigned int(8) role; fixedpoint1616 longitude;\r\n fixedpoint1616 latitude;\r\n fixedpoint1616 altitude;\r\n string astronomicalBody;\r\n string additionalNotes;\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ThreeGPPPerformerBox() \r\nextends Box('perf') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value; \r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ThreeGPPRecordingYearBox() \r\nextends Box('yrrc') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value; \r\n unsigned int(16) year; } "
     }
+
   ]
 }

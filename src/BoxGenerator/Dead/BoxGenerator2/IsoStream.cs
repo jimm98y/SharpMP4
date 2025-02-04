@@ -2060,6 +2060,16 @@ namespace SharpMP4
             throw new NotImplementedException();
         }
 
+        internal ulong ReadFixedPoint1616(out double value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteFixedPoint1616(double value)
+        {
+            throw new NotImplementedException();
+        }
+
         internal static int BitsToDecode()
         {
             throw new NotImplementedException();
