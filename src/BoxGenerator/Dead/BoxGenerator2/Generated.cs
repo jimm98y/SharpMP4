@@ -103,7 +103,7 @@ namespace SharpMP4
                 case "d263": return new H263SpecificBox();
                 case "dac3": return new AC3SpecificBox();
                 case "data": return new DataBox();
-                case "ddts": return new DdtsBox();
+                case "ddts": return new DTSSpecificBox();
                 case "desc": return new AppleDescriptionBox();
                 case "devc": return new EVRCSpecificBox();
                 case "dhec": return new DefaultHevcExtractorConstructorBox();
@@ -39503,20 +39503,80 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class DdtsBox() 
+    aligned(8) class DTSSpecificBox() 
     extends Box('ddts') {
-     bit(8) data[];
+     unsigned int(32) dtsSamplingFrequency;
+     unsigned int(32) maxBitRate;
+     unsigned int(32) avgBitRate;
+     unsigned int(8) pcmSampleDepth;
+     bit(2) frameDuration;
+     bit(5) streamConstruction;
+     bit(1) coreLFEPresent;
+     bit(6) coreLayout;
+     bit(14) coreSize;
+     bit(1) stereoDownmix;
+     bit(3) representationType;
+     bit(16) channelLayout;
+     bit(1) multiAssetFlag;
+     bit(1) lbrDurationMod;
+     bit(1) reservedBoxPresent;
+     bit(5) reserved;
      } 
     */
-    public class DdtsBox : Box
+    public class DTSSpecificBox : Box
     {
         public const string TYPE = "ddts";
-        public override string DisplayName { get { return "DdtsBox"; } }
+        public override string DisplayName { get { return "DTSSpecificBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected uint dtsSamplingFrequency;
+        public uint DtsSamplingFrequency { get { return this.dtsSamplingFrequency; } set { this.dtsSamplingFrequency = value; } }
 
-        public DdtsBox() : base("ddts")
+        protected uint maxBitRate;
+        public uint MaxBitRate { get { return this.maxBitRate; } set { this.maxBitRate = value; } }
+
+        protected uint avgBitRate;
+        public uint AvgBitRate { get { return this.avgBitRate; } set { this.avgBitRate = value; } }
+
+        protected byte pcmSampleDepth;
+        public byte PcmSampleDepth { get { return this.pcmSampleDepth; } set { this.pcmSampleDepth = value; } }
+
+        protected byte frameDuration;
+        public byte FrameDuration { get { return this.frameDuration; } set { this.frameDuration = value; } }
+
+        protected byte streamConstruction;
+        public byte StreamConstruction { get { return this.streamConstruction; } set { this.streamConstruction = value; } }
+
+        protected bool coreLFEPresent;
+        public bool CoreLFEPresent { get { return this.coreLFEPresent; } set { this.coreLFEPresent = value; } }
+
+        protected byte coreLayout;
+        public byte CoreLayout { get { return this.coreLayout; } set { this.coreLayout = value; } }
+
+        protected ushort coreSize;
+        public ushort CoreSize { get { return this.coreSize; } set { this.coreSize = value; } }
+
+        protected bool stereoDownmix;
+        public bool StereoDownmix { get { return this.stereoDownmix; } set { this.stereoDownmix = value; } }
+
+        protected byte representationType;
+        public byte RepresentationType { get { return this.representationType; } set { this.representationType = value; } }
+
+        protected ushort channelLayout;
+        public ushort ChannelLayout { get { return this.channelLayout; } set { this.channelLayout = value; } }
+
+        protected bool multiAssetFlag;
+        public bool MultiAssetFlag { get { return this.multiAssetFlag; } set { this.multiAssetFlag = value; } }
+
+        protected bool lbrDurationMod;
+        public bool LbrDurationMod { get { return this.lbrDurationMod; } set { this.lbrDurationMod = value; } }
+
+        protected bool reservedBoxPresent;
+        public bool ReservedBoxPresent { get { return this.reservedBoxPresent; } set { this.reservedBoxPresent = value; } }
+
+        protected byte reserved;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        public DTSSpecificBox() : base("ddts")
         {
         }
 
@@ -39524,7 +39584,22 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt32(out this.dtsSamplingFrequency);
+            boxSize += stream.ReadUInt32(out this.maxBitRate);
+            boxSize += stream.ReadUInt32(out this.avgBitRate);
+            boxSize += stream.ReadUInt8(out this.pcmSampleDepth);
+            boxSize += stream.ReadBits(2, out this.frameDuration);
+            boxSize += stream.ReadBits(5, out this.streamConstruction);
+            boxSize += stream.ReadBit(out this.coreLFEPresent);
+            boxSize += stream.ReadBits(6, out this.coreLayout);
+            boxSize += stream.ReadBits(14, out this.coreSize);
+            boxSize += stream.ReadBit(out this.stereoDownmix);
+            boxSize += stream.ReadBits(3, out this.representationType);
+            boxSize += stream.ReadUInt16(out this.channelLayout);
+            boxSize += stream.ReadBit(out this.multiAssetFlag);
+            boxSize += stream.ReadBit(out this.lbrDurationMod);
+            boxSize += stream.ReadBit(out this.reservedBoxPresent);
+            boxSize += stream.ReadBits(5, out this.reserved);
             return boxSize;
         }
 
@@ -39532,7 +39607,22 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt32(this.dtsSamplingFrequency);
+            boxSize += stream.WriteUInt32(this.maxBitRate);
+            boxSize += stream.WriteUInt32(this.avgBitRate);
+            boxSize += stream.WriteUInt8(this.pcmSampleDepth);
+            boxSize += stream.WriteBits(2, this.frameDuration);
+            boxSize += stream.WriteBits(5, this.streamConstruction);
+            boxSize += stream.WriteBit(this.coreLFEPresent);
+            boxSize += stream.WriteBits(6, this.coreLayout);
+            boxSize += stream.WriteBits(14, this.coreSize);
+            boxSize += stream.WriteBit(this.stereoDownmix);
+            boxSize += stream.WriteBits(3, this.representationType);
+            boxSize += stream.WriteUInt16(this.channelLayout);
+            boxSize += stream.WriteBit(this.multiAssetFlag);
+            boxSize += stream.WriteBit(this.lbrDurationMod);
+            boxSize += stream.WriteBit(this.reservedBoxPresent);
+            boxSize += stream.WriteBits(5, this.reserved);
             return boxSize;
         }
 
@@ -39540,7 +39630,22 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 32; // dtsSamplingFrequency
+            boxSize += 32; // maxBitRate
+            boxSize += 32; // avgBitRate
+            boxSize += 8; // pcmSampleDepth
+            boxSize += 2; // frameDuration
+            boxSize += 5; // streamConstruction
+            boxSize += 1; // coreLFEPresent
+            boxSize += 6; // coreLayout
+            boxSize += 14; // coreSize
+            boxSize += 1; // stereoDownmix
+            boxSize += 3; // representationType
+            boxSize += 16; // channelLayout
+            boxSize += 1; // multiAssetFlag
+            boxSize += 1; // lbrDurationMod
+            boxSize += 1; // reservedBoxPresent
+            boxSize += 5; // reserved
             return boxSize;
         }
     }

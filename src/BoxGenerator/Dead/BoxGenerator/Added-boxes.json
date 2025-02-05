@@ -426,7 +426,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class DdtsBox() \r\nextends Box('ddts') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class DTSSpecificBox() \r\nextends Box('ddts') {\r\n unsigned int(32) dtsSamplingFrequency;\r\n unsigned int(32) maxBitRate;\r\n unsigned int(32) avgBitRate;\r\n unsigned int(8) pcmSampleDepth;\r\n bit(2) frameDuration;\r\n bit(5) streamConstruction;\r\n bit(1) coreLFEPresent;\r\n bit(6) coreLayout;\r\n bit(14) coreSize;\r\n bit(1) stereoDownmix;\r\n bit(3) representationType;\r\n bit(16) channelLayout;\r\n bit(1) multiAssetFlag;\r\n bit(1) lbrDurationMod;\r\n bit(1) reservedBoxPresent;\r\n bit(5) reserved;\r\n } "
     },
     {
       "containers": [ "*" ],
