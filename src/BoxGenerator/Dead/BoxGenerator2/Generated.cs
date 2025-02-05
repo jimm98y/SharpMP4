@@ -54,6 +54,7 @@ namespace SharpMP4
                 case "amf0": return new Amf0Box();
                 case "amgl": return new SubpicMultipleGroupsBox();
                 case "amve": return new AmbientViewingEnvironmentBox();
+                case "apcn": if (parent == "stsd") return new VisualSampleEntry("apcn"); break;
                 case "apID": return new ITunesPurchaseAccountBox();
                 case "apmd": return new AppleApertureModeBox();
                 case "assp": return new AlternativeStartupSequencePropertiesBox();
@@ -123,9 +124,12 @@ namespace SharpMP4
                 case "drms": if (parent == "stsd") return new AudioSampleEntry("drms"); break;
                 case "dscp": return new ThreeGPPDescriptionBox();
                 case "dsmv": return new SMVSpecificBox();
+                case "dtsc": if (parent == "stsd") return new AudioSampleEntry("dtsc"); break;
                 case "dtse": if (parent == "stsd") return new AudioSampleEntry("dtse"); break;
                 case "dtsh": if (parent == "stsd") return new AudioSampleEntry("dtsh"); break;
                 case "dtsl": if (parent == "stsd") return new AudioSampleEntry("dtsl"); break;
+                case "dvav": if (parent == "stsd") return new VisualSampleEntry("dvav"); break;
+                case "dvhe": if (parent == "stsd") return new VisualSampleEntry("dvhe"); break;
                 case "ec-3": if (parent == "stsd") return new AudioSampleEntry("ec-3"); break;
                 case "ecam": return new ExtrinsicCameraParametersBox();
                 case "edts": return new EditBox();
@@ -227,6 +231,7 @@ namespace SharpMP4
                 case "load": return new LoadBox();
                 case "loca": return new MetaDataLocaleBox();
                 case "loci": return new ThreeGPPLocationInformationBox();
+                case "lpcm": if (parent == "stsd") return new AudioSampleEntry("lpcm"); break;
                 case "lrcu": return new OMALyricsURLBox();
                 case "lsel": return new LayerSelectorProperty();
                 case "ludt": return new LoudnessBox();
@@ -356,6 +361,7 @@ namespace SharpMP4
                 case "soco": return new ComposerSortBox();
                 case "sonm": return new TrackSortBox();
                 case "sosn": return new TVShowSortBox();
+                case "sowt": if (parent == "stsd") return new AudioSampleEntry("sowt"); break;
                 case "spid": return new VvcSubpicIDProperty();
                 case "splt": return new SplitTransitionEffectProperty();
                 case "spor": return new VvcSubpicOrderProperty();
@@ -459,6 +465,9 @@ namespace SharpMP4
                 case "vipr": return new ViewPriorityBox();
                 case "vlab": return new WebVTTSourceLabelBox();
                 case "vmhd": return new VideoMediaHeaderBox();
+                case "vp08": if (parent == "stsd") return new VisualSampleEntry("vp08"); break;
+                case "vp09": if (parent == "stsd") return new VisualSampleEntry("vp09"); break;
+                case "vp10": if (parent == "stsd") return new VisualSampleEntry("vp10"); break;
                 case "vsib": return new ViewScalabilityInformationSEIBox();
                 case "vttC": return new WebVTTConfigurationBox();
                 case "vvc1": if (parent == "stsd") return new VisualSampleEntry("vvc1"); break;
