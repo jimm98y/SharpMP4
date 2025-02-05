@@ -133,6 +133,7 @@ namespace SharpMP4
                 case "elng": return new ExtendedLanguageBox();
                 case "elst": return new EditListBox();
                 case "enca": if (parent == "stsd") return new AudioSampleEntry("enca"); break;
+                case "enct": return new TextSampleEntry();
                 case "encv": if (parent == "stsd") return new VisualSampleEntry("encv"); break;
                 case "enda": return new AppleEndiannessBox();
                 case "enof": return new AppleEncodedPixelsDimensionsBox();
@@ -309,10 +310,14 @@ namespace SharpMP4
                 case "purd": return new PurchaseDateBox();
                 case "purl": return new PodcastUrlBox();
                 case "qlif": return new SVCPriorityLayerInfoBox();
+                case "rdrf": return new AppleDataReferenceBox();
                 case "resa": if (parent == "stsd") return new AudioSampleEntry("resa"); break;
                 case "resv": if (parent == "stsd") return new VisualSampleEntry("resv"); break;
                 case "rinf": return new RestrictedSchemeInfoBox();
                 case "rloc": return new RelativeLocationProperty();
+                case "rmda": return new AppleReferenceMovieDescriptorBox();
+                case "rmdr": return new AppleDataRateBox();
+                case "rmra": return new AppleReferenceMovieBox();
                 case "rref": return new RequiredReferenceTypesProperty();
                 case "rrgn": return new RectRegionBox();
                 case "rssr": return new ReceivedSsrcBox();
@@ -440,6 +445,7 @@ namespace SharpMP4
                 case "tvnn": return new TVNetworkNameBox();
                 case "tvsh": return new TVShowBox();
                 case "tvsn": return new AppleTVSeasonBox();
+                case "tx3g": return new TextSampleEntry_tx3g(); // TODO: fix duplicate
                 case "txtC": return new TextConfigBox();
                 case "tyco": return new TypeCombinationBox();
                 case "udes": return new UserDescriptionProperty();
@@ -40087,9 +40093,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.toollist);
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.toollist); 
             boxSize += stream.ReadUInt8(out this.count);
-            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.descriptor);
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.descriptor); 
             return boxSize;
         }
 
@@ -40097,9 +40103,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteDescriptor(this.toollist);
+            // boxSize += stream.WriteDescriptor( this.toollist); 
             boxSize += stream.WriteUInt8(this.count);
-            boxSize += stream.WriteDescriptor(this.descriptor);
+            // boxSize += stream.WriteDescriptor( this.descriptor); 
             return boxSize;
         }
 
@@ -40107,9 +40113,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateDescriptorSize(toollist); // toollist
+            // boxSize += IsoStream.CalculateDescriptorSize(toollist); // toollist
             boxSize += 8; // count
-            boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
+                          // boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
             return boxSize;
         }
     }
@@ -40137,7 +40143,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.descriptor);
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.descriptor); 
             return boxSize;
         }
 
@@ -40145,7 +40151,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteDescriptor(this.descriptor);
+            // boxSize += stream.WriteDescriptor( this.descriptor); 
             return boxSize;
         }
 
@@ -40153,7 +40159,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
+            // boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
             return boxSize;
         }
     }
@@ -42640,6 +42646,525 @@ namespace SharpMP4
             boxSize += 32; // vendor
             boxSize += 8; // decoderVersion
             boxSize += 8; // framesPerSample
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleReferenceMovieBox() 
+    extends Box('rmra') {
+     Box boxes[];
+     } 
+    */
+    public class AppleReferenceMovieBox : Box
+    {
+        public const string TYPE = "rmra";
+        public override string DisplayName { get { return "AppleReferenceMovieBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleReferenceMovieBox() : base("rmra")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleReferenceMovieDescriptorBox() 
+    extends Box('rmda') {
+     Box boxes[];
+     } 
+    */
+    public class AppleReferenceMovieDescriptorBox : Box
+    {
+        public const string TYPE = "rmda";
+        public override string DisplayName { get { return "AppleReferenceMovieDescriptorBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleReferenceMovieDescriptorBox() : base("rmda")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleDataRateBox() 
+    extends Box('rmdr') {
+     Box boxes[];
+     } 
+    */
+    public class AppleDataRateBox : Box
+    {
+        public const string TYPE = "rmdr";
+        public override string DisplayName { get { return "AppleDataRateBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleDataRateBox() : base("rmdr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleDataReferenceBox() 
+    extends FullBox('rdrf') {
+     unsigned int(32) dataReferenceType;
+     unsigned int(32) count;
+     unsigned int(8) dataReference[count];
+     } 
+    */
+    public class AppleDataReferenceBox : FullBox
+    {
+        public const string TYPE = "rdrf";
+        public override string DisplayName { get { return "AppleDataReferenceBox"; } }
+
+        protected uint dataReferenceType;
+        public uint DataReferenceType { get { return this.dataReferenceType; } set { this.dataReferenceType = value; } }
+
+        protected uint count;
+        public uint Count { get { return this.count; } set { this.count = value; } }
+
+        protected byte[] dataReference;
+        public byte[] DataReference { get { return this.dataReference; } set { this.dataReference = value; } }
+
+        public AppleDataReferenceBox() : base("rdrf")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.dataReferenceType);
+            boxSize += stream.ReadUInt32(out this.count);
+            boxSize += stream.ReadUInt8Array((uint)count, out this.dataReference);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.dataReferenceType);
+            boxSize += stream.WriteUInt32(this.count);
+            boxSize += stream.WriteUInt8Array((uint)count, this.dataReference);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // dataReferenceType
+            boxSize += 32; // count
+            boxSize += (uint)count * 8; // dataReference
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TextSampleEntry() 
+    extends FullBox('enct') {
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(32) displayFlags;
+     unsigned int(8) horizontalJustification;
+     unsigned int(8) verticalJustification;
+     unsigned int(8) backgroundColorRgba[4];
+     RectRecord rectRecord;
+     StyleRecord styleRecord; Box boxes[];
+     }
+
+    */
+    public class TextSampleEntry : FullBox
+    {
+        public const string TYPE = "enct";
+        public override string DisplayName { get { return "TextSampleEntry"; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected uint displayFlags;
+        public uint DisplayFlags { get { return this.displayFlags; } set { this.displayFlags = value; } }
+
+        protected byte horizontalJustification;
+        public byte HorizontalJustification { get { return this.horizontalJustification; } set { this.horizontalJustification = value; } }
+
+        protected byte verticalJustification;
+        public byte VerticalJustification { get { return this.verticalJustification; } set { this.verticalJustification = value; } }
+
+        protected byte[] backgroundColorRgba;
+        public byte[] BackgroundColorRgba { get { return this.backgroundColorRgba; } set { this.backgroundColorRgba = value; } }
+
+        protected RectRecord rectRecord;
+        public RectRecord RectRecord { get { return this.rectRecord; } set { this.rectRecord = value; } }
+
+        protected StyleRecord styleRecord;
+        public StyleRecord StyleRecord { get { return this.styleRecord; } set { this.styleRecord = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public TextSampleEntry() : base("enct")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt32(out this.displayFlags);
+            boxSize += stream.ReadUInt8(out this.horizontalJustification);
+            boxSize += stream.ReadUInt8(out this.verticalJustification);
+            boxSize += stream.ReadUInt8Array((uint)4, out this.backgroundColorRgba);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new RectRecord(), out this.rectRecord);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new StyleRecord(), out this.styleRecord);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt32(this.displayFlags);
+            boxSize += stream.WriteUInt8(this.horizontalJustification);
+            boxSize += stream.WriteUInt8(this.verticalJustification);
+            boxSize += stream.WriteUInt8Array((uint)4, this.backgroundColorRgba);
+            boxSize += stream.WriteClass(this.rectRecord);
+            boxSize += stream.WriteClass(this.styleRecord);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 32; // displayFlags
+            boxSize += 8; // horizontalJustification
+            boxSize += 8; // verticalJustification
+            boxSize += (uint)32; // backgroundColorRgba
+            boxSize += IsoStream.CalculateClassSize(rectRecord); // rectRecord
+            boxSize += IsoStream.CalculateClassSize(styleRecord); // styleRecord
+                                                                  // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TextSampleEntry() 
+    extends FullBox('tx3g') {
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(32) displayFlags;
+     unsigned int(8) horizontalJustification;
+     unsigned int(8) verticalJustification;
+     unsigned int(8) backgroundColorRgba[4];
+     RectRecord rectRecord;
+     StyleRecord styleRecord; Box boxes[];
+     }
+
+    */
+    public class TextSampleEntry_tx3g : FullBox
+    {
+        public const string TYPE = "tx3g";
+        public override string DisplayName { get { return "TextSampleEntry_tx3g"; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected uint displayFlags;
+        public uint DisplayFlags { get { return this.displayFlags; } set { this.displayFlags = value; } }
+
+        protected byte horizontalJustification;
+        public byte HorizontalJustification { get { return this.horizontalJustification; } set { this.horizontalJustification = value; } }
+
+        protected byte verticalJustification;
+        public byte VerticalJustification { get { return this.verticalJustification; } set { this.verticalJustification = value; } }
+
+        protected byte[] backgroundColorRgba;
+        public byte[] BackgroundColorRgba { get { return this.backgroundColorRgba; } set { this.backgroundColorRgba = value; } }
+
+        protected RectRecord rectRecord;
+        public RectRecord RectRecord { get { return this.rectRecord; } set { this.rectRecord = value; } }
+
+        protected StyleRecord styleRecord;
+        public StyleRecord StyleRecord { get { return this.styleRecord; } set { this.styleRecord = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public TextSampleEntry_tx3g() : base("tx3g")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt32(out this.displayFlags);
+            boxSize += stream.ReadUInt8(out this.horizontalJustification);
+            boxSize += stream.ReadUInt8(out this.verticalJustification);
+            boxSize += stream.ReadUInt8Array((uint)4, out this.backgroundColorRgba);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new RectRecord(), out this.rectRecord);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new StyleRecord(), out this.styleRecord);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt32(this.displayFlags);
+            boxSize += stream.WriteUInt8(this.horizontalJustification);
+            boxSize += stream.WriteUInt8(this.verticalJustification);
+            boxSize += stream.WriteUInt8Array((uint)4, this.backgroundColorRgba);
+            boxSize += stream.WriteClass(this.rectRecord);
+            boxSize += stream.WriteClass(this.styleRecord);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 32; // displayFlags
+            boxSize += 8; // horizontalJustification
+            boxSize += 8; // verticalJustification
+            boxSize += (uint)32; // backgroundColorRgba
+            boxSize += IsoStream.CalculateClassSize(rectRecord); // rectRecord
+            boxSize += IsoStream.CalculateClassSize(styleRecord); // styleRecord
+                                                                  // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class RectRecord() {
+     unsigned int(16) top;
+     unsigned int(16) left;
+     unsigned int(16) bottom;
+     unsigned int(16) right;
+     }
+
+    */
+    public class RectRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "RectRecord"; } }
+
+        protected ushort top;
+        public ushort Top { get { return this.top; } set { this.top = value; } }
+
+        protected ushort left;
+        public ushort Left { get { return this.left; } set { this.left = value; } }
+
+        protected ushort bottom;
+        public ushort Bottom { get { return this.bottom; } set { this.bottom = value; } }
+
+        protected ushort right;
+        public ushort Right { get { return this.right; } set { this.right = value; } }
+
+        public RectRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt16(out this.top);
+            boxSize += stream.ReadUInt16(out this.left);
+            boxSize += stream.ReadUInt16(out this.bottom);
+            boxSize += stream.ReadUInt16(out this.right);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt16(this.top);
+            boxSize += stream.WriteUInt16(this.left);
+            boxSize += stream.WriteUInt16(this.bottom);
+            boxSize += stream.WriteUInt16(this.right);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 16; // top
+            boxSize += 16; // left
+            boxSize += 16; // bottom
+            boxSize += 16; // right
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class StyleRecord() {
+     unsigned int(16) startChar;
+     unsigned int(16) endChar;
+     unsigned int(16) fontId;
+     unsigned int(8) faceStyleFlags;
+     unsigned int(8) fontSize;
+     unsigned int(8) textColor[4]; }
+    */
+    public class StyleRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "StyleRecord"; } }
+
+        protected ushort startChar;
+        public ushort StartChar { get { return this.startChar; } set { this.startChar = value; } }
+
+        protected ushort endChar;
+        public ushort EndChar { get { return this.endChar; } set { this.endChar = value; } }
+
+        protected ushort fontId;
+        public ushort FontId { get { return this.fontId; } set { this.fontId = value; } }
+
+        protected byte faceStyleFlags;
+        public byte FaceStyleFlags { get { return this.faceStyleFlags; } set { this.faceStyleFlags = value; } }
+
+        protected byte fontSize;
+        public byte FontSize { get { return this.fontSize; } set { this.fontSize = value; } }
+
+        protected byte[] textColor;
+        public byte[] TextColor { get { return this.textColor; } set { this.textColor = value; } }
+
+        public StyleRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt16(out this.startChar);
+            boxSize += stream.ReadUInt16(out this.endChar);
+            boxSize += stream.ReadUInt16(out this.fontId);
+            boxSize += stream.ReadUInt8(out this.faceStyleFlags);
+            boxSize += stream.ReadUInt8(out this.fontSize);
+            boxSize += stream.ReadUInt8Array((uint)4, out this.textColor);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt16(this.startChar);
+            boxSize += stream.WriteUInt16(this.endChar);
+            boxSize += stream.WriteUInt16(this.fontId);
+            boxSize += stream.WriteUInt8(this.faceStyleFlags);
+            boxSize += stream.WriteUInt8(this.fontSize);
+            boxSize += stream.WriteUInt8Array((uint)4, this.textColor);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 16; // startChar
+            boxSize += 16; // endChar
+            boxSize += 16; // fontId
+            boxSize += 8; // faceStyleFlags
+            boxSize += 8; // fontSize
+            boxSize += (uint)32; // textColor
             return boxSize;
         }
     }

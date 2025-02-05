@@ -375,6 +375,8 @@ partial class Program
             Try(String("signed int(64)")),
             Try(String("signed   int(32)")),
             Try(String("signed   int(8)")),
+            Try(String("RectRecord")),
+            Try(String("StyleRecord")),
             Try(String("Box()[]")),
             Try(String("Box[]")),
             Try(String("Box")),
@@ -2182,9 +2184,8 @@ namespace SharpMP4
             boxSize = "";
 
         // comment out all ReadBox/ReadDescriptor, WriteBox/WriteDescriptor and Calculate* methods
-        if (((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit") || 
-            (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox")) &&
-            b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ItemReferenceBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox")
+        if ((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ItemReferenceBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox") || 
+            (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox"))
         {
             spacing += "// ";
         }
@@ -2239,7 +2240,7 @@ namespace SharpMP4
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" &&
+            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" && value != "[4]" &&
             value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]")
         {
             return value;
@@ -2912,11 +2913,14 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "stream.ReadClass(boxSize, readSize, this, " },
             { "ThreeGPPKeyword[]",                      "stream.ReadClass(boxSize, readSize, this, " },
             { "IodsSample[]",                           "stream.ReadClass(boxSize, readSize, this, " },
+            { "RectRecord",                              "stream.ReadClass(boxSize, readSize, this, new RectRecord(), " },
+            { "StyleRecord",                            "stream.ReadClass(boxSize, readSize, this, new StyleRecord(), " },
             { "unsigned int(8)[contentIDLength]",       "stream.ReadUInt8Array((uint)contentIDLength, " },
             { "unsigned int(8)[contentTypeLength]",     "stream.ReadUInt8Array((uint)contentTypeLength, " },
             { "unsigned int(8)[rightsIssuerLength]",    "stream.ReadUInt8Array((uint)rightsIssuerLength, " },
             { "unsigned int(8)[textualHeadersLength]",  "stream.ReadUInt8Array((uint)textualHeadersLength, " },
             { "unsigned int(8)[count]",                 "stream.ReadUInt8Array((uint)count, " },
+            { "unsigned int(8)[4]",                     "stream.ReadUInt8Array((uint)4, " },
         };
         return map[type];
     }
@@ -3318,11 +3322,14 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "IsoStream.CalculateClassSize(value)" },
             { "ThreeGPPKeyword[]",                      "IsoStream.CalculateClassSize(value)" },
             { "IodsSample[]",                           "IsoStream.CalculateClassSize(value)" },
+            { "RectRecord",                              "IsoStream.CalculateClassSize(value)" },
+            { "StyleRecord",                            "IsoStream.CalculateClassSize(value)" },
             { "unsigned int(8)[contentIDLength]",       "(uint)contentIDLength * 8" },
             { "unsigned int(8)[contentTypeLength]",     "(uint)contentTypeLength * 8" },
             { "unsigned int(8)[rightsIssuerLength]",    "(uint)rightsIssuerLength * 8" },
             { "unsigned int(8)[textualHeadersLength]",  "(uint)textualHeadersLength * 8" },
             { "unsigned int(8)[count]",                 "(uint)count * 8" },
+            { "unsigned int(8)[4]",                     "(uint)32" },
        };
         return map[type];
     }
@@ -3724,11 +3731,14 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "stream.WriteClass(" },
             { "ThreeGPPKeyword[]",                      "stream.WriteClass(" },
             { "IodsSample[]",                           "stream.WriteClass(" },
+            { "RectRecord",                              "stream.WriteClass(" },
+            { "StyleRecord",                            "stream.WriteClass(" },
             { "unsigned int(8)[contentIDLength]",       "stream.WriteUInt8Array((uint)contentIDLength, " },
             { "unsigned int(8)[contentTypeLength]",     "stream.WriteUInt8Array((uint)contentTypeLength, " },
             { "unsigned int(8)[rightsIssuerLength]",    "stream.WriteUInt8Array((uint)rightsIssuerLength, " },
             { "unsigned int(8)[textualHeadersLength]",  "stream.WriteUInt8Array((uint)textualHeadersLength, " },
             { "unsigned int(8)[count]",                 "stream.WriteUInt8Array((uint)count, " },
+            { "unsigned int(8)[4]",                     "stream.WriteUInt8Array((uint)4, " },
         };
         return map[type];
     }
@@ -4175,11 +4185,14 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "AdobeChapterRecord[]" },
             { "ThreeGPPKeyword[]",                      "ThreeGPPKeyword[]" },
             { "IodsSample[]",                           "IodsSample[]" },
+            { "RectRecord",                              "RectRecord" },
+            { "StyleRecord",                            "StyleRecord" },
             { "unsigned int(8)[contentIDLength]",       "byte[]" },
             { "unsigned int(8)[contentTypeLength]",     "byte[]" },
             { "unsigned int(8)[rightsIssuerLength]",    "byte[]" },
             { "unsigned int(8)[textualHeadersLength]",  "byte[]" },
             { "unsigned int(8)[count]",                 "byte[]" },
+            { "unsigned int(8)[4]",                     "byte[]" },
         };
         return map[type];
     }
