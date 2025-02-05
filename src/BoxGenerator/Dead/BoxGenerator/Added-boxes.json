@@ -700,6 +700,31 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class AdditionalMetadataContainerBox() \r\nextends Box('meco') {\r\n\t Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class H263SpecificBox() \r\nextends Box('d263') {\r\n\t unsigned int(32) vendor; unsigned int(8) decoderVersion;\r\n unsigned int(8) level;\r\n unsigned int(8) profile;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AC3SpecificBox() \r\nextends Box('dac3') {\r\n\t unsigned int(32) vendor; unsigned int(8) decoderVersion;\r\n unsigned int(24) flags;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class EVRCSpecificBox() \r\nextends Box('devc') {\r\n\t unsigned int(32) vendor; unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class QCELPSpecificBox() \r\nextends Box('dqcp') {\r\n\t unsigned int(32) vendor; unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SMVSpecificBox() \r\nextends Box('dsmv') {\r\n\t unsigned int(32) vendor; unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
     }
   ]
 }

@@ -100,10 +100,12 @@ namespace SharpMP4
                 case "cstg": return new TrackGroupTypeBox_cstg(); // TODO: fix duplicate
                 case "ctts": return new CompositionOffsetBox();
                 case "cvru": return new OMACoverURLBox();
+                case "d263": return new H263SpecificBox();
                 case "dac3": return new AC3SpecificBox();
                 case "data": return new DataBox();
                 case "ddts": return new DdtsBox();
                 case "desc": return new AppleDescriptionBox();
+                case "devc": return new EVRCSpecificBox();
                 case "dhec": return new DefaultHevcExtractorConstructorBox();
                 case "dimg": return new SingleItemTypeReferenceBox("dimg");
                 case "dimm": return new hintimmediateBytesSent();
@@ -114,11 +116,13 @@ namespace SharpMP4
                 case "dmix": return new DownMixInstructions();
                 case "dOps": return new OpusSpecificBox();
                 case "dpnd": return new DpndBox();
+                case "dqcp": return new QCELPSpecificBox();
                 case "dref": return new DataReferenceBox();
                 case "drep": return new hintrepeatedBytesSent();
                 case "drmi": if (parent == "stsd") return new VisualSampleEntry("drmi"); break;
                 case "drms": if (parent == "stsd") return new AudioSampleEntry("drms"); break;
                 case "dscp": return new ThreeGPPDescriptionBox();
+                case "dsmv": return new SMVSpecificBox();
                 case "dtse": if (parent == "stsd") return new AudioSampleEntry("dtse"); break;
                 case "dtsh": if (parent == "stsd") return new AudioSampleEntry("dtsh"); break;
                 case "dtsl": if (parent == "stsd") return new AudioSampleEntry("dtsl"); break;
@@ -42401,6 +42405,241 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
             boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class H263SpecificBox() 
+    extends Box('d263') {
+         unsigned int(32) vendor; unsigned int(8) decoderVersion;
+     unsigned int(8) level;
+     unsigned int(8) profile;
+     } 
+    */
+    public class H263SpecificBox : Box
+    {
+        public const string TYPE = "d263";
+        public override string DisplayName { get { return "H263SpecificBox"; } }
+
+        protected uint vendor;
+        public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }
+
+        protected byte decoderVersion;
+        public byte DecoderVersion { get { return this.decoderVersion; } set { this.decoderVersion = value; } }
+
+        protected byte level;
+        public byte Level { get { return this.level; } set { this.level = value; } }
+
+        protected byte profile;
+        public byte Profile { get { return this.profile; } set { this.profile = value; } }
+
+        public H263SpecificBox() : base("d263")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.vendor);
+            boxSize += stream.ReadUInt8(out this.decoderVersion);
+            boxSize += stream.ReadUInt8(out this.level);
+            boxSize += stream.ReadUInt8(out this.profile);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.vendor);
+            boxSize += stream.WriteUInt8(this.decoderVersion);
+            boxSize += stream.WriteUInt8(this.level);
+            boxSize += stream.WriteUInt8(this.profile);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // vendor
+            boxSize += 8; // decoderVersion
+            boxSize += 8; // level
+            boxSize += 8; // profile
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class EVRCSpecificBox() 
+    extends Box('devc') {
+         unsigned int(32) vendor; unsigned int(8) decoderVersion;
+     unsigned int(8) framesPerSample;
+     } 
+    */
+    public class EVRCSpecificBox : Box
+    {
+        public const string TYPE = "devc";
+        public override string DisplayName { get { return "EVRCSpecificBox"; } }
+
+        protected uint vendor;
+        public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }
+
+        protected byte decoderVersion;
+        public byte DecoderVersion { get { return this.decoderVersion; } set { this.decoderVersion = value; } }
+
+        protected byte framesPerSample;
+        public byte FramesPerSample { get { return this.framesPerSample; } set { this.framesPerSample = value; } }
+
+        public EVRCSpecificBox() : base("devc")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.vendor);
+            boxSize += stream.ReadUInt8(out this.decoderVersion);
+            boxSize += stream.ReadUInt8(out this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.vendor);
+            boxSize += stream.WriteUInt8(this.decoderVersion);
+            boxSize += stream.WriteUInt8(this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // vendor
+            boxSize += 8; // decoderVersion
+            boxSize += 8; // framesPerSample
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class QCELPSpecificBox() 
+    extends Box('dqcp') {
+         unsigned int(32) vendor; unsigned int(8) decoderVersion;
+     unsigned int(8) framesPerSample;
+     } 
+    */
+    public class QCELPSpecificBox : Box
+    {
+        public const string TYPE = "dqcp";
+        public override string DisplayName { get { return "QCELPSpecificBox"; } }
+
+        protected uint vendor;
+        public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }
+
+        protected byte decoderVersion;
+        public byte DecoderVersion { get { return this.decoderVersion; } set { this.decoderVersion = value; } }
+
+        protected byte framesPerSample;
+        public byte FramesPerSample { get { return this.framesPerSample; } set { this.framesPerSample = value; } }
+
+        public QCELPSpecificBox() : base("dqcp")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.vendor);
+            boxSize += stream.ReadUInt8(out this.decoderVersion);
+            boxSize += stream.ReadUInt8(out this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.vendor);
+            boxSize += stream.WriteUInt8(this.decoderVersion);
+            boxSize += stream.WriteUInt8(this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // vendor
+            boxSize += 8; // decoderVersion
+            boxSize += 8; // framesPerSample
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class SMVSpecificBox() 
+    extends Box('dsmv') {
+         unsigned int(32) vendor; unsigned int(8) decoderVersion;
+     unsigned int(8) framesPerSample;
+     } 
+    */
+    public class SMVSpecificBox : Box
+    {
+        public const string TYPE = "dsmv";
+        public override string DisplayName { get { return "SMVSpecificBox"; } }
+
+        protected uint vendor;
+        public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }
+
+        protected byte decoderVersion;
+        public byte DecoderVersion { get { return this.decoderVersion; } set { this.decoderVersion = value; } }
+
+        protected byte framesPerSample;
+        public byte FramesPerSample { get { return this.framesPerSample; } set { this.framesPerSample = value; } }
+
+        public SMVSpecificBox() : base("dsmv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.vendor);
+            boxSize += stream.ReadUInt8(out this.decoderVersion);
+            boxSize += stream.ReadUInt8(out this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.vendor);
+            boxSize += stream.WriteUInt8(this.decoderVersion);
+            boxSize += stream.WriteUInt8(this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // vendor
+            boxSize += 8; // decoderVersion
+            boxSize += 8; // framesPerSample
             return boxSize;
         }
     }
