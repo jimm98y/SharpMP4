@@ -823,6 +823,18 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class OMATransactionTrackingBox() \r\nextends FullBox('odtt') {\r\n\t unsigned int(8) transactionID[16];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class NeroMetadataTagsBox() \r\nextends Box('tags') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class AdditionalMetadataContainerBox() \r\nextends Box('meco') {\r\n\t Box boxes[];\r\n } "
     }
   ]
 }

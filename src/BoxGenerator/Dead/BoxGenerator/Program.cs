@@ -1007,7 +1007,7 @@ namespace SharpMP4
         // add additional boxes
         string[] audioSampleEntryTypes = new string[]
         {
-            "samr", "sawb", "mp4a", "drms", "alac", "owma", "ac-3", "ec-3", "mlpa", "dtsl", "dtsh", "dtse", "Opus", "enca", "resa"
+            "samr", "sawb", "mp4a", "drms", "alac", "owma", "ac-3", "ec-3", "mlpa", "dtsl", "dtsh", "dtse", "Opus", "enca", "resa", "sevc", "sqcp", "ssmv"
         };
         foreach(var type in audioSampleEntryTypes)
         {

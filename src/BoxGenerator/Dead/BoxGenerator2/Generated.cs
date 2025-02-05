@@ -330,6 +330,7 @@ namespace SharpMP4
                 case "seib": return new ScalabilityInformationSEIBox();
                 case "seii": return new SeiInformationBox();
                 case "setu": return new MetaDataSetupBox();
+                case "sevc": if (parent == "stsd") return new AudioSampleEntry("sevc"); break;
                 case "sfID": return new ITunesCountryCodeBox();
                 case "sgpd": return new SampleGroupDescriptionBox();
                 case "sidx": return new SegmentIndexBox(); // TODO: box is ambiguous in between SegmentIndexBox and CompressedSegmentIndexBox
@@ -348,10 +349,12 @@ namespace SharpMP4
                 case "spid": return new VvcSubpicIDProperty();
                 case "splt": return new SplitTransitionEffectProperty();
                 case "spor": return new VvcSubpicOrderProperty();
+                case "sqcp": if (parent == "stsd") return new AudioSampleEntry("sqcp"); break;
                 case "srat": return new SamplingRateBox();
                 case "srpp": return new SRTPProcessBox();
                 case "ssix": return new CompressedSubsegmentIndexBox();
                 case "ssld": return new SuggestedTimeDisplayDurationProperty();
+                case "ssmv": if (parent == "stsd") return new AudioSampleEntry("ssmv"); break;
                 case "sstl": return new SVCSubTrackLayerBox();
                 case "stbl": return new SampleTableBox();
                 case "stco": return new ChunkOffsetBox();
@@ -391,6 +394,7 @@ namespace SharpMP4
                 case "swtc": return new MultiviewGroupRelationBox();
                 case "swtk": return new SwitchableTracks();
                 case "sync": return new SyncBox();
+                case "tags": return new NeroMetadataTagsBox();
                 case "tapt": return new AppleTrackApertureBox();
                 case "text": return new TextMediaBox();
                 case "tfdt": return new TrackFragmentBaseMediaDecodeTimeBox();
@@ -42307,6 +42311,50 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 16 * 8; // transactionID
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class NeroMetadataTagsBox() 
+    extends Box('tags') {
+         bit(8) data[];
+     } 
+    */
+    public class NeroMetadataTagsBox : Box
+    {
+        public const string TYPE = "tags";
+        public override string DisplayName { get { return "NeroMetadataTagsBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public NeroMetadataTagsBox() : base("tags")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
             return boxSize;
         }
     }
