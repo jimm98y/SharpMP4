@@ -236,6 +236,7 @@ namespace SharpMP4
                 case "mdri": return new OMAMutableDRMBox();
                 case "mdta": return new MdtaBox();
                 case "mean": return new ITunesMetadataMeanBox();
+                case "meco": return new AdditionalMetadataContainerBox();
                 case "mehd": return new MovieExtendsHeaderBox();
                 case "mere": return new MetaBoxRelationBox();
                 case "meta": return new MetaBox();
@@ -42355,6 +42356,51 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AdditionalMetadataContainerBox() 
+    extends Box('meco') {
+         Box boxes[];
+     } 
+    */
+    public class AdditionalMetadataContainerBox : Box
+    {
+        public const string TYPE = "meco";
+        public override string DisplayName { get { return "AdditionalMetadataContainerBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AdditionalMetadataContainerBox() : base("meco")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
