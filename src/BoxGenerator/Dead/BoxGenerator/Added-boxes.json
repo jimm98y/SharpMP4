@@ -751,6 +751,156 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class TextSampleEntry() \r\nextends FullBox('enct') {\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(32) displayFlags;\r\n unsigned int(8) horizontalJustification;\r\n unsigned int(8) verticalJustification;\r\n unsigned int(8) backgroundColorRgba[4];\r\n RectRecord rectRecord;\r\n StyleRecord styleRecord; Box boxes[];\r\n }\r\n aligned(8) class TextSampleEntry() \r\nextends FullBox('tx3g') {\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(32) displayFlags;\r\n unsigned int(8) horizontalJustification;\r\n unsigned int(8) verticalJustification;\r\n unsigned int(8) backgroundColorRgba[4];\r\n RectRecord rectRecord;\r\n StyleRecord styleRecord; Box boxes[];\r\n }\r\n aligned(8) class RectRecord() {\r\n unsigned int(16) top;\r\n unsigned int(16) left;\r\n unsigned int(16) bottom;\r\n unsigned int(16) right;\r\n }\r\n aligned(8) class StyleRecord() {\r\n unsigned int(16) startChar;\r\n unsigned int(16) endChar;\r\n unsigned int(16) fontId;\r\n unsigned int(8) faceStyleFlags;\r\n unsigned int(8) fontSize;\r\n unsigned int(8) textColor[4]; }"
+    },
+
+
+
+
+
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class EC3SpecificBox() \r\nextends Box('dec3') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class MLPSpecificBox() \r\nextends Box('dmlp') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Ovc1VisualSampleEntryImpl() \r\nextends Box('ovc1') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class VPCodecConfigurationBox() \r\nextends Box('vpcC') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AmrSpecificBox() \r\nextends Box('damr') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class BaseMediaInfoAtom() \r\nextends Box('gmin') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class BaseLocationBox() \r\nextends Box('bloc') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class FontTableBox() \r\nextends Box('ftab') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AvcNalUnitStorageBox() \r\nextends Box('avcn') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AssetInformationBox() \r\nextends Box('ainf') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ProtectionSystemSpecificHeaderBox() \r\nextends Box('pssh') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TrickPlayBox() \r\nextends Box('trik') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SampleEncryptionBox() \r\nextends Box('senc') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TrackEncryptionBox() \r\nextends Box('tenc') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Apple_atIDBox() \r\nextends Box('atID') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Apple_geIDBox() \r\nextends Box('geID') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleTVNetworkBox() \r\nextends Box('tvnn') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Apple_xid_Box() \r\nextends Box('xid ') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Apple_flvr_Box() \r\nextends Box('flvr') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleShortDescriptionBox() \r\nextends Box('sdes') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleSortAlbumBox() \r\nextends Box('soal') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class EventMessageBox() \r\nextends Box('emsg') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TrackReferenceTypeBox() \r\nextends Box('hind') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TrackReferenceTypeBox() \r\nextends Box('vdep') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TrackReferenceTypeBox() \r\nextends Box('vplx') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class DoViConfigurationBox() \r\nextends Box('dvcC') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class DfxpSampleEntry() \r\nextends Box('dfxp') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ContentLightLevelBox() \r\nextends Box('CoLL') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SMPTE2086MasteringDisplayMetadataBox() \r\nextends Box('SmDm') {\r\n bit(8) data[];\r\n } "
     }
   ]
 }
