@@ -73,6 +73,7 @@ namespace SharpMP4
                 case "buff": return new BufferingBox();
                 case "bxml": return new BinaryXMLBox();
                 case "catg": return new CategoryBox();
+                case "ccid": return new OMAContentIDBox();
                 case "cclv": return new ContentColourVolumeBox();
                 case "ccst": return new CodingConstraintsBox();
                 case "cdsc": return new TrackReferenceTypeBox("cdsc");
@@ -98,6 +99,7 @@ namespace SharpMP4
                 case "cslg": return new CompositionToDecodeBox();
                 case "cstg": return new TrackGroupTypeBox_cstg(); // TODO: fix duplicate
                 case "ctts": return new CompositionOffsetBox();
+                case "cvru": return new OMACoverURLBox();
                 case "dac3": return new AC3SpecificBox();
                 case "data": return new DataBox();
                 case "ddts": return new DdtsBox();
@@ -177,6 +179,7 @@ namespace SharpMP4
                 case "hvt3": if (parent == "stsd") return new VisualSampleEntry("hvt3"); break;
                 case "hvtC": return new HEVCTileConfigurationBox();
                 case "icam": return new IntrinsicCameraParametersBox();
+                case "icnu": return new OMAIconURLBox();
                 case "icpv": if (parent == "stsd") return new VisualSampleEntry("icpv"); break;
                 case "id32": return new ID3TagBox();
                 case "idat": return new ItemDataBox();
@@ -188,6 +191,7 @@ namespace SharpMP4
                 case "imif": return new IPMPInfoBox();
                 case "imir": return new ImageMirror();
                 case "infe": return new ItemInfoEntry();
+                case "infu": return new OMAInfoURLBox();
                 case "iods": return new AppleInitialObjectDescriptorBox();
                 case "ipco": return new ItemPropertyContainerBox();
                 case "ipma": return new ItemPropertyAssociationBox();
@@ -218,6 +222,7 @@ namespace SharpMP4
                 case "load": return new LoadBox();
                 case "loca": return new MetaDataLocaleBox();
                 case "loci": return new ThreeGPPLocationInformationBox();
+                case "lrcu": return new OMALyricsURLBox();
                 case "lsel": return new LayerSelectorProperty();
                 case "ludt": return new LoudnessBox();
                 case "m4ds": return new MPEG4ExtensionDescriptorsBox();
@@ -228,6 +233,7 @@ namespace SharpMP4
                 case "mdft": return new ModificationTimeProperty();
                 case "mdhd": return new MediaHeaderBox();
                 case "mdia": return new MediaBox();
+                case "mdri": return new OMAMutableDRMBox();
                 case "mdta": return new MdtaBox();
                 case "mean": return new ITunesMetadataMeanBox();
                 case "mehd": return new MovieExtendsHeaderBox();
@@ -269,6 +275,12 @@ namespace SharpMP4
                 case "npck": return new hintPacketsSentNpck();
                 case "nump": return new hintPacketsSentNump();
                 case "odaf": return new OMAAccessUnitFormatBox();
+                case "odda": return new OMAContentObjectBox();
+                case "odhe": return new OMADiscreteMediaHeadersBox();
+                case "odkm": return new OMAKeyManagementBox();
+                case "odrb": return new OMARightsObjectBox();
+                case "odrm": return new OMADrmContainerBox();
+                case "odtt": return new OMATransactionTrackingBox();
                 case "ohdr": return new OMACommonHeadersBox();
                 case "oinf": return new OperatingPointsInformationProperty();
                 case "opeg": return new OperatingPointGroupBox();
@@ -41641,7 +41653,7 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class OMACommonHeadersBox () 
+    aligned(8) class OMACommonHeadersBox() 
     extends FullBox('ohdr') {
          unsigned int(8) encryptionMethod;
      unsigned int(8) paddingScheme;
@@ -41735,6 +41747,566 @@ namespace SharpMP4
             boxSize += (uint)contentIDLength * 8; // contentID
             boxSize += (uint)rightsIssuerLength * 8; // rightsIssuerURL
             boxSize += (uint)textualHeadersLength * 8; // textualHeaders
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAContentIDBox() 
+    extends FullBox('ccid') {
+         unsigned int(16) contentIDLength;
+     unsigned int(8) contentID[contentIDLength];
+     } 
+    */
+    public class OMAContentIDBox : FullBox
+    {
+        public const string TYPE = "ccid";
+        public override string DisplayName { get { return "OMAContentIDBox"; } }
+
+        protected ushort contentIDLength;
+        public ushort ContentIDLength { get { return this.contentIDLength; } set { this.contentIDLength = value; } }
+
+        protected byte[] contentID;
+        public byte[] ContentID { get { return this.contentID; } set { this.contentID = value; } }
+
+        public OMAContentIDBox() : base("ccid")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.contentIDLength);
+            boxSize += stream.ReadUInt8Array((uint)contentIDLength, out this.contentID);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.contentIDLength);
+            boxSize += stream.WriteUInt8Array((uint)contentIDLength, this.contentID);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // contentIDLength
+            boxSize += (uint)contentIDLength * 8; // contentID
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAContentObjectBox() 
+    extends FullBox('odda') {
+         unsigned int(32) count;
+     unsigned int(8) data[count];
+     } 
+    */
+    public class OMAContentObjectBox : FullBox
+    {
+        public const string TYPE = "odda";
+        public override string DisplayName { get { return "OMAContentObjectBox"; } }
+
+        protected uint count;
+        public uint Count { get { return this.count; } set { this.count = value; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public OMAContentObjectBox() : base("odda")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.count);
+            boxSize += stream.ReadUInt8Array((uint)count, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.count);
+            boxSize += stream.WriteUInt8Array((uint)count, this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // count
+            boxSize += (uint)count * 8; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMACoverURLBox() 
+    extends FullBox('cvru') {
+         string content;
+     } 
+    */
+    public class OMACoverURLBox : FullBox
+    {
+        public const string TYPE = "cvru";
+        public override string DisplayName { get { return "OMACoverURLBox"; } }
+
+        protected BinaryUTF8String content;
+        public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
+
+        public OMACoverURLBox() : base("cvru")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.content);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(content); // content
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMADiscreteMediaHeadersBox () 
+    extends FullBox('odhe') {
+         unsigned int(8) contentTypeLength;
+     unsigned int(8) contentType[contentTypeLength];
+     Box boxes[]; 
+     } 
+    */
+    public class OMADiscreteMediaHeadersBox : FullBox
+    {
+        public const string TYPE = "odhe";
+        public override string DisplayName { get { return "OMADiscreteMediaHeadersBox"; } }
+
+        protected byte contentTypeLength;
+        public byte ContentTypeLength { get { return this.contentTypeLength; } set { this.contentTypeLength = value; } }
+
+        protected byte[] contentType;
+        public byte[] ContentType { get { return this.contentType; } set { this.contentType = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public OMADiscreteMediaHeadersBox() : base("odhe")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.contentTypeLength);
+            boxSize += stream.ReadUInt8Array((uint)contentTypeLength, out this.contentType);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.contentTypeLength);
+            boxSize += stream.WriteUInt8Array((uint)contentTypeLength, this.contentType);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // contentTypeLength
+            boxSize += (uint)contentTypeLength * 8; // contentType
+                                                    // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMADrmContainerBox() 
+    extends FullBox('odrm') {
+         Box boxes[]; 
+     } 
+    */
+    public class OMADrmContainerBox : FullBox
+    {
+        public const string TYPE = "odrm";
+        public override string DisplayName { get { return "OMADrmContainerBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public OMADrmContainerBox() : base("odrm")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAIconURLBox() 
+    extends FullBox('icnu') {
+         string content;
+     } 
+    */
+    public class OMAIconURLBox : FullBox
+    {
+        public const string TYPE = "icnu";
+        public override string DisplayName { get { return "OMAIconURLBox"; } }
+
+        protected BinaryUTF8String content;
+        public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
+
+        public OMAIconURLBox() : base("icnu")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.content);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(content); // content
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAInfoURLBox() 
+    extends FullBox('infu') {
+         string content;
+     } 
+    */
+    public class OMAInfoURLBox : FullBox
+    {
+        public const string TYPE = "infu";
+        public override string DisplayName { get { return "OMAInfoURLBox"; } }
+
+        protected BinaryUTF8String content;
+        public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
+
+        public OMAInfoURLBox() : base("infu")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.content);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(content); // content
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMALyricsURLBox() 
+    extends FullBox('lrcu') {
+         string content;
+     } 
+    */
+    public class OMALyricsURLBox : FullBox
+    {
+        public const string TYPE = "lrcu";
+        public override string DisplayName { get { return "OMALyricsURLBox"; } }
+
+        protected BinaryUTF8String content;
+        public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
+
+        public OMALyricsURLBox() : base("lrcu")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.content);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(content); // content
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAMutableDRMBox() 
+    extends Box('mdri') {
+         Box boxes[];
+     } 
+    */
+    public class OMAMutableDRMBox : Box
+    {
+        public const string TYPE = "mdri";
+        public override string DisplayName { get { return "OMAMutableDRMBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public OMAMutableDRMBox() : base("mdri")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAKeyManagementBox() 
+    extends FullBox('odkm') {
+         Box boxes[];
+     } 
+    */
+    public class OMAKeyManagementBox : FullBox
+    {
+        public const string TYPE = "odkm";
+        public override string DisplayName { get { return "OMAKeyManagementBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public OMAKeyManagementBox() : base("odkm")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMARightsObjectBox() 
+    extends FullBox('odrb') {
+         unsigned int(8) data[];
+     } 
+    */
+    public class OMARightsObjectBox : FullBox
+    {
+        public const string TYPE = "odrb";
+        public override string DisplayName { get { return "OMARightsObjectBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public OMARightsObjectBox() : base("odrb")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)data.Length * 8; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMATransactionTrackingBox() 
+    extends FullBox('odtt') {
+         unsigned int(8) transactionID[16];
+     } 
+    */
+    public class OMATransactionTrackingBox : FullBox
+    {
+        public const string TYPE = "odtt";
+        public override string DisplayName { get { return "OMATransactionTrackingBox"; } }
+
+        protected byte[] transactionID;
+        public byte[] TransactionID { get { return this.transactionID; } set { this.transactionID = value; } }
+
+        public OMATransactionTrackingBox() : base("odtt")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8Array(16, out this.transactionID);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8Array(16, this.transactionID);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16 * 8; // transactionID
             return boxSize;
         }
     }

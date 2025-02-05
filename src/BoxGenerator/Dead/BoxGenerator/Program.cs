@@ -2239,8 +2239,8 @@ namespace SharpMP4
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" &&
-            value != "[contentIDLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]")
+            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" &&
+            value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]")
         {
             return value;
         }
@@ -2913,8 +2913,10 @@ namespace SharpMP4
             { "ThreeGPPKeyword[]",                      "stream.ReadClass(boxSize, readSize, this, " },
             { "IodsSample[]",                           "stream.ReadClass(boxSize, readSize, this, " },
             { "unsigned int(8)[contentIDLength]",       "stream.ReadUInt8Array((uint)contentIDLength, " },
+            { "unsigned int(8)[contentTypeLength]",     "stream.ReadUInt8Array((uint)contentTypeLength, " },
             { "unsigned int(8)[rightsIssuerLength]",    "stream.ReadUInt8Array((uint)rightsIssuerLength, " },
             { "unsigned int(8)[textualHeadersLength]",  "stream.ReadUInt8Array((uint)textualHeadersLength, " },
+            { "unsigned int(8)[count]",                 "stream.ReadUInt8Array((uint)count, " },
         };
         return map[type];
     }
@@ -3317,8 +3319,10 @@ namespace SharpMP4
             { "ThreeGPPKeyword[]",                      "IsoStream.CalculateClassSize(value)" },
             { "IodsSample[]",                           "IsoStream.CalculateClassSize(value)" },
             { "unsigned int(8)[contentIDLength]",       "(uint)contentIDLength * 8" },
+            { "unsigned int(8)[contentTypeLength]",     "(uint)contentTypeLength * 8" },
             { "unsigned int(8)[rightsIssuerLength]",    "(uint)rightsIssuerLength * 8" },
             { "unsigned int(8)[textualHeadersLength]",  "(uint)textualHeadersLength * 8" },
+            { "unsigned int(8)[count]",                 "(uint)count * 8" },
        };
         return map[type];
     }
@@ -3721,8 +3725,10 @@ namespace SharpMP4
             { "ThreeGPPKeyword[]",                      "stream.WriteClass(" },
             { "IodsSample[]",                           "stream.WriteClass(" },
             { "unsigned int(8)[contentIDLength]",       "stream.WriteUInt8Array((uint)contentIDLength, " },
+            { "unsigned int(8)[contentTypeLength]",     "stream.WriteUInt8Array((uint)contentTypeLength, " },
             { "unsigned int(8)[rightsIssuerLength]",    "stream.WriteUInt8Array((uint)rightsIssuerLength, " },
             { "unsigned int(8)[textualHeadersLength]",  "stream.WriteUInt8Array((uint)textualHeadersLength, " },
+            { "unsigned int(8)[count]",                 "stream.WriteUInt8Array((uint)count, " },
         };
         return map[type];
     }
@@ -4170,8 +4176,10 @@ namespace SharpMP4
             { "ThreeGPPKeyword[]",                      "ThreeGPPKeyword[]" },
             { "IodsSample[]",                           "IodsSample[]" },
             { "unsigned int(8)[contentIDLength]",       "byte[]" },
+            { "unsigned int(8)[contentTypeLength]",     "byte[]" },
             { "unsigned int(8)[rightsIssuerLength]",    "byte[]" },
             { "unsigned int(8)[textualHeadersLength]",  "byte[]" },
+            { "unsigned int(8)[count]",                 "byte[]" },
         };
         return map[type];
     }
