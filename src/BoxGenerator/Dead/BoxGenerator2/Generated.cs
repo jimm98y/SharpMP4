@@ -377,7 +377,7 @@ namespace SharpMP4
                 case "snro": return new sequenceoffset();
                 case "snut": return new TrackGroupTypeBox_snut(); // TODO: fix duplicate
                 case "soaa": return new AlbumArtistSortBox();
-                case "soal": throw new NotSupportedException($"'soal' under '{parent}' is ambiguous in between AlbumSortBox and AppleSortAlbumBox");
+                case "soal": return new AlbumSortBox();
                 case "soar": return new ArtistSortBox();
                 case "soco": return new ComposerSortBox();
                 case "sonm": return new TrackSortBox();
@@ -471,7 +471,7 @@ namespace SharpMP4
                 case "ttyp": return new TrackTypeBox();
                 case "tven": return new TVEpisodeIDBox();
                 case "tves": return new AppleTVEpisodeBox();
-                case "tvnn": throw new NotSupportedException($"'tvnn' under '{parent}' is ambiguous in between TVNetworkNameBox and AppleTVNetworkBox");
+                case "tvnn": return new TVNetworkNameBox();
                 case "tvsh": return new TVShowBox();
                 case "tvsn": return new AppleTVSeasonBox();
                 case "tx3g": return new TextSampleEntry_tx3g(); // TODO: fix duplicate
@@ -44016,50 +44016,6 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class AppleTVNetworkBox() 
-    extends Box('tvnn') {
-     bit(8) data[];
-     } 
-    */
-    public class AppleTVNetworkBox : Box
-    {
-        public const string TYPE = "tvnn";
-        public override string DisplayName { get { return "AppleTVNetworkBox"; } }
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public AppleTVNetworkBox() : base("tvnn")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
-            return boxSize;
-        }
-    }
-
-
-    /*
     aligned(8) class Apple_xid_Box() 
     extends Box('xid ') {
      bit(8) data[];
@@ -44162,50 +44118,6 @@ namespace SharpMP4
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public AppleShortDescriptionBox() : base("sdes")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class AppleSortAlbumBox() 
-    extends Box('soal') {
-     bit(8) data[];
-     } 
-    */
-    public class AppleSortAlbumBox : Box
-    {
-        public const string TYPE = "soal";
-        public override string DisplayName { get { return "AppleSortAlbumBox"; } }
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public AppleSortAlbumBox() : base("soal")
         {
         }
 
