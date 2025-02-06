@@ -596,19 +596,30 @@ namespace SharpMP4
                 box = new InvalidBox(ToFourCC(header.Type));
                 box.Parent = parent;
                 box.Header = header;
-                Log.Debug($"BOX:{GetIndentation(box)}\'{EscapeString(box.FourCC)}\'");
+                LogBox(header, GetIndentation(box));
                 size = box.Read(this, availableSize) + GetHeaderSize(header);
             }
             else
             {
                 box = factory(header);
                 box.Parent = parent;
-                Log.Debug($"BOX:{GetIndentation(box)}\'{EscapeString(box.FourCC)}\'");
+                box.Header = header;
+                LogBox(header, GetIndentation(box));
                 size = ReadBox(header, box, availableSize);
             }
 
             value = (T)box;
             return size;
+        }
+
+        public static void LogBox(SafeBoxHeader header, string indentation = "")
+        {
+            string uuid = "";
+            if (header.Usertype != null)
+            {
+                uuid = $" (uuid: {new Guid(header.Usertype).ToString()})";
+            }
+            Log.Debug($"BOX:{indentation}\'{EscapeString(ToFourCC(header.Type))}\'{uuid}");
         }
 
         public static string EscapeString(string text)
