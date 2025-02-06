@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace SharpMP4
 {
     public class Mp4 : IMp4Serializable
     {
+        public virtual string DisplayName { get { return nameof(Mp4); } }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
         public StreamMarker Padding { get; set; }
-        public Mp4BoxHeader PaddingHeader { get; set; }
+        public byte[] PaddingBytes { get; set; }
+        public SafeBoxHeader PaddingHeader { get; set; }
 
         public List<Box> Children { get; set; } = new List<Box>();
 
@@ -18,7 +21,7 @@ namespace SharpMP4
             Padding = null;
             PaddingHeader = null;
 
-            Mp4BoxHeader header = null;
+            SafeBoxHeader header = null;
             Box box = null;
             ulong size = 0;
 
@@ -30,21 +33,33 @@ namespace SharpMP4
                     box = null;
 
                     header = stream.ReadBoxHeader();
-                    ulong boxSize = header.Header.GetBoxSizeInBits();
+                    ulong boxSize = header.GetBoxSizeInBits();
+
+                    IsoStream.LogBox(header);
 
                     box = stream.ReadBoxContent(header);
+
                     if(box == null)
                     {
                         // header from 0 bytes
                         this.PaddingHeader = header;
-                        this.Padding = new StreamMarker(stream.GetCurrentOffset(), stream.GetStreamLength() - stream.GetCurrentOffset(), stream);
+                        if (stream.CanStreamSeek())
+                        {
+                            this.Padding = new StreamMarker(stream.GetCurrentOffset(), stream.GetStreamLength() - stream.GetCurrentOffset(), stream);
+                        }
+                        else
+                        {
+                            StreamMarker marker;
+                            stream.ReadPadding(0, ulong.MaxValue, out marker);
+                            this.Padding = marker;
+                        }
                         break;
                     }
-                    
+
                     ulong calculatedSize = box.CalculateSize();
                     if (boxSize != calculatedSize)
                     {
-                        Debug.WriteLine($"Box size mismatch - calculated: {calculatedSize >> 3}, read: {boxSize >> 3}");
+                        Log.Debug($"Box size mismatch - calculated: {calculatedSize >> 3}, read: {boxSize >> 3}");
                     }
 
                     Children.Add(box);
@@ -56,11 +71,13 @@ namespace SharpMP4
                 if (header == null)
                 {
                     Padding = ie.Padding;
+                    PaddingBytes = ie.PaddingBytes;
                 }
-                else if (header.Header != null)
+                else
                 {
                     PaddingHeader = header;
                     Padding = ie.Padding;
+                    PaddingBytes = ie.PaddingBytes;
                 }
             }
             catch (EndOfStreamException) 
@@ -69,7 +86,7 @@ namespace SharpMP4
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error: {ex.Message}");
+                Log.Debug($"Error: {ex.Message}");
             }
 
             return size;
@@ -83,14 +100,18 @@ namespace SharpMP4
                 size += stream.WriteBox(Children[i]);
             }
 
-            if(this.PaddingHeader != null && this.PaddingHeader.Header != null)
+            if(this.PaddingHeader != null && this.PaddingHeader != null)
             {
-                size += this.PaddingHeader.Header.Write(stream);
+                size += this.PaddingHeader.Write(stream);
             }
 
             if(this.Padding != null)
             {
                 size += stream.WritePadding(this.Padding);
+            }
+            else if(this.PaddingBytes != null)
+            {
+                size += stream.WritePadding(this.PaddingBytes);
             }
 
             return size;
@@ -104,9 +125,9 @@ namespace SharpMP4
                 size += Children[i].CalculateSize();
             }
 
-            if (this.PaddingHeader != null && this.PaddingHeader.Header != null)
+            if (this.PaddingHeader != null)
             {
-                size += this.PaddingHeader.HeaderSize;
+                size += this.PaddingHeader.GetHeaderSizeInBits();
             }
 
             if (this.Padding != null)

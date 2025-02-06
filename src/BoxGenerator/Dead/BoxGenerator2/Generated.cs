@@ -16,16 +16,19 @@ namespace SharpMP4
                 case "©cmt": return new AppleCommentBox();
                 case "©cpy": return new AppleCopyright2Box();
                 case "©day": return new AppleRecordingYear2Box();
-                case "©enc": return new EncBox();
+                case "©enc": return new AppleEncoderNameBox();
                 case "©gen": return new AppleGenreBox();
+                case "©grp": return new AppleGroupingBox();
+                case "©lyr": return new AppleLyricsBox();
                 case "©mod": return new AppleCameraModelBox();
                 case "©nam": return new AppleNameBox();
+                case "©req": return new AppleRequirementsBox();
                 case "©swf": return new AppleCreatorBox();
                 case "©swr": return new AppleSoftwareBox();
-                case "©TIM": return new AppleTimBox();
-                case "©too": return new AppleEncoderBox();
-                case "©TSC": return new AppleTscBox();
-                case "©TSZ": return new AppleTszBox();
+                case "©TIM": return new AppleStartTimecode();
+                case "©too": return new AppleEncoderToolBox();
+                case "©TSC": return new AppleStartTimeScale();
+                case "©TSZ": return new AppleStartTimeSampleSize();
                 case "©wrt": return new AppleComposersBox();
                 case "©xyz": return new AppleGPSCoordinatesBox();
                 case "0000": return new ZeroBox();
@@ -33,15 +36,18 @@ namespace SharpMP4
                 case "3sib": return new MVDScalabilityInformationSEIBox();
                 case "a1lx": return new AV1LayeredImageIndexingProperty();
                 case "a1op": return new OperatingPointSelectorProperty();
-                case "a3d1": return new VisualSampleEntry("a3d1");
-                case "a3d2": return new VisualSampleEntry("a3d2");
-                case "a3d3": return new VisualSampleEntry("a3d3");
-                case "a3d4": return new VisualSampleEntry("a3d4");
+                case "a3d1": if (parent == "stsd") return new VisualSampleEntry("a3d1"); break;
+                case "a3d2": if (parent == "stsd") return new VisualSampleEntry("a3d2"); break;
+                case "a3d3": if (parent == "stsd") return new VisualSampleEntry("a3d3"); break;
+                case "a3d4": if (parent == "stsd") return new VisualSampleEntry("a3d4"); break;
                 case "a3dC": return new A3DConfigurationBox();
                 case "aART": return new AppleArtist2Box();
-                case "ac-3": return new AudioSampleEntry("ac-3");
+                case "ac-3": if (parent == "stsd") return new AudioSampleEntry("ac-3"); break;
                 case "acgl": return new SubpicCommonGroupBox();
-                case "alac": return new AudioSampleEntry("alac");
+                case "ainf": return new AssetInformationBox();
+                case "akID": return new ITunesAccountTypeBox();
+                case "alac": if (parent == "stsd") return new AudioSampleEntry("alac"); break;
+                case "albm": return new ThreeGPPAlbumBox();
                 case "alis": return new AlisBox();
                 case "alou": return new AlbumLoudnessInfo();
                 case "alte": return new TrackGroupTypeBox_alte(); // TODO: fix duplicate
@@ -49,36 +55,48 @@ namespace SharpMP4
                 case "amf0": return new Amf0Box();
                 case "amgl": return new SubpicMultipleGroupsBox();
                 case "amve": return new AmbientViewingEnvironmentBox();
+                case "apcn": if (parent == "stsd") return new VisualSampleEntry("apcn"); break;
+                case "apID": return new ITunesPurchaseAccountBox();
+                case "apmd": return new AppleApertureModeBox();
                 case "assp": return new AlternativeStartupSequencePropertiesBox();
-                case "auth": return new AuthorBox();
+                case "atID": return new Apple_atIDBox(); // TODO: fix duplicate
+                case "auth": return new ThreeGPPAuthorBox();
                 case "auxC": return new AuxiliaryTypeProperty();
                 case "auxi": return new AuxiliaryTypeInfoBox();
-                case "av01": return new VisualSampleEntry("av01");
+                case "av01": if (parent == "stsd") return new VisualSampleEntry("av01"); break;
                 case "av1C": return new AV1CodecConfigurationBox();
-                case "avc1": return new VisualSampleEntry("avc1");
-                case "avc2": return new VisualSampleEntry("avc2");
-                case "avc3": return new VisualSampleEntry("avc3");
-                case "avc4": return new VisualSampleEntry("avc4");
+                case "avc1": if (parent == "stsd") return new VisualSampleEntry("avc1"); break;
+                case "avc2": if (parent == "stsd") return new VisualSampleEntry("avc2"); break;
+                case "avc3": if (parent == "stsd") return new VisualSampleEntry("avc3"); break;
+                case "avc4": if (parent == "stsd") return new VisualSampleEntry("avc4"); break;
                 case "avcC": return new AVCConfigurationBox();
-                case "avcp": return new VisualSampleEntry("avcp");
+                case "avcn": return new AvcNalUnitStorageBox();
+                case "avcp": if (parent == "stsd") return new VisualSampleEntry("avcp"); break;
+                case "bloc": return new BaseLocationBox();
                 case "brnd": return new BrandProperty();
                 case "btrt": return new BitRateBox();
                 case "buff": return new BufferingBox();
                 case "bxml": return new BinaryXMLBox();
+                case "catg": return new CategoryBox();
+                case "ccid": return new OMAContentIDBox();
                 case "cclv": return new ContentColourVolumeBox();
                 case "ccst": return new CodingConstraintsBox();
                 case "cdsc": return new TrackReferenceTypeBox("cdsc");
                 case "chan": return new ChanBox();
                 case "chap": return new ChapBox();
                 case "chnl": return new ChannelLayout();
-                case "chpl": return new ChplBox();
+                case "chpl": return new AdobeChapterBox();
                 case "cinf": return new CompleteTrackInfoBox();
                 case "clap": return new CleanApertureBox();
+                case "clef": return new AppleCleanApertureDimensionsBox();
                 case "clfn": return new ClfnBox();
                 case "clli": return new ContentLightLevelBox();
+                case "clsf": return new ThreeGPPClassificationBox();
+                case "cnID": return new AppleStoreCatalogIDBox();
                 case "co64": return new ChunkLargeOffsetBox();
+                case "CoLL": return new ContentLightLevelBox_CoLL(); // TODO: fix duplicate
                 case "colr": return new ColourInformationBox();
-                case "covr": return new CovrBox();
+                case "covr": return new AppleCoverArtBox();
                 case "cpil": return new AppleCompilationBox();
                 case "cprt": if (parent == "ilst") return new AppleCopyrightBox(); else return new CopyrightBox();
                 case "crtt": return new CreationTimeProperty();
@@ -87,40 +105,59 @@ namespace SharpMP4
                 case "cslg": return new CompositionToDecodeBox();
                 case "cstg": return new TrackGroupTypeBox_cstg(); // TODO: fix duplicate
                 case "ctts": return new CompositionOffsetBox();
+                case "cvru": return new OMACoverURLBox();
+                case "d263": return new H263SpecificBox();
                 case "dac3": return new AC3SpecificBox();
-                case "ddts": return new DdtsBox();
+                case "damr": return new AmrSpecificBox();
+                case "data": return new DataBox();
+                case "ddts": return new DTSSpecificBox();
+                case "dec3": return new EC3SpecificBox();
                 case "desc": return new AppleDescriptionBox();
+                case "devc": return new EVRCSpecificBox();
+                case "dfxp": return new DfxpSampleEntry();
                 case "dhec": return new DefaultHevcExtractorConstructorBox();
                 case "dimg": return new SingleItemTypeReferenceBox("dimg");
                 case "dimm": return new hintimmediateBytesSent();
                 case "dinf": return new DataInformationBox();
-                case "disk": return new DiskBox();
+                case "disk": return new DiskNumberBox();
                 case "dmax": return new hintlongestpacket();
                 case "dmed": return new hintmediaBytesSent();
                 case "dmix": return new DownMixInstructions();
+                case "dmlp": return new MLPSpecificBox();
                 case "dOps": return new OpusSpecificBox();
                 case "dpnd": return new DpndBox();
+                case "dqcp": return new QCELPSpecificBox();
                 case "dref": return new DataReferenceBox();
                 case "drep": return new hintrepeatedBytesSent();
-                case "drmi": return new VisualSampleEntry("drmi");
-                case "drms": return new AudioSampleEntry("drms");
-                case "dscp": return new DescriptionBox();
-                case "dtse": return new AudioSampleEntry("dtse");
-                case "dtsh": return new AudioSampleEntry("dtsh");
-                case "dtsl": return new AudioSampleEntry("dtsl");
-                case "ec-3": return new AudioSampleEntry("ec-3");
+                case "drmi": if (parent == "stsd") return new VisualSampleEntry("drmi"); break;
+                case "drms": if (parent == "stsd") return new AudioSampleEntry("drms"); break;
+                case "dscp": return new ThreeGPPDescriptionBox();
+                case "dsmv": return new SMVSpecificBox();
+                case "dtsc": if (parent == "stsd") return new AudioSampleEntry("dtsc"); break;
+                case "dtse": if (parent == "stsd") return new AudioSampleEntry("dtse"); break;
+                case "dtsh": if (parent == "stsd") return new AudioSampleEntry("dtsh"); break;
+                case "dtsl": if (parent == "stsd") return new AudioSampleEntry("dtsl"); break;
+                case "dvav": if (parent == "stsd") return new VisualSampleEntry("dvav"); break;
+                case "dvcC": return new DoViConfigurationBox();
+                case "dvhe": if (parent == "stsd") return new VisualSampleEntry("dvhe"); break;
+                case "ec-3": if (parent == "stsd") return new AudioSampleEntry("ec-3"); break;
                 case "ecam": return new ExtrinsicCameraParametersBox();
                 case "edts": return new EditBox();
+                case "egid": return new EpisodeGlobalUniqueIdBox();
                 case "elng": return new ExtendedLanguageBox();
                 case "elst": return new EditListBox();
-                case "enca": return new AudioSampleEntry("enca");
-                case "encv": return new VisualSampleEntry("encv");
+                case "emsg": return new EventMessageBox();
+                case "enca": if (parent == "stsd") return new AudioSampleEntry("enca"); break;
+                case "enct": return new TextSampleEntry();
+                case "encv": if (parent == "stsd") return new VisualSampleEntry("encv"); break;
+                case "enda": return new AppleEndiannessBox();
+                case "enof": return new AppleEncodedPixelsDimensionsBox();
                 case "esds": return new ESDBox();
                 case "etyp": return new ExtendedTypeBox();
-                case "evc1": return new VisualSampleEntry("evc1");
+                case "evc1": if (parent == "stsd") return new VisualSampleEntry("evc1"); break;
                 case "evcC": return new EVCConfigurationBox();
-                case "evs1": return new VisualSampleEntry("evs1");
-                case "evs2": return new VisualSampleEntry("evs2");
+                case "evs1": if (parent == "stsd") return new VisualSampleEntry("evs1"); break;
+                case "evs2": if (parent == "stsd") return new VisualSampleEntry("evs2"); break;
                 case "evsC": return new EVCSliceComponentTrackConfigurationBox();
                 case "exte": return new MetaDataExtensionsBox();
                 case "fade": return new FadeTransitionEffectProperty();
@@ -129,49 +166,61 @@ namespace SharpMP4
                 case "fiel": return new FielBox();
                 case "fiin": return new FDItemInformationBox();
                 case "fire": return new FileReservoirBox();
+                case "flvr": return new Apple_flvr_Box(); // TODO: fix duplicate
                 case "fpar": return new FilePartitionBox();
                 case "free": return new FreeSpaceBox();
                 case "frma": return new OriginalFormatBox();
+                case "ftab": return new FontTableBox();
                 case "ftyp": return new FileTypeBox();
+                case "geID": return new Apple_geIDBox(); // TODO: fix duplicate
                 case "gitn": return new GroupIdToNameBox();
                 case "gmhd": return new GenericMediaHeaderAtom();
+                case "gmin": return new BaseMediaInfoAtom();
+                case "gnre": return new GenreBox();
                 case "grpl": return new GroupsListBox();
-                case "gshh": return new GshhBox();
-                case "gspm": return new GspmBox();
-                case "gspu": return new GspuBox();
-                case "gssd": return new GssdBox();
-                case "gsst": return new GsstBox();
-                case "gstd": return new GstdBox();
+                case "gshh": return new GooglesHostHeaderBox();
+                case "gspm": return new GooglePingMessageBox();
+                case "gspu": return new GooglePingUrlBox();
+                case "gssd": return new GoogleSourceDataBox();
+                case "gsst": return new GoogleStartTimeBox();
+                case "gstd": return new GoogleTrackDurationBox();
                 case "hdlr": return new HandlerBox();
                 case "hdvd": return new HdvdBox();
-                case "hev1": return new VisualSampleEntry("hev1");
-                case "hev2": return new VisualSampleEntry("hev2");
-                case "hev3": return new VisualSampleEntry("hev3");
+                case "hev1": if (parent == "stsd") return new VisualSampleEntry("hev1"); break;
+                case "hev2": if (parent == "stsd") return new VisualSampleEntry("hev2"); break;
+                case "hev3": if (parent == "stsd") return new VisualSampleEntry("hev3"); break;
+                case "hind": return new TrackReferenceTypeBox_hind(); // TODO: fix duplicate
                 case "hinf": return new hintstatisticsbox();
                 case "hint": return new HintBox();
+                case "hinv": return new AppleHintVersionBox();
                 case "hmhd": return new HintMediaHeaderBox();
                 case "hnti": return new trackhintinformation(); // TODO: box is ambiguous in between trackhintinformation and moviehintinformation
-                case "hvc1": return new VisualSampleEntry("hvc1");
-                case "hvc2": return new VisualSampleEntry("hvc2");
-                case "hvc3": return new VisualSampleEntry("hvc3");
+                case "hvc1": if (parent == "stsd") return new VisualSampleEntry("hvc1"); break;
+                case "hvc2": if (parent == "stsd") return new VisualSampleEntry("hvc2"); break;
+                case "hvc3": if (parent == "stsd") return new VisualSampleEntry("hvc3"); break;
                 case "hvcC": return new HEVCConfigurationBox();
-                case "hvt1": return new VisualSampleEntry("hvt1");
-                case "hvt2": return new VisualSampleEntry("hvt2");
-                case "hvt3": return new VisualSampleEntry("hvt3");
+                case "hvt1": if (parent == "stsd") return new VisualSampleEntry("hvt1"); break;
+                case "hvt2": if (parent == "stsd") return new VisualSampleEntry("hvt2"); break;
+                case "hvt3": if (parent == "stsd") return new VisualSampleEntry("hvt3"); break;
                 case "hvtC": return new HEVCTileConfigurationBox();
                 case "icam": return new IntrinsicCameraParametersBox();
-                case "icpv": return new VisualSampleEntry("icpv");
+                case "icnu": return new OMAIconURLBox();
+                case "icpv": if (parent == "stsd") return new VisualSampleEntry("icpv"); break;
+                case "id32": return new ID3TagBox();
                 case "idat": return new ItemDataBox();
                 case "iinf": return new ItemInfoBox();
                 case "iloc": return new ItemLocationBox();
                 case "ilst": return new AppleItemListBox();
                 case "imda": return new IdentifiedMediaDataBox();
                 case "imdt": return new DataEntryImdaBox();
+                case "imif": return new IPMPInfoBox();
                 case "imir": return new ImageMirror();
                 case "infe": return new ItemInfoEntry();
-                case "iods": return new IodsBox();
+                case "infu": return new OMAInfoURLBox();
+                case "iods": return new AppleInitialObjectDescriptorBox();
                 case "ipco": return new ItemPropertyContainerBox();
                 case "ipma": return new ItemPropertyAssociationBox();
+                case "ipmc": return new IPMPControlBox();
                 case "ipro": return new ItemProtectionBox();
                 case "iprp": return new ItemPropertiesBox();
                 case "iref": return new ItemReferenceBox();
@@ -179,21 +228,27 @@ namespace SharpMP4
                 case "irot": return new ImageRotation();
                 case "iscl": return new ImageScaling();
                 case "ispe": return new ImageSpatialExtentsProperty();
+                case "iviv": return new FairPlayIvBox();
                 case "jpgC": return new JPEGConfigurationBox();
+                case "key ": return new FairPlayUserKeyBox();
                 case "keyd": return new MetaDataKeyDeclarationBox();
                 case "keyi": return new MetaDataInlineKeysPresentBox();
                 case "keys": return new MetaDataKeyTableBox();
-                case "keyw": return new KeywBox();
+                case "keyw": return new AppleKeywordBox();
                 case "kind": return new KindBox();
-                case "kywd": return new KeywordsBox();
+                case "kywd": return new ThreeGPPKeywordsBox();
                 case "ldep": return new TierDependencyBox();
+                case "ldes": return new AppleLongDescriptionBox();
                 case "leva": return new LevelAssignmentBox();
-                case "lhe1": return new VisualSampleEntry("lhe1");
-                case "lht1": return new VisualSampleEntry("lht1");
-                case "lhv1": return new VisualSampleEntry("lhv1");
+                case "lhe1": if (parent == "stsd") return new VisualSampleEntry("lhe1"); break;
+                case "lht1": if (parent == "stsd") return new VisualSampleEntry("lht1"); break;
+                case "lhv1": if (parent == "stsd") return new VisualSampleEntry("lhv1"); break;
                 case "lhvC": return new LHEVCConfigurationBox();
                 case "load": return new LoadBox();
                 case "loca": return new MetaDataLocaleBox();
+                case "loci": return new ThreeGPPLocationInformationBox();
+                case "lpcm": if (parent == "stsd") return new AudioSampleEntry("lpcm"); break;
+                case "lrcu": return new OMALyricsURLBox();
                 case "lsel": return new LayerSelectorProperty();
                 case "ludt": return new LoudnessBox();
                 case "m4ds": return new MPEG4ExtensionDescriptorsBox();
@@ -204,99 +259,139 @@ namespace SharpMP4
                 case "mdft": return new ModificationTimeProperty();
                 case "mdhd": return new MediaHeaderBox();
                 case "mdia": return new MediaBox();
+                case "mdri": return new OMAMutableDRMBox();
                 case "mdta": return new MdtaBox();
+                case "mean": return new ITunesMetadataMeanBox();
+                case "meco": return new AdditionalMetadataContainerBox();
                 case "mehd": return new MovieExtendsHeaderBox();
+                case "mere": return new MetaBoxRelationBox();
                 case "meta": return new MetaBox();
                 case "mfhd": return new MovieFragmentHeaderBox();
                 case "mfra": return new MovieFragmentRandomAccessBox();
                 case "mfro": return new MovieFragmentRandomAccessOffsetBox();
                 case "minf": return new MediaInformationBox();
-                case "mlpa": return new AudioSampleEntry("mlpa");
+                case "mlpa": if (parent == "stsd") return new AudioSampleEntry("mlpa"); break;
                 case "moof": return new MovieFragmentBox(); // TODO: box is ambiguous in between MovieFragmentBox and CompressedMovieFragmentBox
                 case "moov": return new MovieBox(); // TODO: box is ambiguous in between MovieBox and CompressedMovieBox
-                case "mp4a": return new AudioSampleEntry("mp4a");
-                case "mp4s": return new MpegSampleEntry();
-                case "mp4v": return new VisualSampleEntry("mp4v");
+                case "mp4a": if (parent == "stsd") return new AudioSampleEntry("mp4a"); break;
+                case "mp4s": if (parent == "stsd") return new MpegSampleEntry(); break;
+                case "mp4v": if (parent == "stsd") return new VisualSampleEntry("mp4v"); break;
                 case "mpod": return new MpodBox();
                 case "mskC": return new MaskConfigurationProperty();
                 case "msrc": return new TrackGroupTypeBox();
                 case "mstv": return new MVCSubTrackViewBox();
-                case "mvc1": return new VisualSampleEntry("mvc1");
-                case "mvc2": return new VisualSampleEntry("mvc2");
-                case "mvc3": return new VisualSampleEntry("mvc3");
-                case "mvc4": return new VisualSampleEntry("mvc4");
+                case "mvc1": if (parent == "stsd") return new VisualSampleEntry("mvc1"); break;
+                case "mvc2": if (parent == "stsd") return new VisualSampleEntry("mvc2"); break;
+                case "mvc3": if (parent == "stsd") return new VisualSampleEntry("mvc3"); break;
+                case "mvc4": if (parent == "stsd") return new VisualSampleEntry("mvc4"); break;
                 case "mvcC": return new MVCConfigurationBox();
                 case "mvcg": return new MultiviewGroupBox();
                 case "mvci": return new MultiviewInformationBox();
                 case "mvcP": return new MVCViewPriorityAssignmentBox();
-                case "mvd1": return new VisualSampleEntry("mvd1");
-                case "mvd2": return new VisualSampleEntry("mvd2");
-                case "mvd3": return new VisualSampleEntry("mvd3");
-                case "mvd4": return new VisualSampleEntry("mvd4");
+                case "mvd1": if (parent == "stsd") return new VisualSampleEntry("mvd1"); break;
+                case "mvd2": if (parent == "stsd") return new VisualSampleEntry("mvd2"); break;
+                case "mvd3": if (parent == "stsd") return new VisualSampleEntry("mvd3"); break;
+                case "mvd4": if (parent == "stsd") return new VisualSampleEntry("mvd4"); break;
                 case "mvdC": return new MVCDConfigurationBox();
                 case "mvex": return new MovieExtendsBox();
                 case "mvhd": return new MovieHeaderBox();
                 case "mvra": return new MultiviewRelationAttributeBox();
-                case "name": return new AppleName2Box();
+                case "name": return new AppleName2Box(); // TODO: box is ambiguous in between AppleName2Box and FairPlayUserNameBox
                 case "NCTG": return new NikonExifBox();
                 case "nmhd": return new NullMediaHeaderBox();
                 case "npck": return new hintPacketsSentNpck();
                 case "nump": return new hintPacketsSentNump();
+                case "odaf": return new OMAAccessUnitFormatBox();
+                case "odda": return new OMAContentObjectBox();
+                case "odhe": return new OMADiscreteMediaHeadersBox();
+                case "odkm": return new OMAKeyManagementBox();
+                case "odrb": return new OMARightsObjectBox();
+                case "odrm": return new OMADrmContainerBox();
+                case "odtt": return new OMATransactionTrackingBox();
+                case "ohdr": return new OMACommonHeadersBox();
                 case "oinf": return new OperatingPointsInformationProperty();
                 case "opeg": return new OperatingPointGroupBox();
-                case "Opus": return new AudioSampleEntry("Opus");
+                case "Opus": if (parent == "stsd") return new AudioSampleEntry("Opus"); break;
                 case "otyp": return new OriginalFileTypeBox();
-                case "owma": return new AudioSampleEntry("owma");
+                case "ovc1": return new Ovc1VisualSampleEntryImpl();
+                case "owma": if (parent == "stsd") return new AudioSampleEntry("owma"); break;
                 case "padb": return new PaddingBitsBox();
                 case "paen": return new PartitionEntry();
                 case "pasp": return new PixelAspectRatioBox();
                 case "payt": return new hintpayloadID();
+                case "pcst": return new PodcastBox();
                 case "pdin": return new ProgressiveDownloadInfoBox();
+                case "perf": return new ThreeGPPPerformerBox();
+                case "pgap": return new ApplePlayGapBox();
                 case "pitm": return new PrimaryItemBox();
                 case "pixi": return new PixelInformationProperty();
                 case "pmax": return new hintlargestpacket();
                 case "prft": return new ProducerReferenceTimeBox();
+                case "priv": return new FairPlayPrivateKeyBox();
+                case "prof": return new AppleProductionApertureDimensionsBox();
+                case "pssh": return new ProtectionSystemSpecificHeaderBox();
+                case "purd": return new PurchaseDateBox();
+                case "purl": return new PodcastUrlBox();
                 case "qlif": return new SVCPriorityLayerInfoBox();
-                case "resa": return new AudioSampleEntry("resa");
-                case "resv": return new VisualSampleEntry("resv");
+                case "rdrf": return new AppleDataReferenceBox();
+                case "resa": if (parent == "stsd") return new AudioSampleEntry("resa"); break;
+                case "resv": if (parent == "stsd") return new VisualSampleEntry("resv"); break;
                 case "rinf": return new RestrictedSchemeInfoBox();
                 case "rloc": return new RelativeLocationProperty();
+                case "rmda": return new AppleReferenceMovieDescriptorBox();
+                case "rmdr": return new AppleDataRateBox();
+                case "rmra": return new AppleReferenceMovieBox();
                 case "rref": return new RequiredReferenceTypesProperty();
                 case "rrgn": return new RectRegionBox();
                 case "rssr": return new ReceivedSsrcBox();
+                case "rtng": return new AppleRatingBox();
                 case "rtp ": return new rtpmoviehintinformation();
-                case "s263": return new VisualSampleEntry("s263");
+                case "s263": if (parent == "stsd") return new VisualSampleEntry("s263"); break;
                 case "saio": return new SampleAuxiliaryInformationOffsetsBox();
                 case "saiz": return new SampleAuxiliaryInformationSizesBox();
-                case "samr": return new AudioSampleEntry("samr");
-                case "sawb": return new AudioSampleEntry("sawb");
+                case "samr": if (parent == "stsd") return new AudioSampleEntry("samr"); break;
+                case "sawb": if (parent == "stsd") return new AudioSampleEntry("sawb"); break;
                 case "sbgp": return new SampleToGroupBox();
                 case "sbtt": return new TextSubtitleSampleEntry();
                 case "schi": return new SchemeInformationBox();
                 case "schm": return new SchemeTypeBox();
                 case "scrb": return new ScrambleSchemeInfoBox();
                 case "sdep": return new SampleDependencyBox();
+                case "sdes": return new AppleShortDescriptionBox();
                 case "sdp ": return new rtptracksdphintinformation();
                 case "sdtp": return new SampleDependencyTypeBox();
                 case "segr": return new FDSessionGroupBox();
                 case "seib": return new ScalabilityInformationSEIBox();
                 case "seii": return new SeiInformationBox();
+                case "senc": return new SampleEncryptionBox();
                 case "setu": return new MetaDataSetupBox();
+                case "sevc": if (parent == "stsd") return new AudioSampleEntry("sevc"); break;
+                case "sfID": return new ITunesCountryCodeBox();
                 case "sgpd": return new SampleGroupDescriptionBox();
                 case "sidx": return new SegmentIndexBox(); // TODO: box is ambiguous in between SegmentIndexBox and CompressedSegmentIndexBox
                 case "sinf": return new ProtectionSchemeInfoBox();
                 case "skip": return new FreeSpaceBox_skip(); // TODO: fix duplicate
+                case "SmDm": return new SMPTE2086MasteringDisplayMetadataBox();
                 case "smhd": return new SoundMediaHeaderBox();
                 case "snim": return new DataEntrySeqNumImdaBox();
                 case "snro": return new sequenceoffset();
                 case "snut": return new TrackGroupTypeBox_snut(); // TODO: fix duplicate
+                case "soaa": return new AlbumArtistSortBox();
+                case "soal": return new AlbumSortBox();
+                case "soar": return new ArtistSortBox();
+                case "soco": return new ComposerSortBox();
+                case "sonm": return new TrackSortBox();
+                case "sosn": return new TVShowSortBox();
+                case "sowt": if (parent == "stsd") return new AudioSampleEntry("sowt"); break;
                 case "spid": return new VvcSubpicIDProperty();
                 case "splt": return new SplitTransitionEffectProperty();
                 case "spor": return new VvcSubpicOrderProperty();
+                case "sqcp": if (parent == "stsd") return new AudioSampleEntry("sqcp"); break;
                 case "srat": return new SamplingRateBox();
                 case "srpp": return new SRTPProcessBox();
                 case "ssix": return new CompressedSubsegmentIndexBox();
                 case "ssld": return new SuggestedTimeDisplayDurationProperty();
+                case "ssmv": if (parent == "stsd") return new AudioSampleEntry("ssmv"); break;
                 case "sstl": return new SVCSubTrackLayerBox();
                 case "stbl": return new SampleTableBox();
                 case "stco": return new ChunkOffsetBox();
@@ -307,6 +402,7 @@ namespace SharpMP4
                 case "stmg": return new MVCSubTrackMultiviewGroupBox();
                 case "stpe": return new SuggestedTransitionPeriodProperty();
                 case "stpp": return new XMLSubtitleSampleEntry();
+                case "stps": return new ApplePartialSyncSamplesBox();
                 case "strd": return new SubTrackDefinitionBox();
                 case "stri": return new SubTrackInformationBox();
                 case "strk": return new SubTrackBox();
@@ -314,6 +410,7 @@ namespace SharpMP4
                 case "stsd": return new SampleDescriptionBox();
                 case "stsg": return new SubTrackSampleGroupBox();
                 case "stsh": return new ShadowSyncSampleBox();
+                case "stsl": return new SampleScaleBox();
                 case "stss": return new SyncSampleBox();
                 case "stsz": return new SampleSizeBox();
                 case "stti": return new SubTrackTierBox();
@@ -323,8 +420,8 @@ namespace SharpMP4
                 case "styp": return new SegmentTypeBox();
                 case "stz2": return new CompactSampleSizeBox();
                 case "subs": return new SubSampleInformationBox();
-                case "svc1": return new VisualSampleEntry("svc1");
-                case "svc2": return new VisualSampleEntry("svc2");
+                case "svc1": if (parent == "stsd") return new VisualSampleEntry("svc1"); break;
+                case "svc2": if (parent == "stsd") return new VisualSampleEntry("svc2"); break;
                 case "svcC": return new SVCConfigurationBox();
                 case "svcP": return new SVCPriorityAssignmentBox();
                 case "svdr": return new SVCDependencyRangeBox();
@@ -334,6 +431,9 @@ namespace SharpMP4
                 case "swtc": return new MultiviewGroupRelationBox();
                 case "swtk": return new SwitchableTracks();
                 case "sync": return new SyncBox();
+                case "tags": return new NeroMetadataTagsBox();
+                case "tapt": return new AppleTrackApertureBox();
+                case "tenc": return new TrackEncryptionBox();
                 case "text": return new TextMediaBox();
                 case "tfdt": return new TrackFragmentBaseMediaDecodeTimeBox();
                 case "tfhd": return new TrackFragmentHeaderBox();
@@ -342,13 +442,13 @@ namespace SharpMP4
                 case "tibr": return new TierBitRateBox();
                 case "tims": return new timescaleentry();
                 case "tiri": return new TierInfoBox();
-                case "titl": return new TitlBox();
+                case "titl": return new ThreeGPPTitleBox();
                 case "tkhd": return new TrackHeaderBox();
                 case "tlou": return new TrackLoudnessInfo();
                 case "tmax": return new hintmaxrelativetime();
                 case "tmcd": return new TimeCodeBox();
                 case "tmin": return new hintminrelativetime();
-                case "tmpo": return new AppleTempoBox();
+                case "tmpo": return new AppleBeatsPerMinuteBox();
                 case "tols": return new TargetOlsProperty();
                 case "totl": return new hintBytesSentTotl();
                 case "tpay": return new hintBytesSentTpay();
@@ -360,7 +460,8 @@ namespace SharpMP4
                 case "trep": return new TrackExtensionPropertiesBox();
                 case "trex": return new TrackExtendsBox();
                 case "trgr": return new TrackGroupBox();
-                case "trkn": return new TrknBox();
+                case "trik": return new TrickPlayBox();
+                case "trkn": return new TrackNumberBox();
                 case "trpy": return new hintBytesSentTrpy();
                 case "trun": return new TrackRunBox();
                 case "tsel": return new TrackSelectionBox();
@@ -368,10 +469,12 @@ namespace SharpMP4
                 case "tssy": return new timestampsynchrony();
                 case "tstb": return new TileSubTrackGroupBox();
                 case "ttyp": return new TrackTypeBox();
-                case "tven": return new TvenBox();
+                case "tven": return new TVEpisodeIDBox();
                 case "tves": return new AppleTVEpisodeBox();
-                case "tvsh": return new TvshBox();
+                case "tvnn": return new TVNetworkNameBox();
+                case "tvsh": return new TVShowBox();
                 case "tvsn": return new AppleTVSeasonBox();
+                case "tx3g": return new TextSampleEntry_tx3g(); // TODO: fix duplicate
                 case "txtC": return new TextConfigBox();
                 case "tyco": return new TypeCombinationBox();
                 case "udes": return new UserDescriptionProperty();
@@ -380,30 +483,45 @@ namespace SharpMP4
                 case "uriI": return new URIInitBox();
                 case "url ": return new DataEntryUrlBox();
                 case "urn ": return new DataEntryUrnBox();
+                case "user": return new FairPlayUserIDBox();
                 case "uuid": return new UuidBox(uuid);
+                case "vdep": return new TrackReferenceTypeBox_vdep(); // TODO: fix duplicate
                 case "vipr": return new ViewPriorityBox();
                 case "vlab": return new WebVTTSourceLabelBox();
                 case "vmhd": return new VideoMediaHeaderBox();
+                case "vp08": if (parent == "stsd") return new VisualSampleEntry("vp08"); break;
+                case "vp09": if (parent == "stsd") return new VisualSampleEntry("vp09"); break;
+                case "vp10": if (parent == "stsd") return new VisualSampleEntry("vp10"); break;
+                case "vpcC": return new VPCodecConfigurationBox();
+                case "vplx": return new TrackReferenceTypeBox_vplx(); // TODO: fix duplicate
                 case "vsib": return new ViewScalabilityInformationSEIBox();
                 case "vttC": return new WebVTTConfigurationBox();
-                case "vvc1": return new VisualSampleEntry("vvc1");
+                case "vvc1": if (parent == "stsd") return new VisualSampleEntry("vvc1"); break;
                 case "vvcC": return new VvcConfigurationBox();
-                case "vvcN": return new VisualSampleEntry("vvcN");
-                case "vvi1": return new VisualSampleEntry("vvi1");
+                case "vvcN": if (parent == "stsd") return new VisualSampleEntry("vvcN"); break;
+                case "vvi1": if (parent == "stsd") return new VisualSampleEntry("vvi1"); break;
                 case "vvnC": return new VvcNALUConfigBox();
-                case "vvs1": return new VisualSampleEntry("vvs1");
+                case "vvs1": if (parent == "stsd") return new VisualSampleEntry("vvs1"); break;
                 case "vwdi": return new MultiviewSceneInfoBox();
                 case "vwid": return new ViewIdentifierBox();
-                case "wide": return new WideBox();
+                case "wave": return new AppleWaveBox();
+                case "wide": return new FreeSpaceBox_wide(); // TODO: fix duplicate
                 case "wipe": return new WipeTransitionEffectProperty();
                 case "wvtt": return new WVTTSampleEntry();
+                case "xid ": return new Apple_xid_Box(); // TODO: fix duplicate
                 case "xml ": return new XMLBox();
                 case "Xtra": return new WindowsMediaXtraBox();
+                case "yrrc": return new ThreeGPPRecordingYearBox();
                 case "zoom": return new ZoomTransitionEffectProperty();
             }
 
+            if (parent == "ilst")
+            {
+                if (fourCC[0] == '\0') return new IlstKey(fourCC);
+            }
+
             //throw new NotImplementedException(fourCC);
-            System.Diagnostics.Debug.WriteLine($"--Unknown box: {fourCC}");
+            Log.Debug($"Unknown box: '{fourCC}'");
             return new UnknownBox(fourCC);
         }
         public static IMp4Serializable CreateEntry(string fourCC)
@@ -482,7 +600,7 @@ namespace SharpMP4
             }
 
             //throw new NotImplementedException(fourCC);
-            System.Diagnostics.Debug.WriteLine($"--Unknown entry: {fourCC}");
+            Log.Debug($"Unknown entry: '{fourCC}'");
             return new UnknownEntry(fourCC);
         }
     }
@@ -560,7 +678,8 @@ namespace SharpMP4
     public class SymbolicMusicSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SymbolicMusicSpecificConfig"; } }
 
         protected byte version;  // version of this specification is 0b0000 
         public byte Version { get { return this.version; } set { this.version = value; } }
@@ -655,7 +774,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt8(out this.numberOfParts); // parts of the main score 
             boxSize += stream.ReadBits(3, out this.notationFormat); // CWMN or other sets 
             boxSize += stream.ReadUimsbf(8, out this.urlMIDIStream_length); //length in bytes 
-            boxSize += stream.ReadBytes(urlMIDIStream_length, out this.urlMIDIStream); // reference to the MIDI stream, as url 
+            boxSize += stream.ReadUInt8Array((uint)urlMIDIStream_length, out this.urlMIDIStream); // reference to the MIDI stream, as url 
             boxSize += stream.ReadBits(2, out this.codingType); // coding of the XML chunks 
             boxSize += stream.ReadUimsbf(8, out this.length); //length in bits of decoder configuration, unsigned integer 
             /*  start of decoderConfiguration  */
@@ -729,7 +848,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt8(this.numberOfParts); // parts of the main score 
             boxSize += stream.WriteBits(3, this.notationFormat); // CWMN or other sets 
             boxSize += stream.WriteUimsbf(8, this.urlMIDIStream_length); //length in bytes 
-            boxSize += stream.WriteBytes(urlMIDIStream_length, this.urlMIDIStream); // reference to the MIDI stream, as url 
+            boxSize += stream.WriteUInt8Array((uint)urlMIDIStream_length, this.urlMIDIStream); // reference to the MIDI stream, as url 
             boxSize += stream.WriteBits(2, this.codingType); // coding of the XML chunks 
             boxSize += stream.WriteUimsbf(8, this.length); //length in bits of decoder configuration, unsigned integer 
             /*  start of decoderConfiguration  */
@@ -873,7 +992,7 @@ namespace SharpMP4
     */
     public class FullBox : Box
     {
-
+        public override string DisplayName { get { return "FullBox"; } }
 
         protected byte version; // = v
         public byte Version { get { return this.version; } set { this.version = value; } }
@@ -925,7 +1044,8 @@ namespace SharpMP4
     public abstract class SampleGroupDescriptionEntry : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SampleGroupDescriptionEntry"; } }
 
         public SampleGroupDescriptionEntry(string grouping_type) : base()
         {
@@ -961,7 +1081,7 @@ namespace SharpMP4
     */
     public abstract class VisualSampleGroupEntry : SampleGroupDescriptionEntry
     {
-
+        public override string DisplayName { get { return "VisualSampleGroupEntry"; } }
 
         public VisualSampleGroupEntry(string grouping_type) : base(grouping_type)
         {
@@ -1000,7 +1120,7 @@ namespace SharpMP4
     */
     public abstract class AudioSampleGroupEntry : SampleGroupDescriptionEntry
     {
-
+        public override string DisplayName { get { return "AudioSampleGroupEntry"; } }
 
         public AudioSampleGroupEntry(string grouping_type) : base(grouping_type)
         {
@@ -1039,7 +1159,7 @@ namespace SharpMP4
     */
     public abstract class HintSampleGroupEntry : SampleGroupDescriptionEntry
     {
-
+        public override string DisplayName { get { return "HintSampleGroupEntry"; } }
 
         public HintSampleGroupEntry(string grouping_type) : base(grouping_type)
         {
@@ -1078,7 +1198,7 @@ namespace SharpMP4
     */
     public abstract class SubtitleSampleGroupEntry : SampleGroupDescriptionEntry
     {
-
+        public override string DisplayName { get { return "SubtitleSampleGroupEntry"; } }
 
         public SubtitleSampleGroupEntry(string grouping_type) : base(grouping_type)
         {
@@ -1115,7 +1235,7 @@ namespace SharpMP4
     */
     public abstract class TextSampleGroupEntry : SampleGroupDescriptionEntry
     {
-
+        public override string DisplayName { get { return "TextSampleGroupEntry"; } }
 
         public TextSampleGroupEntry(string grouping_type) : base(grouping_type)
         {
@@ -1152,7 +1272,7 @@ namespace SharpMP4
     */
     public class SubtitleSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "SubtitleSampleEntry"; } }
 
         public SubtitleSampleEntry(string codingname = "") : base(codingname)
         {
@@ -1194,6 +1314,7 @@ namespace SharpMP4
     public class XMLSubtitleSampleEntry : SubtitleSampleEntry
     {
         public const string TYPE = "stpp";
+        public override string DisplayName { get { return "XMLSubtitleSampleEntry"; } }
 
         protected BinaryUTF8String ns;
         public BinaryUTF8String Ns { get { return this.ns; } set { this.ns = value; } }
@@ -1213,10 +1334,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.ns);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.schema_location); // optional 
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
-                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); 
+            boxSize += stream.ReadString(boxSize, readSize, out this.ns);
+            boxSize += stream.ReadString(boxSize, readSize, out this.schema_location); // optional 
+            boxSize += stream.ReadString(boxSize, readSize, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+                                                                                            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -1225,10 +1346,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.ns);
-            boxSize += stream.WriteStringZeroTerminated(this.schema_location); // optional 
-            boxSize += stream.WriteStringZeroTerminated(this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
-                                                                                    // boxSize += stream.WriteBox( this.BitRateBox); 
+            boxSize += stream.WriteString(this.ns);
+            boxSize += stream.WriteString(this.schema_location); // optional 
+            boxSize += stream.WriteString(this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+                                                                      // boxSize += stream.WriteBox( this.BitRateBox); 
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
@@ -1258,6 +1379,7 @@ namespace SharpMP4
     public class TextSubtitleSampleEntry : SubtitleSampleEntry
     {
         public const string TYPE = "sbtt";
+        public override string DisplayName { get { return "TextSubtitleSampleEntry"; } }
 
         protected BinaryUTF8String content_encoding;  //  optional 
         public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -1275,8 +1397,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional 
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.mime_format);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional 
+            boxSize += stream.ReadString(boxSize, readSize, out this.mime_format);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -1287,8 +1409,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional 
-            boxSize += stream.WriteStringZeroTerminated(this.mime_format);
+            boxSize += stream.WriteString(this.content_encoding); // optional 
+            boxSize += stream.WriteString(this.mime_format);
             // boxSize += stream.WriteBox( this.BitRateBox); // optional 
             // boxSize += stream.WriteBox( this.TextConfigBox); // optional 
             boxSize += stream.WriteBoxArrayTillEnd(this);
@@ -1331,7 +1453,7 @@ namespace SharpMP4
     */
     public class LoudnessBaseBox : FullBox
     {
-
+        public override string DisplayName { get { return "LoudnessBaseBox"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -1464,7 +1586,7 @@ namespace SharpMP4
     */
     public class MPEG2TSSampleEntry : HintSampleEntry
     {
-
+        public override string DisplayName { get { return "MPEG2TSSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -1545,7 +1667,8 @@ namespace SharpMP4
     public class ItemInfoExtension : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ItemInfoExtension"; } }
 
         public ItemInfoExtension(string extension_type) : base()
         {
@@ -1578,7 +1701,7 @@ namespace SharpMP4
     */
     public class PlainTextSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "PlainTextSampleEntry"; } }
 
         public PlainTextSampleEntry(string codingname = "") : base(codingname)
         {
@@ -1621,6 +1744,7 @@ namespace SharpMP4
     public class SimpleTextSampleEntry : PlainTextSampleEntry
     {
         public const string TYPE = "stxt";
+        public override string DisplayName { get { return "SimpleTextSampleEntry"; } }
 
         protected BinaryUTF8String content_encoding;  //  optional 
         public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -1638,8 +1762,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional 
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.mime_format);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional 
+            boxSize += stream.ReadString(boxSize, readSize, out this.mime_format);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -1650,8 +1774,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional 
-            boxSize += stream.WriteStringZeroTerminated(this.mime_format);
+            boxSize += stream.WriteString(this.content_encoding); // optional 
+            boxSize += stream.WriteString(this.mime_format);
             // boxSize += stream.WriteBox( this.BitRateBox); // optional 
             // boxSize += stream.WriteBox( this.TextConfigBox); // optional 
             boxSize += stream.WriteBoxArrayTillEnd(this);
@@ -1678,7 +1802,7 @@ namespace SharpMP4
     */
     public class ItemProperty : Box
     {
-
+        public override string DisplayName { get { return "ItemProperty"; } }
 
         public ItemProperty(string property_type) : base(property_type)
         {
@@ -1712,7 +1836,7 @@ namespace SharpMP4
     */
     public class ItemFullProperty : FullBox
     {
-
+        public override string DisplayName { get { return "ItemFullProperty"; } }
 
         public ItemFullProperty(string property_type, byte version, uint flags) : base(property_type, version, flags)
         {
@@ -1750,7 +1874,7 @@ namespace SharpMP4
     */
     public class GeneralTypeBox : Box
     {
-
+        public override string DisplayName { get { return "GeneralTypeBox"; } }
 
         protected uint major_brand;
         public uint MajorBrand { get { return this.major_brand; } set { this.major_brand = value; } }
@@ -1809,7 +1933,7 @@ namespace SharpMP4
     */
     public class MetaDataKeyBox : Box
     {
-
+        public override string DisplayName { get { return "MetaDataKeyBox"; } }
         public MetaDataKeyDeclarationBox _MetaDataKeyDeclarationBox { get { return this.children.OfType<MetaDataKeyDeclarationBox>().FirstOrDefault(); } }
         public MetaDataDatatypeBox _MetaDataDatatypeBox { get { return this.children.OfType<MetaDataDatatypeBox>().FirstOrDefault(); } }
         public MetaDataLocaleBox _MetaDataLocaleBox { get { return this.children.OfType<MetaDataLocaleBox>().FirstOrDefault(); } }
@@ -1872,6 +1996,7 @@ namespace SharpMP4
     public class MetaDataKeyDeclarationBox : Box
     {
         public const string TYPE = "keyd";
+        public override string DisplayName { get { return "MetaDataKeyDeclarationBox"; } }
 
         protected uint key_namespace;
         public uint KeyNamespace { get { return this.key_namespace; } set { this.key_namespace = value; } }
@@ -1922,6 +2047,7 @@ namespace SharpMP4
     public class MetaDataLocaleBox : Box
     {
         public const string TYPE = "loca";
+        public override string DisplayName { get { return "MetaDataLocaleBox"; } }
 
         protected BinaryUTF8String locale_string;
         public BinaryUTF8String LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
@@ -1934,7 +2060,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.locale_string);
+            boxSize += stream.ReadString(boxSize, readSize, out this.locale_string);
             return boxSize;
         }
 
@@ -1942,7 +2068,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.locale_string);
+            boxSize += stream.WriteString(this.locale_string);
             return boxSize;
         }
 
@@ -1965,6 +2091,7 @@ namespace SharpMP4
     public class MetaDataSetupBox : Box
     {
         public const string TYPE = "setu";
+        public override string DisplayName { get { return "MetaDataSetupBox"; } }
 
         public MetaDataSetupBox() : base("setu")
         {
@@ -2006,6 +2133,7 @@ namespace SharpMP4
     public class MetaDataExtensionsBox : Box
     {
         public const string TYPE = "exte";
+        public override string DisplayName { get { return "MetaDataExtensionsBox"; } }
         public IEnumerable<Box> Extensions { get { return this.children.OfType<Box>(); } }
 
         public MetaDataExtensionsBox() : base("exte")
@@ -2051,6 +2179,7 @@ namespace SharpMP4
     public class MetaDataInlineKeysPresentBox : Box
     {
         public const string TYPE = "keyi";
+        public override string DisplayName { get { return "MetaDataInlineKeysPresentBox"; } }
 
         protected byte inlineKeyValueBoxesPresent;
         public byte InlineKeyValueBoxesPresent { get { return this.inlineKeyValueBoxesPresent; } set { this.inlineKeyValueBoxesPresent = value; } }
@@ -2095,7 +2224,8 @@ namespace SharpMP4
     public class MetaDataAccessUnit : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "MetaDataAccessUnit"; } }
 
         protected Box[] boxes;
         public Box[] Boxes { get { return this.boxes; } set { this.boxes = value; } }
@@ -2135,7 +2265,7 @@ namespace SharpMP4
     */
     public class MetaDataAUBox : Box
     {
-
+        public override string DisplayName { get { return "MetaDataAUBox"; } }
 
         public MetaDataAUBox(string local_key_id) : base(local_key_id)
         {
@@ -2173,7 +2303,7 @@ namespace SharpMP4
     */
     public abstract class SampleEntry : Box
     {
-
+        public override string DisplayName { get { return "SampleEntry"; } }
 
         protected byte[] reserved = [];
         public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -2242,6 +2372,7 @@ namespace SharpMP4
     public class SegmentIndexBox : FullBox
     {
         public const string TYPE = "sidx";
+        public override string DisplayName { get { return "SegmentIndexBox"; } }
 
         protected uint reference_ID;
         public uint ReferenceID { get { return this.reference_ID; } set { this.reference_ID = value; } }
@@ -2397,6 +2528,7 @@ namespace SharpMP4
     public class MovieBox : Box
     {
         public const string TYPE = "moov";
+        public override string DisplayName { get { return "MovieBox"; } }
 
         public MovieBox() : base("moov")
         {
@@ -2435,6 +2567,7 @@ namespace SharpMP4
     public class MovieFragmentBox : Box
     {
         public const string TYPE = "moof";
+        public override string DisplayName { get { return "MovieFragmentBox"; } }
 
         public MovieFragmentBox() : base("moof")
         {
@@ -2474,7 +2607,7 @@ namespace SharpMP4
     */
     public class DataEntryBaseBox : FullBox
     {
-
+        public override string DisplayName { get { return "DataEntryBaseBox"; } }
 
         public DataEntryBaseBox(string entry_type, uint flags) : base(entry_type, 0, flags)
         {
@@ -2517,6 +2650,7 @@ namespace SharpMP4
     public class ViewPriorityBox : Box
     {
         public const string TYPE = "vipr";
+        public override string DisplayName { get { return "ViewPriorityBox"; } }
 
         protected byte[] reserved;
         public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -2590,7 +2724,8 @@ namespace SharpMP4
     public class DependencyInfo : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "DependencyInfo"; } }
 
         protected byte subSeqDirectionFlag;
         public byte SubSeqDirectionFlag { get { return this.subSeqDirectionFlag; } set { this.subSeqDirectionFlag = value; } }
@@ -2658,6 +2793,7 @@ namespace SharpMP4
     public class AVCSubSequenceEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "avss";
+        public override string DisplayName { get { return "AVCSubSequenceEntry"; } }
 
         protected ushort subSequenceIdentifer;
         public ushort SubSequenceIdentifer { get { return this.subSequenceIdentifer; } set { this.subSequenceIdentifer = value; } }
@@ -2718,7 +2854,7 @@ namespace SharpMP4
                 boxSize += stream.ReadUInt16(out this.avgFrameRate);
             }
             boxSize += stream.ReadUInt8(out this.numReferences);
-            boxSize += stream.ReadClass(boxSize, readSize, out this.dependency);
+            boxSize += stream.ReadClass(boxSize, readSize, this, out this.dependency);
             return boxSize;
         }
 
@@ -2799,6 +2935,7 @@ namespace SharpMP4
     public class IntrinsicCameraParametersBox : FullBox
     {
         public const string TYPE = "icam";
+        public override string DisplayName { get { return "IntrinsicCameraParametersBox"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -2936,6 +3073,7 @@ namespace SharpMP4
     public class ExtrinsicCameraParametersBox : FullBox
     {
         public const string TYPE = "ecam";
+        public override string DisplayName { get { return "ExtrinsicCameraParametersBox"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -3087,7 +3225,8 @@ namespace SharpMP4
     public class AVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "AVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -3177,7 +3316,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadBytes(sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
 
@@ -3186,7 +3325,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadBytes(pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
             }
 
             if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize; else HasExtensions = true;
@@ -3206,7 +3345,7 @@ namespace SharpMP4
                 for (int i = 0; i < numOfSequenceParameterSetExt; i++)
                 {
                     boxSize += stream.ReadUInt16(out this.sequenceParameterSetExtLength[i]);
-                    boxSize += stream.ReadBytes(sequenceParameterSetExtLength[i], out this.sequenceParameterSetExtNALUnit[i]);
+                    boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetExtLength[i], out this.sequenceParameterSetExtNALUnit[i]);
                 }
             }
             return boxSize;
@@ -3227,14 +3366,14 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
-                boxSize += stream.WriteBytes(sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
 
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
-                boxSize += stream.WriteBytes(pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
             }
 
             if (!HasExtensions) return boxSize;
@@ -3252,7 +3391,7 @@ namespace SharpMP4
                 for (int i = 0; i < numOfSequenceParameterSetExt; i++)
                 {
                     boxSize += stream.WriteUInt16(this.sequenceParameterSetExtLength[i]);
-                    boxSize += stream.WriteBytes(sequenceParameterSetExtLength[i], this.sequenceParameterSetExtNALUnit[i]);
+                    boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetExtLength[i], this.sequenceParameterSetExtNALUnit[i]);
                 }
             }
             return boxSize;
@@ -3332,7 +3471,8 @@ namespace SharpMP4
     public class MVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "MVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -3402,7 +3542,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadBytes(sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
 
@@ -3411,7 +3551,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadBytes(pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
             }
             return boxSize;
         }
@@ -3433,14 +3573,14 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
-                boxSize += stream.WriteBytes(sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
 
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
-                boxSize += stream.WriteBytes(pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
             }
             return boxSize;
         }
@@ -3501,7 +3641,8 @@ namespace SharpMP4
     public class SVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -3567,7 +3708,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
             {
                 boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadBytes(sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
 
@@ -3576,7 +3717,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadBytes(pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
             }
             return boxSize;
         }
@@ -3597,14 +3738,14 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
             {
                 boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
-                boxSize += stream.WriteBytes(sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
 
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
-                boxSize += stream.WriteBytes(pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
             }
             return boxSize;
         }
@@ -3679,7 +3820,8 @@ namespace SharpMP4
     public class HEVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "HEVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -3817,7 +3959,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
-                    boxSize += stream.ReadBytes(nalUnitLength[j][i], out this.nalUnit[j][i]);
+                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
                 }
             }
             return boxSize;
@@ -3860,7 +4002,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += stream.WriteUInt16(this.nalUnitLength[j][i]);
-                    boxSize += stream.WriteBytes(nalUnitLength[j][i], this.nalUnit[j][i]);
+                    boxSize += stream.WriteUInt8Array((uint)nalUnitLength[j][i], this.nalUnit[j][i]);
                 }
             }
             return boxSize;
@@ -3937,7 +4079,8 @@ namespace SharpMP4
     public class VvcPTLRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "VvcPTLRecord"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -4144,7 +4287,8 @@ namespace SharpMP4
     public class VvcDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "VvcDecoderConfigurationRecord"; } }
 
         protected byte reserved = 0b11111;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -4228,7 +4372,7 @@ namespace SharpMP4
                 boxSize += stream.ReadBits(2, out this.chroma_format_idc);
                 boxSize += stream.ReadBits(3, out this.bit_depth_minus8);
                 boxSize += stream.ReadBits(5, out this.reserved0);
-                boxSize += stream.ReadClass(boxSize, readSize, new VvcPTLRecord(num_sublayers), out this.native_ptl);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord(num_sublayers), out this.native_ptl);
                 boxSize += stream.ReadUInt16(out this.max_picture_width);
                 boxSize += stream.ReadUInt16(out this.max_picture_height);
                 boxSize += stream.ReadUInt16(out this.avg_frame_rate);
@@ -4256,7 +4400,7 @@ namespace SharpMP4
                     for (int i = 0; i < num_nalus[j]; i++)
                     {
                         boxSize += stream.ReadUInt16(out this.nal_unit_length[j][i]);
-                        boxSize += stream.ReadBytes(nal_unit_length[j][i], out this.nal_unit[j][i]);
+                        boxSize += stream.ReadUInt8Array((uint)nal_unit_length[j][i], out this.nal_unit[j][i]);
                     }
                 }
             }
@@ -4301,7 +4445,7 @@ namespace SharpMP4
                     for (int i = 0; i < num_nalus[j]; i++)
                     {
                         boxSize += stream.WriteUInt16(this.nal_unit_length[j][i]);
-                        boxSize += stream.WriteBytes(nal_unit_length[j][i], this.nal_unit[j][i]);
+                        boxSize += stream.WriteUInt8Array((uint)nal_unit_length[j][i], this.nal_unit[j][i]);
                     }
                 }
             }
@@ -4381,7 +4525,8 @@ namespace SharpMP4
     public class MVDDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "MVDDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -4451,7 +4596,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadBytes(sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
 
@@ -4460,7 +4605,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadBytes(pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
             }
             return boxSize;
         }
@@ -4482,14 +4627,14 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
-                boxSize += stream.WriteBytes(sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
 
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
-                boxSize += stream.WriteBytes(pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
             }
             return boxSize;
         }
@@ -4578,7 +4723,8 @@ namespace SharpMP4
     public class VvcOperatingPointsRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "VvcOperatingPointsRecord"; } }
 
         protected byte num_profile_tier_level_minus1;
         public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }
@@ -4681,7 +4827,7 @@ namespace SharpMP4
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
                 boxSize += stream.ReadUInt8(out this.ptl_max_temporal_id[i]);
-                boxSize += stream.ReadClass(boxSize, readSize, new VvcPTLRecord((byte)(ptl_max_temporal_id[i] + 1)), out this.ptl[i]);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord((byte)(ptl_max_temporal_id[i] + 1)), out this.ptl[i]);
             }
             boxSize += stream.ReadBit(out this.all_independent_layers_flag);
             boxSize += stream.ReadBits(7, out this.reserved);
@@ -4941,7 +5087,8 @@ namespace SharpMP4
     public class EVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "EVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -5038,7 +5185,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
-                    boxSize += stream.ReadBytes(nalUnitLength[j][i], out this.nalUnit[j][i]);
+                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
                 }
             }
             return boxSize;
@@ -5071,7 +5218,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += stream.WriteUInt16(this.nalUnitLength[j][i]);
-                    boxSize += stream.WriteBytes(nalUnitLength[j][i], this.nalUnit[j][i]);
+                    boxSize += stream.WriteUInt8Array((uint)nalUnitLength[j][i], this.nalUnit[j][i]);
                 }
             }
             return boxSize;
@@ -5154,7 +5301,8 @@ namespace SharpMP4
     public class LHEVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "LHEVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
         public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -5299,7 +5447,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
-                    boxSize += stream.ReadBytes(nalUnitLength[j][i], out this.nalUnit[j][i]);
+                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
                 }
             }
             boxSize += stream.ReadUInt16(out this.operationPointIdx);
@@ -5344,7 +5492,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += stream.WriteUInt16(this.nalUnitLength[j][i]);
-                    boxSize += stream.WriteBytes(nalUnitLength[j][i], this.nalUnit[j][i]);
+                    boxSize += stream.WriteUInt8Array((uint)nalUnitLength[j][i], this.nalUnit[j][i]);
                 }
             }
             boxSize += stream.WriteUInt16(this.operationPointIdx);
@@ -5406,6 +5554,7 @@ namespace SharpMP4
     public class ReceivedSsrcBox : Box
     {
         public const string TYPE = "rssr";
+        public override string DisplayName { get { return "ReceivedSsrcBox"; } }
 
         protected uint SSRC;
         public uint _SSRC { get { return this.SSRC; } set { this.SSRC = value; } }
@@ -5449,6 +5598,7 @@ namespace SharpMP4
     public class timestampsynchrony : Box
     {
         public const string TYPE = "tssy";
+        public override string DisplayName { get { return "timestampsynchrony"; } }
 
         protected byte reserved;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -5499,6 +5649,7 @@ namespace SharpMP4
     public class timescaleentry : Box
     {
         public const string TYPE = "tims";
+        public override string DisplayName { get { return "timescaleentry"; } }
 
         protected uint timescale;
         public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }
@@ -5543,6 +5694,7 @@ namespace SharpMP4
     public class timeoffset : Box
     {
         public const string TYPE = "tsro";
+        public override string DisplayName { get { return "timeoffset"; } }
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
@@ -5585,6 +5737,7 @@ namespace SharpMP4
     public class sequenceoffset : Box
     {
         public const string TYPE = "snro";
+        public override string DisplayName { get { return "sequenceoffset"; } }
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
@@ -5627,6 +5780,7 @@ namespace SharpMP4
     public class hintBytesSentTrpy : Box
     {
         public const string TYPE = "trpy";
+        public override string DisplayName { get { return "hintBytesSentTrpy"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5669,6 +5823,7 @@ namespace SharpMP4
     public class hintPacketsSentNump : Box
     {
         public const string TYPE = "nump";
+        public override string DisplayName { get { return "hintPacketsSentNump"; } }
 
         protected ulong packetssent;
         public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
@@ -5710,6 +5865,7 @@ namespace SharpMP4
     public class hintBytesSentTpyl : Box
     {
         public const string TYPE = "tpyl";
+        public override string DisplayName { get { return "hintBytesSentTpyl"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5752,6 +5908,7 @@ namespace SharpMP4
     public class hintBytesSentTotl : Box
     {
         public const string TYPE = "totl";
+        public override string DisplayName { get { return "hintBytesSentTotl"; } }
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5794,6 +5951,7 @@ namespace SharpMP4
     public class hintPacketsSentNpck : Box
     {
         public const string TYPE = "npck";
+        public override string DisplayName { get { return "hintPacketsSentNpck"; } }
 
         protected uint packetssent;
         public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
@@ -5835,6 +5993,7 @@ namespace SharpMP4
     public class hintBytesSentTpay : Box
     {
         public const string TYPE = "tpay";
+        public override string DisplayName { get { return "hintBytesSentTpay"; } }
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5877,6 +6036,7 @@ namespace SharpMP4
     public class hintmaxrate : Box
     {
         public const string TYPE = "maxr";
+        public override string DisplayName { get { return "hintmaxrate"; } }
 
         protected uint period;  //  in milliseconds
         public uint Period { get { return this.period; } set { this.period = value; } }
@@ -5928,6 +6088,7 @@ namespace SharpMP4
     public class hintmediaBytesSent : Box
     {
         public const string TYPE = "dmed";
+        public override string DisplayName { get { return "hintmediaBytesSent"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -5970,6 +6131,7 @@ namespace SharpMP4
     public class hintimmediateBytesSent : Box
     {
         public const string TYPE = "dimm";
+        public override string DisplayName { get { return "hintimmediateBytesSent"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -6011,6 +6173,7 @@ namespace SharpMP4
     public class hintrepeatedBytesSent : Box
     {
         public const string TYPE = "drep";
+        public override string DisplayName { get { return "hintrepeatedBytesSent"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -6053,6 +6216,7 @@ namespace SharpMP4
     public class hintminrelativetime : Box
     {
         public const string TYPE = "tmin";
+        public override string DisplayName { get { return "hintminrelativetime"; } }
 
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
@@ -6094,6 +6258,7 @@ namespace SharpMP4
     public class hintmaxrelativetime : Box
     {
         public const string TYPE = "tmax";
+        public override string DisplayName { get { return "hintmaxrelativetime"; } }
 
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
@@ -6136,6 +6301,7 @@ namespace SharpMP4
     public class hintlargestpacket : Box
     {
         public const string TYPE = "pmax";
+        public override string DisplayName { get { return "hintlargestpacket"; } }
 
         protected uint bytes;
         public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
@@ -6177,6 +6343,7 @@ namespace SharpMP4
     public class hintlongestpacket : Box
     {
         public const string TYPE = "dmax";
+        public override string DisplayName { get { return "hintlongestpacket"; } }
 
         protected uint time;
         public uint Time { get { return this.time; } set { this.time = value; } }
@@ -6220,6 +6387,7 @@ namespace SharpMP4
     public class hintpayloadID : Box
     {
         public const string TYPE = "payt";
+        public override string DisplayName { get { return "hintpayloadID"; } }
 
         protected uint payloadID;  //  payload ID used in RTP packets
         public uint PayloadID { get { return this.payloadID; } set { this.payloadID = value; } }
@@ -6240,7 +6408,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt32(out this.payloadID); // payload ID used in RTP packets
             boxSize += stream.ReadUInt8(out this.count);
-            boxSize += stream.ReadUInt8Array(count, out this.rtpmap_string);
+            boxSize += stream.ReadUInt8Array((uint)count, out this.rtpmap_string);
             return boxSize;
         }
 
@@ -6250,7 +6418,7 @@ namespace SharpMP4
             boxSize += base.Write(stream);
             boxSize += stream.WriteUInt32(this.payloadID); // payload ID used in RTP packets
             boxSize += stream.WriteUInt8(this.count);
-            boxSize += stream.WriteUInt8Array(count, this.rtpmap_string);
+            boxSize += stream.WriteUInt8Array((uint)count, this.rtpmap_string);
             return boxSize;
         }
 
@@ -6280,6 +6448,7 @@ namespace SharpMP4
     public class StereoVideoBox : FullBox
     {
         public const string TYPE = "stvi";
+        public override string DisplayName { get { return "StereoVideoBox"; } }
 
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -6309,7 +6478,7 @@ namespace SharpMP4
             boxSize += stream.ReadBits(2, out this.single_view_allowed);
             boxSize += stream.ReadUInt32(out this.stereo_scheme);
             boxSize += stream.ReadUInt32(out this.length);
-            boxSize += stream.ReadBytes(length, out this.stereo_indication_type);
+            boxSize += stream.ReadUInt8Array((uint)length, out this.stereo_indication_type);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.any_box); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -6323,7 +6492,7 @@ namespace SharpMP4
             boxSize += stream.WriteBits(2, this.single_view_allowed);
             boxSize += stream.WriteUInt32(this.stereo_scheme);
             boxSize += stream.WriteUInt32(this.length);
-            boxSize += stream.WriteBytes(length, this.stereo_indication_type);
+            boxSize += stream.WriteUInt8Array(length, this.stereo_indication_type);
             // boxSize += stream.WriteBox( this.any_box); // optional
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
@@ -6353,6 +6522,7 @@ namespace SharpMP4
     public class ExtendedLanguageBox : FullBox
     {
         public const string TYPE = "elng";
+        public override string DisplayName { get { return "ExtendedLanguageBox"; } }
 
         protected BinaryUTF8String extended_language;
         public BinaryUTF8String ExtendedLanguage { get { return this.extended_language; } set { this.extended_language = value; } }
@@ -6365,7 +6535,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.extended_language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.extended_language);
             return boxSize;
         }
 
@@ -6373,7 +6543,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.extended_language);
+            boxSize += stream.WriteString(this.extended_language);
             return boxSize;
         }
 
@@ -6397,6 +6567,7 @@ namespace SharpMP4
     public class BitRateBox : Box
     {
         public const string TYPE = "btrt";
+        public override string DisplayName { get { return "BitRateBox"; } }
 
         protected uint bufferSizeDB;
         public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
@@ -6452,6 +6623,7 @@ namespace SharpMP4
     public class PixelAspectRatioBox : Box
     {
         public const string TYPE = "pasp";
+        public override string DisplayName { get { return "PixelAspectRatioBox"; } }
 
         protected uint hSpacing;
         public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
@@ -6513,6 +6685,7 @@ namespace SharpMP4
     public class CleanApertureBox : Box
     {
         public const string TYPE = "clap";
+        public override string DisplayName { get { return "CleanApertureBox"; } }
 
         protected uint cleanApertureWidthN;
         public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
@@ -6615,6 +6788,7 @@ namespace SharpMP4
     public class ContentColourVolumeBox : Box
     {
         public const string TYPE = "cclv";
+        public override string DisplayName { get { return "ContentColourVolumeBox"; } }
 
         protected bool reserved1 = false;  //  ccv_cancel_flag
         public bool Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -6803,6 +6977,7 @@ namespace SharpMP4
     public class ColourInformationBox : Box
     {
         public const string TYPE = "colr";
+        public override string DisplayName { get { return "ColourInformationBox"; } }
 
         protected uint colour_type;
         public uint ColourType { get { return this.colour_type; } set { this.colour_type = value; } }
@@ -6850,12 +7025,12 @@ namespace SharpMP4
 
             else if (colour_type == IsoStream.FromFourCC("rICC"))
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ICC_profile(), out this.ICC_profile); // restricted ICC profile
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ICC_profile(), out this.ICC_profile); // restricted ICC profile
             }
 
             else if (colour_type == IsoStream.FromFourCC("prof"))
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ICC_profile(), out this.ICC_profile); // unrestricted ICC profile
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ICC_profile(), out this.ICC_profile); // unrestricted ICC profile
             }
             return boxSize;
         }
@@ -6933,6 +7108,7 @@ namespace SharpMP4
     public class ContentLightLevelBox : Box
     {
         public const string TYPE = "clli";
+        public override string DisplayName { get { return "ContentLightLevelBox"; } }
 
         protected ushort max_content_light_level;
         public ushort MaxContentLightLevel { get { return this.max_content_light_level; } set { this.max_content_light_level = value; } }
@@ -6988,6 +7164,7 @@ namespace SharpMP4
     public class MasteringDisplayColourVolumeBox : Box
     {
         public const string TYPE = "mdcv";
+        public override string DisplayName { get { return "MasteringDisplayColourVolumeBox"; } }
 
         protected ushort[] display_primaries_x;
         public ushort[] DisplayPrimariesx { get { return this.display_primaries_x; } set { this.display_primaries_x = value; } }
@@ -7075,6 +7252,7 @@ namespace SharpMP4
     public class ScrambleSchemeInfoBox : Box
     {
         public const string TYPE = "scrb";
+        public override string DisplayName { get { return "ScrambleSchemeInfoBox"; } }
         public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
         public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }
 
@@ -7171,6 +7349,7 @@ namespace SharpMP4
     public class ChannelLayout : FullBox
     {
         public const string TYPE = "chnl";
+        public override string DisplayName { get { return "ChannelLayout"; } }
 
         protected byte stream_structure;
         public byte StreamStructure { get { return this.stream_structure; } set { this.stream_structure = value; } }
@@ -7531,6 +7710,7 @@ namespace SharpMP4
     public class DownMixInstructions : FullBox
     {
         public const string TYPE = "dmix";
+        public override string DisplayName { get { return "DownMixInstructions"; } }
 
         protected bool reserved = false;
         public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -7624,7 +7804,7 @@ namespace SharpMP4
                                 size += 5;
                             }
                         }
-                        boxSize += stream.ReadBytes((ulong)(Math.Ceiling(size / 8d) - size), out this.reserved00[a]); // byte align
+                        boxSize += stream.ReadUInt8Array((uint)(Math.Ceiling(size / 8d) - size), out this.reserved00[a]); // byte align
                     }
 
                     else
@@ -7690,7 +7870,7 @@ namespace SharpMP4
                                 size += 5;
                             }
                         }
-                        boxSize += stream.WriteBytes((ulong)(Math.Ceiling(size / 8d) - size), this.reserved00[a]); // byte align
+                        boxSize += stream.WriteUInt8Array((uint)(Math.Ceiling(size / 8d) - size), this.reserved00[a]); // byte align
                     }
 
                     else
@@ -7784,6 +7964,7 @@ namespace SharpMP4
     public class SamplingRateBox : FullBox
     {
         public const string TYPE = "srat";
+        public override string DisplayName { get { return "SamplingRateBox"; } }
 
         protected uint sampling_rate;
         public uint SamplingRate { get { return this.sampling_rate; } set { this.sampling_rate = value; } }
@@ -7826,6 +8007,7 @@ namespace SharpMP4
     public class TextConfigBox : FullBox
     {
         public const string TYPE = "txtC";
+        public override string DisplayName { get { return "TextConfigBox"; } }
 
         protected BinaryUTF8String text_config;
         public BinaryUTF8String TextConfig { get { return this.text_config; } set { this.text_config = value; } }
@@ -7838,7 +8020,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.text_config);
+            boxSize += stream.ReadString(boxSize, readSize, out this.text_config);
             return boxSize;
         }
 
@@ -7846,7 +8028,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.text_config);
+            boxSize += stream.WriteString(this.text_config);
             return boxSize;
         }
 
@@ -7869,6 +8051,7 @@ namespace SharpMP4
     public class URIInitBox : FullBox
     {
         public const string TYPE = "uriI";
+        public override string DisplayName { get { return "URIInitBox"; } }
 
         protected byte[] uri_initialization_data;
         public byte[] UriInitializationData { get { return this.uri_initialization_data; } set { this.uri_initialization_data = value; } }
@@ -7914,6 +8097,7 @@ namespace SharpMP4
     public class CopyrightBox : FullBox
     {
         public const string TYPE = "cprt";
+        public override string DisplayName { get { return "CopyrightBox"; } }
 
         protected bool pad = false;
         public bool Pad { get { return this.pad; } set { this.pad = value; } }
@@ -7934,7 +8118,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadBit(out this.pad);
             boxSize += stream.ReadIso639(out this.language); // ISO-639-2/T language code
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.notice);
+            boxSize += stream.ReadString(boxSize, readSize, out this.notice);
             return boxSize;
         }
 
@@ -7944,7 +8128,7 @@ namespace SharpMP4
             boxSize += base.Write(stream);
             boxSize += stream.WriteBit(this.pad);
             boxSize += stream.WriteIso639(this.language); // ISO-639-2/T language code
-            boxSize += stream.WriteStringZeroTerminated(this.notice);
+            boxSize += stream.WriteString(this.notice);
             return boxSize;
         }
 
@@ -7969,6 +8153,7 @@ namespace SharpMP4
     public class KindBox : FullBox
     {
         public const string TYPE = "kind";
+        public override string DisplayName { get { return "KindBox"; } }
 
         protected BinaryUTF8String schemeURI;
         public BinaryUTF8String SchemeURI { get { return this.schemeURI; } set { this.schemeURI = value; } }
@@ -7984,8 +8169,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.schemeURI);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.value);
+            boxSize += stream.ReadString(boxSize, readSize, out this.schemeURI);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -7993,8 +8178,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.schemeURI);
-            boxSize += stream.WriteStringZeroTerminated(this.value);
+            boxSize += stream.WriteString(this.schemeURI);
+            boxSize += stream.WriteString(this.value);
             return boxSize;
         }
 
@@ -8019,6 +8204,7 @@ namespace SharpMP4
     public class TrackSelectionBox : FullBox
     {
         public const string TYPE = "tsel";
+        public override string DisplayName { get { return "TrackSelectionBox"; } }
 
         protected int switch_group = 0;
         public int SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
@@ -8066,6 +8252,7 @@ namespace SharpMP4
     public class SubTrackBox : Box
     {
         public const string TYPE = "strk";
+        public override string DisplayName { get { return "SubTrackBox"; } }
 
         public SubTrackBox() : base("strk")
         {
@@ -8106,6 +8293,7 @@ namespace SharpMP4
     public class trackhintinformation : Box
     {
         public const string TYPE = "hnti";
+        public override string DisplayName { get { return "trackhintinformation"; } }
 
         public trackhintinformation() : base("hnti")
         {
@@ -8145,6 +8333,7 @@ namespace SharpMP4
     public class rtptracksdphintinformation : Box
     {
         public const string TYPE = "sdp ";
+        public override string DisplayName { get { return "rtptracksdphintinformation"; } }
 
         protected byte[] sdptext;
         public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
@@ -8188,6 +8377,7 @@ namespace SharpMP4
     public class moviehintinformation : Box
     {
         public const string TYPE = "hnti";
+        public override string DisplayName { get { return "moviehintinformation"; } }
 
         public moviehintinformation() : base("hnti")
         {
@@ -8228,6 +8418,7 @@ namespace SharpMP4
     public class rtpmoviehintinformation : Box
     {
         public const string TYPE = "rtp ";
+        public override string DisplayName { get { return "rtpmoviehintinformation"; } }
 
         protected uint descriptionformat = IsoStream.FromFourCC("sdp ");
         public uint Descriptionformat { get { return this.descriptionformat; } set { this.descriptionformat = value; } }
@@ -8278,6 +8469,7 @@ namespace SharpMP4
     public class hintstatisticsbox : Box
     {
         public const string TYPE = "hinf";
+        public override string DisplayName { get { return "hintstatisticsbox"; } }
 
         public hintstatisticsbox() : base("hinf")
         {
@@ -8320,6 +8512,7 @@ namespace SharpMP4
     public class LoudnessBox : Box
     {
         public const string TYPE = "ludt";
+        public override string DisplayName { get { return "LoudnessBox"; } }
         public IEnumerable<TrackLoudnessInfo> Loudness { get { return this.children.OfType<TrackLoudnessInfo>(); } }
         public IEnumerable<AlbumLoudnessInfo> AlbumLoudness { get { return this.children.OfType<AlbumLoudnessInfo>(); } }
 
@@ -8368,6 +8561,7 @@ namespace SharpMP4
     public class TrackLoudnessInfo : LoudnessBaseBox
     {
         public const string TYPE = "tlou";
+        public override string DisplayName { get { return "TrackLoudnessInfo"; } }
 
         public TrackLoudnessInfo() : base("tlou")
         {
@@ -8402,6 +8596,7 @@ namespace SharpMP4
     public class AlbumLoudnessInfo : LoudnessBaseBox
     {
         public const string TYPE = "alou";
+        public override string DisplayName { get { return "AlbumLoudnessInfo"; } }
 
         public AlbumLoudnessInfo() : base("alou")
         {
@@ -8439,6 +8634,7 @@ namespace SharpMP4
     public class DataEntryUrlBox : DataEntryBaseBox
     {
         public const string TYPE = "url ";
+        public override string DisplayName { get { return "DataEntryUrlBox"; } }
 
         protected BinaryUTF8String location;
         public BinaryUTF8String Location { get { return this.location; } set { this.location = value; } }
@@ -8451,7 +8647,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.location);
+            boxSize += stream.ReadString(boxSize, readSize, out this.location);
             return boxSize;
         }
 
@@ -8459,7 +8655,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.location);
+            boxSize += stream.WriteString(this.location);
             return boxSize;
         }
 
@@ -8483,6 +8679,7 @@ namespace SharpMP4
     public class DataEntryUrnBox : DataEntryBaseBox
     {
         public const string TYPE = "urn ";
+        public override string DisplayName { get { return "DataEntryUrnBox"; } }
 
         protected BinaryUTF8String name;
         public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
@@ -8498,8 +8695,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.name);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.location);
+            boxSize += stream.ReadString(boxSize, readSize, out this.name);
+            boxSize += stream.ReadString(boxSize, readSize, out this.location);
             return boxSize;
         }
 
@@ -8507,8 +8704,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.name);
-            boxSize += stream.WriteStringZeroTerminated(this.location);
+            boxSize += stream.WriteString(this.name);
+            boxSize += stream.WriteString(this.location);
             return boxSize;
         }
 
@@ -8532,6 +8729,7 @@ namespace SharpMP4
     public class DataEntryImdaBox : DataEntryBaseBox
     {
         public const string TYPE = "imdt";
+        public override string DisplayName { get { return "DataEntryImdaBox"; } }
 
         protected uint imda_ref_identifier;
         public uint ImdaRefIdentifier { get { return this.imda_ref_identifier; } set { this.imda_ref_identifier = value; } }
@@ -8574,6 +8772,7 @@ namespace SharpMP4
     public class DataEntrySeqNumImdaBox : DataEntryBaseBox
     {
         public const string TYPE = "snim";
+        public override string DisplayName { get { return "DataEntrySeqNumImdaBox"; } }
 
         public DataEntrySeqNumImdaBox(uint flags = 0) : base("snim", flags)
         {
@@ -8615,6 +8814,7 @@ namespace SharpMP4
     public class ItemPropertyContainerBox : Box
     {
         public const string TYPE = "ipco";
+        public override string DisplayName { get { return "ItemPropertyContainerBox"; } }
         public IEnumerable<Box> Properties { get { return this.children.OfType<Box>(); } }
 
         public ItemPropertyContainerBox() : base("ipco")
@@ -8681,6 +8881,7 @@ namespace SharpMP4
     public class ItemPropertyAssociationBox : FullBox
     {
         public const string TYPE = "ipma";
+        public override string DisplayName { get { return "ItemPropertyAssociationBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -8833,6 +9034,7 @@ namespace SharpMP4
     public class ItemPropertiesBox : Box
     {
         public const string TYPE = "iprp";
+        public override string DisplayName { get { return "ItemPropertiesBox"; } }
         public ItemPropertyContainerBox PropertyContainer { get { return this.children.OfType<ItemPropertyContainerBox>().FirstOrDefault(); } }
         public IEnumerable<ItemPropertyAssociationBox> Association { get { return this.children.OfType<ItemPropertyAssociationBox>(); } }
 
@@ -8889,6 +9091,7 @@ namespace SharpMP4
     public class AlternativeStartupSequencePropertiesBox : FullBox
     {
         public const string TYPE = "assp";
+        public override string DisplayName { get { return "AlternativeStartupSequencePropertiesBox"; } }
 
         protected int min_initial_alt_startup_offset;
         public int MinInitialAltStartupOffset { get { return this.min_initial_alt_startup_offset; } set { this.min_initial_alt_startup_offset = value; } }
@@ -8988,6 +9191,7 @@ namespace SharpMP4
     public class BinaryXMLBox : FullBox
     {
         public const string TYPE = "bxml";
+        public override string DisplayName { get { return "BinaryXMLBox"; } }
 
         protected byte[] data;  //  to end of box
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -9030,6 +9234,7 @@ namespace SharpMP4
     public class CompleteTrackInfoBox : Box
     {
         public const string TYPE = "cinf";
+        public override string DisplayName { get { return "CompleteTrackInfoBox"; } }
         public OriginalFormatBox OriginalFormat { get { return this.children.OfType<OriginalFormatBox>().FirstOrDefault(); } }
 
         public CompleteTrackInfoBox(string fmt = "") : base("cinf")
@@ -9077,6 +9282,7 @@ namespace SharpMP4
     public class ChunkLargeOffsetBox : FullBox
     {
         public const string TYPE = "co64";
+        public override string DisplayName { get { return "ChunkLargeOffsetBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9157,6 +9363,7 @@ namespace SharpMP4
     public class CompactSampleToGroupBox : FullBox
     {
         public const string TYPE = "csgp";
+        public override string DisplayName { get { return "CompactSampleToGroupBox"; } }
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -9311,6 +9518,7 @@ namespace SharpMP4
     public class CompositionToDecodeBox : FullBox
     {
         public const string TYPE = "cslg";
+        public override string DisplayName { get { return "CompositionToDecodeBox"; } }
 
         protected long compositionToDTSShift;
         public long CompositionToDTSShift { get { return this.compositionToDTSShift; } set { this.compositionToDTSShift = value; } }
@@ -9430,6 +9638,7 @@ namespace SharpMP4
     public class CompositionOffsetBox : FullBox
     {
         public const string TYPE = "ctts";
+        public override string DisplayName { get { return "CompositionOffsetBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9546,6 +9755,7 @@ namespace SharpMP4
     public class DataInformationBox : Box
     {
         public const string TYPE = "dinf";
+        public override string DisplayName { get { return "DataInformationBox"; } }
 
         public DataInformationBox() : base("dinf")
         {
@@ -9589,6 +9799,7 @@ namespace SharpMP4
     public class DataReferenceBox : FullBox
     {
         public const string TYPE = "dref";
+        public override string DisplayName { get { return "DataReferenceBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9649,6 +9860,7 @@ namespace SharpMP4
     public class EditBox : Box
     {
         public const string TYPE = "edts";
+        public override string DisplayName { get { return "EditBox"; } }
 
         public EditBox() : base("edts")
         {
@@ -9699,6 +9911,7 @@ namespace SharpMP4
     public class EditListBox : FullBox
     {
         public const string TYPE = "elst";
+        public override string DisplayName { get { return "EditListBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -9814,6 +10027,7 @@ namespace SharpMP4
     public class ExtendedTypeBox : Box
     {
         public const string TYPE = "etyp";
+        public override string DisplayName { get { return "ExtendedTypeBox"; } }
         public IEnumerable<TypeCombinationBox> CompatibleCombinations { get { return this.children.OfType<TypeCombinationBox>(); } }
 
         public ExtendedTypeBox() : base("etyp")
@@ -9863,6 +10077,7 @@ namespace SharpMP4
     public class FDItemInfoExtension : ItemInfoExtension
     {
         public const string TYPE = "fdel";
+        public override string DisplayName { get { return "FDItemInfoExtension"; } }
 
         protected BinaryUTF8String content_location;
         public BinaryUTF8String ContentLocation { get { return this.content_location; } set { this.content_location = value; } }
@@ -9890,8 +10105,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_location);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_MD5);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_location);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_MD5);
             boxSize += stream.ReadUInt64(out this.content_length);
             boxSize += stream.ReadUInt64(out this.transfer_length);
             boxSize += stream.ReadUInt8(out this.entry_count);
@@ -9908,8 +10123,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_location);
-            boxSize += stream.WriteStringZeroTerminated(this.content_MD5);
+            boxSize += stream.WriteString(this.content_location);
+            boxSize += stream.WriteString(this.content_MD5);
             boxSize += stream.WriteUInt64(this.content_length);
             boxSize += stream.WriteUInt64(this.transfer_length);
             boxSize += stream.WriteUInt8(this.entry_count);
@@ -9961,6 +10176,7 @@ namespace SharpMP4
     public class FECReservoirBox : FullBox
     {
         public const string TYPE = "fecr";
+        public override string DisplayName { get { return "FECReservoirBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10087,6 +10303,7 @@ namespace SharpMP4
     public class PartitionEntry : Box
     {
         public const string TYPE = "paen";
+        public override string DisplayName { get { return "PartitionEntry"; } }
         public FilePartitionBox BlocksAndSymbols { get { return this.children.OfType<FilePartitionBox>().FirstOrDefault(); } }
         public FECReservoirBox FECSymbolLocations { get { return this.children.OfType<FECReservoirBox>().FirstOrDefault(); } }
         public FileReservoirBox FileSymbolLocations { get { return this.children.OfType<FileReservoirBox>().FirstOrDefault(); } }
@@ -10142,6 +10359,7 @@ namespace SharpMP4
     public class FDItemInformationBox : FullBox
     {
         public const string TYPE = "fiin";
+        public override string DisplayName { get { return "FDItemInformationBox"; } }
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10212,6 +10430,7 @@ namespace SharpMP4
     public class FileReservoirBox : FullBox
     {
         public const string TYPE = "fire";
+        public override string DisplayName { get { return "FileReservoirBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10356,6 +10575,7 @@ namespace SharpMP4
     public class FilePartitionBox : FullBox
     {
         public const string TYPE = "fpar";
+        public override string DisplayName { get { return "FilePartitionBox"; } }
 
         protected uint item_ID;
         public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -10418,7 +10638,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.max_source_block_length);
             boxSize += stream.ReadUInt16(out this.encoding_symbol_length);
             boxSize += stream.ReadUInt16(out this.max_number_of_encoding_symbols);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.scheme_specific_info);
+            boxSize += stream.ReadString(boxSize, readSize, out this.scheme_specific_info);
 
             if (version == 0)
             {
@@ -10461,7 +10681,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt16(this.max_source_block_length);
             boxSize += stream.WriteUInt16(this.encoding_symbol_length);
             boxSize += stream.WriteUInt16(this.max_number_of_encoding_symbols);
-            boxSize += stream.WriteStringZeroTerminated(this.scheme_specific_info);
+            boxSize += stream.WriteString(this.scheme_specific_info);
 
             if (version == 0)
             {
@@ -10532,6 +10752,7 @@ namespace SharpMP4
     public class FreeSpaceBox : Box
     {
         public const string TYPE = "free";
+        public override string DisplayName { get { return "FreeSpaceBox"; } }
 
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
@@ -10577,6 +10798,7 @@ namespace SharpMP4
     public class OriginalFormatBox : Box
     {
         public const string TYPE = "frma";
+        public override string DisplayName { get { return "OriginalFormatBox"; } }
 
         protected uint data_format; // = codingname
         public uint DataFormat { get { return this.data_format; } set { this.data_format = value; } }
@@ -10629,6 +10851,7 @@ namespace SharpMP4
     public class FileTypeBox : Box
     {
         public const string TYPE = "ftyp";
+        public override string DisplayName { get { return "FileTypeBox"; } }
 
         protected uint major_brand;
         public uint MajorBrand { get { return this.major_brand; } set { this.major_brand = value; } }
@@ -10688,6 +10911,7 @@ namespace SharpMP4
     public class GroupIdToNameBox : FullBox
     {
         public const string TYPE = "gitn";
+        public override string DisplayName { get { return "GroupIdToNameBox"; } }
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -10713,7 +10937,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.ReadUInt32(out this.group_ID[i]);
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.group_name[i]);
+                boxSize += stream.ReadString(boxSize, readSize, out this.group_name[i]);
             }
             return boxSize;
         }
@@ -10727,7 +10951,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.WriteUInt32(this.group_ID[i]);
-                boxSize += stream.WriteStringZeroTerminated(this.group_name[i]);
+                boxSize += stream.WriteString(this.group_name[i]);
             }
             return boxSize;
         }
@@ -10755,6 +10979,7 @@ namespace SharpMP4
     public class GroupsListBox : Box
     {
         public const string TYPE = "grpl";
+        public override string DisplayName { get { return "GroupsListBox"; } }
 
         public GroupsListBox() : base("grpl")
         {
@@ -10797,6 +11022,7 @@ namespace SharpMP4
     public class HandlerBox : FullBox
     {
         public const string TYPE = "hdlr";
+        public override string DisplayName { get { return "HandlerBox"; } }
 
         protected uint pre_defined = 0;
         public uint PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -10821,7 +11047,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(out this.pre_defined);
             boxSize += stream.ReadUInt32(out this.handler_type);
             boxSize += stream.ReadUInt32Array(3, out this.reserved);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.name);
+            boxSize += stream.ReadString(boxSize, readSize, out this.name);
             return boxSize;
         }
 
@@ -10832,7 +11058,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt32(this.pre_defined);
             boxSize += stream.WriteUInt32(this.handler_type);
             boxSize += stream.WriteUInt32Array(3, this.reserved);
-            boxSize += stream.WriteStringZeroTerminated(this.name);
+            boxSize += stream.WriteString(this.name);
             return boxSize;
         }
 
@@ -10862,6 +11088,7 @@ namespace SharpMP4
     public class HintMediaHeaderBox : FullBox
     {
         public const string TYPE = "hmhd";
+        public override string DisplayName { get { return "HintMediaHeaderBox"; } }
 
         protected ushort maxPDUsize;
         public ushort MaxPDUsize { get { return this.maxPDUsize; } set { this.maxPDUsize = value; } }
@@ -10928,6 +11155,7 @@ namespace SharpMP4
     public class ItemDataBox : Box
     {
         public const string TYPE = "idat";
+        public override string DisplayName { get { return "ItemDataBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -10976,6 +11204,7 @@ namespace SharpMP4
     public class ItemInfoBox : FullBox
     {
         public const string TYPE = "iinf";
+        public override string DisplayName { get { return "ItemInfoBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -11085,6 +11314,7 @@ namespace SharpMP4
     public class ItemLocationBox : FullBox
     {
         public const string TYPE = "iloc";
+        public override string DisplayName { get { return "ItemLocationBox"; } }
 
         protected byte offset_size;
         public byte OffsetSize { get { return this.offset_size; } set { this.offset_size = value; } }
@@ -11191,7 +11421,7 @@ namespace SharpMP4
                     boxSize += stream.ReadBits(4, out this.construction_method[i]);
                 }
                 boxSize += stream.ReadUInt16(out this.data_reference_index[i]);
-                boxSize += stream.ReadBytes(base_offset_size, out this.base_offset[i]);
+                boxSize += stream.ReadUInt8Array((uint)base_offset_size, out this.base_offset[i]);
                 boxSize += stream.ReadUInt16(out this.extent_count[i]);
 
                 this.item_reference_index[i] = new byte[extent_count[i]][];
@@ -11202,10 +11432,10 @@ namespace SharpMP4
 
                     if (((version == 1) || (version == 2)) && (index_size > 0))
                     {
-                        boxSize += stream.ReadBytes(index_size, out this.item_reference_index[i][j]);
+                        boxSize += stream.ReadUInt8Array((uint)index_size, out this.item_reference_index[i][j]);
                     }
-                    boxSize += stream.ReadBytes(offset_size, out this.extent_offset[i][j]);
-                    boxSize += stream.ReadBytes(length_size, out this.extent_length[i][j]);
+                    boxSize += stream.ReadUInt8Array((uint)offset_size, out this.extent_offset[i][j]);
+                    boxSize += stream.ReadUInt8Array((uint)length_size, out this.extent_length[i][j]);
                 }
             }
             return boxSize;
@@ -11258,7 +11488,7 @@ namespace SharpMP4
                     boxSize += stream.WriteBits(4, this.construction_method[i]);
                 }
                 boxSize += stream.WriteUInt16(this.data_reference_index[i]);
-                boxSize += stream.WriteBytes(base_offset_size, this.base_offset[i]);
+                boxSize += stream.WriteUInt8Array((uint)base_offset_size, this.base_offset[i]);
                 boxSize += stream.WriteUInt16(this.extent_count[i]);
 
                 for (int j = 0; j < extent_count[i]; j++)
@@ -11266,10 +11496,10 @@ namespace SharpMP4
 
                     if (((version == 1) || (version == 2)) && (index_size > 0))
                     {
-                        boxSize += stream.WriteBytes(index_size, this.item_reference_index[i][j]);
+                        boxSize += stream.WriteUInt8Array((uint)index_size, this.item_reference_index[i][j]);
                     }
-                    boxSize += stream.WriteBytes(offset_size, this.extent_offset[i][j]);
-                    boxSize += stream.WriteBytes(length_size, this.extent_length[i][j]);
+                    boxSize += stream.WriteUInt8Array((uint)offset_size, this.extent_offset[i][j]);
+                    boxSize += stream.WriteUInt8Array((uint)length_size, this.extent_length[i][j]);
                 }
             }
             return boxSize;
@@ -11350,6 +11580,7 @@ namespace SharpMP4
     public class IdentifiedMediaDataBox : Box
     {
         public const string TYPE = "imda";
+        public override string DisplayName { get { return "IdentifiedMediaDataBox"; } }
 
         protected uint imda_identifier;
         public uint ImdaIdentifier { get { return this.imda_identifier; } set { this.imda_identifier = value; } }
@@ -11425,6 +11656,7 @@ namespace SharpMP4
     public class ItemInfoEntry : FullBox
     {
         public const string TYPE = "infe";
+        public override string DisplayName { get { return "ItemInfoEntry"; } }
 
         protected uint item_ID;
         public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -11466,15 +11698,15 @@ namespace SharpMP4
             {
                 boxSize += stream.ReadUInt16(out this.item_ID);
                 boxSize += stream.ReadUInt16(out this.item_protection_index);
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.item_name);
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_type);
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); //optional
+                boxSize += stream.ReadString(boxSize, readSize, out this.item_name);
+                boxSize += stream.ReadString(boxSize, readSize, out this.content_type);
+                boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); //optional
             }
 
             if (version == 1)
             {
                 boxSize += stream.ReadUInt32(out this.extension_type); //optional
-                boxSize += stream.ReadClass(boxSize, readSize, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), out this.ItemInfoExtension); //optional
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), out this.ItemInfoExtension); //optional
             }
 
             if (version >= 2)
@@ -11491,17 +11723,17 @@ namespace SharpMP4
                 }
                 boxSize += stream.ReadUInt16(out this.item_protection_index);
                 boxSize += stream.ReadUInt32(out this.item_type);
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.item_name);
+                boxSize += stream.ReadString(boxSize, readSize, out this.item_name);
 
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
-                    boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_type);
-                    boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); //optional
+                    boxSize += stream.ReadString(boxSize, readSize, out this.content_type);
+                    boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); //optional
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
                 {
-                    boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.item_uri_type);
+                    boxSize += stream.ReadString(boxSize, readSize, out this.item_uri_type);
                 }
             }
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -11517,9 +11749,9 @@ namespace SharpMP4
             {
                 boxSize += stream.WriteUInt16(this.item_ID);
                 boxSize += stream.WriteUInt16(this.item_protection_index);
-                boxSize += stream.WriteStringZeroTerminated(this.item_name);
-                boxSize += stream.WriteStringZeroTerminated(this.content_type);
-                boxSize += stream.WriteStringZeroTerminated(this.content_encoding); //optional
+                boxSize += stream.WriteString(this.item_name);
+                boxSize += stream.WriteString(this.content_type);
+                boxSize += stream.WriteString(this.content_encoding); //optional
             }
 
             if (version == 1)
@@ -11542,17 +11774,17 @@ namespace SharpMP4
                 }
                 boxSize += stream.WriteUInt16(this.item_protection_index);
                 boxSize += stream.WriteUInt32(this.item_type);
-                boxSize += stream.WriteStringZeroTerminated(this.item_name);
+                boxSize += stream.WriteString(this.item_name);
 
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
-                    boxSize += stream.WriteStringZeroTerminated(this.content_type);
-                    boxSize += stream.WriteStringZeroTerminated(this.content_encoding); //optional
+                    boxSize += stream.WriteString(this.content_type);
+                    boxSize += stream.WriteString(this.content_encoding); //optional
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
                 {
-                    boxSize += stream.WriteStringZeroTerminated(this.item_uri_type);
+                    boxSize += stream.WriteString(this.item_uri_type);
                 }
             }
             boxSize += stream.WriteBoxArrayTillEnd(this);
@@ -11624,6 +11856,7 @@ namespace SharpMP4
     public class ItemProtectionBox : FullBox
     {
         public const string TYPE = "ipro";
+        public override string DisplayName { get { return "ItemProtectionBox"; } }
 
         protected ushort protection_count;
         public ushort ProtectionCount { get { return this.protection_count; } set { this.protection_count = value; } }
@@ -11689,6 +11922,7 @@ namespace SharpMP4
     public class ItemReferenceBox : FullBox
     {
         public const string TYPE = "iref";
+        public override string DisplayName { get { return "ItemReferenceBox"; } }
 
         protected SingleItemTypeReferenceBox[] references;
         public SingleItemTypeReferenceBox[] References { get { return this.references; } set { this.references = value; } }
@@ -11707,12 +11941,12 @@ namespace SharpMP4
 
             if (version == 0)
             {
-                boxSize += stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Header.Type)), this, out this.references);
+                boxSize += stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Type)), this, out this.references);
             }
 
             else if (version == 1)
             {
-                boxSize += stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Header.Type)), this, out this.references0);
+                boxSize += stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Type)), this, out this.references0);
             }
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -11785,6 +12019,7 @@ namespace SharpMP4
     public class LevelAssignmentBox : FullBox
     {
         public const string TYPE = "leva";
+        public override string DisplayName { get { return "LevelAssignmentBox"; } }
 
         protected byte level_count;
         public byte LevelCount { get { return this.level_count; } set { this.level_count = value; } }
@@ -11953,6 +12188,7 @@ namespace SharpMP4
     public class MediaDataBox : Box
     {
         public const string TYPE = "mdat";
+        public override string DisplayName { get { return "MediaDataBox"; } }
 
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
@@ -12008,6 +12244,7 @@ namespace SharpMP4
     public class MediaHeaderBox : FullBox
     {
         public const string TYPE = "mdhd";
+        public override string DisplayName { get { return "MediaHeaderBox"; } }
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -12124,6 +12361,7 @@ namespace SharpMP4
     public class MediaBox : Box
     {
         public const string TYPE = "mdia";
+        public override string DisplayName { get { return "MediaBox"; } }
 
         public MediaBox() : base("mdia")
         {
@@ -12167,6 +12405,7 @@ namespace SharpMP4
     public class MovieExtendsHeaderBox : FullBox
     {
         public const string TYPE = "mehd";
+        public override string DisplayName { get { return "MovieExtendsHeaderBox"; } }
 
         protected ulong fragment_duration;
         public ulong FragmentDuration { get { return this.fragment_duration; } set { this.fragment_duration = value; } }
@@ -12249,6 +12488,7 @@ namespace SharpMP4
     public class MetaBox : FullBox
     {
         public const string TYPE = "meta";
+        public override string DisplayName { get { return "MetaBox"; } }
         public HandlerBox TheHandler { get { return this.children.OfType<HandlerBox>().FirstOrDefault(); } }
         public PrimaryItemBox PrimaryResource { get { return this.children.OfType<PrimaryItemBox>().FirstOrDefault(); } }
         public DataInformationBox FileLocations { get { return this.children.OfType<DataInformationBox>().FirstOrDefault(); } }
@@ -12259,7 +12499,7 @@ namespace SharpMP4
         public ItemReferenceBox ItemRefs { get { return this.children.OfType<ItemReferenceBox>().FirstOrDefault(); } }
         public ItemDataBox ItemData { get { return this.children.OfType<ItemDataBox>().FirstOrDefault(); } }
         public IEnumerable<Box> OtherBoxes { get { return this.children.OfType<Box>(); } }
-        public bool IsQuickTime { get; set; } = false;
+        public bool IsQuickTime { get { return (Parent != null && (((Box)Parent).FourCC == "udta" || ((Box)Parent).FourCC == "trak")); } }
 
         public MetaBox(string handler_type = "") : base("meta", 0, 0)
         {
@@ -12268,21 +12508,7 @@ namespace SharpMP4
         public override ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            stream.ReadBytes(20, out byte[] lookahead);
-            if (lookahead[4] == 'h' && lookahead[5] == 'd' && lookahead[6] == 'l' && lookahead[7] == 'r' &&
-                lookahead[16] == 'm' && lookahead[17] == 'd' && lookahead[18] == 't' && lookahead[19] == 'a')
-            {
-                IsQuickTime = true;
-            }
-            else
-            {
-                IsQuickTime = false;
-            }
-            stream.UnreadBytes(20, lookahead);
-            if (!IsQuickTime)
-            {
-                boxSize += base.Read(stream, readSize);
-            }
+            if (IsQuickTime) boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.theHandler); 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.primary_resource); // optional
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.file_locations); // optional
@@ -12300,7 +12526,7 @@ namespace SharpMP4
         public override ulong Write(IsoStream stream)
         {
             ulong boxSize = 0;
-            if (!IsQuickTime) boxSize += base.Write(stream);
+            if (IsQuickTime) boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.theHandler); 
             // boxSize += stream.WriteBox( this.primary_resource); // optional
             // boxSize += stream.WriteBox( this.file_locations); // optional
@@ -12318,8 +12544,7 @@ namespace SharpMP4
         public override ulong CalculateSize()
         {
             ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            if (IsQuickTime) boxSize = (ulong)(boxSize - 32);
+            if (IsQuickTime) boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(theHandler); // theHandler
             // boxSize += IsoStream.CalculateBoxSize(primary_resource); // primary_resource
             // boxSize += IsoStream.CalculateBoxSize(file_locations); // file_locations
@@ -12345,6 +12570,7 @@ namespace SharpMP4
     public class MovieFragmentHeaderBox : FullBox
     {
         public const string TYPE = "mfhd";
+        public override string DisplayName { get { return "MovieFragmentHeaderBox"; } }
 
         protected uint sequence_number;
         public uint SequenceNumber { get { return this.sequence_number; } set { this.sequence_number = value; } }
@@ -12388,6 +12614,7 @@ namespace SharpMP4
     public class MovieFragmentRandomAccessBox : Box
     {
         public const string TYPE = "mfra";
+        public override string DisplayName { get { return "MovieFragmentRandomAccessBox"; } }
 
         public MovieFragmentRandomAccessBox() : base("mfra")
         {
@@ -12428,6 +12655,7 @@ namespace SharpMP4
     public class MovieFragmentRandomAccessOffsetBox : FullBox
     {
         public const string TYPE = "mfro";
+        public override string DisplayName { get { return "MovieFragmentRandomAccessOffsetBox"; } }
 
         protected uint parent_size;
         public uint ParentSize { get { return this.parent_size; } set { this.parent_size = value; } }
@@ -12469,6 +12697,7 @@ namespace SharpMP4
     public class MediaInformationBox : Box
     {
         public const string TYPE = "minf";
+        public override string DisplayName { get { return "MediaInformationBox"; } }
 
         public MediaInformationBox() : base("minf")
         {
@@ -12509,6 +12738,7 @@ namespace SharpMP4
     public class CompressedMovieFragmentBox : CompressedBox
     {
         public const string TYPE = "moof";
+        public override string DisplayName { get { return "CompressedMovieFragmentBox"; } }
 
         public CompressedMovieFragmentBox() : base("moof")
         {
@@ -12548,6 +12778,7 @@ namespace SharpMP4
     public class CompressedMovieBox : CompressedBox
     {
         public const string TYPE = "moov";
+        public override string DisplayName { get { return "CompressedMovieBox"; } }
 
         public CompressedMovieBox() : base("moov")
         {
@@ -12586,6 +12817,7 @@ namespace SharpMP4
     public class MovieExtendsBox : Box
     {
         public const string TYPE = "mvex";
+        public override string DisplayName { get { return "MovieExtendsBox"; } }
 
         public MovieExtendsBox() : base("mvex")
         {
@@ -12644,6 +12876,7 @@ namespace SharpMP4
     public class MovieHeaderBox : FullBox
     {
         public const string TYPE = "mvhd";
+        public override string DisplayName { get { return "MovieHeaderBox"; } }
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -12786,6 +13019,7 @@ namespace SharpMP4
     public class NullMediaHeaderBox : FullBox
     {
         public const string TYPE = "nmhd";
+        public override string DisplayName { get { return "NullMediaHeaderBox"; } }
 
         public NullMediaHeaderBox(uint flags = 0) : base("nmhd", 0, flags)
         {
@@ -12821,6 +13055,7 @@ namespace SharpMP4
     public class OriginalFileTypeBox : Box
     {
         public const string TYPE = "otyp";
+        public override string DisplayName { get { return "OriginalFileTypeBox"; } }
 
         public OriginalFileTypeBox() : base("otyp")
         {
@@ -12867,6 +13102,7 @@ namespace SharpMP4
     public class PaddingBitsBox : FullBox
     {
         public const string TYPE = "padb";
+        public override string DisplayName { get { return "PaddingBitsBox"; } }
 
         protected uint sample_count;
         public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
@@ -12956,6 +13192,7 @@ namespace SharpMP4
     public class ProgressiveDownloadInfoBox : FullBox
     {
         public const string TYPE = "pdin";
+        public override string DisplayName { get { return "ProgressiveDownloadInfoBox"; } }
 
         protected uint[] rate;
         public uint[] Rate { get { return this.rate; } set { this.rate = value; } }
@@ -13024,6 +13261,7 @@ namespace SharpMP4
     public class PrimaryItemBox : FullBox
     {
         public const string TYPE = "pitm";
+        public override string DisplayName { get { return "PrimaryItemBox"; } }
 
         protected uint item_ID;
         public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -13100,6 +13338,7 @@ namespace SharpMP4
     public class ProducerReferenceTimeBox : FullBox
     {
         public const string TYPE = "prft";
+        public override string DisplayName { get { return "ProducerReferenceTimeBox"; } }
 
         protected uint reference_track_ID;
         public uint ReferenceTrackID { get { return this.reference_track_ID; } set { this.reference_track_ID = value; } }
@@ -13183,6 +13422,7 @@ namespace SharpMP4
     public class RestrictedSchemeInfoBox : Box
     {
         public const string TYPE = "rinf";
+        public override string DisplayName { get { return "RestrictedSchemeInfoBox"; } }
         public OriginalFormatBox OriginalFormat { get { return this.children.OfType<OriginalFormatBox>().FirstOrDefault(); } }
         public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
         public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }
@@ -13246,6 +13486,7 @@ namespace SharpMP4
     public class SampleAuxiliaryInformationOffsetsBox : FullBox
     {
         public const string TYPE = "saio";
+        public override string DisplayName { get { return "SampleAuxiliaryInformationOffsetsBox"; } }
 
         protected uint aux_info_type;
         public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
@@ -13355,6 +13596,7 @@ namespace SharpMP4
     public class SampleAuxiliaryInformationSizesBox : FullBox
     {
         public const string TYPE = "saiz";
+        public override string DisplayName { get { return "SampleAuxiliaryInformationSizesBox"; } }
 
         protected uint aux_info_type;
         public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
@@ -13390,7 +13632,7 @@ namespace SharpMP4
 
             if (default_sample_info_size == 0)
             {
-                boxSize += stream.ReadBytes(sample_count, out this.sample_info_size);
+                boxSize += stream.ReadUInt8Array((uint)sample_count, out this.sample_info_size);
             }
             return boxSize;
         }
@@ -13410,7 +13652,7 @@ namespace SharpMP4
 
             if (default_sample_info_size == 0)
             {
-                boxSize += stream.WriteBytes(sample_count, this.sample_info_size);
+                boxSize += stream.WriteUInt8Array(sample_count, this.sample_info_size);
             }
             return boxSize;
         }
@@ -13456,6 +13698,7 @@ namespace SharpMP4
     public class SampleToGroupBox : FullBox
     {
         public const string TYPE = "sbgp";
+        public override string DisplayName { get { return "SampleToGroupBox"; } }
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -13548,6 +13791,7 @@ namespace SharpMP4
     public class SchemeInformationBox : Box
     {
         public const string TYPE = "schi";
+        public override string DisplayName { get { return "SchemeInformationBox"; } }
         public IEnumerable<Box> SchemeSpecificData { get { return this.children.OfType<Box>(); } }
 
         public SchemeInformationBox() : base("schi")
@@ -13595,6 +13839,7 @@ namespace SharpMP4
     public class SchemeTypeBox : FullBox
     {
         public const string TYPE = "schm";
+        public override string DisplayName { get { return "SchemeTypeBox"; } }
 
         protected uint scheme_type;  //  4CC identifying the scheme
         public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
@@ -13618,7 +13863,7 @@ namespace SharpMP4
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.scheme_uri); // browser uri
+                boxSize += stream.ReadString(boxSize, readSize, out this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -13632,7 +13877,7 @@ namespace SharpMP4
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.WriteStringZeroTerminated(this.scheme_uri); // browser uri
+                boxSize += stream.WriteString(this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -13667,6 +13912,7 @@ namespace SharpMP4
     public class CompatibleSchemeTypeBox : FullBox
     {
         public const string TYPE = "csch";
+        public override string DisplayName { get { return "CompatibleSchemeTypeBox"; } }
 
         protected uint scheme_type;  //  4CC identifying the scheme
         public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
@@ -13691,7 +13937,7 @@ namespace SharpMP4
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.scheme_uri); // browser uri
+                boxSize += stream.ReadString(boxSize, readSize, out this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -13706,7 +13952,7 @@ namespace SharpMP4
 
             if ((flags & 0x000001) == 0x000001)
             {
-                boxSize += stream.WriteStringZeroTerminated(this.scheme_uri); // browser uri
+                boxSize += stream.WriteString(this.scheme_uri); // browser uri
             }
             return boxSize;
         }
@@ -13742,6 +13988,7 @@ namespace SharpMP4
     public class SampleDependencyTypeBox : FullBox
     {
         public const string TYPE = "sdtp";
+        public override string DisplayName { get { return "SampleDependencyTypeBox"; } }
 
         protected byte[] is_leading;
         public byte[] IsLeading { get { return this.is_leading; } set { this.is_leading = value; } }
@@ -13834,6 +14081,7 @@ namespace SharpMP4
     public class FDSessionGroupBox : Box
     {
         public const string TYPE = "segr";
+        public override string DisplayName { get { return "FDSessionGroupBox"; } }
 
         protected ushort num_session_groups;
         public ushort NumSessionGroups { get { return this.num_session_groups; } set { this.num_session_groups = value; } }
@@ -13959,6 +14207,7 @@ namespace SharpMP4
     public class SampleGroupDescriptionBox : FullBox
     {
         public const string TYPE = "sgpd";
+        public override string DisplayName { get { return "SampleGroupDescriptionBox"; } }
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -14013,7 +14262,7 @@ namespace SharpMP4
                         boxSize += stream.ReadUInt32(out this.description_length[i]);
                     }
                 }
-                boxSize += stream.ReadEntry(boxSize, readSize, IsoStream.ToFourCC(grouping_type), out this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
+                boxSize += stream.ReadEntry(boxSize, readSize, this, IsoStream.ToFourCC(grouping_type), out this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
                 /*   that is appropriate and permitted for the media type */
             }
             return boxSize;
@@ -14100,6 +14349,7 @@ namespace SharpMP4
     public class CompressedSegmentIndexBox : CompressedBox
     {
         public const string TYPE = "sidx";
+        public override string DisplayName { get { return "CompressedSegmentIndexBox"; } }
 
         public CompressedSegmentIndexBox() : base("sidx")
         {
@@ -14139,6 +14389,7 @@ namespace SharpMP4
     public class ProtectionSchemeInfoBox : Box
     {
         public const string TYPE = "sinf";
+        public override string DisplayName { get { return "ProtectionSchemeInfoBox"; } }
         public OriginalFormatBox OriginalFormat { get { return this.children.OfType<OriginalFormatBox>().FirstOrDefault(); } }
         public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
         public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }
@@ -14190,6 +14441,7 @@ namespace SharpMP4
     public class FreeSpaceBox_skip : Box
     {
         public const string TYPE = "skip";
+        public override string DisplayName { get { return "FreeSpaceBox_skip"; } }
 
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
@@ -14234,6 +14486,7 @@ namespace SharpMP4
     public class SoundMediaHeaderBox : FullBox
     {
         public const string TYPE = "smhd";
+        public override string DisplayName { get { return "SoundMediaHeaderBox"; } }
 
         protected short balance = 0;
         public short Balance { get { return this.balance; } set { this.balance = value; } }
@@ -14287,6 +14540,7 @@ namespace SharpMP4
     public class SRTPProcessBox : FullBox
     {
         public const string TYPE = "srpp";
+        public override string DisplayName { get { return "SRTPProcessBox"; } }
 
         protected uint encryption_algorithm_rtp;
         public uint EncryptionAlgorithmRtp { get { return this.encryption_algorithm_rtp; } set { this.encryption_algorithm_rtp = value; } }
@@ -14358,6 +14612,7 @@ namespace SharpMP4
     public class CompressedSubsegmentIndexBox : CompressedBox
     {
         public const string TYPE = "ssix";
+        public override string DisplayName { get { return "CompressedSubsegmentIndexBox"; } }
 
         public CompressedSubsegmentIndexBox() : base("ssix")
         {
@@ -14393,6 +14648,7 @@ namespace SharpMP4
     public class SampleTableBox : Box
     {
         public const string TYPE = "stbl";
+        public override string DisplayName { get { return "SampleTableBox"; } }
 
         public SampleTableBox() : base("stbl")
         {
@@ -14436,6 +14692,7 @@ namespace SharpMP4
     public class ChunkOffsetBox : FullBox
     {
         public const string TYPE = "stco";
+        public override string DisplayName { get { return "ChunkOffsetBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14501,6 +14758,7 @@ namespace SharpMP4
     public class DegradationPriorityBox : FullBox
     {
         public const string TYPE = "stdp";
+        public override string DisplayName { get { return "DegradationPriorityBox"; } }
 
         protected ushort[] priority;
         public ushort[] Priority { get { return this.priority; } set { this.priority = value; } }
@@ -14565,6 +14823,7 @@ namespace SharpMP4
     public class SubtitleMediaHeaderBox : FullBox
     {
         public const string TYPE = "sthd";
+        public override string DisplayName { get { return "SubtitleMediaHeaderBox"; } }
 
         public SubtitleMediaHeaderBox() : base("sthd", 0, 0)
         {
@@ -14600,6 +14859,7 @@ namespace SharpMP4
     public class SubTrackDefinitionBox : Box
     {
         public const string TYPE = "strd";
+        public override string DisplayName { get { return "SubTrackDefinitionBox"; } }
 
         public SubTrackDefinitionBox() : base("strd")
         {
@@ -14643,6 +14903,7 @@ namespace SharpMP4
     public class SubTrackInformationBox : FullBox
     {
         public const string TYPE = "stri";
+        public override string DisplayName { get { return "SubTrackInformationBox"; } }
 
         protected short switch_group = 0;
         public short SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
@@ -14709,6 +14970,7 @@ namespace SharpMP4
     public class SampleToChunkBox : FullBox
     {
         public const string TYPE = "stsc";
+        public override string DisplayName { get { return "SampleToChunkBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14789,6 +15051,7 @@ namespace SharpMP4
     public class SampleDescriptionBox : FullBox
     {
         public const string TYPE = "stsd";
+        public override string DisplayName { get { return "SampleDescriptionBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -14857,6 +15120,7 @@ namespace SharpMP4
     public class SubTrackSampleGroupBox : FullBox
     {
         public const string TYPE = "stsg";
+        public override string DisplayName { get { return "SubTrackSampleGroupBox"; } }
 
         protected uint grouping_type;
         public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -14930,6 +15194,7 @@ namespace SharpMP4
     public class ShadowSyncSampleBox : FullBox
     {
         public const string TYPE = "stsh";
+        public override string DisplayName { get { return "ShadowSyncSampleBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -15006,6 +15271,7 @@ namespace SharpMP4
     public class SyncSampleBox : FullBox
     {
         public const string TYPE = "stss";
+        public override string DisplayName { get { return "SyncSampleBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -15076,6 +15342,7 @@ namespace SharpMP4
     public class SampleSizeBox : FullBox
     {
         public const string TYPE = "stsz";
+        public override string DisplayName { get { return "SampleSizeBox"; } }
 
         protected uint sample_size;
         public uint SampleSize { get { return this.sample_size; } set { this.sample_size = value; } }
@@ -15161,6 +15428,7 @@ namespace SharpMP4
     public class TimeToSampleBox : FullBox
     {
         public const string TYPE = "stts";
+        public override string DisplayName { get { return "TimeToSampleBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -15231,6 +15499,7 @@ namespace SharpMP4
     public class SegmentTypeBox : GeneralTypeBox
     {
         public const string TYPE = "styp";
+        public override string DisplayName { get { return "SegmentTypeBox"; } }
 
         public SegmentTypeBox() : base("styp")
         {
@@ -15273,6 +15542,7 @@ namespace SharpMP4
     public class CompactSampleSizeBox : FullBox
     {
         public const string TYPE = "stz2";
+        public override string DisplayName { get { return "CompactSampleSizeBox"; } }
 
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -15301,7 +15571,7 @@ namespace SharpMP4
             this.entry_size = new byte[sample_count][];
             for (int i = 0; i < sample_count; i++)
             {
-                boxSize += stream.ReadBytes(field_size, out this.entry_size[i]);
+                boxSize += stream.ReadUInt8Array((uint)field_size, out this.entry_size[i]);
             }
             return boxSize;
         }
@@ -15316,7 +15586,7 @@ namespace SharpMP4
 
             for (int i = 0; i < sample_count; i++)
             {
-                boxSize += stream.WriteBytes(field_size, this.entry_size[i]);
+                boxSize += stream.WriteUInt8Array((uint)field_size, this.entry_size[i]);
             }
             return boxSize;
         }
@@ -15367,6 +15637,7 @@ namespace SharpMP4
     public class SubSampleInformationBox : FullBox
     {
         public const string TYPE = "subs";
+        public override string DisplayName { get { return "SubSampleInformationBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -15526,6 +15797,7 @@ namespace SharpMP4
     public class TrackFragmentBaseMediaDecodeTimeBox : FullBox
     {
         public const string TYPE = "tfdt";
+        public override string DisplayName { get { return "TrackFragmentBaseMediaDecodeTimeBox"; } }
 
         protected ulong baseMediaDecodeTime;
         public ulong BaseMediaDecodeTime { get { return this.baseMediaDecodeTime; } set { this.baseMediaDecodeTime = value; } }
@@ -15616,6 +15888,7 @@ namespace SharpMP4
     public class TrackFragmentHeaderBox : FullBox
     {
         public const string TYPE = "tfhd";
+        public override string DisplayName { get { return "TrackFragmentHeaderBox"; } }
 
         protected uint track_ID;  //  all the following are optional fields
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -15769,6 +16042,7 @@ namespace SharpMP4
     public class TrackFragmentRandomAccessBox : FullBox
     {
         public const string TYPE = "tfra";
+        public override string DisplayName { get { return "TrackFragmentRandomAccessBox"; } }
 
         protected uint track_ID;
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -15837,9 +16111,9 @@ namespace SharpMP4
                     boxSize += stream.ReadUInt32(out this.time[i]);
                     boxSize += stream.ReadUInt32(out this.moof_offset[i]);
                 }
-                boxSize += stream.ReadBytes((ulong)(length_size_of_traf_num + 1), out this.traf_number[i]);
-                boxSize += stream.ReadBytes((ulong)(length_size_of_trun_num + 1), out this.trun_number[i]);
-                boxSize += stream.ReadBytes((ulong)(length_size_of_sample_num + 1), out this.sample_delta[i]);
+                boxSize += stream.ReadUInt8Array((uint)(length_size_of_traf_num + 1), out this.traf_number[i]);
+                boxSize += stream.ReadUInt8Array((uint)(length_size_of_trun_num + 1), out this.trun_number[i]);
+                boxSize += stream.ReadUInt8Array((uint)(length_size_of_sample_num + 1), out this.sample_delta[i]);
             }
             return boxSize;
         }
@@ -15869,9 +16143,9 @@ namespace SharpMP4
                     boxSize += stream.WriteUInt32(this.time[i]);
                     boxSize += stream.WriteUInt32(this.moof_offset[i]);
                 }
-                boxSize += stream.WriteBytes((ulong)(length_size_of_traf_num + 1), this.traf_number[i]);
-                boxSize += stream.WriteBytes((ulong)(length_size_of_trun_num + 1), this.trun_number[i]);
-                boxSize += stream.WriteBytes((ulong)(length_size_of_sample_num + 1), this.sample_delta[i]);
+                boxSize += stream.WriteUInt8Array((uint)(length_size_of_traf_num + 1), this.traf_number[i]);
+                boxSize += stream.WriteUInt8Array((uint)(length_size_of_trun_num + 1), this.trun_number[i]);
+                boxSize += stream.WriteUInt8Array((uint)(length_size_of_sample_num + 1), this.sample_delta[i]);
             }
             return boxSize;
         }
@@ -15941,6 +16215,7 @@ namespace SharpMP4
     public class TrackHeaderBox : FullBox
     {
         public const string TYPE = "tkhd";
+        public override string DisplayName { get { return "TrackHeaderBox"; } }
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -16100,6 +16375,7 @@ namespace SharpMP4
     public class TrackFragmentBox : Box
     {
         public const string TYPE = "traf";
+        public override string DisplayName { get { return "TrackFragmentBox"; } }
 
         public TrackFragmentBox() : base("traf")
         {
@@ -16138,6 +16414,7 @@ namespace SharpMP4
     public class TrackBox : Box
     {
         public const string TYPE = "trak";
+        public override string DisplayName { get { return "TrackBox"; } }
 
         public TrackBox() : base("trak")
         {
@@ -16177,6 +16454,7 @@ namespace SharpMP4
     public class TrackReferenceBox : Box
     {
         public const string TYPE = "tref";
+        public override string DisplayName { get { return "TrackReferenceBox"; } }
         public IEnumerable<TrackReferenceTypeBox> _TrackReferenceTypeBox { get { return this.children.OfType<TrackReferenceTypeBox>(); } }
 
         public TrackReferenceBox() : base("tref")
@@ -16221,6 +16499,7 @@ namespace SharpMP4
     public class TrackExtensionPropertiesBox : FullBox
     {
         public const string TYPE = "trep";
+        public override string DisplayName { get { return "TrackExtensionPropertiesBox"; } }
 
         protected uint track_ID;  //  Any number of boxes may follow
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -16270,6 +16549,7 @@ namespace SharpMP4
     public class TrackExtendsBox : FullBox
     {
         public const string TYPE = "trex";
+        public override string DisplayName { get { return "TrackExtendsBox"; } }
 
         protected uint track_ID;
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -16335,6 +16615,7 @@ namespace SharpMP4
     public class TrackGroupBox : Box
     {
         public const string TYPE = "trgr";
+        public override string DisplayName { get { return "TrackGroupBox"; } }
 
         public TrackGroupBox() : base("trgr")
         {
@@ -16401,6 +16682,7 @@ namespace SharpMP4
     public class TrackRunBox : FullBox
     {
         public const string TYPE = "trun";
+        public override string DisplayName { get { return "TrackRunBox"; } }
 
         protected uint sample_count;  //  the following are optional fields
         public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
@@ -16577,6 +16859,7 @@ namespace SharpMP4
     public class TrackTypeBox : GeneralTypeBox
     {
         public const string TYPE = "ttyp";
+        public override string DisplayName { get { return "TrackTypeBox"; } }
 
         public TrackTypeBox() : base("ttyp")
         {
@@ -16613,6 +16896,7 @@ namespace SharpMP4
     public class TypeCombinationBox : Box
     {
         public const string TYPE = "tyco";
+        public override string DisplayName { get { return "TypeCombinationBox"; } }
 
         protected uint[] compatible_brands;  //  to end of the box
         public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
@@ -16654,6 +16938,7 @@ namespace SharpMP4
     public class UserDataBox : Box
     {
         public const string TYPE = "udta";
+        public override string DisplayName { get { return "UserDataBox"; } }
 
         public UserDataBox() : base("udta")
         {
@@ -16704,7 +16989,8 @@ namespace SharpMP4
     public class BoxHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "BoxHeader"; } }
 
         protected uint size;
         public uint Size { get { return this.size; } set { this.size = value; } }
@@ -16742,7 +17028,7 @@ namespace SharpMP4
 
             if (type == IsoStream.FromFourCC("uuid"))
             {
-                boxSize += stream.ReadBytes(16, out this.usertype);
+                boxSize += stream.ReadUInt8Array(16, out this.usertype);
             }
             return boxSize;
         }
@@ -16765,7 +17051,7 @@ namespace SharpMP4
 
             if (type == IsoStream.FromFourCC("uuid"))
             {
-                boxSize += stream.WriteBytes(16, this.usertype);
+                boxSize += stream.WriteUInt8Array(16, this.usertype);
             }
             return boxSize;
         }
@@ -16805,6 +17091,7 @@ namespace SharpMP4
     public class VideoMediaHeaderBox : FullBox
     {
         public const string TYPE = "vmhd";
+        public override string DisplayName { get { return "VideoMediaHeaderBox"; } }
 
         protected ushort graphicsmode = 0;  //  copy, see below
         public ushort Graphicsmode { get { return this.graphicsmode; } set { this.graphicsmode = value; } }
@@ -16854,6 +17141,7 @@ namespace SharpMP4
     public class XMLBox : FullBox
     {
         public const string TYPE = "xml ";
+        public override string DisplayName { get { return "XMLBox"; } }
 
         protected BinaryUTF8String xml;
         public BinaryUTF8String Xml { get { return this.xml; } set { this.xml = value; } }
@@ -16866,7 +17154,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.xml);
+            boxSize += stream.ReadString(boxSize, readSize, out this.xml);
             return boxSize;
         }
 
@@ -16874,7 +17162,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.xml);
+            boxSize += stream.WriteString(this.xml);
             return boxSize;
         }
 
@@ -16898,6 +17186,7 @@ namespace SharpMP4
     public class AmbientViewingEnvironmentBox : Box
     {
         public const string TYPE = "amve";
+        public override string DisplayName { get { return "AmbientViewingEnvironmentBox"; } }
 
         protected uint ambient_illuminance;
         public uint AmbientIlluminance { get { return this.ambient_illuminance; } set { this.ambient_illuminance = value; } }
@@ -16953,6 +17242,7 @@ namespace SharpMP4
     public class MetaDataKeyTableBox : FullBox
     {
         public const string TYPE = "keys";
+        public override string DisplayName { get { return "MetaDataKeyTableBox"; } }
 
         protected uint entry_count;
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -17002,6 +17292,7 @@ namespace SharpMP4
     public class URIBox : FullBox
     {
         public const string TYPE = "uri ";
+        public override string DisplayName { get { return "URIBox"; } }
 
         protected BinaryUTF8String theURI;
         public BinaryUTF8String TheURI { get { return this.theURI; } set { this.theURI = value; } }
@@ -17014,7 +17305,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.theURI);
+            boxSize += stream.ReadString(boxSize, readSize, out this.theURI);
             return boxSize;
         }
 
@@ -17022,7 +17313,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.theURI);
+            boxSize += stream.WriteString(this.theURI);
             return boxSize;
         }
 
@@ -17057,6 +17348,7 @@ namespace SharpMP4
     public class IroiInfoBox : Box
     {
         public const string TYPE = "iroi";
+        public override string DisplayName { get { return "IroiInfoBox"; } }
 
         protected byte iroi_type;
         public byte IroiType { get { return this.iroi_type; } set { this.iroi_type = value; } }
@@ -17182,6 +17474,7 @@ namespace SharpMP4
     public class TierDependencyBox : Box
     {
         public const string TYPE = "ldep";
+        public override string DisplayName { get { return "TierDependencyBox"; } }
 
         protected ushort entry_count;
         public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -17250,6 +17543,7 @@ namespace SharpMP4
     public class SVCDependencyRangeBox : Box
     {
         public const string TYPE = "svdr";
+        public override string DisplayName { get { return "SVCDependencyRangeBox"; } }
 
         protected byte min_dependency_id;
         public byte MinDependencyId { get { return this.min_dependency_id; } set { this.min_dependency_id = value; } }
@@ -17339,6 +17633,7 @@ namespace SharpMP4
     public class InitialParameterSetBox : Box
     {
         public const string TYPE = "svip";
+        public override string DisplayName { get { return "InitialParameterSetBox"; } }
 
         protected byte sps_id_count;
         public byte SpsIdCount { get { return this.sps_id_count; } set { this.sps_id_count = value; } }
@@ -17428,6 +17723,7 @@ namespace SharpMP4
     public class PriorityRangeBox : Box
     {
         public const string TYPE = "svpr";
+        public override string DisplayName { get { return "PriorityRangeBox"; } }
 
         protected byte reserved1 = 0;
         public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -17501,6 +17797,7 @@ namespace SharpMP4
     public class TranscodingInfoBox : Box
     {
         public const string TYPE = "tran";
+        public override string DisplayName { get { return "TranscodingInfoBox"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -17629,6 +17926,7 @@ namespace SharpMP4
     public class RectRegionBox : Box
     {
         public const string TYPE = "rrgn";
+        public override string DisplayName { get { return "RectRegionBox"; } }
 
         protected ushort base_region_tierID;
         public ushort BaseRegionTierID { get { return this.base_region_tierID; } set { this.base_region_tierID = value; } }
@@ -17726,6 +18024,7 @@ namespace SharpMP4
     public class BufferingBox : Box
     {
         public const string TYPE = "buff";
+        public override string DisplayName { get { return "BufferingBox"; } }
 
         protected ushort operating_point_count;
         public ushort OperatingPointCount { get { return this.operating_point_count; } set { this.operating_point_count = value; } }
@@ -17821,6 +18120,7 @@ namespace SharpMP4
     public class MVCSubTrackViewBox : FullBox
     {
         public const string TYPE = "mstv";
+        public override string DisplayName { get { return "MVCSubTrackViewBox"; } }
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -17921,6 +18221,7 @@ namespace SharpMP4
     public class MultiviewGroupBox : FullBox
     {
         public const string TYPE = "mvcg";
+        public override string DisplayName { get { return "MultiviewGroupBox"; } }
 
         protected uint multiview_group_id;
         public uint MultiviewGroupId { get { return this.multiview_group_id; } set { this.multiview_group_id = value; } }
@@ -18117,6 +18418,7 @@ namespace SharpMP4
     public class MultiviewInformationBox : FullBox
     {
         public const string TYPE = "mvci";
+        public override string DisplayName { get { return "MultiviewInformationBox"; } }
 
         public MultiviewInformationBox(uint flags = 0) : base("mvci", 0, flags)
         {
@@ -18170,6 +18472,7 @@ namespace SharpMP4
     public class MVDDepthResolutionBox : Box
     {
         public const string TYPE = "3dpr";
+        public override string DisplayName { get { return "MVDDepthResolutionBox"; } }
 
         protected ushort depth_width;
         public ushort DepthWidth { get { return this.depth_width; } set { this.depth_width = value; } }
@@ -18301,6 +18604,7 @@ namespace SharpMP4
     public class MultiviewRelationAttributeBox : FullBox
     {
         public const string TYPE = "mvra";
+        public override string DisplayName { get { return "MultiviewRelationAttributeBox"; } }
 
         protected ushort reserved1 = 0;
         public ushort Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -18412,6 +18716,7 @@ namespace SharpMP4
     public class SampleDependencyBox : FullBox
     {
         public const string TYPE = "sdep";
+        public override string DisplayName { get { return "SampleDependencyBox"; } }
 
         protected ushort[] dependency_count;
         public ushort[] DependencyCount { get { return this.dependency_count; } set { this.dependency_count = value; } }
@@ -18500,6 +18805,7 @@ namespace SharpMP4
     public class SeiInformationBox : Box
     {
         public const string TYPE = "seii";
+        public override string DisplayName { get { return "SeiInformationBox"; } }
 
         protected ushort numRequiredSEIs;
         public ushort NumRequiredSEIs { get { return this.numRequiredSEIs; } set { this.numRequiredSEIs = value; } }
@@ -18597,6 +18903,7 @@ namespace SharpMP4
     public class SVCSubTrackLayerBox : FullBox
     {
         public const string TYPE = "sstl";
+        public override string DisplayName { get { return "SVCSubTrackLayerBox"; } }
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -18711,6 +19018,7 @@ namespace SharpMP4
     public class MVCSubTrackMultiviewGroupBox : FullBox
     {
         public const string TYPE = "stmg";
+        public override string DisplayName { get { return "MVCSubTrackMultiviewGroupBox"; } }
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -18776,6 +19084,7 @@ namespace SharpMP4
     public class SubTrackTierBox : FullBox
     {
         public const string TYPE = "stti";
+        public override string DisplayName { get { return "SubTrackTierBox"; } }
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -18840,6 +19149,7 @@ namespace SharpMP4
     public class MultiviewGroupRelationBox : FullBox
     {
         public const string TYPE = "swtc";
+        public override string DisplayName { get { return "MultiviewGroupRelationBox"; } }
 
         protected uint num_entries;
         public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
@@ -18914,6 +19224,7 @@ namespace SharpMP4
     public class TierBitRateBox : Box
     {
         public const string TYPE = "tibr";
+        public override string DisplayName { get { return "TierBitRateBox"; } }
 
         protected uint baseBitRate;
         public uint BaseBitRate { get { return this.baseBitRate; } set { this.baseBitRate = value; } }
@@ -18998,6 +19309,7 @@ namespace SharpMP4
     public class TierInfoBox : Box
     {
         public const string TYPE = "tiri";
+        public override string DisplayName { get { return "TierInfoBox"; } }
 
         protected ushort tierID;
         public ushort TierID { get { return this.tierID; } set { this.tierID = value; } }
@@ -19106,6 +19418,7 @@ namespace SharpMP4
     public class TileSubTrackGroupBox : FullBox
     {
         public const string TYPE = "tstb";
+        public override string DisplayName { get { return "TileSubTrackGroupBox"; } }
 
         protected ushort item_count;
         public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -19168,6 +19481,7 @@ namespace SharpMP4
     public class MultiviewSceneInfoBox : Box
     {
         public const string TYPE = "vwdi";
+        public override string DisplayName { get { return "MultiviewSceneInfoBox"; } }
 
         protected byte max_disparity;
         public byte MaxDisparity { get { return this.max_disparity; } set { this.max_disparity = value; } }
@@ -19211,6 +19525,7 @@ namespace SharpMP4
     public class MVCDConfigurationBox : Box
     {
         public const string TYPE = "mvdC";
+        public override string DisplayName { get { return "MVCDConfigurationBox"; } }
 
         protected MVDDecoderConfigurationRecord MVDConfig;
         public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
@@ -19224,7 +19539,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new MVDDecoderConfigurationRecord(), out this.MVDConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new MVDDecoderConfigurationRecord(), out this.MVDConfig);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdDepthRes); //Optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -19261,6 +19576,7 @@ namespace SharpMP4
     public class A3DConfigurationBox : Box
     {
         public const string TYPE = "a3dC";
+        public override string DisplayName { get { return "A3DConfigurationBox"; } }
 
         protected MVDDecoderConfigurationRecord MVDConfig;
         public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
@@ -19274,7 +19590,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new MVDDecoderConfigurationRecord(), out this.MVDConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new MVDDecoderConfigurationRecord(), out this.MVDConfig);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdDepthRes); //Optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -19331,6 +19647,7 @@ namespace SharpMP4
     public class ViewIdentifierBox : FullBox
     {
         public const string TYPE = "vwid";
+        public override string DisplayName { get { return "ViewIdentifierBox"; } }
 
         protected byte reserved6 = 0;
         public byte Reserved6 { get { return this.reserved6; } set { this.reserved6 = value; } }
@@ -19509,6 +19826,7 @@ namespace SharpMP4
     public class MVCConfigurationBox : Box
     {
         public const string TYPE = "mvcC";
+        public override string DisplayName { get { return "MVCConfigurationBox"; } }
 
         protected MVCDecoderConfigurationRecord MVCConfig;
         public MVCDecoderConfigurationRecord _MVCConfig { get { return this.MVCConfig; } set { this.MVCConfig = value; } }
@@ -19521,7 +19839,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new MVCDecoderConfigurationRecord(), out this.MVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new MVCDecoderConfigurationRecord(), out this.MVCConfig);
             return boxSize;
         }
 
@@ -19551,6 +19869,7 @@ namespace SharpMP4
     public class AVCConfigurationBox : Box
     {
         public const string TYPE = "avcC";
+        public override string DisplayName { get { return "AVCConfigurationBox"; } }
 
         protected AVCDecoderConfigurationRecord AVCConfig;
         public AVCDecoderConfigurationRecord _AVCConfig { get { return this.AVCConfig; } set { this.AVCConfig = value; } }
@@ -19563,7 +19882,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new AVCDecoderConfigurationRecord(), out this.AVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new AVCDecoderConfigurationRecord(), out this.AVCConfig);
             return boxSize;
         }
 
@@ -19593,6 +19912,7 @@ namespace SharpMP4
     public class HEVCConfigurationBox : Box
     {
         public const string TYPE = "hvcC";
+        public override string DisplayName { get { return "HEVCConfigurationBox"; } }
 
         protected HEVCDecoderConfigurationRecord HEVCConfig;
         public HEVCDecoderConfigurationRecord _HEVCConfig { get { return this.HEVCConfig; } set { this.HEVCConfig = value; } }
@@ -19605,7 +19925,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new HEVCDecoderConfigurationRecord(), out this.HEVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new HEVCDecoderConfigurationRecord(), out this.HEVCConfig);
             return boxSize;
         }
 
@@ -19635,6 +19955,7 @@ namespace SharpMP4
     public class LHEVCConfigurationBox : Box
     {
         public const string TYPE = "lhvC";
+        public override string DisplayName { get { return "LHEVCConfigurationBox"; } }
 
         protected LHEVCDecoderConfigurationRecord LHEVCConfig;
         public LHEVCDecoderConfigurationRecord _LHEVCConfig { get { return this.LHEVCConfig; } set { this.LHEVCConfig = value; } }
@@ -19647,7 +19968,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new LHEVCDecoderConfigurationRecord(), out this.LHEVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new LHEVCDecoderConfigurationRecord(), out this.LHEVCConfig);
             return boxSize;
         }
 
@@ -19677,6 +19998,7 @@ namespace SharpMP4
     public class MPEG4ExtensionDescriptorsBox : Box
     {
         public const string TYPE = "m4ds";
+        public override string DisplayName { get { return "MPEG4ExtensionDescriptorsBox"; } }
 
         protected Descriptor[] Descr;
         public Descriptor[] _Descr { get { return this.Descr; } set { this.Descr = value; } }
@@ -19689,7 +20011,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadClass(boxSize, readSize, new Descriptor(),  out this.Descr); 
+            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.Descr);
             return boxSize;
         }
 
@@ -19697,7 +20019,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteClass(this.Descr);
+            boxSize += stream.WriteDescriptor(this.Descr);
             return boxSize;
         }
 
@@ -19705,7 +20027,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateClassSize(Descr); // Descr
+            boxSize += IsoStream.CalculateDescriptorSize(Descr); // Descr
             return boxSize;
         }
     }
@@ -19719,6 +20041,7 @@ namespace SharpMP4
     public class SVCConfigurationBox : Box
     {
         public const string TYPE = "svcC";
+        public override string DisplayName { get { return "SVCConfigurationBox"; } }
 
         protected SVCDecoderConfigurationRecord SVCConfig;
         public SVCDecoderConfigurationRecord _SVCConfig { get { return this.SVCConfig; } set { this.SVCConfig = value; } }
@@ -19731,7 +20054,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new SVCDecoderConfigurationRecord(), out this.SVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new SVCDecoderConfigurationRecord(), out this.SVCConfig);
             return boxSize;
         }
 
@@ -19762,6 +20085,7 @@ namespace SharpMP4
     public class ScalabilityInformationSEIBox : Box
     {
         public const string TYPE = "seib";
+        public override string DisplayName { get { return "ScalabilityInformationSEIBox"; } }
 
         protected byte[] scalinfosei;
         public byte[] Scalinfosei { get { return this.scalinfosei; } set { this.scalinfosei = value; } }
@@ -19774,7 +20098,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBytes(size - 8, out this.scalinfosei);
+            boxSize += stream.ReadUInt8Array((uint)(size - 8), out this.scalinfosei);
             return boxSize;
         }
 
@@ -19782,7 +20106,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteBytes(size - 8, this.scalinfosei);
+            boxSize += stream.WriteUInt8Array((uint)(size - 8), this.scalinfosei);
             return boxSize;
         }
 
@@ -19806,6 +20130,7 @@ namespace SharpMP4
     public class SVCPriorityAssignmentBox : Box
     {
         public const string TYPE = "svcP";
+        public override string DisplayName { get { return "SVCPriorityAssignmentBox"; } }
 
         protected byte method_count;
         public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
@@ -19855,6 +20180,7 @@ namespace SharpMP4
     public class ViewScalabilityInformationSEIBox : Box
     {
         public const string TYPE = "vsib";
+        public override string DisplayName { get { return "ViewScalabilityInformationSEIBox"; } }
 
         protected byte[] mvcscalinfosei;
         public byte[] Mvcscalinfosei { get { return this.mvcscalinfosei; } set { this.mvcscalinfosei = value; } }
@@ -19867,7 +20193,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBytes(size - 8, out this.mvcscalinfosei);
+            boxSize += stream.ReadUInt8Array((uint)(size - 8), out this.mvcscalinfosei);
             return boxSize;
         }
 
@@ -19875,7 +20201,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteBytes(size - 8, this.mvcscalinfosei);
+            boxSize += stream.WriteUInt8Array((uint)(size - 8), this.mvcscalinfosei);
             return boxSize;
         }
 
@@ -19898,6 +20224,7 @@ namespace SharpMP4
     public class MVDScalabilityInformationSEIBox : Box
     {
         public const string TYPE = "3sib";
+        public override string DisplayName { get { return "MVDScalabilityInformationSEIBox"; } }
 
         protected byte[] mvdscalinfosei;
         public byte[] Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
@@ -19910,7 +20237,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBytes(size - 8, out this.mvdscalinfosei);
+            boxSize += stream.ReadUInt8Array((uint)(size - 8), out this.mvdscalinfosei);
             return boxSize;
         }
 
@@ -19918,7 +20245,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteBytes(size - 8, this.mvdscalinfosei);
+            boxSize += stream.WriteUInt8Array((uint)(size - 8), this.mvdscalinfosei);
             return boxSize;
         }
 
@@ -19942,6 +20269,7 @@ namespace SharpMP4
     public class MVCViewPriorityAssignmentBox : Box
     {
         public const string TYPE = "mvcP";
+        public override string DisplayName { get { return "MVCViewPriorityAssignmentBox"; } }
 
         protected byte method_count;
         public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
@@ -19990,6 +20318,7 @@ namespace SharpMP4
     public class HEVCTileConfigurationBox : Box
     {
         public const string TYPE = "hvtC";
+        public override string DisplayName { get { return "HEVCTileConfigurationBox"; } }
 
         protected HEVCTileTierLevelConfigurationRecord HEVCTileTierLevelConfig;
         public HEVCTileTierLevelConfigurationRecord _HEVCTileTierLevelConfig { get { return this.HEVCTileTierLevelConfig; } set { this.HEVCTileTierLevelConfig = value; } }
@@ -20002,7 +20331,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new HEVCTileTierLevelConfigurationRecord(), out this.HEVCTileTierLevelConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new HEVCTileTierLevelConfigurationRecord(), out this.HEVCTileTierLevelConfig);
             return boxSize;
         }
 
@@ -20032,6 +20361,7 @@ namespace SharpMP4
     public class EVCConfigurationBox : Box
     {
         public const string TYPE = "evcC";
+        public override string DisplayName { get { return "EVCConfigurationBox"; } }
 
         protected EVCDecoderConfigurationRecord EVCConfig;
         public EVCDecoderConfigurationRecord _EVCConfig { get { return this.EVCConfig; } set { this.EVCConfig = value; } }
@@ -20044,7 +20374,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new EVCDecoderConfigurationRecord(), out this.EVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new EVCDecoderConfigurationRecord(), out this.EVCConfig);
             return boxSize;
         }
 
@@ -20080,6 +20410,7 @@ namespace SharpMP4
     public class SVCPriorityLayerInfoBox : Box
     {
         public const string TYPE = "qlif";
+        public override string DisplayName { get { return "SVCPriorityLayerInfoBox"; } }
 
         protected byte pr_layer_num;
         public byte PrLayerNum { get { return this.pr_layer_num; } set { this.pr_layer_num = value; } }
@@ -20162,6 +20493,7 @@ namespace SharpMP4
     public class VvcConfigurationBox : FullBox
     {
         public const string TYPE = "vvcC";
+        public override string DisplayName { get { return "VvcConfigurationBox"; } }
 
         protected VvcDecoderConfigurationRecord VvcConfig;
         public VvcDecoderConfigurationRecord _VvcConfig { get { return this.VvcConfig; } set { this.VvcConfig = value; } }
@@ -20174,7 +20506,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new VvcDecoderConfigurationRecord(), out this.VvcConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new VvcDecoderConfigurationRecord(), out this.VvcConfig);
             return boxSize;
         }
 
@@ -20205,6 +20537,7 @@ namespace SharpMP4
     public class VvcNALUConfigBox : FullBox
     {
         public const string TYPE = "vvnC";
+        public override string DisplayName { get { return "VvcNALUConfigBox"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -20265,6 +20598,7 @@ namespace SharpMP4
     public class DefaultHevcExtractorConstructorBox : FullBox
     {
         public const string TYPE = "dhec";
+        public override string DisplayName { get { return "DefaultHevcExtractorConstructorBox"; } }
 
         protected uint num_entries;
         public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
@@ -20409,6 +20743,7 @@ namespace SharpMP4
     public class SVCMetadataSampleConfigBox : FullBox
     {
         public const string TYPE = "svmC";
+        public override string DisplayName { get { return "SVCMetadataSampleConfigBox"; } }
 
         protected byte sample_statement_type;
         public byte SampleStatementType { get { return this.sample_statement_type; } set { this.sample_statement_type = value; } }
@@ -20448,7 +20783,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.ReadUInt8(out this.statement_type[i]); // from the user extension ranges
-                boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.statement_namespace[i]);
+                boxSize += stream.ReadString(boxSize, readSize, out this.statement_namespace[i]);
             }
             return boxSize;
         }
@@ -20467,7 +20802,7 @@ namespace SharpMP4
             for (int i = 0; i < entry_count; i++)
             {
                 boxSize += stream.WriteUInt8(this.statement_type[i]); // from the user extension ranges
-                boxSize += stream.WriteStringZeroTerminated(this.statement_namespace[i]);
+                boxSize += stream.WriteString(this.statement_namespace[i]);
             }
             return boxSize;
         }
@@ -20501,6 +20836,7 @@ namespace SharpMP4
     public class EVCSliceComponentTrackConfigurationBox : Box
     {
         public const string TYPE = "evsC";
+        public override string DisplayName { get { return "EVCSliceComponentTrackConfigurationBox"; } }
 
         protected EVCSliceComponentTrackConfigurationRecord config;
         public EVCSliceComponentTrackConfigurationRecord Config { get { return this.config; } set { this.config = value; } }
@@ -20513,7 +20849,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new EVCSliceComponentTrackConfigurationRecord(), out this.config);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new EVCSliceComponentTrackConfigurationRecord(), out this.config);
             return boxSize;
         }
 
@@ -20543,6 +20879,7 @@ namespace SharpMP4
     public class WebVTTConfigurationBox : Box
     {
         public const string TYPE = "vttC";
+        public override string DisplayName { get { return "WebVTTConfigurationBox"; } }
 
         protected BinaryUTF8String config;
         public BinaryUTF8String Config { get { return this.config; } set { this.config = value; } }
@@ -20555,7 +20892,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.config);
+            boxSize += stream.ReadString(boxSize, readSize, out this.config);
             return boxSize;
         }
 
@@ -20563,7 +20900,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.config);
+            boxSize += stream.WriteString(this.config);
             return boxSize;
         }
 
@@ -20585,6 +20922,7 @@ namespace SharpMP4
     public class WebVTTSourceLabelBox : Box
     {
         public const string TYPE = "vlab";
+        public override string DisplayName { get { return "WebVTTSourceLabelBox"; } }
 
         protected BinaryUTF8String source_label;
         public BinaryUTF8String SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
@@ -20597,7 +20935,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.source_label);
+            boxSize += stream.ReadString(boxSize, readSize, out this.source_label);
             return boxSize;
         }
 
@@ -20605,7 +20943,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.source_label);
+            boxSize += stream.WriteString(this.source_label);
             return boxSize;
         }
 
@@ -20629,6 +20967,7 @@ namespace SharpMP4
     public class WVTTSampleEntry : PlainTextSampleEntry
     {
         public const string TYPE = "wvtt";
+        public override string DisplayName { get { return "WVTTSampleEntry"; } }
         public WebVTTConfigurationBox Config { get { return this.children.OfType<WebVTTConfigurationBox>().FirstOrDefault(); } }
         public WebVTTSourceLabelBox Label { get { return this.children.OfType<WebVTTSourceLabelBox>().FirstOrDefault(); } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
@@ -20681,6 +21020,7 @@ namespace SharpMP4
     public class AuxiliaryTypeInfoBox : FullBox
     {
         public const string TYPE = "auxi";
+        public override string DisplayName { get { return "AuxiliaryTypeInfoBox"; } }
 
         protected BinaryUTF8String aux_track_type;
         public BinaryUTF8String AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
@@ -20693,7 +21033,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.aux_track_type);
+            boxSize += stream.ReadString(boxSize, readSize, out this.aux_track_type);
             return boxSize;
         }
 
@@ -20701,7 +21041,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.aux_track_type);
+            boxSize += stream.WriteString(this.aux_track_type);
             return boxSize;
         }
 
@@ -20727,6 +21067,7 @@ namespace SharpMP4
     public class CodingConstraintsBox : FullBox
     {
         public const string TYPE = "ccst";
+        public override string DisplayName { get { return "CodingConstraintsBox"; } }
 
         protected bool all_ref_pics_intra;
         public bool AllRefPicsIntra { get { return this.all_ref_pics_intra; } set { this.all_ref_pics_intra = value; } }
@@ -20798,6 +21139,7 @@ namespace SharpMP4
     public class MD5IntegrityBox : FullBox
     {
         public const string TYPE = "md5i";
+        public override string DisplayName { get { return "MD5IntegrityBox"; } }
 
         protected byte[] input_MD5;
         public byte[] InputMD5 { get { return this.input_MD5; } set { this.input_MD5 = value; } }
@@ -20825,7 +21167,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBytes(16, out this.input_MD5);
+            boxSize += stream.ReadUInt8Array(16, out this.input_MD5);
             boxSize += stream.ReadUInt32(out this.input_4cc);
 
             if (input_4cc == IsoStream.FromFourCC("sgpd"))
@@ -20851,7 +21193,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteBytes(16, this.input_MD5);
+            boxSize += stream.WriteUInt8Array(16, this.input_MD5);
             boxSize += stream.WriteUInt32(this.input_4cc);
 
             if (input_4cc == IsoStream.FromFourCC("sgpd"))
@@ -20942,7 +21284,7 @@ namespace SharpMP4
     */
     public class AudioSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "AudioSampleEntry"; } }
 
         protected ushort soundversion = 0;
         public ushort Soundversion { get { return this.soundversion; } set { this.soundversion = value; } }
@@ -21024,7 +21366,7 @@ namespace SharpMP4
 
             if (soundversion == 2)
             {
-                boxSize += stream.ReadBytes(32, out this.soundVersion2Data);
+                boxSize += stream.ReadUInt8Array(32, out this.soundVersion2Data);
             }
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DownMixInstructions); 
@@ -21067,7 +21409,7 @@ namespace SharpMP4
 
             if (soundversion == 2)
             {
-                boxSize += stream.WriteBytes(20, this.soundVersion2Data);
+                boxSize += stream.WriteUInt8Array(20, this.soundVersion2Data);
             }
             // boxSize += stream.WriteBox( this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
             // boxSize += stream.WriteBox( this.DownMixInstructions); 
@@ -21154,7 +21496,7 @@ namespace SharpMP4
     */
     public class AudioSampleEntryV1 : SampleEntry
     {
-
+        public override string DisplayName { get { return "AudioSampleEntryV1"; } }
 
         protected ushort entry_version;  //  shall be 1, 
         public ushort EntryVersion { get { return this.entry_version; } set { this.entry_version = value; } }
@@ -21277,7 +21619,7 @@ namespace SharpMP4
     */
     public class FontSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "FontSampleEntry"; } }
 
         public FontSampleEntry(string codingname = "") : base(codingname)
         {
@@ -21315,7 +21657,7 @@ namespace SharpMP4
     */
     public class MetaDataSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "MetaDataSampleEntry"; } }
 
         public MetaDataSampleEntry(string codingname = "") : base(codingname)
         {
@@ -21363,6 +21705,7 @@ namespace SharpMP4
     public class GenericSampleEntry : Box
     {
         public const string TYPE = "encv";
+        public override string DisplayName { get { return "GenericSampleEntry"; } }
 
         public GenericSampleEntry() : base("encv")
         {
@@ -21440,6 +21783,7 @@ namespace SharpMP4
     public class XMLMetaDataSampleEntry : MetaDataSampleEntry
     {
         public const string TYPE = "metx";
+        public override string DisplayName { get { return "XMLMetaDataSampleEntry"; } }
 
         protected BinaryUTF8String content_encoding;  //  optional
         public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -21458,9 +21802,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.ns);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.schema_location); // optional
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional
+            boxSize += stream.ReadString(boxSize, readSize, out this.ns);
+            boxSize += stream.ReadString(boxSize, readSize, out this.schema_location); // optional
             return boxSize;
         }
 
@@ -21468,9 +21812,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional
-            boxSize += stream.WriteStringZeroTerminated(this.ns);
-            boxSize += stream.WriteStringZeroTerminated(this.schema_location); // optional
+            boxSize += stream.WriteString(this.content_encoding); // optional
+            boxSize += stream.WriteString(this.ns);
+            boxSize += stream.WriteString(this.schema_location); // optional
             return boxSize;
         }
 
@@ -21496,6 +21840,7 @@ namespace SharpMP4
     public class TextMetaDataSampleEntry : MetaDataSampleEntry
     {
         public const string TYPE = "mett";
+        public override string DisplayName { get { return "TextMetaDataSampleEntry"; } }
 
         protected BinaryUTF8String content_encoding;  //  optional
         public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
@@ -21512,8 +21857,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.mime_format);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional
+            boxSize += stream.ReadString(boxSize, readSize, out this.mime_format);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -21523,8 +21868,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional
-            boxSize += stream.WriteStringZeroTerminated(this.mime_format);
+            boxSize += stream.WriteString(this.content_encoding); // optional
+            boxSize += stream.WriteString(this.mime_format);
             // boxSize += stream.WriteBox( this.TextConfigBox); // optional
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
@@ -21552,6 +21897,7 @@ namespace SharpMP4
     public class URIMetaSampleEntry : MetaDataSampleEntry
     {
         public const string TYPE = "urim";
+        public override string DisplayName { get { return "URIMetaSampleEntry"; } }
         public URIBox TheLabel { get { return this.children.OfType<URIBox>().FirstOrDefault(); } }
         public URIInitBox Init { get { return this.children.OfType<URIInitBox>().FirstOrDefault(); } }
 
@@ -21601,6 +21947,7 @@ namespace SharpMP4
     public class BoxedMetaDataSampleEntry : MetaDataSampleEntry
     {
         public const string TYPE = "mebx";
+        public override string DisplayName { get { return "BoxedMetaDataSampleEntry"; } }
         public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return this.children.OfType<MetaDataKeyTableBox>().FirstOrDefault(); } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
 
@@ -21651,6 +21998,7 @@ namespace SharpMP4
     public class FDHintSampleEntry : HintSampleEntry
     {
         public const string TYPE = "fdp ";
+        public override string DisplayName { get { return "FDHintSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -21715,6 +22063,7 @@ namespace SharpMP4
     public class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEntry
     {
         public const string TYPE = "pm2t";
+        public override string DisplayName { get { return "ProtectedMPEG2TransportStreamSampleEntry"; } }
         public ProtectionSchemeInfoBox _SchemeInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
 
         public ProtectedMPEG2TransportStreamSampleEntry() : base("pm2t")
@@ -21759,6 +22108,7 @@ namespace SharpMP4
     public class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
     {
         public const string TYPE = "prtp";
+        public override string DisplayName { get { return "ProtectedRtpReceptionHintSampleEntry"; } }
         public ProtectionSchemeInfoBox _SchemeInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
 
         public ProtectedRtpReceptionHintSampleEntry() : base("prtp")
@@ -21800,6 +22150,7 @@ namespace SharpMP4
     public class MPEG2TSReceptionSampleEntry : MPEG2TSSampleEntry
     {
         public const string TYPE = "rm2t";
+        public override string DisplayName { get { return "MPEG2TSReceptionSampleEntry"; } }
 
         public MPEG2TSReceptionSampleEntry() : base("rm2t")
         {
@@ -21838,6 +22189,7 @@ namespace SharpMP4
     public class ReceivedRtpHintSampleEntry : HintSampleEntry
     {
         public const string TYPE = "rrtp";
+        public override string DisplayName { get { return "ReceivedRtpHintSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -21897,6 +22249,7 @@ namespace SharpMP4
     public class ReceivedSrtpHintSampleEntry : HintSampleEntry
     {
         public const string TYPE = "rsrp";
+        public override string DisplayName { get { return "ReceivedSrtpHintSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -21949,7 +22302,7 @@ namespace SharpMP4
     */
     public class HintSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "HintSampleEntry"; } }
 
         public HintSampleEntry(string protocol) : base(protocol)
         {
@@ -21984,6 +22337,7 @@ namespace SharpMP4
     public class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
     {
         public const string TYPE = "sm2t";
+        public override string DisplayName { get { return "MPEG2TSServerSampleEntry"; } }
 
         public MPEG2TSServerSampleEntry() : base("sm2t")
         {
@@ -22022,6 +22376,7 @@ namespace SharpMP4
     public class SrtpHintSampleEntry : HintSampleEntry
     {
         public const string TYPE = "srtp";
+        public override string DisplayName { get { return "SrtpHintSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -22079,7 +22434,7 @@ namespace SharpMP4
     */
     public class HapticSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "HapticSampleEntry"; } }
         public IEnumerable<Box> Otherboxes { get { return this.children.OfType<Box>(); } }
 
         public HapticSampleEntry(string codingname = "") : base(codingname)
@@ -22124,7 +22479,7 @@ namespace SharpMP4
     */
     public class VolumetricVisualSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "VolumetricVisualSampleEntry"; } }
 
         protected byte[] compressorname;  //  other boxes from derived specifications
         public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
@@ -22137,7 +22492,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBytes(32, out this.compressorname); // other boxes from derived specifications
+            boxSize += stream.ReadUInt8Array(32, out this.compressorname); // other boxes from derived specifications
             return boxSize;
         }
 
@@ -22145,7 +22500,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteBytes(32, this.compressorname); // other boxes from derived specifications
+            boxSize += stream.WriteUInt8Array(32, this.compressorname); // other boxes from derived specifications
             return boxSize;
         }
 
@@ -22181,7 +22536,7 @@ namespace SharpMP4
     */
     public class VisualSampleEntry : SampleEntry
     {
-
+        public override string DisplayName { get { return "VisualSampleEntry"; } }
 
         protected ushort pre_defined = 0;
         public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -22238,7 +22593,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(out this.vertresolution); // 72 dpi
             boxSize += stream.ReadUInt32(out this.reserved0);
             boxSize += stream.ReadUInt16(out this.frame_count);
-            boxSize += stream.ReadBytes(32, out this.compressorname);
+            boxSize += stream.ReadUInt8Array(32, out this.compressorname);
             boxSize += stream.ReadUInt16(out this.depth);
             boxSize += stream.ReadInt16(out this.pre_defined1); // other boxes from derived specifications
                                                                 // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.clap); // optional
@@ -22260,7 +22615,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt32(this.vertresolution); // 72 dpi
             boxSize += stream.WriteUInt32(this.reserved0);
             boxSize += stream.WriteUInt16(this.frame_count);
-            boxSize += stream.WriteBytes(32, this.compressorname);
+            boxSize += stream.WriteUInt8Array(32, this.compressorname);
             boxSize += stream.WriteUInt16(this.depth);
             boxSize += stream.WriteInt16(this.pre_defined1); // other boxes from derived specifications
                                                              // boxSize += stream.WriteBox( this.clap); // optional
@@ -22303,6 +22658,7 @@ namespace SharpMP4
     public class RtpHintSampleEntry : HintSampleEntry
     {
         public const string TYPE = "rtp ";
+        public override string DisplayName { get { return "RtpHintSampleEntry"; } }
 
         protected ushort hinttrackversion = 1;
         public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -22364,7 +22720,7 @@ namespace SharpMP4
     */
     public class EntityToGroupBox : FullBox
     {
-
+        public override string DisplayName { get { return "EntityToGroupBox"; } }
 
         protected uint group_id;
         public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
@@ -22431,6 +22787,7 @@ namespace SharpMP4
     public class BrandProperty : GeneralTypeBox
     {
         public const string TYPE = "brnd";
+        public override string DisplayName { get { return "BrandProperty"; } }
 
         public BrandProperty() : base("brnd")
         {
@@ -22473,7 +22830,7 @@ namespace SharpMP4
     */
     public class SingleItemTypeReferenceBox : Box
     {
-
+        public override string DisplayName { get { return "SingleItemTypeReferenceBox"; } }
 
         protected ushort from_item_ID;
         public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
@@ -22544,7 +22901,7 @@ namespace SharpMP4
     */
     public class SingleItemTypeReferenceBoxLarge : Box
     {
-
+        public override string DisplayName { get { return "SingleItemTypeReferenceBoxLarge"; } }
 
         protected uint from_item_ID;
         public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
@@ -22622,6 +22979,7 @@ namespace SharpMP4
     public class AlternativeStartupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "alst";
+        public override string DisplayName { get { return "AlternativeStartupEntry"; } }
 
         protected ushort roll_count;
         public ushort RollCount { get { return this.roll_count; } set { this.roll_count = value; } }
@@ -22724,6 +23082,7 @@ namespace SharpMP4
     public class VisualDRAPEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "drap";
+        public override string DisplayName { get { return "VisualDRAPEntry"; } }
 
         protected byte DRAP_type;
         public byte DRAPType { get { return this.DRAP_type; } set { this.DRAP_type = value; } }
@@ -22773,6 +23132,7 @@ namespace SharpMP4
     public class AudioPreRollEntry : AudioSampleGroupEntry
     {
         public const string TYPE = "prol";
+        public override string DisplayName { get { return "AudioPreRollEntry"; } }
 
         protected short roll_distance;
         public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
@@ -22817,6 +23177,7 @@ namespace SharpMP4
     public class VisualRandomAccessEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "rap ";
+        public override string DisplayName { get { return "VisualRandomAccessEntry"; } }
 
         protected bool num_leading_samples_known;
         public bool NumLeadingSamplesKnown { get { return this.num_leading_samples_known; } set { this.num_leading_samples_known = value; } }
@@ -22877,6 +23238,7 @@ namespace SharpMP4
     public class RateShareEntry : SampleGroupDescriptionEntry
     {
         public const string TYPE = "rash";
+        public override string DisplayName { get { return "RateShareEntry"; } }
 
         protected ushort operation_point_count;
         public ushort OperationPointCount { get { return this.operation_point_count; } set { this.operation_point_count = value; } }
@@ -22994,6 +23356,7 @@ namespace SharpMP4
     public class AudioRollRecoveryEntry : AudioSampleGroupEntry
     {
         public const string TYPE = "roll";
+        public override string DisplayName { get { return "AudioRollRecoveryEntry"; } }
 
         protected short roll_distance;
         public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
@@ -23039,6 +23402,7 @@ namespace SharpMP4
     public class SAPEntry : SampleGroupDescriptionEntry
     {
         public const string TYPE = "sap ";
+        public override string DisplayName { get { return "SAPEntry"; } }
 
         protected bool dependent_flag;
         public bool DependentFlag { get { return this.dependent_flag; } set { this.dependent_flag = value; } }
@@ -23098,6 +23462,7 @@ namespace SharpMP4
     public class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
     {
         public const string TYPE = "stmi";
+        public override string DisplayName { get { return "SampleToMetadataItemEntry"; } }
 
         protected uint meta_box_handler_type;
         public uint MetaBoxHandlerType { get { return this.meta_box_handler_type; } set { this.meta_box_handler_type = value; } }
@@ -23167,6 +23532,7 @@ namespace SharpMP4
     public class TemporalLevelEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "tele";
+        public override string DisplayName { get { return "TemporalLevelEntry"; } }
 
         protected bool level_independently_decodable;
         public bool LevelIndependentlyDecodable { get { return this.level_independently_decodable; } set { this.level_independently_decodable = value; } }
@@ -23216,6 +23582,7 @@ namespace SharpMP4
     public class PixelAspectRatioEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "pasr";
+        public override string DisplayName { get { return "PixelAspectRatioEntry"; } }
 
         protected uint hSpacing;
         public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
@@ -23277,6 +23644,7 @@ namespace SharpMP4
     public class CleanApertureEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "casg";
+        public override string DisplayName { get { return "CleanApertureEntry"; } }
 
         protected uint cleanApertureWidthN;
         public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
@@ -23364,6 +23732,7 @@ namespace SharpMP4
     public class TrackGroupTypeBox : FullBox
     {
         public const string TYPE = "msrc";
+        public override string DisplayName { get { return "TrackGroupTypeBox"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -23411,6 +23780,7 @@ namespace SharpMP4
     public class StereoVideoGroupBox : TrackGroupTypeBox
     {
         public const string TYPE = "ster";
+        public override string DisplayName { get { return "StereoVideoGroupBox"; } }
 
         protected bool left_view_flag;
         public bool LeftViewFlag { get { return this.left_view_flag; } set { this.left_view_flag = value; } }
@@ -23458,7 +23828,7 @@ namespace SharpMP4
     */
     public class TrackReferenceTypeBox : Box
     {
-
+        public override string DisplayName { get { return "TrackReferenceTypeBox"; } }
 
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
@@ -23504,6 +23874,7 @@ namespace SharpMP4
     public class SVCMetaDataSampleEntry : MetaDataSampleEntry
     {
         public const string TYPE = "svcM";
+        public override string DisplayName { get { return "SVCMetaDataSampleEntry"; } }
         public SVCMetadataSampleConfigBox Config { get { return this.children.OfType<SVCMetadataSampleConfigBox>().FirstOrDefault(); } }
         public SVCPriorityAssignmentBox Methods { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
         public SVCPriorityLayerInfoBox Priorities { get { return this.children.OfType<SVCPriorityLayerInfoBox>().FirstOrDefault(); } }
@@ -23562,6 +23933,7 @@ namespace SharpMP4
     public class SubpicCommonGroupBox : EntityToGroupBox
     {
         public const string TYPE = "acgl";
+        public override string DisplayName { get { return "SubpicCommonGroupBox"; } }
 
         protected bool level_is_present_flag;
         public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }
@@ -23671,6 +24043,7 @@ namespace SharpMP4
     public class SubpicMultipleGroupsBox : EntityToGroupBox
     {
         public const string TYPE = "amgl";
+        public override string DisplayName { get { return "SubpicMultipleGroupsBox"; } }
 
         protected bool level_is_present_flag;
         public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }
@@ -23858,6 +24231,7 @@ namespace SharpMP4
     public class OperatingPointGroupBox : EntityToGroupBox
     {
         public const string TYPE = "opeg";
+        public override string DisplayName { get { return "OperatingPointGroupBox"; } }
 
         protected byte num_profile_tier_level_minus1;
         public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }
@@ -23971,7 +24345,7 @@ namespace SharpMP4
             this.opeg_ptl = new VvcPTLRecord[num_profile_tier_level_minus1 + 1];
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new VvcPTLRecord(0), out this.opeg_ptl[i]);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord(0), out this.opeg_ptl[i]);
             }
             boxSize += stream.ReadBits(6, out this.reserved);
             boxSize += stream.ReadBit(out this.incomplete_operating_points_flag);
@@ -24245,6 +24619,7 @@ namespace SharpMP4
     public class SwitchableTracks : EntityToGroupBox
     {
         public const string TYPE = "swtk";
+        public override string DisplayName { get { return "SwitchableTracks"; } }
 
         protected ushort[] track_switch_hierarchy_id;
         public ushort[] TrackSwitchHierarchyId { get { return this.track_switch_hierarchy_id; } set { this.track_switch_hierarchy_id = value; } }
@@ -24305,6 +24680,7 @@ namespace SharpMP4
     public class EntityToGroupBox_vvcb : FullBox
     {
         public const string TYPE = "vvcb";
+        public override string DisplayName { get { return "EntityToGroupBox_vvcb"; } }
 
         protected uint group_id;
         public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
@@ -24373,6 +24749,7 @@ namespace SharpMP4
     public class AUDSampleEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "aud ";
+        public override string DisplayName { get { return "AUDSampleEntry"; } }
 
         protected uint audNalUnit;
         public uint AudNalUnit { get { return this.audNalUnit; } set { this.audNalUnit = value; } }
@@ -24420,6 +24797,7 @@ namespace SharpMP4
     public class AVCLayerEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "avll";
+        public override string DisplayName { get { return "AVCLayerEntry"; } }
 
         protected byte layerNumber;
         public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
@@ -24487,6 +24865,7 @@ namespace SharpMP4
     public class DecodingCapabilityInformation : VisualSampleGroupEntry
     {
         public const string TYPE = "dcfi";
+        public override string DisplayName { get { return "DecodingCapabilityInformation"; } }
 
         protected ushort dci_nal_unit_length;
         public ushort DciNalUnitLength { get { return this.dci_nal_unit_length; } set { this.dci_nal_unit_length = value; } }
@@ -24503,7 +24882,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.dci_nal_unit_length);
-            boxSize += stream.ReadBytes(dci_nal_unit_length, out this.dci_nal_unit);
+            boxSize += stream.ReadUInt8Array((uint)dci_nal_unit_length, out this.dci_nal_unit);
             return boxSize;
         }
 
@@ -24512,7 +24891,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             boxSize += stream.WriteUInt16(this.dci_nal_unit_length);
-            boxSize += stream.WriteBytes(dci_nal_unit_length, this.dci_nal_unit);
+            boxSize += stream.WriteUInt8Array((uint)dci_nal_unit_length, this.dci_nal_unit);
             return boxSize;
         }
 
@@ -24539,6 +24918,7 @@ namespace SharpMP4
     public class DecodeRetimingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "dtrt";
+        public override string DisplayName { get { return "DecodeRetimingEntry"; } }
 
         protected byte tierCount;
         public byte TierCount { get { return this.tierCount; } set { this.tierCount = value; } }
@@ -24608,6 +24988,7 @@ namespace SharpMP4
     public class EndOfBitstreamSampleEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "eob ";
+        public override string DisplayName { get { return "EndOfBitstreamSampleEntry"; } }
 
         protected ushort eobNalUnit;
         public ushort EobNalUnit { get { return this.eobNalUnit; } set { this.eobNalUnit = value; } }
@@ -24653,6 +25034,7 @@ namespace SharpMP4
     public class EndOfSequenceSampleEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "eos ";
+        public override string DisplayName { get { return "EndOfSequenceSampleEntry"; } }
 
         protected byte num_eos_nal_unit_minus1;
         public byte NumEosNalUnitMinus1 { get { return this.num_eos_nal_unit_minus1; } set { this.num_eos_nal_unit_minus1 = value; } }
@@ -24718,6 +25100,7 @@ namespace SharpMP4
     public class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
     {
         public const string TYPE = "lbli";
+        public override string DisplayName { get { return "LhvcExternalBaseLayerInfo"; } }
 
         protected bool reserved = true;
         public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -24789,6 +25172,7 @@ namespace SharpMP4
     public class LayerInfoGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "linf";
+        public override string DisplayName { get { return "LayerInfoGroupEntry"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -24912,6 +25296,7 @@ namespace SharpMP4
     public class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "minp";
+        public override string DisplayName { get { return "VvcMixedNALUnitTypePicEntry"; } }
 
         protected ushort num_mix_nalu_pic_idx;
         public ushort NumMixNaluPicIdx { get { return this.num_mix_nalu_pic_idx; } set { this.num_mix_nalu_pic_idx = value; } }
@@ -25012,6 +25397,7 @@ namespace SharpMP4
     public class MultiviewGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "mvif";
+        public override string DisplayName { get { return "MultiviewGroupEntry"; } }
 
         protected byte groupID;
         public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -25170,6 +25556,7 @@ namespace SharpMP4
     public class NALUMapEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "nalm";
+        public override string DisplayName { get { return "NALUMapEntry"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -25322,6 +25709,7 @@ namespace SharpMP4
     public class OperatingPointsInformation : VisualSampleGroupEntry
     {
         public const string TYPE = "oinf";
+        public override string DisplayName { get { return "OperatingPointsInformation"; } }
 
         protected OperatingPointsRecord oinf;
         public OperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
@@ -25334,7 +25722,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new OperatingPointsRecord(), out this.oinf);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new OperatingPointsRecord(), out this.oinf);
             return boxSize;
         }
 
@@ -25367,6 +25755,7 @@ namespace SharpMP4
     public class OperatingPointDecodeTimeHint : VisualSampleGroupEntry
     {
         public const string TYPE = "opth";
+        public override string DisplayName { get { return "OperatingPointDecodeTimeHint"; } }
 
         protected int delta_time;
         public int DeltaTime { get { return this.delta_time; } set { this.delta_time = value; } }
@@ -25411,6 +25800,7 @@ namespace SharpMP4
     public class ParameterSetNALUEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "pase";
+        public override string DisplayName { get { return "ParameterSetNALUEntry"; } }
 
         protected ushort ps_nalu_length;
         public ushort PsNaluLength { get { return this.ps_nalu_length; } set { this.ps_nalu_length = value; } }
@@ -25427,7 +25817,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.ps_nalu_length);
-            boxSize += stream.ReadBytes(ps_nalu_length, out this.ps_nal_unit);
+            boxSize += stream.ReadUInt8Array((uint)ps_nalu_length, out this.ps_nal_unit);
             return boxSize;
         }
 
@@ -25436,7 +25826,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             boxSize += stream.WriteUInt16(this.ps_nalu_length);
-            boxSize += stream.WriteBytes(ps_nalu_length, this.ps_nal_unit);
+            boxSize += stream.WriteUInt8Array((uint)ps_nalu_length, this.ps_nal_unit);
             return boxSize;
         }
 
@@ -25463,6 +25853,7 @@ namespace SharpMP4
     public class PSSampleGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "pss1";
+        public override string DisplayName { get { return "PSSampleGroupEntry"; } }
 
         protected bool sps_present;
         public bool SpsPresent { get { return this.sps_present; } set { this.sps_present = value; } }
@@ -25537,6 +25928,7 @@ namespace SharpMP4
     public class VvcRectRegionOrderEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "rror";
+        public override string DisplayName { get { return "VvcRectRegionOrderEntry"; } }
 
         protected bool subpic_id_info_flag;
         public bool SubpicIdInfoFlag { get { return this.subpic_id_info_flag; } set { this.subpic_id_info_flag = value; } }
@@ -25601,7 +25993,7 @@ namespace SharpMP4
 
             if (subpic_id_info_flag)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
             }
             return boxSize;
         }
@@ -25705,6 +26097,7 @@ namespace SharpMP4
     public class ScalableGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "scif";
+        public override string DisplayName { get { return "ScalableGroupEntry"; } }
 
         protected byte groupID;
         public byte GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -25880,6 +26273,7 @@ namespace SharpMP4
     public class ScalableNALUMapEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "scnm";
+        public override string DisplayName { get { return "ScalableNALUMapEntry"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -25957,6 +26351,7 @@ namespace SharpMP4
     public class VvcSubpicIDEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "spid";
+        public override string DisplayName { get { return "VvcSubpicIDEntry"; } }
 
         protected bool rect_region_flag;
         public bool RectRegionFlag { get { return this.rect_region_flag; } set { this.rect_region_flag = value; } }
@@ -26068,6 +26463,7 @@ namespace SharpMP4
     public class SubpicLevelInfoEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "spli";
+        public override string DisplayName { get { return "SubpicLevelInfoEntry"; } }
 
         protected byte level_idc;
         public byte LevelIdc { get { return this.level_idc; } set { this.level_idc = value; } }
@@ -26116,6 +26512,7 @@ namespace SharpMP4
     public class VvcSubpicOrderEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "spor";
+        public override string DisplayName { get { return "VvcSubpicOrderEntry"; } }
 
         protected bool subpic_id_info_flag;
         public bool SubpicIdInfoFlag { get { return this.subpic_id_info_flag; } set { this.subpic_id_info_flag = value; } }
@@ -26148,7 +26545,7 @@ namespace SharpMP4
 
             if (subpic_id_info_flag)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
             }
             return boxSize;
         }
@@ -26201,6 +26598,7 @@ namespace SharpMP4
     public class StepwiseTemporalLayerEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "stsa";
+        public override string DisplayName { get { return "StepwiseTemporalLayerEntry"; } }
 
         public StepwiseTemporalLayerEntry() : base("stsa")
         {
@@ -26240,6 +26638,7 @@ namespace SharpMP4
     public class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "sulm";
+        public override string DisplayName { get { return "VvcSubpicLayoutMapEntry"; } }
 
         protected uint groupID_info_4cc;
         public uint GroupIDInfo4cc { get { return this.groupID_info_4cc; } set { this.groupID_info_4cc = value; } }
@@ -26309,6 +26708,7 @@ namespace SharpMP4
     public class SyncSampleEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "sync";
+        public override string DisplayName { get { return "SyncSampleEntry"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -26379,6 +26779,7 @@ namespace SharpMP4
     public class RectangularRegionGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "trif";
+        public override string DisplayName { get { return "RectangularRegionGroupEntry"; } }
 
         protected ushort groupID;
         public ushort GroupID { get { return this.groupID; } set { this.groupID = value; } }
@@ -26560,6 +26961,7 @@ namespace SharpMP4
     public class TemporalSubLayerEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "tsas";
+        public override string DisplayName { get { return "TemporalSubLayerEntry"; } }
 
         public TemporalSubLayerEntry() : base("tsas")
         {
@@ -26607,6 +27009,7 @@ namespace SharpMP4
     public class TemporalLayerEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "tscl";
+        public override string DisplayName { get { return "TemporalLayerEntry"; } }
 
         protected byte temporalLayerId;
         public byte TemporalLayerId { get { return this.temporalLayerId; } set { this.temporalLayerId = value; } }
@@ -26710,6 +27113,7 @@ namespace SharpMP4
     public class ViewPriorityEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "vipr";
+        public override string DisplayName { get { return "ViewPriorityEntry"; } }
 
         protected ViewPriorityBox ViewPriorityBox;
         public ViewPriorityBox _ViewPriorityBox { get { return this.ViewPriorityBox; } set { this.ViewPriorityBox = value; } }
@@ -26752,6 +27156,7 @@ namespace SharpMP4
     public class VvcOperatingPointsInformation : VisualSampleGroupEntry
     {
         public const string TYPE = "vopi";
+        public override string DisplayName { get { return "VvcOperatingPointsInformation"; } }
 
         protected VvcOperatingPointsRecord oinf;
         public VvcOperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
@@ -26764,7 +27169,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new VvcOperatingPointsRecord(), out this.oinf);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new VvcOperatingPointsRecord(), out this.oinf);
             return boxSize;
         }
 
@@ -26797,6 +27202,7 @@ namespace SharpMP4
     public class TrackGroupTypeBox_alte : FullBox
     {
         public const string TYPE = "alte";
+        public override string DisplayName { get { return "TrackGroupTypeBox_alte"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -26845,6 +27251,7 @@ namespace SharpMP4
     public class TrackGroupTypeBox_cstg : FullBox
     {
         public const string TYPE = "cstg";
+        public override string DisplayName { get { return "TrackGroupTypeBox_cstg"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -26893,6 +27300,7 @@ namespace SharpMP4
     public class TrackGroupTypeBox_snut : FullBox
     {
         public const string TYPE = "snut";
+        public override string DisplayName { get { return "TrackGroupTypeBox_snut"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -26941,6 +27349,7 @@ namespace SharpMP4
     public class AuxiliaryTypeProperty : ItemFullProperty
     {
         public const string TYPE = "auxC";
+        public override string DisplayName { get { return "AuxiliaryTypeProperty"; } }
 
         protected BinaryUTF8String aux_type;
         public BinaryUTF8String AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
@@ -26956,7 +27365,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.aux_type);
+            boxSize += stream.ReadString(boxSize, readSize, out this.aux_type);
             boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
             return boxSize;
         }
@@ -26965,7 +27374,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.aux_type);
+            boxSize += stream.WriteString(this.aux_type);
             boxSize += stream.WriteUInt8ArrayTillEnd(this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
             return boxSize;
         }
@@ -26991,6 +27400,7 @@ namespace SharpMP4
     public class ImageMirror : ItemProperty
     {
         public const string TYPE = "imir";
+        public override string DisplayName { get { return "ImageMirror"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -27041,6 +27451,7 @@ namespace SharpMP4
     public class ImageRotation : ItemProperty
     {
         public const string TYPE = "irot";
+        public override string DisplayName { get { return "ImageRotation"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -27092,6 +27503,7 @@ namespace SharpMP4
     public class ImageSpatialExtentsProperty : ItemFullProperty
     {
         public const string TYPE = "ispe";
+        public override string DisplayName { get { return "ImageSpatialExtentsProperty"; } }
 
         protected uint image_width;
         public uint ImageWidth { get { return this.image_width; } set { this.image_width = value; } }
@@ -27140,6 +27552,7 @@ namespace SharpMP4
     public class JPEGConfigurationBox : Box
     {
         public const string TYPE = "jpgC";
+        public override string DisplayName { get { return "JPEGConfigurationBox"; } }
 
         protected byte[] JPEGprefix;
         public byte[] _JPEGprefix { get { return this.JPEGprefix; } set { this.JPEGprefix = value; } }
@@ -27183,6 +27596,7 @@ namespace SharpMP4
     public class LayerSelectorProperty : ItemProperty
     {
         public const string TYPE = "lsel";
+        public override string DisplayName { get { return "LayerSelectorProperty"; } }
 
         protected ushort layer_id;
         public ushort LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
@@ -27226,6 +27640,7 @@ namespace SharpMP4
     public class OperatingPointsInformationProperty : ItemFullProperty
     {
         public const string TYPE = "oinf";
+        public override string DisplayName { get { return "OperatingPointsInformationProperty"; } }
 
         protected OperatingPointsRecord op_info;  //  specified in ISO/IEC 14496-15
         public OperatingPointsRecord OpInfo { get { return this.op_info; } set { this.op_info = value; } }
@@ -27238,7 +27653,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new OperatingPointsRecord(), out this.op_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadClass(boxSize, readSize, this, new OperatingPointsRecord(), out this.op_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -27272,6 +27687,7 @@ namespace SharpMP4
     public class PixelInformationProperty : ItemFullProperty
     {
         public const string TYPE = "pixi";
+        public override string DisplayName { get { return "PixelInformationProperty"; } }
 
         protected byte num_channels;
         public byte NumChannels { get { return this.num_channels; } set { this.num_channels = value; } }
@@ -27336,6 +27752,7 @@ namespace SharpMP4
     public class RelativeLocationProperty : ItemFullProperty
     {
         public const string TYPE = "rloc";
+        public override string DisplayName { get { return "RelativeLocationProperty"; } }
 
         protected uint horizontal_offset;
         public uint HorizontalOffset { get { return this.horizontal_offset; } set { this.horizontal_offset = value; } }
@@ -27385,6 +27802,7 @@ namespace SharpMP4
     public class TargetOlsProperty : ItemFullProperty
     {
         public const string TYPE = "tols";
+        public override string DisplayName { get { return "TargetOlsProperty"; } }
 
         protected ushort target_ols_idx;
         public ushort TargetOlsIdx { get { return this.target_ols_idx; } set { this.target_ols_idx = value; } }
@@ -27429,6 +27847,7 @@ namespace SharpMP4
     public class AutoExposureBracketingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "aebr";
+        public override string DisplayName { get { return "AutoExposureBracketingEntry"; } }
 
         protected sbyte exposure_step;
         public sbyte ExposureStep { get { return this.exposure_step; } set { this.exposure_step = value; } }
@@ -27479,6 +27898,7 @@ namespace SharpMP4
     public class FlashExposureBracketingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "afbr";
+        public override string DisplayName { get { return "FlashExposureBracketingEntry"; } }
 
         protected sbyte flash_exposure_numerator;
         public sbyte FlashExposureNumerator { get { return this.flash_exposure_numerator; } set { this.flash_exposure_numerator = value; } }
@@ -27530,6 +27950,7 @@ namespace SharpMP4
     public class AccessibilityTextProperty : ItemFullProperty
     {
         public const string TYPE = "altt";
+        public override string DisplayName { get { return "AccessibilityTextProperty"; } }
 
         protected BinaryUTF8String alt_text;
         public BinaryUTF8String AltText { get { return this.alt_text; } set { this.alt_text = value; } }
@@ -27545,8 +27966,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.alt_text);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.alt_lang);
+            boxSize += stream.ReadString(boxSize, readSize, out this.alt_text);
+            boxSize += stream.ReadString(boxSize, readSize, out this.alt_lang);
             return boxSize;
         }
 
@@ -27554,8 +27975,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.alt_text);
-            boxSize += stream.WriteStringZeroTerminated(this.alt_lang);
+            boxSize += stream.WriteString(this.alt_text);
+            boxSize += stream.WriteString(this.alt_lang);
             return boxSize;
         }
 
@@ -27580,6 +28001,7 @@ namespace SharpMP4
     public class CreationTimeProperty : ItemFullProperty
     {
         public const string TYPE = "crtt";
+        public override string DisplayName { get { return "CreationTimeProperty"; } }
 
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -27624,6 +28046,7 @@ namespace SharpMP4
     public class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "dobr";
+        public override string DisplayName { get { return "DepthOfFieldBracketingEntry"; } }
 
         protected sbyte f_stop_numerator;
         public sbyte fStopNumerator { get { return this.f_stop_numerator; } set { this.f_stop_numerator = value; } }
@@ -27674,6 +28097,7 @@ namespace SharpMP4
     public class FocusBracketingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "fobr";
+        public override string DisplayName { get { return "FocusBracketingEntry"; } }
 
         protected ushort focus_distance_numerator;
         public ushort FocusDistanceNumerator { get { return this.focus_distance_numerator; } set { this.focus_distance_numerator = value; } }
@@ -27726,6 +28150,7 @@ namespace SharpMP4
     public class ImageScaling : ItemFullProperty
     {
         public const string TYPE = "iscl";
+        public override string DisplayName { get { return "ImageScaling"; } }
 
         protected ushort target_width_numerator;
         public ushort TargetWidthNumerator { get { return this.target_width_numerator; } set { this.target_width_numerator = value; } }
@@ -27788,6 +28213,7 @@ namespace SharpMP4
     public class ModificationTimeProperty : ItemFullProperty
     {
         public const string TYPE = "mdft";
+        public override string DisplayName { get { return "ModificationTimeProperty"; } }
 
         protected ulong modification_time;
         public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }
@@ -27832,6 +28258,7 @@ namespace SharpMP4
     public class PanoramaEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "pano";
+        public override string DisplayName { get { return "PanoramaEntry"; } }
 
         protected ushort frame_number;
         public ushort FrameNumber { get { return this.frame_number; } set { this.frame_number = value; } }
@@ -27878,6 +28305,7 @@ namespace SharpMP4
     public class RequiredReferenceTypesProperty : ItemFullProperty
     {
         public const string TYPE = "rref";
+        public override string DisplayName { get { return "RequiredReferenceTypesProperty"; } }
 
         protected byte reference_type_count;
         public byte ReferenceTypeCount { get { return this.reference_type_count; } set { this.reference_type_count = value; } }
@@ -27944,6 +28372,7 @@ namespace SharpMP4
     public class UserDescriptionProperty : ItemFullProperty
     {
         public const string TYPE = "udes";
+        public override string DisplayName { get { return "UserDescriptionProperty"; } }
 
         protected BinaryUTF8String lang;
         public BinaryUTF8String Lang { get { return this.lang; } set { this.lang = value; } }
@@ -27965,10 +28394,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.lang);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.name);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.description);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.tags);
+            boxSize += stream.ReadString(boxSize, readSize, out this.lang);
+            boxSize += stream.ReadString(boxSize, readSize, out this.name);
+            boxSize += stream.ReadString(boxSize, readSize, out this.description);
+            boxSize += stream.ReadString(boxSize, readSize, out this.tags);
             return boxSize;
         }
 
@@ -27976,10 +28405,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.lang);
-            boxSize += stream.WriteStringZeroTerminated(this.name);
-            boxSize += stream.WriteStringZeroTerminated(this.description);
-            boxSize += stream.WriteStringZeroTerminated(this.tags);
+            boxSize += stream.WriteString(this.lang);
+            boxSize += stream.WriteString(this.name);
+            boxSize += stream.WriteString(this.description);
+            boxSize += stream.WriteString(this.tags);
             return boxSize;
         }
 
@@ -28006,6 +28435,7 @@ namespace SharpMP4
     public class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "wbbr";
+        public override string DisplayName { get { return "WhiteBalanceBracketingEntry"; } }
 
         protected ushort blue_amber;
         public ushort BlueAmber { get { return this.blue_amber; } set { this.blue_amber = value; } }
@@ -28055,6 +28485,7 @@ namespace SharpMP4
     public class WipeTransitionEffectProperty : ItemFullProperty
     {
         public const string TYPE = "wipe";
+        public override string DisplayName { get { return "WipeTransitionEffectProperty"; } }
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -28099,6 +28530,7 @@ namespace SharpMP4
     public class ZoomTransitionEffectProperty : ItemFullProperty
     {
         public const string TYPE = "zoom";
+        public override string DisplayName { get { return "ZoomTransitionEffectProperty"; } }
 
         protected bool transition_direction;
         public bool TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -28148,6 +28580,7 @@ namespace SharpMP4
     public class FadeTransitionEffectProperty : ItemFullProperty
     {
         public const string TYPE = "fade";
+        public override string DisplayName { get { return "FadeTransitionEffectProperty"; } }
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -28191,6 +28624,7 @@ namespace SharpMP4
     public class SplitTransitionEffectProperty : ItemFullProperty
     {
         public const string TYPE = "splt";
+        public override string DisplayName { get { return "SplitTransitionEffectProperty"; } }
 
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -28234,6 +28668,7 @@ namespace SharpMP4
     public class SuggestedTransitionPeriodProperty : ItemFullProperty
     {
         public const string TYPE = "stpe";
+        public override string DisplayName { get { return "SuggestedTransitionPeriodProperty"; } }
 
         protected byte transition_period;
         public byte TransitionPeriod { get { return this.transition_period; } set { this.transition_period = value; } }
@@ -28277,6 +28712,7 @@ namespace SharpMP4
     public class SuggestedTimeDisplayDurationProperty : ItemFullProperty
     {
         public const string TYPE = "ssld";
+        public override string DisplayName { get { return "SuggestedTimeDisplayDurationProperty"; } }
 
         protected ushort duration;
         public ushort Duration { get { return this.duration; } set { this.duration = value; } }
@@ -28320,6 +28756,7 @@ namespace SharpMP4
     public class MaskConfigurationProperty : ItemFullProperty
     {
         public const string TYPE = "mskC";
+        public override string DisplayName { get { return "MaskConfigurationProperty"; } }
 
         protected byte bits_per_pixel;
         public byte BitsPerPixel { get { return this.bits_per_pixel; } set { this.bits_per_pixel = value; } }
@@ -28363,6 +28800,7 @@ namespace SharpMP4
     public class VvcSubpicIDProperty : ItemFullProperty
     {
         public const string TYPE = "spid";
+        public override string DisplayName { get { return "VvcSubpicIDProperty"; } }
 
         protected VvcSubpicIDEntry sid_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicIDEntry SidInfo { get { return this.sid_info; } set { this.sid_info = value; } }
@@ -28375,7 +28813,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadEntry(boxSize, readSize, out this.sid_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadEntry(boxSize, readSize, this, TYPE, out this.sid_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -28406,6 +28844,7 @@ namespace SharpMP4
     public class VvcSubpicOrderProperty : ItemFullProperty
     {
         public const string TYPE = "spor";
+        public override string DisplayName { get { return "VvcSubpicOrderProperty"; } }
 
         protected VvcSubpicOrderEntry sor_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicOrderEntry SorInfo { get { return this.sor_info; } set { this.sor_info = value; } }
@@ -28418,7 +28857,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadEntry(boxSize, readSize, out this.sor_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadEntry(boxSize, readSize, this, TYPE, out this.sor_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -28450,6 +28889,7 @@ namespace SharpMP4
     public class VisualEquivalenceEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "eqiv";
+        public override string DisplayName { get { return "VisualEquivalenceEntry"; } }
 
         protected short time_offset;
         public short TimeOffset { get { return this.time_offset; } set { this.time_offset = value; } }
@@ -28503,6 +28943,7 @@ namespace SharpMP4
     public class DirectReferenceSamplesList : VisualSampleGroupEntry
     {
         public const string TYPE = "refs";
+        public override string DisplayName { get { return "DirectReferenceSamplesList"; } }
 
         protected uint sample_id;
         public uint SampleId { get { return this.sample_id; } set { this.sample_id = value; } }
@@ -28570,6 +29011,7 @@ namespace SharpMP4
     public abstract class BaseDescriptor : Descriptor
     {
         public const byte TYPE = 0;
+        public override string DisplayName { get { return "BaseDescriptor"; } }
 
         public BaseDescriptor(byte tag) : base(tag)
         {
@@ -28607,6 +29049,7 @@ namespace SharpMP4
     public abstract class DecoderSpecificInfo : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+        public override string DisplayName { get { return "DecoderSpecificInfo"; } }
 
         public DecoderSpecificInfo() : base(DescriptorTags.DecSpecificInfoTag)
         {
@@ -28667,6 +29110,7 @@ namespace SharpMP4
     public class ES_Descriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.ES_DescrTag;
+        public override string DisplayName { get { return "ES_Descriptor"; } }
 
         protected ushort ES_ID;
         public ushort ESID { get { return this.ES_ID; } set { this.ES_ID = value; } }
@@ -28726,22 +29170,22 @@ namespace SharpMP4
             if (URL_Flag)
             {
                 boxSize += stream.ReadUInt8(out this.URLlength);
-                boxSize += stream.ReadBytes(URLlength, out this.URLstring);
+                boxSize += stream.ReadUInt8Array((uint)URLlength, out this.URLstring);
             }
 
             if (OCRstreamFlag)
             {
                 boxSize += stream.ReadUInt16(out this.OCR_ES_Id);
             }
-            // boxSize += stream.ReadDescriptor( out this.decConfigDescr); 
-            // boxSize += stream.ReadDescriptor( out this.slConfigDescr); 
-            // boxSize += stream.ReadDescriptor( out this.ipiPtr); 
-            // boxSize += stream.ReadDescriptor( out this.ipIDS); 
-            // boxSize += stream.ReadDescriptor( out this.ipmpDescrPtr); 
-            // boxSize += stream.ReadDescriptor( out this.langDescr); 
-            // boxSize += stream.ReadDescriptor( out this.qosDescr); 
-            // boxSize += stream.ReadDescriptor( out this.regDescr); 
-            // boxSize += stream.ReadDescriptor( out this.extDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.decConfigDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.slConfigDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipiPtr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipIDS); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipmpDescrPtr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.langDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.qosDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.regDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.extDescr); 
             boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -28764,7 +29208,7 @@ namespace SharpMP4
             if (URL_Flag)
             {
                 boxSize += stream.WriteUInt8(this.URLlength);
-                boxSize += stream.WriteBytes(URLlength, this.URLstring);
+                boxSize += stream.WriteUInt8Array((uint)URLlength, this.URLstring);
             }
 
             if (OCRstreamFlag)
@@ -28862,6 +29306,7 @@ namespace SharpMP4
     public class SLConfigDescriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.SLConfigDescrTag;
+        public override string DisplayName { get { return "SLConfigDescriptor"; } }
 
         protected byte predefined;
         public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
@@ -28979,8 +29424,8 @@ namespace SharpMP4
 
             if (!useTimeStampsFlag)
             {
-                boxSize += stream.ReadBytes(timeStampLength, out this.startDecodingTimeStamp);
-                boxSize += stream.ReadBytes(timeStampLength, out this.startCompositionTimeStamp);
+                boxSize += stream.ReadUInt8Array((uint)timeStampLength, out this.startDecodingTimeStamp);
+                boxSize += stream.ReadUInt8Array((uint)timeStampLength, out this.startCompositionTimeStamp);
             }
             boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.ocr); // OCR stream flag, reserved, OCR_ES_id 
             return boxSize;
@@ -29023,8 +29468,8 @@ namespace SharpMP4
 
             if (!useTimeStampsFlag)
             {
-                boxSize += stream.WriteBytes(timeStampLength, this.startDecodingTimeStamp);
-                boxSize += stream.WriteBytes(timeStampLength, this.startCompositionTimeStamp);
+                boxSize += stream.WriteUInt8Array((uint)timeStampLength, this.startDecodingTimeStamp);
+                boxSize += stream.WriteUInt8Array((uint)timeStampLength, this.startCompositionTimeStamp);
             }
             boxSize += stream.WriteUInt8ArrayTillEnd(this.ocr); // OCR stream flag, reserved, OCR_ES_id 
             return boxSize;
@@ -29092,6 +29537,7 @@ namespace SharpMP4
     public class DecoderConfigDescriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.DecoderConfigDescrTag;
+        public override string DisplayName { get { return "DecoderConfigDescriptor"; } }
 
         protected byte objectTypeIndication;
         public byte ObjectTypeIndication { get { return this.objectTypeIndication; } set { this.objectTypeIndication = value; } }
@@ -29131,8 +29577,8 @@ namespace SharpMP4
             boxSize += stream.ReadBits(24, out this.bufferSizeDB);
             boxSize += stream.ReadUInt32(out this.maxBitrate);
             boxSize += stream.ReadUInt32(out this.avgBitrate);
-            // boxSize += stream.ReadDescriptor( out this.decSpecificInfo); 
-            // boxSize += stream.ReadDescriptor( out this.profileLevelIndicationIndexDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.decSpecificInfo); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.profileLevelIndicationIndexDescr); 
             boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this, objectTypeIndication);
             return boxSize;
         }
@@ -29182,6 +29628,7 @@ namespace SharpMP4
     public class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.ProfileLevelIndicationIndexDescrTag;
+        public override string DisplayName { get { return "ProfileLevelIndicationIndexDescriptor"; } }
 
         protected byte profileLevelIndicationIndex;
         public byte ProfileLevelIndicationIndex { get { return this.profileLevelIndicationIndex; } set { this.profileLevelIndicationIndex = value; } }
@@ -29224,6 +29671,7 @@ namespace SharpMP4
     public class IPI_DescrPointer : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.IPI_DescrPointerTag;
+        public override string DisplayName { get { return "IPI_DescrPointer"; } }
 
         protected ushort IPI_ES_Id;
         public ushort IPIESId { get { return this.IPI_ES_Id; } set { this.IPI_ES_Id = value; } }
@@ -29268,7 +29716,7 @@ namespace SharpMP4
     public abstract class IP_IdentificationDataSet : BaseDescriptor
     {
         public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
-        public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag;
+        public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag; public override string DisplayName { get { return "IP_IdentificationDataSet"; } }
 
         public IP_IdentificationDataSet(byte tag) : base(tag)
         {
@@ -29308,6 +29756,7 @@ namespace SharpMP4
     public class IPMP_DescriptorPointer : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.IPMP_DescrPointerTag;
+        public override string DisplayName { get { return "IPMP_DescriptorPointer"; } }
 
         protected byte IPMP_DescriptorID;
         public byte IPMPDescriptorID { get { return this.IPMP_DescriptorID; } set { this.IPMP_DescriptorID = value; } }
@@ -29351,7 +29800,7 @@ namespace SharpMP4
     public abstract class OCI_Descriptor : BaseDescriptor
     {
         public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
-        public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange;
+        public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange; public override string DisplayName { get { return "OCI_Descriptor"; } }
 
         public OCI_Descriptor(byte tag) : base(tag)
         {
@@ -29391,6 +29840,7 @@ namespace SharpMP4
     public class LanguageDescriptor : OCI_Descriptor
     {
         public const byte TYPE = DescriptorTags.LanguageDescrTag;
+        public override string DisplayName { get { return "LanguageDescriptor"; } }
 
         protected uint languageCode;
         public uint LanguageCode { get { return this.languageCode; } set { this.languageCode = value; } }
@@ -29436,6 +29886,7 @@ namespace SharpMP4
     public class QoS_Descriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.QoS_DescrTag;
+        public override string DisplayName { get { return "QoS_Descriptor"; } }
 
         protected byte predefined;
         public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
@@ -29453,7 +29904,7 @@ namespace SharpMP4
 
             if (predefined == 0)
             {
-                // boxSize += stream.ReadDescriptor( out this.qualifiers); 
+                // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.qualifiers); 
             }
             boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -29498,7 +29949,7 @@ namespace SharpMP4
     public abstract class QoS_Qualifier : Descriptor
     {
         public byte TagMin { get; set; } = 0x01;
-        public byte TagMax { get; set; } = 0xff;
+        public byte TagMax { get; set; } = 0xff; public override string DisplayName { get { return "QoS_Qualifier"; } }
 
         public QoS_Qualifier(byte tag) : base(tag)
         {
@@ -29536,6 +29987,7 @@ namespace SharpMP4
     public class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
     {
         public const byte TYPE = 0x01;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_DELAY"; } }
 
         protected uint MAX_DELAY;
         public uint MAXDELAY { get { return this.MAX_DELAY; } set { this.MAX_DELAY = value; } }
@@ -29579,6 +30031,7 @@ namespace SharpMP4
     public class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
     {
         public const byte TYPE = 0x02;
+        public override string DisplayName { get { return "QoS_Qualifier_PREF_MAX_DELAY"; } }
 
         protected uint PREF_MAX_DELAY;
         public uint PREFMAXDELAY { get { return this.PREF_MAX_DELAY; } set { this.PREF_MAX_DELAY = value; } }
@@ -29622,6 +30075,7 @@ namespace SharpMP4
     public class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
     {
         public const byte TYPE = 0x03;
+        public override string DisplayName { get { return "QoS_Qualifier_LOSS_PROB"; } }
 
         protected double LOSS_PROB;
         public double LOSSPROB { get { return this.LOSS_PROB; } set { this.LOSS_PROB = value; } }
@@ -29665,6 +30119,7 @@ namespace SharpMP4
     public class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
     {
         public const byte TYPE = 0x04;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_GAP_LOSS"; } }
 
         protected uint MAX_GAP_LOSS;
         public uint MAXGAPLOSS { get { return this.MAX_GAP_LOSS; } set { this.MAX_GAP_LOSS = value; } }
@@ -29708,6 +30163,7 @@ namespace SharpMP4
     public class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
     {
         public const byte TYPE = 0x41;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_AU_SIZE"; } }
 
         protected uint MAX_AU_SIZE;
         public uint MAXAUSIZE { get { return this.MAX_AU_SIZE; } set { this.MAX_AU_SIZE = value; } }
@@ -29751,6 +30207,7 @@ namespace SharpMP4
     public class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
     {
         public const byte TYPE = 0x42;
+        public override string DisplayName { get { return "QoS_Qualifier_AVG_AU_SIZE"; } }
 
         protected uint AVG_AU_SIZE;
         public uint AVGAUSIZE { get { return this.AVG_AU_SIZE; } set { this.AVG_AU_SIZE = value; } }
@@ -29793,6 +30250,7 @@ namespace SharpMP4
     public class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
     {
         public const byte TYPE = 0x43;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_AU_RATE"; } }
 
         protected uint MAX_AU_RATE;
         public uint MAXAURATE { get { return this.MAX_AU_RATE; } set { this.MAX_AU_RATE = value; } }
@@ -29836,6 +30294,7 @@ namespace SharpMP4
     public class RegistrationDescriptor : BaseDescriptor
     {
         public const byte TYPE = DescriptorTags.RegistrationDescrTag;
+        public override string DisplayName { get { return "RegistrationDescriptor"; } }
 
         protected uint formatIdentifier;
         public uint FormatIdentifier { get { return this.formatIdentifier; } set { this.formatIdentifier = value; } }
@@ -29852,7 +30311,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt32(out this.formatIdentifier);
-            boxSize += stream.ReadBytes((ulong)(sizeOfInstance - 4), out this.additionalIdentificationInfo);
+            boxSize += stream.ReadUInt8Array((uint)(sizeOfInstance - 4), out this.additionalIdentificationInfo);
             return boxSize;
         }
 
@@ -29861,7 +30320,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             boxSize += stream.WriteUInt32(this.formatIdentifier);
-            boxSize += stream.WriteBytes((ulong)(sizeOfInstance - 4), this.additionalIdentificationInfo);
+            boxSize += stream.WriteUInt8Array((uint)(sizeOfInstance - 4), this.additionalIdentificationInfo);
             return boxSize;
         }
 
@@ -29884,7 +30343,7 @@ namespace SharpMP4
     public abstract class ExtensionDescriptor : BaseDescriptor
     {
         public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
-        public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange;
+        public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange; public override string DisplayName { get { return "ExtensionDescriptor"; } }
 
         public ExtensionDescriptor(byte tag) : base(tag)
         {
@@ -29925,6 +30384,7 @@ namespace SharpMP4
     public class ESDBox : FullBox
     {
         public const string TYPE = "esds";
+        public override string DisplayName { get { return "ESDBox"; } }
 
         protected ES_Descriptor ES;
         public ES_Descriptor _ES { get { return this.ES; } set { this.ES = value; } }
@@ -29937,7 +30397,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadDescriptor(out this.ES);
+            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.ES);
             return boxSize;
         }
 
@@ -29967,6 +30427,7 @@ namespace SharpMP4
     public class MpegSampleEntry : SampleEntry
     {
         public const string TYPE = "mp4s";
+        public override string DisplayName { get { return "MpegSampleEntry"; } }
         public Box _ES { get { return this.children.OfType<Box>().FirstOrDefault(); } }
 
         public MpegSampleEntry() : base("mp4s")
@@ -30165,7 +30626,8 @@ namespace SharpMP4
     public class AudioSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "AudioSpecificConfig"; } }
 
         protected GetAudioObjectType audioObjectType;
         public GetAudioObjectType AudioObjectType { get { return this.audioObjectType; } set { this.audioObjectType = value; } }
@@ -30270,7 +30732,7 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadClass(boxSize, readSize, new GetAudioObjectType(), out this.audioObjectType);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new GetAudioObjectType(), out this.audioObjectType);
             boxSize += stream.ReadBslbf(4, out this.samplingFrequencyIndex);
 
             if (samplingFrequencyIndex == 0xf)
@@ -30296,7 +30758,7 @@ namespace SharpMP4
                 {
                     boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency);
                 }
-                boxSize += stream.ReadClass(boxSize, readSize, new GetAudioObjectType(), out this.audioObjectType);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new GetAudioObjectType(), out this.audioObjectType);
 
                 if (audioObjectType.AudioObjectType == 22)
                 {
@@ -30323,62 +30785,62 @@ namespace SharpMP4
                 case 21:
                 case 22:
                 case 23:
-                    boxSize += stream.ReadClass(boxSize, readSize, new GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.GASpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.GASpecificConfig);
                     break;
                 case 8:
-                    boxSize += stream.ReadClass(boxSize, readSize, new CelpSpecificConfig(samplingFrequencyIndex), out this.CelpSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new CelpSpecificConfig(samplingFrequencyIndex), out this.CelpSpecificConfig);
                     break;
                 case 9:
-                    boxSize += stream.ReadClass(boxSize, readSize, new HvxcSpecificConfig(), out this.HvxcSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new HvxcSpecificConfig(), out this.HvxcSpecificConfig);
                     break;
                 case 12:
-                    boxSize += stream.ReadClass(boxSize, readSize, new TTSSpecificConfig(), out this.TTSSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new TTSSpecificConfig(), out this.TTSSpecificConfig);
                     break;
                 case 13:
                 case 14:
                 case 15:
                 case 16:
-                    boxSize += stream.ReadClass(boxSize, readSize, new StructuredAudioSpecificConfig(), out this.StructuredAudioSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new StructuredAudioSpecificConfig(), out this.StructuredAudioSpecificConfig);
                     break;
                 case 24:
-                    boxSize += stream.ReadClass(boxSize, readSize, new ErrorResilientCelpSpecificConfig(samplingFrequencyIndex), out this.ErrorResilientCelpSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorResilientCelpSpecificConfig(samplingFrequencyIndex), out this.ErrorResilientCelpSpecificConfig);
                     break;
                 case 25:
-                    boxSize += stream.ReadClass(boxSize, readSize, new ErrorResilientHvxcSpecificConfig(), out this.ErrorResilientHvxcSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorResilientHvxcSpecificConfig(), out this.ErrorResilientHvxcSpecificConfig);
                     break;
                 case 26:
                 case 27:
-                    boxSize += stream.ReadClass(boxSize, readSize, new ParametricSpecificConfig(), out this.ParametricSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new ParametricSpecificConfig(), out this.ParametricSpecificConfig);
                     break;
                 case 28:
-                    boxSize += stream.ReadClass(boxSize, readSize, new SSCSpecificConfig(channelConfiguration), out this.SSCSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new SSCSpecificConfig(channelConfiguration), out this.SSCSpecificConfig);
                     break;
                 case 30:
                     boxSize += stream.ReadUimsbf(out this.sacPayloadEmbedding);
-                    boxSize += stream.ReadClass(boxSize, readSize, new SpatialSpecificConfig(), out this.SpatialSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new SpatialSpecificConfig(), out this.SpatialSpecificConfig);
                     break;
                 case 32:
                 case 33:
                 case 34:
-                    boxSize += stream.ReadClass(boxSize, readSize, new MPEG_1_2_SpecificConfig(), out this.MPEG_1_2_SpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new MPEG_1_2_SpecificConfig(), out this.MPEG_1_2_SpecificConfig);
                     break;
                 case 35:
-                    boxSize += stream.ReadClass(boxSize, readSize, new DSTSpecificConfig(channelConfiguration), out this.DSTSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new DSTSpecificConfig(channelConfiguration), out this.DSTSpecificConfig);
                     break;
                 case 36:
                     boxSize += stream.ReadBslbf(5, out this.fillBits);
-                    boxSize += stream.ReadClass(boxSize, readSize, new ALSSpecificConfig(), out this.ALSSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new ALSSpecificConfig(), out this.ALSSpecificConfig);
                     break;
                 case 37:
                 case 38:
-                    boxSize += stream.ReadClass(boxSize, readSize, new SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.SLSSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.SLSSpecificConfig);
                     break;
                 case 39:
-                    boxSize += stream.ReadClass(boxSize, readSize, new ELDSpecificConfig(channelConfiguration), out this.ELDSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new ELDSpecificConfig(channelConfiguration), out this.ELDSpecificConfig);
                     break;
                 case 40:
                 case 41:
-                    boxSize += stream.ReadClass(boxSize, readSize, new SymbolicMusicSpecificConfig(), out this.SymbolicMusicSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new SymbolicMusicSpecificConfig(), out this.SymbolicMusicSpecificConfig);
                     break;
                 default:
                     /* reserved */
@@ -30402,7 +30864,7 @@ namespace SharpMP4
 
                     if (epConfig == 2 || epConfig == 3)
                     {
-                        boxSize += stream.ReadClass(boxSize, readSize, new ErrorProtectionSpecificConfig(), out this.ErrorProtectionSpecificConfig);
+                        boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorProtectionSpecificConfig(), out this.ErrorProtectionSpecificConfig);
                     }
 
                     if (epConfig == 3)
@@ -30423,7 +30885,7 @@ namespace SharpMP4
 
                 if (syncExtensionType == 0x2b7)
                 {
-                    boxSize += stream.ReadClass(boxSize, readSize, new GetAudioObjectType(), out this.extensionAudioObjectType);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new GetAudioObjectType(), out this.extensionAudioObjectType);
 
                     if (extensionAudioObjectType.AudioObjectType == 5)
                     {
@@ -30892,7 +31354,8 @@ namespace SharpMP4
     public class GetAudioObjectType : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "GetAudioObjectType"; } }
 
         protected byte audioObjectType;
         public byte AudioObjectType { get { return this.audioObjectType; } set { this.audioObjectType = value; } }
@@ -30987,7 +31450,8 @@ namespace SharpMP4
     public class GASpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "GASpecificConfig"; } }
 
         protected bool frameLengthFlag;
         public bool FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
@@ -31055,7 +31519,7 @@ namespace SharpMP4
 
             if (channelConfiguration == 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new program_config_element(), out this.program_config_element);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new program_config_element(), out this.program_config_element);
             }
 
             if ((audioObjectType == 6) || (audioObjectType == 20))
@@ -31241,7 +31705,8 @@ namespace SharpMP4
     public class program_config_element : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "program_config_element"; } }
 
         protected byte element_instance_tag;
         public byte ElementInstanceTag { get { return this.element_instance_tag; } set { this.element_instance_tag = value; } }
@@ -31595,7 +32060,8 @@ namespace SharpMP4
     public class CelpSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "CelpSpecificConfig"; } }
 
         protected bool isBaseLayer;
         public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
@@ -31627,7 +32093,7 @@ namespace SharpMP4
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new CelpHeader(samplingFrequencyIndex), out this.CelpHeader);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new CelpHeader(samplingFrequencyIndex), out this.CelpHeader);
             }
 
             else
@@ -31636,7 +32102,7 @@ namespace SharpMP4
 
                 if (isBWSLayer)
                 {
-                    boxSize += stream.ReadClass(boxSize, readSize, new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
                 }
 
                 else
@@ -31724,7 +32190,8 @@ namespace SharpMP4
     public class CelpHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "CelpHeader"; } }
 
         protected bool ExcitationMode;
         public bool _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
@@ -31839,7 +32306,8 @@ namespace SharpMP4
     public class CelpBWSenhHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "CelpBWSenhHeader"; } }
 
         protected byte BWS_configuration;
         public byte BWSConfiguration { get { return this.BWS_configuration; } set { this.BWS_configuration = value; } }
@@ -31884,7 +32352,8 @@ namespace SharpMP4
     public class HvxcSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "HvxcSpecificConfig"; } }
 
         protected bool isBaseLayer;
         public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
@@ -31903,7 +32372,7 @@ namespace SharpMP4
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new HVXCconfig(), out this.HVXCconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new HVXCconfig(), out this.HVXCconfig);
             }
             return boxSize;
         }
@@ -31950,7 +32419,8 @@ namespace SharpMP4
     public class HVXCconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "HVXCconfig"; } }
 
         protected bool HVXCvarMode;
         public bool _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
@@ -32019,7 +32489,8 @@ namespace SharpMP4
     public class TTSSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "TTSSpecificConfig"; } }
 
         protected TTS_Sequence TTS_Sequence;
         public TTS_Sequence TTSSequence { get { return this.TTS_Sequence; } set { this.TTS_Sequence = value; } }
@@ -32031,7 +32502,7 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadClass(boxSize, readSize, new TTS_Sequence(), out this.TTS_Sequence);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new TTS_Sequence(), out this.TTS_Sequence);
             return boxSize;
         }
 
@@ -32070,7 +32541,8 @@ namespace SharpMP4
     public class TTS_Sequence : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "TTS_Sequence"; } }
 
         protected byte TTS_Sequence_ID;
         public byte TTSSequenceID { get { return this.TTS_Sequence_ID; } set { this.TTS_Sequence_ID = value; } }
@@ -32173,7 +32645,8 @@ namespace SharpMP4
     public class ErrorResilientCelpSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ErrorResilientCelpSpecificConfig"; } }
 
         protected bool isBaseLayer;
         public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
@@ -32205,7 +32678,7 @@ namespace SharpMP4
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ER_SC_CelpHeader(samplingFrequencyIndex), out this.ER_SC_CelpHeader);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ER_SC_CelpHeader(samplingFrequencyIndex), out this.ER_SC_CelpHeader);
             }
 
             else
@@ -32214,7 +32687,7 @@ namespace SharpMP4
 
                 if (isBWSLayer)
                 {
-                    boxSize += stream.ReadClass(boxSize, readSize, new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
                 }
 
                 else
@@ -32303,7 +32776,8 @@ namespace SharpMP4
     public class ER_SC_CelpHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ER_SC_CelpHeader"; } }
 
         protected bool ExcitationMode;
         public bool _ExcitationMode { get { return this.ExcitationMode; } set { this.ExcitationMode = value; } }
@@ -32430,7 +32904,8 @@ namespace SharpMP4
     public class ErrorResilientHvxcSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ErrorResilientHvxcSpecificConfig"; } }
 
         protected bool isBaseLayer;
         public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
@@ -32449,7 +32924,7 @@ namespace SharpMP4
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ErHVXCconfig(), out this.ErHVXCconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ErHVXCconfig(), out this.ErHVXCconfig);
             }
             return boxSize;
         }
@@ -32496,7 +32971,8 @@ namespace SharpMP4
     public class ErHVXCconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ErHVXCconfig"; } }
 
         protected bool HVXCvarMode;
         public bool _HVXCvarMode { get { return this.HVXCvarMode; } set { this.HVXCvarMode = value; } }
@@ -32575,7 +33051,8 @@ namespace SharpMP4
     public class ParametricSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ParametricSpecificConfig"; } }
 
         protected bool isBaseLayer;
         public bool IsBaseLayer { get { return this.isBaseLayer; } set { this.isBaseLayer = value; } }
@@ -32597,12 +33074,12 @@ namespace SharpMP4
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new PARAconfig(), out this.PARAconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new PARAconfig(), out this.PARAconfig);
             }
 
             else
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new HILNenexConfig(), out this.HILNenexConfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new HILNenexConfig(), out this.HILNenexConfig);
             }
             return boxSize;
         }
@@ -32664,7 +33141,8 @@ namespace SharpMP4
     public class PARAconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "PARAconfig"; } }
 
         protected byte PARAmode;
         public byte _PARAmode { get { return this.PARAmode; } set { this.PARAmode = value; } }
@@ -32689,12 +33167,12 @@ namespace SharpMP4
 
             if (PARAmode != 1)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ErHVXCconfig(), out this.ErHVXCconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ErHVXCconfig(), out this.ErHVXCconfig);
             }
 
             if (PARAmode != 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new HILNconfig(), out this.HILNconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new HILNconfig(), out this.HILNconfig);
             }
             boxSize += stream.ReadUimsbf(out this.PARAextensionFlag);
 
@@ -32768,7 +33246,8 @@ namespace SharpMP4
     public class HILNconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "HILNconfig"; } }
 
         protected bool HILNquantMode;
         public bool _HILNquantMode { get { return this.HILNquantMode; } set { this.HILNquantMode = value; } }
@@ -32838,7 +33317,8 @@ namespace SharpMP4
     public class HILNenexConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "HILNenexConfig"; } }
 
         protected bool HILNenhaLayer;
         public bool _HILNenhaLayer { get { return this.HILNenhaLayer; } set { this.HILNenhaLayer = value; } }
@@ -32907,7 +33387,8 @@ namespace SharpMP4
     public class SSCSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SSCSpecificConfig"; } }
 
         protected byte decoder_level;
         public byte DecoderLevel { get { return this.decoder_level; } set { this.decoder_level = value; } }
@@ -33002,7 +33483,8 @@ namespace SharpMP4
     public class MPEG_1_2_SpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "MPEG_1_2_SpecificConfig"; } }
 
         protected bool extension;
         public bool Extension { get { return this.extension; } set { this.extension = value; } }
@@ -33046,7 +33528,8 @@ namespace SharpMP4
     public class DSTSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "DSTSpecificConfig"; } }
 
         protected bool DSDDST_Coded;
         public bool DSDDSTCoded { get { return this.DSDDST_Coded; } set { this.DSDDST_Coded = value; } }
@@ -33150,7 +33633,8 @@ namespace SharpMP4
     public class ALSSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ALSSpecificConfig"; } }
 
         protected uint als_id;
         public uint AlsId { get { return this.als_id; } set { this.als_id = value; } }
@@ -33504,7 +33988,8 @@ namespace SharpMP4
     public class SLSSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SLSSpecificConfig"; } }
 
         protected byte pcmWordLength;
         public byte PcmWordLength { get { return this.pcmWordLength; } set { this.pcmWordLength = value; } }
@@ -33551,7 +34036,7 @@ namespace SharpMP4
 
             if (channelConfiguration == 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new program_config_element(), out this.program_config_element);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new program_config_element(), out this.program_config_element);
             }
             return boxSize;
         }
@@ -33635,7 +34120,8 @@ namespace SharpMP4
     public class ELDSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ELDSpecificConfig"; } }
 
         protected bool frameLengthFlag;
         public bool FrameLengthFlag { get { return this.frameLengthFlag; } set { this.frameLengthFlag = value; } }
@@ -33701,7 +34187,7 @@ namespace SharpMP4
             {
                 boxSize += stream.ReadBslbf(out this.ldSbrSamplingRate);
                 boxSize += stream.ReadBslbf(out this.ldSbrCrcFlag);
-                boxSize += stream.ReadClass(boxSize, readSize, new ld_sbr_header(channelConfiguration), out this.ld_sbr_header);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ld_sbr_header(channelConfiguration), out this.ld_sbr_header);
             }
             boxSize += stream.ReadBslbf(4, out this.eldExtType);
 
@@ -33885,7 +34371,8 @@ namespace SharpMP4
     public class ld_sbr_header : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ld_sbr_header"; } }
 
         protected sbr_header[] sbr_header;
         public sbr_header[] SbrHeader { get { return this.sbr_header; } set { this.sbr_header = value; } }
@@ -33929,7 +34416,7 @@ namespace SharpMP4
             this.sbr_header = new sbr_header[numSbrHeader];
             for (int el = 0; el < numSbrHeader; el++)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new sbr_header(), out this.sbr_header[el]);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new sbr_header(), out this.sbr_header[el]);
             }
             return boxSize;
         }
@@ -34036,7 +34523,8 @@ namespace SharpMP4
     public class sbr_header : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "sbr_header"; } }
 
         protected bool bs_amp_res;
         public bool BsAmpRes { get { return this.bs_amp_res; } set { this.bs_amp_res = value; } }
@@ -34229,7 +34717,8 @@ namespace SharpMP4
     public class ErrorProtectionSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ErrorProtectionSpecificConfig"; } }
 
         protected byte number_of_predefined_set;
         public byte NumberOfPredefinedSet { get { return this.number_of_predefined_set; } set { this.number_of_predefined_set = value; } }
@@ -34607,7 +35096,8 @@ namespace SharpMP4
     public class ChannelMappingTable : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ChannelMappingTable"; } }
 
         protected byte StreamCount;
         public byte _StreamCount { get { return this.StreamCount; } set { this.StreamCount = value; } }
@@ -34631,7 +35121,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.StreamCount);
             boxSize += stream.ReadUInt8(out this.CoupledCount);
-            boxSize += stream.ReadBytes(OutputChannelCount, out this.ChannelMapping);
+            boxSize += stream.ReadUInt8Array((uint)OutputChannelCount, out this.ChannelMapping);
             return boxSize;
         }
 
@@ -34640,7 +35130,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += stream.WriteUInt8(this.StreamCount);
             boxSize += stream.WriteUInt8(this.CoupledCount);
-            boxSize += stream.WriteBytes(OutputChannelCount, this.ChannelMapping);
+            boxSize += stream.WriteUInt8Array((uint)OutputChannelCount, this.ChannelMapping);
             return boxSize;
         }
 
@@ -34671,6 +35161,7 @@ namespace SharpMP4
     public class OpusSpecificBox : Box
     {
         public const string TYPE = "dOps";
+        public override string DisplayName { get { return "OpusSpecificBox"; } }
 
         protected byte Version;
         public byte _Version { get { return this.Version; } set { this.Version = value; } }
@@ -34710,7 +35201,7 @@ namespace SharpMP4
 
             if (ChannelMappingFamily != 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, new ChannelMappingTable(_OutputChannelCount), out this.ChannelMappingTable);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ChannelMappingTable(_OutputChannelCount), out this.ChannelMappingTable);
             }
             return boxSize;
         }
@@ -34764,6 +35255,7 @@ namespace SharpMP4
     public class AV1CodecConfigurationBox : Box
     {
         public const string TYPE = "av1C";
+        public override string DisplayName { get { return "AV1CodecConfigurationBox"; } }
 
         protected AV1CodecConfigurationRecord av1Config;
         public AV1CodecConfigurationRecord Av1Config { get { return this.av1Config; } set { this.av1Config = value; } }
@@ -34776,7 +35268,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, new AV1CodecConfigurationRecord(), out this.av1Config);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new AV1CodecConfigurationRecord(), out this.av1Config);
             return boxSize;
         }
 
@@ -34828,7 +35320,8 @@ namespace SharpMP4
     public class AV1CodecConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "AV1CodecConfigurationRecord"; } }
 
         protected bool marker = true;
         public bool Marker { get { return this.marker; } set { this.marker = value; } }
@@ -34985,6 +35478,7 @@ namespace SharpMP4
     public class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "av1f";
+        public override string DisplayName { get { return "AV1ForwardKeyFrameSampleGroupEntry"; } }
 
         protected byte fwd_distance;
         public byte FwdDistance { get { return this.fwd_distance; } set { this.fwd_distance = value; } }
@@ -35029,6 +35523,7 @@ namespace SharpMP4
     public class AV1SwitchFrameSampleGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "av1s";
+        public override string DisplayName { get { return "AV1SwitchFrameSampleGroupEntry"; } }
 
         public AV1SwitchFrameSampleGroupEntry() : base("av1s")
         {
@@ -35067,6 +35562,7 @@ namespace SharpMP4
     public class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
     {
         public const string TYPE = "av1M";
+        public override string DisplayName { get { return "AV1MetadataSampleGroupEntry"; } }
 
         public AV1MetadataSampleGroupEntry() : base("av1M")
         {
@@ -35104,6 +35600,7 @@ namespace SharpMP4
     public class OperatingPointSelectorProperty : ItemProperty
     {
         public const string TYPE = "a1op";
+        public override string DisplayName { get { return "OperatingPointSelectorProperty"; } }
 
         protected byte op_index;
         public byte OpIndex { get { return this.op_index; } set { this.op_index = value; } }
@@ -35153,6 +35650,7 @@ namespace SharpMP4
     public class AV1LayeredImageIndexingProperty : ItemProperty
     {
         public const string TYPE = "a1lx";
+        public override string DisplayName { get { return "AV1LayeredImageIndexingProperty"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -35235,6 +35733,7 @@ namespace SharpMP4
     public class AppleItemListBox : Box
     {
         public const string TYPE = "ilst";
+        public override string DisplayName { get { return "AppleItemListBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleItemListBox() : base("ilst")
@@ -35279,6 +35778,7 @@ namespace SharpMP4
     public class AppleCameraModelBox : Box
     {
         public const string TYPE = "©mod";
+        public override string DisplayName { get { return "AppleCameraModelBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35314,19 +35814,18 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class AppleEncoderBox() 
+    aligned(8) class AppleEncoderToolBox() 
     extends Box('©too') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class AppleEncoderBox : Box
+    public class AppleEncoderToolBox : Box
     {
         public const string TYPE = "©too";
+        public override string DisplayName { get { return "AppleEncoderToolBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public AppleEncoderBox() : base("©too")
+        public AppleEncoderToolBox() : base("©too")
         {
         }
 
@@ -35334,7 +35833,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -35342,7 +35842,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -35350,7 +35851,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -35359,15 +35861,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleComposersBox() 
     extends Box('©wrt') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleComposersBox : Box
     {
         public const string TYPE = "©wrt";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleComposersBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleComposersBox() : base("©wrt")
         {
@@ -35377,7 +35878,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -35385,7 +35887,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -35393,7 +35896,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -35408,6 +35912,7 @@ namespace SharpMP4
     public class AppleSoftwareBox : Box
     {
         public const string TYPE = "©swr";
+        public override string DisplayName { get { return "AppleSoftwareBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35451,6 +35956,7 @@ namespace SharpMP4
     public class AppleCreatorBox : Box
     {
         public const string TYPE = "©swf";
+        public override string DisplayName { get { return "AppleCreatorBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -35488,15 +35994,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleCommentBox() 
     extends Box('©cmt') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleCommentBox : Box
     {
         public const string TYPE = "©cmt";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleCommentBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleCommentBox() : base("©cmt")
         {
@@ -35506,7 +36011,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -35514,7 +36020,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -35522,26 +36029,28 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class AppleTimBox() 
+    aligned(8) class AppleStartTimecode() 
     extends Box('©TIM') {
-     bit(8) data[];
+     MultiLanguageString value[]; 
      } 
     */
-    public class AppleTimBox : Box
+    public class AppleStartTimecode : Box
     {
         public const string TYPE = "©TIM";
+        public override string DisplayName { get { return "AppleStartTimecode"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected MultiLanguageString[] value;
+        public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public AppleTimBox() : base("©TIM")
+        public AppleStartTimecode() : base("©TIM")
         {
         }
 
@@ -35549,7 +36058,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadStringSizeLangPrefixed(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -35557,7 +36066,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteStringSizeLangPrefixed(this.value);
             return boxSize;
         }
 
@@ -35565,26 +36074,27 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += IsoStream.CalculateStringSizeLangPrefixed(value); // value
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class AppleTscBox() 
+    aligned(8) class AppleStartTimeScale() 
     extends Box('©TSC') {
-     bit(8) data[];
+     MultiLanguageString value[]; 
      } 
     */
-    public class AppleTscBox : Box
+    public class AppleStartTimeScale : Box
     {
         public const string TYPE = "©TSC";
+        public override string DisplayName { get { return "AppleStartTimeScale"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected MultiLanguageString[] value;
+        public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public AppleTscBox() : base("©TSC")
+        public AppleStartTimeScale() : base("©TSC")
         {
         }
 
@@ -35592,7 +36102,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadStringSizeLangPrefixed(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -35600,7 +36110,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteStringSizeLangPrefixed(this.value);
             return boxSize;
         }
 
@@ -35608,26 +36118,27 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += IsoStream.CalculateStringSizeLangPrefixed(value); // value
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class AppleTszBox() 
+    aligned(8) class AppleStartTimeSampleSize() 
     extends Box('©TSZ') {
-     bit(8) data[];
+     MultiLanguageString value[]; 
      } 
     */
-    public class AppleTszBox : Box
+    public class AppleStartTimeSampleSize : Box
     {
         public const string TYPE = "©TSZ";
+        public override string DisplayName { get { return "AppleStartTimeSampleSize"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected MultiLanguageString[] value;
+        public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public AppleTszBox() : base("©TSZ")
+        public AppleStartTimeSampleSize() : base("©TSZ")
         {
         }
 
@@ -35635,7 +36146,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadStringSizeLangPrefixed(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -35643,7 +36154,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteStringSizeLangPrefixed(this.value);
             return boxSize;
         }
 
@@ -35651,7 +36162,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += IsoStream.CalculateStringSizeLangPrefixed(value); // value
             return boxSize;
         }
     }
@@ -35660,15 +36171,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleNameBox() 
     extends Box('©nam') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleNameBox : Box
     {
         public const string TYPE = "©nam";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleNameBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleNameBox() : base("©nam")
         {
@@ -35678,7 +36188,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -35686,7 +36197,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -35694,7 +36206,142 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleRequirementsBox() 
+    extends FullBox('©req', version = 0, 0) {
+    string requirement;
+     } 
+    */
+    public class AppleRequirementsBox : FullBox
+    {
+        public const string TYPE = "©req";
+        public override string DisplayName { get { return "AppleRequirementsBox"; } }
+
+        protected BinaryUTF8String requirement;
+        public BinaryUTF8String Requirement { get { return this.requirement; } set { this.requirement = value; } }
+
+        public AppleRequirementsBox() : base("©req", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.requirement);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.requirement);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(requirement); // requirement
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleLyricsBox() 
+    extends Box('©lyr') {
+    Box boxes[];
+     } 
+    */
+    public class AppleLyricsBox : Box
+    {
+        public const string TYPE = "©lyr";
+        public override string DisplayName { get { return "AppleLyricsBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleLyricsBox() : base("©lyr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleGroupingBox() 
+    extends Box('©grp') {
+    Box boxes[];
+     } 
+    */
+    public class AppleGroupingBox : Box
+    {
+        public const string TYPE = "©grp";
+        public override string DisplayName { get { return "AppleGroupingBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleGroupingBox() : base("©grp")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -35703,15 +36350,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleAlbumBox() 
     extends Box('©alb') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleAlbumBox : Box
     {
         public const string TYPE = "©alb";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleAlbumBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleAlbumBox() : base("©alb")
         {
@@ -35721,7 +36367,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -35729,7 +36376,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -35737,7 +36385,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -35746,15 +36395,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleArtistBox() 
     extends Box('©ART') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleArtistBox : Box
     {
         public const string TYPE = "©ART";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleArtistBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleArtistBox() : base("©ART")
         {
@@ -35764,7 +36412,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -35772,7 +36421,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -35780,7 +36430,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -35789,15 +36440,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleArtist2Box() 
     extends Box('aART') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleArtist2Box : Box
     {
         public const string TYPE = "aART";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleArtist2Box"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleArtist2Box() : base("aART")
         {
@@ -35807,7 +36457,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -35815,7 +36466,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -35823,7 +36475,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -35832,15 +36485,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleCopyrightBox() 
     extends Box('cprt') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleCopyrightBox : Box
     {
         public const string TYPE = "cprt";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleCopyrightBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleCopyrightBox() : base("cprt")
         {
@@ -35850,7 +36502,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -35858,7 +36511,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -35866,7 +36520,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -35875,15 +36530,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleCopyright2Box() 
     extends Box('©cpy') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleCopyright2Box : Box
     {
         public const string TYPE = "©cpy";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleCopyright2Box"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleCopyright2Box() : base("©cpy")
         {
@@ -35893,7 +36547,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -35901,7 +36556,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -35909,7 +36565,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -35918,15 +36575,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleRecordingYear2Box() 
     extends Box('©day') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleRecordingYear2Box : Box
     {
         public const string TYPE = "©day";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleRecordingYear2Box"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleRecordingYear2Box() : base("©day")
         {
@@ -35936,7 +36592,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -35944,7 +36601,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -35952,7 +36610,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -35961,15 +36620,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleGenreBox() 
     extends Box('©gen') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleGenreBox : Box
     {
         public const string TYPE = "©gen";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleGenreBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleGenreBox() : base("©gen")
         {
@@ -35979,7 +36637,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -35987,7 +36646,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -35995,7 +36655,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -36004,15 +36665,16 @@ namespace SharpMP4
     /*
     aligned(8) class AppleGPSCoordinatesBox() 
     extends Box('©xyz') {
-     bit(8) data[];
+     MultiLanguageString value[]; 
      } 
     */
     public class AppleGPSCoordinatesBox : Box
     {
         public const string TYPE = "©xyz";
+        public override string DisplayName { get { return "AppleGPSCoordinatesBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected MultiLanguageString[] value;
+        public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
         public AppleGPSCoordinatesBox() : base("©xyz")
         {
@@ -36022,7 +36684,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadStringSizeLangPrefixed(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -36030,7 +36692,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteStringSizeLangPrefixed(this.value);
             return boxSize;
         }
 
@@ -36038,7 +36700,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += IsoStream.CalculateStringSizeLangPrefixed(value); // value
             return boxSize;
         }
     }
@@ -36047,15 +36709,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleCompilationBox() 
     extends Box('cpil') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleCompilationBox : Box
     {
         public const string TYPE = "cpil";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleCompilationBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleCompilationBox() : base("cpil")
         {
@@ -36065,7 +36726,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -36073,7 +36735,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -36081,7 +36744,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -36096,6 +36760,7 @@ namespace SharpMP4
     public class AppleName2Box : Box
     {
         public const string TYPE = "name";
+        public override string DisplayName { get { return "AppleName2Box"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36133,15 +36798,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleDescriptionBox() 
     extends Box('desc') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleDescriptionBox : Box
     {
         public const string TYPE = "desc";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleDescriptionBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleDescriptionBox() : base("desc")
         {
@@ -36151,7 +36815,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -36159,7 +36824,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -36167,7 +36833,53 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleLongDescriptionBox() 
+    extends Box('ldes') {
+     Box boxes[];
+     } 
+    */
+    public class AppleLongDescriptionBox : Box
+    {
+        public const string TYPE = "ldes";
+        public override string DisplayName { get { return "AppleLongDescriptionBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleLongDescriptionBox() : base("ldes")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -36182,6 +36894,7 @@ namespace SharpMP4
     public class UuidBox : Box
     {
         public const string TYPE = "uuid";
+        public override string DisplayName { get { return "UuidBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36217,19 +36930,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class IodsBox() 
-    extends Box('iods') {
-     bit(8) data[];
+    aligned(8) class AppleInitialObjectDescriptorBox() 
+    extends FullBox('iods') {
+     Descriptor descriptor[0 .. 255];
      } 
     */
-    public class IodsBox : Box
+    public class AppleInitialObjectDescriptorBox : FullBox
     {
         public const string TYPE = "iods";
+        public override string DisplayName { get { return "AppleInitialObjectDescriptorBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected Descriptor[] descriptor;
+        public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
 
-        public IodsBox() : base("iods")
+        public AppleInitialObjectDescriptorBox() : base("iods")
         {
         }
 
@@ -36237,7 +36951,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.descriptor);
             return boxSize;
         }
 
@@ -36245,7 +36959,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteDescriptor(this.descriptor);
             return boxSize;
         }
 
@@ -36253,26 +36967,35 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class TitlBox() 
+    aligned(8) class ThreeGPPTitleBox() 
     extends Box('titl') {
-     bit(8) data[];
-     } 
+        bit(1) reserved;
+     unsigned int(5)[3] language;
+        string value;
+    } 
     */
-    public class TitlBox : Box
+    public class ThreeGPPTitleBox : Box
     {
         public const string TYPE = "titl";
+        public override string DisplayName { get { return "ThreeGPPTitleBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public TitlBox() : base("titl")
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        public ThreeGPPTitleBox() : base("titl")
         {
         }
 
@@ -36280,7 +37003,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -36288,7 +37013,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
             return boxSize;
         }
 
@@ -36296,26 +37023,37 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class AuthorBox() 
+    aligned(8) class ThreeGPPAuthorBox() 
     extends Box('auth') {
-     bit(8) data[];
-     } 
+        bit(1) reserved;
+     unsigned int(5)[3] language;
+        string value;
+    } 
     */
-    public class AuthorBox : Box
+    public class ThreeGPPAuthorBox : Box
     {
         public const string TYPE = "auth";
+        public override string DisplayName { get { return "ThreeGPPAuthorBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public AuthorBox() : base("auth")
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        public ThreeGPPAuthorBox() : base("auth")
         {
         }
 
@@ -36323,7 +37061,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -36331,7 +37071,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
             return boxSize;
         }
 
@@ -36339,7 +37081,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
             return boxSize;
         }
     }
@@ -36354,6 +37098,7 @@ namespace SharpMP4
     public class TextMediaBox : Box
     {
         public const string TYPE = "text";
+        public override string DisplayName { get { return "TextMediaBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36397,6 +37142,7 @@ namespace SharpMP4
     public class WindowsMediaXtraBox : Box
     {
         public const string TYPE = "Xtra";
+        public override string DisplayName { get { return "WindowsMediaXtraBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36440,6 +37186,7 @@ namespace SharpMP4
     public class AC3SpecificBox : Box
     {
         public const string TYPE = "dac3";
+        public override string DisplayName { get { return "AC3SpecificBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36475,19 +37222,28 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class DescriptionBox() 
+    aligned(8) class ThreeGPPDescriptionBox() 
     extends Box('dscp') {
-     bit(8) data[];
-     } 
+        bit(1) reserved;
+    unsigned int(5)[3] language;
+        string value;
+    }
     */
-    public class DescriptionBox : Box
+    public class ThreeGPPDescriptionBox : Box
     {
         public const string TYPE = "dscp";
+        public override string DisplayName { get { return "ThreeGPPDescriptionBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public DescriptionBox() : base("dscp")
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        public ThreeGPPDescriptionBox() : base("dscp")
         {
         }
 
@@ -36495,7 +37251,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -36503,7 +37261,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
             return boxSize;
         }
 
@@ -36511,7 +37271,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
             return boxSize;
         }
     }
@@ -36526,6 +37288,7 @@ namespace SharpMP4
     public class GenericMediaHeaderAtom : Box
     {
         public const string TYPE = "gmhd";
+        public override string DisplayName { get { return "GenericMediaHeaderAtom"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36561,19 +37324,28 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class KeywordsBox() 
+    aligned(8) class ThreeGPPKeywordsBox() 
     extends Box('kywd') {
-     bit(8) data[];
-     } 
+        bit(1) reserved;
+    unsigned int(5)[3] language;
+        string value;
+    }
     */
-    public class KeywordsBox : Box
+    public class ThreeGPPKeywordsBox : Box
     {
         public const string TYPE = "kywd";
+        public override string DisplayName { get { return "ThreeGPPKeywordsBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public KeywordsBox() : base("kywd")
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        public ThreeGPPKeywordsBox() : base("kywd")
         {
         }
 
@@ -36581,7 +37353,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
             return boxSize;
         }
 
@@ -36589,7 +37363,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
             return boxSize;
         }
 
@@ -36597,7 +37373,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
             return boxSize;
         }
     }
@@ -36606,15 +37384,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleMediaTypeBox() 
     extends Box('stik') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleMediaTypeBox : Box
     {
         public const string TYPE = "stik";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleMediaTypeBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleMediaTypeBox() : base("stik")
         {
@@ -36624,7 +37401,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -36632,7 +37410,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -36640,7 +37419,143 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleRatingBox() 
+    extends Box('rtng') {
+     Box boxes[];
+     } 
+    */
+    public class AppleRatingBox : Box
+    {
+        public const string TYPE = "rtng";
+        public override string DisplayName { get { return "AppleRatingBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleRatingBox() : base("rtng")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ApplePlayGapBox() 
+    extends Box('pgap') {
+     Box boxes[];
+     } 
+    */
+    public class ApplePlayGapBox : Box
+    {
+        public const string TYPE = "pgap";
+        public override string DisplayName { get { return "ApplePlayGapBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public ApplePlayGapBox() : base("pgap")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleStoreCatalogIDBox() 
+    extends Box('cnID') {
+     Box boxes[];
+     } 
+    */
+    public class AppleStoreCatalogIDBox : Box
+    {
+        public const string TYPE = "cnID";
+        public override string DisplayName { get { return "AppleStoreCatalogIDBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleStoreCatalogIDBox() : base("cnID")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -36655,6 +37570,7 @@ namespace SharpMP4
     public class TimeCodeBox : Box
     {
         public const string TYPE = "tmcd";
+        public override string DisplayName { get { return "TimeCodeBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36690,19 +37606,18 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class AppleTempoBox() 
+    aligned(8) class AppleBeatsPerMinuteBox() 
     extends Box('tmpo') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class AppleTempoBox : Box
+    public class AppleBeatsPerMinuteBox : Box
     {
         public const string TYPE = "tmpo";
+        public override string DisplayName { get { return "AppleBeatsPerMinuteBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public AppleTempoBox() : base("tmpo")
+        public AppleBeatsPerMinuteBox() : base("tmpo")
         {
         }
 
@@ -36710,7 +37625,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -36718,7 +37634,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -36726,7 +37643,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -36735,15 +37653,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleTVEpisodeBox() 
     extends Box('tves') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleTVEpisodeBox : Box
     {
         public const string TYPE = "tves";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleTVEpisodeBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleTVEpisodeBox() : base("tves")
         {
@@ -36753,7 +37670,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -36761,7 +37679,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -36769,7 +37688,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -36778,15 +37698,14 @@ namespace SharpMP4
     /*
     aligned(8) class AppleTVSeasonBox() 
     extends Box('tvsn') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleTVSeasonBox : Box
     {
         public const string TYPE = "tvsn";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "AppleTVSeasonBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleTVSeasonBox() : base("tvsn")
         {
@@ -36796,7 +37715,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -36804,7 +37724,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -36812,7 +37733,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -36821,15 +37743,14 @@ namespace SharpMP4
     /*
     aligned(8) class HdvdBox() 
     extends Box('hdvd') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class HdvdBox : Box
     {
         public const string TYPE = "hdvd";
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public override string DisplayName { get { return "HdvdBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public HdvdBox() : base("hdvd")
         {
@@ -36839,7 +37760,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -36847,7 +37769,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -36855,7 +37778,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -36870,6 +37794,7 @@ namespace SharpMP4
     public class SyncBox : Box
     {
         public const string TYPE = "sync";
+        public override string DisplayName { get { return "SyncBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36905,19 +37830,18 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class DiskBox() 
+    aligned(8) class DiskNumberBox() 
     extends Box('disk') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class DiskBox : Box
+    public class DiskNumberBox : Box
     {
         public const string TYPE = "disk";
+        public override string DisplayName { get { return "DiskNumberBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public DiskBox() : base("disk")
+        public DiskNumberBox() : base("disk")
         {
         }
 
@@ -36925,7 +37849,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -36933,7 +37858,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -36941,7 +37867,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -36956,6 +37883,7 @@ namespace SharpMP4
     public class HintBox : Box
     {
         public const string TYPE = "hint";
+        public override string DisplayName { get { return "HintBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -36991,19 +37919,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class WideBox() 
+    aligned(8) class FreeSpaceBox() 
     extends Box('wide') {
      bit(8) data[];
      } 
     */
-    public class WideBox : Box
+    public class FreeSpaceBox_wide : Box
     {
         public const string TYPE = "wide";
+        public override string DisplayName { get { return "FreeSpaceBox_wide"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public WideBox() : base("wide")
+        public FreeSpaceBox_wide() : base("wide")
         {
         }
 
@@ -37042,6 +37971,7 @@ namespace SharpMP4
     public class FielBox : Box
     {
         public const string TYPE = "fiel";
+        public override string DisplayName { get { return "FielBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37085,6 +38015,7 @@ namespace SharpMP4
     public class Amf0Box : Box
     {
         public const string TYPE = "amf0";
+        public override string DisplayName { get { return "Amf0Box"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37128,6 +38059,7 @@ namespace SharpMP4
     public class MpodBox : Box
     {
         public const string TYPE = "mpod";
+        public override string DisplayName { get { return "MpodBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37163,19 +38095,20 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class GsstBox() 
+    aligned(8) class GoogleStartTimeBox() 
     extends Box('gsst') {
      bit(8) data[];
      } 
     */
-    public class GsstBox : Box
+    public class GoogleStartTimeBox : Box
     {
         public const string TYPE = "gsst";
+        public override string DisplayName { get { return "GoogleStartTimeBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public GsstBox() : base("gsst")
+        public GoogleStartTimeBox() : base("gsst")
         {
         }
 
@@ -37206,19 +38139,18 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class GssdBox() 
+    aligned(8) class GoogleSourceDataBox() 
     extends Box('gssd') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class GssdBox : Box
+    public class GoogleSourceDataBox : Box
     {
         public const string TYPE = "gssd";
+        public override string DisplayName { get { return "GoogleSourceDataBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public GssdBox() : base("gssd")
+        public GoogleSourceDataBox() : base("gssd")
         {
         }
 
@@ -37226,7 +38158,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -37234,7 +38167,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -37242,26 +38176,28 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class GstdBox() 
+    aligned(8) class GoogleTrackDurationBox() 
     extends Box('gstd') {
      bit(8) data[];
      } 
     */
-    public class GstdBox : Box
+    public class GoogleTrackDurationBox : Box
     {
         public const string TYPE = "gstd";
+        public override string DisplayName { get { return "GoogleTrackDurationBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public GstdBox() : base("gstd")
+        public GoogleTrackDurationBox() : base("gstd")
         {
         }
 
@@ -37292,19 +38228,18 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class TrknBox() 
+    aligned(8) class TrackNumberBox() 
     extends Box('trkn') {
-     bit(8) data[];
+     Box boxes[]; 
      } 
     */
-    public class TrknBox : Box
+    public class TrackNumberBox : Box
     {
         public const string TYPE = "trkn";
+        public override string DisplayName { get { return "TrackNumberBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public TrknBox() : base("trkn")
+        public TrackNumberBox() : base("trkn")
         {
         }
 
@@ -37312,7 +38247,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -37320,7 +38256,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -37328,7 +38265,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -37343,6 +38281,7 @@ namespace SharpMP4
     public class ZeroBox : Box
     {
         public const string TYPE = "0000";
+        public override string DisplayName { get { return "ZeroBox"; } }
 
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
@@ -37386,6 +38325,7 @@ namespace SharpMP4
     public class DpndBox : Box
     {
         public const string TYPE = "dpnd";
+        public override string DisplayName { get { return "DpndBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37421,19 +38361,18 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class GspuBox() 
+    aligned(8) class GooglePingUrlBox() 
     extends Box('gspu') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class GspuBox : Box
+    public class GooglePingUrlBox : Box
     {
         public const string TYPE = "gspu";
+        public override string DisplayName { get { return "GooglePingUrlBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public GspuBox() : base("gspu")
+        public GooglePingUrlBox() : base("gspu")
         {
         }
 
@@ -37441,7 +38380,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -37449,7 +38389,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -37457,26 +38398,26 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class GspmBox() 
+    aligned(8) class GooglePingMessageBox() 
     extends Box('gspm') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class GspmBox : Box
+    public class GooglePingMessageBox : Box
     {
         public const string TYPE = "gspm";
+        public override string DisplayName { get { return "GooglePingMessageBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public GspmBox() : base("gspm")
+        public GooglePingMessageBox() : base("gspm")
         {
         }
 
@@ -37484,7 +38425,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -37492,7 +38434,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -37500,26 +38443,26 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class GshhBox() 
+    aligned(8) class GooglesHostHeaderBox() 
     extends Box('gshh') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class GshhBox : Box
+    public class GooglesHostHeaderBox : Box
     {
         public const string TYPE = "gshh";
+        public override string DisplayName { get { return "GooglesHostHeaderBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public GshhBox() : base("gshh")
+        public GooglesHostHeaderBox() : base("gshh")
         {
         }
 
@@ -37527,7 +38470,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -37535,7 +38479,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -37543,26 +38488,26 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class TvenBox() 
+    aligned(8) class TVEpisodeIDBox() 
     extends Box('tven') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class TvenBox : Box
+    public class TVEpisodeIDBox : Box
     {
         public const string TYPE = "tven";
+        public override string DisplayName { get { return "TVEpisodeIDBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public TvenBox() : base("tven")
+        public TVEpisodeIDBox() : base("tven")
         {
         }
 
@@ -37570,7 +38515,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -37578,7 +38524,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -37586,26 +38533,26 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class CovrBox() 
+    aligned(8) class AppleCoverArtBox() 
     extends Box('covr') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class CovrBox : Box
+    public class AppleCoverArtBox : Box
     {
         public const string TYPE = "covr";
+        public override string DisplayName { get { return "AppleCoverArtBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public CovrBox() : base("covr")
+        public AppleCoverArtBox() : base("covr")
         {
         }
 
@@ -37613,7 +38560,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -37621,7 +38569,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -37629,7 +38578,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -37644,11 +38594,366 @@ namespace SharpMP4
     public class LoadBox : Box
     {
         public const string TYPE = "load";
+        public override string DisplayName { get { return "LoadBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public LoadBox() : base("load")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleHintVersionBox() 
+    extends Box('hinv') {
+     string version;
+     } 
+    */
+    public class AppleHintVersionBox : Box
+    {
+        public const string TYPE = "hinv";
+        public override string DisplayName { get { return "AppleHintVersionBox"; } }
+
+        protected BinaryUTF8String version;
+        public BinaryUTF8String Version { get { return this.version; } set { this.version = value; } }
+
+        public AppleHintVersionBox() : base("hinv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.version);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.version);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(version); // version
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleTrackApertureBox() 
+    extends Box('tapt') {
+     Box boxes[];
+     } 
+    */
+    public class AppleTrackApertureBox : Box
+    {
+        public const string TYPE = "tapt";
+        public override string DisplayName { get { return "AppleTrackApertureBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleTrackApertureBox() : base("tapt")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleCleanApertureDimensionsBox() 
+    extends Box('clef') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleCleanApertureDimensionsBox : Box
+    {
+        public const string TYPE = "clef";
+        public override string DisplayName { get { return "AppleCleanApertureDimensionsBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleCleanApertureDimensionsBox() : base("clef")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleEncodedPixelsDimensionsBox() 
+    extends Box('enof') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleEncodedPixelsDimensionsBox : Box
+    {
+        public const string TYPE = "enof";
+        public override string DisplayName { get { return "AppleEncodedPixelsDimensionsBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleEncodedPixelsDimensionsBox() : base("enof")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleProductionApertureDimensionsBox() 
+    extends Box('prof') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleProductionApertureDimensionsBox : Box
+    {
+        public const string TYPE = "prof";
+        public override string DisplayName { get { return "AppleProductionApertureDimensionsBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleProductionApertureDimensionsBox() : base("prof")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleApertureModeBox() 
+    extends Box('apmd') {
+     string mode;
+     } 
+    */
+    public class AppleApertureModeBox : Box
+    {
+        public const string TYPE = "apmd";
+        public override string DisplayName { get { return "AppleApertureModeBox"; } }
+
+        protected BinaryUTF8String mode;
+        public BinaryUTF8String Mode { get { return this.mode; } set { this.mode = value; } }
+
+        public AppleApertureModeBox() : base("apmd")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.mode);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.mode);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(mode); // mode
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleWaveBox() 
+    extends Box('wave') {
+     Box boxes[];
+     } 
+    */
+    public class AppleWaveBox : Box
+    {
+        public const string TYPE = "wave";
+        public override string DisplayName { get { return "AppleWaveBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleWaveBox() : base("wave")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleEndiannessBox() 
+    extends Box('enda') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleEndiannessBox : Box
+    {
+        public const string TYPE = "enda";
+        public override string DisplayName { get { return "AppleEndiannessBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleEndiannessBox() : base("enda")
         {
         }
 
@@ -37687,6 +38992,7 @@ namespace SharpMP4
     public class AlisBox : Box
     {
         public const string TYPE = "alis";
+        public override string DisplayName { get { return "AlisBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37730,6 +39036,7 @@ namespace SharpMP4
     public class ChanBox : Box
     {
         public const string TYPE = "chan";
+        public override string DisplayName { get { return "ChanBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37773,6 +39080,7 @@ namespace SharpMP4
     public class MdtaBox : Box
     {
         public const string TYPE = "mdta";
+        public override string DisplayName { get { return "MdtaBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37816,6 +39124,7 @@ namespace SharpMP4
     public class ChapBox : Box
     {
         public const string TYPE = "chap";
+        public override string DisplayName { get { return "ChapBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37851,19 +39160,28 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class ChplBox() 
-    extends Box('chpl') {
-     bit(8) data[];
-     } 
+    aligned(8) class AdobeChapterBox() 
+    extends FullBox('chpl', version = 0, 0) {
+     unsigned int(32) unknown; unsigned int(8) count;
+     AdobeChapterRecord chapters[]; 
+     }
+
     */
-    public class ChplBox : Box
+    public class AdobeChapterBox : FullBox
     {
         public const string TYPE = "chpl";
+        public override string DisplayName { get { return "AdobeChapterBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected uint unknown;
+        public uint Unknown { get { return this.unknown; } set { this.unknown = value; } }
 
-        public ChplBox() : base("chpl")
+        protected byte count;
+        public byte Count { get { return this.count; } set { this.count = value; } }
+
+        protected AdobeChapterRecord[] chapters;
+        public AdobeChapterRecord[] Chapters { get { return this.chapters; } set { this.chapters = value; } }
+
+        public AdobeChapterBox() : base("chpl", 0, 0)
         {
         }
 
@@ -37871,7 +39189,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt32(out this.unknown);
+            boxSize += stream.ReadUInt8(out this.count);
+            boxSize += stream.ReadClass(boxSize, readSize, this, out this.chapters);
             return boxSize;
         }
 
@@ -37879,7 +39199,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt32(this.unknown);
+            boxSize += stream.WriteUInt8(this.count);
+            boxSize += stream.WriteClass(this.chapters);
             return boxSize;
         }
 
@@ -37887,26 +39209,81 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 32; // unknown
+            boxSize += 8; // count
+            boxSize += IsoStream.CalculateClassSize(chapters); // chapters
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class KeywBox() 
+    aligned(8) class AdobeChapterRecord() {
+     unsigned int(64) timestamp;
+     unsigned int(8) count; char title[count];
+     }
+    */
+    public class AdobeChapterRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "AdobeChapterRecord"; } }
+
+        protected ulong timestamp;
+        public ulong Timestamp { get { return this.timestamp; } set { this.timestamp = value; } }
+
+        protected byte count;
+        public byte Count { get { return this.count; } set { this.count = value; } }
+
+        protected byte[] title;
+        public byte[] Title { get { return this.title; } set { this.title = value; } }
+
+        public AdobeChapterRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt64(out this.timestamp);
+            boxSize += stream.ReadUInt8(out this.count);
+            boxSize += stream.ReadUInt8Array((uint)count, out this.title);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt64(this.timestamp);
+            boxSize += stream.WriteUInt8(this.count);
+            boxSize += stream.WriteUInt8Array((uint)count, this.title);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 64; // timestamp
+            boxSize += 8; // count
+            boxSize += (ulong)count * 8; // title
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleKeywordBox() 
     extends Box('keyw') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class KeywBox : Box
+    public class AppleKeywordBox : Box
     {
         public const string TYPE = "keyw";
+        public override string DisplayName { get { return "AppleKeywordBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public KeywBox() : base("keyw")
+        public AppleKeywordBox() : base("keyw")
         {
         }
 
@@ -37914,7 +39291,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -37922,7 +39300,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -37930,7 +39309,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -37945,6 +39325,7 @@ namespace SharpMP4
     public class ClfnBox : Box
     {
         public const string TYPE = "clfn";
+        public override string DisplayName { get { return "ClfnBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -37988,6 +39369,7 @@ namespace SharpMP4
     public class ThmbBox : Box
     {
         public const string TYPE = "thmb";
+        public override string DisplayName { get { return "ThmbBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -38031,6 +39413,7 @@ namespace SharpMP4
     public class FallBox : Box
     {
         public const string TYPE = "fall";
+        public override string DisplayName { get { return "FallBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -38066,19 +39449,18 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class TvshBox() 
+    aligned(8) class TVShowBox() 
     extends Box('tvsh') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class TvshBox : Box
+    public class TVShowBox : Box
     {
         public const string TYPE = "tvsh";
+        public override string DisplayName { get { return "TVShowBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public TvshBox() : base("tvsh")
+        public TVShowBox() : base("tvsh")
         {
         }
 
@@ -38086,7 +39468,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -38094,7 +39477,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -38102,26 +39486,26 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class EncBox() 
+    aligned(8) class AppleEncoderNameBox() 
     extends Box('©enc') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
-    public class EncBox : Box
+    public class AppleEncoderNameBox : Box
     {
         public const string TYPE = "©enc";
+        public override string DisplayName { get { return "AppleEncoderNameBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public EncBox() : base("©enc")
+        public AppleEncoderNameBox() : base("©enc")
         {
         }
 
@@ -38129,7 +39513,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -38137,7 +39522,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -38145,26 +39531,88 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class DdtsBox() 
+    aligned(8) class DTSSpecificBox() 
     extends Box('ddts') {
-     bit(8) data[];
+     unsigned int(32) dtsSamplingFrequency;
+     unsigned int(32) maxBitRate;
+     unsigned int(32) avgBitRate;
+     unsigned int(8) pcmSampleDepth;
+     bit(2) frameDuration;
+     bit(5) streamConstruction;
+     bit(1) coreLFEPresent;
+     bit(6) coreLayout;
+     bit(14) coreSize;
+     bit(1) stereoDownmix;
+     bit(3) representationType;
+     bit(16) channelLayout;
+     bit(1) multiAssetFlag;
+     bit(1) lbrDurationMod;
+     bit(1) reservedBoxPresent;
+     bit(5) reserved;
      } 
     */
-    public class DdtsBox : Box
+    public class DTSSpecificBox : Box
     {
         public const string TYPE = "ddts";
+        public override string DisplayName { get { return "DTSSpecificBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected uint dtsSamplingFrequency;
+        public uint DtsSamplingFrequency { get { return this.dtsSamplingFrequency; } set { this.dtsSamplingFrequency = value; } }
 
-        public DdtsBox() : base("ddts")
+        protected uint maxBitRate;
+        public uint MaxBitRate { get { return this.maxBitRate; } set { this.maxBitRate = value; } }
+
+        protected uint avgBitRate;
+        public uint AvgBitRate { get { return this.avgBitRate; } set { this.avgBitRate = value; } }
+
+        protected byte pcmSampleDepth;
+        public byte PcmSampleDepth { get { return this.pcmSampleDepth; } set { this.pcmSampleDepth = value; } }
+
+        protected byte frameDuration;
+        public byte FrameDuration { get { return this.frameDuration; } set { this.frameDuration = value; } }
+
+        protected byte streamConstruction;
+        public byte StreamConstruction { get { return this.streamConstruction; } set { this.streamConstruction = value; } }
+
+        protected bool coreLFEPresent;
+        public bool CoreLFEPresent { get { return this.coreLFEPresent; } set { this.coreLFEPresent = value; } }
+
+        protected byte coreLayout;
+        public byte CoreLayout { get { return this.coreLayout; } set { this.coreLayout = value; } }
+
+        protected ushort coreSize;
+        public ushort CoreSize { get { return this.coreSize; } set { this.coreSize = value; } }
+
+        protected bool stereoDownmix;
+        public bool StereoDownmix { get { return this.stereoDownmix; } set { this.stereoDownmix = value; } }
+
+        protected byte representationType;
+        public byte RepresentationType { get { return this.representationType; } set { this.representationType = value; } }
+
+        protected ushort channelLayout;
+        public ushort ChannelLayout { get { return this.channelLayout; } set { this.channelLayout = value; } }
+
+        protected bool multiAssetFlag;
+        public bool MultiAssetFlag { get { return this.multiAssetFlag; } set { this.multiAssetFlag = value; } }
+
+        protected bool lbrDurationMod;
+        public bool LbrDurationMod { get { return this.lbrDurationMod; } set { this.lbrDurationMod = value; } }
+
+        protected bool reservedBoxPresent;
+        public bool ReservedBoxPresent { get { return this.reservedBoxPresent; } set { this.reservedBoxPresent = value; } }
+
+        protected byte reserved;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        public DTSSpecificBox() : base("ddts")
         {
         }
 
@@ -38172,6 +39620,105 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.dtsSamplingFrequency);
+            boxSize += stream.ReadUInt32(out this.maxBitRate);
+            boxSize += stream.ReadUInt32(out this.avgBitRate);
+            boxSize += stream.ReadUInt8(out this.pcmSampleDepth);
+            boxSize += stream.ReadBits(2, out this.frameDuration);
+            boxSize += stream.ReadBits(5, out this.streamConstruction);
+            boxSize += stream.ReadBit(out this.coreLFEPresent);
+            boxSize += stream.ReadBits(6, out this.coreLayout);
+            boxSize += stream.ReadBits(14, out this.coreSize);
+            boxSize += stream.ReadBit(out this.stereoDownmix);
+            boxSize += stream.ReadBits(3, out this.representationType);
+            boxSize += stream.ReadUInt16(out this.channelLayout);
+            boxSize += stream.ReadBit(out this.multiAssetFlag);
+            boxSize += stream.ReadBit(out this.lbrDurationMod);
+            boxSize += stream.ReadBit(out this.reservedBoxPresent);
+            boxSize += stream.ReadBits(5, out this.reserved);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.dtsSamplingFrequency);
+            boxSize += stream.WriteUInt32(this.maxBitRate);
+            boxSize += stream.WriteUInt32(this.avgBitRate);
+            boxSize += stream.WriteUInt8(this.pcmSampleDepth);
+            boxSize += stream.WriteBits(2, this.frameDuration);
+            boxSize += stream.WriteBits(5, this.streamConstruction);
+            boxSize += stream.WriteBit(this.coreLFEPresent);
+            boxSize += stream.WriteBits(6, this.coreLayout);
+            boxSize += stream.WriteBits(14, this.coreSize);
+            boxSize += stream.WriteBit(this.stereoDownmix);
+            boxSize += stream.WriteBits(3, this.representationType);
+            boxSize += stream.WriteUInt16(this.channelLayout);
+            boxSize += stream.WriteBit(this.multiAssetFlag);
+            boxSize += stream.WriteBit(this.lbrDurationMod);
+            boxSize += stream.WriteBit(this.reservedBoxPresent);
+            boxSize += stream.WriteBits(5, this.reserved);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // dtsSamplingFrequency
+            boxSize += 32; // maxBitRate
+            boxSize += 32; // avgBitRate
+            boxSize += 8; // pcmSampleDepth
+            boxSize += 2; // frameDuration
+            boxSize += 5; // streamConstruction
+            boxSize += 1; // coreLFEPresent
+            boxSize += 6; // coreLayout
+            boxSize += 14; // coreSize
+            boxSize += 1; // stereoDownmix
+            boxSize += 3; // representationType
+            boxSize += 16; // channelLayout
+            boxSize += 1; // multiAssetFlag
+            boxSize += 1; // lbrDurationMod
+            boxSize += 1; // reservedBoxPresent
+            boxSize += 5; // reserved
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class DataBox() 
+    extends Box('data') {
+    unsigned int(32) dataType;
+     unsigned int(32) dataLang;
+     bit(8) data[];
+     } 
+    */
+    public class DataBox : Box
+    {
+        public const string TYPE = "data";
+        public override string DisplayName { get { return "DataBox"; } }
+
+        protected uint dataType;
+        public uint DataType { get { return this.dataType; } set { this.dataType = value; } }
+
+        protected uint dataLang;
+        public uint DataLang { get { return this.dataLang; } set { this.dataLang = value; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public DataBox() : base("data")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.dataType);
+            boxSize += stream.ReadUInt32(out this.dataLang);
             boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
             return boxSize;
         }
@@ -38180,6 +39727,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.dataType);
+            boxSize += stream.WriteUInt32(this.dataLang);
             boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
             return boxSize;
         }
@@ -38188,6 +39737,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
+            boxSize += 32; // dataType
+            boxSize += 32; // dataLang
             boxSize += 8 * (ulong)data.Length; // data
             return boxSize;
         }
@@ -38203,6 +39754,7 @@ namespace SharpMP4
     public class NikonExifBox : Box
     {
         public const string TYPE = "NCTG";
+        public override string DisplayName { get { return "NikonExifBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -38246,11 +39798,4678 @@ namespace SharpMP4
     public class CustomBox : Box
     {
         public const string TYPE = "----";
+        public override string DisplayName { get { return "CustomBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
         public CustomBox() : base("----")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ApplePartialSyncSamplesBox() 
+    extends FullBox('stps', version = 0, 0) {
+        unsigned int(32)	entry_count;
+        int i;
+        for (i=0; i < entry_count; i++) {
+            unsigned int(32)	sample_number;
+        }
+    }
+    */
+    public class ApplePartialSyncSamplesBox : FullBox
+    {
+        public const string TYPE = "stps";
+        public override string DisplayName { get { return "ApplePartialSyncSamplesBox"; } }
+
+        protected uint entry_count;
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
+
+        protected uint[] sample_number;
+        public uint[] SampleNumber { get { return this.sample_number; } set { this.sample_number = value; } }
+
+        public ApplePartialSyncSamplesBox() : base("stps", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.entry_count);
+
+
+            this.sample_number = new uint[entry_count];
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += stream.ReadUInt32(out this.sample_number[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.entry_count);
+
+
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += stream.WriteUInt32(this.sample_number[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // entry_count
+
+
+            for (int i = 0; i < entry_count; i++)
+            {
+                boxSize += 32; // sample_number
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class SampleScaleBox() 
+    extends FullBox('stsl', version = 0, 0) {
+        bit(7)	reserved;
+        bit(1) constrained; unsigned int(8) scaleMethod; signed int(16) displayCenterX; signed int(16) displayCenterY;
+        }
+
+    */
+    public class SampleScaleBox : FullBox
+    {
+        public const string TYPE = "stsl";
+        public override string DisplayName { get { return "SampleScaleBox"; } }
+
+        protected byte reserved;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool constrained;
+        public bool Constrained { get { return this.constrained; } set { this.constrained = value; } }
+
+        protected byte scaleMethod;
+        public byte ScaleMethod { get { return this.scaleMethod; } set { this.scaleMethod = value; } }
+
+        protected short displayCenterX;
+        public short DisplayCenterX { get { return this.displayCenterX; } set { this.displayCenterX = value; } }
+
+        protected short displayCenterY;
+        public short DisplayCenterY { get { return this.displayCenterY; } set { this.displayCenterY = value; } }
+
+        public SampleScaleBox() : base("stsl", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBits(7, out this.reserved);
+            boxSize += stream.ReadBit(out this.constrained);
+            boxSize += stream.ReadUInt8(out this.scaleMethod);
+            boxSize += stream.ReadInt16(out this.displayCenterX);
+            boxSize += stream.ReadInt16(out this.displayCenterY);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBits(7, this.reserved);
+            boxSize += stream.WriteBit(this.constrained);
+            boxSize += stream.WriteUInt8(this.scaleMethod);
+            boxSize += stream.WriteInt16(this.displayCenterX);
+            boxSize += stream.WriteInt16(this.displayCenterY);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 7; // reserved
+            boxSize += 1; // constrained
+            boxSize += 8; // scaleMethod
+            boxSize += 16; // displayCenterX
+            boxSize += 16; // displayCenterY
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {
+    unsigned int(16) odid; unsigned int(8) odProfileLevel;
+     unsigned int(8) sceneProfileLevel;
+        unsigned int(8) audioProfileId;
+        unsigned int(8) videoProfileId;
+        unsigned int(8) graphicsProfileLevel;
+        IodsSample samples[];
+     }
+
+    */
+    public class IOD_Descriptor : BaseDescriptor
+    {
+        public const byte TYPE = DescriptorTags.MP4_IOD_Tag;
+        public override string DisplayName { get { return "IOD_Descriptor"; } }
+
+        protected ushort odid;
+        public ushort Odid { get { return this.odid; } set { this.odid = value; } }
+
+        protected byte odProfileLevel;
+        public byte OdProfileLevel { get { return this.odProfileLevel; } set { this.odProfileLevel = value; } }
+
+        protected byte sceneProfileLevel;
+        public byte SceneProfileLevel { get { return this.sceneProfileLevel; } set { this.sceneProfileLevel = value; } }
+
+        protected byte audioProfileId;
+        public byte AudioProfileId { get { return this.audioProfileId; } set { this.audioProfileId = value; } }
+
+        protected byte videoProfileId;
+        public byte VideoProfileId { get { return this.videoProfileId; } set { this.videoProfileId = value; } }
+
+        protected byte graphicsProfileLevel;
+        public byte GraphicsProfileLevel { get { return this.graphicsProfileLevel; } set { this.graphicsProfileLevel = value; } }
+
+        protected IodsSample[] samples;
+        public IodsSample[] Samples { get { return this.samples; } set { this.samples = value; } }
+
+        public IOD_Descriptor() : base(DescriptorTags.MP4_IOD_Tag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.odid);
+            boxSize += stream.ReadUInt8(out this.odProfileLevel);
+            boxSize += stream.ReadUInt8(out this.sceneProfileLevel);
+            boxSize += stream.ReadUInt8(out this.audioProfileId);
+            boxSize += stream.ReadUInt8(out this.videoProfileId);
+            boxSize += stream.ReadUInt8(out this.graphicsProfileLevel);
+            boxSize += stream.ReadClass(boxSize, readSize, this, out this.samples);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.odid);
+            boxSize += stream.WriteUInt8(this.odProfileLevel);
+            boxSize += stream.WriteUInt8(this.sceneProfileLevel);
+            boxSize += stream.WriteUInt8(this.audioProfileId);
+            boxSize += stream.WriteUInt8(this.videoProfileId);
+            boxSize += stream.WriteUInt8(this.graphicsProfileLevel);
+            boxSize += stream.WriteClass(this.samples);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // odid
+            boxSize += 8; // odProfileLevel
+            boxSize += 8; // sceneProfileLevel
+            boxSize += 8; // audioProfileId
+            boxSize += 8; // videoProfileId
+            boxSize += 8; // graphicsProfileLevel
+            boxSize += IsoStream.CalculateClassSize(samples); // samples
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class IodsSample() {
+        unsigned int(8) incTag;
+        unsigned int(8) length;
+        unsigned int(32) trackId;
+     } 
+    */
+    public class IodsSample : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "IodsSample"; } }
+
+        protected byte incTag;
+        public byte IncTag { get { return this.incTag; } set { this.incTag = value; } }
+
+        protected byte length;
+        public byte Length { get { return this.length; } set { this.length = value; } }
+
+        protected uint trackId;
+        public uint TrackId { get { return this.trackId; } set { this.trackId = value; } }
+
+        public IodsSample() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt8(out this.incTag);
+            boxSize += stream.ReadUInt8(out this.length);
+            boxSize += stream.ReadUInt32(out this.trackId);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt8(this.incTag);
+            boxSize += stream.WriteUInt8(this.length);
+            boxSize += stream.WriteUInt32(this.trackId);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // incTag
+            boxSize += 8; // length
+            boxSize += 32; // trackId
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class IPMP_Descriptor() extends BaseDescriptor : bit(8) tag=IPMP_DescrTag {
+     bit(8) IPMP_DescriptorID;
+     unsigned int(16)
+     IPMPS_Type;
+     if (IPMPS_Type == 0) {
+     bit(8) URLString[sizeOfInstance-3];
+     } else {
+     bit(8) IPMP_data[sizeOfInstance-3];
+     }
+     }
+    */
+    public class IPMP_Descriptor : BaseDescriptor
+    {
+        public const byte TYPE = DescriptorTags.IPMP_DescrTag;
+        public override string DisplayName { get { return "IPMP_Descriptor"; } }
+
+        protected byte IPMP_DescriptorID;
+        public byte IPMPDescriptorID { get { return this.IPMP_DescriptorID; } set { this.IPMP_DescriptorID = value; } }
+
+        protected ushort IPMPS_Type;
+        public ushort IPMPSType { get { return this.IPMPS_Type; } set { this.IPMPS_Type = value; } }
+
+        protected byte[] URLString;
+        public byte[] _URLString { get { return this.URLString; } set { this.URLString = value; } }
+
+        protected byte[] IPMP_data;
+        public byte[] IPMPData { get { return this.IPMP_data; } set { this.IPMP_data = value; } }
+
+        public IPMP_Descriptor() : base(DescriptorTags.IPMP_DescrTag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.IPMP_DescriptorID);
+            boxSize += stream.ReadUInt16(out this.IPMPS_Type);
+
+            if (IPMPS_Type == 0)
+            {
+                boxSize += stream.ReadUInt8Array((uint)(sizeOfInstance - 3), out this.URLString);
+            }
+
+            else
+            {
+                boxSize += stream.ReadUInt8Array((uint)(sizeOfInstance - 3), out this.IPMP_data);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.IPMP_DescriptorID);
+            boxSize += stream.WriteUInt16(this.IPMPS_Type);
+
+            if (IPMPS_Type == 0)
+            {
+                boxSize += stream.WriteUInt8Array((uint)(sizeOfInstance - 3), this.URLString);
+            }
+
+            else
+            {
+                boxSize += stream.WriteUInt8Array((uint)(sizeOfInstance - 3), this.IPMP_data);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // IPMP_DescriptorID
+            boxSize += 16; // IPMPS_Type
+
+            if (IPMPS_Type == 0)
+            {
+                boxSize += (ulong)(sizeOfInstance - 3) * 8; // URLString
+            }
+
+            else
+            {
+                boxSize += (ulong)(sizeOfInstance - 3) * 8; // IPMP_data
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class IPMPControlBox() 
+    extends FullBox('ipmc') {
+     Descriptor toollist;
+     unsigned int(8) count; Descriptor descriptor[count];
+     }
+    */
+    public class IPMPControlBox : FullBox
+    {
+        public const string TYPE = "ipmc";
+        public override string DisplayName { get { return "IPMPControlBox"; } }
+
+        protected Descriptor toollist;
+        public Descriptor Toollist { get { return this.toollist; } set { this.toollist = value; } }
+
+        protected byte count;
+        public byte Count { get { return this.count; } set { this.count = value; } }
+
+        protected Descriptor[] descriptor;
+        public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
+
+        public IPMPControlBox() : base("ipmc")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.toollist); 
+            boxSize += stream.ReadUInt8(out this.count);
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.descriptor); 
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteDescriptor( this.toollist); 
+            boxSize += stream.WriteUInt8(this.count);
+            // boxSize += stream.WriteDescriptor( this.descriptor); 
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateDescriptorSize(toollist); // toollist
+            boxSize += 8; // count
+                          // boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class IPMPInfoBox() 
+    extends FullBox('imif') {
+     Descriptor descriptor[0 .. 255];
+     }
+    */
+    public class IPMPInfoBox : FullBox
+    {
+        public const string TYPE = "imif";
+        public override string DisplayName { get { return "IPMPInfoBox"; } }
+
+        protected Descriptor[] descriptor;
+        public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
+
+        public IPMPInfoBox() : base("imif")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.descriptor); 
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteDescriptor( this.descriptor); 
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class GenreBox() 
+    extends FullBox('gnre') {
+     Box boxes[]; 
+     }
+    */
+    public class GenreBox : FullBox
+    {
+        public const string TYPE = "gnre";
+        public override string DisplayName { get { return "GenreBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public GenreBox() : base("gnre")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FairPlayUserIDBox() 
+    extends Box('user') {
+     bit(8) data[]; 
+     }
+    */
+    public class FairPlayUserIDBox : Box
+    {
+        public const string TYPE = "user";
+        public override string DisplayName { get { return "FairPlayUserIDBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public FairPlayUserIDBox() : base("user")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FairPlayUserNameBox() 
+    extends Box('name') {
+     bit(8) data[]; 
+     }
+    */
+    public class FairPlayUserNameBox : Box
+    {
+        public const string TYPE = "name";
+        public override string DisplayName { get { return "FairPlayUserNameBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public FairPlayUserNameBox() : base("name")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FairPlayUserKeyBox() 
+    extends Box('key ') {
+     bit(8) data[]; 
+     }
+    */
+    public class FairPlayUserKeyBox : Box
+    {
+        public const string TYPE = "key ";
+        public override string DisplayName { get { return "FairPlayUserKeyBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public FairPlayUserKeyBox() : base("key ")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FairPlayIvBox() 
+    extends Box('iviv') {
+     bit(8) data[]; 
+     }
+    */
+    public class FairPlayIvBox : Box
+    {
+        public const string TYPE = "iviv";
+        public override string DisplayName { get { return "FairPlayIvBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public FairPlayIvBox() : base("iviv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FairPlayPrivateKeyBox() 
+    extends Box('priv') {
+     bit(8) data[]; 
+     }
+    */
+    public class FairPlayPrivateKeyBox : Box
+    {
+        public const string TYPE = "priv";
+        public override string DisplayName { get { return "FairPlayPrivateKeyBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public FairPlayPrivateKeyBox() : base("priv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class MetaBoxRelationBox() 
+    extends FullBox('mere') {
+     unsigned int(32) firstMetaBoxHandlerType;
+     unsigned int(32) secondMetaBoxHandlerType;
+     bit(8) metaboxRelation; 
+     }
+    */
+    public class MetaBoxRelationBox : FullBox
+    {
+        public const string TYPE = "mere";
+        public override string DisplayName { get { return "MetaBoxRelationBox"; } }
+
+        protected uint firstMetaBoxHandlerType;
+        public uint FirstMetaBoxHandlerType { get { return this.firstMetaBoxHandlerType; } set { this.firstMetaBoxHandlerType = value; } }
+
+        protected uint secondMetaBoxHandlerType;
+        public uint SecondMetaBoxHandlerType { get { return this.secondMetaBoxHandlerType; } set { this.secondMetaBoxHandlerType = value; } }
+
+        protected byte metaboxRelation;
+        public byte MetaboxRelation { get { return this.metaboxRelation; } set { this.metaboxRelation = value; } }
+
+        public MetaBoxRelationBox() : base("mere")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.firstMetaBoxHandlerType);
+            boxSize += stream.ReadUInt32(out this.secondMetaBoxHandlerType);
+            boxSize += stream.ReadUInt8(out this.metaboxRelation);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.firstMetaBoxHandlerType);
+            boxSize += stream.WriteUInt32(this.secondMetaBoxHandlerType);
+            boxSize += stream.WriteUInt8(this.metaboxRelation);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // firstMetaBoxHandlerType
+            boxSize += 32; // secondMetaBoxHandlerType
+            boxSize += 8; // metaboxRelation
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ID3TagBox() 
+    extends FullBox('id32') {
+     bit(8) data[]; 
+     }
+    */
+    public class ID3TagBox : FullBox
+    {
+        public const string TYPE = "id32";
+        public override string DisplayName { get { return "ID3TagBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public ID3TagBox() : base("id32")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ITunesMetadataMeanBox() 
+    extends FullBox('mean') {
+     string domain; 
+     }
+    */
+    public class ITunesMetadataMeanBox : FullBox
+    {
+        public const string TYPE = "mean";
+        public override string DisplayName { get { return "ITunesMetadataMeanBox"; } }
+
+        protected BinaryUTF8String domain;
+        public BinaryUTF8String Domain { get { return this.domain; } set { this.domain = value; } }
+
+        public ITunesMetadataMeanBox() : base("mean")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.domain);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.domain);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(domain); // domain
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AlbumArtistSortBox() 
+    extends Box('soaa') {
+     Box boxes[]; 
+     }
+    */
+    public class AlbumArtistSortBox : Box
+    {
+        public const string TYPE = "soaa";
+        public override string DisplayName { get { return "AlbumArtistSortBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AlbumArtistSortBox() : base("soaa")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AlbumSortBox() 
+    extends Box('soal') {
+     Box boxes[]; 
+     }
+    */
+    public class AlbumSortBox : Box
+    {
+        public const string TYPE = "soal";
+        public override string DisplayName { get { return "AlbumSortBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AlbumSortBox() : base("soal")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ArtistSortBox() 
+    extends Box('soar') {
+     Box boxes[]; 
+     }
+    */
+    public class ArtistSortBox : Box
+    {
+        public const string TYPE = "soar";
+        public override string DisplayName { get { return "ArtistSortBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public ArtistSortBox() : base("soar")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class CategoryBox() 
+    extends Box('catg') {
+     Box boxes[]; 
+     }
+    */
+    public class CategoryBox : Box
+    {
+        public const string TYPE = "catg";
+        public override string DisplayName { get { return "CategoryBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public CategoryBox() : base("catg")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ComposerSortBox() 
+    extends Box('soco') {
+     Box boxes[]; 
+     }
+    */
+    public class ComposerSortBox : Box
+    {
+        public const string TYPE = "soco";
+        public override string DisplayName { get { return "ComposerSortBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public ComposerSortBox() : base("soco")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class EpisodeGlobalUniqueIdBox() 
+    extends Box('egid') {
+     Box boxes[]; 
+     }
+    */
+    public class EpisodeGlobalUniqueIdBox : Box
+    {
+        public const string TYPE = "egid";
+        public override string DisplayName { get { return "EpisodeGlobalUniqueIdBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public EpisodeGlobalUniqueIdBox() : base("egid")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ITunesPurchaseAccountBox() 
+    extends Box('apID') {
+     Box boxes[]; 
+     }
+    */
+    public class ITunesPurchaseAccountBox : Box
+    {
+        public const string TYPE = "apID";
+        public override string DisplayName { get { return "ITunesPurchaseAccountBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public ITunesPurchaseAccountBox() : base("apID")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ITunesAccountTypeBox() 
+    extends Box('akID') {
+     Box boxes[]; 
+     }
+    */
+    public class ITunesAccountTypeBox : Box
+    {
+        public const string TYPE = "akID";
+        public override string DisplayName { get { return "ITunesAccountTypeBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public ITunesAccountTypeBox() : base("akID")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ITunesCountryCodeBox() 
+    extends Box('sfID') {
+     Box boxes[]; 
+     }
+    */
+    public class ITunesCountryCodeBox : Box
+    {
+        public const string TYPE = "sfID";
+        public override string DisplayName { get { return "ITunesCountryCodeBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public ITunesCountryCodeBox() : base("sfID")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PodcastBox() 
+    extends Box('pcst') {
+     Box boxes[]; 
+     }
+    */
+    public class PodcastBox : Box
+    {
+        public const string TYPE = "pcst";
+        public override string DisplayName { get { return "PodcastBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public PodcastBox() : base("pcst")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PodcastUrlBox() 
+    extends Box('purl') {
+     Box boxes[]; 
+     }
+    */
+    public class PodcastUrlBox : Box
+    {
+        public const string TYPE = "purl";
+        public override string DisplayName { get { return "PodcastUrlBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public PodcastUrlBox() : base("purl")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PurchaseDateBox() 
+    extends Box('purd') {
+     Box boxes[]; 
+     }
+    */
+    public class PurchaseDateBox : Box
+    {
+        public const string TYPE = "purd";
+        public override string DisplayName { get { return "PurchaseDateBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public PurchaseDateBox() : base("purd")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TrackSortBox() 
+    extends Box('sonm') {
+     Box boxes[]; 
+     }
+    */
+    public class TrackSortBox : Box
+    {
+        public const string TYPE = "sonm";
+        public override string DisplayName { get { return "TrackSortBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public TrackSortBox() : base("sonm")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TVNetworkNameBox() 
+    extends Box('tvnn') {
+     Box boxes[]; 
+     }
+    */
+    public class TVNetworkNameBox : Box
+    {
+        public const string TYPE = "tvnn";
+        public override string DisplayName { get { return "TVNetworkNameBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public TVNetworkNameBox() : base("tvnn")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TVShowSortBox() 
+    extends Box('sosn') {
+     Box boxes[]; 
+     }
+    */
+    public class TVShowSortBox : Box
+    {
+        public const string TYPE = "sosn";
+        public override string DisplayName { get { return "TVShowSortBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public TVShowSortBox() : base("sosn")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ThreeGPPAlbumBox() 
+    extends Box('albm') {
+        bit(1) reserved;
+     unsigned int(5)[3] language;
+        string value;
+     bit(8) trackNumber; // optional
+    } 
+    */
+    public class ThreeGPPAlbumBox : Box
+    {
+        public const string TYPE = "albm";
+        public override string DisplayName { get { return "ThreeGPPAlbumBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        protected byte trackNumber;  //  optional
+        public byte TrackNumber { get { return this.trackNumber; } set { this.trackNumber = value; } }
+
+        public ThreeGPPAlbumBox() : base("albm")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
+            boxSize += stream.ReadUInt8(out this.trackNumber); // optional
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
+            boxSize += stream.WriteUInt8(this.trackNumber); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
+            boxSize += 8; // trackNumber
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ThreeGPPClassificationBox() 
+    extends Box('clsf') {
+        bit(1) reserved;
+     unsigned int(5)[3] language;
+        string value; 
+    } 
+    */
+    public class ThreeGPPClassificationBox : Box
+    {
+        public const string TYPE = "clsf";
+        public override string DisplayName { get { return "ThreeGPPClassificationBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        public ThreeGPPClassificationBox() : base("clsf")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ThreeGPPLocationInformationBox() 
+    extends Box('loci') {
+        bit(1) reserved;
+     unsigned int(5)[3] language;
+        string value;
+     string placeName; unsigned int(8) role; fixedpoint1616 longitude;
+     fixedpoint1616 latitude;
+     fixedpoint1616 altitude;
+     string astronomicalBody;
+     string additionalNotes;
+     }
+    */
+    public class ThreeGPPLocationInformationBox : Box
+    {
+        public const string TYPE = "loci";
+        public override string DisplayName { get { return "ThreeGPPLocationInformationBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        protected BinaryUTF8String placeName;
+        public BinaryUTF8String PlaceName { get { return this.placeName; } set { this.placeName = value; } }
+
+        protected byte role;
+        public byte Role { get { return this.role; } set { this.role = value; } }
+
+        protected double longitude;
+        public double Longitude { get { return this.longitude; } set { this.longitude = value; } }
+
+        protected double latitude;
+        public double Latitude { get { return this.latitude; } set { this.latitude = value; } }
+
+        protected double altitude;
+        public double Altitude { get { return this.altitude; } set { this.altitude = value; } }
+
+        protected BinaryUTF8String astronomicalBody;
+        public BinaryUTF8String AstronomicalBody { get { return this.astronomicalBody; } set { this.astronomicalBody = value; } }
+
+        protected BinaryUTF8String additionalNotes;
+        public BinaryUTF8String AdditionalNotes { get { return this.additionalNotes; } set { this.additionalNotes = value; } }
+
+        public ThreeGPPLocationInformationBox() : base("loci")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
+            boxSize += stream.ReadString(boxSize, readSize, out this.placeName);
+            boxSize += stream.ReadUInt8(out this.role);
+            boxSize += stream.ReadFixedPoint1616(out this.longitude);
+            boxSize += stream.ReadFixedPoint1616(out this.latitude);
+            boxSize += stream.ReadFixedPoint1616(out this.altitude);
+            boxSize += stream.ReadString(boxSize, readSize, out this.astronomicalBody);
+            boxSize += stream.ReadString(boxSize, readSize, out this.additionalNotes);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
+            boxSize += stream.WriteString(this.placeName);
+            boxSize += stream.WriteUInt8(this.role);
+            boxSize += stream.WriteFixedPoint1616(this.longitude);
+            boxSize += stream.WriteFixedPoint1616(this.latitude);
+            boxSize += stream.WriteFixedPoint1616(this.altitude);
+            boxSize += stream.WriteString(this.astronomicalBody);
+            boxSize += stream.WriteString(this.additionalNotes);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
+            boxSize += IsoStream.CalculateStringSize(placeName); // placeName
+            boxSize += 8; // role
+            boxSize += 32; // longitude
+            boxSize += 32; // latitude
+            boxSize += 32; // altitude
+            boxSize += IsoStream.CalculateStringSize(astronomicalBody); // astronomicalBody
+            boxSize += IsoStream.CalculateStringSize(additionalNotes); // additionalNotes
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ThreeGPPPerformerBox() 
+    extends Box('perf') {
+        bit(1) reserved;
+     unsigned int(5)[3] language;
+        string value; 
+    } 
+    */
+    public class ThreeGPPPerformerBox : Box
+    {
+        public const string TYPE = "perf";
+        public override string DisplayName { get { return "ThreeGPPPerformerBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        public ThreeGPPPerformerBox() : base("perf")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ThreeGPPRecordingYearBox() 
+    extends Box('yrrc') {
+        bit(1) reserved;
+     unsigned int(5)[3] language;
+        string value; 
+     unsigned int(16) year;
+     } 
+    */
+    public class ThreeGPPRecordingYearBox : Box
+    {
+        public const string TYPE = "yrrc";
+        public override string DisplayName { get { return "ThreeGPPRecordingYearBox"; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected BinaryUTF8String value;
+        public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+        protected ushort year;
+        public ushort Year { get { return this.year; } set { this.year = value; } }
+
+        public ThreeGPPRecordingYearBox() : base("yrrc")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadString(boxSize, readSize, out this.value);
+            boxSize += stream.ReadUInt16(out this.year);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteString(this.value);
+            boxSize += stream.WriteUInt16(this.year);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += IsoStream.CalculateStringSize(value); // value
+            boxSize += 16; // year
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAAccessUnitFormatBox() 
+    extends FullBox('odaf') {
+         bit(7) reserved;
+     bit(1) selectiveEncrypted;
+     unsigned int(8) keyIndicatorLength;
+     unsigned int(8) initialVectorLength;
+     } 
+    */
+    public class OMAAccessUnitFormatBox : FullBox
+    {
+        public const string TYPE = "odaf";
+        public override string DisplayName { get { return "OMAAccessUnitFormatBox"; } }
+
+        protected byte reserved;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool selectiveEncrypted;
+        public bool SelectiveEncrypted { get { return this.selectiveEncrypted; } set { this.selectiveEncrypted = value; } }
+
+        protected byte keyIndicatorLength;
+        public byte KeyIndicatorLength { get { return this.keyIndicatorLength; } set { this.keyIndicatorLength = value; } }
+
+        protected byte initialVectorLength;
+        public byte InitialVectorLength { get { return this.initialVectorLength; } set { this.initialVectorLength = value; } }
+
+        public OMAAccessUnitFormatBox() : base("odaf")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBits(7, out this.reserved);
+            boxSize += stream.ReadBit(out this.selectiveEncrypted);
+            boxSize += stream.ReadUInt8(out this.keyIndicatorLength);
+            boxSize += stream.ReadUInt8(out this.initialVectorLength);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBits(7, this.reserved);
+            boxSize += stream.WriteBit(this.selectiveEncrypted);
+            boxSize += stream.WriteUInt8(this.keyIndicatorLength);
+            boxSize += stream.WriteUInt8(this.initialVectorLength);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 7; // reserved
+            boxSize += 1; // selectiveEncrypted
+            boxSize += 8; // keyIndicatorLength
+            boxSize += 8; // initialVectorLength
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMACommonHeadersBox() 
+    extends FullBox('ohdr') {
+         unsigned int(8) encryptionMethod;
+     unsigned int(8) paddingScheme;
+     unsigned int(64) plaintextLength;
+     unsigned int(16) contentIDLength;
+     unsigned int(16) rightsIssuerLength;
+     unsigned int(16) textualHeadersLength;
+     unsigned int(8) contentID[contentIDLength];
+     unsigned int(8) rightsIssuerURL[rightsIssuerLength];
+     unsigned int(8) textualHeaders[textualHeadersLength];
+     } 
+    */
+    public class OMACommonHeadersBox : FullBox
+    {
+        public const string TYPE = "ohdr";
+        public override string DisplayName { get { return "OMACommonHeadersBox"; } }
+
+        protected byte encryptionMethod;
+        public byte EncryptionMethod { get { return this.encryptionMethod; } set { this.encryptionMethod = value; } }
+
+        protected byte paddingScheme;
+        public byte PaddingScheme { get { return this.paddingScheme; } set { this.paddingScheme = value; } }
+
+        protected ulong plaintextLength;
+        public ulong PlaintextLength { get { return this.plaintextLength; } set { this.plaintextLength = value; } }
+
+        protected ushort contentIDLength;
+        public ushort ContentIDLength { get { return this.contentIDLength; } set { this.contentIDLength = value; } }
+
+        protected ushort rightsIssuerLength;
+        public ushort RightsIssuerLength { get { return this.rightsIssuerLength; } set { this.rightsIssuerLength = value; } }
+
+        protected ushort textualHeadersLength;
+        public ushort TextualHeadersLength { get { return this.textualHeadersLength; } set { this.textualHeadersLength = value; } }
+
+        protected byte[] contentID;
+        public byte[] ContentID { get { return this.contentID; } set { this.contentID = value; } }
+
+        protected byte[] rightsIssuerURL;
+        public byte[] RightsIssuerURL { get { return this.rightsIssuerURL; } set { this.rightsIssuerURL = value; } }
+
+        protected byte[] textualHeaders;
+        public byte[] TextualHeaders { get { return this.textualHeaders; } set { this.textualHeaders = value; } }
+
+        public OMACommonHeadersBox() : base("ohdr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.encryptionMethod);
+            boxSize += stream.ReadUInt8(out this.paddingScheme);
+            boxSize += stream.ReadUInt64(out this.plaintextLength);
+            boxSize += stream.ReadUInt16(out this.contentIDLength);
+            boxSize += stream.ReadUInt16(out this.rightsIssuerLength);
+            boxSize += stream.ReadUInt16(out this.textualHeadersLength);
+            boxSize += stream.ReadUInt8Array((uint)contentIDLength, out this.contentID);
+            boxSize += stream.ReadUInt8Array((uint)rightsIssuerLength, out this.rightsIssuerURL);
+            boxSize += stream.ReadUInt8Array((uint)textualHeadersLength, out this.textualHeaders);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.encryptionMethod);
+            boxSize += stream.WriteUInt8(this.paddingScheme);
+            boxSize += stream.WriteUInt64(this.plaintextLength);
+            boxSize += stream.WriteUInt16(this.contentIDLength);
+            boxSize += stream.WriteUInt16(this.rightsIssuerLength);
+            boxSize += stream.WriteUInt16(this.textualHeadersLength);
+            boxSize += stream.WriteUInt8Array((uint)contentIDLength, this.contentID);
+            boxSize += stream.WriteUInt8Array((uint)rightsIssuerLength, this.rightsIssuerURL);
+            boxSize += stream.WriteUInt8Array((uint)textualHeadersLength, this.textualHeaders);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // encryptionMethod
+            boxSize += 8; // paddingScheme
+            boxSize += 64; // plaintextLength
+            boxSize += 16; // contentIDLength
+            boxSize += 16; // rightsIssuerLength
+            boxSize += 16; // textualHeadersLength
+            boxSize += (uint)contentIDLength * 8; // contentID
+            boxSize += (uint)rightsIssuerLength * 8; // rightsIssuerURL
+            boxSize += (uint)textualHeadersLength * 8; // textualHeaders
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAContentIDBox() 
+    extends FullBox('ccid') {
+         unsigned int(16) contentIDLength;
+     unsigned int(8) contentID[contentIDLength];
+     } 
+    */
+    public class OMAContentIDBox : FullBox
+    {
+        public const string TYPE = "ccid";
+        public override string DisplayName { get { return "OMAContentIDBox"; } }
+
+        protected ushort contentIDLength;
+        public ushort ContentIDLength { get { return this.contentIDLength; } set { this.contentIDLength = value; } }
+
+        protected byte[] contentID;
+        public byte[] ContentID { get { return this.contentID; } set { this.contentID = value; } }
+
+        public OMAContentIDBox() : base("ccid")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.contentIDLength);
+            boxSize += stream.ReadUInt8Array((uint)contentIDLength, out this.contentID);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.contentIDLength);
+            boxSize += stream.WriteUInt8Array((uint)contentIDLength, this.contentID);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // contentIDLength
+            boxSize += (uint)contentIDLength * 8; // contentID
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAContentObjectBox() 
+    extends FullBox('odda') {
+         unsigned int(32) count;
+     unsigned int(8) data[count];
+     } 
+    */
+    public class OMAContentObjectBox : FullBox
+    {
+        public const string TYPE = "odda";
+        public override string DisplayName { get { return "OMAContentObjectBox"; } }
+
+        protected uint count;
+        public uint Count { get { return this.count; } set { this.count = value; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public OMAContentObjectBox() : base("odda")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.count);
+            boxSize += stream.ReadUInt8Array((uint)count, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.count);
+            boxSize += stream.WriteUInt8Array((uint)count, this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // count
+            boxSize += (uint)count * 8; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMACoverURLBox() 
+    extends FullBox('cvru') {
+         string content;
+     } 
+    */
+    public class OMACoverURLBox : FullBox
+    {
+        public const string TYPE = "cvru";
+        public override string DisplayName { get { return "OMACoverURLBox"; } }
+
+        protected BinaryUTF8String content;
+        public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
+
+        public OMACoverURLBox() : base("cvru")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.content);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(content); // content
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMADiscreteMediaHeadersBox () 
+    extends FullBox('odhe') {
+         unsigned int(8) contentTypeLength;
+     unsigned int(8) contentType[contentTypeLength];
+     Box boxes[]; 
+     } 
+    */
+    public class OMADiscreteMediaHeadersBox : FullBox
+    {
+        public const string TYPE = "odhe";
+        public override string DisplayName { get { return "OMADiscreteMediaHeadersBox"; } }
+
+        protected byte contentTypeLength;
+        public byte ContentTypeLength { get { return this.contentTypeLength; } set { this.contentTypeLength = value; } }
+
+        protected byte[] contentType;
+        public byte[] ContentType { get { return this.contentType; } set { this.contentType = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public OMADiscreteMediaHeadersBox() : base("odhe")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.contentTypeLength);
+            boxSize += stream.ReadUInt8Array((uint)contentTypeLength, out this.contentType);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.contentTypeLength);
+            boxSize += stream.WriteUInt8Array((uint)contentTypeLength, this.contentType);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // contentTypeLength
+            boxSize += (uint)contentTypeLength * 8; // contentType
+                                                    // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMADrmContainerBox() 
+    extends FullBox('odrm') {
+         Box boxes[]; 
+     } 
+    */
+    public class OMADrmContainerBox : FullBox
+    {
+        public const string TYPE = "odrm";
+        public override string DisplayName { get { return "OMADrmContainerBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public OMADrmContainerBox() : base("odrm")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAIconURLBox() 
+    extends FullBox('icnu') {
+         string content;
+     } 
+    */
+    public class OMAIconURLBox : FullBox
+    {
+        public const string TYPE = "icnu";
+        public override string DisplayName { get { return "OMAIconURLBox"; } }
+
+        protected BinaryUTF8String content;
+        public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
+
+        public OMAIconURLBox() : base("icnu")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.content);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(content); // content
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAInfoURLBox() 
+    extends FullBox('infu') {
+         string content;
+     } 
+    */
+    public class OMAInfoURLBox : FullBox
+    {
+        public const string TYPE = "infu";
+        public override string DisplayName { get { return "OMAInfoURLBox"; } }
+
+        protected BinaryUTF8String content;
+        public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
+
+        public OMAInfoURLBox() : base("infu")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.content);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(content); // content
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMALyricsURLBox() 
+    extends FullBox('lrcu') {
+         string content;
+     } 
+    */
+    public class OMALyricsURLBox : FullBox
+    {
+        public const string TYPE = "lrcu";
+        public override string DisplayName { get { return "OMALyricsURLBox"; } }
+
+        protected BinaryUTF8String content;
+        public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
+
+        public OMALyricsURLBox() : base("lrcu")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadString(boxSize, readSize, out this.content);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteString(this.content);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(content); // content
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAMutableDRMBox() 
+    extends Box('mdri') {
+         Box boxes[];
+     } 
+    */
+    public class OMAMutableDRMBox : Box
+    {
+        public const string TYPE = "mdri";
+        public override string DisplayName { get { return "OMAMutableDRMBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public OMAMutableDRMBox() : base("mdri")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMAKeyManagementBox() 
+    extends FullBox('odkm') {
+         Box boxes[];
+     } 
+    */
+    public class OMAKeyManagementBox : FullBox
+    {
+        public const string TYPE = "odkm";
+        public override string DisplayName { get { return "OMAKeyManagementBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public OMAKeyManagementBox() : base("odkm")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMARightsObjectBox() 
+    extends FullBox('odrb') {
+         unsigned int(8) data[];
+     } 
+    */
+    public class OMARightsObjectBox : FullBox
+    {
+        public const string TYPE = "odrb";
+        public override string DisplayName { get { return "OMARightsObjectBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public OMARightsObjectBox() : base("odrb")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)data.Length * 8; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OMATransactionTrackingBox() 
+    extends FullBox('odtt') {
+         unsigned int(8) transactionID[16];
+     } 
+    */
+    public class OMATransactionTrackingBox : FullBox
+    {
+        public const string TYPE = "odtt";
+        public override string DisplayName { get { return "OMATransactionTrackingBox"; } }
+
+        protected byte[] transactionID;
+        public byte[] TransactionID { get { return this.transactionID; } set { this.transactionID = value; } }
+
+        public OMATransactionTrackingBox() : base("odtt")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8Array(16, out this.transactionID);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8Array(16, this.transactionID);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16 * 8; // transactionID
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class NeroMetadataTagsBox() 
+    extends Box('tags') {
+         bit(8) data[];
+     } 
+    */
+    public class NeroMetadataTagsBox : Box
+    {
+        public const string TYPE = "tags";
+        public override string DisplayName { get { return "NeroMetadataTagsBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public NeroMetadataTagsBox() : base("tags")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AdditionalMetadataContainerBox() 
+    extends Box('meco') {
+         Box boxes[];
+     } 
+    */
+    public class AdditionalMetadataContainerBox : Box
+    {
+        public const string TYPE = "meco";
+        public override string DisplayName { get { return "AdditionalMetadataContainerBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AdditionalMetadataContainerBox() : base("meco")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class H263SpecificBox() 
+    extends Box('d263') {
+         unsigned int(32) vendor; unsigned int(8) decoderVersion;
+     unsigned int(8) level;
+     unsigned int(8) profile;
+     } 
+    */
+    public class H263SpecificBox : Box
+    {
+        public const string TYPE = "d263";
+        public override string DisplayName { get { return "H263SpecificBox"; } }
+
+        protected uint vendor;
+        public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }
+
+        protected byte decoderVersion;
+        public byte DecoderVersion { get { return this.decoderVersion; } set { this.decoderVersion = value; } }
+
+        protected byte level;
+        public byte Level { get { return this.level; } set { this.level = value; } }
+
+        protected byte profile;
+        public byte Profile { get { return this.profile; } set { this.profile = value; } }
+
+        public H263SpecificBox() : base("d263")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.vendor);
+            boxSize += stream.ReadUInt8(out this.decoderVersion);
+            boxSize += stream.ReadUInt8(out this.level);
+            boxSize += stream.ReadUInt8(out this.profile);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.vendor);
+            boxSize += stream.WriteUInt8(this.decoderVersion);
+            boxSize += stream.WriteUInt8(this.level);
+            boxSize += stream.WriteUInt8(this.profile);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // vendor
+            boxSize += 8; // decoderVersion
+            boxSize += 8; // level
+            boxSize += 8; // profile
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class EVRCSpecificBox() 
+    extends Box('devc') {
+         unsigned int(32) vendor; unsigned int(8) decoderVersion;
+     unsigned int(8) framesPerSample;
+     } 
+    */
+    public class EVRCSpecificBox : Box
+    {
+        public const string TYPE = "devc";
+        public override string DisplayName { get { return "EVRCSpecificBox"; } }
+
+        protected uint vendor;
+        public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }
+
+        protected byte decoderVersion;
+        public byte DecoderVersion { get { return this.decoderVersion; } set { this.decoderVersion = value; } }
+
+        protected byte framesPerSample;
+        public byte FramesPerSample { get { return this.framesPerSample; } set { this.framesPerSample = value; } }
+
+        public EVRCSpecificBox() : base("devc")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.vendor);
+            boxSize += stream.ReadUInt8(out this.decoderVersion);
+            boxSize += stream.ReadUInt8(out this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.vendor);
+            boxSize += stream.WriteUInt8(this.decoderVersion);
+            boxSize += stream.WriteUInt8(this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // vendor
+            boxSize += 8; // decoderVersion
+            boxSize += 8; // framesPerSample
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class QCELPSpecificBox() 
+    extends Box('dqcp') {
+         unsigned int(32) vendor; unsigned int(8) decoderVersion;
+     unsigned int(8) framesPerSample;
+     } 
+    */
+    public class QCELPSpecificBox : Box
+    {
+        public const string TYPE = "dqcp";
+        public override string DisplayName { get { return "QCELPSpecificBox"; } }
+
+        protected uint vendor;
+        public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }
+
+        protected byte decoderVersion;
+        public byte DecoderVersion { get { return this.decoderVersion; } set { this.decoderVersion = value; } }
+
+        protected byte framesPerSample;
+        public byte FramesPerSample { get { return this.framesPerSample; } set { this.framesPerSample = value; } }
+
+        public QCELPSpecificBox() : base("dqcp")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.vendor);
+            boxSize += stream.ReadUInt8(out this.decoderVersion);
+            boxSize += stream.ReadUInt8(out this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.vendor);
+            boxSize += stream.WriteUInt8(this.decoderVersion);
+            boxSize += stream.WriteUInt8(this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // vendor
+            boxSize += 8; // decoderVersion
+            boxSize += 8; // framesPerSample
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class SMVSpecificBox() 
+    extends Box('dsmv') {
+         unsigned int(32) vendor; unsigned int(8) decoderVersion;
+     unsigned int(8) framesPerSample;
+     } 
+    */
+    public class SMVSpecificBox : Box
+    {
+        public const string TYPE = "dsmv";
+        public override string DisplayName { get { return "SMVSpecificBox"; } }
+
+        protected uint vendor;
+        public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }
+
+        protected byte decoderVersion;
+        public byte DecoderVersion { get { return this.decoderVersion; } set { this.decoderVersion = value; } }
+
+        protected byte framesPerSample;
+        public byte FramesPerSample { get { return this.framesPerSample; } set { this.framesPerSample = value; } }
+
+        public SMVSpecificBox() : base("dsmv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.vendor);
+            boxSize += stream.ReadUInt8(out this.decoderVersion);
+            boxSize += stream.ReadUInt8(out this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.vendor);
+            boxSize += stream.WriteUInt8(this.decoderVersion);
+            boxSize += stream.WriteUInt8(this.framesPerSample);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // vendor
+            boxSize += 8; // decoderVersion
+            boxSize += 8; // framesPerSample
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleReferenceMovieBox() 
+    extends Box('rmra') {
+     Box boxes[];
+     } 
+    */
+    public class AppleReferenceMovieBox : Box
+    {
+        public const string TYPE = "rmra";
+        public override string DisplayName { get { return "AppleReferenceMovieBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleReferenceMovieBox() : base("rmra")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleReferenceMovieDescriptorBox() 
+    extends Box('rmda') {
+     Box boxes[];
+     } 
+    */
+    public class AppleReferenceMovieDescriptorBox : Box
+    {
+        public const string TYPE = "rmda";
+        public override string DisplayName { get { return "AppleReferenceMovieDescriptorBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleReferenceMovieDescriptorBox() : base("rmda")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleDataRateBox() 
+    extends Box('rmdr') {
+     Box boxes[];
+     } 
+    */
+    public class AppleDataRateBox : Box
+    {
+        public const string TYPE = "rmdr";
+        public override string DisplayName { get { return "AppleDataRateBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public AppleDataRateBox() : base("rmdr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleDataReferenceBox() 
+    extends FullBox('rdrf') {
+     unsigned int(32) dataReferenceType;
+     unsigned int(32) count;
+     unsigned int(8) dataReference[count];
+     } 
+    */
+    public class AppleDataReferenceBox : FullBox
+    {
+        public const string TYPE = "rdrf";
+        public override string DisplayName { get { return "AppleDataReferenceBox"; } }
+
+        protected uint dataReferenceType;
+        public uint DataReferenceType { get { return this.dataReferenceType; } set { this.dataReferenceType = value; } }
+
+        protected uint count;
+        public uint Count { get { return this.count; } set { this.count = value; } }
+
+        protected byte[] dataReference;
+        public byte[] DataReference { get { return this.dataReference; } set { this.dataReference = value; } }
+
+        public AppleDataReferenceBox() : base("rdrf")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.dataReferenceType);
+            boxSize += stream.ReadUInt32(out this.count);
+            boxSize += stream.ReadUInt8Array((uint)count, out this.dataReference);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.dataReferenceType);
+            boxSize += stream.WriteUInt32(this.count);
+            boxSize += stream.WriteUInt8Array((uint)count, this.dataReference);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // dataReferenceType
+            boxSize += 32; // count
+            boxSize += (uint)count * 8; // dataReference
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TextSampleEntry() 
+    extends FullBox('enct') {
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(32) displayFlags;
+     unsigned int(8) horizontalJustification;
+     unsigned int(8) verticalJustification;
+     unsigned int(8) backgroundColorRgba[4];
+     RectRecord rectRecord;
+     StyleRecord styleRecord; Box boxes[];
+     }
+
+    */
+    public class TextSampleEntry : FullBox
+    {
+        public const string TYPE = "enct";
+        public override string DisplayName { get { return "TextSampleEntry"; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected uint displayFlags;
+        public uint DisplayFlags { get { return this.displayFlags; } set { this.displayFlags = value; } }
+
+        protected byte horizontalJustification;
+        public byte HorizontalJustification { get { return this.horizontalJustification; } set { this.horizontalJustification = value; } }
+
+        protected byte verticalJustification;
+        public byte VerticalJustification { get { return this.verticalJustification; } set { this.verticalJustification = value; } }
+
+        protected byte[] backgroundColorRgba;
+        public byte[] BackgroundColorRgba { get { return this.backgroundColorRgba; } set { this.backgroundColorRgba = value; } }
+
+        protected RectRecord rectRecord;
+        public RectRecord RectRecord { get { return this.rectRecord; } set { this.rectRecord = value; } }
+
+        protected StyleRecord styleRecord;
+        public StyleRecord StyleRecord { get { return this.styleRecord; } set { this.styleRecord = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public TextSampleEntry() : base("enct")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt32(out this.displayFlags);
+            boxSize += stream.ReadUInt8(out this.horizontalJustification);
+            boxSize += stream.ReadUInt8(out this.verticalJustification);
+            boxSize += stream.ReadUInt8Array((uint)4, out this.backgroundColorRgba);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new RectRecord(), out this.rectRecord);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new StyleRecord(), out this.styleRecord);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt32(this.displayFlags);
+            boxSize += stream.WriteUInt8(this.horizontalJustification);
+            boxSize += stream.WriteUInt8(this.verticalJustification);
+            boxSize += stream.WriteUInt8Array((uint)4, this.backgroundColorRgba);
+            boxSize += stream.WriteClass(this.rectRecord);
+            boxSize += stream.WriteClass(this.styleRecord);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 32; // displayFlags
+            boxSize += 8; // horizontalJustification
+            boxSize += 8; // verticalJustification
+            boxSize += (uint)32; // backgroundColorRgba
+            boxSize += IsoStream.CalculateClassSize(rectRecord); // rectRecord
+            boxSize += IsoStream.CalculateClassSize(styleRecord); // styleRecord
+                                                                  // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TextSampleEntry() 
+    extends FullBox('tx3g') {
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(32) displayFlags;
+     unsigned int(8) horizontalJustification;
+     unsigned int(8) verticalJustification;
+     unsigned int(8) backgroundColorRgba[4];
+     RectRecord rectRecord;
+     StyleRecord styleRecord; Box boxes[];
+     }
+
+    */
+    public class TextSampleEntry_tx3g : FullBox
+    {
+        public const string TYPE = "tx3g";
+        public override string DisplayName { get { return "TextSampleEntry_tx3g"; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected uint displayFlags;
+        public uint DisplayFlags { get { return this.displayFlags; } set { this.displayFlags = value; } }
+
+        protected byte horizontalJustification;
+        public byte HorizontalJustification { get { return this.horizontalJustification; } set { this.horizontalJustification = value; } }
+
+        protected byte verticalJustification;
+        public byte VerticalJustification { get { return this.verticalJustification; } set { this.verticalJustification = value; } }
+
+        protected byte[] backgroundColorRgba;
+        public byte[] BackgroundColorRgba { get { return this.backgroundColorRgba; } set { this.backgroundColorRgba = value; } }
+
+        protected RectRecord rectRecord;
+        public RectRecord RectRecord { get { return this.rectRecord; } set { this.rectRecord = value; } }
+
+        protected StyleRecord styleRecord;
+        public StyleRecord StyleRecord { get { return this.styleRecord; } set { this.styleRecord = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public TextSampleEntry_tx3g() : base("tx3g")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt32(out this.displayFlags);
+            boxSize += stream.ReadUInt8(out this.horizontalJustification);
+            boxSize += stream.ReadUInt8(out this.verticalJustification);
+            boxSize += stream.ReadUInt8Array((uint)4, out this.backgroundColorRgba);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new RectRecord(), out this.rectRecord);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new StyleRecord(), out this.styleRecord);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt32(this.displayFlags);
+            boxSize += stream.WriteUInt8(this.horizontalJustification);
+            boxSize += stream.WriteUInt8(this.verticalJustification);
+            boxSize += stream.WriteUInt8Array((uint)4, this.backgroundColorRgba);
+            boxSize += stream.WriteClass(this.rectRecord);
+            boxSize += stream.WriteClass(this.styleRecord);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 32; // displayFlags
+            boxSize += 8; // horizontalJustification
+            boxSize += 8; // verticalJustification
+            boxSize += (uint)32; // backgroundColorRgba
+            boxSize += IsoStream.CalculateClassSize(rectRecord); // rectRecord
+            boxSize += IsoStream.CalculateClassSize(styleRecord); // styleRecord
+                                                                  // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class RectRecord() {
+     unsigned int(16) top;
+     unsigned int(16) left;
+     unsigned int(16) bottom;
+     unsigned int(16) right;
+     }
+
+    */
+    public class RectRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "RectRecord"; } }
+
+        protected ushort top;
+        public ushort Top { get { return this.top; } set { this.top = value; } }
+
+        protected ushort left;
+        public ushort Left { get { return this.left; } set { this.left = value; } }
+
+        protected ushort bottom;
+        public ushort Bottom { get { return this.bottom; } set { this.bottom = value; } }
+
+        protected ushort right;
+        public ushort Right { get { return this.right; } set { this.right = value; } }
+
+        public RectRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt16(out this.top);
+            boxSize += stream.ReadUInt16(out this.left);
+            boxSize += stream.ReadUInt16(out this.bottom);
+            boxSize += stream.ReadUInt16(out this.right);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt16(this.top);
+            boxSize += stream.WriteUInt16(this.left);
+            boxSize += stream.WriteUInt16(this.bottom);
+            boxSize += stream.WriteUInt16(this.right);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 16; // top
+            boxSize += 16; // left
+            boxSize += 16; // bottom
+            boxSize += 16; // right
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class StyleRecord() {
+     unsigned int(16) startChar;
+     unsigned int(16) endChar;
+     unsigned int(16) fontId;
+     unsigned int(8) faceStyleFlags;
+     unsigned int(8) fontSize;
+     unsigned int(8) textColor[4]; }
+    */
+    public class StyleRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "StyleRecord"; } }
+
+        protected ushort startChar;
+        public ushort StartChar { get { return this.startChar; } set { this.startChar = value; } }
+
+        protected ushort endChar;
+        public ushort EndChar { get { return this.endChar; } set { this.endChar = value; } }
+
+        protected ushort fontId;
+        public ushort FontId { get { return this.fontId; } set { this.fontId = value; } }
+
+        protected byte faceStyleFlags;
+        public byte FaceStyleFlags { get { return this.faceStyleFlags; } set { this.faceStyleFlags = value; } }
+
+        protected byte fontSize;
+        public byte FontSize { get { return this.fontSize; } set { this.fontSize = value; } }
+
+        protected byte[] textColor;
+        public byte[] TextColor { get { return this.textColor; } set { this.textColor = value; } }
+
+        public StyleRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt16(out this.startChar);
+            boxSize += stream.ReadUInt16(out this.endChar);
+            boxSize += stream.ReadUInt16(out this.fontId);
+            boxSize += stream.ReadUInt8(out this.faceStyleFlags);
+            boxSize += stream.ReadUInt8(out this.fontSize);
+            boxSize += stream.ReadUInt8Array((uint)4, out this.textColor);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt16(this.startChar);
+            boxSize += stream.WriteUInt16(this.endChar);
+            boxSize += stream.WriteUInt16(this.fontId);
+            boxSize += stream.WriteUInt8(this.faceStyleFlags);
+            boxSize += stream.WriteUInt8(this.fontSize);
+            boxSize += stream.WriteUInt8Array((uint)4, this.textColor);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 16; // startChar
+            boxSize += 16; // endChar
+            boxSize += 16; // fontId
+            boxSize += 8; // faceStyleFlags
+            boxSize += 8; // fontSize
+            boxSize += (uint)32; // textColor
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class EC3SpecificBox() 
+    extends Box('dec3') {
+     bit(8) data[];
+     } 
+    */
+    public class EC3SpecificBox : Box
+    {
+        public const string TYPE = "dec3";
+        public override string DisplayName { get { return "EC3SpecificBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public EC3SpecificBox() : base("dec3")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class MLPSpecificBox() 
+    extends Box('dmlp') {
+     bit(8) data[];
+     } 
+    */
+    public class MLPSpecificBox : Box
+    {
+        public const string TYPE = "dmlp";
+        public override string DisplayName { get { return "MLPSpecificBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public MLPSpecificBox() : base("dmlp")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class Ovc1VisualSampleEntryImpl() 
+    extends Box('ovc1') {
+     bit(8) data[];
+     } 
+    */
+    public class Ovc1VisualSampleEntryImpl : Box
+    {
+        public const string TYPE = "ovc1";
+        public override string DisplayName { get { return "Ovc1VisualSampleEntryImpl"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public Ovc1VisualSampleEntryImpl() : base("ovc1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class VPCodecConfigurationBox() 
+    extends Box('vpcC') {
+     bit(8) data[];
+     } 
+    */
+    public class VPCodecConfigurationBox : Box
+    {
+        public const string TYPE = "vpcC";
+        public override string DisplayName { get { return "VPCodecConfigurationBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public VPCodecConfigurationBox() : base("vpcC")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AmrSpecificBox() 
+    extends Box('damr') {
+     bit(8) data[];
+     } 
+    */
+    public class AmrSpecificBox : Box
+    {
+        public const string TYPE = "damr";
+        public override string DisplayName { get { return "AmrSpecificBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AmrSpecificBox() : base("damr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class BaseMediaInfoAtom() 
+    extends Box('gmin') {
+     bit(8) data[];
+     } 
+    */
+    public class BaseMediaInfoAtom : Box
+    {
+        public const string TYPE = "gmin";
+        public override string DisplayName { get { return "BaseMediaInfoAtom"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public BaseMediaInfoAtom() : base("gmin")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class BaseLocationBox() 
+    extends Box('bloc') {
+     bit(8) data[];
+     } 
+    */
+    public class BaseLocationBox : Box
+    {
+        public const string TYPE = "bloc";
+        public override string DisplayName { get { return "BaseLocationBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public BaseLocationBox() : base("bloc")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FontTableBox() 
+    extends Box('ftab') {
+     bit(8) data[];
+     } 
+    */
+    public class FontTableBox : Box
+    {
+        public const string TYPE = "ftab";
+        public override string DisplayName { get { return "FontTableBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public FontTableBox() : base("ftab")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AvcNalUnitStorageBox() 
+    extends Box('avcn') {
+     bit(8) data[];
+     } 
+    */
+    public class AvcNalUnitStorageBox : Box
+    {
+        public const string TYPE = "avcn";
+        public override string DisplayName { get { return "AvcNalUnitStorageBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AvcNalUnitStorageBox() : base("avcn")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AssetInformationBox() 
+    extends Box('ainf') {
+     bit(8) data[];
+     } 
+    */
+    public class AssetInformationBox : Box
+    {
+        public const string TYPE = "ainf";
+        public override string DisplayName { get { return "AssetInformationBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AssetInformationBox() : base("ainf")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ProtectionSystemSpecificHeaderBox() 
+    extends Box('pssh') {
+     bit(8) data[];
+     } 
+    */
+    public class ProtectionSystemSpecificHeaderBox : Box
+    {
+        public const string TYPE = "pssh";
+        public override string DisplayName { get { return "ProtectionSystemSpecificHeaderBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public ProtectionSystemSpecificHeaderBox() : base("pssh")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TrickPlayBox() 
+    extends Box('trik') {
+     bit(8) data[];
+     } 
+    */
+    public class TrickPlayBox : Box
+    {
+        public const string TYPE = "trik";
+        public override string DisplayName { get { return "TrickPlayBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public TrickPlayBox() : base("trik")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class SampleEncryptionBox() 
+    extends Box('senc') {
+     bit(8) data[];
+     } 
+    */
+    public class SampleEncryptionBox : Box
+    {
+        public const string TYPE = "senc";
+        public override string DisplayName { get { return "SampleEncryptionBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public SampleEncryptionBox() : base("senc")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TrackEncryptionBox() 
+    extends Box('tenc') {
+     bit(8) data[];
+     } 
+    */
+    public class TrackEncryptionBox : Box
+    {
+        public const string TYPE = "tenc";
+        public override string DisplayName { get { return "TrackEncryptionBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public TrackEncryptionBox() : base("tenc")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class Apple_atIDBox() 
+    extends Box('atID') {
+     bit(8) data[];
+     } 
+    */
+    public class Apple_atIDBox : Box
+    {
+        public const string TYPE = "atID";
+        public override string DisplayName { get { return "Apple_atIDBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public Apple_atIDBox() : base("atID")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class Apple_geIDBox() 
+    extends Box('geID') {
+     bit(8) data[];
+     } 
+    */
+    public class Apple_geIDBox : Box
+    {
+        public const string TYPE = "geID";
+        public override string DisplayName { get { return "Apple_geIDBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public Apple_geIDBox() : base("geID")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class Apple_xid_Box() 
+    extends Box('xid ') {
+     bit(8) data[];
+     } 
+    */
+    public class Apple_xid_Box : Box
+    {
+        public const string TYPE = "xid ";
+        public override string DisplayName { get { return "Apple_xid_Box"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public Apple_xid_Box() : base("xid ")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class Apple_flvr_Box() 
+    extends Box('flvr') {
+     bit(8) data[];
+     } 
+    */
+    public class Apple_flvr_Box : Box
+    {
+        public const string TYPE = "flvr";
+        public override string DisplayName { get { return "Apple_flvr_Box"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public Apple_flvr_Box() : base("flvr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AppleShortDescriptionBox() 
+    extends Box('sdes') {
+     bit(8) data[];
+     } 
+    */
+    public class AppleShortDescriptionBox : Box
+    {
+        public const string TYPE = "sdes";
+        public override string DisplayName { get { return "AppleShortDescriptionBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public AppleShortDescriptionBox() : base("sdes")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class EventMessageBox() 
+    extends Box('emsg') {
+     bit(8) data[];
+     } 
+    */
+    public class EventMessageBox : Box
+    {
+        public const string TYPE = "emsg";
+        public override string DisplayName { get { return "EventMessageBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public EventMessageBox() : base("emsg")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TrackReferenceTypeBox() 
+    extends Box('hind') {
+     bit(8) data[];
+     } 
+    */
+    public class TrackReferenceTypeBox_hind : Box
+    {
+        public const string TYPE = "hind";
+        public override string DisplayName { get { return "TrackReferenceTypeBox_hind"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public TrackReferenceTypeBox_hind() : base("hind")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TrackReferenceTypeBox() 
+    extends Box('vdep') {
+     bit(8) data[];
+     } 
+    */
+    public class TrackReferenceTypeBox_vdep : Box
+    {
+        public const string TYPE = "vdep";
+        public override string DisplayName { get { return "TrackReferenceTypeBox_vdep"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public TrackReferenceTypeBox_vdep() : base("vdep")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TrackReferenceTypeBox() 
+    extends Box('vplx') {
+     bit(8) data[];
+     } 
+    */
+    public class TrackReferenceTypeBox_vplx : Box
+    {
+        public const string TYPE = "vplx";
+        public override string DisplayName { get { return "TrackReferenceTypeBox_vplx"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public TrackReferenceTypeBox_vplx() : base("vplx")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class DoViConfigurationBox() 
+    extends Box('dvcC') {
+     bit(8) data[];
+     } 
+    */
+    public class DoViConfigurationBox : Box
+    {
+        public const string TYPE = "dvcC";
+        public override string DisplayName { get { return "DoViConfigurationBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public DoViConfigurationBox() : base("dvcC")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class DfxpSampleEntry() 
+    extends Box('dfxp') {
+     bit(8) data[];
+     } 
+    */
+    public class DfxpSampleEntry : Box
+    {
+        public const string TYPE = "dfxp";
+        public override string DisplayName { get { return "DfxpSampleEntry"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public DfxpSampleEntry() : base("dfxp")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ContentLightLevelBox() 
+    extends Box('CoLL') {
+     bit(8) data[];
+     } 
+    */
+    public class ContentLightLevelBox_CoLL : Box
+    {
+        public const string TYPE = "CoLL";
+        public override string DisplayName { get { return "ContentLightLevelBox_CoLL"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public ContentLightLevelBox_CoLL() : base("CoLL")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class SMPTE2086MasteringDisplayMetadataBox() 
+    extends Box('SmDm') {
+     bit(8) data[];
+     } 
+    */
+    public class SMPTE2086MasteringDisplayMetadataBox : Box
+    {
+        public const string TYPE = "SmDm";
+        public override string DisplayName { get { return "SMPTE2086MasteringDisplayMetadataBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public SMPTE2086MasteringDisplayMetadataBox() : base("SmDm")
         {
         }
 

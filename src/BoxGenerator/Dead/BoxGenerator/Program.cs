@@ -339,6 +339,7 @@ partial class Program
             Try(String("bit(6)")),
             Try(String("bit(7)")),
             Try(String("bit(8)")),
+            Try(String("bit(14)")),
             Try(String("bit(16)")),
             Try(String("bit(24)")),
             Try(String("bit(31)")),
@@ -375,6 +376,8 @@ partial class Program
             Try(String("signed int(64)")),
             Try(String("signed   int(32)")),
             Try(String("signed   int(8)")),
+            Try(String("RectRecord")),
+            Try(String("StyleRecord")),
             Try(String("Box()[]")),
             Try(String("Box[]")),
             Try(String("Box")),
@@ -484,6 +487,11 @@ partial class Program
             Try(String("subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")), // WORKAROUND
             Try(String("totalPatternLength = 0")), // WORKAROUND
             Try(String("samplerate = samplerate >> 16")), // WORKAROUND
+            // added
+            Try(String("MultiLanguageString")), 
+            Try(String("AdobeChapterRecord")), 
+            Try(String("ThreeGPPKeyword")), 
+            Try(String("IodsSample")), 
             // descriptors
             Try(String("DecoderConfigDescriptor")),
             Try(String("SLConfigDescriptor")),
@@ -500,6 +508,7 @@ partial class Program
             Try(String("DecoderSpecificInfo")),
             Try(String("QoS_Qualifier")),
             Try(String("double(32)")),
+            Try(String("fixedpoint1616")),
             Try(String("GetAudioObjectType()")),
             Try(String("bslbf(header_size * 8)")),
             Try(String("bslbf(trailer_size * 8)")),
@@ -706,6 +715,8 @@ partial class Program
            Try(String("tag=RegistrationDescrTag")),
            Try(String("tag=ExtDescrTagStartRange..ExtDescrTagEndRange")),
            Try(String("tag=OCIDescrTagStartRange..OCIDescrTagEndRange")),
+           Try(String("tag=MP4_IOD_Tag")),
+           Try(String("tag=IPMP_DescrTag")),
            Try(String("tag=0"))
            ).Labelled("descriptor tag");
 
@@ -999,7 +1010,27 @@ namespace SharpMP4
         // add additional boxes
         string[] audioSampleEntryTypes = new string[]
         {
-            "samr", "sawb", "mp4a", "drms", "alac", "owma", "ac-3", "ec-3", "mlpa", "dtsl", "dtsh", "dtse", "Opus", "enca", "resa"
+            "samr", 
+            "sawb", 
+            "mp4a", 
+            "drms", 
+            "alac", 
+            "owma", 
+            "ac-3", 
+            "ec-3", 
+            "mlpa", 
+            "dtsl", 
+            "dtsh", 
+            "dtse", 
+            "Opus", 
+            "enca", 
+            "resa", 
+            "sevc", 
+            "sqcp", 
+            "ssmv",
+            "lpcm",
+            "dtsc",
+            "sowt",
         };
         foreach(var type in audioSampleEntryTypes)
         {
@@ -1013,7 +1044,6 @@ namespace SharpMP4
             "drmi", 
             "encv", 
             "resv",
-            
             "icpv",
             "hvc1",
             "hvc2",
@@ -1054,6 +1084,12 @@ namespace SharpMP4
             "avc2",
             "avc3",
             "avc4",
+            "vp08",
+            "vp09",
+            "vp10",
+            "apcn",
+            "dvhe",
+            "dvav",
         };
         foreach (var type in visualSampleEntryTypes)
         {
@@ -1069,6 +1105,8 @@ namespace SharpMP4
 
         foreach (var item in fourccBoxes)
         {
+            string optCondition = "";
+
             if (item.Value.Count == 1)
             {
                 if (item.Key == "uuid")
@@ -1086,7 +1124,12 @@ namespace SharpMP4
                         item.Value.Single().BoxName == "TrackReferenceTypeBox")
                         optParams = $"\"{item.Key}\"";
 
-                    factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}({optParams});{comment}\r\n";
+                    // for instance "mp4a" box can be also under the "wave" box where it has a different syntax
+                    if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" || item.Value.Single().BoxName == "MpegSampleEntry")
+                        optCondition = "if(parent == \"stsd\") ";
+
+
+                    factory += $"               case \"{item.Key}\": {optCondition} return new {item.Value.Single().BoxName}({optParams});{(optCondition != "" ? "break;" : "")}{comment}\r\n";
                 }
             }
             else
@@ -1097,7 +1140,8 @@ namespace SharpMP4
                     item.Value.First().BoxName == "SegmentIndexBox" ||
                     item.Value.First().BoxName == "trackhintinformation" ||
                     item.Value.First().BoxName == "ViewPriorityBox" ||
-                    item.Value.First().BoxName == "rtpmoviehintinformation"
+                    item.Value.First().BoxName == "rtpmoviehintinformation" ||
+                    item.Value.First().BoxName == "AppleName2Box"
                     )
                 {
                     string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
@@ -1117,8 +1161,13 @@ namespace SharpMP4
         factory +=
 @"          }
 
+            if(parent == ""ilst"")
+            {
+                if (fourCC[0] == '\0') return new IlstKey(fourCC);
+            }
+
             //throw new NotImplementedException(fourCC);
-            System.Diagnostics.Debug.WriteLine($""--Unknown box: {fourCC}"");
+            Log.Debug($""Unknown box: '{fourCC}'"");
             return new UnknownBox(fourCC);
         }";
 
@@ -1151,7 +1200,7 @@ namespace SharpMP4
                     item.Value.First().BoxName == "SegmentIndexBox" ||
                     item.Value.First().BoxName == "trackhintinformation" ||
                     item.Value.First().BoxName == "ViewPriorityBox" ||
-                    item.Value.First().BoxName == "rtpmoviehintinformation"
+                    item.Value.First().BoxName == "rtpmoviehintinformation" 
                     )
                 {
                     string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
@@ -1168,7 +1217,7 @@ namespace SharpMP4
 @"          }
 
             //throw new NotImplementedException(fourCC);
-            System.Diagnostics.Debug.WriteLine($""--Unknown entry: {fourCC}"");
+            Log.Debug($""Unknown entry: '{fourCC}'"");
             return new UnknownEntry(fourCC);
         }";
 
@@ -1249,12 +1298,12 @@ namespace SharpMP4
             if (b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")
                 cls += $" : Descriptor\r\n{{\r\n";
             else
-                cls += $" : IMp4Serializable\r\n{{\r\n\t\tpublic StreamMarker Padding {{ get; set; }}\r\n";
+                cls += $" : IMp4Serializable\r\n{{\r\n\t\tpublic StreamMarker Padding {{ get; set; }}\r\n\t\tpublic IMp4Serializable Parent {{ get; set; }}\r\n";
         }
 
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.Extended.BoxType))
         {
-            cls += $"\tpublic const string TYPE = \"{b.Extended.BoxType}\";";
+            cls += $"\tpublic const string TYPE = \"{b.Extended.BoxType}\";\r\n";
         }
         else if(b.Extended != null && !string.IsNullOrEmpty(b.Extended.DescriptorTag))
         {
@@ -1265,7 +1314,7 @@ namespace SharpMP4
                 {
                     tag = "DescriptorTags." + tag;
                 }
-                cls += $"\tpublic const byte TYPE = {tag};";
+                cls += $"\tpublic const byte TYPE = {tag};\r\n";
             }
             else
             {
@@ -1282,6 +1331,9 @@ namespace SharpMP4
                 cls += $"\tpublic byte TagMax {{ get; set; }} = {tags[1]};";
             }
         }
+
+        string ov = ((b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName)) || (b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")) ? "override " : "virtual ";
+        cls += $"\tpublic {ov}string DisplayName {{ get {{ return \"{b.BoxName}\"; }} }}";
 
         string ctorContent = "";
         var fields = FlattenFields(b.Fields);
@@ -1319,7 +1371,7 @@ namespace SharpMP4
         }
 
         bool hasBoxes = fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "ItemReferenceBox";
-        bool hasDescriptors = fields.Select(x => GetReadMethod(x.Type).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry";
+        bool hasDescriptors = fields.Select(x => GetReadMethod(x.Type).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
 
         foreach (var field in fields)
         {
@@ -1332,7 +1384,12 @@ namespace SharpMP4
         }
         else if(b.BoxName == "MetaBox")
         {
-            cls += "\r\npublic bool IsQuickTime { get; set; } = false;";
+            // This is very badly documented, but in case the Apple "ilst" box appears in "meta" inside "trak" or "udta", then the 
+            //  serialization is incompatible with ISOBMFF as it uses the "Quicktime atom format".
+            //  see: https://www.academia.edu/66625880/Forensic_Analysis_of_Video_Files_Using_Metadata
+            //  see: https://web.archive.org/web/20220126080109/https://leo-van-stee.github.io/
+            // TODO: maybe instead of lookahead, we just have to check the parents
+            cls += "\r\npublic bool IsQuickTime { get { return (Parent != null && (((Box)Parent).FourCC == \"udta\" || ((Box)Parent).FourCC == \"trak\")); } }";
         }
         else if(b.BoxName == "AVCDecoderConfigurationRecord")
         {
@@ -1403,14 +1460,9 @@ namespace SharpMP4
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
         {
             string baseRead = "\r\n\t\tboxSize += base.Read(stream, readSize);";
-            if(b.BoxName == "MetaBox")
+            if (b.BoxName == "MetaBox")
             {
-                // This is very badly documented, but in case the Apple "ilst" box appears in "meta" inside "trak" or "udta", then the 
-                //  serialization is incompatible with ISOBMFF as it uses the "Quicktime atom format".
-                //  see: https://www.academia.edu/66625880/Forensic_Analysis_of_Video_Files_Using_Metadata
-                //  see: https://web.archive.org/web/20220126080109/https://leo-van-stee.github.io/
-                // TODO: maybe instead of lookahead, we just have to check the parents
-                baseRead = "\r\n\t\tstream.ReadBytes(20, out byte[] lookahead);\r\n            if (lookahead[4] == 'h' && lookahead[5] == 'd' && lookahead[6] == 'l' && lookahead[7] == 'r' &&\r\n                lookahead[16] == 'm' && lookahead[17] == 'd' && lookahead[18] == 't' && lookahead[19] == 'a')\r\n            {\r\n                IsQuickTime = true;\r\n            }\r\n            else\r\n            {\r\n                IsQuickTime = false;\r\n            }\r\n            stream.UnreadBytes(20, lookahead);\r\n            if (!IsQuickTime)\r\n            {\r\n                boxSize += base.Read(stream, readSize);\r\n            }";
+                baseRead = "\r\n\t\tif(IsQuickTime) boxSize += base.Read(stream, readSize);";
             }
             cls += baseRead;
         }
@@ -1445,7 +1497,7 @@ namespace SharpMP4
             string baseWrite = "\r\n\t\tboxSize += base.Write(stream);";
             if (b.BoxName == "MetaBox")
             {
-                baseWrite = "\r\n\t\tif(!IsQuickTime) boxSize += base.Write(stream);";
+                baseWrite = "\r\n\t\tif(IsQuickTime) boxSize += base.Write(stream);";
             }
             cls += baseWrite;
         }
@@ -1479,7 +1531,7 @@ namespace SharpMP4
             string baseSize = "\r\n\t\tboxSize += base.CalculateSize();";
             if (b.BoxName == "MetaBox")
             {
-                baseSize += "\r\n\t\tif(IsQuickTime) boxSize = (ulong)(boxSize - 32);";
+                baseSize = "\r\n\t\tif(IsQuickTime) boxSize += base.CalculateSize();";
             }
             cls += baseSize;
         }
@@ -1876,7 +1928,7 @@ namespace SharpMP4
 
                 string readMethod = GetReadMethod((field as PseudoField)?.Type);
                 if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox"
-                    && b.BoxName != "ViewPriorityEntry" && b.BoxName != "MultiviewGroupEntry" && b.BoxName != "ScalableGroupEntry" && b.BoxName != "ItemReferenceBox")
+                    && b.BoxName != "ViewPriorityEntry" && b.BoxName != "MultiviewGroupEntry" && b.BoxName != "ScalableGroupEntry" && b.BoxName != "ItemReferenceBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox")
                 {
                     string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
                     string ttttt = tt.Replace("[]", "");
@@ -2158,7 +2210,8 @@ namespace SharpMP4
             boxSize = "";
 
         // comment out all ReadBox/ReadDescriptor, WriteBox/WriteDescriptor and Calculate* methods
-        if (((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit") || (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ItemReferenceBox")
+        if ((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ItemReferenceBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox") || 
+            (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox"))
         {
             spacing += "// ";
         }
@@ -2172,8 +2225,11 @@ namespace SharpMP4
             GetNestedInLoopSuffix(field, typedef, out suffix);
             typedef += suffix;
 
-            if(methodType != MethodType.Size)
+            if (methodType != MethodType.Size)
+            {
                 m = FixNestedInLoopVariables(field, m, "(", ",");
+                m = FixNestedInLoopVariables(field, m, ")", ","); // when casting
+            }
             else
                 m = FixNestedInLoopVariables(field, m, "", " ");
         }
@@ -2210,7 +2266,8 @@ namespace SharpMP4
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[3]")
+            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" && value != "[4]" &&
+            value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]")
         {
             return value;
         }
@@ -2512,11 +2569,11 @@ namespace SharpMP4
             { "unsigned int(10)[i][j]",                 "stream.ReadBits(10, " },
             { "unsigned int(10)[i]",                    "stream.ReadBits(10, " },
             { "unsigned int(10)",                       "stream.ReadBits(10, " },
-            { "unsigned int(8)[ sample_count ]",        "stream.ReadBytes(sample_count, " },
-            { "unsigned int(8)[length]",                "stream.ReadBytes(length, " },
-            { "unsigned int(8)[32]",                    "stream.ReadBytes(32, " },
-            { "unsigned int(8)[20]",                    "stream.ReadBytes(32, " },
-            { "unsigned int(8)[16]",                    "stream.ReadBytes(16, " },
+            { "unsigned int(8)[ sample_count ]",        "stream.ReadUInt8Array((uint)sample_count, " },
+            { "unsigned int(8)[length]",                "stream.ReadUInt8Array((uint)length, " },
+            { "unsigned int(8)[32]",                    "stream.ReadUInt8Array(32, " },
+            { "unsigned int(8)[20]",                    "stream.ReadUInt8Array(32, " },
+            { "unsigned int(8)[16]",                    "stream.ReadUInt8Array(16, " },
             { "unsigned int(9)",                        "stream.ReadBits(9, " },
             { "unsigned int(8)",                        "stream.ReadUInt8(" },
             { "unsigned int(7)",                        "stream.ReadBits(7, " },
@@ -2534,15 +2591,15 @@ namespace SharpMP4
             { "unsigned int(f(index_size_code))[i]",    "stream.ReadBits(index_size_code, " },
             { "unsigned int(f(index_size_code))[j][k]", "stream.ReadBits(index_size_code, " },
             { "unsigned int(f(count_size_code))[i]",    "stream.ReadBits(count_size_code, " },
-            { "unsigned int(base_offset_size*8)",       "stream.ReadBytes(base_offset_size, " },
-            { "unsigned int(offset_size*8)",            "stream.ReadBytes(offset_size, " },
-            { "unsigned int(length_size*8)",            "stream.ReadBytes(length_size, " },
-            { "unsigned int(index_size*8)",             "stream.ReadBytes(index_size, " },
-            { "unsigned int(field_size)",               "stream.ReadBytes(field_size, " },
-            { "unsigned int((length_size_of_traf_num+1) * 8)", "stream.ReadBytes((ulong)(length_size_of_traf_num+1), " },
-            { "unsigned int((length_size_of_trun_num+1) * 8)", "stream.ReadBytes((ulong)(length_size_of_trun_num+1), " },
-            { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.ReadBytes((ulong)(length_size_of_sample_num+1), " },
-            { "unsigned int(8*size-64)",                "stream.ReadBytes(size-8, " },
+            { "unsigned int(base_offset_size*8)",       "stream.ReadUInt8Array((uint)base_offset_size, " },
+            { "unsigned int(offset_size*8)",            "stream.ReadUInt8Array((uint)offset_size, " },
+            { "unsigned int(length_size*8)",            "stream.ReadUInt8Array((uint)length_size, " },
+            { "unsigned int(index_size*8)",             "stream.ReadUInt8Array((uint)index_size, " },
+            { "unsigned int(field_size)",               "stream.ReadUInt8Array((uint)field_size, " },
+            { "unsigned int((length_size_of_traf_num+1) * 8)", "stream.ReadUInt8Array((uint)(length_size_of_traf_num+1), " },
+            { "unsigned int((length_size_of_trun_num+1) * 8)", "stream.ReadUInt8Array((uint)(length_size_of_trun_num+1), " },
+            { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.ReadUInt8Array((uint)(length_size_of_sample_num+1), " },
+            { "unsigned int(8*size-64)",                "stream.ReadUInt8Array((uint)(size-8), " },
             { "unsigned int(subgroupIdLen)[i]",         "stream.ReadUInt32(" },
             { "const unsigned int(8)[6]",               "stream.ReadUInt8Array(6, " },
             { "const unsigned int(32)[2]",              "stream.ReadUInt32Array(2, " },
@@ -2578,30 +2635,31 @@ namespace SharpMP4
             { "bit(7)",                                 "stream.ReadBits(7, " },
             { "bit(8)[]",                               "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
             { "bit(8)",                                 "stream.ReadUInt8(" },
+            { "bit(14)",                                "stream.ReadBits(14, " },
             { "bit(16)[i]",                             "stream.ReadUInt16(" },
             { "bit(16)",                                "stream.ReadUInt16(" },
             { "bit(24)",                                "stream.ReadBits(24, " },
             { "bit(31)",                                "stream.ReadBits(31, " },
-            { "bit(8 ceil(size / 8) \u2013 size)",      "stream.ReadBytes((ulong)(Math.Ceiling(size / 8d) - size), " },
-            { "bit(8* ps_nalu_length)",                 "stream.ReadBytes(ps_nalu_length, " },
-            { "bit(8*nalUnitLength)",                   "stream.ReadBytes(nalUnitLength, " },
-            { "bit(8*sequenceParameterSetLength)",      "stream.ReadBytes(sequenceParameterSetLength, " },
-            { "bit(8*pictureParameterSetLength)",       "stream.ReadBytes(pictureParameterSetLength, " },
-            { "bit(8*sequenceParameterSetExtLength)",   "stream.ReadBytes(sequenceParameterSetExtLength, " },
+            { "bit(8 ceil(size / 8) \u2013 size)",      "stream.ReadUInt8Array((uint)(Math.Ceiling(size / 8d) - size), " },
+            { "bit(8* ps_nalu_length)",                 "stream.ReadUInt8Array((uint)ps_nalu_length, " },
+            { "bit(8*nalUnitLength)",                   "stream.ReadUInt8Array((uint)nalUnitLength, " },
+            { "bit(8*sequenceParameterSetLength)",      "stream.ReadUInt8Array((uint)sequenceParameterSetLength, " },
+            { "bit(8*pictureParameterSetLength)",       "stream.ReadUInt8Array((uint)pictureParameterSetLength, " },
+            { "bit(8*sequenceParameterSetExtLength)",   "stream.ReadUInt8Array((uint)sequenceParameterSetExtLength, " },
             { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.ReadBits((uint)(8*num_bytes_constraint_info - 2), " },
-            { "bit(8*nal_unit_length)",                 "stream.ReadBytes(nal_unit_length, " },
-            { "bit(timeStampLength)",                   "stream.ReadBytes(timeStampLength, " },
-            { "utf8string",                             "stream.ReadStringZeroTerminated(boxSize, readSize, " },
-            { "utfstring",                              "stream.ReadStringZeroTerminated(boxSize, readSize, " },
-            { "utf8list",                               "stream.ReadStringZeroTerminated(boxSize, readSize, " },
-            { "boxstring",                              "stream.ReadStringZeroTerminated(boxSize, readSize, " },
-            { "string",                                 "stream.ReadStringZeroTerminated(boxSize, readSize, " },
+            { "bit(8*nal_unit_length)",                 "stream.ReadUInt8Array((uint)nal_unit_length, " },
+            { "bit(timeStampLength)",                   "stream.ReadUInt8Array((uint)timeStampLength, " },
+            { "utf8string",                             "stream.ReadString(boxSize, readSize, " },
+            { "utfstring",                              "stream.ReadString(boxSize, readSize, " },
+            { "utf8list",                               "stream.ReadString(boxSize, readSize, " },
+            { "boxstring",                              "stream.ReadString(boxSize, readSize, " },
+            { "string",                                 "stream.ReadString(boxSize, readSize, " },
             { "bit(32)[6]",                             "stream.ReadUInt32Array(6, " },
             { "bit(32)",                                "stream.ReadUInt32(" },
             { "uint(32)",                               "stream.ReadUInt32(" },
             { "uint(16)",                               "stream.ReadUInt16(" },
             { "uint(64)",                               "stream.ReadUInt64(" },
-            { "uint(8)[32]",                            "stream.ReadBytes(32, " }, // compressor_name
+            { "uint(8)[32]",                            "stream.ReadUInt8Array(32, " }, // compressor_name
             { "uint(8)",                                "stream.ReadUInt8(" },
             { "uint(7)",                                "stream.ReadBits(7, " },
             { "uint(1)",                                "stream.ReadBits(1, " },
@@ -2624,7 +2682,7 @@ namespace SharpMP4
             { "ItemPropertyAssociationBox[]",           "stream.ReadBox(boxSize, readSize, this, " },
             { "char",                                   "stream.ReadInt8(" },
             { "loudness",                               "stream.ReadInt32(" },
-            { "ICC_profile",                            "stream.ReadClass(boxSize, readSize, new ICC_profile(), " },
+            { "ICC_profile",                            "stream.ReadClass(boxSize, readSize, this, new ICC_profile(), " },
             { "OriginalFormatBox(fmt)",                 "stream.ReadBox(boxSize, readSize, this, " },
             { "DataEntryBaseBox(entry_type, entry_flags)", "stream.ReadBox(boxSize, readSize, this, " },
             { "ItemInfoEntry[ entry_count ]",           "stream.ReadBox(boxSize, readSize, this, " },
@@ -2635,12 +2693,12 @@ namespace SharpMP4
             { "PartitionEntry[ entry_count ]",          "stream.ReadBox(boxSize, readSize, this, entry_count, " },
             { "FDSessionGroupBox",                      "stream.ReadBox(boxSize, readSize, this, " },
             { "GroupIdToNameBox",                       "stream.ReadBox(boxSize, readSize, this, " },
-            { "base64string",                           "stream.ReadStringZeroTerminated(boxSize, readSize, " },
+            { "base64string",                           "stream.ReadString(boxSize, readSize, " },
             { "ProtectionSchemeInfoBox",                "stream.ReadBox(boxSize, readSize, this, " },
-            { "SingleItemTypeReferenceBox",             "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Header.Type)), this, " },
-            { "SingleItemTypeReferenceBox[]",           "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Header.Type)), this, " },
-            { "SingleItemTypeReferenceBoxLarge",        "stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Header.Type)), this, " },
-            { "SingleItemTypeReferenceBoxLarge[]",      "stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Header.Type)), this, " },
+            { "SingleItemTypeReferenceBox",             "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Type)), this, " },
+            { "SingleItemTypeReferenceBox[]",           "stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Type)), this, " },
+            { "SingleItemTypeReferenceBoxLarge",        "stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Type)), this, " },
+            { "SingleItemTypeReferenceBoxLarge[]",      "stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Type)), this, " },
             { "HandlerBox(handler_type)",               "stream.ReadBox(boxSize, readSize, this, " },
             { "PrimaryItemBox",                         "stream.ReadBox(boxSize, readSize, this, " },
             { "DataInformationBox",                     "stream.ReadBox(boxSize, readSize, this, " },
@@ -2657,25 +2715,26 @@ namespace SharpMP4
             { "TierBitRateBox",                         "stream.ReadBox(boxSize, readSize, this, " },
             { "BufferingBox",                           "stream.ReadBox(boxSize, readSize, this, " },
             { "MultiviewSceneInfoBox",                  "stream.ReadBox(boxSize, readSize, this, " },
-            { "MVDDecoderConfigurationRecord",          "stream.ReadClass(boxSize, readSize, new MVDDecoderConfigurationRecord(), " },
+            { "MVDDecoderConfigurationRecord",          "stream.ReadClass(boxSize, readSize, this, new MVDDecoderConfigurationRecord(), " },
             { "MVDDepthResolutionBox",                  "stream.ReadBox(boxSize, readSize, this, " },
-            { "MVCDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, new MVCDecoderConfigurationRecord(), " },
-            { "AVCDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, new AVCDecoderConfigurationRecord(), " },
-            { "HEVCDecoderConfigurationRecord()",       "stream.ReadClass(boxSize, readSize, new HEVCDecoderConfigurationRecord(), " },
-            { "LHEVCDecoderConfigurationRecord()",      "stream.ReadClass(boxSize, readSize, new LHEVCDecoderConfigurationRecord(), " },
-            { "SVCDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, new SVCDecoderConfigurationRecord(), " },
-            { "HEVCTileTierLevelConfigurationRecord()", "stream.ReadClass(boxSize, readSize, new HEVCTileTierLevelConfigurationRecord(), " },
-            { "EVCDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, new EVCDecoderConfigurationRecord(), " },
-            { "VvcDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, new VvcDecoderConfigurationRecord(), " },
-            { "EVCSliceComponentTrackConfigurationRecord()", "stream.ReadClass(boxSize, readSize, new EVCSliceComponentTrackConfigurationRecord(), " },
-            { "SampleGroupDescriptionEntry(grouping_type)", "stream.ReadEntry(boxSize, readSize, IsoStream.ToFourCC(grouping_type), " },
-            { "Descriptor[0 .. 255]",                   "stream.ReadClass(boxSize, readSize, new Descriptor(), " },
-            { "Descriptor",                             "stream.ReadClass(boxSize, readSize, new Descriptor(), " },
+            { "MVCDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, this, new MVCDecoderConfigurationRecord(), " },
+            { "AVCDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, this, new AVCDecoderConfigurationRecord(), " },
+            { "HEVCDecoderConfigurationRecord()",       "stream.ReadClass(boxSize, readSize, this, new HEVCDecoderConfigurationRecord(), " },
+            { "LHEVCDecoderConfigurationRecord()",      "stream.ReadClass(boxSize, readSize, this, new LHEVCDecoderConfigurationRecord(), " },
+            { "SVCDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, this, new SVCDecoderConfigurationRecord(), " },
+            { "HEVCTileTierLevelConfigurationRecord()", "stream.ReadClass(boxSize, readSize, this, new HEVCTileTierLevelConfigurationRecord(), " },
+            { "EVCDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, this, new EVCDecoderConfigurationRecord(), " },
+            { "VvcDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, this, new VvcDecoderConfigurationRecord(), " },
+            { "EVCSliceComponentTrackConfigurationRecord()", "stream.ReadClass(boxSize, readSize, this, new EVCSliceComponentTrackConfigurationRecord(), " },
+            { "SampleGroupDescriptionEntry(grouping_type)", "stream.ReadEntry(boxSize, readSize, this, IsoStream.ToFourCC(grouping_type), " },
+            { "Descriptor[0 .. 255]",                   "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "Descriptor[count]",                      "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "Descriptor",                             "stream.ReadDescriptor(boxSize, readSize, this, " },
             { "WebVTTConfigurationBox",                 "stream.ReadBox(boxSize, readSize, this, " },
             { "WebVTTSourceLabelBox",                   "stream.ReadBox(boxSize, readSize, this, " },
-            { "OperatingPointsRecord",                  "stream.ReadClass(boxSize, readSize, new OperatingPointsRecord(), " },
-            { "VvcSubpicIDEntry",                       "stream.ReadEntry(boxSize, readSize, " },
-            { "VvcSubpicOrderEntry",                    "stream.ReadEntry(boxSize, readSize, " },
+            { "OperatingPointsRecord",                  "stream.ReadClass(boxSize, readSize, this, new OperatingPointsRecord(), " },
+            { "VvcSubpicIDEntry",                       "stream.ReadEntry(boxSize, readSize, this, TYPE, " },
+            { "VvcSubpicOrderEntry",                    "stream.ReadEntry(boxSize, readSize, this, TYPE, " },
             { "URIInitBox",                             "stream.ReadBox(boxSize, readSize, this, " },
             { "URIBox",                                 "stream.ReadBox(boxSize, readSize, this, " },
             { "CleanApertureBox",                       "stream.ReadBox(boxSize, readSize, this, " },
@@ -2700,14 +2759,14 @@ namespace SharpMP4
             { "MVCDConfigurationBox",                   "stream.ReadBox(boxSize, readSize, this, " },
             { "MVDScalabilityInformationSEIBox",        "stream.ReadBox(boxSize, readSize, this, " },
             { "A3DConfigurationBox",                    "stream.ReadBox(boxSize, readSize, this, " },
-            { "VvcOperatingPointsRecord",               "stream.ReadClass(boxSize, readSize, new VvcOperatingPointsRecord(), " },
-            { "VVCSubpicIDRewritingInfomationStruct()", "stream.ReadClass(boxSize, readSize, new VVCSubpicIDRewritingInfomationStruct(), " },
+            { "VvcOperatingPointsRecord",               "stream.ReadClass(boxSize, readSize, this, new VvcOperatingPointsRecord(), " },
+            { "VVCSubpicIDRewritingInfomationStruct()", "stream.ReadClass(boxSize, readSize, this, new VVCSubpicIDRewritingInfomationStruct(), " },
             { "MPEG4ExtensionDescriptorsBox ()",        "stream.ReadBox(boxSize, readSize, this, " },
             { "MPEG4ExtensionDescriptorsBox()",         "stream.ReadBox(boxSize, readSize, this, " },
             { "MPEG4ExtensionDescriptorsBox",           "stream.ReadBox(boxSize, readSize, this, " },
-            { "bit(8*dci_nal_unit_length)",             "stream.ReadBytes(dci_nal_unit_length, " },
-            { "DependencyInfo[numReferences]",          "stream.ReadClass(boxSize, readSize, " },
-            { "VvcPTLRecord(0)[i]",                     "stream.ReadClass(boxSize, readSize, new VvcPTLRecord(0), " },
+            { "bit(8*dci_nal_unit_length)",             "stream.ReadUInt8Array((uint)dci_nal_unit_length, " },
+            { "DependencyInfo[numReferences]",          "stream.ReadClass(boxSize, readSize, this, " },
+            { "VvcPTLRecord(0)[i]",                     "stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord(0), " },
             { "EVCSliceComponentTrackConfigurationBox", "stream.ReadBox(boxSize, readSize, this, " },
             { "SVCMetadataSampleConfigBox",             "stream.ReadBox(boxSize, readSize, this, " },
             { "SVCPriorityLayerInfoBox",                "stream.ReadBox(boxSize, readSize, this, " },
@@ -2717,7 +2776,7 @@ namespace SharpMP4
             { "HEVCTileConfigurationBox",               "stream.ReadBox(boxSize, readSize, this, " },
             { "MetaDataKeyTableBox()",                  "stream.ReadBox(boxSize, readSize, this, " },
             { "BitRateBox ()",                          "stream.ReadBox(boxSize, readSize, this, " },
-            { "char[count]",                            "stream.ReadUInt8Array(count, " },
+            { "char[count]",                            "stream.ReadUInt8Array((uint)count, " },
             { "signed int(32)[ c ]",                    "stream.ReadInt32(" },
             { "unsigned int(8)[]",                      "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
             { "unsigned int(8)[i]",                     "stream.ReadUInt8(" },
@@ -2734,8 +2793,8 @@ namespace SharpMP4
             { "signed   int(64)[j]",                    "stream.ReadInt64(" },
             { "char[]",                                 "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
             { "string[method_count]",                   "stream.ReadStringArray(method_count, " },
-            { "ItemInfoExtension",                      "stream.ReadClass(boxSize, readSize, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), " },
-            { "SampleGroupDescriptionEntry",            "stream.ReadEntry(boxSize, readSize, IsoStream.ToFourCC(grouping_type), " },
+            { "ItemInfoExtension",                      "stream.ReadClass(boxSize, readSize, this, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), " },
+            { "SampleGroupDescriptionEntry",            "stream.ReadEntry(boxSize, readSize, this, IsoStream.ToFourCC(grouping_type), " },
             { "SampleEntry",                            "stream.ReadBox(boxSize, readSize, this, " },
             { "SampleConstructor",                      "stream.ReadBox(boxSize, readSize, this, " },
             { "InlineConstructor",                      "stream.ReadBox(boxSize, readSize, this, " },
@@ -2764,29 +2823,31 @@ namespace SharpMP4
             { "MetaDataExtensionsBox",                  "stream.ReadBox(boxSize, readSize, this, " },
             { "TrackLoudnessInfo[]",                    "stream.ReadBox(boxSize, readSize, this, " },
             { "AlbumLoudnessInfo[]",                    "stream.ReadBox(boxSize, readSize, this, " },
-            { "VvcPTLRecord(num_sublayers)",            "stream.ReadClass(boxSize, readSize, new VvcPTLRecord(num_sublayers)," },
-            { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "stream.ReadClass(boxSize, readSize, new VvcPTLRecord((byte)(ptl_max_temporal_id[i]+1)), " },
+            { "VvcPTLRecord(num_sublayers)",            "stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord(num_sublayers)," },
+            { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord((byte)(ptl_max_temporal_id[i]+1)), " },
             { "OpusSpecificBox",                        "stream.ReadBox(boxSize, readSize, this, " },
-            { "unsigned int(8 * OutputChannelCount)",   "stream.ReadBytes(OutputChannelCount, " },
-            { "ChannelMappingTable",                    "stream.ReadClass(boxSize, readSize, new ChannelMappingTable(_OutputChannelCount), " },
+            { "unsigned int(8 * OutputChannelCount)",   "stream.ReadUInt8Array((uint)OutputChannelCount, " },
+            { "ChannelMappingTable",                    "stream.ReadClass(boxSize, readSize, this, new ChannelMappingTable(_OutputChannelCount), " },
             // descriptors
-            { "DecoderConfigDescriptor",                "stream.ReadDescriptor(" },
-            { "SLConfigDescriptor",                     "stream.ReadDescriptor(" },
-            { "IPI_DescrPointer[0 .. 1]",               "stream.ReadDescriptor(" },
-            { "IP_IdentificationDataSet[0 .. 255]",     "stream.ReadDescriptor(" },
-            { "IPMP_DescriptorPointer[0 .. 255]",       "stream.ReadDescriptor(" },
-            { "LanguageDescriptor[0 .. 255]",           "stream.ReadDescriptor(" },
-            { "QoS_Descriptor[0 .. 1]",                 "stream.ReadDescriptor(" },
-            { "ES_Descriptor",                          "stream.ReadDescriptor(" },
-            { "RegistrationDescriptor[0 .. 1]",         "stream.ReadDescriptor(" },
-            { "ExtensionDescriptor[0 .. 255]",          "stream.ReadDescriptor(" },
-            { "ProfileLevelIndicationIndexDescriptor[0..255]", "stream.ReadDescriptor(" },
-            { "DecoderSpecificInfo[0 .. 1]",            "stream.ReadDescriptor(" },
-            { "bit(8)[URLlength]",                      "stream.ReadBytes(URLlength, " },
-            { "bit(8)[sizeOfInstance-4]",               "stream.ReadBytes((ulong)(sizeOfInstance - 4), " },
+            { "DecoderConfigDescriptor",                "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "SLConfigDescriptor",                     "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "IPI_DescrPointer[0 .. 1]",               "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "IP_IdentificationDataSet[0 .. 255]",     "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "IPMP_DescriptorPointer[0 .. 255]",       "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "LanguageDescriptor[0 .. 255]",           "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "QoS_Descriptor[0 .. 1]",                 "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "ES_Descriptor",                          "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "RegistrationDescriptor[0 .. 1]",         "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "ExtensionDescriptor[0 .. 255]",          "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "ProfileLevelIndicationIndexDescriptor[0..255]", "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "DecoderSpecificInfo[0 .. 1]",            "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "bit(8)[URLlength]",                      "stream.ReadUInt8Array((uint)URLlength, " },
+            { "bit(8)[sizeOfInstance-4]",               "stream.ReadUInt8Array((uint)(sizeOfInstance - 4), " },
+            { "bit(8)[sizeOfInstance-3]",               "stream.ReadUInt8Array((uint)(sizeOfInstance - 3), " },
             { "double(32)",                             "stream.ReadDouble32(" },
-            { "QoS_Qualifier[]",                        "stream.ReadDescriptor(" },
-            { "GetAudioObjectType()",                   "stream.ReadClass(boxSize, readSize, new GetAudioObjectType(), " },
+            { "fixedpoint1616",                         "stream.ReadFixedPoint1616(" },
+            { "QoS_Qualifier[]",                        "stream.ReadDescriptor(boxSize, readSize, this, " },
+            { "GetAudioObjectType()",                   "stream.ReadClass(boxSize, readSize, this, new GetAudioObjectType(), " },
             { "bslbf(header_size * 8)[]",               "stream.ReadBslbf(header_size * 8, " },
             { "bslbf(trailer_size * 8)[]",              "stream.ReadBslbf(trailer_size * 8, " },
             { "bslbf(aux_size * 8)[]",                  "stream.ReadBslbf(aux_size * 8, " },
@@ -2809,47 +2870,47 @@ namespace SharpMP4
             { "uimsbf(3)",                              "stream.ReadUimsbf(3, " },
             { "uimsbf(2)",                              "stream.ReadUimsbf(2, " },
             { "uimsbf(1)",                              "stream.ReadUimsbf(" },
-            { "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()", "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), " },
-            { "case 8:\r\n      CelpSpecificConfig()",  "case 8:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new CelpSpecificConfig(samplingFrequencyIndex), " },
-            { "case 9:\r\n      HvxcSpecificConfig()",  "case 9:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new HvxcSpecificConfig(), " },
-            { "case 12:\r\n      TTSSpecificConfig()",  "case 12:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new TTSSpecificConfig(), " },
-            { "case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      StructuredAudioSpecificConfig()", "case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new StructuredAudioSpecificConfig(), " },
-            { "case 24:\r\n      ErrorResilientCelpSpecificConfig()", "case 24:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new ErrorResilientCelpSpecificConfig(samplingFrequencyIndex), " },
-            { "case 25:\r\n      ErrorResilientHvxcSpecificConfig()", "case 25:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new ErrorResilientHvxcSpecificConfig(), " },
-            { "case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()", "case 26:\r\n    case 27:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new ParametricSpecificConfig(), " },
-            { "case 28:\r\n      SSCSpecificConfig()",  "case 28:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new SSCSpecificConfig(channelConfiguration), " },
+            { "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()", "case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), " },
+            { "case 8:\r\n      CelpSpecificConfig()",  "case 8:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new CelpSpecificConfig(samplingFrequencyIndex), " },
+            { "case 9:\r\n      HvxcSpecificConfig()",  "case 9:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new HvxcSpecificConfig(), " },
+            { "case 12:\r\n      TTSSpecificConfig()",  "case 12:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new TTSSpecificConfig(), " },
+            { "case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      StructuredAudioSpecificConfig()", "case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new StructuredAudioSpecificConfig(), " },
+            { "case 24:\r\n      ErrorResilientCelpSpecificConfig()", "case 24:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorResilientCelpSpecificConfig(samplingFrequencyIndex), " },
+            { "case 25:\r\n      ErrorResilientHvxcSpecificConfig()", "case 25:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorResilientHvxcSpecificConfig(), " },
+            { "case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()", "case 26:\r\n    case 27:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new ParametricSpecificConfig(), " },
+            { "case 28:\r\n      SSCSpecificConfig()",  "case 28:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new SSCSpecificConfig(channelConfiguration), " },
             { "case 30:\r\n      uimsbf(1)", "case 30:\r\n      boxSize += stream.ReadUimsbf(" },
-            { "case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()", "case 32:\r\n    case 33:\r\n    case 34:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new MPEG_1_2_SpecificConfig(), " },
-            { "case 35:\r\n      DSTSpecificConfig()",  "case 35:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new DSTSpecificConfig(channelConfiguration), " },
+            { "case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()", "case 32:\r\n    case 33:\r\n    case 34:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new MPEG_1_2_SpecificConfig(), " },
+            { "case 35:\r\n      DSTSpecificConfig()",  "case 35:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new DSTSpecificConfig(channelConfiguration), " },
             { "case 36:\r\n      bslbf(5)", "case 36:\r\n      boxSize += stream.ReadBslbf(5, " },
-            { "case 37:\r\n    case 38:\r\n      SLSSpecificConfig()", "case 37:\r\n    case 38:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), " },
-            { "case 39:\r\n      ELDSpecificConfig(channelConfiguration)", "case 39:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new ELDSpecificConfig(channelConfiguration), " },
-            { "case 40:\r\n    case 41:\r\n      SymbolicMusicSpecificConfig()", "case 40:\r\n    case 41:\r\n      boxSize += stream.ReadClass(boxSize, readSize, new SymbolicMusicSpecificConfig(), " },
+            { "case 37:\r\n    case 38:\r\n      SLSSpecificConfig()", "case 37:\r\n    case 38:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), " },
+            { "case 39:\r\n      ELDSpecificConfig(channelConfiguration)", "case 39:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new ELDSpecificConfig(channelConfiguration), " },
+            { "case 40:\r\n    case 41:\r\n      SymbolicMusicSpecificConfig()", "case 40:\r\n    case 41:\r\n      boxSize += stream.ReadClass(boxSize, readSize, this, new SymbolicMusicSpecificConfig(), " },
             { "case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      bslbf(2)", "case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      boxSize += stream.ReadBslbf(2, " },
-            { "SpatialSpecificConfig",                  "stream.ReadClass(boxSize, readSize, new SpatialSpecificConfig(), " },
-            { "ALSSpecificConfig",                      "stream.ReadClass(boxSize, readSize, new ALSSpecificConfig(), " },
-            { "ErrorProtectionSpecificConfig",          "stream.ReadClass(boxSize, readSize, new ErrorProtectionSpecificConfig(), " },
-            { "program_config_element",                 "stream.ReadClass(boxSize, readSize, new program_config_element(), " },
+            { "SpatialSpecificConfig",                  "stream.ReadClass(boxSize, readSize, this, new SpatialSpecificConfig(), " },
+            { "ALSSpecificConfig",                      "stream.ReadClass(boxSize, readSize, this, new ALSSpecificConfig(), " },
+            { "ErrorProtectionSpecificConfig",          "stream.ReadClass(boxSize, readSize, this, new ErrorProtectionSpecificConfig(), " },
+            { "program_config_element",                 "stream.ReadClass(boxSize, readSize, this, new program_config_element(), " },
             { "byte_alignment",                         "stream.ReadByteAlignment(" },
-            { "CelpHeader(samplingFrequencyIndex)",     "stream.ReadClass(boxSize, readSize, new CelpHeader(samplingFrequencyIndex), " },
-            { "CelpBWSenhHeader",                       "stream.ReadClass(boxSize, readSize, new CelpBWSenhHeader(), " },
-            { "HVXCconfig",                             "stream.ReadClass(boxSize, readSize, new HVXCconfig(), " },
-            { "TTS_Sequence",                           "stream.ReadClass(boxSize, readSize, new TTS_Sequence(), " },
-            { "ER_SC_CelpHeader(samplingFrequencyIndex)", "stream.ReadClass(boxSize, readSize, new ER_SC_CelpHeader(samplingFrequencyIndex), " },
-            { "ErHVXCconfig",                           "stream.ReadClass(boxSize, readSize, new ErHVXCconfig(), " },
-            { "PARAconfig",                             "stream.ReadClass(boxSize, readSize, new PARAconfig(), " },
-            { "HILNenexConfig",                         "stream.ReadClass(boxSize, readSize, new HILNenexConfig(), " },
-            { "HILNconfig",                             "stream.ReadClass(boxSize, readSize, new HILNconfig(), " },
-            { "ld_sbr_header",                          "stream.ReadClass(boxSize, readSize, new ld_sbr_header(channelConfiguration), " },
-            { "sbr_header",                             "stream.ReadClass(boxSize, readSize, new sbr_header(), " },
+            { "CelpHeader(samplingFrequencyIndex)",     "stream.ReadClass(boxSize, readSize, this, new CelpHeader(samplingFrequencyIndex), " },
+            { "CelpBWSenhHeader",                       "stream.ReadClass(boxSize, readSize, this, new CelpBWSenhHeader(), " },
+            { "HVXCconfig",                             "stream.ReadClass(boxSize, readSize, this, new HVXCconfig(), " },
+            { "TTS_Sequence",                           "stream.ReadClass(boxSize, readSize, this, new TTS_Sequence(), " },
+            { "ER_SC_CelpHeader(samplingFrequencyIndex)", "stream.ReadClass(boxSize, readSize, this, new ER_SC_CelpHeader(samplingFrequencyIndex), " },
+            { "ErHVXCconfig",                           "stream.ReadClass(boxSize, readSize, this, new ErHVXCconfig(), " },
+            { "PARAconfig",                             "stream.ReadClass(boxSize, readSize, this, new PARAconfig(), " },
+            { "HILNenexConfig",                         "stream.ReadClass(boxSize, readSize, this, new HILNenexConfig(), " },
+            { "HILNconfig",                             "stream.ReadClass(boxSize, readSize, this, new HILNconfig(), " },
+            { "ld_sbr_header",                          "stream.ReadClass(boxSize, readSize, this, new ld_sbr_header(channelConfiguration), " },
+            { "sbr_header",                             "stream.ReadClass(boxSize, readSize, this, new sbr_header(), " },
             { "uimsbf(1)[i]",                           "stream.ReadUimsbf(" },
             { "uimsbf(8)[i]",                           "stream.ReadUimsbf(8, " },
             { "bslbf(1)[i]",                            "stream.ReadBslbf(1, " },
             { "uimsbf(4)[i]",                           "stream.ReadUimsbf(4, " },
             { "uimsbf(1)[c]",                           "stream.ReadUimsbf(" },
             { "uimsbf(32)[f]",                          "stream.ReadUimsbf(32, " },
-            { "CelpHeader",                             "stream.ReadClass(boxSize, readSize, new CelpHeader(samplingFrequencyIndex), " },
-            { "ER_SC_CelpHeader",                       "stream.ReadClass(boxSize, readSize, new ER_SC_CelpHeader(samplingFrequencyIndex), " },
+            { "CelpHeader",                             "stream.ReadClass(boxSize, readSize, this, new CelpHeader(samplingFrequencyIndex), " },
+            { "ER_SC_CelpHeader",                       "stream.ReadClass(boxSize, readSize, this, new ER_SC_CelpHeader(samplingFrequencyIndex), " },
             { "uimsbf(6)[i]",                           "stream.ReadUimsbf(6, " },
             { "uimsbf(1)[i][j]",                        "stream.ReadUimsbf(" },
             { "uimsbf(2)[i][j]",                        "stream.ReadUimsbf(2, " },
@@ -2860,9 +2921,9 @@ namespace SharpMP4
             { "uimsbf(6)[i][j]",                        "stream.ReadUimsbf(6, " },
             { "AV1SampleEntry",                         "stream.ReadBox(boxSize, readSize, this, " },
             { "AV1CodecConfigurationBox",               "stream.ReadBox(boxSize, readSize, this, " },
-            { "AV1CodecConfigurationRecord",            "stream.ReadClass(boxSize, readSize, new AV1CodecConfigurationRecord(), " },
+            { "AV1CodecConfigurationRecord",            "stream.ReadClass(boxSize, readSize, this, new AV1CodecConfigurationRecord(), " },
             { "vluimsbf8",                              "stream.ReadUimsbf(8, " },
-            { "byte(urlMIDIStream_length)",             "stream.ReadBytes(urlMIDIStream_length, " },
+            { "byte(urlMIDIStream_length)",             "stream.ReadUInt8Array((uint)urlMIDIStream_length, " },
             { "aligned bit(3)",                         "stream.ReadAlignedBits(3, " },
             { "aligned bit(1)",                         "stream.ReadAlignedBits(1, " },
             { "bit",                                    "stream.ReadBit(" },
@@ -2875,6 +2936,18 @@ namespace SharpMP4
             { "case 0b110: ",                           "case 0b110: boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
             { "case 0b111: ",                           "case 0b111: boxSize += stream.ReadBits((uint)(8 * chunk_length), " },
             { "unsigned int(16)[3]",                    "stream.ReadUInt16Array(3, " },
+            { "MultiLanguageString[]",                  "stream.ReadStringSizeLangPrefixed(boxSize, readSize, " },
+            { "AdobeChapterRecord[]",                   "stream.ReadClass(boxSize, readSize, this, " },
+            { "ThreeGPPKeyword[]",                      "stream.ReadClass(boxSize, readSize, this, " },
+            { "IodsSample[]",                           "stream.ReadClass(boxSize, readSize, this, " },
+            { "RectRecord",                              "stream.ReadClass(boxSize, readSize, this, new RectRecord(), " },
+            { "StyleRecord",                            "stream.ReadClass(boxSize, readSize, this, new StyleRecord(), " },
+            { "unsigned int(8)[contentIDLength]",       "stream.ReadUInt8Array((uint)contentIDLength, " },
+            { "unsigned int(8)[contentTypeLength]",     "stream.ReadUInt8Array((uint)contentTypeLength, " },
+            { "unsigned int(8)[rightsIssuerLength]",    "stream.ReadUInt8Array((uint)rightsIssuerLength, " },
+            { "unsigned int(8)[textualHeadersLength]",  "stream.ReadUInt8Array((uint)textualHeadersLength, " },
+            { "unsigned int(8)[count]",                 "stream.ReadUInt8Array((uint)count, " },
+            { "unsigned int(8)[4]",                     "stream.ReadUInt8Array((uint)4, " },
         };
         return map[type];
     }
@@ -2973,6 +3046,7 @@ namespace SharpMP4
             { "bit(7)",                                 "7" },
             { "bit(8)[]",                               "8 * (ulong)value.Length" },
             { "bit(8)",                                 "8" },
+            { "bit(14)",                                "14" },
             { "bit(16)[i]",                             "16" },
             { "bit(16)",                                "16" },
             { "bit(24)",                                "24" },
@@ -3063,8 +3137,9 @@ namespace SharpMP4
             { "VvcDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
             { "EVCSliceComponentTrackConfigurationRecord()", "IsoStream.CalculateClassSize(value)" },
             { "SampleGroupDescriptionEntry (grouping_type)", "IsoStream.CalculateEntrySize(value)" },
-            { "Descriptor[0 .. 255]",                   "IsoStream.CalculateClassSize(value)" },
-            { "Descriptor",                             "IsoStream.CalculateClassSize(value)" },
+            { "Descriptor[0 .. 255]",                   "IsoStream.CalculateDescriptorSize(value)" },
+            { "Descriptor[count]",                      "IsoStream.CalculateDescriptorSize(value)" },
+            { "Descriptor",                             "IsoStream.CalculateDescriptorSize(value)" },
             { "WebVTTConfigurationBox",                 "IsoStream.CalculateBoxSize(value)" },
             { "WebVTTSourceLabelBox",                   "IsoStream.CalculateBoxSize(value)" },
             { "OperatingPointsRecord",                  "IsoStream.CalculateClassSize(value)" },
@@ -3178,7 +3253,9 @@ namespace SharpMP4
             { "DecoderSpecificInfo[0 .. 1]",            "IsoStream.CalculateDescriptorSize(value)" },
             { "bit(8)[URLlength]",                      "(ulong)(URLlength * 8)" },
             { "bit(8)[sizeOfInstance-4]",               "(ulong)(sizeOfInstance - 4) * 8" },
+            { "bit(8)[sizeOfInstance-3]",               "(ulong)(sizeOfInstance - 3) * 8" },
             { "double(32)",                             "32" },
+            { "fixedpoint1616",                         "32" },
             { "QoS_Qualifier[]",                        "IsoStream.CalculateDescriptorSize(value)" },
             { "GetAudioObjectType()",                   "IsoStream.CalculateClassSize(value)" },
             { "bslbf(header_size * 8)[]",               "header_size * 8" },
@@ -3269,6 +3346,18 @@ namespace SharpMP4
             { "case 0b110: ",                           "case 0b110: boxSize += (ulong)((uint)(8 * chunk_length))" },
             { "case 0b111: ",                           "case 0b111: boxSize += (ulong)((uint)(8 * chunk_length))" },
             { "unsigned int(16)[3]",                    "3 * 16" },
+            { "MultiLanguageString[]",                  "IsoStream.CalculateStringSizeLangPrefixed(value)" },
+            { "AdobeChapterRecord[]",                   "IsoStream.CalculateClassSize(value)" },
+            { "ThreeGPPKeyword[]",                      "IsoStream.CalculateClassSize(value)" },
+            { "IodsSample[]",                           "IsoStream.CalculateClassSize(value)" },
+            { "RectRecord",                              "IsoStream.CalculateClassSize(value)" },
+            { "StyleRecord",                            "IsoStream.CalculateClassSize(value)" },
+            { "unsigned int(8)[contentIDLength]",       "(uint)contentIDLength * 8" },
+            { "unsigned int(8)[contentTypeLength]",     "(uint)contentTypeLength * 8" },
+            { "unsigned int(8)[rightsIssuerLength]",    "(uint)rightsIssuerLength * 8" },
+            { "unsigned int(8)[textualHeadersLength]",  "(uint)textualHeadersLength * 8" },
+            { "unsigned int(8)[count]",                 "(uint)count * 8" },
+            { "unsigned int(8)[4]",                     "(uint)32" },
        };
         return map[type];
     }
@@ -3301,11 +3390,11 @@ namespace SharpMP4
             { "unsigned int(10)[i][j]",                 "stream.WriteBits(10, " },
             { "unsigned int(10)[i]",                    "stream.WriteBits(10, " },
             { "unsigned int(10)",                       "stream.WriteBits(10, " },
-            { "unsigned int(8)[ sample_count ]",        "stream.WriteBytes(sample_count, " },
-            { "unsigned int(8)[length]",                "stream.WriteBytes(length, " },
-            { "unsigned int(8)[32]",                    "stream.WriteBytes(32, " },
-            { "unsigned int(8)[20]",                    "stream.WriteBytes(20, " },
-            { "unsigned int(8)[16]",                    "stream.WriteBytes(16, " },
+            { "unsigned int(8)[ sample_count ]",        "stream.WriteUInt8Array(sample_count, " },
+            { "unsigned int(8)[length]",                "stream.WriteUInt8Array(length, " },
+            { "unsigned int(8)[32]",                    "stream.WriteUInt8Array(32, " },
+            { "unsigned int(8)[20]",                    "stream.WriteUInt8Array(20, " },
+            { "unsigned int(8)[16]",                    "stream.WriteUInt8Array(16, " },
             { "unsigned int(9)",                        "stream.WriteBits(9, " },
             { "unsigned int(8)",                        "stream.WriteUInt8(" },
             { "unsigned int(7)",                        "stream.WriteBits(7, " },
@@ -3323,15 +3412,15 @@ namespace SharpMP4
             { "unsigned int(f(index_size_code))[i]",    "stream.WriteBits(index_size_code, " },
             { "unsigned int(f(index_size_code))[j][k]", "stream.WriteBits(index_size_code, " },
             { "unsigned int(f(count_size_code))[i]",    "stream.WriteBits(count_size_code, " },
-            { "unsigned int(base_offset_size*8)",       "stream.WriteBytes(base_offset_size, " },
-            { "unsigned int(offset_size*8)",            "stream.WriteBytes(offset_size, " },
-            { "unsigned int(length_size*8)",            "stream.WriteBytes(length_size, " },
-            { "unsigned int(index_size*8)",             "stream.WriteBytes(index_size, " },
-            { "unsigned int(field_size)",               "stream.WriteBytes(field_size, " },
-            { "unsigned int((length_size_of_traf_num+1) * 8)", "stream.WriteBytes((ulong)(length_size_of_traf_num+1), " },
-            { "unsigned int((length_size_of_trun_num+1) * 8)", "stream.WriteBytes((ulong)(length_size_of_trun_num+1), " },
-            { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.WriteBytes((ulong)(length_size_of_sample_num+1), " },
-            { "unsigned int(8*size-64)",                "stream.WriteBytes(size-8, " },
+            { "unsigned int(base_offset_size*8)",       "stream.WriteUInt8Array((uint)base_offset_size, " },
+            { "unsigned int(offset_size*8)",            "stream.WriteUInt8Array((uint)offset_size, " },
+            { "unsigned int(length_size*8)",            "stream.WriteUInt8Array((uint)length_size, " },
+            { "unsigned int(index_size*8)",             "stream.WriteUInt8Array((uint)index_size, " },
+            { "unsigned int(field_size)",               "stream.WriteUInt8Array((uint)field_size, " },
+            { "unsigned int((length_size_of_traf_num+1) * 8)", "stream.WriteUInt8Array((uint)(length_size_of_traf_num+1), " },
+            { "unsigned int((length_size_of_trun_num+1) * 8)", "stream.WriteUInt8Array((uint)(length_size_of_trun_num+1), " },
+            { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.WriteUInt8Array((uint)(length_size_of_sample_num+1), " },
+            { "unsigned int(8*size-64)",                "stream.WriteUInt8Array((uint)(size-8), " },
             { "unsigned int(subgroupIdLen)[i]",         "stream.WriteUInt32(" },
             { "const unsigned int(8)[6]",               "stream.WriteUInt8Array(6, " },
             { "const unsigned int(32)[2]",              "stream.WriteUInt32Array(2, " },
@@ -3367,30 +3456,31 @@ namespace SharpMP4
             { "bit(7)",                                 "stream.WriteBits(7, " },
             { "bit(8)[]",                               "stream.WriteUInt8ArrayTillEnd(" },
             { "bit(8)",                                 "stream.WriteUInt8(" },
+            { "bit(14)",                                "stream.WriteBits(14, " },
             { "bit(16)[i]",                             "stream.WriteUInt16(" },
             { "bit(16)",                                "stream.WriteUInt16(" },
             { "bit(24)",                                "stream.WriteBits(24, " },
             { "bit(31)",                                "stream.WriteBits(31, " },
-            { "bit(8 ceil(size / 8) \u2013 size)",      "stream.WriteBytes((ulong)(Math.Ceiling(size / 8d) - size), " },
-            { "bit(8* ps_nalu_length)",                 "stream.WriteBytes(ps_nalu_length, " },
-            { "bit(8*nalUnitLength)",                   "stream.WriteBytes(nalUnitLength, " },
-            { "bit(8*sequenceParameterSetLength)",      "stream.WriteBytes(sequenceParameterSetLength, " },
-            { "bit(8*pictureParameterSetLength)",       "stream.WriteBytes(pictureParameterSetLength, " },
-            { "bit(8*sequenceParameterSetExtLength)",   "stream.WriteBytes(sequenceParameterSetExtLength, " },
+            { "bit(8 ceil(size / 8) \u2013 size)",      "stream.WriteUInt8Array((uint)(Math.Ceiling(size / 8d) - size), " },
+            { "bit(8* ps_nalu_length)",                 "stream.WriteUInt8Array((uint)ps_nalu_length, " },
+            { "bit(8*nalUnitLength)",                   "stream.WriteUInt8Array((uint)nalUnitLength, " },
+            { "bit(8*sequenceParameterSetLength)",      "stream.WriteUInt8Array((uint)sequenceParameterSetLength, " },
+            { "bit(8*pictureParameterSetLength)",       "stream.WriteUInt8Array((uint)pictureParameterSetLength, " },
+            { "bit(8*sequenceParameterSetExtLength)",   "stream.WriteUInt8Array((uint)sequenceParameterSetExtLength, " },
             { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.WriteBits((uint)(8*num_bytes_constraint_info - 2), " },
-            { "bit(8*nal_unit_length)",                 "stream.WriteBytes(nal_unit_length, " },
-            { "bit(timeStampLength)",                   "stream.WriteBytes(timeStampLength, " },
-            { "utf8string",                             "stream.WriteStringZeroTerminated(" },
-            { "utfstring",                              "stream.WriteStringZeroTerminated(" },
-            { "utf8list",                               "stream.WriteStringZeroTerminated(" },
-            { "boxstring",                              "stream.WriteStringZeroTerminated(" },
-            { "string",                                 "stream.WriteStringZeroTerminated(" },
+            { "bit(8*nal_unit_length)",                 "stream.WriteUInt8Array((uint)nal_unit_length, " },
+            { "bit(timeStampLength)",                   "stream.WriteUInt8Array((uint)timeStampLength, " },
+            { "utf8string",                             "stream.WriteString(" },
+            { "utfstring",                              "stream.WriteString(" },
+            { "utf8list",                               "stream.WriteString(" },
+            { "boxstring",                              "stream.WriteString(" },
+            { "string",                                 "stream.WriteString(" },
             { "bit(32)[6]",                             "stream.WriteUInt32Array(6, " },
             { "bit(32)",                                "stream.WriteUInt32(" },
             { "uint(32)",                               "stream.WriteUInt32(" },
             { "uint(16)",                               "stream.WriteUInt16(" },
             { "uint(64)",                               "stream.WriteUInt64(" },
-            { "uint(8)[32]",                            "stream.WriteBytes(32, " }, // compressor_name
+            { "uint(8)[32]",                            "stream.WriteUInt8Array(32, " }, // compressor_name
             { "uint(8)",                                "stream.WriteUInt8(" },
             { "uint(7)",                                "stream.WriteBits(7, " },
             { "uint(1)",                                "stream.WriteBits(1, " },
@@ -3423,7 +3513,7 @@ namespace SharpMP4
             { "PartitionEntry[ entry_count ]",          "stream.WriteBox(entry_count, " },
             { "FDSessionGroupBox",                      "stream.WriteBox(" },
             { "GroupIdToNameBox",                       "stream.WriteBox(" },
-            { "base64string",                           "stream.WriteStringZeroTerminated(" },
+            { "base64string",                           "stream.WriteString(" },
             { "ProtectionSchemeInfoBox",                "stream.WriteBox(" },
             { "SingleItemTypeReferenceBox",             "stream.WriteBox(" },
             { "SingleItemTypeReferenceBox[]",           "stream.WriteBox(" },
@@ -3457,8 +3547,9 @@ namespace SharpMP4
             { "VvcDecoderConfigurationRecord()",        "stream.WriteClass(" },
             { "EVCSliceComponentTrackConfigurationRecord()", "stream.WriteClass(" },
             { "SampleGroupDescriptionEntry (grouping_type)", "stream.WriteEntry(" },
-            { "Descriptor[0 .. 255]",                   "stream.WriteClass(" },
-            { "Descriptor",                             "stream.WriteClass(" },
+            { "Descriptor[0 .. 255]",                   "stream.WriteDescriptor(" },
+            { "Descriptor[count]",                      "stream.WriteDescriptor(" },
+            { "Descriptor",                             "stream.WriteDescriptor(" },
             { "WebVTTConfigurationBox",                 "stream.WriteBox(" },
             { "WebVTTSourceLabelBox",                   "stream.WriteBox(" },
             { "OperatingPointsRecord",                  "stream.WriteClass(" },
@@ -3493,7 +3584,7 @@ namespace SharpMP4
             { "MPEG4ExtensionDescriptorsBox ()",        "stream.WriteBox(" },
             { "MPEG4ExtensionDescriptorsBox()",         "stream.WriteBox(" },
             { "MPEG4ExtensionDescriptorsBox",           "stream.WriteBox(" },
-            { "bit(8*dci_nal_unit_length)",             "stream.WriteBytes(dci_nal_unit_length, " },
+            { "bit(8*dci_nal_unit_length)",             "stream.WriteUInt8Array((uint)dci_nal_unit_length, " },
             { "DependencyInfo[numReferences]",          "stream.WriteClass(" },
             { "VvcPTLRecord(0)[i]",                     "stream.WriteClass(" },
             { "EVCSliceComponentTrackConfigurationBox", "stream.WriteBox(" },
@@ -3505,7 +3596,7 @@ namespace SharpMP4
             { "HEVCTileConfigurationBox",               "stream.WriteBox(" },
             { "MetaDataKeyTableBox()",                  "stream.WriteBox(" },
             { "BitRateBox ()",                          "stream.WriteBox(" },
-            { "char[count]",                            "stream.WriteUInt8Array(count, " },
+            { "char[count]",                            "stream.WriteUInt8Array((uint)count, " },
             { "signed int(32)[ c ]",                    "stream.WriteInt32(" },
             { "unsigned int(8)[]",                      "stream.WriteUInt8ArrayTillEnd(" },
             { "unsigned int(8)[i]",                     "stream.WriteUInt8(" },
@@ -3555,7 +3646,7 @@ namespace SharpMP4
             { "VvcPTLRecord(num_sublayers)",            "stream.WriteClass(" },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "stream.WriteClass(" },
             { "OpusSpecificBox",                        "stream.WriteBox(" },
-            { "unsigned int(8 * OutputChannelCount)",   "stream.WriteBytes(OutputChannelCount, " },
+            { "unsigned int(8 * OutputChannelCount)",   "stream.WriteUInt8Array((uint)OutputChannelCount, " },
             { "ChannelMappingTable",                    "stream.WriteClass(" },
             // descriptors
             { "DecoderConfigDescriptor",                "stream.WriteDescriptor(" },
@@ -3570,9 +3661,11 @@ namespace SharpMP4
             { "ExtensionDescriptor[0 .. 255]",          "stream.WriteDescriptor(" },
             { "ProfileLevelIndicationIndexDescriptor[0..255]", "stream.WriteDescriptor(" },
             { "DecoderSpecificInfo[0 .. 1]",            "stream.WriteDescriptor(" },
-            { "bit(8)[URLlength]",                      "stream.WriteBytes(URLlength, " },
-            { "bit(8)[sizeOfInstance-4]",               "stream.WriteBytes((ulong)(sizeOfInstance - 4), " },
+            { "bit(8)[URLlength]",                      "stream.WriteUInt8Array((uint)URLlength, " },
+            { "bit(8)[sizeOfInstance-4]",               "stream.WriteUInt8Array((uint)(sizeOfInstance - 4), " },
+            { "bit(8)[sizeOfInstance-3]",               "stream.WriteUInt8Array((uint)(sizeOfInstance - 3), " },
             { "double(32)",                             "stream.WriteDouble32(" },
+            { "fixedpoint1616",                         "stream.WriteFixedPoint1616(" },
             { "QoS_Qualifier[]",                        "stream.WriteDescriptor(" },
             { "GetAudioObjectType()",                   "stream.WriteClass(" },
             { "bslbf(header_size * 8)[]",               "stream.WriteBslbf(header_size * 8, " },
@@ -3650,7 +3743,7 @@ namespace SharpMP4
             { "AV1CodecConfigurationBox",               "stream.WriteBox(" },
             { "AV1CodecConfigurationRecord",            "stream.WriteClass(" },
             { "vluimsbf8",                              "stream.WriteUimsbf(8, " },
-            { "byte(urlMIDIStream_length)",             "stream.WriteBytes(urlMIDIStream_length, " },
+            { "byte(urlMIDIStream_length)",             "stream.WriteUInt8Array((uint)urlMIDIStream_length, " },
             { "aligned bit(3)",                         "stream.WriteAlignedBits(3, " },
             { "aligned bit(1)",                         "stream.WriteAlignedBits(1, " },
             { "bit",                                    "stream.WriteBit(" },
@@ -3663,6 +3756,18 @@ namespace SharpMP4
             { "case 0b110: ",                           "case 0b110: boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
             { "case 0b111: ",                           "case 0b111: boxSize += stream.WriteBits((uint)(8 * chunk_length), " },
             { "unsigned int(16)[3]",                    "stream.WriteUInt16Array(3, " },
+            { "MultiLanguageString[]",                  "stream.WriteStringSizeLangPrefixed(" },
+            { "AdobeChapterRecord[]",                   "stream.WriteClass(" },
+            { "ThreeGPPKeyword[]",                      "stream.WriteClass(" },
+            { "IodsSample[]",                           "stream.WriteClass(" },
+            { "RectRecord",                              "stream.WriteClass(" },
+            { "StyleRecord",                            "stream.WriteClass(" },
+            { "unsigned int(8)[contentIDLength]",       "stream.WriteUInt8Array((uint)contentIDLength, " },
+            { "unsigned int(8)[contentTypeLength]",     "stream.WriteUInt8Array((uint)contentTypeLength, " },
+            { "unsigned int(8)[rightsIssuerLength]",    "stream.WriteUInt8Array((uint)rightsIssuerLength, " },
+            { "unsigned int(8)[textualHeadersLength]",  "stream.WriteUInt8Array((uint)textualHeadersLength, " },
+            { "unsigned int(8)[count]",                 "stream.WriteUInt8Array((uint)count, " },
+            { "unsigned int(8)[4]",                     "stream.WriteUInt8Array((uint)4, " },
         };
         return map[type];
     }
@@ -3805,6 +3910,7 @@ namespace SharpMP4
             { "bit(7)",                                 "byte" },
             { "bit(8)[]",                               "byte[]" },
             { "bit(8)",                                 "byte" },
+            { "bit(14)",                                "ushort" },
             { "bit(16)[i]",                             "ushort[]" },
             { "bit(16)",                                "ushort" },
             { "bit(24)",                                "uint" },
@@ -3896,6 +4002,7 @@ namespace SharpMP4
             { "EVCSliceComponentTrackConfigurationRecord()", "EVCSliceComponentTrackConfigurationRecord" },
             { "SampleGroupDescriptionEntry (grouping_type)", "SampleGroupDescriptionEntry" },
             { "Descriptor[0 .. 255]",                   "Descriptor[]" },
+            { "Descriptor[count]",                      "Descriptor[]" },
             { "Descriptor",                             "Descriptor" },
             { "WebVTTConfigurationBox",                 "WebVTTConfigurationBox" },
             { "WebVTTSourceLabelBox",                   "WebVTTSourceLabelBox" },
@@ -4012,7 +4119,9 @@ namespace SharpMP4
             { "DecoderSpecificInfo[0 .. 1]",            "DecoderSpecificInfo[]" },
             { "bit(8)[URLlength]",                      "byte[]" },
             { "bit(8)[sizeOfInstance-4]",               "byte[]" },
+            { "bit(8)[sizeOfInstance-3]",               "byte[]" },
             { "double(32)",                             "double" },
+            { "fixedpoint1616",                         "double" },
             { "QoS_Qualifier[]",                        "QoS_Qualifier[]" },
             { "bslbf(header_size * 8)[]",               "byte[]" },
             { "bslbf(trailer_size * 8)[]",              "byte[]" },
@@ -4102,7 +4211,19 @@ namespace SharpMP4
             { "case 0b110: ",                           "byte[]" },
             { "case 0b111: ",                           "byte[]" },
             { "unsigned int(16)[3]",                    "ushort[]" },
-       };
+            { "MultiLanguageString[]",                  "MultiLanguageString[]" },
+            { "AdobeChapterRecord[]",                   "AdobeChapterRecord[]" },
+            { "ThreeGPPKeyword[]",                      "ThreeGPPKeyword[]" },
+            { "IodsSample[]",                           "IodsSample[]" },
+            { "RectRecord",                              "RectRecord" },
+            { "StyleRecord",                            "StyleRecord" },
+            { "unsigned int(8)[contentIDLength]",       "byte[]" },
+            { "unsigned int(8)[contentTypeLength]",     "byte[]" },
+            { "unsigned int(8)[rightsIssuerLength]",    "byte[]" },
+            { "unsigned int(8)[textualHeadersLength]",  "byte[]" },
+            { "unsigned int(8)[count]",                 "byte[]" },
+            { "unsigned int(8)[4]",                     "byte[]" },
+        };
         return map[type];
     }
 

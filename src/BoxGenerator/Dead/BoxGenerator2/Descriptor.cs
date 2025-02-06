@@ -66,15 +66,28 @@ namespace SharpMP4
                 case DescriptorTags.SLConfigDescrTag:
                     return new SLConfigDescriptor();
 
+                case DescriptorTags.MP4_IOD_Tag:
+                    return new IOD_Descriptor();
+
+                case DescriptorTags.IPMP_DescrTag:
+                    return new IPMP_Descriptor();
+
+                case DescriptorTags.IPMP_DescrPointerTag:
+                    return new IPMP_DescriptorPointer();
+
                 default:
-                    throw new System.NotImplementedException();
-                    //return new UnknownDescriptor();
+                    {
+                        //throw new System.NotImplementedException();
+                        Log.Debug($"Unknown descriptor: '{tag}'");
+                        return new UnknownDescriptor(tag);
+                    }
             }
         }
     }
 
-    public class Descriptor : IMp4Serializable
+    public abstract class Descriptor : IMp4Serializable
     {
+        public abstract string DisplayName { get; }
         protected List<Descriptor> children = null;
         public List<Descriptor> Children { get { return children; } set { children = value; } }
 
@@ -98,6 +111,8 @@ namespace SharpMP4
         /// </summary>
         public ulong SizeOfSize { get; set; } = 0;
 
+        public IMp4Serializable Parent { get; set; }
+
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             return 0;
@@ -114,8 +129,16 @@ namespace SharpMP4
         }
     }
 
+    public class InvalidDescriptor : UnknownDescriptor
+    {
+        public InvalidDescriptor(byte tag) : base(tag)
+        {
+        }
+    }
+
     public class UnknownDescriptor : Descriptor
     {
+        public override string DisplayName { get { return nameof(UnknownDescriptor); } }
         protected StreamMarker data = null;
         public StreamMarker Data { get { return data; } set { data = value; } }
 

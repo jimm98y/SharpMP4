@@ -2,13 +2,18 @@
 {
     public static class BoxHeaderExtensions
     {
-        public static ulong GetBoxSizeInBits(this BoxHeader header)
+        public static ulong GetBoxSizeInBits(this SafeBoxHeader header)
         {
             if (header.Size == 1)
                 return header.Largesize << 3;
 
             ulong size = (ulong)header.Size << 3;
             return size;
+        }
+
+        public static ulong GetHeaderSizeInBits(this SafeBoxHeader header)
+        {
+            return header.CalculateSize();
         }
     }
 }

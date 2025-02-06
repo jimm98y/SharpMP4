@@ -4,6 +4,9 @@ namespace SharpMP4
 {
     public class SpatialSpecificConfig : IMp4Serializable
     {
+        public virtual string DisplayName { get { return nameof(SpatialSpecificConfig); } }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
         protected StreamMarker padding = null;
         public StreamMarker Padding { get { return padding; } set { padding = value; } }
 
@@ -28,6 +31,9 @@ namespace SharpMP4
 
     public class StructuredAudioSpecificConfig : IMp4Serializable
     {
+        public virtual string DisplayName { get { return nameof(StructuredAudioSpecificConfig); } }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
         protected StreamMarker padding = null;
         public StreamMarker Padding { get { return padding; } set { padding = value; } }
 
@@ -52,6 +58,7 @@ namespace SharpMP4
 
     public class GenericDecoderSpecificInfo : DecoderSpecificInfo
     {
+        public override string DisplayName { get { return nameof(GenericDecoderSpecificInfo); } }
         protected StreamMarker data = null;
         public StreamMarker Data { get { return data; } set { data = value; } }
 
