@@ -840,11 +840,6 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleTVNetworkBox() \r\nextends Box('tvnn') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
       "syntax": "aligned(8) class Apple_xid_Box() \r\nextends Box('xid ') {\r\n bit(8) data[];\r\n } "
     },
     {
@@ -856,11 +851,6 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class AppleShortDescriptionBox() \r\nextends Box('sdes') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class AppleSortAlbumBox() \r\nextends Box('soal') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
