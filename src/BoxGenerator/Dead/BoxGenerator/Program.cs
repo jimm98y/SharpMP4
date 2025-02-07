@@ -339,6 +339,8 @@ partial class Program
             Try(String("bit(6)")),
             Try(String("bit(7)")),
             Try(String("bit(8)")),
+            Try(String("bit(9)")),
+            Try(String("bit(13)")),
             Try(String("bit(14)")),
             Try(String("bit(16)")),
             Try(String("bit(24)")),
@@ -492,6 +494,7 @@ partial class Program
             Try(String("AdobeChapterRecord")), 
             Try(String("ThreeGPPKeyword")), 
             Try(String("IodsSample")), 
+            Try(String("EC3SpecificEntry")), 
             // descriptors
             Try(String("DecoderConfigDescriptor")),
             Try(String("SLConfigDescriptor")),
@@ -2267,7 +2270,7 @@ namespace SharpMP4
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
             value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" && value != "[4]" &&
-            value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]")
+            value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]" && value != "[numIndSub + 1]")
         {
             return value;
         }
@@ -2635,6 +2638,8 @@ namespace SharpMP4
             { "bit(7)",                                 "stream.ReadBits(7, " },
             { "bit(8)[]",                               "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
             { "bit(8)",                                 "stream.ReadUInt8(" },
+            { "bit(9)",                                 "stream.ReadBits(9, " },
+            { "bit(13)",                                "stream.ReadBits(13, " },
             { "bit(14)",                                "stream.ReadBits(14, " },
             { "bit(16)[i]",                             "stream.ReadUInt16(" },
             { "bit(16)",                                "stream.ReadUInt16(" },
@@ -2940,7 +2945,7 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "stream.ReadClass(boxSize, readSize, this, " },
             { "ThreeGPPKeyword[]",                      "stream.ReadClass(boxSize, readSize, this, " },
             { "IodsSample[]",                           "stream.ReadClass(boxSize, readSize, this, " },
-            { "RectRecord",                              "stream.ReadClass(boxSize, readSize, this, new RectRecord(), " },
+            { "RectRecord",                             "stream.ReadClass(boxSize, readSize, this, new RectRecord(), " },
             { "StyleRecord",                            "stream.ReadClass(boxSize, readSize, this, new StyleRecord(), " },
             { "unsigned int(8)[contentIDLength]",       "stream.ReadUInt8Array((uint)contentIDLength, " },
             { "unsigned int(8)[contentTypeLength]",     "stream.ReadUInt8Array((uint)contentTypeLength, " },
@@ -2948,6 +2953,7 @@ namespace SharpMP4
             { "unsigned int(8)[textualHeadersLength]",  "stream.ReadUInt8Array((uint)textualHeadersLength, " },
             { "unsigned int(8)[count]",                 "stream.ReadUInt8Array((uint)count, " },
             { "unsigned int(8)[4]",                     "stream.ReadUInt8Array((uint)4, " },
+            { "EC3SpecificEntry[numIndSub + 1]",        "stream.ReadClass(boxSize, readSize, this, (uint)numIndSub + 1, " },
         };
         return map[type];
     }
@@ -3046,6 +3052,8 @@ namespace SharpMP4
             { "bit(7)",                                 "7" },
             { "bit(8)[]",                               "8 * (ulong)value.Length" },
             { "bit(8)",                                 "8" },
+            { "bit(9)",                                 "9" },
+            { "bit(13)",                                "13" },
             { "bit(14)",                                "14" },
             { "bit(16)[i]",                             "16" },
             { "bit(16)",                                "16" },
@@ -3358,6 +3366,7 @@ namespace SharpMP4
             { "unsigned int(8)[textualHeadersLength]",  "(uint)textualHeadersLength * 8" },
             { "unsigned int(8)[count]",                 "(uint)count * 8" },
             { "unsigned int(8)[4]",                     "(uint)32" },
+            { "EC3SpecificEntry[numIndSub + 1]",        "IsoStream.CalculateClassSize(value)" },
        };
         return map[type];
     }
@@ -3456,6 +3465,8 @@ namespace SharpMP4
             { "bit(7)",                                 "stream.WriteBits(7, " },
             { "bit(8)[]",                               "stream.WriteUInt8ArrayTillEnd(" },
             { "bit(8)",                                 "stream.WriteUInt8(" },
+            { "bit(9)",                                 "stream.WriteBits(9, " },
+            { "bit(13)",                                "stream.WriteBits(13, " },
             { "bit(14)",                                "stream.WriteBits(14, " },
             { "bit(16)[i]",                             "stream.WriteUInt16(" },
             { "bit(16)",                                "stream.WriteUInt16(" },
@@ -3768,6 +3779,7 @@ namespace SharpMP4
             { "unsigned int(8)[textualHeadersLength]",  "stream.WriteUInt8Array((uint)textualHeadersLength, " },
             { "unsigned int(8)[count]",                 "stream.WriteUInt8Array((uint)count, " },
             { "unsigned int(8)[4]",                     "stream.WriteUInt8Array((uint)4, " },
+            { "EC3SpecificEntry[numIndSub + 1]",        "stream.WriteClass(" },
         };
         return map[type];
     }
@@ -3910,6 +3922,8 @@ namespace SharpMP4
             { "bit(7)",                                 "byte" },
             { "bit(8)[]",                               "byte[]" },
             { "bit(8)",                                 "byte" },
+            { "bit(9)",                                 "ushort" },
+            { "bit(13)",                                "ushort" },
             { "bit(14)",                                "ushort" },
             { "bit(16)[i]",                             "ushort[]" },
             { "bit(16)",                                "ushort" },
@@ -4223,6 +4237,7 @@ namespace SharpMP4
             { "unsigned int(8)[textualHeadersLength]",  "byte[]" },
             { "unsigned int(8)[count]",                 "byte[]" },
             { "unsigned int(8)[4]",                     "byte[]" },
+            { "EC3SpecificEntry[numIndSub + 1]",        "EC3SpecificEntry[]" },
         };
         return map[type];
     }

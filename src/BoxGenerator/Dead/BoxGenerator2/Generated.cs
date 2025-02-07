@@ -43314,16 +43314,25 @@ namespace SharpMP4
     /*
     aligned(8) class EC3SpecificBox() 
     extends Box('dec3') {
-     bit(8) data[];
-     } 
+     bit(13) dataRate;
+     bit(3) numIndSub;
+     EC3SpecificEntry entries[numIndSub + 1];
+     }
+
     */
     public class EC3SpecificBox : Box
     {
         public const string TYPE = "dec3";
         public override string DisplayName { get { return "EC3SpecificBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected ushort dataRate;
+        public ushort DataRate { get { return this.dataRate; } set { this.dataRate = value; } }
+
+        protected byte numIndSub;
+        public byte NumIndSub { get { return this.numIndSub; } set { this.numIndSub = value; } }
+
+        protected EC3SpecificEntry[] entries;
+        public EC3SpecificEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
         public EC3SpecificBox() : base("dec3")
         {
@@ -43333,7 +43342,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadBits(13, out this.dataRate);
+            boxSize += stream.ReadBits(3, out this.numIndSub);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)numIndSub + 1, out this.entries);
             return boxSize;
         }
 
@@ -43341,7 +43352,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteBits(13, this.dataRate);
+            boxSize += stream.WriteBits(3, this.numIndSub);
+            boxSize += stream.WriteClass(this.entries);
             return boxSize;
         }
 
@@ -43349,7 +43362,136 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 13; // dataRate
+            boxSize += 3; // numIndSub
+            boxSize += IsoStream.CalculateClassSize(entries); // entries
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class EC3SpecificEntry() {
+     bit(2) fscod;
+     bit(5) bsid;
+     bit(5) bsmod;
+     bit(3) acmod;
+     bit(1) lfeon;
+     bit(3) reserved;
+     bit(4) numDepSub;
+     if(numDepSub > 0) {
+     bit(9) chanLoc;
+     }
+     else 
+     {
+     bit(1) reserved2;
+     }
+     }
+
+    */
+    public class EC3SpecificEntry : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "EC3SpecificEntry"; } }
+
+        protected byte fscod;
+        public byte Fscod { get { return this.fscod; } set { this.fscod = value; } }
+
+        protected byte bsid;
+        public byte Bsid { get { return this.bsid; } set { this.bsid = value; } }
+
+        protected byte bsmod;
+        public byte Bsmod { get { return this.bsmod; } set { this.bsmod = value; } }
+
+        protected byte acmod;
+        public byte Acmod { get { return this.acmod; } set { this.acmod = value; } }
+
+        protected bool lfeon;
+        public bool Lfeon { get { return this.lfeon; } set { this.lfeon = value; } }
+
+        protected byte reserved;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected byte numDepSub;
+        public byte NumDepSub { get { return this.numDepSub; } set { this.numDepSub = value; } }
+
+        protected ushort chanLoc;
+        public ushort ChanLoc { get { return this.chanLoc; } set { this.chanLoc = value; } }
+
+        protected bool reserved2;
+        public bool Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+        public EC3SpecificEntry() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadBits(2, out this.fscod);
+            boxSize += stream.ReadBits(5, out this.bsid);
+            boxSize += stream.ReadBits(5, out this.bsmod);
+            boxSize += stream.ReadBits(3, out this.acmod);
+            boxSize += stream.ReadBit(out this.lfeon);
+            boxSize += stream.ReadBits(3, out this.reserved);
+            boxSize += stream.ReadBits(4, out this.numDepSub);
+
+            if (numDepSub > 0)
+            {
+                boxSize += stream.ReadBits(9, out this.chanLoc);
+            }
+
+            else
+            {
+                boxSize += stream.ReadBit(out this.reserved2);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteBits(2, this.fscod);
+            boxSize += stream.WriteBits(5, this.bsid);
+            boxSize += stream.WriteBits(5, this.bsmod);
+            boxSize += stream.WriteBits(3, this.acmod);
+            boxSize += stream.WriteBit(this.lfeon);
+            boxSize += stream.WriteBits(3, this.reserved);
+            boxSize += stream.WriteBits(4, this.numDepSub);
+
+            if (numDepSub > 0)
+            {
+                boxSize += stream.WriteBits(9, this.chanLoc);
+            }
+
+            else
+            {
+                boxSize += stream.WriteBit(this.reserved2);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 2; // fscod
+            boxSize += 5; // bsid
+            boxSize += 5; // bsmod
+            boxSize += 3; // acmod
+            boxSize += 1; // lfeon
+            boxSize += 3; // reserved
+            boxSize += 4; // numDepSub
+
+            if (numDepSub > 0)
+            {
+                boxSize += 9; // chanLoc
+            }
+
+            else
+            {
+                boxSize += 1; // reserved2
+            }
             return boxSize;
         }
     }

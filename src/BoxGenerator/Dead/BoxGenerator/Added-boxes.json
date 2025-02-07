@@ -752,16 +752,12 @@
       "type": "Box",
       "syntax": "aligned(8) class TextSampleEntry() \r\nextends FullBox('enct') {\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(32) displayFlags;\r\n unsigned int(8) horizontalJustification;\r\n unsigned int(8) verticalJustification;\r\n unsigned int(8) backgroundColorRgba[4];\r\n RectRecord rectRecord;\r\n StyleRecord styleRecord; Box boxes[];\r\n }\r\n aligned(8) class TextSampleEntry() \r\nextends FullBox('tx3g') {\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(32) displayFlags;\r\n unsigned int(8) horizontalJustification;\r\n unsigned int(8) verticalJustification;\r\n unsigned int(8) backgroundColorRgba[4];\r\n RectRecord rectRecord;\r\n StyleRecord styleRecord; Box boxes[];\r\n }\r\n aligned(8) class RectRecord() {\r\n unsigned int(16) top;\r\n unsigned int(16) left;\r\n unsigned int(16) bottom;\r\n unsigned int(16) right;\r\n }\r\n aligned(8) class StyleRecord() {\r\n unsigned int(16) startChar;\r\n unsigned int(16) endChar;\r\n unsigned int(16) fontId;\r\n unsigned int(8) faceStyleFlags;\r\n unsigned int(8) fontSize;\r\n unsigned int(8) textColor[4]; }"
     },
-
-
-
-
-
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class EC3SpecificBox() \r\nextends Box('dec3') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class EC3SpecificBox() \r\nextends Box('dec3') {\r\n bit(13) dataRate;\r\n bit(3) numIndSub;\r\n EC3SpecificEntry entries[numIndSub + 1];\r\n }\r\n aligned(8) class EC3SpecificEntry() {\r\n bit(2) fscod;\r\n bit(5) bsid;\r\n bit(5) bsmod;\r\n bit(3) acmod;\r\n bit(1) lfeon;\r\n bit(3) reserved;\r\n bit(4) numDepSub;\r\n if(numDepSub > 0) {\r\n bit(9) chanLoc;\r\n }\r\n else \r\n {\r\n bit(1) reserved2;\r\n }\r\n }\r\n "
     },
+
     {
       "containers": [ "*" ],
       "type": "Box",

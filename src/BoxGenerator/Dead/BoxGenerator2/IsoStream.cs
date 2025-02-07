@@ -884,6 +884,26 @@ namespace SharpMP4
             return consumed;
         }
 
+        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, uint count, out T[] value) where T : IMp4Serializable, new()
+        {
+            ulong consumed = 0;
+            ulong remaining = readSize - boxSize;
+            List<T> ret = new List<T>();
+            for (uint i = 0; i < count && consumed < remaining; i++)
+            {
+                T c;
+                consumed += ReadClass<T>(boxSize + consumed, remaining, parent, new T(), out c);
+                if (consumed > readSize)
+                {
+                    throw new Exception($"Class read through!");
+                }
+                c.Parent = parent;
+                ret.Add(c);
+            }
+            value = ret.ToArray();
+            return consumed;
+        }
+
         internal ulong WriteClass(IMp4Serializable value)
         {
             ulong writtenSize = 0;
