@@ -43500,7 +43500,10 @@ namespace SharpMP4
     /*
     aligned(8) class MLPSpecificBox() 
     extends Box('dmlp') {
-     bit(8) data[];
+     unsigned int(32) formatInfo;
+     bit(15) peakDataRate;
+     bit(1) reserved;
+     unsigned int(32) reserved2; 
      } 
     */
     public class MLPSpecificBox : Box
@@ -43508,8 +43511,17 @@ namespace SharpMP4
         public const string TYPE = "dmlp";
         public override string DisplayName { get { return "MLPSpecificBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected uint formatInfo;
+        public uint FormatInfo { get { return this.formatInfo; } set { this.formatInfo = value; } }
+
+        protected ushort peakDataRate;
+        public ushort PeakDataRate { get { return this.peakDataRate; } set { this.peakDataRate = value; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected uint reserved2;
+        public uint Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
         public MLPSpecificBox() : base("dmlp")
         {
@@ -43519,7 +43531,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt32(out this.formatInfo);
+            boxSize += stream.ReadBits(15, out this.peakDataRate);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadUInt32(out this.reserved2);
             return boxSize;
         }
 
@@ -43527,7 +43542,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt32(this.formatInfo);
+            boxSize += stream.WriteBits(15, this.peakDataRate);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteUInt32(this.reserved2);
             return boxSize;
         }
 
@@ -43535,7 +43553,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 32; // formatInfo
+            boxSize += 15; // peakDataRate
+            boxSize += 1; // reserved
+            boxSize += 32; // reserved2
             return boxSize;
         }
     }
@@ -43544,7 +43565,9 @@ namespace SharpMP4
     /*
     aligned(8) class Ovc1VisualSampleEntryImpl() 
     extends Box('ovc1') {
-     bit(8) data[];
+     unsigned int(48) reserved;
+     unsigned int(16) dataReferenceIndex;
+     bit(8) vc1Content[];
      } 
     */
     public class Ovc1VisualSampleEntryImpl : Box
@@ -43552,8 +43575,14 @@ namespace SharpMP4
         public const string TYPE = "ovc1";
         public override string DisplayName { get { return "Ovc1VisualSampleEntryImpl"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected ulong reserved;
+        public ulong Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected byte[] vc1Content;
+        public byte[] Vc1Content { get { return this.vc1Content; } set { this.vc1Content = value; } }
 
         public Ovc1VisualSampleEntryImpl() : base("ovc1")
         {
@@ -43563,7 +43592,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt48(out this.reserved);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.vc1Content);
             return boxSize;
         }
 
@@ -43571,7 +43602,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt48(this.reserved);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.vc1Content);
             return boxSize;
         }
 
@@ -43579,7 +43612,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 48; // reserved
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 8 * (ulong)vc1Content.Length; // vc1Content
             return boxSize;
         }
     }
@@ -43587,17 +43622,48 @@ namespace SharpMP4
 
     /*
     aligned(8) class VPCodecConfigurationBox() 
-    extends Box('vpcC') {
-     bit(8) data[];
+    extends FullBox('vpcC') {
+     unsigned int(8) profile;
+     unsigned int(8) level;
+     bit(4) bitDepth;
+     bit(3) chromaSubsampling;
+     bit(1) videoFullRangeFlag;
+     unsigned int(8) colourPrimaries; unsigned int(8) transferCharacteristics;
+     unsigned int(8) matrixCoefficients;
+     unsigned int(16) codecInitializationData;
      } 
     */
-    public class VPCodecConfigurationBox : Box
+    public class VPCodecConfigurationBox : FullBox
     {
         public const string TYPE = "vpcC";
         public override string DisplayName { get { return "VPCodecConfigurationBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte profile;
+        public byte Profile { get { return this.profile; } set { this.profile = value; } }
+
+        protected byte level;
+        public byte Level { get { return this.level; } set { this.level = value; } }
+
+        protected byte bitDepth;
+        public byte BitDepth { get { return this.bitDepth; } set { this.bitDepth = value; } }
+
+        protected byte chromaSubsampling;
+        public byte ChromaSubsampling { get { return this.chromaSubsampling; } set { this.chromaSubsampling = value; } }
+
+        protected bool videoFullRangeFlag;
+        public bool VideoFullRangeFlag { get { return this.videoFullRangeFlag; } set { this.videoFullRangeFlag = value; } }
+
+        protected byte colourPrimaries;
+        public byte ColourPrimaries { get { return this.colourPrimaries; } set { this.colourPrimaries = value; } }
+
+        protected byte transferCharacteristics;
+        public byte TransferCharacteristics { get { return this.transferCharacteristics; } set { this.transferCharacteristics = value; } }
+
+        protected byte matrixCoefficients;
+        public byte MatrixCoefficients { get { return this.matrixCoefficients; } set { this.matrixCoefficients = value; } }
+
+        protected ushort codecInitializationData;
+        public ushort CodecInitializationData { get { return this.codecInitializationData; } set { this.codecInitializationData = value; } }
 
         public VPCodecConfigurationBox() : base("vpcC")
         {
@@ -43607,7 +43673,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8(out this.profile);
+            boxSize += stream.ReadUInt8(out this.level);
+            boxSize += stream.ReadBits(4, out this.bitDepth);
+            boxSize += stream.ReadBits(3, out this.chromaSubsampling);
+            boxSize += stream.ReadBit(out this.videoFullRangeFlag);
+            boxSize += stream.ReadUInt8(out this.colourPrimaries);
+            boxSize += stream.ReadUInt8(out this.transferCharacteristics);
+            boxSize += stream.ReadUInt8(out this.matrixCoefficients);
+            boxSize += stream.ReadUInt16(out this.codecInitializationData);
             return boxSize;
         }
 
@@ -43615,7 +43689,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8(this.profile);
+            boxSize += stream.WriteUInt8(this.level);
+            boxSize += stream.WriteBits(4, this.bitDepth);
+            boxSize += stream.WriteBits(3, this.chromaSubsampling);
+            boxSize += stream.WriteBit(this.videoFullRangeFlag);
+            boxSize += stream.WriteUInt8(this.colourPrimaries);
+            boxSize += stream.WriteUInt8(this.transferCharacteristics);
+            boxSize += stream.WriteUInt8(this.matrixCoefficients);
+            boxSize += stream.WriteUInt16(this.codecInitializationData);
             return boxSize;
         }
 
@@ -43623,7 +43705,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 8; // profile
+            boxSize += 8; // level
+            boxSize += 4; // bitDepth
+            boxSize += 3; // chromaSubsampling
+            boxSize += 1; // videoFullRangeFlag
+            boxSize += 8; // colourPrimaries
+            boxSize += 8; // transferCharacteristics
+            boxSize += 8; // matrixCoefficients
+            boxSize += 16; // codecInitializationData
             return boxSize;
         }
     }

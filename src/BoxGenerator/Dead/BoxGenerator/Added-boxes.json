@@ -757,22 +757,22 @@
       "type": "Box",
       "syntax": "aligned(8) class EC3SpecificBox() \r\nextends Box('dec3') {\r\n bit(13) dataRate;\r\n bit(3) numIndSub;\r\n EC3SpecificEntry entries[numIndSub + 1];\r\n }\r\n aligned(8) class EC3SpecificEntry() {\r\n bit(2) fscod;\r\n bit(5) bsid;\r\n bit(5) bsmod;\r\n bit(3) acmod;\r\n bit(1) lfeon;\r\n bit(3) reserved;\r\n bit(4) numDepSub;\r\n if(numDepSub > 0) {\r\n bit(9) chanLoc;\r\n }\r\n else \r\n {\r\n bit(1) reserved2;\r\n }\r\n }\r\n "
     },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class MLPSpecificBox() \r\nextends Box('dmlp') {\r\n unsigned int(32) formatInfo;\r\n bit(15) peakDataRate;\r\n bit(1) reserved;\r\n unsigned int(32) reserved2; \r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Ovc1VisualSampleEntryImpl() \r\nextends Box('ovc1') {\r\n unsigned int(48) reserved;\r\n unsigned int(16) dataReferenceIndex;\r\n bit(8) vc1Content[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class VPCodecConfigurationBox() \r\nextends FullBox('vpcC') {\r\n unsigned int(8) profile;\r\n unsigned int(8) level;\r\n bit(4) bitDepth;\r\n bit(3) chromaSubsampling;\r\n bit(1) videoFullRangeFlag;\r\n unsigned int(8) colourPrimaries; unsigned int(8) transferCharacteristics;\r\n unsigned int(8) matrixCoefficients;\r\n unsigned int(16) codecInitializationData;\r\n } "
+    },
 
-    {
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class MLPSpecificBox() \r\nextends Box('dmlp') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class Ovc1VisualSampleEntryImpl() \r\nextends Box('ovc1') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class VPCodecConfigurationBox() \r\nextends Box('vpcC') {\r\n bit(8) data[];\r\n } "
-    },
     {
       "containers": [ "*" ],
       "type": "Box",
