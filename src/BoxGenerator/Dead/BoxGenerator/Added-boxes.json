@@ -852,46 +852,45 @@
       "type": "Box",
       "syntax": "aligned(8) class AppleShortDescriptionBox() extends Box('sdes') {\r\n Box boxes[];\r\n } "
     },
-
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class EventMessageBox() extends Box('emsg') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class EventMessageBox() extends Box('emsg') {\r\n string schemeIdUri;\r\n string value;\r\n unsigned int(32) timescale;\r\n unsigned int(32) presentationTimeDelta;\r\n unsigned int(32) eventDuration;\r\n unsigned int(32) id;\r\n unsigned int(8) messageData[]; } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('hind') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('hind') {\r\n unsigned int(32) trackIds[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('vdep') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('vdep') {\r\n unsigned int(32) trackIds[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('vplx') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('vplx') {\r\n unsigned int(32) trackIds[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class DoViConfigurationBox() extends Box('dvcC') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class DoViConfigurationBox() extends Box('dvcC') {\r\n unsigned int(8) dvVersionMajor;\r\n unsigned int(8) dvVersionMinor;\r\n unsigned int(16) profileLevelFlags;\r\n unsigned int(32) reserved1;\r\n unsigned int(32) reserved2;\r\nunsigned int(32) reserved3;\r\nunsigned int(32) reserved4;\r\n \r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class DfxpSampleEntry() extends Box('dfxp') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class DfxpSampleEntry() extends SampleEntry('dfxp') {\r\n unsigned int(8) reserved[6];\r\n unsigned int(16) dataReferenceIndex;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ContentLightLevelBox() extends Box('CoLL') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ContentLightLevelBox() extends FullBox('CoLL') {\r\n unsigned int(16) maxCLL;\r\n unsigned int(8) maxFALL;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class SMPTE2086MasteringDisplayMetadataBox() extends Box('SmDm') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class SMPTE2086MasteringDisplayMetadataBox() extends FullBox('SmDm') {\r\n unsigned int(16) primaryRChromaticityX;\r\nunsigned int(16) primaryRChromaticityY;\r\nunsigned int(16) primaryGChromaticityX;\r\nunsigned int(16) primaryGChromaticityY;\r\nunsigned int(16) primaryBChromaticityX;\r\nunsigned int(16) primaryBChromaticityY;\r\n unsigned int(32) luminanceMax;\r\n unsigned int(32) luminanceMin;\r\n } "
     }
   ]
 }
