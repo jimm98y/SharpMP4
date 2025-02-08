@@ -285,6 +285,7 @@ partial class Program
             Try(String("unsigned int(8)[32]")),
             Try(String("unsigned int(8)[20]")),
             Try(String("unsigned int(8)[16]")),
+            Try(String("unsigned int(8)[constant_IV_size]")),
             Try(String("unsigned int(9)")),
             Try(String("unsigned int(8)")),
             Try(String("unsigned int(7)")),
@@ -309,6 +310,7 @@ partial class Program
             Try(String("unsigned int((length_size_of_sample_num+1) * 8)")),
             Try(String("unsigned int(8*size-64)")),
             Try(String("unsigned int(subgroupIdLen)")),
+            Try(String("unsigned int(Per_Sample_IV_Size*8)")),
             Try(String("const unsigned int(8)[6]")),
             Try(String("const unsigned int(32)[2]")),
             Try(String("const unsigned int(32)[3]")),
@@ -496,6 +498,10 @@ partial class Program
             Try(String("ThreeGPPKeyword")), 
             Try(String("IodsSample")), 
             Try(String("EC3SpecificEntry")), 
+            Try(String("ProtectionSystemSpecificKeyID")), 
+            Try(String("TrickPlayEntry")), 
+            Try(String("SampleEncryptionSample(version, flags, Per_Sample_IV_Size)")), 
+            Try(String("SampleEncryptionSubsample(version)")), 
             // descriptors
             Try(String("DecoderConfigDescriptor")),
             Try(String("SLConfigDescriptor")),
@@ -693,6 +699,7 @@ partial class Program
             Try(String("(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)")),            
             Try(String("(unsigned int(8) OutputChannelCount)")),         
             Try(String("(entry_type, bit(24) flags)")),
+            Try(String("(version, flags, Per_Sample_IV_Size)")),
             Try(String("(samplingFrequencyIndex)"))
             ).Labelled("class type");
 
@@ -1373,6 +1380,22 @@ namespace SharpMP4
         {
             ctorContent = "\t\tthis.type = IsoStream.FromFourCC(boxtype);\r\n\t\tthis.usertype = extended_type;\r\n";
         }
+        else if(b.BoxName == "SampleEncryptionSample")
+        {
+            fields.Add(new PseudoField() { Name = "version", Type = "unsigned int(8)" });
+            fields.Add(new PseudoField() { Name = "flags", Type = "unsigned int(32)" });
+            fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = "unsigned int(8)" });
+            ctorContent = "\t\tthis.version = version;\r\n\t\tthis.flags = flags;\r\n\t\tthis.Per_Sample_IV_Size = Per_Sample_IV_Size;\r\n";
+        }
+        else if(b.BoxName == "SampleEncryptionSubsample")
+        {
+            fields.Add(new PseudoField() { Name = "version", Type = "unsigned int(8)" });
+            ctorContent = "\t\tthis.version = version;\r\n";
+        }
+        else if(b.BoxName == "SampleEncryptionBox")
+        {
+            fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = "unsigned int(8)", Value = " = 16; // TODO: get from the 'tenc' box" });
+        }
 
         bool hasBoxes = fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "ItemReferenceBox";
         bool hasDescriptors = fields.Select(x => GetReadMethod(x.Type).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
@@ -1412,7 +1435,7 @@ namespace SharpMP4
             if (!string.IsNullOrWhiteSpace(b.Extended.BoxType))
                 base4cc = $"\"{b.Extended.BoxType}\"";
             string base4ccparams = "";
-            if (b.Extended.Parameters != null)
+            if (b.Extended.BoxName != null && b.Extended.Parameters != null)
             {
                 base4ccparams = string.Join(", ", b.Extended.Parameters.Select(x => string.IsNullOrEmpty(x.Value) ? x.Name : x.Value));
             }
@@ -1602,6 +1625,7 @@ namespace SharpMP4
             { "(unsigned int(8) OutputChannelCount)", "byte OutputChannelCount" },
             { "(entry_type, bit(24) flags)",        "string entry_type, uint flags" },
             { "(samplingFrequencyIndex)",           "int samplingFrequencyIndex" },
+            { "(version, flags, Per_Sample_IV_Size)",  "byte version, uint flags, byte Per_Sample_IV_Size" },
             };
             return map[classType];
         }
@@ -1621,6 +1645,7 @@ namespace SharpMP4
                 { "version = 0, 1",         "" },
                 { "version, 0",             "byte version = 0" },
                 { "version, flags = 0",     "byte version = 0" },
+                { "version",                "byte version" },
                 { "version = 0, flags = 0", "" },
                 { "version, flags",         "byte version = 0, uint flags = 0" },
                 { "0, tf_flags",            "uint tf_flags = 0" },
@@ -2248,17 +2273,35 @@ namespace SharpMP4
 
     private static string BuildRepeatingBlock(PseudoClass b, PseudoBlock parent, PseudoBlock? block, int level, MethodType methodType)
     {
-        if(methodType == MethodType.Read)
+        if (b.BoxName == "TrackRunBox")
         {
-            return "entries = new List<TrunEntry>();\r\n            for (int i = 0; i < sample_count; i++)\r\n            {\r\n                TrunEntry entry = new TrunEntry();\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += stream.ReadUInt32(out entry.SampleDuration);\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += stream.ReadUInt32(out entry.SampleSize);\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = stream.ReadUInt32(out entry.SampleFlags);\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += stream.ReadUInt32(out entry.SampleCompositionTimeOffset0);\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = stream.ReadInt32(out entry.SampleCompositionTimeOffset);\r\n                    }\r\n                }\r\n\r\n                entries.Add(entry);\r\n            }";
+            if (methodType == MethodType.Read)
+            {
+                return "entries = new List<TrunEntry>();\r\n            for (int i = 0; i < sample_count; i++)\r\n            {\r\n                TrunEntry entry = new TrunEntry();\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += stream.ReadUInt32(out entry.SampleDuration);\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += stream.ReadUInt32(out entry.SampleSize);\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = stream.ReadUInt32(out entry.SampleFlags);\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += stream.ReadUInt32(out entry.SampleCompositionTimeOffset0);\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = stream.ReadInt32(out entry.SampleCompositionTimeOffset);\r\n                    }\r\n                }\r\n\r\n                entries.Add(entry);\r\n            }";
+            }
+            else if (methodType == MethodType.Write)
+            {
+                return "for (int i = 0; i < sample_count; i++)\r\n            {\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += stream.WriteUInt32(entries[i].SampleDuration);\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += stream.WriteUInt32(entries[i].SampleSize);\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = stream.WriteUInt32(entries[i].SampleFlags);\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += stream.WriteUInt32(entries[i].SampleCompositionTimeOffset0);\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = stream.WriteInt32(entries[i].SampleCompositionTimeOffset);\r\n                    }\r\n                }\r\n            }";
+            }
+            else if (methodType == MethodType.Size)
+            {
+                return "for (int i = 0; i < sample_count; i++)\r\n            {\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += 32;\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += 32;\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = 32;\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += 32;\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = 32;\r\n                    }\r\n                }\r\n            }";
+            }
         }
-        else if(methodType == MethodType.Write)
+        else if (b.BoxName == "SampleEncryptionBox")
         {
-            return "for (int i = 0; i < sample_count; i++)\r\n            {\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += stream.WriteUInt32(entries[i].SampleDuration);\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += stream.WriteUInt32(entries[i].SampleSize);\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = stream.WriteUInt32(entries[i].SampleFlags);\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += stream.WriteUInt32(entries[i].SampleCompositionTimeOffset0);\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = stream.WriteInt32(entries[i].SampleCompositionTimeOffset);\r\n                    }\r\n                }\r\n            }";
-        }
-        else if(methodType == MethodType.Size)
-        {
-            return "for (int i = 0; i < sample_count; i++)\r\n            {\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += 32;\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += 32;\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = 32;\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += 32;\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = 32;\r\n                    }\r\n                }\r\n            }";
+            if (methodType == MethodType.Read)
+            {
+                return "";
+            }
+            else if(methodType == MethodType.Write)
+            {
+                return "";
+            }
+            else if (methodType == MethodType.Size)
+            {
+                return "";
+            }
         }
 
         throw new NotImplementedException();
@@ -2270,7 +2313,7 @@ namespace SharpMP4
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" && value != "[4]" &&
+            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" && value != "[4]" && value != "[256]" && value != "[512]" &&
             value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]" && value != "[numIndSub + 1]")
         {
             return value;
@@ -2947,15 +2990,23 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "stream.ReadClass(boxSize, readSize, this, " },
             { "ThreeGPPKeyword[]",                      "stream.ReadClass(boxSize, readSize, this, " },
             { "IodsSample[]",                           "stream.ReadClass(boxSize, readSize, this, " },
+            { "TrickPlayEntry[]",                       "stream.ReadClass(boxSize, readSize, this, " },
             { "RectRecord",                             "stream.ReadClass(boxSize, readSize, this, new RectRecord(), " },
             { "StyleRecord",                            "stream.ReadClass(boxSize, readSize, this, new StyleRecord(), " },
+            { "ProtectionSystemSpecificKeyID[count]",   "stream.ReadClass(boxSize, readSize, this, (uint)count, " },
             { "unsigned int(8)[contentIDLength]",       "stream.ReadUInt8Array((uint)contentIDLength, " },
             { "unsigned int(8)[contentTypeLength]",     "stream.ReadUInt8Array((uint)contentTypeLength, " },
             { "unsigned int(8)[rightsIssuerLength]",    "stream.ReadUInt8Array((uint)rightsIssuerLength, " },
             { "unsigned int(8)[textualHeadersLength]",  "stream.ReadUInt8Array((uint)textualHeadersLength, " },
             { "unsigned int(8)[count]",                 "stream.ReadUInt8Array((uint)count, " },
             { "unsigned int(8)[4]",                     "stream.ReadUInt8Array((uint)4, " },
+            { "unsigned int(8)[256]",                   "stream.ReadUInt8Array((uint)256, " },
+            { "unsigned int(8)[512]",                   "stream.ReadUInt8Array((uint)512, " },
+            { "unsigned int(8)[constant_IV_size]",      "stream.ReadUInt8Array((uint)constant_IV_size, " },
+            { "unsigned int(Per_Sample_IV_Size*8)",     "stream.ReadUInt8Array((uint)Per_Sample_IV_Size, " },
             { "EC3SpecificEntry[numIndSub + 1]",        "stream.ReadClass(boxSize, readSize, this, (uint)numIndSub + 1, " },
+            { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "stream.ReadClass(boxSize, readSize, this, (uint)sample_count, () => new SampleEncryptionSample(version, flags, Per_Sample_IV_Size), " },
+            { "SampleEncryptionSubsample(version)[subsample_count]", "stream.ReadClass(boxSize, readSize, this, (uint)subsample_count, () => new SampleEncryptionSubsample(version), " },
         };
         return map[type];
     }
@@ -3361,15 +3412,23 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "IsoStream.CalculateClassSize(value)" },
             { "ThreeGPPKeyword[]",                      "IsoStream.CalculateClassSize(value)" },
             { "IodsSample[]",                           "IsoStream.CalculateClassSize(value)" },
-            { "RectRecord",                              "IsoStream.CalculateClassSize(value)" },
+            { "TrickPlayEntry[]",                       "IsoStream.CalculateClassSize(value)" },
+            { "RectRecord",                             "IsoStream.CalculateClassSize(value)" },
             { "StyleRecord",                            "IsoStream.CalculateClassSize(value)" },
+            { "ProtectionSystemSpecificKeyID[count]",   "IsoStream.CalculateClassSize(value)" },
             { "unsigned int(8)[contentIDLength]",       "(uint)contentIDLength * 8" },
             { "unsigned int(8)[contentTypeLength]",     "(uint)contentTypeLength * 8" },
             { "unsigned int(8)[rightsIssuerLength]",    "(uint)rightsIssuerLength * 8" },
             { "unsigned int(8)[textualHeadersLength]",  "(uint)textualHeadersLength * 8" },
             { "unsigned int(8)[count]",                 "(uint)count * 8" },
             { "unsigned int(8)[4]",                     "(uint)32" },
+            { "unsigned int(8)[256]",                   "(uint)256 * 8" },
+            { "unsigned int(8)[512]",                   "(uint)512 * 8" },
+            { "unsigned int(8)[constant_IV_size]",      "(uint)constant_IV_size * 8" },
             { "EC3SpecificEntry[numIndSub + 1]",        "IsoStream.CalculateClassSize(value)" },
+            { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "IsoStream.CalculateClassSize(value)" },
+            { "SampleEncryptionSubsample(version)[subsample_count]", "IsoStream.CalculateClassSize(value)" },
+            { "unsigned int(Per_Sample_IV_Size*8)",     "(uint)Per_Sample_IV_Size * 8" },
        };
         return map[type];
     }
@@ -3775,15 +3834,23 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "stream.WriteClass(" },
             { "ThreeGPPKeyword[]",                      "stream.WriteClass(" },
             { "IodsSample[]",                           "stream.WriteClass(" },
-            { "RectRecord",                              "stream.WriteClass(" },
+            { "TrickPlayEntry[]",                       "stream.WriteClass(" },
+            { "RectRecord",                             "stream.WriteClass(" },
             { "StyleRecord",                            "stream.WriteClass(" },
+            { "ProtectionSystemSpecificKeyID[count]",   "stream.WriteClass(" },
             { "unsigned int(8)[contentIDLength]",       "stream.WriteUInt8Array((uint)contentIDLength, " },
             { "unsigned int(8)[contentTypeLength]",     "stream.WriteUInt8Array((uint)contentTypeLength, " },
             { "unsigned int(8)[rightsIssuerLength]",    "stream.WriteUInt8Array((uint)rightsIssuerLength, " },
             { "unsigned int(8)[textualHeadersLength]",  "stream.WriteUInt8Array((uint)textualHeadersLength, " },
             { "unsigned int(8)[count]",                 "stream.WriteUInt8Array((uint)count, " },
             { "unsigned int(8)[4]",                     "stream.WriteUInt8Array((uint)4, " },
+            { "unsigned int(8)[256]",                   "stream.WriteUInt8Array((uint)256, " },
+            { "unsigned int(8)[512]",                   "stream.WriteUInt8Array((uint)512, " },
+            { "unsigned int(8)[constant_IV_size]",      "stream.WriteUInt8Array((uint)constant_IV_size, " },
             { "EC3SpecificEntry[numIndSub + 1]",        "stream.WriteClass(" },
+            { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]",        "stream.WriteClass(" },
+            { "unsigned int(Per_Sample_IV_Size*8)",     "stream.WriteUInt8Array((uint)Per_Sample_IV_Size, " },
+            { "SampleEncryptionSubsample(version)[subsample_count]", "stream.WriteClass(" },
         };
         return map[type];
     }
@@ -4234,15 +4301,23 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "AdobeChapterRecord[]" },
             { "ThreeGPPKeyword[]",                      "ThreeGPPKeyword[]" },
             { "IodsSample[]",                           "IodsSample[]" },
-            { "RectRecord",                              "RectRecord" },
+            { "TrickPlayEntry[]",                       "TrickPlayEntry[]" },
+            { "RectRecord",                             "RectRecord" },
             { "StyleRecord",                            "StyleRecord" },
+            { "ProtectionSystemSpecificKeyID[count]",   "ProtectionSystemSpecificKeyID[]" },
             { "unsigned int(8)[contentIDLength]",       "byte[]" },
             { "unsigned int(8)[contentTypeLength]",     "byte[]" },
             { "unsigned int(8)[rightsIssuerLength]",    "byte[]" },
             { "unsigned int(8)[textualHeadersLength]",  "byte[]" },
             { "unsigned int(8)[count]",                 "byte[]" },
             { "unsigned int(8)[4]",                     "byte[]" },
+            { "unsigned int(8)[256]",                   "byte[]" },
+            { "unsigned int(8)[512]",                   "byte[]" },
+            { "unsigned int(8)[constant_IV_size]",      "byte[]" },
+            { "unsigned int(Per_Sample_IV_Size*8)",     "byte[]" },
             { "EC3SpecificEntry[numIndSub + 1]",        "EC3SpecificEntry[]" },
+            { "SampleEncryptionSubsample(version)[subsample_count]", "SampleEncryptionSubsample[]" },
+            { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "SampleEncryptionSample[]" },
         };
         return map[type];
     }

@@ -886,13 +886,18 @@ namespace SharpMP4
 
         internal ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, uint count, out T[] value) where T : IMp4Serializable, new()
         {
+           return ReadClass<T>(boxSize, readSize, parent, count, () => new T(), out value); 
+        }
+
+        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, uint count, Func<T> factory, out T[] value) where T : IMp4Serializable
+        {
             ulong consumed = 0;
             ulong remaining = readSize - boxSize;
             List<T> ret = new List<T>();
             for (uint i = 0; i < count && consumed < remaining; i++)
             {
                 T c;
-                consumed += ReadClass<T>(boxSize + consumed, remaining, parent, new T(), out c);
+                consumed += ReadClass<T>(boxSize + consumed, remaining, parent, factory(), out c);
                 if (consumed > readSize)
                 {
                     throw new Exception($"Class read through!");
