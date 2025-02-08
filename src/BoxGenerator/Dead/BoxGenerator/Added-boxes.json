@@ -827,32 +827,32 @@
       "originalSyntax": "aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)\r\n{\r\n   unsigned int(32)  sample_count;\r\n   {\r\n      if (version==0) {\r\n         unsigned int(Per_Sample_IV_Size*8) InitializationVector;\r\n         if (flags & 0x000002) {\r\n            unsigned int(16) subsample_count;\r\n            {\r\n               unsigned int(16) BytesOfClearData;\r\n               unsigned int(32) BytesOfProtectedData;\r\n            } [subsample_count ]\r\n         }\r\n  } else if (version==1) {\r\n         unsigned int(16) multi_IV_count;\r\n         for (i=1; i <= multi _IV_count; i++) {\r\n            unsigned int(8) multi_subindex_IV;\r\n            unsigned int(Per_Sample_IV_Size*8) IV;\r\n         }\r\n         unsigned int(32) subsample_count;\r\n         {\r\n            unsigned int(16) multi_subindex;\r\n            unsigned int(16) BytesOfClearData;\r\n            unsigned int(32) BytesOfProtectedData;\r\n         } [subsample_count]\r\n      }\r\n   }[ sample_count ]\r\n}",
       "syntax": "aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)\r\n{\r\n   unsigned int(32)  sample_count;\r\n   SampleEncryptionSample(version, flags, Per_Sample_IV_Size) samples[sample_count];\r\n}\r\n\r\naligned(8) class SampleEncryptionSample(version, flags, Per_Sample_IV_Size) {\r\n      if (version == 0) {\r\n         unsigned int(Per_Sample_IV_Size*8) InitializationVector;\r\n         if (flags & 0x000002) {            unsigned int(16) subsample_count;\r\n            SampleEncryptionSubsample(version) subsamples[subsample_count];\r\n         }\r\n      } else if (version==1) {\r\n         unsigned int(16) multi_IV_count;\r\n         for (i=1; i <= multi_IV_count; i++) {\r\n            unsigned int(8) multi_subindex_IV;\r\n            unsigned int(Per_Sample_IV_Size*8) IV;\r\n         }\r\n          unsigned int(32) subsample_count;\r\n          SampleEncryptionSubsample(version) subsamples[subsample_count];\r\n      }\r\n}\r\n\r\naligned(8) class SampleEncryptionSubsample(version) {\r\n  if (version==0) {\r\n     unsigned int(16) BytesOfClearData;\r\n     unsigned int(32) BytesOfProtectedData;\r\n  }\r\n  else if(version == 1) {\r\n     unsigned int(16) multi_subindex;\r\n     unsigned int(16) BytesOfClearData;\r\n     unsigned int(32) BytesOfProtectedData;\r\n  }\r\n}"
     },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleAtIDBox() extends Box('atID') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleGeIDBox() extends Box('geID') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleXidBox() extends Box('xid ') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleFlvrBox() extends Box('flvr') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleShortDescriptionBox() extends Box('sdes') {\r\n Box boxes[];\r\n } "
+    },
 
-    {
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class Apple_atIDBox() extends Box('atID') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class Apple_geIDBox() extends Box('geID') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class Apple_xid_Box() extends Box('xid ') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class Apple_flvr_Box() extends Box('flvr') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class AppleShortDescriptionBox() extends Box('sdes') {\r\n bit(8) data[];\r\n } "
-    },
     {
       "containers": [ "*" ],
       "type": "Box",

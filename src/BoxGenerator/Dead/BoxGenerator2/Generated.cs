@@ -59,7 +59,7 @@ namespace SharpMP4
                 case "apID": return new ITunesPurchaseAccountBox();
                 case "apmd": return new AppleApertureModeBox();
                 case "assp": return new AlternativeStartupSequencePropertiesBox();
-                case "atID": return new Apple_atIDBox(); // TODO: fix duplicate
+                case "atID": return new AppleAtIDBox();
                 case "auth": return new ThreeGPPAuthorBox();
                 case "auxC": return new AuxiliaryTypeProperty();
                 case "auxi": return new AuxiliaryTypeInfoBox();
@@ -166,13 +166,13 @@ namespace SharpMP4
                 case "fiel": return new FielBox();
                 case "fiin": return new FDItemInformationBox();
                 case "fire": return new FileReservoirBox();
-                case "flvr": return new Apple_flvr_Box(); // TODO: fix duplicate
+                case "flvr": return new AppleFlvrBox();
                 case "fpar": return new FilePartitionBox();
                 case "free": return new FreeSpaceBox();
                 case "frma": return new OriginalFormatBox();
                 case "ftab": return new FontTableBox();
                 case "ftyp": return new FileTypeBox();
-                case "geID": return new Apple_geIDBox(); // TODO: fix duplicate
+                case "geID": return new AppleGeIDBox();
                 case "gitn": return new GroupIdToNameBox();
                 case "gmhd": return new GenericMediaHeaderAtom();
                 case "gmin": return new BaseMediaInfoAtom();
@@ -509,7 +509,7 @@ namespace SharpMP4
                 case "wide": return new FreeSpaceBox_wide(); // TODO: fix duplicate
                 case "wipe": return new WipeTransitionEffectProperty();
                 case "wvtt": return new WVTTSampleEntry();
-                case "xid ": return new Apple_xid_Box(); // TODO: fix duplicate
+                case "xid ": return new AppleXidBox();
                 case "xml ": return new XMLBox();
                 case "Xtra": return new WindowsMediaXtraBox();
                 case "yrrc": return new ThreeGPPRecordingYearBox();
@@ -44691,19 +44691,17 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class Apple_atIDBox() extends Box('atID') {
-     bit(8) data[];
+    aligned(8) class AppleAtIDBox() extends Box('atID') {
+     Box boxes[];
      } 
     */
-    public class Apple_atIDBox : Box
+    public class AppleAtIDBox : Box
     {
         public const string TYPE = "atID";
-        public override string DisplayName { get { return "Apple_atIDBox"; } }
+        public override string DisplayName { get { return "AppleAtIDBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public Apple_atIDBox() : base("atID")
+        public AppleAtIDBox() : base("atID")
         {
         }
 
@@ -44711,7 +44709,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -44719,7 +44718,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -44727,26 +44727,25 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class Apple_geIDBox() extends Box('geID') {
-     bit(8) data[];
+    aligned(8) class AppleGeIDBox() extends Box('geID') {
+     Box boxes[];
      } 
     */
-    public class Apple_geIDBox : Box
+    public class AppleGeIDBox : Box
     {
         public const string TYPE = "geID";
-        public override string DisplayName { get { return "Apple_geIDBox"; } }
+        public override string DisplayName { get { return "AppleGeIDBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public Apple_geIDBox() : base("geID")
+        public AppleGeIDBox() : base("geID")
         {
         }
 
@@ -44754,7 +44753,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -44762,7 +44762,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -44770,26 +44771,25 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class Apple_xid_Box() extends Box('xid ') {
-     bit(8) data[];
+    aligned(8) class AppleXidBox() extends Box('xid ') {
+     Box boxes[];
      } 
     */
-    public class Apple_xid_Box : Box
+    public class AppleXidBox : Box
     {
         public const string TYPE = "xid ";
-        public override string DisplayName { get { return "Apple_xid_Box"; } }
+        public override string DisplayName { get { return "AppleXidBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public Apple_xid_Box() : base("xid ")
+        public AppleXidBox() : base("xid ")
         {
         }
 
@@ -44797,7 +44797,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -44805,7 +44806,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -44813,26 +44815,25 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class Apple_flvr_Box() extends Box('flvr') {
-     bit(8) data[];
+    aligned(8) class AppleFlvrBox() extends Box('flvr') {
+     Box boxes[];
      } 
     */
-    public class Apple_flvr_Box : Box
+    public class AppleFlvrBox : Box
     {
         public const string TYPE = "flvr";
-        public override string DisplayName { get { return "Apple_flvr_Box"; } }
+        public override string DisplayName { get { return "AppleFlvrBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public Apple_flvr_Box() : base("flvr")
+        public AppleFlvrBox() : base("flvr")
         {
         }
 
@@ -44840,7 +44841,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -44848,7 +44850,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -44856,7 +44859,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -44864,16 +44868,14 @@ namespace SharpMP4
 
     /*
     aligned(8) class AppleShortDescriptionBox() extends Box('sdes') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class AppleShortDescriptionBox : Box
     {
         public const string TYPE = "sdes";
         public override string DisplayName { get { return "AppleShortDescriptionBox"; } }
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AppleShortDescriptionBox() : base("sdes")
         {
@@ -44883,7 +44885,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -44891,7 +44894,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -44899,7 +44903,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
