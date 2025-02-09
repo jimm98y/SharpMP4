@@ -485,7 +485,7 @@ namespace SharpMP4
                 case "url ": return new DataEntryUrlBox();
                 case "urn ": return new DataEntryUrnBox();
                 case "user": return new FairPlayUserIDBox();
-                case "uuid": return new UuidBox(uuid);
+                case "uuid": return new UserBox(uuid);
                 case "vdep": return new TrackReferenceTypeBox_vdep(); // TODO: fix duplicate
                 case "vipr": return new ViewPriorityBox();
                 case "vlab": return new WebVTTSourceLabelBox();
@@ -1042,11 +1042,14 @@ namespace SharpMP4
 
 
     */
-    public abstract class SampleGroupDescriptionEntry : IMp4Serializable
+    public abstract class SampleGroupDescriptionEntry : IHasBoxChildren
     {
         public StreamMarker Padding { get; set; }
         public IMp4Serializable Parent { get; set; }
         public virtual string DisplayName { get { return "SampleGroupDescriptionEntry"; } }
+
+        protected List<Box> children = new List<Box>();
+        public List<Box> Children { get { return this.children; } set { this.children = value; } }
 
         public SampleGroupDescriptionEntry(string grouping_type) : base()
         {
@@ -1336,9 +1339,9 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadString(boxSize, readSize, out this.ns);
-            boxSize += stream.ReadString(boxSize, readSize, out this.schema_location); // optional 
-            boxSize += stream.ReadString(boxSize, readSize, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
-                                                                                            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); 
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadString(boxSize, readSize, out this.schema_location); // optional 
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadString(boxSize, readSize, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+                                                                                                                                       // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -1398,10 +1401,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional 
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional 
             boxSize += stream.ReadString(boxSize, readSize, out this.mime_format);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -1763,10 +1766,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional 
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional 
             boxSize += stream.ReadString(boxSize, readSize, out this.mime_format);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -1950,10 +1953,10 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataKeyDeclarationBox); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataDatatypeBox); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataLocaleBox); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataSetupBox); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataExtensionsBox); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataDatatypeBox); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataLocaleBox); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataSetupBox); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataExtensionsBox); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -6480,7 +6483,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(out this.stereo_scheme);
             boxSize += stream.ReadUInt32(out this.length);
             boxSize += stream.ReadUInt8Array((uint)length, out this.stereo_indication_type);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.any_box); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.any_box); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -7266,7 +7269,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scheme_type_box); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.info); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.info); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -10318,8 +10321,8 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.blocks_and_symbols); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.FEC_symbol_locations); //optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.File_symbol_locations); //optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.FEC_symbol_locations); //optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.File_symbol_locations); //optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -10378,8 +10381,8 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.entry_count);
             // boxSize += stream.ReadBox(boxSize, readSize, this, entry_count,  out this.partition_entries); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.session_info); //optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.group_id_to_name); //optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.session_info); //optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.group_id_to_name); //optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -11701,13 +11704,13 @@ namespace SharpMP4
                 boxSize += stream.ReadUInt16(out this.item_protection_index);
                 boxSize += stream.ReadString(boxSize, readSize, out this.item_name);
                 boxSize += stream.ReadString(boxSize, readSize, out this.content_type);
-                boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); //optional
+                if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); //optional
             }
 
             if (version == 1)
             {
-                boxSize += stream.ReadUInt32(out this.extension_type); //optional
-                boxSize += stream.ReadClass(boxSize, readSize, this, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), out this.ItemInfoExtension); //optional
+                if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(out this.extension_type); //optional
+                if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadClass(boxSize, readSize, this, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), out this.ItemInfoExtension); //optional
             }
 
             if (version >= 2)
@@ -11729,7 +11732,7 @@ namespace SharpMP4
                 if (item_type == IsoStream.FromFourCC("mime"))
                 {
                     boxSize += stream.ReadString(boxSize, readSize, out this.content_type);
-                    boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); //optional
+                    if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); //optional
                 }
 
                 else if (item_type == IsoStream.FromFourCC("uri "))
@@ -12511,15 +12514,15 @@ namespace SharpMP4
             ulong boxSize = 0;
             if (IsQuickTime) boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.theHandler); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.primary_resource); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.file_locations); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.item_locations); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.protections); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.item_infos); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.IPMP_control); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.item_refs); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.item_data); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.other_boxes); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.primary_resource); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.file_locations); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.item_locations); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.protections); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.item_infos); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.IPMP_control); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.item_refs); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.item_data); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.other_boxes); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -13438,7 +13441,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.original_format); 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scheme_type_box); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.info); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.info); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -14404,8 +14407,8 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.original_format); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scheme_type_box); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.info); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scheme_type_box); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.info); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -15917,7 +15920,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.track_ID); // all the following are optional fields
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(out this.track_ID); // all the following are optional fields
             /*  their presence is indicated by bits in the tf_flags */
 
             if ((flags & 0x1) == 0x1)
@@ -16704,7 +16707,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.sample_count); // the following are optional fields
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(out this.sample_count); // the following are optional fields
 
             if ((flags & 0x1) == 0x1)
             {
@@ -18310,11 +18313,11 @@ namespace SharpMP4
                     boxSize += stream.ReadUInt16(out this.view_count[i]);
                 }
             }
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.subset_stream_info); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.relation_attributes); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.subset_stream_bit_rate); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.subset_stream_buffering); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.multiview_scene_info); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.subset_stream_info); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.relation_attributes); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.subset_stream_bit_rate); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.subset_stream_buffering); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.multiview_scene_info); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -18519,11 +18522,11 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.depth_width);
             boxSize += stream.ReadUInt16(out this.depth_height);
             /*  The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox).  */
-            boxSize += stream.ReadUInt16(out this.depth_hor_mult_minus1); // optional
-            boxSize += stream.ReadUInt16(out this.depth_ver_mult_minus1); // optional
-            boxSize += stream.ReadBits(4, out this.depth_hor_rsh); // optional
-            boxSize += stream.ReadBits(4, out this.depth_ver_rsh); // optional
-            boxSize += stream.ReadUInt16(out this.grid_pos_num_views); // optional
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt16(out this.depth_hor_mult_minus1); // optional
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt16(out this.depth_ver_mult_minus1); // optional
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBits(4, out this.depth_hor_rsh); // optional
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBits(4, out this.depth_ver_rsh); // optional
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt16(out this.grid_pos_num_views); // optional
 
             this.reserved = new byte[grid_pos_num_views];
             this.grid_pos_view_id = new ushort[grid_pos_num_views];
@@ -20983,7 +20986,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.label); // recommended
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -21375,7 +21378,7 @@ namespace SharpMP4
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsBasic); 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsUniDRC); 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.UniDrcConfigExtension); // optional boxes follow
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.UniDrcConfigExtension); // optional boxes follow
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SamplingRateBox); 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.Box); // further boxes as needed
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -21544,17 +21547,17 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.samplesize);
             boxSize += stream.ReadUInt16(out this.pre_defined);
             boxSize += stream.ReadUInt16(out this.reserved0);
-            boxSize += stream.ReadUInt32(out this.samplerate); // optional boxes follow
-                                                               // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SamplingRateBox); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.Box); // further boxes as needed
-                                                               // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DownMixInstructions); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsBasic); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsBasic); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsUniDRC); 
-                                                               // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-                                                               // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.UniDrcConfigExtension); // optional boxes follow
-                                                               // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); 
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(out this.samplerate); // optional boxes follow
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SamplingRateBox); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.Box); // further boxes as needed
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DownMixInstructions); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsBasic); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsBasic); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsUniDRC); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+                                                                                                          // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.UniDrcConfigExtension); // optional boxes follow
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -21803,9 +21806,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional
             boxSize += stream.ReadString(boxSize, readSize, out this.ns);
-            boxSize += stream.ReadString(boxSize, readSize, out this.schema_location); // optional
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadString(boxSize, readSize, out this.schema_location); // optional
             return boxSize;
         }
 
@@ -21858,9 +21861,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadString(boxSize, readSize, out this.content_encoding); // optional
             boxSize += stream.ReadString(boxSize, readSize, out this.mime_format);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -21911,7 +21914,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.the_label); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.init); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.init); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -21961,7 +21964,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataKeyTableBox); // mandatory
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -22597,8 +22600,8 @@ namespace SharpMP4
             boxSize += stream.ReadUInt8Array(32, out this.compressorname);
             boxSize += stream.ReadUInt16(out this.depth);
             boxSize += stream.ReadInt16(out this.pre_defined1); // other boxes from derived specifications
-                                                                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.clap); // optional
-                                                                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.pasp); // optional
+                                                                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.clap); // optional
+                                                                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.pasp); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -23889,8 +23892,8 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.methods); // optional
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.priorities); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.methods); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.priorities); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -25417,33 +25420,15 @@ namespace SharpMP4
 
         protected byte tl_switching_distance;
         public byte TlSwitchingDistance { get { return this.tl_switching_distance; } set { this.tl_switching_distance = value; } }
-
-        protected ViewIdentifierBox ViewIdentifierBox;  //  Mandatory
-        public ViewIdentifierBox _ViewIdentifierBox { get { return this.ViewIdentifierBox; } set { this.ViewIdentifierBox = value; } }
-
-        protected TierInfoBox TierInfoBox;  //  Mandatory
-        public TierInfoBox _TierInfoBox { get { return this.TierInfoBox; } set { this.TierInfoBox = value; } }
-
-        protected TierDependencyBox TierDependencyBox;  //  Mandatory
-        public TierDependencyBox _TierDependencyBox { get { return this.TierDependencyBox; } set { this.TierDependencyBox = value; } }
-
-        protected PriorityRangeBox PriorityRangeBox;  //  Mandatory
-        public PriorityRangeBox _PriorityRangeBox { get { return this.PriorityRangeBox; } set { this.PriorityRangeBox = value; } }
-
-        protected TierBitRateBox TierBitRateBox;  //  optional
-        public TierBitRateBox _TierBitRateBox { get { return this.TierBitRateBox; } set { this.TierBitRateBox = value; } }
-
-        protected BufferingBox BufferingBox;  //  optional
-        public BufferingBox _BufferingBox { get { return this.BufferingBox; } set { this.BufferingBox = value; } }
-
-        protected InitialParameterSetBox InitialParameterSetBox;  //  optional
-        public InitialParameterSetBox _InitialParameterSetBox { get { return this.InitialParameterSetBox; } set { this.InitialParameterSetBox = value; } }
-
-        protected ProtectionSchemeInfoBox ProtectionSchemeInfoBox;  //  optional
-        public ProtectionSchemeInfoBox _ProtectionSchemeInfoBox { get { return this.ProtectionSchemeInfoBox; } set { this.ProtectionSchemeInfoBox = value; } }
-
-        protected ViewPriorityBox ViewPriorityBox;  //  optional
-        public ViewPriorityBox _ViewPriorityBox { get { return this.ViewPriorityBox; } set { this.ViewPriorityBox = value; } }
+        public ViewIdentifierBox _ViewIdentifierBox { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public TierInfoBox _TierInfoBox { get { return this.children.OfType<TierInfoBox>().FirstOrDefault(); } }
+        public TierDependencyBox _TierDependencyBox { get { return this.children.OfType<TierDependencyBox>().FirstOrDefault(); } }
+        public PriorityRangeBox _PriorityRangeBox { get { return this.children.OfType<PriorityRangeBox>().FirstOrDefault(); } }
+        public TierBitRateBox _TierBitRateBox { get { return this.children.OfType<TierBitRateBox>().FirstOrDefault(); } }
+        public BufferingBox _BufferingBox { get { return this.children.OfType<BufferingBox>().FirstOrDefault(); } }
+        public InitialParameterSetBox _InitialParameterSetBox { get { return this.children.OfType<InitialParameterSetBox>().FirstOrDefault(); } }
+        public ProtectionSchemeInfoBox _ProtectionSchemeInfoBox { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
+        public ViewPriorityBox _ViewPriorityBox { get { return this.children.OfType<ViewPriorityBox>().FirstOrDefault(); } }
 
         public MultiviewGroupEntry() : base("mvif")
         {
@@ -25467,12 +25452,13 @@ namespace SharpMP4
                 // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TierDependencyBox); // Mandatory
                 // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.PriorityRangeBox); // Mandatory
                 /* Optional Boxes or fields may follow when defined later */
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TierBitRateBox); // optional
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BufferingBox); // optional
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.InitialParameterSetBox); // optional
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ProtectionSchemeInfoBox); // optional
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ViewPriorityBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TierBitRateBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BufferingBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.InitialParameterSetBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ProtectionSchemeInfoBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ViewPriorityBox); // optional
             }
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -25500,6 +25486,7 @@ namespace SharpMP4
                 // boxSize += stream.WriteBox( this.ProtectionSchemeInfoBox); // optional
                 // boxSize += stream.WriteBox( this.ViewPriorityBox); // optional
             }
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -25527,6 +25514,7 @@ namespace SharpMP4
                 // boxSize += IsoStream.CalculateBoxSize(ProtectionSchemeInfoBox); // ProtectionSchemeInfoBox
                 // boxSize += IsoStream.CalculateBoxSize(ViewPriorityBox); // ViewPriorityBox
             }
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -26126,39 +26114,17 @@ namespace SharpMP4
 
         protected byte tl_switching_distance;
         public byte TlSwitchingDistance { get { return this.tl_switching_distance; } set { this.tl_switching_distance = value; } }
-
-        protected TierInfoBox TierInfoBox;  //  Mandatory
-        public TierInfoBox _TierInfoBox { get { return this.TierInfoBox; } set { this.TierInfoBox = value; } }
-
-        protected SVCDependencyRangeBox SVCDependencyRangeBox;  //  Mandatory
-        public SVCDependencyRangeBox _SVCDependencyRangeBox { get { return this.SVCDependencyRangeBox; } set { this.SVCDependencyRangeBox = value; } }
-
-        protected PriorityRangeBox PriorityRangeBox;  //  Mandatory
-        public PriorityRangeBox _PriorityRangeBox { get { return this.PriorityRangeBox; } set { this.PriorityRangeBox = value; } }
-
-        protected TierBitRateBox TierBitRateBox;  //  optional
-        public TierBitRateBox _TierBitRateBox { get { return this.TierBitRateBox; } set { this.TierBitRateBox = value; } }
-
-        protected RectRegionBox RectRegionBox;  //  optional
-        public RectRegionBox _RectRegionBox { get { return this.RectRegionBox; } set { this.RectRegionBox = value; } }
-
-        protected BufferingBox BufferingBox;  //  optional
-        public BufferingBox _BufferingBox { get { return this.BufferingBox; } set { this.BufferingBox = value; } }
-
-        protected TierDependencyBox TierDependencyBox;  //  optional
-        public TierDependencyBox _TierDependencyBox { get { return this.TierDependencyBox; } set { this.TierDependencyBox = value; } }
-
-        protected InitialParameterSetBox InitialParameterSetBox;  //  optional
-        public InitialParameterSetBox _InitialParameterSetBox { get { return this.InitialParameterSetBox; } set { this.InitialParameterSetBox = value; } }
-
-        protected IroiInfoBox IroiInfoBox;  //  optional
-        public IroiInfoBox _IroiInfoBox { get { return this.IroiInfoBox; } set { this.IroiInfoBox = value; } }
-
-        protected ProtectionSchemeInfoBox ProtectionSchemeInfoBox;  //  optional
-        public ProtectionSchemeInfoBox _ProtectionSchemeInfoBox { get { return this.ProtectionSchemeInfoBox; } set { this.ProtectionSchemeInfoBox = value; } }
-
-        protected TranscodingInfoBox TranscodingInfoBox;  //  optional
-        public TranscodingInfoBox _TranscodingInfoBox { get { return this.TranscodingInfoBox; } set { this.TranscodingInfoBox = value; } }
+        public TierInfoBox _TierInfoBox { get { return this.children.OfType<TierInfoBox>().FirstOrDefault(); } }
+        public SVCDependencyRangeBox _SVCDependencyRangeBox { get { return this.children.OfType<SVCDependencyRangeBox>().FirstOrDefault(); } }
+        public PriorityRangeBox _PriorityRangeBox { get { return this.children.OfType<PriorityRangeBox>().FirstOrDefault(); } }
+        public TierBitRateBox _TierBitRateBox { get { return this.children.OfType<TierBitRateBox>().FirstOrDefault(); } }
+        public RectRegionBox _RectRegionBox { get { return this.children.OfType<RectRegionBox>().FirstOrDefault(); } }
+        public BufferingBox _BufferingBox { get { return this.children.OfType<BufferingBox>().FirstOrDefault(); } }
+        public TierDependencyBox _TierDependencyBox { get { return this.children.OfType<TierDependencyBox>().FirstOrDefault(); } }
+        public InitialParameterSetBox _InitialParameterSetBox { get { return this.children.OfType<InitialParameterSetBox>().FirstOrDefault(); } }
+        public IroiInfoBox _IroiInfoBox { get { return this.children.OfType<IroiInfoBox>().FirstOrDefault(); } }
+        public ProtectionSchemeInfoBox _ProtectionSchemeInfoBox { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
+        public TranscodingInfoBox _TranscodingInfoBox { get { return this.children.OfType<TranscodingInfoBox>().FirstOrDefault(); } }
 
         public ScalableGroupEntry() : base("scif")
         {
@@ -26184,15 +26150,16 @@ namespace SharpMP4
                 // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SVCDependencyRangeBox); // Mandatory
                 // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.PriorityRangeBox); // Mandatory
                 /* Optional Boxes or fields may follow when defined later */
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TierBitRateBox); // optional
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.RectRegionBox); // optional
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BufferingBox); // optional
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TierDependencyBox); // optional
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.InitialParameterSetBox); // optional
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.IroiInfoBox); // optional
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ProtectionSchemeInfoBox); // optional
-                // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TranscodingInfoBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TierBitRateBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.RectRegionBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BufferingBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TierDependencyBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.InitialParameterSetBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.IroiInfoBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ProtectionSchemeInfoBox); // optional
+                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TranscodingInfoBox); // optional
             }
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -26225,6 +26192,7 @@ namespace SharpMP4
                 // boxSize += stream.WriteBox( this.ProtectionSchemeInfoBox); // optional
                 // boxSize += stream.WriteBox( this.TranscodingInfoBox); // optional
             }
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -26257,6 +26225,7 @@ namespace SharpMP4
                 // boxSize += IsoStream.CalculateBoxSize(ProtectionSchemeInfoBox); // ProtectionSchemeInfoBox
                 // boxSize += IsoStream.CalculateBoxSize(TranscodingInfoBox); // TranscodingInfoBox
             }
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -27115,9 +27084,7 @@ namespace SharpMP4
     {
         public const string TYPE = "vipr";
         public override string DisplayName { get { return "ViewPriorityEntry"; } }
-
-        protected ViewPriorityBox ViewPriorityBox;
-        public ViewPriorityBox _ViewPriorityBox { get { return this.ViewPriorityBox; } set { this.ViewPriorityBox = value; } }
+        public ViewPriorityBox _ViewPriorityBox { get { return this.children.OfType<ViewPriorityBox>().FirstOrDefault(); } }
 
         public ViewPriorityEntry() : base("vipr")
         {
@@ -27128,6 +27095,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ViewPriorityBox); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -27136,6 +27104,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.ViewPriorityBox); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -27144,6 +27113,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(ViewPriorityBox); // ViewPriorityBox
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -36861,19 +36831,19 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class UuidBox(uuid) extends Box('uuid') {
+    aligned(8) class UserBox(uuid) extends Box('uuid') {
      bit(8) data[];
      } 
     */
-    public class UuidBox : Box
+    public class UserBox : Box
     {
         public const string TYPE = "uuid";
-        public override string DisplayName { get { return "UuidBox"; } }
+        public override string DisplayName { get { return "UserBox"; } }
 
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public UuidBox(byte[] uuid) : base("uuid", uuid)
+        public UserBox(byte[] uuid) : base("uuid", uuid)
         {
         }
 
@@ -41314,7 +41284,7 @@ namespace SharpMP4
             boxSize += stream.ReadBit(out this.reserved);
             boxSize += stream.ReadIso639(out this.language);
             boxSize += stream.ReadString(boxSize, readSize, out this.value);
-            boxSize += stream.ReadUInt8(out this.trackNumber); // optional
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt8(out this.trackNumber); // optional
             return boxSize;
         }
 

@@ -136,7 +136,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class UuidBox(uuid) extends Box('uuid') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class UserBox(uuid) extends Box('uuid') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],

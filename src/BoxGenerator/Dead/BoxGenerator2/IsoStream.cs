@@ -35,6 +35,17 @@ namespace SharpMP4
 
         #region Stream operations
 
+        internal bool HasMoreData(ulong boxSize, ulong readSize)
+        {
+            if (readSize == ulong.MaxValue)
+            {
+                return true;
+            }
+
+            ulong remaining = readSize - boxSize;
+            return remaining > 0;
+        }
+
         internal bool CanStreamSeek()
         {
             return _stream.CanStreamSeek();
@@ -697,11 +708,11 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadBoxArrayTillEnd(ulong boxSize, ulong readSize, Box box)
+        internal ulong ReadBoxArrayTillEnd(ulong boxSize, ulong readSize, IHasBoxChildren box)
         {
             if (box.Children != null)
             {
-                Log.Debug($"Box reading {box.FourCC} repeated Children read");
+                Log.Debug($"Box reading repeated Children read");
                 return 0;
             }
 
@@ -750,7 +761,7 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal ulong WriteBoxArrayTillEnd(Box box)
+        internal ulong WriteBoxArrayTillEnd(IHasBoxChildren box)
         {
             if (box.Children == null)
                 return 0;
@@ -838,13 +849,13 @@ namespace SharpMP4
             return indent;
         }
 
-        internal static ulong CalculateBoxSize(IEnumerable<Box> boxes)
+        internal static ulong CalculateBoxSize(IEnumerable<IHasBoxChildren> boxes)
         {
             ulong size = 0;
             if (boxes == null)
                 return 0;
 
-            foreach (Box box in boxes)
+            foreach (IHasBoxChildren box in boxes)
             {
                 size += CalculateBoxSize(box);
             }
@@ -1933,12 +1944,12 @@ namespace SharpMP4
             return value.CalculateSize();
         }
 
-        internal static ulong CalculateBoxSize(Box value)
+        internal static ulong CalculateBoxSize(IHasBoxChildren value)
         {
             return value.CalculateSize();
         }
 
-        internal static ulong CalculateBoxArray(Box value)
+        internal static ulong CalculateBoxArray(IHasBoxChildren value)
         {
             return CalculateBoxSize(value.Children);
         }

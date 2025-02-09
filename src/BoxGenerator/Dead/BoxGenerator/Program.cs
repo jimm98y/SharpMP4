@@ -1122,7 +1122,7 @@ namespace SharpMP4
             {
                 if (item.Key == "uuid")
                 {
-                    factory += $"               case \"{item.Key}\": return new UuidBox(uuid);\r\n";
+                    factory += $"               case \"{item.Key}\": return new UserBox(uuid);\r\n";
                 }
                 else
                 {
@@ -1309,7 +1309,14 @@ namespace SharpMP4
             if (b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")
                 cls += $" : Descriptor\r\n{{\r\n";
             else
-                cls += $" : IMp4Serializable\r\n{{\r\n\t\tpublic StreamMarker Padding {{ get; set; }}\r\n\t\tpublic IMp4Serializable Parent {{ get; set; }}\r\n";
+            {
+                string inType = "IMp4Serializable";
+                if(b.BoxName == "SampleGroupDescriptionEntry")
+                {
+                    inType = "IHasBoxChildren";
+                }
+                cls += $" : {inType}\r\n{{\r\n\t\tpublic StreamMarker Padding {{ get; set; }}\r\n\t\tpublic IMp4Serializable Parent {{ get; set; }}\r\n";
+            }
         }
 
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.Extended.BoxType))
@@ -1396,6 +1403,10 @@ namespace SharpMP4
         {
             fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = "unsigned int(8)", Value = " = 16; // TODO: get from the 'tenc' box" });
         }
+        else if(b.BoxName == "SampleGroupDescriptionEntry")
+        {
+            fields.Add(new PseudoField() { Name = "children", Type = "Box[]" });
+        }
 
         bool hasBoxes = fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "ItemReferenceBox";
         bool hasDescriptors = fields.Select(x => GetReadMethod(x.Type).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
@@ -1439,7 +1450,7 @@ namespace SharpMP4
             {
                 base4ccparams = string.Join(", ", b.Extended.Parameters.Select(x => string.IsNullOrEmpty(x.Value) ? x.Name : x.Value));
             }
-            else if(b.BoxName == "UuidBox")
+            else if(b.BoxName == "UserBox")
             {
                 base4ccparams = "uuid";
             }
@@ -1502,7 +1513,7 @@ namespace SharpMP4
         }
 
         if ((string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)) && 
-            b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ViewPriorityEntry" && b.BoxName != "MultiviewGroupEntry" && b.BoxName != "ScalableGroupEntry")
+            b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry")
         {
             cls += "\r\n" + "boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);";
         }
@@ -1537,7 +1548,7 @@ namespace SharpMP4
         }
 
         if ((string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)) &&
-            b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ViewPriorityEntry" && b.BoxName != "MultiviewGroupEntry" && b.BoxName != "ScalableGroupEntry")
+            b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry")
         {
             cls += "\r\n" + "boxSize += stream.WriteBoxArrayTillEnd(this);";
         }
@@ -1571,7 +1582,7 @@ namespace SharpMP4
         }
 
         if ((string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)) &&
-            b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ViewPriorityEntry" && b.BoxName != "MultiviewGroupEntry" && b.BoxName != "ScalableGroupEntry")
+            b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry")
         {
             cls += "\r\n" + "boxSize += IsoStream.CalculateBoxArray(this);";
         }
@@ -1956,8 +1967,8 @@ namespace SharpMP4
                 }
 
                 string readMethod = GetReadMethod((field as PseudoField)?.Type);
-                if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox"
-                    && b.BoxName != "ViewPriorityEntry" && b.BoxName != "MultiviewGroupEntry" && b.BoxName != "ScalableGroupEntry" && b.BoxName != "ItemReferenceBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox")
+                if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox"&& b.BoxName != "SampleGroupDescriptionEntry"
+                     && b.BoxName != "ItemReferenceBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox")
                 {
                     string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
                     string ttttt = tt.Replace("[]", "");
@@ -1966,6 +1977,12 @@ namespace SharpMP4
                 }
                 else
                 {
+                    if(b.BoxName == "SampleGroupDescriptionEntry" && tt == "Box[]")
+                    {
+                        tt = "List<Box>";
+                        value = "= new List<Box>()";
+                    }
+
                     return $"\r\n\tprotected {tt} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
                      $"\tpublic {tt} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
                 }
@@ -2243,6 +2260,22 @@ namespace SharpMP4
             (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox"))
         {
             spacing += "// ";
+        }
+
+        if(fieldComment != null && fieldComment.Contains("optional"))
+        {
+            if (methodType == MethodType.Read)
+            {
+                spacing += "if (stream.HasMoreData(boxSize, readSize)) ";
+            }
+            else if (methodType == MethodType.Write)
+            {
+                spacing += ""; // TODO
+            }
+            else if (methodType == MethodType.Size)
+            {
+                spacing += ""; // TODO
+            }
         }
 
         if (methodType == MethodType.Size)

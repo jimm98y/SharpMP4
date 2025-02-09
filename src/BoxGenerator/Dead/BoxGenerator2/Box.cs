@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SharpMP4
 {
-    public interface IHasBoxChildren
+    public interface IHasBoxChildren : IMp4Serializable
     {
         List<Box> Children { get; set; }
     }
