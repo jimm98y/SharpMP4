@@ -156,7 +156,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TextMediaBox() extends Box('text') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class TextMediaBox() extends Box('text') {\r\n unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(32) displayFlags;\r\n unsigned int(32) textJustification;\r\n unsigned int(16) bgColorRed;\r\n unsigned int(16) bgColorGreen;\r\n unsigned int(16) bgColorBlue;\r\n unsigned int(16) defTextBoxTop;\r\n unsigned int(16) defTextBoxLeft;\r\n unsigned int(16) defTextBoxBotton;\r\n unsigned int(16) defTextBoxRight;\r\n unsigned int(64) reserved2;\r\n unsigned int(16) fontNumber;\r\n unsigned int(16) fontFace;\r\n unsigned int(8) reserved3;\r\n unsigned int(16) reserved4;\r\n unsigned int(16) foreColorRed;\r\n unsigned int(16) foreColorGreen;\r\n unsigned int(16) foreColorBlue;\r\n string name;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TextGmhdMediaBox() extends Box('text') {\r\n unsigned int(8) textData[36];\r\n } "
     },
     {
       "containers": [ "*" ],

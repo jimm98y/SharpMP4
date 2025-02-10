@@ -1139,7 +1139,6 @@ namespace SharpMP4
                     if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" || item.Value.Single().BoxName == "MpegSampleEntry")
                         optCondition = "if(parent == \"stsd\") ";
 
-
                     factory += $"               case \"{item.Key}\": {optCondition} return new {item.Value.Single().BoxName}({optParams});{(optCondition != "" ? "break;" : "")}{comment}\r\n";
                 }
             }
@@ -1158,9 +1157,13 @@ namespace SharpMP4
                     string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
                     factory += $"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n";
                 }
-                else if(item.Key == "cprt")
+                else if (item.Key == "cprt")
                 {
                     factory += $"               case \"{item.Key}\": if(parent == \"ilst\") return new AppleCopyrightBox(); else return new CopyrightBox();\r\n";
+                }
+                else if (item.Value.First().BoxName == "TextMediaBox")
+                {
+                    factory += $"               case \"{item.Key}\": if(parent == \"gmhd\") return new TextGmhdMediaBox(); else if(parent == \"stsd\") return new TextMediaBox(); break;\r\n";
                 }
                 else
                 {
@@ -2346,7 +2349,7 @@ namespace SharpMP4
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" && value != "[4]" && value != "[6]" && value != "[256]" && value != "[512]" &&
+            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" && value != "[4]" && value != "[6]" && value != "[36]" && value != "[256]" && value != "[512]" &&
             value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]" && value != "[numIndSub + 1]")
         {
             return value;
@@ -2652,7 +2655,8 @@ namespace SharpMP4
             { "unsigned int(8)[ sample_count ]",        "stream.ReadUInt8Array((uint)sample_count, " },
             { "unsigned int(8)[length]",                "stream.ReadUInt8Array((uint)length, " },
             { "unsigned int(8)[32]",                    "stream.ReadUInt8Array(32, " },
-            { "unsigned int(8)[20]",                    "stream.ReadUInt8Array(32, " },
+            { "unsigned int(8)[36]",                    "stream.ReadUInt8Array(36, " },
+            { "unsigned int(8)[20]",                    "stream.ReadUInt8Array(20, " },
             { "unsigned int(8)[16]",                    "stream.ReadUInt8Array(16, " },
             { "unsigned int(9)",                        "stream.ReadBits(9, " },
             { "unsigned int(8)",                        "stream.ReadUInt8(" },
@@ -3076,6 +3080,7 @@ namespace SharpMP4
             { "unsigned int(8)[ sample_count ]",        "(ulong)sample_count * 8" },
             { "unsigned int(8)[length]",                "(ulong)length * 8" },
             { "unsigned int(8)[32]",                    "32 * 8" },
+            { "unsigned int(8)[36]",                    "36 * 8" },
             { "unsigned int(8)[20]",                    "20 * 8" },
             { "unsigned int(8)[16]",                    "16 * 8" },
             { "unsigned int(9)",                        "9" },
@@ -3499,6 +3504,7 @@ namespace SharpMP4
             { "unsigned int(8)[ sample_count ]",        "stream.WriteUInt8Array(sample_count, " },
             { "unsigned int(8)[length]",                "stream.WriteUInt8Array(length, " },
             { "unsigned int(8)[32]",                    "stream.WriteUInt8Array(32, " },
+            { "unsigned int(8)[36]",                    "stream.WriteUInt8Array(36, " },
             { "unsigned int(8)[20]",                    "stream.WriteUInt8Array(20, " },
             { "unsigned int(8)[16]",                    "stream.WriteUInt8Array(16, " },
             { "unsigned int(9)",                        "stream.WriteBits(9, " },
@@ -3967,6 +3973,7 @@ namespace SharpMP4
             { "unsigned int(8)[ sample_count ]",        "byte[]" },
             { "unsigned int(8)[length]",                "byte[]" },
             { "unsigned int(8)[32]",                    "byte[]" },
+            { "unsigned int(8)[36]",                    "byte[]" },
             { "unsigned int(8)[20]",                    "byte[]" },
             { "unsigned int(8)[16]",                    "byte[]" },
             { "unsigned int(9)",                        "ushort" },
