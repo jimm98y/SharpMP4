@@ -36701,7 +36701,7 @@ namespace SharpMP4
 
     /*
     aligned(8) class AppleName2Box() extends Box('name') {
-     bit(8) data[];
+     string name;
      } 
     */
     public class AppleName2Box : Box
@@ -36709,8 +36709,8 @@ namespace SharpMP4
         public const string TYPE = "name";
         public override string DisplayName { get { return "AppleName2Box"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected BinaryUTF8String name;
+        public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
 
         public AppleName2Box() : base("name")
         {
@@ -36720,7 +36720,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadString(boxSize, readSize, out this.name);
             return boxSize;
         }
 
@@ -36728,7 +36728,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteString(this.name);
             return boxSize;
         }
 
@@ -36736,7 +36736,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += IsoStream.CalculateStringSize(name); // name
             return boxSize;
         }
     }

@@ -121,7 +121,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleName2Box() extends Box('name') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleName2Box() extends Box('name') {\r\n string name;\r\n } "
     },
     {
       "containers": [ "*" ],
