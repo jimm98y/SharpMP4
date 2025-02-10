@@ -181,7 +181,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class GenericMediaHeaderAtom() extends Box('gmhd') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class GenericMediaHeaderAtom() extends Box('gmhd') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],

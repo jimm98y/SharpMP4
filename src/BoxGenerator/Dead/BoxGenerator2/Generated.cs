@@ -37394,16 +37394,14 @@ namespace SharpMP4
 
     /*
     aligned(8) class GenericMediaHeaderAtom() extends Box('gmhd') {
-     bit(8) data[];
+     Box boxes[];
      } 
     */
     public class GenericMediaHeaderAtom : Box
     {
         public const string TYPE = "gmhd";
         public override string DisplayName { get { return "GenericMediaHeaderAtom"; } }
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public GenericMediaHeaderAtom() : base("gmhd")
         {
@@ -37413,7 +37411,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -37421,7 +37420,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -37429,7 +37429,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
