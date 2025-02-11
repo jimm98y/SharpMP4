@@ -374,7 +374,12 @@ namespace SharpMP4
             return (ulong)value.Length << 3;
         }
 
-        internal ulong ReadString(ulong boxSize, ulong readSize, out BinaryUTF8String value)
+        internal ulong WriteStringZeroTerminated(BinaryUTF8String value)
+        {
+            return WriteString(value);
+        }
+
+        internal ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out BinaryUTF8String value)
         {
             ulong remaining = readSize - boxSize;
             if (remaining == 0)
@@ -383,10 +388,22 @@ namespace SharpMP4
                 return 0;
             }
 
-            ulong read = ReadBytes(remaining >> 3, out byte[] buffer);
-            value = new BinaryUTF8String(buffer);
+            List<byte> buffer = new List<byte>();
+            ulong remainingCount = remaining >> 3;
+            while(remainingCount > 0)
+            {
+                int b = ReadByteInternal();
+                if (b == -1)
+                    break;
+                buffer.Add((byte)b);
+                remainingCount--;
+                if (b == 0)
+                    break;
+            }
+
+            value = new BinaryUTF8String(buffer.ToArray());
             Log.Debug($"ReadString: {EscapeString(value.ToString())}");
-            return read;
+            return (ulong)buffer.Count * 8;
         }
 
         internal ulong ReadStringSizeLangPrefixed(ulong boxSize, ulong readSize, out MultiLanguageString[] value)
@@ -410,7 +427,7 @@ namespace SharpMP4
                 byte[] bytes;
                 size += ReadBytes(length, out bytes);
 
-                BinaryUTF8String str = new BinaryUTF8String(bytes);
+                BinaryUTF8String str = new BinaryUTF8String(bytes) { IsZeroTerminated = false };
 
                 Log.Debug($"ReadString ({lang}): {EscapeString(str.ToString())}");
 
@@ -2176,6 +2193,7 @@ namespace SharpMP4
 
     public struct BinaryUTF8String
     {
+        public bool IsZeroTerminated { get; set; } = true;
         public int Length { get { return Bytes == null ? 0 : Bytes.Length; } }
         public byte[] Bytes { get; set; }
         public BinaryUTF8String(byte[] bytes)
