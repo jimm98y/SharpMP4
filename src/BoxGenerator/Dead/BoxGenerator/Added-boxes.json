@@ -881,7 +881,6 @@
       "type": "Box",
       "syntax": "aligned(8) class AppleSwkBox() extends Box('©swk') {\r\n\t bit(8) data[];\r\n } "
     },
-
     {
       "containers": [ "*" ],
       "type": "Box",
@@ -890,27 +889,27 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class H263SpecificBox() extends Box('d263') {\r\n\t unsigned int(32) vendor; unsigned int(8) decoderVersion;\r\n unsigned int(8) level;\r\n unsigned int(8) profile;\r\n } "
+      "syntax": "aligned(8) class H263SpecificBox() extends Box('d263') {\r\n\t unsigned int(32) vendor;\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) level;\r\n unsigned int(8) profile;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AC3SpecificBox() extends Box('dac3') {\r\n\t unsigned int(32) vendor; unsigned int(8) decoderVersion;\r\n unsigned int(24) flags;\r\n } "
+      "syntax": "aligned(8) class AC3SpecificBox() extends Box('dac3') {\r\n\t unsigned int(32) vendor;\n\t unsigned int(8) decoderVersion;\r\n unsigned int(24) flags;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class EVRCSpecificBox() extends Box('devc') {\r\n\t unsigned int(32) vendor; unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
+      "syntax": "aligned(8) class EVRCSpecificBox() extends Box('devc') {\r\n\t unsigned int(32) vendor;\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class QCELPSpecificBox() extends Box('dqcp') {\r\n\t unsigned int(32) vendor; unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
+      "syntax": "aligned(8) class QCELPSpecificBox() extends Box('dqcp') {\r\n\t unsigned int(32) vendor;\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class SMVSpecificBox() extends Box('dsmv') {\r\n\t unsigned int(32) vendor; unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
+      "syntax": "aligned(8) class SMVSpecificBox() extends Box('dsmv') {\r\n\t unsigned int(32) vendor;\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1077,6 +1076,73 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class SMPTE2086MasteringDisplayMetadataBox() extends FullBox('SmDm') {\r\n unsigned int(16) primaryRChromaticityX;\r\nunsigned int(16) primaryRChromaticityY;\r\nunsigned int(16) primaryGChromaticityX;\r\nunsigned int(16) primaryGChromaticityY;\r\nunsigned int(16) primaryBChromaticityX;\r\nunsigned int(16) primaryBChromaticityY;\r\n unsigned int(32) luminanceMax;\r\n unsigned int(32) luminanceMin;\r\n } "
+    },
+
+
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SVQ3Box() extends Box('SVQ3') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SMIBox() extends Box('SMI ') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AlawBox() extends Box('alaw') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class C608Box() extends Box('c608') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class H263Box() extends Box('h263') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class HrefBox() extends Box('href') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class IpirBox() extends Box('ipir') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Ima4Box() extends Box('ima4') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class JpegBox() extends Box('jpeg') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class RawBox() extends Box('raw ') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TwosBox() extends Box('twos') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class UlawBox() extends Box('ulaw') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Yuv2Box() extends Box('yuv2') {\r\n\t bit(8) data[];\r\n } "
     }
   ]
 }
