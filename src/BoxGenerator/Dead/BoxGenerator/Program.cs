@@ -285,6 +285,7 @@ partial class Program
             Try(String("unsigned int(8)[32]")),
             Try(String("unsigned int(8)[20]")),
             Try(String("unsigned int(8)[16]")),
+            Try(String("unsigned int(8)[14]")),
             Try(String("unsigned int(8)[constant_IV_size]")),
             Try(String("unsigned int(9)")),
             Try(String("unsigned int(8)")),
@@ -2349,7 +2350,7 @@ namespace SharpMP4
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" && value != "[4]" && value != "[6]" && value != "[36]" && value != "[256]" && value != "[512]" &&
+            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" && value != "[14]" && value != "[4]" && value != "[6]" && value != "[32]" && value != "[36]" && value != "[256]" && value != "[512]" &&
             value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]" && value != "[numIndSub + 1]")
         {
             return value;
@@ -3037,6 +3038,7 @@ namespace SharpMP4
             { "unsigned int(8)[textualHeadersLength]",  "stream.ReadUInt8Array((uint)textualHeadersLength, " },
             { "unsigned int(8)[count]",                 "stream.ReadUInt8Array((uint)count, " },
             { "unsigned int(8)[4]",                     "stream.ReadUInt8Array((uint)4, " },
+            { "unsigned int(8)[14]",                    "stream.ReadUInt8Array((uint)14, " },
             { "unsigned int(8)[6]",                     "stream.ReadUInt8Array((uint)6, " },
             { "unsigned int(8)[256]",                   "stream.ReadUInt8Array((uint)256, " },
             { "unsigned int(8)[512]",                   "stream.ReadUInt8Array((uint)512, " },
@@ -3461,6 +3463,7 @@ namespace SharpMP4
             { "unsigned int(8)[textualHeadersLength]",  "(uint)textualHeadersLength * 8" },
             { "unsigned int(8)[count]",                 "(uint)count * 8" },
             { "unsigned int(8)[4]",                     "(uint)32" },
+            { "unsigned int(8)[14]",                    "(uint)14 * 8" },
             { "unsigned int(8)[6]",                     "(uint)48" },
             { "unsigned int(8)[256]",                   "(uint)256 * 8" },
             { "unsigned int(8)[512]",                   "(uint)512 * 8" },
@@ -3885,6 +3888,7 @@ namespace SharpMP4
             { "unsigned int(8)[textualHeadersLength]",  "stream.WriteUInt8Array((uint)textualHeadersLength, " },
             { "unsigned int(8)[count]",                 "stream.WriteUInt8Array((uint)count, " },
             { "unsigned int(8)[4]",                     "stream.WriteUInt8Array((uint)4, " },
+            { "unsigned int(8)[14]",                     "stream.WriteUInt8Array((uint)14, " },
             { "unsigned int(8)[6]",                     "stream.WriteUInt8Array((uint)6, " },
             { "unsigned int(8)[256]",                   "stream.WriteUInt8Array((uint)256, " },
             { "unsigned int(8)[512]",                   "stream.WriteUInt8Array((uint)512, " },
@@ -4354,6 +4358,7 @@ namespace SharpMP4
             { "unsigned int(8)[textualHeadersLength]",  "byte[]" },
             { "unsigned int(8)[count]",                 "byte[]" },
             { "unsigned int(8)[4]",                     "byte[]" },
+            { "unsigned int(8)[14]",                    "byte[]" },
             { "unsigned int(8)[6]",                     "byte[]" },
             { "unsigned int(8)[256]",                   "byte[]" },
             { "unsigned int(8)[512]",                   "byte[]" },

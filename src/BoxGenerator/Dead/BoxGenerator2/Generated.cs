@@ -47151,7 +47151,14 @@ namespace SharpMP4
 
     /*
     aligned(8) class SVQ3Box() extends Box('SVQ3') {
-         bit(8) data[];
+         unsigned int(8) reserved1[6];
+    unsigned int(16) dataReferenceIndex;
+     unsigned int(8) reserved2[16]; unsigned int(16) width;
+     unsigned int(16) height;
+     unsigned int(8) reserved3[14];
+     unsigned int(8) compressorName[32];
+     unsigned int(16) depth;
+     unsigned int(16) colorTableId;
      } 
     */
     public class SVQ3Box : Box
@@ -47159,8 +47166,32 @@ namespace SharpMP4
         public const string TYPE = "SVQ3";
         public override string DisplayName { get { return "SVQ3Box"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected byte[] reserved2;
+        public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+        protected ushort width;
+        public ushort Width { get { return this.width; } set { this.width = value; } }
+
+        protected ushort height;
+        public ushort Height { get { return this.height; } set { this.height = value; } }
+
+        protected byte[] reserved3;
+        public byte[] Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
+
+        protected byte[] compressorName;
+        public byte[] CompressorName { get { return this.compressorName; } set { this.compressorName = value; } }
+
+        protected ushort depth;
+        public ushort Depth { get { return this.depth; } set { this.depth = value; } }
+
+        protected ushort colorTableId;
+        public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
 
         public SVQ3Box() : base("SVQ3")
         {
@@ -47170,7 +47201,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt8Array(16, out this.reserved2);
+            boxSize += stream.ReadUInt16(out this.width);
+            boxSize += stream.ReadUInt16(out this.height);
+            boxSize += stream.ReadUInt8Array((uint)14, out this.reserved3);
+            boxSize += stream.ReadUInt8Array(32, out this.compressorName);
+            boxSize += stream.ReadUInt16(out this.depth);
+            boxSize += stream.ReadUInt16(out this.colorTableId);
             return boxSize;
         }
 
@@ -47178,7 +47217,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8Array((uint)6, this.reserved1);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt8Array(16, this.reserved2);
+            boxSize += stream.WriteUInt16(this.width);
+            boxSize += stream.WriteUInt16(this.height);
+            boxSize += stream.WriteUInt8Array((uint)14, this.reserved3);
+            boxSize += stream.WriteUInt8Array(32, this.compressorName);
+            boxSize += stream.WriteUInt16(this.depth);
+            boxSize += stream.WriteUInt16(this.colorTableId);
             return boxSize;
         }
 
@@ -47186,7 +47233,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += (uint)48; // reserved1
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 16 * 8; // reserved2
+            boxSize += 16; // width
+            boxSize += 16; // height
+            boxSize += (uint)14 * 8; // reserved3
+            boxSize += 32 * 8; // compressorName
+            boxSize += 16; // depth
+            boxSize += 16; // colorTableId
             return boxSize;
         }
     }
@@ -47194,7 +47249,7 @@ namespace SharpMP4
 
     /*
     aligned(8) class SMIBox() extends Box('SMI ') {
-         bit(8) data[];
+         bit(8) metadata[];
      } 
     */
     public class SMIBox : Box
@@ -47202,8 +47257,8 @@ namespace SharpMP4
         public const string TYPE = "SMI ";
         public override string DisplayName { get { return "SMIBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] metadata;
+        public byte[] Metadata { get { return this.metadata; } set { this.metadata = value; } }
 
         public SMIBox() : base("SMI ")
         {
@@ -47213,7 +47268,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.metadata);
             return boxSize;
         }
 
@@ -47221,7 +47276,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.metadata);
             return boxSize;
         }
 
@@ -47229,7 +47284,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 8 * (ulong)metadata.Length; // metadata
             return boxSize;
         }
     }
@@ -47237,7 +47292,16 @@ namespace SharpMP4
 
     /*
     aligned(8) class AlawBox() extends Box('alaw') {
-         bit(8) data[];
+         unsigned int(8) reserved1[6];
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(16) soundVersion;
+     unsigned int(8) reserved2[6];
+     unsigned int(16) channels;
+     unsigned int(16) sampleSize;
+     unsigned int(16) compressionId;
+     unsigned int(16) packetSize;
+     unsigned int(32) timeScale;
+     Box[] boxes; 
      } 
     */
     public class AlawBox : Box
@@ -47245,8 +47309,33 @@ namespace SharpMP4
         public const string TYPE = "alaw";
         public override string DisplayName { get { return "AlawBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected ushort soundVersion;
+        public ushort SoundVersion { get { return this.soundVersion; } set { this.soundVersion = value; } }
+
+        protected byte[] reserved2;
+        public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+        protected ushort channels;
+        public ushort Channels { get { return this.channels; } set { this.channels = value; } }
+
+        protected ushort sampleSize;
+        public ushort SampleSize { get { return this.sampleSize; } set { this.sampleSize = value; } }
+
+        protected ushort compressionId;
+        public ushort CompressionId { get { return this.compressionId; } set { this.compressionId = value; } }
+
+        protected ushort packetSize;
+        public ushort PacketSize { get { return this.packetSize; } set { this.packetSize = value; } }
+
+        protected uint timeScale;
+        public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public AlawBox() : base("alaw")
         {
@@ -47256,7 +47345,17 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt16(out this.soundVersion);
+            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved2);
+            boxSize += stream.ReadUInt16(out this.channels);
+            boxSize += stream.ReadUInt16(out this.sampleSize);
+            boxSize += stream.ReadUInt16(out this.compressionId);
+            boxSize += stream.ReadUInt16(out this.packetSize);
+            boxSize += stream.ReadUInt32(out this.timeScale);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -47264,7 +47363,17 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8Array((uint)6, this.reserved1);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt16(this.soundVersion);
+            boxSize += stream.WriteUInt8Array((uint)6, this.reserved2);
+            boxSize += stream.WriteUInt16(this.channels);
+            boxSize += stream.WriteUInt16(this.sampleSize);
+            boxSize += stream.WriteUInt16(this.compressionId);
+            boxSize += stream.WriteUInt16(this.packetSize);
+            boxSize += stream.WriteUInt32(this.timeScale);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -47272,7 +47381,17 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += (uint)48; // reserved1
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 16; // soundVersion
+            boxSize += (uint)48; // reserved2
+            boxSize += 16; // channels
+            boxSize += 16; // sampleSize
+            boxSize += 16; // compressionId
+            boxSize += 16; // packetSize
+            boxSize += 32; // timeScale
+                           // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -47280,7 +47399,8 @@ namespace SharpMP4
 
     /*
     aligned(8) class C608Box() extends Box('c608') {
-         bit(8) data[];
+         unsigned int(8) reserved1[4]; unsigned int(16) reserved2;
+     unsigned int(16) dataReferenceIndex;
      } 
     */
     public class C608Box : Box
@@ -47288,8 +47408,14 @@ namespace SharpMP4
         public const string TYPE = "c608";
         public override string DisplayName { get { return "C608Box"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected ushort reserved2;
+        public ushort Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
 
         public C608Box() : base("c608")
         {
@@ -47299,7 +47425,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8Array((uint)4, out this.reserved1);
+            boxSize += stream.ReadUInt16(out this.reserved2);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
             return boxSize;
         }
 
@@ -47307,7 +47435,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8Array((uint)4, this.reserved1);
+            boxSize += stream.WriteUInt16(this.reserved2);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
             return boxSize;
         }
 
@@ -47315,7 +47445,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += (uint)32; // reserved1
+            boxSize += 16; // reserved2
+            boxSize += 16; // dataReferenceIndex
             return boxSize;
         }
     }
@@ -47323,7 +47455,14 @@ namespace SharpMP4
 
     /*
     aligned(8) class H263Box() extends Box('h263') {
-         bit(8) data[];
+         unsigned int(8) reserved1[6];
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(8) reserved2[16]; unsigned int(16) width;
+     unsigned int(16) height;
+     unsigned int(8) reserved3[14];
+     unsigned int(8) compressorName[32];
+     unsigned int(16) depth;
+     unsigned int(16) colorTableId;
      } 
     */
     public class H263Box : Box
@@ -47331,8 +47470,32 @@ namespace SharpMP4
         public const string TYPE = "h263";
         public override string DisplayName { get { return "H263Box"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected byte[] reserved2;
+        public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+        protected ushort width;
+        public ushort Width { get { return this.width; } set { this.width = value; } }
+
+        protected ushort height;
+        public ushort Height { get { return this.height; } set { this.height = value; } }
+
+        protected byte[] reserved3;
+        public byte[] Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
+
+        protected byte[] compressorName;
+        public byte[] CompressorName { get { return this.compressorName; } set { this.compressorName = value; } }
+
+        protected ushort depth;
+        public ushort Depth { get { return this.depth; } set { this.depth = value; } }
+
+        protected ushort colorTableId;
+        public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
 
         public H263Box() : base("h263")
         {
@@ -47342,7 +47505,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt8Array(16, out this.reserved2);
+            boxSize += stream.ReadUInt16(out this.width);
+            boxSize += stream.ReadUInt16(out this.height);
+            boxSize += stream.ReadUInt8Array((uint)14, out this.reserved3);
+            boxSize += stream.ReadUInt8Array(32, out this.compressorName);
+            boxSize += stream.ReadUInt16(out this.depth);
+            boxSize += stream.ReadUInt16(out this.colorTableId);
             return boxSize;
         }
 
@@ -47350,7 +47521,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8Array((uint)6, this.reserved1);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt8Array(16, this.reserved2);
+            boxSize += stream.WriteUInt16(this.width);
+            boxSize += stream.WriteUInt16(this.height);
+            boxSize += stream.WriteUInt8Array((uint)14, this.reserved3);
+            boxSize += stream.WriteUInt8Array(32, this.compressorName);
+            boxSize += stream.WriteUInt16(this.depth);
+            boxSize += stream.WriteUInt16(this.colorTableId);
             return boxSize;
         }
 
@@ -47358,7 +47537,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += (uint)48; // reserved1
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 16 * 8; // reserved2
+            boxSize += 16; // width
+            boxSize += 16; // height
+            boxSize += (uint)14 * 8; // reserved3
+            boxSize += 32 * 8; // compressorName
+            boxSize += 16; // depth
+            boxSize += 16; // colorTableId
             return boxSize;
         }
     }
@@ -47366,7 +47553,9 @@ namespace SharpMP4
 
     /*
     aligned(8) class HrefBox() extends Box('href') {
-         bit(8) data[];
+         unsigned int(8) reserved1[6];
+     unsigned int(16) dataReferenceIndex;
+     Box boxes[];
      } 
     */
     public class HrefBox : Box
@@ -47374,8 +47563,12 @@ namespace SharpMP4
         public const string TYPE = "href";
         public override string DisplayName { get { return "HrefBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public HrefBox() : base("href")
         {
@@ -47385,7 +47578,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -47393,7 +47589,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8Array((uint)6, this.reserved1);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -47401,7 +47600,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += (uint)48; // reserved1
+            boxSize += 16; // dataReferenceIndex
+                           // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -47409,7 +47611,8 @@ namespace SharpMP4
 
     /*
     aligned(8) class IpirBox() extends Box('ipir') {
-         bit(8) data[];
+         unsigned int(32) entry_count;
+     unsigned int(32) trackIDs[ entry_count ];
      } 
     */
     public class IpirBox : Box
@@ -47417,8 +47620,11 @@ namespace SharpMP4
         public const string TYPE = "ipir";
         public override string DisplayName { get { return "IpirBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected uint entry_count;
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
+
+        protected uint[] trackIDs;
+        public uint[] TrackIDs { get { return this.trackIDs; } set { this.trackIDs = value; } }
 
         public IpirBox() : base("ipir")
         {
@@ -47428,7 +47634,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt32(out this.entry_count);
+            boxSize += stream.ReadUInt32Array(entry_count, out this.trackIDs);
             return boxSize;
         }
 
@@ -47436,7 +47643,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt32(this.entry_count);
+            boxSize += stream.WriteUInt32Array(entry_count, this.trackIDs);
             return boxSize;
         }
 
@@ -47444,7 +47652,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 32; // entry_count
+            boxSize += (ulong)entry_count * 32; // trackIDs
             return boxSize;
         }
     }
@@ -47452,7 +47661,15 @@ namespace SharpMP4
 
     /*
     aligned(8) class Ima4Box() extends Box('ima4') {
-         bit(8) data[];
+         unsigned int(8) reserved1[6];
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(16) soundVersion;
+     unsigned int(16) channels;
+     unsigned int(16) sampleSize;
+     unsigned int(16) compressionId;
+     unsigned int(16) packetSize;
+     unsigned int(32) timeScale;
+     Box boxes[];
      } 
     */
     public class Ima4Box : Box
@@ -47460,8 +47677,30 @@ namespace SharpMP4
         public const string TYPE = "ima4";
         public override string DisplayName { get { return "Ima4Box"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected ushort soundVersion;
+        public ushort SoundVersion { get { return this.soundVersion; } set { this.soundVersion = value; } }
+
+        protected ushort channels;
+        public ushort Channels { get { return this.channels; } set { this.channels = value; } }
+
+        protected ushort sampleSize;
+        public ushort SampleSize { get { return this.sampleSize; } set { this.sampleSize = value; } }
+
+        protected ushort compressionId;
+        public ushort CompressionId { get { return this.compressionId; } set { this.compressionId = value; } }
+
+        protected ushort packetSize;
+        public ushort PacketSize { get { return this.packetSize; } set { this.packetSize = value; } }
+
+        protected uint timeScale;
+        public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public Ima4Box() : base("ima4")
         {
@@ -47471,7 +47710,16 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt16(out this.soundVersion);
+            boxSize += stream.ReadUInt16(out this.channels);
+            boxSize += stream.ReadUInt16(out this.sampleSize);
+            boxSize += stream.ReadUInt16(out this.compressionId);
+            boxSize += stream.ReadUInt16(out this.packetSize);
+            boxSize += stream.ReadUInt32(out this.timeScale);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -47479,7 +47727,16 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8Array((uint)6, this.reserved1);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt16(this.soundVersion);
+            boxSize += stream.WriteUInt16(this.channels);
+            boxSize += stream.WriteUInt16(this.sampleSize);
+            boxSize += stream.WriteUInt16(this.compressionId);
+            boxSize += stream.WriteUInt16(this.packetSize);
+            boxSize += stream.WriteUInt32(this.timeScale);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -47487,7 +47744,16 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += (uint)48; // reserved1
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 16; // soundVersion
+            boxSize += 16; // channels
+            boxSize += 16; // sampleSize
+            boxSize += 16; // compressionId
+            boxSize += 16; // packetSize
+            boxSize += 32; // timeScale
+                           // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -47495,7 +47761,14 @@ namespace SharpMP4
 
     /*
     aligned(8) class JpegBox() extends Box('jpeg') {
-         bit(8) data[];
+         unsigned int(8) reserved1[6];
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(8) reserved2[16]; unsigned int(16) width;
+     unsigned int(16) height;
+     unsigned int(8) reserved3[14];
+     unsigned int(8) compressorName[32];
+     unsigned int(16) depth;
+     unsigned int(16) colorTableId;
      } 
     */
     public class JpegBox : Box
@@ -47503,8 +47776,32 @@ namespace SharpMP4
         public const string TYPE = "jpeg";
         public override string DisplayName { get { return "JpegBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected byte[] reserved2;
+        public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+        protected ushort width;
+        public ushort Width { get { return this.width; } set { this.width = value; } }
+
+        protected ushort height;
+        public ushort Height { get { return this.height; } set { this.height = value; } }
+
+        protected byte[] reserved3;
+        public byte[] Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
+
+        protected byte[] compressorName;
+        public byte[] CompressorName { get { return this.compressorName; } set { this.compressorName = value; } }
+
+        protected ushort depth;
+        public ushort Depth { get { return this.depth; } set { this.depth = value; } }
+
+        protected ushort colorTableId;
+        public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
 
         public JpegBox() : base("jpeg")
         {
@@ -47514,7 +47811,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt8Array(16, out this.reserved2);
+            boxSize += stream.ReadUInt16(out this.width);
+            boxSize += stream.ReadUInt16(out this.height);
+            boxSize += stream.ReadUInt8Array((uint)14, out this.reserved3);
+            boxSize += stream.ReadUInt8Array(32, out this.compressorName);
+            boxSize += stream.ReadUInt16(out this.depth);
+            boxSize += stream.ReadUInt16(out this.colorTableId);
             return boxSize;
         }
 
@@ -47522,7 +47827,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8Array((uint)6, this.reserved1);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt8Array(16, this.reserved2);
+            boxSize += stream.WriteUInt16(this.width);
+            boxSize += stream.WriteUInt16(this.height);
+            boxSize += stream.WriteUInt8Array((uint)14, this.reserved3);
+            boxSize += stream.WriteUInt8Array(32, this.compressorName);
+            boxSize += stream.WriteUInt16(this.depth);
+            boxSize += stream.WriteUInt16(this.colorTableId);
             return boxSize;
         }
 
@@ -47530,7 +47843,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += (uint)48; // reserved1
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 16 * 8; // reserved2
+            boxSize += 16; // width
+            boxSize += 16; // height
+            boxSize += (uint)14 * 8; // reserved3
+            boxSize += 32 * 8; // compressorName
+            boxSize += 16; // depth
+            boxSize += 16; // colorTableId
             return boxSize;
         }
     }
@@ -47538,7 +47859,14 @@ namespace SharpMP4
 
     /*
     aligned(8) class RawBox() extends Box('raw ') {
-         bit(8) data[];
+         unsigned int(8) reserved1[6];
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(8) reserved2[16]; unsigned int(16) width;
+     unsigned int(16) height;
+     unsigned int(8) reserved3[14];
+     unsigned int(8) compressorName[32];
+     unsigned int(16) depth;
+     unsigned int(16) colorTableId;
      } 
     */
     public class RawBox : Box
@@ -47546,8 +47874,32 @@ namespace SharpMP4
         public const string TYPE = "raw ";
         public override string DisplayName { get { return "RawBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected byte[] reserved2;
+        public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+        protected ushort width;
+        public ushort Width { get { return this.width; } set { this.width = value; } }
+
+        protected ushort height;
+        public ushort Height { get { return this.height; } set { this.height = value; } }
+
+        protected byte[] reserved3;
+        public byte[] Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
+
+        protected byte[] compressorName;
+        public byte[] CompressorName { get { return this.compressorName; } set { this.compressorName = value; } }
+
+        protected ushort depth;
+        public ushort Depth { get { return this.depth; } set { this.depth = value; } }
+
+        protected ushort colorTableId;
+        public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
 
         public RawBox() : base("raw ")
         {
@@ -47557,7 +47909,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt8Array(16, out this.reserved2);
+            boxSize += stream.ReadUInt16(out this.width);
+            boxSize += stream.ReadUInt16(out this.height);
+            boxSize += stream.ReadUInt8Array((uint)14, out this.reserved3);
+            boxSize += stream.ReadUInt8Array(32, out this.compressorName);
+            boxSize += stream.ReadUInt16(out this.depth);
+            boxSize += stream.ReadUInt16(out this.colorTableId);
             return boxSize;
         }
 
@@ -47565,7 +47925,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8Array((uint)6, this.reserved1);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt8Array(16, this.reserved2);
+            boxSize += stream.WriteUInt16(this.width);
+            boxSize += stream.WriteUInt16(this.height);
+            boxSize += stream.WriteUInt8Array((uint)14, this.reserved3);
+            boxSize += stream.WriteUInt8Array(32, this.compressorName);
+            boxSize += stream.WriteUInt16(this.depth);
+            boxSize += stream.WriteUInt16(this.colorTableId);
             return boxSize;
         }
 
@@ -47573,7 +47941,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += (uint)48; // reserved1
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 16 * 8; // reserved2
+            boxSize += 16; // width
+            boxSize += 16; // height
+            boxSize += (uint)14 * 8; // reserved3
+            boxSize += 32 * 8; // compressorName
+            boxSize += 16; // depth
+            boxSize += 16; // colorTableId
             return boxSize;
         }
     }
@@ -47581,7 +47957,15 @@ namespace SharpMP4
 
     /*
     aligned(8) class TwosBox() extends Box('twos') {
-         bit(8) data[];
+         unsigned int(8) reserved1[6];
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(16) soundVersion;
+     unsigned int(16) channels;
+     unsigned int(16) sampleSize;
+     unsigned int(16) compressionId;
+     unsigned int(16) packetSize;
+     unsigned int(32) timeScale;
+     Box boxes[];
      } 
     */
     public class TwosBox : Box
@@ -47589,8 +47973,30 @@ namespace SharpMP4
         public const string TYPE = "twos";
         public override string DisplayName { get { return "TwosBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected ushort soundVersion;
+        public ushort SoundVersion { get { return this.soundVersion; } set { this.soundVersion = value; } }
+
+        protected ushort channels;
+        public ushort Channels { get { return this.channels; } set { this.channels = value; } }
+
+        protected ushort sampleSize;
+        public ushort SampleSize { get { return this.sampleSize; } set { this.sampleSize = value; } }
+
+        protected ushort compressionId;
+        public ushort CompressionId { get { return this.compressionId; } set { this.compressionId = value; } }
+
+        protected ushort packetSize;
+        public ushort PacketSize { get { return this.packetSize; } set { this.packetSize = value; } }
+
+        protected uint timeScale;
+        public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public TwosBox() : base("twos")
         {
@@ -47600,7 +48006,16 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt16(out this.soundVersion);
+            boxSize += stream.ReadUInt16(out this.channels);
+            boxSize += stream.ReadUInt16(out this.sampleSize);
+            boxSize += stream.ReadUInt16(out this.compressionId);
+            boxSize += stream.ReadUInt16(out this.packetSize);
+            boxSize += stream.ReadUInt32(out this.timeScale);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -47608,7 +48023,16 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8Array((uint)6, this.reserved1);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt16(this.soundVersion);
+            boxSize += stream.WriteUInt16(this.channels);
+            boxSize += stream.WriteUInt16(this.sampleSize);
+            boxSize += stream.WriteUInt16(this.compressionId);
+            boxSize += stream.WriteUInt16(this.packetSize);
+            boxSize += stream.WriteUInt32(this.timeScale);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -47616,7 +48040,16 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += (uint)48; // reserved1
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 16; // soundVersion
+            boxSize += 16; // channels
+            boxSize += 16; // sampleSize
+            boxSize += 16; // compressionId
+            boxSize += 16; // packetSize
+            boxSize += 32; // timeScale
+                           // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -47624,7 +48057,15 @@ namespace SharpMP4
 
     /*
     aligned(8) class UlawBox() extends Box('ulaw') {
-         bit(8) data[];
+         unsigned int(8) reserved1[6];
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(16) soundVersion;
+     unsigned int(16) channels;
+     unsigned int(16) sampleSize;
+     unsigned int(16) compressionId;
+     unsigned int(16) packetSize;
+     unsigned int(32) timeScale;
+     Box boxes[];
      } 
     */
     public class UlawBox : Box
@@ -47632,8 +48073,30 @@ namespace SharpMP4
         public const string TYPE = "ulaw";
         public override string DisplayName { get { return "UlawBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected ushort soundVersion;
+        public ushort SoundVersion { get { return this.soundVersion; } set { this.soundVersion = value; } }
+
+        protected ushort channels;
+        public ushort Channels { get { return this.channels; } set { this.channels = value; } }
+
+        protected ushort sampleSize;
+        public ushort SampleSize { get { return this.sampleSize; } set { this.sampleSize = value; } }
+
+        protected ushort compressionId;
+        public ushort CompressionId { get { return this.compressionId; } set { this.compressionId = value; } }
+
+        protected ushort packetSize;
+        public ushort PacketSize { get { return this.packetSize; } set { this.packetSize = value; } }
+
+        protected uint timeScale;
+        public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
         public UlawBox() : base("ulaw")
         {
@@ -47643,7 +48106,16 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt16(out this.soundVersion);
+            boxSize += stream.ReadUInt16(out this.channels);
+            boxSize += stream.ReadUInt16(out this.sampleSize);
+            boxSize += stream.ReadUInt16(out this.compressionId);
+            boxSize += stream.ReadUInt16(out this.packetSize);
+            boxSize += stream.ReadUInt32(out this.timeScale);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -47651,7 +48123,16 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8Array((uint)6, this.reserved1);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt16(this.soundVersion);
+            boxSize += stream.WriteUInt16(this.channels);
+            boxSize += stream.WriteUInt16(this.sampleSize);
+            boxSize += stream.WriteUInt16(this.compressionId);
+            boxSize += stream.WriteUInt16(this.packetSize);
+            boxSize += stream.WriteUInt32(this.timeScale);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -47659,7 +48140,16 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += (uint)48; // reserved1
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 16; // soundVersion
+            boxSize += 16; // channels
+            boxSize += 16; // sampleSize
+            boxSize += 16; // compressionId
+            boxSize += 16; // packetSize
+            boxSize += 32; // timeScale
+                           // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -47667,7 +48157,14 @@ namespace SharpMP4
 
     /*
     aligned(8) class Yuv2Box() extends Box('yuv2') {
-         bit(8) data[];
+         unsigned int(8) reserved1[6];
+     unsigned int(16) dataReferenceIndex;
+     unsigned int(8) reserved2[16]; unsigned int(16) width;
+     unsigned int(16) height;
+     unsigned int(8) reserved3[14];
+     unsigned int(8) compressorName[32];
+     unsigned int(16) depth;
+     unsigned int(16) colorTableId;
      } 
     */
     public class Yuv2Box : Box
@@ -47675,8 +48172,32 @@ namespace SharpMP4
         public const string TYPE = "yuv2";
         public override string DisplayName { get { return "Yuv2Box"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected ushort dataReferenceIndex;
+        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+
+        protected byte[] reserved2;
+        public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+        protected ushort width;
+        public ushort Width { get { return this.width; } set { this.width = value; } }
+
+        protected ushort height;
+        public ushort Height { get { return this.height; } set { this.height = value; } }
+
+        protected byte[] reserved3;
+        public byte[] Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
+
+        protected byte[] compressorName;
+        public byte[] CompressorName { get { return this.compressorName; } set { this.compressorName = value; } }
+
+        protected ushort depth;
+        public ushort Depth { get { return this.depth; } set { this.depth = value; } }
+
+        protected ushort colorTableId;
+        public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
 
         public Yuv2Box() : base("yuv2")
         {
@@ -47686,7 +48207,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
+            boxSize += stream.ReadUInt8Array(16, out this.reserved2);
+            boxSize += stream.ReadUInt16(out this.width);
+            boxSize += stream.ReadUInt16(out this.height);
+            boxSize += stream.ReadUInt8Array((uint)14, out this.reserved3);
+            boxSize += stream.ReadUInt8Array(32, out this.compressorName);
+            boxSize += stream.ReadUInt16(out this.depth);
+            boxSize += stream.ReadUInt16(out this.colorTableId);
             return boxSize;
         }
 
@@ -47694,7 +48223,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8Array((uint)6, this.reserved1);
+            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
+            boxSize += stream.WriteUInt8Array(16, this.reserved2);
+            boxSize += stream.WriteUInt16(this.width);
+            boxSize += stream.WriteUInt16(this.height);
+            boxSize += stream.WriteUInt8Array((uint)14, this.reserved3);
+            boxSize += stream.WriteUInt8Array(32, this.compressorName);
+            boxSize += stream.WriteUInt16(this.depth);
+            boxSize += stream.WriteUInt16(this.colorTableId);
             return boxSize;
         }
 
@@ -47702,7 +48239,15 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += (uint)48; // reserved1
+            boxSize += 16; // dataReferenceIndex
+            boxSize += 16 * 8; // reserved2
+            boxSize += 16; // width
+            boxSize += 16; // height
+            boxSize += (uint)14 * 8; // reserved3
+            boxSize += 32 * 8; // compressorName
+            boxSize += 16; // depth
+            boxSize += 16; // colorTableId
             return boxSize;
         }
     }

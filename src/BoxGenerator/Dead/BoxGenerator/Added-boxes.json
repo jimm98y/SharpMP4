@@ -1077,72 +1077,70 @@
       "type": "Box",
       "syntax": "aligned(8) class SMPTE2086MasteringDisplayMetadataBox() extends FullBox('SmDm') {\r\n unsigned int(16) primaryRChromaticityX;\r\nunsigned int(16) primaryRChromaticityY;\r\nunsigned int(16) primaryGChromaticityX;\r\nunsigned int(16) primaryGChromaticityY;\r\nunsigned int(16) primaryBChromaticityX;\r\nunsigned int(16) primaryBChromaticityY;\r\n unsigned int(32) luminanceMax;\r\n unsigned int(32) luminanceMin;\r\n } "
     },
-
-
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class SVQ3Box() extends Box('SVQ3') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class SVQ3Box() extends Box('SVQ3') {\r\n\t unsigned int(8) reserved1[6];\r\nunsigned int(16) dataReferenceIndex;\r\n unsigned int(8) reserved2[16]; unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(8) reserved3[14];\r\n unsigned int(8) compressorName[32];\r\n unsigned int(16) depth;\r\n unsigned int(16) colorTableId;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class SMIBox() extends Box('SMI ') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class SMIBox() extends Box('SMI ') {\r\n\t bit(8) metadata[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AlawBox() extends Box('alaw') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AlawBox() extends Box('alaw') {\r\n\t unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(16) soundVersion;\r\n unsigned int(8) reserved2[6];\r\n unsigned int(16) channels;\r\n unsigned int(16) sampleSize;\r\n unsigned int(16) compressionId;\r\n unsigned int(16) packetSize;\r\n unsigned int(32) timeScale;\r\n Box[] boxes; \r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class C608Box() extends Box('c608') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class C608Box() extends Box('c608') {\r\n\t unsigned int(8) reserved1[4]; unsigned int(16) reserved2;\r\n unsigned int(16) dataReferenceIndex;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class H263Box() extends Box('h263') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class H263Box() extends Box('h263') {\r\n\t unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(8) reserved2[16]; unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(8) reserved3[14];\r\n unsigned int(8) compressorName[32];\r\n unsigned int(16) depth;\r\n unsigned int(16) colorTableId;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class HrefBox() extends Box('href') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class HrefBox() extends Box('href') {\r\n\t unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class IpirBox() extends Box('ipir') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class IpirBox() extends Box('ipir') {\r\n\t unsigned int(32) entry_count;\r\n unsigned int(32) trackIDs[ entry_count ];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class Ima4Box() extends Box('ima4') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class Ima4Box() extends Box('ima4') {\r\n\t unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(16) soundVersion;\r\n unsigned int(16) channels;\r\n unsigned int(16) sampleSize;\r\n unsigned int(16) compressionId;\r\n unsigned int(16) packetSize;\r\n unsigned int(32) timeScale;\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class JpegBox() extends Box('jpeg') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class JpegBox() extends Box('jpeg') {\r\n\t unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(8) reserved2[16]; unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(8) reserved3[14];\r\n unsigned int(8) compressorName[32];\r\n unsigned int(16) depth;\r\n unsigned int(16) colorTableId;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class RawBox() extends Box('raw ') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class RawBox() extends Box('raw ') {\r\n\t unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(8) reserved2[16]; unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(8) reserved3[14];\r\n unsigned int(8) compressorName[32];\r\n unsigned int(16) depth;\r\n unsigned int(16) colorTableId;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TwosBox() extends Box('twos') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class TwosBox() extends Box('twos') {\r\n\t unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(16) soundVersion;\r\n unsigned int(16) channels;\r\n unsigned int(16) sampleSize;\r\n unsigned int(16) compressionId;\r\n unsigned int(16) packetSize;\r\n unsigned int(32) timeScale;\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class UlawBox() extends Box('ulaw') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class UlawBox() extends Box('ulaw') {\r\n\t unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(16) soundVersion;\r\n unsigned int(16) channels;\r\n unsigned int(16) sampleSize;\r\n unsigned int(16) compressionId;\r\n unsigned int(16) packetSize;\r\n unsigned int(32) timeScale;\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class Yuv2Box() extends Box('yuv2') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class Yuv2Box() extends Box('yuv2') {\r\n\t unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(8) reserved2[16]; unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(8) reserved3[14];\r\n unsigned int(8) compressorName[32];\r\n unsigned int(16) depth;\r\n unsigned int(16) colorTableId;\r\n } "
     }
   ]
 }
