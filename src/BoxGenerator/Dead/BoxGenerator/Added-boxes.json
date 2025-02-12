@@ -1146,6 +1146,36 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class XMPBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {\r\n\t string data;\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PspUsmtExtensionBox() extends Box('uuid 55534d5421d24fcebb88695cfac9c740') {\r\n\t Box boxes[];\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PspProfExtensionBox() extends Box('uuid 50524f4621d24fcebb88695cfac9c740') {\r\n\t unsigned int(32) unknown1;\r\n unsigned int(32) entry_count;\r\n Box boxes[];\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PspMtdtBox() extends Box('MTDT') {\r\n\t unsigned int(16) entry_count;\r\n MtdtEntry entries[ entry_count ];\r\n }\r\n aligned(8) class MtdtEntry() {\r\n unsigned int(16) size;\r\n unsigned int(32) type;\r\n bit(1) reserved;\r\nunsigned int(5)[3] language;\r\n unsigned int(16) dataType;\r\n bit(8) data[size-10];\r\n }\r\n"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PspFprfBox() extends Box('FPRF') {\r\n\t unsigned int(32) unknown1;\r\n unsigned int(32) unknown2;\r\n unsigned int(32) unknown3;\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PspAprfBox() extends Box('APRF') {\r\n\t unsigned int(32) unknown1;\r\n unsigned int(32) unknown2;\r\n unsigned int(32) codec;\r\n unsigned int(32) unknown3;\r\n unsigned int(32) unknown4;\r\n unsigned int(32) maxBitrate;\r\n unsigned int(32) avgBitrate;\r\n unsigned int(32) frameRate;\r\n unsigned int(32) channels;\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PspVprfBox() extends Box('VPRF') {\r\n\t unsigned int(32) unknown1;\r\n unsigned int(32) unknown2;\r\n unsigned int(32) codec;\r\n unsigned int(32) unknown3;\r\n unsigned int(32) unknown4;\r\n unsigned int(32) maxBitrate;\r\n unsigned int(32) avgBitrate;\r\n unsigned int(32) frameRate1;\r\n unsigned int(32) frameRate2;\r\n unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(32) unknown5;\r\n }"
     }
   ]
 }

@@ -502,6 +502,7 @@ partial class Program
             Try(String("EC3SpecificEntry")), 
             Try(String("ProtectionSystemSpecificKeyID")), 
             Try(String("TrickPlayEntry")), 
+            Try(String("MtdtEntry")), 
             Try(String("SampleEncryptionSample(version, flags, Per_Sample_IV_Size)")), 
             Try(String("SampleEncryptionSubsample(version)")), 
             // descriptors
@@ -993,7 +994,7 @@ namespace SharpMP4
     {
         public static Box CreateBox(string fourCC, string parent, byte[] uuid = null)
         {
-            if (uuid != null) fourCC = $""{fourCC} {Convert.ToHexString(uuid)}"";
+            if (uuid != null) fourCC = $""{fourCC} {Convert.ToHexString(uuid).ToLowerInvariant()}"";
 
             switch(fourCC)
             {
@@ -2369,7 +2370,7 @@ namespace SharpMP4
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[3]" && value != "[16]" && value != "[14]" && value != "[4]" && value != "[6]" && value != "[32]" && value != "[36]" && value != "[256]" && value != "[512]" &&
+            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[size-10]" && value != "[3]" && value != "[16]" && value != "[14]" && value != "[4]" && value != "[6]" && value != "[32]" && value != "[36]" && value != "[256]" && value != "[512]" &&
             value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]" && value != "[numIndSub + 1]")
         {
             return value;
@@ -2951,6 +2952,7 @@ namespace SharpMP4
             { "bit(8)[URLlength]",                      "stream.ReadUInt8Array((uint)URLlength, " },
             { "bit(8)[sizeOfInstance-4]",               "stream.ReadUInt8Array((uint)(sizeOfInstance - 4), " },
             { "bit(8)[sizeOfInstance-3]",               "stream.ReadUInt8Array((uint)(sizeOfInstance - 3), " },
+            { "bit(8)[size-10]",                        "stream.ReadUInt8Array((uint)(size - 10), " },
             { "double(32)",                             "stream.ReadDouble32(" },
             { "fixedpoint1616",                         "stream.ReadFixedPoint1616(" },
             { "QoS_Qualifier[]",                        "stream.ReadDescriptor(boxSize, readSize, this, " },
@@ -3048,6 +3050,7 @@ namespace SharpMP4
             { "ThreeGPPKeyword[]",                      "stream.ReadClass(boxSize, readSize, this, " },
             { "IodsSample[]",                           "stream.ReadClass(boxSize, readSize, this, " },
             { "TrickPlayEntry[]",                       "stream.ReadClass(boxSize, readSize, this, " },
+            { "MtdtEntry[ entry_count ]",               "stream.ReadClass(boxSize, readSize, this, " },
             { "RectRecord",                             "stream.ReadClass(boxSize, readSize, this, new RectRecord(), " },
             { "StyleRecord",                            "stream.ReadClass(boxSize, readSize, this, new StyleRecord(), " },
             { "ProtectionSystemSpecificKeyID[count]",   "stream.ReadClass(boxSize, readSize, this, (uint)count, " },
@@ -3376,6 +3379,7 @@ namespace SharpMP4
             { "bit(8)[URLlength]",                      "(ulong)(URLlength * 8)" },
             { "bit(8)[sizeOfInstance-4]",               "(ulong)(sizeOfInstance - 4) * 8" },
             { "bit(8)[sizeOfInstance-3]",               "(ulong)(sizeOfInstance - 3) * 8" },
+            { "bit(8)[size-10]",                        "(ulong)(size - 10) * 8" },
             { "double(32)",                             "32" },
             { "fixedpoint1616",                         "32" },
             { "QoS_Qualifier[]",                        "IsoStream.CalculateDescriptorSize(value)" },
@@ -3473,6 +3477,7 @@ namespace SharpMP4
             { "ThreeGPPKeyword[]",                      "IsoStream.CalculateClassSize(value)" },
             { "IodsSample[]",                           "IsoStream.CalculateClassSize(value)" },
             { "TrickPlayEntry[]",                       "IsoStream.CalculateClassSize(value)" },
+            { "MtdtEntry[ entry_count ]",               "IsoStream.CalculateClassSize(value)" },
             { "RectRecord",                             "IsoStream.CalculateClassSize(value)" },
             { "StyleRecord",                            "IsoStream.CalculateClassSize(value)" },
             { "ProtectionSystemSpecificKeyID[count]",   "IsoStream.CalculateClassSize(value)" },
@@ -3801,6 +3806,7 @@ namespace SharpMP4
             { "bit(8)[URLlength]",                      "stream.WriteUInt8Array((uint)URLlength, " },
             { "bit(8)[sizeOfInstance-4]",               "stream.WriteUInt8Array((uint)(sizeOfInstance - 4), " },
             { "bit(8)[sizeOfInstance-3]",               "stream.WriteUInt8Array((uint)(sizeOfInstance - 3), " },
+            { "bit(8)[size-10]",                        "stream.WriteUInt8Array((uint)(size - 10), " },
             { "double(32)",                             "stream.WriteDouble32(" },
             { "fixedpoint1616",                         "stream.WriteFixedPoint1616(" },
             { "QoS_Qualifier[]",                        "stream.WriteDescriptor(" },
@@ -3898,6 +3904,7 @@ namespace SharpMP4
             { "ThreeGPPKeyword[]",                      "stream.WriteClass(" },
             { "IodsSample[]",                           "stream.WriteClass(" },
             { "TrickPlayEntry[]",                       "stream.WriteClass(" },
+            { "MtdtEntry[ entry_count ]",               "stream.WriteClass(" },
             { "RectRecord",                             "stream.WriteClass(" },
             { "StyleRecord",                            "stream.WriteClass(" },
             { "ProtectionSystemSpecificKeyID[count]",   "stream.WriteClass(" },
@@ -4272,6 +4279,7 @@ namespace SharpMP4
             { "bit(8)[URLlength]",                      "byte[]" },
             { "bit(8)[sizeOfInstance-4]",               "byte[]" },
             { "bit(8)[sizeOfInstance-3]",               "byte[]" },
+            { "bit(8)[size-10]",                        "byte[]" },
             { "double(32)",                             "double" },
             { "fixedpoint1616",                         "double" },
             { "QoS_Qualifier[]",                        "QoS_Qualifier[]" },
@@ -4368,6 +4376,7 @@ namespace SharpMP4
             { "ThreeGPPKeyword[]",                      "ThreeGPPKeyword[]" },
             { "IodsSample[]",                           "IodsSample[]" },
             { "TrickPlayEntry[]",                       "TrickPlayEntry[]" },
+            { "MtdtEntry[ entry_count ]",               "MtdtEntry[]" },
             { "RectRecord",                             "RectRecord" },
             { "StyleRecord",                            "StyleRecord" },
             { "ProtectionSystemSpecificKeyID[count]",   "ProtectionSystemSpecificKeyID[]" },

@@ -93,6 +93,7 @@ namespace SharpMP4
                 case "apcn": if (parent == "stsd") return new VisualSampleEntry("apcn"); break;
                 case "apID": return new ITunesPurchaseAccountBox();
                 case "apmd": return new AppleApertureModeBox();
+                case "APRF": return new PspAprfBox();
                 case "assp": return new AlternativeStartupSequencePropertiesBox();
                 case "atID": return new AppleAtIDBox();
                 case "auth": return new ThreeGPPAuthorBox();
@@ -204,6 +205,7 @@ namespace SharpMP4
                 case "fire": return new FileReservoirBox();
                 case "flvr": return new AppleFlvrBox();
                 case "fpar": return new FilePartitionBox();
+                case "FPRF": return new PspFprfBox();
                 case "free": return new FreeSpaceBox();
                 case "frma": return new OriginalFormatBox();
                 case "ftab": return new FontTableBox();
@@ -323,6 +325,7 @@ namespace SharpMP4
                 case "mskC": return new MaskConfigurationProperty();
                 case "msrc": return new TrackGroupTypeBox();
                 case "mstv": return new MVCSubTrackViewBox();
+                case "MTDT": return new PspMtdtBox();
                 case "mvc1": if (parent == "stsd") return new VisualSampleEntry("mvc1"); break;
                 case "mvc2": if (parent == "stsd") return new VisualSampleEntry("mvc2"); break;
                 case "mvc3": if (parent == "stsd") return new VisualSampleEntry("mvc3"); break;
@@ -535,6 +538,8 @@ namespace SharpMP4
                 case "urn ": return new DataEntryUrnBox();
                 case "user": return new FairPlayUserIDBox();
                 case "uuid": return new UserBox(uuid);
+                case "uuid 50524f4621d24fcebb88695cfac9c740": return new PspProfExtensionBox();
+                case "uuid 55534d5421d24fcebb88695cfac9c740": return new PspUsmtExtensionBox();
                 case "uuid be7acfcb97a942e89c71999491e3afac": return new XMPBox();
                 case "vdep": return new TrackReferenceTypeBox_vdep(); // TODO: fix duplicate
                 case "vipr": return new ViewPriorityBox();
@@ -545,6 +550,7 @@ namespace SharpMP4
                 case "vp10": if (parent == "stsd") return new VisualSampleEntry("vp10"); break;
                 case "vpcC": return new VPCodecConfigurationBox();
                 case "vplx": return new TrackReferenceTypeBox_vplx(); // TODO: fix duplicate
+                case "VPRF": return new PspVprfBox();
                 case "vsib": return new ViewScalabilityInformationSEIBox();
                 case "vttC": return new WebVTTConfigurationBox();
                 case "vvc1": if (parent == "stsd") return new VisualSampleEntry("vvc1"); break;
@@ -48261,7 +48267,7 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class XMPBox() extends Box('uuid cbcf7abea997e8429c71999491e3afac') {
+    aligned(8) class XMPBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {
          string data;
      }
     */
@@ -48273,7 +48279,7 @@ namespace SharpMP4
         protected BinaryUTF8String data;
         public BinaryUTF8String Data { get { return this.data; } set { this.data = value; } }
 
-        public XMPBox() : base("uuid", Convert.FromHexString("cbcf7abea997e8429c71999491e3afac"))
+        public XMPBox() : base("uuid", Convert.FromHexString("be7acfcb97a942e89c71999491e3afac"))
         {
         }
 
@@ -48298,6 +48304,512 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateStringSize(data); // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PspUsmtExtensionBox() extends Box('uuid 55534d5421d24fcebb88695cfac9c740') {
+         Box boxes[];
+     }
+    */
+    public class PspUsmtExtensionBox : Box
+    {
+        public const string TYPE = "uuid";
+        public override string DisplayName { get { return "PspUsmtExtensionBox"; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public PspUsmtExtensionBox() : base("uuid", Convert.FromHexString("55534d5421d24fcebb88695cfac9c740"))
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PspProfExtensionBox() extends Box('uuid 50524f4621d24fcebb88695cfac9c740') {
+         unsigned int(32) unknown1;
+     unsigned int(32) entry_count;
+     Box boxes[];
+     }
+    */
+    public class PspProfExtensionBox : Box
+    {
+        public const string TYPE = "uuid";
+        public override string DisplayName { get { return "PspProfExtensionBox"; } }
+
+        protected uint unknown1;
+        public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
+
+        protected uint entry_count;
+        public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
+        public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+        public PspProfExtensionBox() : base("uuid", Convert.FromHexString("50524f4621d24fcebb88695cfac9c740"))
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.unknown1);
+            boxSize += stream.ReadUInt32(out this.entry_count);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.unknown1);
+            boxSize += stream.WriteUInt32(this.entry_count);
+            // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // unknown1
+            boxSize += 32; // entry_count
+                           // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PspMtdtBox() extends Box('MTDT') {
+         unsigned int(16) entry_count;
+     MtdtEntry entries[ entry_count ];
+     }
+
+    */
+    public class PspMtdtBox : Box
+    {
+        public const string TYPE = "MTDT";
+        public override string DisplayName { get { return "PspMtdtBox"; } }
+
+        protected ushort entry_count;
+        public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
+
+        protected MtdtEntry[] entries;
+        public MtdtEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
+
+        public PspMtdtBox() : base("MTDT")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.entry_count);
+            boxSize += stream.ReadClass(boxSize, readSize, this, out this.entries);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.entry_count);
+            boxSize += stream.WriteClass(this.entries);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // entry_count
+            boxSize += IsoStream.CalculateClassSize(entries); // entries
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class MtdtEntry() {
+     unsigned int(16) size;
+     unsigned int(32) type;
+     bit(1) reserved;
+    unsigned int(5)[3] language;
+     unsigned int(16) dataType;
+     bit(8) data[size-10];
+     }
+
+    */
+    public class MtdtEntry : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "MtdtEntry"; } }
+
+        protected ushort size;
+        public ushort Size { get { return this.size; } set { this.size = value; } }
+
+        protected uint type;
+        public uint Type { get { return this.type; } set { this.type = value; } }
+
+        protected bool reserved;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected string language;
+        public string Language { get { return this.language; } set { this.language = value; } }
+
+        protected ushort dataType;
+        public ushort DataType { get { return this.dataType; } set { this.dataType = value; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public MtdtEntry() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt16(out this.size);
+            boxSize += stream.ReadUInt32(out this.type);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadIso639(out this.language);
+            boxSize += stream.ReadUInt16(out this.dataType);
+            boxSize += stream.ReadUInt8Array((uint)(size - 10), out this.data);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt16(this.size);
+            boxSize += stream.WriteUInt32(this.type);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteIso639(this.language);
+            boxSize += stream.WriteUInt16(this.dataType);
+            boxSize += stream.WriteUInt8Array((uint)(size - 10), this.data);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 16; // size
+            boxSize += 32; // type
+            boxSize += 1; // reserved
+            boxSize += 15; // language
+            boxSize += 16; // dataType
+            boxSize += (ulong)(size - 10) * 8; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PspFprfBox() extends Box('FPRF') {
+         unsigned int(32) unknown1;
+     unsigned int(32) unknown2;
+     unsigned int(32) unknown3;
+     }
+    */
+    public class PspFprfBox : Box
+    {
+        public const string TYPE = "FPRF";
+        public override string DisplayName { get { return "PspFprfBox"; } }
+
+        protected uint unknown1;
+        public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
+
+        protected uint unknown2;
+        public uint Unknown2 { get { return this.unknown2; } set { this.unknown2 = value; } }
+
+        protected uint unknown3;
+        public uint Unknown3 { get { return this.unknown3; } set { this.unknown3 = value; } }
+
+        public PspFprfBox() : base("FPRF")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.unknown1);
+            boxSize += stream.ReadUInt32(out this.unknown2);
+            boxSize += stream.ReadUInt32(out this.unknown3);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.unknown1);
+            boxSize += stream.WriteUInt32(this.unknown2);
+            boxSize += stream.WriteUInt32(this.unknown3);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // unknown1
+            boxSize += 32; // unknown2
+            boxSize += 32; // unknown3
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PspAprfBox() extends Box('APRF') {
+         unsigned int(32) unknown1;
+     unsigned int(32) unknown2;
+     unsigned int(32) codec;
+     unsigned int(32) unknown3;
+     unsigned int(32) unknown4;
+     unsigned int(32) maxBitrate;
+     unsigned int(32) avgBitrate;
+     unsigned int(32) frameRate;
+     unsigned int(32) channels;
+     }
+    */
+    public class PspAprfBox : Box
+    {
+        public const string TYPE = "APRF";
+        public override string DisplayName { get { return "PspAprfBox"; } }
+
+        protected uint unknown1;
+        public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
+
+        protected uint unknown2;
+        public uint Unknown2 { get { return this.unknown2; } set { this.unknown2 = value; } }
+
+        protected uint codec;
+        public uint Codec { get { return this.codec; } set { this.codec = value; } }
+
+        protected uint unknown3;
+        public uint Unknown3 { get { return this.unknown3; } set { this.unknown3 = value; } }
+
+        protected uint unknown4;
+        public uint Unknown4 { get { return this.unknown4; } set { this.unknown4 = value; } }
+
+        protected uint maxBitrate;
+        public uint MaxBitrate { get { return this.maxBitrate; } set { this.maxBitrate = value; } }
+
+        protected uint avgBitrate;
+        public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
+
+        protected uint frameRate;
+        public uint FrameRate { get { return this.frameRate; } set { this.frameRate = value; } }
+
+        protected uint channels;
+        public uint Channels { get { return this.channels; } set { this.channels = value; } }
+
+        public PspAprfBox() : base("APRF")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.unknown1);
+            boxSize += stream.ReadUInt32(out this.unknown2);
+            boxSize += stream.ReadUInt32(out this.codec);
+            boxSize += stream.ReadUInt32(out this.unknown3);
+            boxSize += stream.ReadUInt32(out this.unknown4);
+            boxSize += stream.ReadUInt32(out this.maxBitrate);
+            boxSize += stream.ReadUInt32(out this.avgBitrate);
+            boxSize += stream.ReadUInt32(out this.frameRate);
+            boxSize += stream.ReadUInt32(out this.channels);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.unknown1);
+            boxSize += stream.WriteUInt32(this.unknown2);
+            boxSize += stream.WriteUInt32(this.codec);
+            boxSize += stream.WriteUInt32(this.unknown3);
+            boxSize += stream.WriteUInt32(this.unknown4);
+            boxSize += stream.WriteUInt32(this.maxBitrate);
+            boxSize += stream.WriteUInt32(this.avgBitrate);
+            boxSize += stream.WriteUInt32(this.frameRate);
+            boxSize += stream.WriteUInt32(this.channels);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // unknown1
+            boxSize += 32; // unknown2
+            boxSize += 32; // codec
+            boxSize += 32; // unknown3
+            boxSize += 32; // unknown4
+            boxSize += 32; // maxBitrate
+            boxSize += 32; // avgBitrate
+            boxSize += 32; // frameRate
+            boxSize += 32; // channels
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PspVprfBox() extends Box('VPRF') {
+         unsigned int(32) unknown1;
+     unsigned int(32) unknown2;
+     unsigned int(32) codec;
+     unsigned int(32) unknown3;
+     unsigned int(32) unknown4;
+     unsigned int(32) maxBitrate;
+     unsigned int(32) avgBitrate;
+     unsigned int(32) frameRate1;
+     unsigned int(32) frameRate2;
+     unsigned int(16) width;
+     unsigned int(16) height;
+     unsigned int(32) unknown5;
+     }
+    */
+    public class PspVprfBox : Box
+    {
+        public const string TYPE = "VPRF";
+        public override string DisplayName { get { return "PspVprfBox"; } }
+
+        protected uint unknown1;
+        public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
+
+        protected uint unknown2;
+        public uint Unknown2 { get { return this.unknown2; } set { this.unknown2 = value; } }
+
+        protected uint codec;
+        public uint Codec { get { return this.codec; } set { this.codec = value; } }
+
+        protected uint unknown3;
+        public uint Unknown3 { get { return this.unknown3; } set { this.unknown3 = value; } }
+
+        protected uint unknown4;
+        public uint Unknown4 { get { return this.unknown4; } set { this.unknown4 = value; } }
+
+        protected uint maxBitrate;
+        public uint MaxBitrate { get { return this.maxBitrate; } set { this.maxBitrate = value; } }
+
+        protected uint avgBitrate;
+        public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
+
+        protected uint frameRate1;
+        public uint FrameRate1 { get { return this.frameRate1; } set { this.frameRate1 = value; } }
+
+        protected uint frameRate2;
+        public uint FrameRate2 { get { return this.frameRate2; } set { this.frameRate2 = value; } }
+
+        protected ushort width;
+        public ushort Width { get { return this.width; } set { this.width = value; } }
+
+        protected ushort height;
+        public ushort Height { get { return this.height; } set { this.height = value; } }
+
+        protected uint unknown5;
+        public uint Unknown5 { get { return this.unknown5; } set { this.unknown5 = value; } }
+
+        public PspVprfBox() : base("VPRF")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.unknown1);
+            boxSize += stream.ReadUInt32(out this.unknown2);
+            boxSize += stream.ReadUInt32(out this.codec);
+            boxSize += stream.ReadUInt32(out this.unknown3);
+            boxSize += stream.ReadUInt32(out this.unknown4);
+            boxSize += stream.ReadUInt32(out this.maxBitrate);
+            boxSize += stream.ReadUInt32(out this.avgBitrate);
+            boxSize += stream.ReadUInt32(out this.frameRate1);
+            boxSize += stream.ReadUInt32(out this.frameRate2);
+            boxSize += stream.ReadUInt16(out this.width);
+            boxSize += stream.ReadUInt16(out this.height);
+            boxSize += stream.ReadUInt32(out this.unknown5);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.unknown1);
+            boxSize += stream.WriteUInt32(this.unknown2);
+            boxSize += stream.WriteUInt32(this.codec);
+            boxSize += stream.WriteUInt32(this.unknown3);
+            boxSize += stream.WriteUInt32(this.unknown4);
+            boxSize += stream.WriteUInt32(this.maxBitrate);
+            boxSize += stream.WriteUInt32(this.avgBitrate);
+            boxSize += stream.WriteUInt32(this.frameRate1);
+            boxSize += stream.WriteUInt32(this.frameRate2);
+            boxSize += stream.WriteUInt16(this.width);
+            boxSize += stream.WriteUInt16(this.height);
+            boxSize += stream.WriteUInt32(this.unknown5);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // unknown1
+            boxSize += 32; // unknown2
+            boxSize += 32; // codec
+            boxSize += 32; // unknown3
+            boxSize += 32; // unknown4
+            boxSize += 32; // maxBitrate
+            boxSize += 32; // avgBitrate
+            boxSize += 32; // frameRate1
+            boxSize += 32; // frameRate2
+            boxSize += 16; // width
+            boxSize += 16; // height
+            boxSize += 32; // unknown5
             return boxSize;
         }
     }
