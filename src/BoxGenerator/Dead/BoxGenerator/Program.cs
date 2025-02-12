@@ -68,6 +68,7 @@ public class PseudoExtendedClass : PseudoCode
 {
     public string OldType { get; set; }
     public string BoxType { get; set; }
+    public string UserType { get; set; }
     public IList<(string Name, string Value)> Parameters { get; set; }
     public string BoxName { get; set; }
     public string DescriptorTag { get; set; }
@@ -992,6 +993,8 @@ namespace SharpMP4
     {
         public static Box CreateBox(string fourCC, string parent, byte[] uuid = null)
         {
+            if (uuid != null) fourCC = $""{fourCC} {Convert.ToHexString(uuid)}"";
+
             switch(fourCC)
             {
                ";
@@ -1180,6 +1183,10 @@ namespace SharpMP4
             {
                 if (fourCC[0] == '\0') return new IlstKey(fourCC);
             }
+            else if(uuid != null)
+            {
+                return new UserBox(uuid);
+            }
 
             //throw new NotImplementedException(fourCC);
             Log.Debug($""Unknown box: '{fourCC}'"");
@@ -1325,6 +1332,14 @@ namespace SharpMP4
 
         if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.Extended.BoxType))
         {
+            // UUID in case the box is a UserBox
+            if(b.Extended.BoxType.Length > 4)
+            {
+                string[] parts = b.Extended.BoxType.Split(' ');
+                b.Extended.BoxType = parts[0];
+                b.Extended.UserType = parts[1];
+            }
+
             cls += $"\tpublic const string TYPE = \"{b.Extended.BoxType}\";\r\n";
         }
         else if(b.Extended != null && !string.IsNullOrEmpty(b.Extended.DescriptorTag))
@@ -1457,6 +1472,10 @@ namespace SharpMP4
             else if(b.BoxName == "UserBox")
             {
                 base4ccparams = "uuid";
+            }
+            else if(!string.IsNullOrEmpty(b.Extended.UserType))
+            {
+                base4ccparams = $"Convert.FromHexString(\"{b.Extended.UserType}\")";
             }
             else if (b.Extended != null && !string.IsNullOrEmpty(b.Extended.DescriptorTag))
             {

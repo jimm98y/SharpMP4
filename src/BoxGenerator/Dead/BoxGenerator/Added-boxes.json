@@ -1141,6 +1141,11 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class Yuv2Box() extends Box('yuv2') {\r\n\t unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(8) reserved2[16]; unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(8) reserved3[14];\r\n unsigned int(8) compressorName[32];\r\n unsigned int(16) depth;\r\n unsigned int(16) colorTableId;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class XMPBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {\r\n\t string data;\r\n }"
     }
   ]
 }

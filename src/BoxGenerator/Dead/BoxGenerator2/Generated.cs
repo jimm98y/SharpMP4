@@ -8,6 +8,8 @@ namespace SharpMP4
     {
         public static Box CreateBox(string fourCC, string parent, byte[] uuid = null)
         {
+            if (uuid != null) fourCC = $"{fourCC} {Convert.ToHexString(uuid).ToLowerInvariant()}";
+
             switch (fourCC)
             {
                 case "----": return new CustomBox();
@@ -533,6 +535,7 @@ namespace SharpMP4
                 case "urn ": return new DataEntryUrnBox();
                 case "user": return new FairPlayUserIDBox();
                 case "uuid": return new UserBox(uuid);
+                case "uuid be7acfcb97a942e89c71999491e3afac": return new XMPBox();
                 case "vdep": return new TrackReferenceTypeBox_vdep(); // TODO: fix duplicate
                 case "vipr": return new ViewPriorityBox();
                 case "vlab": return new WebVTTSourceLabelBox();
@@ -568,6 +571,10 @@ namespace SharpMP4
             if (parent == "ilst")
             {
                 if (fourCC[0] == '\0') return new IlstKey(fourCC);
+            }
+            else if (uuid != null)
+            {
+                return new UserBox(uuid);
             }
 
             //throw new NotImplementedException(fourCC);
@@ -48248,6 +48255,49 @@ namespace SharpMP4
             boxSize += 32 * 8; // compressorName
             boxSize += 16; // depth
             boxSize += 16; // colorTableId
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class XMPBox() extends Box('uuid cbcf7abea997e8429c71999491e3afac') {
+         string data;
+     }
+    */
+    public class XMPBox : Box
+    {
+        public const string TYPE = "uuid";
+        public override string DisplayName { get { return "XMPBox"; } }
+
+        protected BinaryUTF8String data;
+        public BinaryUTF8String Data { get { return this.data; } set { this.data = value; } }
+
+        public XMPBox() : base("uuid", Convert.FromHexString("cbcf7abea997e8429c71999491e3afac"))
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteStringZeroTerminated(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(data); // data
             return boxSize;
         }
     }

@@ -645,7 +645,7 @@ namespace SharpMP4
             string uuid = "";
             if (header.Usertype != null)
             {
-                uuid = $" (uuid: {new Guid(header.Usertype).ToString()})";
+                uuid = $" (uuid: {Convert.ToHexString(header.Usertype).ToLowerInvariant()})";
             }
             Log.Debug($"BOX:{indentation}\'{EscapeString(ToFourCC(header.Type))}\'{uuid}");
         }
