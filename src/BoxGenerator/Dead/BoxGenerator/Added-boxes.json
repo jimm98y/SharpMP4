@@ -256,7 +256,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class FielBox() extends Box('fiel') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class FielBox() extends Box('fiel') {\r\n unsigned int(8) total;\r\n unsigned int(8) order;\r\n } "
     },
     {
       "containers": [ "*" ],
