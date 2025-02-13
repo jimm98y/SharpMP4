@@ -1427,6 +1427,10 @@ namespace SharpMP4
         {
             fields.Add(new PseudoField() { Name = "children", Type = "Box[]" });
         }
+        else if(b.BoxName == "FullBox")
+        {
+            ctorContent = "\t\tthis.version = v;\r\n\t\t this.flags = f;";
+        }
 
         bool hasBoxes = fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "ItemReferenceBox";
         bool hasDescriptors = fields.Select(x => GetReadMethod(x.Type).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
@@ -1452,6 +1456,10 @@ namespace SharpMP4
         else if(b.BoxName == "AVCDecoderConfigurationRecord")
         {
             cls += "\r\npublic bool HasExtensions { get; set; } = false;";
+        }
+        else if(b.BoxName == "FullBox")
+        {
+            cls += "\r\npublic FullBox(string boxtype, byte[] uuid) : base(boxtype, uuid) { }\r\n";
         }
 
         string ctorParams = "";

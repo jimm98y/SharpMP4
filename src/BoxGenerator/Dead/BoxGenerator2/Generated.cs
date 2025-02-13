@@ -540,7 +540,12 @@ namespace SharpMP4
                 case "uuid": return new UserBox(uuid);
                 case "uuid 50524f4621d24fcebb88695cfac9c740": return new PspProfExtensionBox();
                 case "uuid 55534d5421d24fcebb88695cfac9c740": return new PspUsmtExtensionBox();
+                case "uuid 6d1d9b0542d544e680e2141daff757b2": return new TfxdBox();
+                case "uuid 8974dbce7be74c5184f97148f9882554": return new PiffTrackEncryptionBox();
+                case "uuid a2394f525a9b4f14a2446c427c648df4": return new PiffSampleEncryptionBox();
                 case "uuid be7acfcb97a942e89c71999491e3afac": return new XMPBox();
+                case "uuid d08a4f1810f34a82b6c832d8aba183d3": return new UuidBasedProtectionSystemSpecificHeaderBox();
+                case "uuid d4807ef2ca3946958e5426cb9e46a79f": return new TfrfBox();
                 case "vdep": return new TrackReferenceTypeBox_vdep(); // TODO: fix duplicate
                 case "vipr": return new ViewPriorityBox();
                 case "vlab": return new WebVTTSourceLabelBox();
@@ -1062,9 +1067,13 @@ namespace SharpMP4
 
         protected uint flags; // = f
         public uint Flags { get { return this.flags; } set { this.flags = value; } }
+        public FullBox(string boxtype, byte[] uuid) : base(boxtype, uuid) { }
+
 
         public FullBox(string boxtype, byte v = 0, uint f = 0) : base(boxtype)
         {
+            this.version = v;
+            this.flags = f;
         }
 
         public override ulong Read(IsoStream stream, ulong readSize)
@@ -48817,6 +48826,400 @@ namespace SharpMP4
             boxSize += 16; // width
             boxSize += 16; // height
             boxSize += 32; // unknown5
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags) 
+    {
+     if(flags & 0x1) {
+     unsigned int(24) algorithmID;
+     unsigned int(8) Per_Sample_IV_Size;
+     unsigned int(8) kid[16];
+     }
+      unsigned int(32)  sample_count;
+       SampleEncryptionSample(version, flags, Per_Sample_IV_Size) samples[sample_count];
+    }
+
+    */
+    public class PiffSampleEncryptionBox : FullBox
+    {
+        public const string TYPE = "uuid";
+        public override string DisplayName { get { return "PiffSampleEncryptionBox"; } }
+
+        protected uint algorithmID;
+        public uint AlgorithmID { get { return this.algorithmID; } set { this.algorithmID = value; } }
+
+        protected byte Per_Sample_IV_Size;
+        public byte PerSampleIVSize { get { return this.Per_Sample_IV_Size; } set { this.Per_Sample_IV_Size = value; } }
+
+        protected byte[] kid;
+        public byte[] Kid { get { return this.kid; } set { this.kid = value; } }
+
+        protected uint sample_count;
+        public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
+
+        protected SampleEncryptionSample[] samples;
+        public SampleEncryptionSample[] Samples { get { return this.samples; } set { this.samples = value; } }
+
+        public PiffSampleEncryptionBox(byte version = 0, uint flags = 0) : base("uuid", version, flags)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+
+            if ((flags & 0x1) == 0x1)
+            {
+                boxSize += stream.ReadUInt24(out this.algorithmID);
+                boxSize += stream.ReadUInt8(out this.Per_Sample_IV_Size);
+                boxSize += stream.ReadUInt8Array(16, out this.kid);
+            }
+            boxSize += stream.ReadUInt32(out this.sample_count);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)sample_count, () => new SampleEncryptionSample(version, flags, Per_Sample_IV_Size), out this.samples);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+
+            if ((flags & 0x1) == 0x1)
+            {
+                boxSize += stream.WriteUInt24(this.algorithmID);
+                boxSize += stream.WriteUInt8(this.Per_Sample_IV_Size);
+                boxSize += stream.WriteUInt8Array(16, this.kid);
+            }
+            boxSize += stream.WriteUInt32(this.sample_count);
+            boxSize += stream.WriteClass(this.samples);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if ((flags & 0x1) == 0x1)
+            {
+                boxSize += 24; // algorithmID
+                boxSize += 8; // Per_Sample_IV_Size
+                boxSize += 16 * 8; // kid
+            }
+            boxSize += 32; // sample_count
+            boxSize += IsoStream.CalculateClassSize(samples); // samples
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PiffTrackEncryptionBox() extends FullBox('uuid 8974dbce7be74c5184f97148f9882554', version, flags) 
+    {
+     unsigned int(24) algorithmID;
+     unsigned int(8) Per_Sample_IV_Size;
+     unsigned int(8) kid[16];
+     }
+
+    */
+    public class PiffTrackEncryptionBox : FullBox
+    {
+        public const string TYPE = "uuid";
+        public override string DisplayName { get { return "PiffTrackEncryptionBox"; } }
+
+        protected uint algorithmID;
+        public uint AlgorithmID { get { return this.algorithmID; } set { this.algorithmID = value; } }
+
+        protected byte Per_Sample_IV_Size;
+        public byte PerSampleIVSize { get { return this.Per_Sample_IV_Size; } set { this.Per_Sample_IV_Size = value; } }
+
+        protected byte[] kid;
+        public byte[] Kid { get { return this.kid; } set { this.kid = value; } }
+
+        public PiffTrackEncryptionBox(byte version = 0, uint flags = 0) : base("uuid", version, flags)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt24(out this.algorithmID);
+            boxSize += stream.ReadUInt8(out this.Per_Sample_IV_Size);
+            boxSize += stream.ReadUInt8Array(16, out this.kid);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt24(this.algorithmID);
+            boxSize += stream.WriteUInt8(this.Per_Sample_IV_Size);
+            boxSize += stream.WriteUInt8Array(16, this.kid);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 24; // algorithmID
+            boxSize += 8; // Per_Sample_IV_Size
+            boxSize += 16 * 8; // kid
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TfrfBox() extends FullBox('uuid d4807ef2ca3946958e5426cb9e46a79f') {
+         unsigned int(8) fragmentCount;
+     for(i = 0; i < fragmentCount; i++) {
+     if(version == 0x1) {
+     unsigned int(64) fragmentAbsoluteTime;
+     unsigned int(64) fragmentAbsoluteDuration;
+     } else {
+     unsigned int(32) fragmentAbsoluteTime;
+     unsigned int(32) fragmentAbsoluteDuration;
+     }
+     } }
+    */
+    public class TfrfBox : FullBox
+    {
+        public const string TYPE = "uuid";
+        public override string DisplayName { get { return "TfrfBox"; } }
+
+        protected byte fragmentCount;
+        public byte FragmentCount { get { return this.fragmentCount; } set { this.fragmentCount = value; } }
+
+        protected ulong[] fragmentAbsoluteTime;
+        public ulong[] FragmentAbsoluteTime { get { return this.fragmentAbsoluteTime; } set { this.fragmentAbsoluteTime = value; } }
+
+        protected ulong[] fragmentAbsoluteDuration;
+        public ulong[] FragmentAbsoluteDuration { get { return this.fragmentAbsoluteDuration; } set { this.fragmentAbsoluteDuration = value; } }
+
+        public TfrfBox() : base("uuid", Convert.FromHexString("d4807ef2ca3946958e5426cb9e46a79f"))
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.fragmentCount);
+
+            this.fragmentAbsoluteTime = new ulong[fragmentCount];
+            this.fragmentAbsoluteDuration = new ulong[fragmentCount];
+            for (int i = 0; i < fragmentCount; i++)
+            {
+
+                if (version == 0x1)
+                {
+                    boxSize += stream.ReadUInt64(out this.fragmentAbsoluteTime[i]);
+                    boxSize += stream.ReadUInt64(out this.fragmentAbsoluteDuration[i]);
+                }
+
+                else
+                {
+                    boxSize += stream.ReadUInt32(out this.fragmentAbsoluteTime[i]);
+                    boxSize += stream.ReadUInt32(out this.fragmentAbsoluteDuration[i]);
+                }
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.fragmentCount);
+
+            for (int i = 0; i < fragmentCount; i++)
+            {
+
+                if (version == 0x1)
+                {
+                    boxSize += stream.WriteUInt64(this.fragmentAbsoluteTime[i]);
+                    boxSize += stream.WriteUInt64(this.fragmentAbsoluteDuration[i]);
+                }
+
+                else
+                {
+                    boxSize += stream.WriteUInt32(this.fragmentAbsoluteTime[i]);
+                    boxSize += stream.WriteUInt32(this.fragmentAbsoluteDuration[i]);
+                }
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // fragmentCount
+
+            for (int i = 0; i < fragmentCount; i++)
+            {
+
+                if (version == 0x1)
+                {
+                    boxSize += 64; // fragmentAbsoluteTime
+                    boxSize += 64; // fragmentAbsoluteDuration
+                }
+
+                else
+                {
+                    boxSize += 32; // fragmentAbsoluteTime
+                    boxSize += 32; // fragmentAbsoluteDuration
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TfxdBox() extends FullBox('uuid 6d1d9b0542d544e680e2141daff757b2') {
+         if(version == 0x1) {
+     unsigned int(64) fragmentAbsoluteTime;
+     unsigned int(64) fragmentAbsoluteDuration;
+     } else {
+     unsigned int(32) fragmentAbsoluteTime;
+     unsigned int(32) fragmentAbsoluteDuration;
+     } }
+    */
+    public class TfxdBox : FullBox
+    {
+        public const string TYPE = "uuid";
+        public override string DisplayName { get { return "TfxdBox"; } }
+
+        protected ulong fragmentAbsoluteTime;
+        public ulong FragmentAbsoluteTime { get { return this.fragmentAbsoluteTime; } set { this.fragmentAbsoluteTime = value; } }
+
+        protected ulong fragmentAbsoluteDuration;
+        public ulong FragmentAbsoluteDuration { get { return this.fragmentAbsoluteDuration; } set { this.fragmentAbsoluteDuration = value; } }
+
+        public TfxdBox() : base("uuid", Convert.FromHexString("6d1d9b0542d544e680e2141daff757b2"))
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+
+            if (version == 0x1)
+            {
+                boxSize += stream.ReadUInt64(out this.fragmentAbsoluteTime);
+                boxSize += stream.ReadUInt64(out this.fragmentAbsoluteDuration);
+            }
+
+            else
+            {
+                boxSize += stream.ReadUInt32(out this.fragmentAbsoluteTime);
+                boxSize += stream.ReadUInt32(out this.fragmentAbsoluteDuration);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+
+            if (version == 0x1)
+            {
+                boxSize += stream.WriteUInt64(this.fragmentAbsoluteTime);
+                boxSize += stream.WriteUInt64(this.fragmentAbsoluteDuration);
+            }
+
+            else
+            {
+                boxSize += stream.WriteUInt32(this.fragmentAbsoluteTime);
+                boxSize += stream.WriteUInt32(this.fragmentAbsoluteDuration);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+
+            if (version == 0x1)
+            {
+                boxSize += 64; // fragmentAbsoluteTime
+                boxSize += 64; // fragmentAbsoluteDuration
+            }
+
+            else
+            {
+                boxSize += 32; // fragmentAbsoluteTime
+                boxSize += 32; // fragmentAbsoluteDuration
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class UuidBasedProtectionSystemSpecificHeaderBox() extends FullBox('uuid d08a4f1810f34a82b6c832d8aba183d3') {
+         unsigned int(8) systemID[16];
+     unsigned int(32) count;
+     unsigned int(8) data[count];
+     }
+    */
+    public class UuidBasedProtectionSystemSpecificHeaderBox : FullBox
+    {
+        public const string TYPE = "uuid";
+        public override string DisplayName { get { return "UuidBasedProtectionSystemSpecificHeaderBox"; } }
+
+        protected byte[] systemID;
+        public byte[] SystemID { get { return this.systemID; } set { this.systemID = value; } }
+
+        protected uint count;
+        public uint Count { get { return this.count; } set { this.count = value; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public UuidBasedProtectionSystemSpecificHeaderBox() : base("uuid", Convert.FromHexString("d08a4f1810f34a82b6c832d8aba183d3"))
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8Array(16, out this.systemID);
+            boxSize += stream.ReadUInt32(out this.count);
+            boxSize += stream.ReadUInt8Array((uint)count, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8Array(16, this.systemID);
+            boxSize += stream.WriteUInt32(this.count);
+            boxSize += stream.WriteUInt8Array((uint)count, this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16 * 8; // systemID
+            boxSize += 32; // count
+            boxSize += (uint)count * 8; // data
             return boxSize;
         }
     }

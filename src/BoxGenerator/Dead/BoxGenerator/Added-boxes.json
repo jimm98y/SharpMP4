@@ -1176,6 +1176,31 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class PspVprfBox() extends Box('VPRF') {\r\n\t unsigned int(32) unknown1;\r\n unsigned int(32) unknown2;\r\n unsigned int(32) codec;\r\n unsigned int(32) unknown3;\r\n unsigned int(32) unknown4;\r\n unsigned int(32) maxBitrate;\r\n unsigned int(32) avgBitrate;\r\n unsigned int(32) frameRate1;\r\n unsigned int(32) frameRate2;\r\n unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(32) unknown5;\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags) \r\n{\r\n if(flags & 0x1) {\r\n unsigned int(24) algorithmID;\r\n unsigned int(8) Per_Sample_IV_Size;\r\n unsigned int(8) kid[16];\r\n }\r\n  unsigned int(32)  sample_count;\r\n   SampleEncryptionSample(version, flags, Per_Sample_IV_Size) samples[sample_count];\r\n}\r\n"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PiffTrackEncryptionBox() extends FullBox('uuid 8974dbce7be74c5184f97148f9882554', version, flags) \r\n{\r\n unsigned int(24) algorithmID;\r\n unsigned int(8) Per_Sample_IV_Size;\r\n unsigned int(8) kid[16];\r\n }\r\n"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TfrfBox() extends FullBox('uuid d4807ef2ca3946958e5426cb9e46a79f') {\r\n\t unsigned int(8) fragmentCount;\r\n for(i = 0; i < fragmentCount; i++) {\r\n if(version == 0x1) {\r\n unsigned int(64) fragmentAbsoluteTime;\r\n unsigned int(64) fragmentAbsoluteDuration;\r\n } else {\r\n unsigned int(32) fragmentAbsoluteTime;\r\n unsigned int(32) fragmentAbsoluteDuration;\r\n }\r\n } }"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TfxdBox() extends FullBox('uuid 6d1d9b0542d544e680e2141daff757b2') {\r\n\t if(version == 0x1) {\r\n unsigned int(64) fragmentAbsoluteTime;\r\n unsigned int(64) fragmentAbsoluteDuration;\r\n } else {\r\n unsigned int(32) fragmentAbsoluteTime;\r\n unsigned int(32) fragmentAbsoluteDuration;\r\n } }"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class UuidBasedProtectionSystemSpecificHeaderBox() extends FullBox('uuid d08a4f1810f34a82b6c832d8aba183d3') {\r\n\t unsigned int(8) systemID[16];\r\n unsigned int(32) count;\r\n unsigned int(8) data[count];\r\n }"
     }
   ]
 }
