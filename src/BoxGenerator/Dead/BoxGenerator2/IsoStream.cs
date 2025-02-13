@@ -1363,6 +1363,16 @@ namespace SharpMP4
 
         #region Number arrays
 
+        internal static ulong CalculateSize<T>(ulong entry_count, T[] entries, int entrySize)
+        {
+            // there might be no entries at all, even though the size says 1 (e.g. sync box)
+            if (entries == null || entries.Length == 0)
+                return 0;
+
+            // there might be more entries than the size says
+            return Math.Max(entry_count, (ulong)entries.Length) * (ulong)entrySize;
+        }
+
         internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out byte[] value)
         {
             if (readSize == ulong.MaxValue)
@@ -1465,6 +1475,10 @@ namespace SharpMP4
         internal ulong WriteUInt32Array(uint count, uint[] value)
         {
             ulong size = 0;
+
+            if (value == null)
+                return size;
+
             for (uint i = 0; i < count; i++)
             {
                 size += WriteUInt32(value[i]);

@@ -3080,7 +3080,7 @@ namespace SharpMP4
             { "unsigned int(64)[ entry_count ]",        "(ulong)entry_count * 64" },
             { "unsigned int(64)",                       "64" },
             { "unsigned int(48)",                       "48" },
-            { "unsigned int(32)[ entry_count ]",        "(ulong)entry_count * 32" },
+            { "unsigned int(32)[ entry_count ]",        "IsoStream.CalculateSize((ulong)entry_count, value, 32)" },
             { "template int(32)[9]",                    "9 * 32" },
             { "unsigned int(32)[3]",                    "3 * 32" },
             { "unsigned int(32)",                       "32" },

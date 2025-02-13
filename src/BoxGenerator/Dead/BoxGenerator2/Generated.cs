@@ -13632,7 +13632,7 @@ namespace SharpMP4
 
             if (version == 0)
             {
-                boxSize += (ulong)entry_count * 32; // offset
+                boxSize += IsoStream.CalculateSize((ulong)entry_count, offset, 32); // offset
             }
 
             else
@@ -37952,7 +37952,7 @@ namespace SharpMP4
 
     /*
     aligned(8) class SyncBox() extends Box('sync') {
-     bit(8) data[];
+     unsigned int(32) trackId;
      } 
     */
     public class SyncBox : Box
@@ -37960,8 +37960,8 @@ namespace SharpMP4
         public const string TYPE = "sync";
         public override string DisplayName { get { return "SyncBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected uint trackId;
+        public uint TrackId { get { return this.trackId; } set { this.trackId = value; } }
 
         public SyncBox() : base("sync")
         {
@@ -37971,7 +37971,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt32(out this.trackId);
             return boxSize;
         }
 
@@ -37979,7 +37979,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt32(this.trackId);
             return boxSize;
         }
 
@@ -37987,7 +37987,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 32; // trackId
             return boxSize;
         }
     }
@@ -47666,7 +47666,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32; // entry_count
-            boxSize += (ulong)entry_count * 32; // trackIDs
+            boxSize += IsoStream.CalculateSize((ulong)entry_count, trackIDs, 32); // trackIDs
             return boxSize;
         }
     }
