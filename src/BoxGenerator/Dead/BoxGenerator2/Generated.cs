@@ -38125,7 +38125,8 @@ namespace SharpMP4
 
     /*
     aligned(8) class FielBox() extends Box('fiel') {
-     bit(8) data[];
+     unsigned int(8) total;
+     unsigned int(8) order;
      } 
     */
     public class FielBox : Box
@@ -38133,8 +38134,11 @@ namespace SharpMP4
         public const string TYPE = "fiel";
         public override string DisplayName { get { return "FielBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected byte total;
+        public byte Total { get { return this.total; } set { this.total = value; } }
+
+        protected byte order;
+        public byte Order { get { return this.order; } set { this.order = value; } }
 
         public FielBox() : base("fiel")
         {
@@ -38144,7 +38148,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8(out this.total);
+            boxSize += stream.ReadUInt8(out this.order);
             return boxSize;
         }
 
@@ -38152,7 +38157,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8(this.total);
+            boxSize += stream.WriteUInt8(this.order);
             return boxSize;
         }
 
@@ -38160,7 +38166,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 8; // total
+            boxSize += 8; // order
             return boxSize;
         }
     }
