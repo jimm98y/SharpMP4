@@ -585,6 +585,7 @@ namespace SharpMP4
             }
             else if (uuid != null)
             {
+                Log.Debug($"Unknown 'uuid' box: '{fourCC}'");
                 return new UserBox(uuid);
             }
 
