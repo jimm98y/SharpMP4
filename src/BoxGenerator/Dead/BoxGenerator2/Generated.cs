@@ -38039,7 +38039,7 @@ namespace SharpMP4
 
     /*
     aligned(8) class HintBox() extends Box('hint') {
-     bit(8) data[];
+     unsigned int(32) trackId;
      } 
     */
     public class HintBox : Box
@@ -38047,8 +38047,8 @@ namespace SharpMP4
         public const string TYPE = "hint";
         public override string DisplayName { get { return "HintBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected uint trackId;
+        public uint TrackId { get { return this.trackId; } set { this.trackId = value; } }
 
         public HintBox() : base("hint")
         {
@@ -38058,7 +38058,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt32(out this.trackId);
             return boxSize;
         }
 
@@ -38066,7 +38066,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt32(this.trackId);
             return boxSize;
         }
 
@@ -38074,7 +38074,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 32; // trackId
             return boxSize;
         }
     }

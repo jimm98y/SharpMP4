@@ -246,7 +246,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class HintBox() extends Box('hint') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class HintBox() extends Box('hint') {\r\n unsigned int(32) trackId;\r\n } "
     },
     {
       "containers": [ "*" ],
