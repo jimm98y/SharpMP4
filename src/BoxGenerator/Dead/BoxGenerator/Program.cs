@@ -1277,7 +1277,14 @@ namespace SharpMP4
             if (!item.Key.StartsWith("tag=0x"))
             {
                 string key = "DescriptorTags." + item.Key.Replace("tag=", "");
-                factory += $"               case {key}: return new {item.Value.Single().BoxName}();\r\n";
+                if (item.Key == "tag=DecSpecificInfoTag")
+                {
+                    factory += $"               case {key}: return new GenericDecoderSpecificInfo(); // TODO: choose the specific descriptor\r\n";
+                }
+                else
+                {
+                    factory += $"               case {key}: return new {item.Value.Single().BoxName}();\r\n";
+                }
             }
         }
 
@@ -1549,7 +1556,7 @@ namespace SharpMP4
                         ctorParams = "byte tag";
                         base4ccparams = "tag";
                     }
-                    else
+                    else if(b.Extended.BoxName != "DecoderSpecificInfo")
                     {
                         base4ccparams = tag;
                     }

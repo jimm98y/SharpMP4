@@ -60,6 +60,26 @@
     {
       "type": "Descriptor",
       "containers": [ "*" ],
+      "syntax": "class IPMPDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {\r\n // IPMP system specific configuration information\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class OCIDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {\r\n bit(8) versionLabel = 0x01;\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class JPEG_DecoderConfig extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {\r\n int(16) headerLength;\r\n int(16) Xdensity;\r\n int(16) Ydensity;\r\n int(8) numComponents;\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class GenericDecoderSpecificInfo extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
       "syntax": "class QoS_Descriptor extends BaseDescriptor : bit(8) tag=QoS_DescrTag {\r\n bit(8) predefined;\r\n if (predefined==0) {\r\n QoS_Qualifier qualifiers[];\r\n }\r\n }"
     },
     {

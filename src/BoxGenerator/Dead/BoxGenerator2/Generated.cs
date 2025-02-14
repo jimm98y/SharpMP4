@@ -680,6 +680,7 @@ namespace SharpMP4
             {
                 case DescriptorTags.ProfileLevelIndicationIndexDescrTag: return new ProfileLevelIndicationIndexDescriptor();
                 case DescriptorTags.DecoderConfigDescrTag: return new DecoderConfigDescriptor();
+                case DescriptorTags.DecSpecificInfoTag: return new GenericDecoderSpecificInfo(); // TODO: choose the specific descriptor
                 case DescriptorTags.ES_DescrTag: return new ES_Descriptor();
                 case DescriptorTags.IPI_DescrPointerTag: return new IPI_DescrPointer();
                 case DescriptorTags.IPMP_DescrPointerTag: return new IPMP_DescriptorPointer();
@@ -29937,6 +29938,196 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 24; // languageCode
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class IPMPDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+     // IPMP system specific configuration information
+     }
+    */
+    public class IPMPDecoderConfiguration : DecoderSpecificInfo
+    {
+        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+        public override string DisplayName { get { return "IPMPDecoderConfiguration"; } }
+
+        public IPMPDecoderConfiguration() : base()
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            /*  IPMP system specific configuration information */
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            /*  IPMP system specific configuration information */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  IPMP system specific configuration information */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class OCIDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+     bit(8) versionLabel = 0x01;
+     }
+    */
+    public class OCIDecoderConfiguration : DecoderSpecificInfo
+    {
+        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+        public override string DisplayName { get { return "OCIDecoderConfiguration"; } }
+
+        protected byte versionLabel = 0x01;
+        public byte VersionLabel { get { return this.versionLabel; } set { this.versionLabel = value; } }
+
+        public OCIDecoderConfiguration() : base()
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.versionLabel);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.versionLabel);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // versionLabel
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class JPEG_DecoderConfig extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+     int(16) headerLength;
+     int(16) Xdensity;
+     int(16) Ydensity;
+     int(8) numComponents;
+     }
+    */
+    public class JPEG_DecoderConfig : DecoderSpecificInfo
+    {
+        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+        public override string DisplayName { get { return "JPEG_DecoderConfig"; } }
+
+        protected short headerLength;
+        public short HeaderLength { get { return this.headerLength; } set { this.headerLength = value; } }
+
+        protected short Xdensity;
+        public short _Xdensity { get { return this.Xdensity; } set { this.Xdensity = value; } }
+
+        protected short Ydensity;
+        public short _Ydensity { get { return this.Ydensity; } set { this.Ydensity = value; } }
+
+        protected sbyte numComponents;
+        public sbyte NumComponents { get { return this.numComponents; } set { this.numComponents = value; } }
+
+        public JPEG_DecoderConfig() : base()
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadInt16(out this.headerLength);
+            boxSize += stream.ReadInt16(out this.Xdensity);
+            boxSize += stream.ReadInt16(out this.Ydensity);
+            boxSize += stream.ReadInt8(out this.numComponents);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteInt16(this.headerLength);
+            boxSize += stream.WriteInt16(this.Xdensity);
+            boxSize += stream.WriteInt16(this.Ydensity);
+            boxSize += stream.WriteInt8(this.numComponents);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // headerLength
+            boxSize += 16; // Xdensity
+            boxSize += 16; // Ydensity
+            boxSize += 8; // numComponents
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class GenericDecoderSpecificInfo extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+     bit(8) data[];
+     }
+    */
+    public class GenericDecoderSpecificInfo : DecoderSpecificInfo
+    {
+        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+        public override string DisplayName { get { return "GenericDecoderSpecificInfo"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public GenericDecoderSpecificInfo() : base()
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
             return boxSize;
         }
     }
