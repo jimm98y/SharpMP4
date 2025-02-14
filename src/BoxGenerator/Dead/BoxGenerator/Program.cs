@@ -1487,7 +1487,7 @@ namespace SharpMP4
             ctorContent = "\t\tthis.version = v;\r\n\t\t this.flags = f;";
         }
 
-        bool hasBoxes = fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "ItemReferenceBox";
+        bool hasBoxes = (fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "ItemReferenceBox") || b.Syntax.Contains("other boxes from derived specifications");
         bool hasDescriptors = fields.Select(x => GetReadMethod(x.Type).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
 
         foreach (var field in fields)

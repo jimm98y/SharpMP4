@@ -21731,6 +21731,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             /* other boxes from derived specifications */
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -21739,6 +21740,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             /* other boxes from derived specifications */
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -21747,6 +21749,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             /* other boxes from derived specifications */
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -22594,6 +22597,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt8Array(32, out this.compressorname); // other boxes from derived specifications
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -22602,6 +22606,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             boxSize += stream.WriteUInt8Array(32, this.compressorname); // other boxes from derived specifications
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -22610,6 +22615,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32 * 8; // compressorname
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
