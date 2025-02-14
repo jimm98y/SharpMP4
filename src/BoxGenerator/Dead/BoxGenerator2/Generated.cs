@@ -38312,7 +38312,7 @@ namespace SharpMP4
 
     /*
     aligned(8) class Amf0Box() extends Box('amf0') {
-     bit(8) data[];
+     unsigned int(32) unknown1; unsigned int(32) unknown2;
      } 
     */
     public class Amf0Box : Box
@@ -38320,8 +38320,11 @@ namespace SharpMP4
         public const string TYPE = "amf0";
         public override string DisplayName { get { return "Amf0Box"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected uint unknown1;
+        public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
+
+        protected uint unknown2;
+        public uint Unknown2 { get { return this.unknown2; } set { this.unknown2 = value; } }
 
         public Amf0Box() : base("amf0")
         {
@@ -38331,7 +38334,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt32(out this.unknown1);
+            boxSize += stream.ReadUInt32(out this.unknown2);
             return boxSize;
         }
 
@@ -38339,7 +38343,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt32(this.unknown1);
+            boxSize += stream.WriteUInt32(this.unknown2);
             return boxSize;
         }
 
@@ -38347,7 +38352,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 32; // unknown1
+            boxSize += 32; // unknown2
             return boxSize;
         }
     }
@@ -38355,7 +38361,7 @@ namespace SharpMP4
 
     /*
     aligned(8) class MpodBox() extends Box('mpod') {
-     bit(8) data[];
+     unsigned int(32) unknown1; unsigned int(32) unknown2;
      } 
     */
     public class MpodBox : Box
@@ -38363,8 +38369,11 @@ namespace SharpMP4
         public const string TYPE = "mpod";
         public override string DisplayName { get { return "MpodBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected uint unknown1;
+        public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
+
+        protected uint unknown2;
+        public uint Unknown2 { get { return this.unknown2; } set { this.unknown2 = value; } }
 
         public MpodBox() : base("mpod")
         {
@@ -38374,7 +38383,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt32(out this.unknown1);
+            boxSize += stream.ReadUInt32(out this.unknown2);
             return boxSize;
         }
 
@@ -38382,7 +38392,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt32(this.unknown1);
+            boxSize += stream.WriteUInt32(this.unknown2);
             return boxSize;
         }
 
@@ -38390,7 +38401,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += 32; // unknown1
+            boxSize += 32; // unknown2
             return boxSize;
         }
     }

@@ -261,12 +261,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class Amf0Box() extends Box('amf0') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class Amf0Box() extends Box('amf0') {\r\n unsigned int(32) unknown1; unsigned int(32) unknown2;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class MpodBox() extends Box('mpod') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class MpodBox() extends Box('mpod') {\r\n unsigned int(32) unknown1; unsigned int(32) unknown2;\r\n } "
     },
     {
       "containers": [ "*" ],
