@@ -5,7 +5,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleItemListBox() extends Box('ilst') { \r\n Box boxes[]; \r\n} "
+      "syntax": "aligned(8) class AppleItemListBox() extends Box('ilst') { \r\n Box boxes[]; \r\n}\r\n aligned(8) class IlstKey(unsigned int(32) format) extends Box(format) {\r\n Box boxes[]; }"
     },
     {
       "containers": [ "*" ],
