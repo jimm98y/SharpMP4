@@ -6,7 +6,8 @@
       "fourcc": "vipr",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class ViewPriorityBox extends Box ('vipr') { \r\nfor (i=0; ; i++) {  \r\n// To end of box \r\n  unsigned int(6) reserved = 0; \r\n  unsigned int(10) view_id; \r\n  unsigned int(32) content_priority_id; \r\n } \r\n} \r\n"
+      "originalSyntax": "class ViewPriorityBox extends Box ('vipr') { \r\nfor (i=0; ; i++) {  \r\n// To end of box \r\n  unsigned int(6) reserved = 0; \r\n  unsigned int(10) view_id; \r\n  unsigned int(32) content_priority_id; \r\n } \r\n} \r\n",
+      "syntax": "class ViewPriorityBox extends Box ('vipr') {\r\n ViprEntry entries[]; \r\n} \r\n aligned(8) class ViprEntry() {\r\n unsigned int(6) reserved = 0; \r\n  unsigned int(10) view_id; \r\n  unsigned int(32) content_priority_id;\r\n }\r\n"
     },
     {
       "containers": [ "*" ],

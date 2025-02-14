@@ -2738,13 +2738,8 @@ namespace SharpMP4
 
 
     /*
-    class ViewPriorityBox extends Box ('vipr') { 
-    for (i=0; ; i++) {  
-    // To end of box 
-      unsigned int(6) reserved = 0; 
-      unsigned int(10) view_id; 
-      unsigned int(32) content_priority_id; 
-     } 
+    class ViewPriorityBox extends Box ('vipr') {
+     ViprEntry entries[]; 
     } 
 
     */
@@ -2753,14 +2748,8 @@ namespace SharpMP4
         public const string TYPE = "vipr";
         public override string DisplayName { get { return "ViewPriorityBox"; } }
 
-        protected byte[] reserved;
-        public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected ushort[] view_id;
-        public ushort[] ViewId { get { return this.view_id; } set { this.view_id = value; } }
-
-        protected uint[] content_priority_id;
-        public uint[] ContentPriorityId { get { return this.content_priority_id; } set { this.content_priority_id = value; } }
+        protected ViprEntry[] entries;
+        public ViprEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
         public ViewPriorityBox() : base("vipr")
         {
@@ -2770,14 +2759,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-
-            for (int i = 0; ; i++)
-            {
-                /*  To end of box  */
-                boxSize += stream.ReadBits(6, out this.reserved[i]);
-                boxSize += stream.ReadBits(10, out this.view_id[i]);
-                boxSize += stream.ReadUInt32(out this.content_priority_id[i]);
-            }
+            boxSize += stream.ReadClass(boxSize, readSize, this, out this.entries);
             return boxSize;
         }
 
@@ -2785,14 +2767,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-
-            for (int i = 0; ; i++)
-            {
-                /*  To end of box  */
-                boxSize += stream.WriteBits(6, this.reserved[i]);
-                boxSize += stream.WriteBits(10, this.view_id[i]);
-                boxSize += stream.WriteUInt32(this.content_priority_id[i]);
-            }
+            boxSize += stream.WriteClass(this.entries);
             return boxSize;
         }
 
@@ -2800,14 +2775,63 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateClassSize(entries); // entries
+            return boxSize;
+        }
+    }
 
-            for (int i = 0; ; i++)
-            {
-                /*  To end of box  */
-                boxSize += 6; // reserved
-                boxSize += 10; // view_id
-                boxSize += 32; // content_priority_id
-            }
+
+    /*
+    aligned(8) class ViprEntry() {
+     unsigned int(6) reserved = 0; 
+      unsigned int(10) view_id; 
+      unsigned int(32) content_priority_id;
+     }
+
+    */
+    public class ViprEntry : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ViprEntry"; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected ushort view_id;
+        public ushort ViewId { get { return this.view_id; } set { this.view_id = value; } }
+
+        protected uint content_priority_id;
+        public uint ContentPriorityId { get { return this.content_priority_id; } set { this.content_priority_id = value; } }
+
+        public ViprEntry() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadBits(6, out this.reserved);
+            boxSize += stream.ReadBits(10, out this.view_id);
+            boxSize += stream.ReadUInt32(out this.content_priority_id);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteBits(6, this.reserved);
+            boxSize += stream.WriteBits(10, this.view_id);
+            boxSize += stream.WriteUInt32(this.content_priority_id);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 6; // reserved
+            boxSize += 10; // view_id
+            boxSize += 32; // content_priority_id
             return boxSize;
         }
     }
