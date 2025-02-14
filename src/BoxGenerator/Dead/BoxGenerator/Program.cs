@@ -265,6 +265,58 @@ partial class Program
             Try(String("int size = 4")), // WORKAROUND
             Try(String("sizeOfInstance = sizeOfInstance<<7 | sizeByte")), // WORKAROUND
             Try(String("int sizeOfInstance = 0")), // WORKAROUND
+            Try(String("size += 5")), // WORKAROUND
+            Try(String("j=1")), // WORKAROUND
+            Try(String("j++")), // WORKAROUND
+            Try(String("subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")), // WORKAROUND
+            Try(String("totalPatternLength = 0")), // WORKAROUND
+            Try(String("samplerate = samplerate >> 16")), // WORKAROUND
+            Try(String("sbrPresentFlag = -1")), // WORKAROUND
+            Try(String("psPresentFlag = -1")), // WORKAROUND
+            Try(String("extensionAudioObjectType = 0")), // WORKAROUND
+            Try(String("extensionAudioObjectType = 5")), // WORKAROUND
+            Try(String("sbrPresentFlag = 1")), // WORKAROUND
+            Try(String("psPresentFlag = 1")), // WORKAROUND
+            Try(String("case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()")),
+            Try(String("case 8:\r\n      CelpSpecificConfig()")),
+            Try(String("case 9:\r\n      HvxcSpecificConfig()")),
+            Try(String("case 12:\r\n      TTSSpecificConfig()")),
+            Try(String("case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      StructuredAudioSpecificConfig()")),
+            Try(String("case 24:\r\n      ErrorResilientCelpSpecificConfig()")),
+            Try(String("case 25:\r\n      ErrorResilientHvxcSpecificConfig()")),
+            Try(String("case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()")),
+            Try(String("case 28:\r\n      SSCSpecificConfig()")),
+            Try(String("case 30:\r\n      uimsbf(1)")),
+            Try(String("case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()")),
+            Try(String("case 35:\r\n      DSTSpecificConfig()")),
+            Try(String("case 36:\r\n      bslbf(5)")),
+            Try(String("case 37:\r\n    case 38:\r\n      SLSSpecificConfig()")),
+            Try(String("case 39:\r\n      ELDSpecificConfig(channelConfiguration)")),
+            Try(String("case 40:\r\n    case 41:\r\n      SymbolicMusicSpecificConfig()")),
+            Try(String("default:\r\n      /* reserved */\r\n      break")),
+            Try(String("case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      bslbf(2)")),
+            Try(String("break")),
+            Try(String("audioObjectType = 32 + audioObjectTypeExt")),
+            Try(String("return audioObjectType")),
+            Try(String("len = eldExtLen")),
+            Try(String("len += eldExtLenAddAdd")),
+            Try(String("len += eldExtLenAdd")),
+            Try(String("default:\r\n        int cntt")),
+            Try(String("case 1:\r\n    case 2:\r\n      numSbrHeader = 1")),
+            Try(String("case 3:\r\n      numSbrHeader = 2")),
+            Try(String("case 4:\r\n    case 5:\r\n    case 6:\r\n      numSbrHeader = 3")),
+            Try(String("case 7:\r\n      numSbrHeader = 4")),
+            Try(String("default:\r\n      numSbrHeader = 0")),
+            Try(String("case 0b000:\r\n                mainscore_file")),
+            Try(String("case 0b001:\r\n                bit(8) partID; // ID of the part at which the following info refers \r\n                part_file")),
+            Try(String("case 0b010:\r\n                // this segment is always in binary as stated in Section 9 \r\n                synch_file")),
+            Try(String("case 0b011:\r\n                format_file")),
+            Try(String("case 0b100:\r\n                bit(8) partID;\r\n                bit(8) lyricID;\r\n                lyrics_file")),
+            Try(String("case 0b101:\r\n                // this segment is always in binary as stated in Section 11.4 \r\n                font_file")),
+            Try(String("case 0b110: ")),
+            Try(String("case 0b111: ")),
+            Try(String("FieldLength = (large_size + 1) * 16")), // WORKAROUND
+
             Try(String("unsigned int(8 * OutputChannelCount)")),
             Try(String("unsigned int(64)")),
             Try(String("unsigned int(48)")),
@@ -489,12 +541,6 @@ partial class Program
             Try(String("AlbumLoudnessInfo[]")),           
             Try(String("VvcPTLRecord(num_sublayers)")),           
             Try(String("VvcPTLRecord(ptl_max_temporal_id[i]+1)")),           
-            Try(String("size += 5")), // WORKAROUND
-            Try(String("j=1")), // WORKAROUND
-            Try(String("j++")), // WORKAROUND
-            Try(String("subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")), // WORKAROUND
-            Try(String("totalPatternLength = 0")), // WORKAROUND
-            Try(String("samplerate = samplerate >> 16")), // WORKAROUND
             // added
             Try(String("MultiLanguageString")), 
             Try(String("AdobeChapterRecord")), 
@@ -549,36 +595,9 @@ partial class Program
             Try(String("uimsbf(3)")),
             Try(String("uimsbf(2)")),
             Try(String("uimsbf(1)")),
-            Try(String("sbrPresentFlag = -1")), // WORKAROUND
-            Try(String("psPresentFlag = -1")), // WORKAROUND
-            Try(String("extensionAudioObjectType = 0")), // WORKAROUND
-            Try(String("extensionAudioObjectType = 5")), // WORKAROUND
-            Try(String("sbrPresentFlag = 1")), // WORKAROUND
-            Try(String("psPresentFlag = 1")), // WORKAROUND
-            Try(String("case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()")),
-            Try(String("case 8:\r\n      CelpSpecificConfig()")),
-            Try(String("case 9:\r\n      HvxcSpecificConfig()")),
-            Try(String("case 12:\r\n      TTSSpecificConfig()")),
-            Try(String("case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      StructuredAudioSpecificConfig()")),
-            Try(String("case 24:\r\n      ErrorResilientCelpSpecificConfig()")),
-            Try(String("case 25:\r\n      ErrorResilientHvxcSpecificConfig()")),
-            Try(String("case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()")),
-            Try(String("case 28:\r\n      SSCSpecificConfig()")),
-            Try(String("case 30:\r\n      uimsbf(1)")),
             Try(String("SpatialSpecificConfig()")),
-            Try(String("case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()")),
-            Try(String("case 35:\r\n      DSTSpecificConfig()")),
-            Try(String("case 36:\r\n      bslbf(5)")),
             Try(String("ALSSpecificConfig()")),
-            Try(String("case 37:\r\n    case 38:\r\n      SLSSpecificConfig()")),
-            Try(String("case 39:\r\n      ELDSpecificConfig(channelConfiguration)")),
-            Try(String("case 40:\r\n    case 41:\r\n      SymbolicMusicSpecificConfig()")),
-            Try(String("default:\r\n      /* reserved */\r\n      break")),
-            Try(String("case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      bslbf(2)")),
             Try(String("ErrorProtectionSpecificConfig()")),
-            Try(String("break")),
-            Try(String("audioObjectType = 32 + audioObjectTypeExt")),
-            Try(String("return audioObjectType")),
             Try(String("program_config_element()")),
             Try(String("byte_alignment()")),
             Try(String("CelpHeader(samplingFrequencyIndex)")),
@@ -591,15 +610,6 @@ partial class Program
             Try(String("HILNenexConfig()")),
             Try(String("HILNconfig()")),
             Try(String("ld_sbr_header(channelConfiguration)")),
-            Try(String("len = eldExtLen")),
-            Try(String("len += eldExtLenAddAdd")),
-            Try(String("len += eldExtLenAdd")),
-            Try(String("default:\r\n        int cntt")),
-            Try(String("case 1:\r\n    case 2:\r\n      numSbrHeader = 1")),
-            Try(String("case 3:\r\n      numSbrHeader = 2")),
-            Try(String("case 4:\r\n    case 5:\r\n    case 6:\r\n      numSbrHeader = 3")),
-            Try(String("case 7:\r\n      numSbrHeader = 4")),
-            Try(String("default:\r\n      numSbrHeader = 0")),
             Try(String("sbr_header()")),
             Try(String("AV1SampleEntry")),
             Try(String("AV1CodecConfigurationBox")),
@@ -608,16 +618,7 @@ partial class Program
             Try(String("byte(urlMIDIStream_length)")),
             Try(String("aligned bit(3)")),
             Try(String("aligned bit(1)")),
-            Try(String("bit")),
-            Try(String("case 0b000:\r\n                mainscore_file")),
-            Try(String("case 0b001:\r\n                bit(8) partID; // ID of the part at which the following info refers \r\n                part_file")),
-            Try(String("case 0b010:\r\n                // this segment is always in binary as stated in Section 9 \r\n                synch_file")),
-            Try(String("case 0b011:\r\n                format_file")),
-            Try(String("case 0b100:\r\n                bit(8) partID;\r\n                bit(8) lyricID;\r\n                lyrics_file")),
-            Try(String("case 0b101:\r\n                // this segment is always in binary as stated in Section 11.4 \r\n                font_file")),
-            Try(String("case 0b110: ")),
-            Try(String("case 0b111: ")),
-            Try(String("FieldLength = (large_size + 1) * 16")) // WORKAROUND
+            Try(String("bit"))
             )
         .Labelled("field type");
 
