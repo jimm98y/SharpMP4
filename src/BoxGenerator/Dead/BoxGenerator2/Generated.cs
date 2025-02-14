@@ -20212,8 +20212,8 @@ namespace SharpMP4
         protected byte method_count;
         public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
 
-        protected string[] PriorityAssignmentURI;
-        public string[] _PriorityAssignmentURI { get { return this.PriorityAssignmentURI; } set { this.PriorityAssignmentURI = value; } }
+        protected BinaryUTF8String[] PriorityAssignmentURI;
+        public BinaryUTF8String[] _PriorityAssignmentURI { get { return this.PriorityAssignmentURI; } set { this.PriorityAssignmentURI = value; } }
 
         public SVCPriorityAssignmentBox() : base("svcP")
         {
@@ -20242,7 +20242,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 8; // method_count
-            boxSize += IsoStream.CalculateSize(PriorityAssignmentURI); // PriorityAssignmentURI
+            boxSize += IsoStream.CalculateStringSize(PriorityAssignmentURI); // PriorityAssignmentURI
             return boxSize;
         }
     }
@@ -20351,8 +20351,8 @@ namespace SharpMP4
         protected byte method_count;
         public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
 
-        protected string[] PriorityAssignmentURI;
-        public string[] _PriorityAssignmentURI { get { return this.PriorityAssignmentURI; } set { this.PriorityAssignmentURI = value; } }
+        protected BinaryUTF8String[] PriorityAssignmentURI;
+        public BinaryUTF8String[] _PriorityAssignmentURI { get { return this.PriorityAssignmentURI; } set { this.PriorityAssignmentURI = value; } }
 
         public MVCViewPriorityAssignmentBox() : base("mvcP")
         {
@@ -20381,7 +20381,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 8; // method_count
-            boxSize += IsoStream.CalculateSize(PriorityAssignmentURI); // PriorityAssignmentURI
+            boxSize += IsoStream.CalculateStringSize(PriorityAssignmentURI); // PriorityAssignmentURI
             return boxSize;
         }
     }
@@ -30923,7 +30923,7 @@ namespace SharpMP4
                     break;
             }
 
-            if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
+            if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode(boxSize, readSize) >= 16)
             {
                 boxSize += stream.ReadBslbf(11, out this.syncExtensionType);
 
@@ -30944,7 +30944,7 @@ namespace SharpMP4
                                 boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency);
                             }
 
-                            if (IsoStream.BitsToDecode() >= 12)
+                            if (IsoStream.BitsToDecode(boxSize, readSize) >= 12)
                             {
                                 boxSize += stream.ReadBslbf(11, out this.syncExtensionType);
 
@@ -32069,7 +32069,7 @@ namespace SharpMP4
                 boxSize += 1; // cc_element_is_ind_sw
                 boxSize += 4; // valid_cc_element_tag_select
             }
-            boxSize += IsoStream.CalculateByteAlignmentSize(byte_alignment); // byte_alignment
+            boxSize += IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment); // byte_alignment
             boxSize += 8; // comment_field_bytes
 
             for (int i = 0; i < comment_field_bytes; i++)

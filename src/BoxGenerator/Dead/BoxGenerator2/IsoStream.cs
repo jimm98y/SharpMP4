@@ -216,6 +216,16 @@ namespace SharpMP4
 
         #region Bits
 
+        internal static int BitsToDecode(ulong boxSize, ulong readSize)
+        {
+            return (int)(readSize - boxSize);
+        }
+
+        internal static int BitsToDecode()
+        {
+            return int.MaxValue;
+        }
+
         internal ulong ReadBit(out bool value)
         {
             value = ReadBit() != 0;
@@ -357,9 +367,53 @@ namespace SharpMP4
             return count;
         }
 
+        internal ulong ReadByteAlignment(out byte value)
+        {
+            int bytePos = _bitsPosition >> 3;
+            int currentBytePos = bytePos << 3;
+            uint bitsToRead = (uint)(8 - (_bitsPosition - currentBytePos));
+            return ReadBits(bitsToRead, out value);
+        }
+
+        internal ulong WriteByteAlignment(byte value)
+        {
+            int bytePos = _bitsPosition >> 3;
+            int currentBytePos = bytePos << 3;
+            uint bitsToWrite = (uint)(8 - (_bitsPosition - currentBytePos));
+            return WriteBits(bitsToWrite, value);
+        }
+
+        internal static ulong CalculateByteAlignmentSize(ulong boxSize, byte value)
+        {
+            return 8 - (boxSize % 8);
+        }
+
         #endregion // Bits
 
         #region Strings
+
+        internal ulong ReadStringArray(uint count, out BinaryUTF8String[] value)
+        {
+            ulong size = 0;
+            BinaryUTF8String[] strings = new BinaryUTF8String[count];
+            for (int i = 0; i < count; i++)
+            {
+                size += ReadBytes(count, out byte[] bytes);
+                strings[i] = new BinaryUTF8String(bytes) { IsZeroTerminated = false };
+            }
+            value = strings;
+            return size;
+        }
+
+        internal ulong WriteStringArray(uint count, BinaryUTF8String[] values)
+        {
+            ulong size = 0;
+            for (int i = 0; i < count && i < values.Length; i++)
+            {
+                size += WriteString(values[i]);
+            }
+            return size;
+        }
 
         internal ulong WriteString(BinaryUTF8String value)
         {
@@ -1892,6 +1946,52 @@ namespace SharpMP4
             return 64;
         }
 
+        internal ulong ReadFixedPoint1616(out double value)
+        {
+            int b1 = ReadByteInternal();
+            if (b1 == -1)
+            {
+                throw new IsoEndOfStreamException();
+            }
+
+            int b2 = ReadByteInternal();
+            if (b2 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1 });
+            }
+
+            int b3 = ReadByteInternal();
+            if (b3 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2 });
+            }
+
+            int b4 = ReadByteInternal();
+            if (b4 == -1)
+            {
+                throw new IsoEndOfStreamException(new byte[] { (byte)b1, (byte)b2, (byte)b3 });
+            }
+
+            value = (double)(
+                ((uint)b1 << 24) +
+                ((uint)b2 << 16) +
+                ((uint)b3 << 8) +
+                ((uint)b4)
+            ) / 65536d;
+            return 32;
+        }
+
+        internal ulong WriteFixedPoint1616(double value)
+        {
+            ulong size = 0;
+            int result = (int)(value * 65536);
+            size += WriteByte((byte)((result & 0xFF000000) >> 24));
+            size += WriteByte((byte)((result & 0x00FF0000) >> 16));
+            size += WriteByte((byte)((result & 0x0000FF00) >> 8));
+            size += WriteByte((byte)(result & 0x000000FF));
+            return size;
+        }
+
         #endregion // Numbers
 
         #region Iso639
@@ -1929,6 +2029,18 @@ namespace SharpMP4
         #endregion // Iso639
 
         #region Proxy
+
+        internal ulong ReadDouble32(out double value)
+        {
+            // TODO?
+            return ReadFixedPoint1616(out value);
+        }
+
+        internal ulong WriteDouble32(double value)
+        {
+            // TODO?
+            return WriteFixedPoint1616(value);
+        }
 
         internal ulong ReadPadding(ulong size, ulong availableSize, out StreamMarker padding)
         {
@@ -2110,65 +2222,6 @@ namespace SharpMP4
         }
 
         #endregion // IDisposable
-
-        #region TODO
-
-        internal ulong ReadStringArray(uint count, out string[] value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteStringArray(uint count, string[] values)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static ulong CalculateSize(string[] values)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadDouble32(out double value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteDouble32(double value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadFixedPoint1616(out double value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteFixedPoint1616(double value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static int BitsToDecode()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static ulong CalculateByteAlignmentSize(byte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadByteAlignment(out byte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteByteAlignment(byte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion // TODO
     }
 
     public class StreamMarker
@@ -2190,9 +2243,7 @@ namespace SharpMP4
         public byte[] PaddingBytes { get; set; }
 
         public IsoEndOfStreamException()
-        {
-            
-        }
+        {  }
 
         public IsoEndOfStreamException(StreamMarker padding)
         {

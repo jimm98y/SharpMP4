@@ -2482,7 +2482,16 @@ namespace SharpMP4
                 condition = condition.Replace("extensionAudioObjectType", "extensionAudioObjectType.AudioObjectType");
 
             if (condition.Contains("bits_to_decode()"))
-                condition = condition.Replace("bits_to_decode()", "IsoStream.BitsToDecode()");
+            {
+                if (methodType == MethodType.Read)
+                {
+                    condition = condition.Replace("bits_to_decode()", "IsoStream.BitsToDecode(boxSize, readSize)");
+                }
+                else
+                {
+                    condition = condition.Replace("bits_to_decode()", "IsoStream.BitsToDecode()");
+                }
+            }
 
             if(condition.Contains("AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110"))
             {
@@ -3342,7 +3351,7 @@ namespace SharpMP4
             { "signed   int(64)[j][k]",                 "64" },
             { "signed   int(64)[j]",                    "64" },
             { "char[]",                                 "(ulong)value.Length * 8" },
-            { "string[method_count]",                   "IsoStream.CalculateSize(value)" },
+            { "string[method_count]",                   "IsoStream.CalculateStringSize(value)" },
             { "ItemInfoExtension",                      "IsoStream.CalculateClassSize(value)" },
             { "SampleGroupDescriptionEntry",            "IsoStream.CalculateEntrySize(value)" },
             { "SampleEntry",                            "IsoStream.CalculateBoxSize(value)" },
@@ -3442,7 +3451,7 @@ namespace SharpMP4
             { "ALSSpecificConfig",                      "IsoStream.CalculateClassSize(value)" },
             { "ErrorProtectionSpecificConfig",          "IsoStream.CalculateClassSize(value)" },
             { "program_config_element",                 "IsoStream.CalculateClassSize(value)" },
-            { "byte_alignment",                         "IsoStream.CalculateByteAlignmentSize(value)" },
+            { "byte_alignment",                         "IsoStream.CalculateByteAlignmentSize(boxSize, value)" },
             { "CelpHeader(samplingFrequencyIndex)",     "IsoStream.CalculateClassSize(value)" },
             { "CelpBWSenhHeader",                       "IsoStream.CalculateClassSize(value)" },
             { "HVXCconfig",                             "IsoStream.CalculateClassSize(value)" },
@@ -4250,7 +4259,7 @@ namespace SharpMP4
             { "char[]",                                 "byte[]" },
             { "loudness[]",                             "int[]" },
             { "ItemPropertyAssociationBox[]",           "ItemPropertyAssociationBox[]" },
-            { "string[method_count]",                   "string[]" },
+            { "string[method_count]",                   "BinaryUTF8String[]" },
             { "ItemInfoExtension",                      "ItemInfoExtension" },
             { "SampleGroupDescriptionEntry",            "SampleGroupDescriptionEntry" },
             { "SampleEntry",                            "SampleEntry" },
