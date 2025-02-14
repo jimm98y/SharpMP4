@@ -15,7 +15,8 @@ namespace ConsoleApp;
 public enum ParsedBoxType
 {
     Box,
-    Group
+    Entry,
+    Descriptor
 }
 
 [SuppressMessage("naming", "CA1724:The type name conflicts with the namespace name", Justification = "Example code")]
@@ -811,7 +812,7 @@ partial class Program
 
         foreach (var file in jsonFiles)
         {
-            ParsedBoxType parsedBoxType = ParsedBoxType.Group;
+            ParsedBoxType parsedBoxType = ParsedBoxType.Entry;
             if (file.Contains("-boxes") || file.Contains("-properties"))
                 parsedBoxType = ParsedBoxType.Box;
 
@@ -896,7 +897,7 @@ partial class Program
                                 item.BoxName == "PanoramaEntry" ||
                                 item.BoxName == "WhiteBalanceBracketingEntry")
                             {
-                                item.ParsedBoxType = ParsedBoxType.Group;
+                                item.ParsedBoxType = ParsedBoxType.Entry;
                             }
                             else if(
                                 item.BoxName == "SubpicCommonGroupBox" ||
@@ -916,6 +917,11 @@ partial class Program
                             else
                             {
                                 item.ParsedBoxType = parsedBoxType;
+                            }
+
+                            if(item.Extended != null && !string.IsNullOrEmpty(item.Extended.DescriptorTag))
+                            {
+                                item.ParsedBoxType = ParsedBoxType.Descriptor;
                             }
 
                             item.Syntax = GetSampleCode(sample, offset, item.CurrentOffset);
@@ -1245,7 +1251,46 @@ namespace SharpMP4
             //throw new NotImplementedException(fourCC);
             Log.Debug($""Unknown entry: '{fourCC}'"");
             return new UnknownEntry(fourCC);
-        }";
+        }
+";
+
+        factory += @"
+        public static Descriptor CreateDescriptor(byte tag)
+        {
+            switch (tag)
+            {
+";
+        SortedDictionary<string, List<PseudoClass>> descriptors = new SortedDictionary<string, List<PseudoClass>>();
+        foreach (var item in ret)
+        {
+            if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.DescriptorTag) && string.IsNullOrEmpty(item.Value.Abstract))
+            {
+                if (!descriptors.ContainsKey(item.Value.Extended.DescriptorTag))
+                    descriptors.Add(item.Value.Extended.DescriptorTag, new List<PseudoClass>() { item.Value });
+                else
+                    descriptors[item.Value.Extended.DescriptorTag].Add(item.Value);
+            }
+        }
+
+        foreach(var item in descriptors)
+        {
+            if (!item.Key.StartsWith("tag=0x"))
+            {
+                string key = "DescriptorTags." + item.Key.Replace("tag=", "");
+                factory += $"               case {key}: return new {item.Value.Single().BoxName}();\r\n";
+            }
+        }
+
+        factory +=
+@"          }
+
+            //throw new NotImplementedException($""Unknown descriptor: 'tag'"");
+            Log.Debug($""Unknown descriptor: '{tag}'"");
+            return new UnknownDescriptor(tag);";
+
+        factory += @"
+        }
+";
 
         factory += 
 @"

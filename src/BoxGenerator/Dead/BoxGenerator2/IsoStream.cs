@@ -1081,7 +1081,7 @@ namespace SharpMP4
             ulong sizeOfSize = ReadDescriptorSize(out int sizeOfInstance);
             size += sizeOfSize;
             long sizeOfInstanceBits = (long)sizeOfInstance << 3;
-            descriptor = (T)DescriptorFactory.CreateDescriptor(tag);
+            descriptor = (T)BoxFactory.CreateDescriptor(tag);
             descriptor.SizeOfSize = sizeOfSize;
             descriptor.Parent = parent;
 

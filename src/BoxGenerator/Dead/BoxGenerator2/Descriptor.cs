@@ -48,43 +48,6 @@ namespace SharpMP4
         public const byte OCIDescrTagEndRange = 0x50;
     }
 
-    public class DescriptorFactory
-    {
-        internal static Descriptor CreateDescriptor(byte tag)
-        {
-            switch (tag)
-            {
-                case DescriptorTags.ES_DescrTag:
-                    return new ES_Descriptor();
-
-                case DescriptorTags.DecoderConfigDescrTag:
-                    return new DecoderConfigDescriptor();
-
-                case DescriptorTags.DecSpecificInfoTag:
-                    return new GenericDecoderSpecificInfo();
-
-                case DescriptorTags.SLConfigDescrTag:
-                    return new SLConfigDescriptor();
-
-                case DescriptorTags.MP4_IOD_Tag:
-                    return new IOD_Descriptor();
-
-                case DescriptorTags.IPMP_DescrTag:
-                    return new IPMP_Descriptor();
-
-                case DescriptorTags.IPMP_DescrPointerTag:
-                    return new IPMP_DescriptorPointer();
-
-                default:
-                    {
-                        //throw new System.NotImplementedException();
-                        Log.Debug($"Unknown descriptor: '{tag}'");
-                        return new UnknownDescriptor(tag);
-                    }
-            }
-        }
-    }
-
     public abstract class Descriptor : IMp4Serializable
     {
         public abstract string DisplayName { get; }
@@ -120,7 +83,7 @@ namespace SharpMP4
 
         public virtual ulong Write(IsoStream stream)
         {
-            return (ulong)0;
+            return 0;
         }
 
         public virtual ulong CalculateSize()

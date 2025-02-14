@@ -673,6 +673,29 @@ namespace SharpMP4
             Log.Debug($"Unknown entry: '{fourCC}'");
             return new UnknownEntry(fourCC);
         }
+
+        public static Descriptor CreateDescriptor(byte tag)
+        {
+            switch (tag)
+            {
+                case DescriptorTags.ProfileLevelIndicationIndexDescrTag: return new ProfileLevelIndicationIndexDescriptor();
+                case DescriptorTags.DecoderConfigDescrTag: return new DecoderConfigDescriptor();
+                case DescriptorTags.ES_DescrTag: return new ES_Descriptor();
+                case DescriptorTags.IPI_DescrPointerTag: return new IPI_DescrPointer();
+                case DescriptorTags.IPMP_DescrPointerTag: return new IPMP_DescriptorPointer();
+                case DescriptorTags.IPMP_DescrTag: return new IPMP_Descriptor();
+                case DescriptorTags.LanguageDescrTag: return new LanguageDescriptor();
+                case DescriptorTags.MP4_IOD_Tag: return new IOD_Descriptor();
+                case DescriptorTags.QoS_DescrTag: return new QoS_Descriptor();
+                case DescriptorTags.RegistrationDescrTag: return new RegistrationDescriptor();
+                case DescriptorTags.SLConfigDescrTag: return new SLConfigDescriptor();
+            }
+
+            //throw new NotImplementedException($"Unknown descriptor: 'tag'");
+            Log.Debug($"Unknown descriptor: '{tag}'");
+            return new UnknownDescriptor(tag);
+        }
+
     }
 
     /*
