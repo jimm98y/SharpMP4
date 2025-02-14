@@ -166,7 +166,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class WindowsMediaXtraBox() extends Box('Xtra') {\r\n bit(8) data[]; \r\n } "
+      "syntax": "aligned(8) class WindowsMediaXtraBox() extends Box('Xtra') {\r\n XtraTag tags[]; \r\n }\r\n aligned(8) class XtraTag() {\r\n unsigned int(32) inputSize;\r\n unsigned int(32) tagLength;\r\n char tagName[tagLength];\r\n unsigned int(32) count;\r\n XtraValue values[count];\r\n }\r\n aligned(8) class XtraValue() {\r\n unsigned int(32) length;\r\n unsigned int(16) type;\r\n unsigned int(8) value[length-6];\r\n }"
     },
     {
       "containers": [ "*" ],

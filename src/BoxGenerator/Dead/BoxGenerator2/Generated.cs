@@ -37324,16 +37324,17 @@ namespace SharpMP4
 
     /*
     aligned(8) class WindowsMediaXtraBox() extends Box('Xtra') {
-     bit(8) data[];
-     } 
+     XtraTag tags[]; 
+     }
+
     */
     public class WindowsMediaXtraBox : Box
     {
         public const string TYPE = "Xtra";
         public override string DisplayName { get { return "WindowsMediaXtraBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected XtraTag[] tags;
+        public XtraTag[] Tags { get { return this.tags; } set { this.tags = value; } }
 
         public WindowsMediaXtraBox() : base("Xtra")
         {
@@ -37343,7 +37344,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadClass(boxSize, readSize, this, out this.tags);
             return boxSize;
         }
 
@@ -37351,7 +37352,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteClass(this.tags);
             return boxSize;
         }
 
@@ -37359,7 +37360,132 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += IsoStream.CalculateClassSize(tags); // tags
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class XtraTag() {
+     unsigned int(32) inputSize;
+     unsigned int(32) tagLength;
+     char tagName[tagLength];
+     unsigned int(32) count;
+     XtraValue values[count];
+     }
+
+    */
+    public class XtraTag : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "XtraTag"; } }
+
+        protected uint inputSize;
+        public uint InputSize { get { return this.inputSize; } set { this.inputSize = value; } }
+
+        protected uint tagLength;
+        public uint TagLength { get { return this.tagLength; } set { this.tagLength = value; } }
+
+        protected byte[] tagName;
+        public byte[] TagName { get { return this.tagName; } set { this.tagName = value; } }
+
+        protected uint count;
+        public uint Count { get { return this.count; } set { this.count = value; } }
+
+        protected XtraValue[] values;
+        public XtraValue[] Values { get { return this.values; } set { this.values = value; } }
+
+        public XtraTag() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt32(out this.inputSize);
+            boxSize += stream.ReadUInt32(out this.tagLength);
+            boxSize += stream.ReadUInt8Array((uint)tagLength, out this.tagName);
+            boxSize += stream.ReadUInt32(out this.count);
+            boxSize += stream.ReadClass(boxSize, readSize, this, out this.values);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt32(this.inputSize);
+            boxSize += stream.WriteUInt32(this.tagLength);
+            boxSize += stream.WriteUInt8Array((uint)tagLength, this.tagName);
+            boxSize += stream.WriteUInt32(this.count);
+            boxSize += stream.WriteClass(this.values);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 32; // inputSize
+            boxSize += 32; // tagLength
+            boxSize += (uint)tagLength * 8; // tagName
+            boxSize += 32; // count
+            boxSize += IsoStream.CalculateClassSize(values); // values
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class XtraValue() {
+     unsigned int(32) length;
+     unsigned int(16) type;
+     unsigned int(8) value[length-6];
+     }
+    */
+    public class XtraValue : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "XtraValue"; } }
+
+        protected uint length;
+        public uint Length { get { return this.length; } set { this.length = value; } }
+
+        protected ushort type;
+        public ushort Type { get { return this.type; } set { this.type = value; } }
+
+        protected byte[] value;
+        public byte[] Value { get { return this.value; } set { this.value = value; } }
+
+        public XtraValue() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt32(out this.length);
+            boxSize += stream.ReadUInt16(out this.type);
+            boxSize += stream.ReadUInt8Array((uint)(length - 6), out this.value);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt32(this.length);
+            boxSize += stream.WriteUInt16(this.type);
+            boxSize += stream.WriteUInt8Array((uint)(length - 6), this.value);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 32; // length
+            boxSize += 16; // type
+            boxSize += (uint)(length - 6) * 8; // value
             return boxSize;
         }
     }
@@ -49229,7 +49355,8 @@ namespace SharpMP4
 
     /*
     aligned(8) class MicrosoftWindowsVersionBox() extends Box('uuid 5ca708fb328e4205a861650eca0a9596') {
-         unsigned int(32) count;
+         unsigned int(16) unknown1;
+     unsigned int(16) count;
      char version[count];
      }
     */
@@ -49238,8 +49365,11 @@ namespace SharpMP4
         public const string TYPE = "uuid";
         public override string DisplayName { get { return "MicrosoftWindowsVersionBox"; } }
 
-        protected uint count;
-        public uint Count { get { return this.count; } set { this.count = value; } }
+        protected ushort unknown1;
+        public ushort Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
+
+        protected ushort count;
+        public ushort Count { get { return this.count; } set { this.count = value; } }
 
         protected byte[] version;
         public byte[] Version { get { return this.version; } set { this.version = value; } }
@@ -49252,7 +49382,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.count);
+            boxSize += stream.ReadUInt16(out this.unknown1);
+            boxSize += stream.ReadUInt16(out this.count);
             boxSize += stream.ReadUInt8Array((uint)count, out this.version);
             return boxSize;
         }
@@ -49261,7 +49392,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.count);
+            boxSize += stream.WriteUInt16(this.unknown1);
+            boxSize += stream.WriteUInt16(this.count);
             boxSize += stream.WriteUInt8Array((uint)count, this.version);
             return boxSize;
         }
@@ -49270,7 +49402,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 32; // count
+            boxSize += 16; // unknown1
+            boxSize += 16; // count
             boxSize += (ulong)count * 8; // version
             return boxSize;
         }

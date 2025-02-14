@@ -505,6 +505,8 @@ partial class Program
             Try(String("MtdtEntry")), 
             Try(String("SampleEncryptionSample(version, flags, Per_Sample_IV_Size)")), 
             Try(String("SampleEncryptionSubsample(version)")), 
+            Try(String("XtraTag")), 
+            Try(String("XtraValue")), 
             // descriptors
             Try(String("DecoderConfigDescriptor")),
             Try(String("SLConfigDescriptor")),
@@ -2379,7 +2381,7 @@ namespace SharpMP4
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[size-10]" && value != "[3]" && value != "[16]" && value != "[14]" && value != "[4]" && value != "[6]" && value != "[32]" && value != "[36]" && value != "[256]" && value != "[512]" &&
+            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[size-10]" && value != "[tagLength]" && value != "[length-6]" && value != "[3]" && value != "[16]" && value != "[14]" && value != "[4]" && value != "[6]" && value != "[32]" && value != "[36]" && value != "[256]" && value != "[512]" &&
             value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]" && value != "[numIndSub + 1]")
         {
             return value;
@@ -3058,6 +3060,8 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "stream.ReadClass(boxSize, readSize, this, " },
             { "ThreeGPPKeyword[]",                      "stream.ReadClass(boxSize, readSize, this, " },
             { "IodsSample[]",                           "stream.ReadClass(boxSize, readSize, this, " },
+            { "XtraTag[]",                              "stream.ReadClass(boxSize, readSize, this, " },
+            { "XtraValue[count]",                       "stream.ReadClass(boxSize, readSize, this, " },
             { "TrickPlayEntry[]",                       "stream.ReadClass(boxSize, readSize, this, " },
             { "MtdtEntry[ entry_count ]",               "stream.ReadClass(boxSize, readSize, this, " },
             { "RectRecord",                             "stream.ReadClass(boxSize, readSize, this, new RectRecord(), " },
@@ -3073,7 +3077,9 @@ namespace SharpMP4
             { "unsigned int(8)[6]",                     "stream.ReadUInt8Array((uint)6, " },
             { "unsigned int(8)[256]",                   "stream.ReadUInt8Array((uint)256, " },
             { "unsigned int(8)[512]",                   "stream.ReadUInt8Array((uint)512, " },
+            { "char[tagLength]",                        "stream.ReadUInt8Array((uint)tagLength, " },
             { "unsigned int(8)[constant_IV_size]",      "stream.ReadUInt8Array((uint)constant_IV_size, " },
+            { "unsigned int(8)[length-6]",              "stream.ReadUInt8Array((uint)(length-6), " },
             { "unsigned int(Per_Sample_IV_Size*8)",     "stream.ReadUInt8Array((uint)Per_Sample_IV_Size, " },
             { "EC3SpecificEntry[numIndSub + 1]",        "stream.ReadClass(boxSize, readSize, this, (uint)numIndSub + 1, " },
             { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "stream.ReadClass(boxSize, readSize, this, (uint)sample_count, () => new SampleEncryptionSample(version, flags, Per_Sample_IV_Size), " },
@@ -3485,6 +3491,8 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "IsoStream.CalculateClassSize(value)" },
             { "ThreeGPPKeyword[]",                      "IsoStream.CalculateClassSize(value)" },
             { "IodsSample[]",                           "IsoStream.CalculateClassSize(value)" },
+            { "XtraTag[]",                              "IsoStream.CalculateClassSize(value)" },
+            { "XtraValue[count]",                       "IsoStream.CalculateClassSize(value)" },
             { "TrickPlayEntry[]",                       "IsoStream.CalculateClassSize(value)" },
             { "MtdtEntry[ entry_count ]",               "IsoStream.CalculateClassSize(value)" },
             { "RectRecord",                             "IsoStream.CalculateClassSize(value)" },
@@ -3500,7 +3508,9 @@ namespace SharpMP4
             { "unsigned int(8)[6]",                     "(uint)48" },
             { "unsigned int(8)[256]",                   "(uint)256 * 8" },
             { "unsigned int(8)[512]",                   "(uint)512 * 8" },
+            { "char[tagLength]",                        "(uint)tagLength * 8" },
             { "unsigned int(8)[constant_IV_size]",      "(uint)constant_IV_size * 8" },
+            { "unsigned int(8)[length-6]",              "(uint)(length-6) * 8" },
             { "EC3SpecificEntry[numIndSub + 1]",        "IsoStream.CalculateClassSize(value)" },
             { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "IsoStream.CalculateClassSize(value)" },
             { "SampleEncryptionSubsample(version)[subsample_count]", "IsoStream.CalculateClassSize(value)" },
@@ -3912,6 +3922,8 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "stream.WriteClass(" },
             { "ThreeGPPKeyword[]",                      "stream.WriteClass(" },
             { "IodsSample[]",                           "stream.WriteClass(" },
+            { "XtraTag[]",                              "stream.WriteClass(" },
+            { "XtraValue[count]",                       "stream.WriteClass(" },
             { "TrickPlayEntry[]",                       "stream.WriteClass(" },
             { "MtdtEntry[ entry_count ]",               "stream.WriteClass(" },
             { "RectRecord",                             "stream.WriteClass(" },
@@ -3923,11 +3935,13 @@ namespace SharpMP4
             { "unsigned int(8)[textualHeadersLength]",  "stream.WriteUInt8Array((uint)textualHeadersLength, " },
             { "unsigned int(8)[count]",                 "stream.WriteUInt8Array((uint)count, " },
             { "unsigned int(8)[4]",                     "stream.WriteUInt8Array((uint)4, " },
-            { "unsigned int(8)[14]",                     "stream.WriteUInt8Array((uint)14, " },
+            { "unsigned int(8)[14]",                    "stream.WriteUInt8Array((uint)14, " },
             { "unsigned int(8)[6]",                     "stream.WriteUInt8Array((uint)6, " },
             { "unsigned int(8)[256]",                   "stream.WriteUInt8Array((uint)256, " },
             { "unsigned int(8)[512]",                   "stream.WriteUInt8Array((uint)512, " },
+            { "char[tagLength]",                        "stream.WriteUInt8Array((uint)tagLength, " },
             { "unsigned int(8)[constant_IV_size]",      "stream.WriteUInt8Array((uint)constant_IV_size, " },
+            { "unsigned int(8)[length-6]",              "stream.WriteUInt8Array((uint)(length-6), " },
             { "EC3SpecificEntry[numIndSub + 1]",        "stream.WriteClass(" },
             { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]",        "stream.WriteClass(" },
             { "unsigned int(Per_Sample_IV_Size*8)",     "stream.WriteUInt8Array((uint)Per_Sample_IV_Size, " },
@@ -4384,6 +4398,8 @@ namespace SharpMP4
             { "AdobeChapterRecord[]",                   "AdobeChapterRecord[]" },
             { "ThreeGPPKeyword[]",                      "ThreeGPPKeyword[]" },
             { "IodsSample[]",                           "IodsSample[]" },
+            { "XtraTag[]",                              "XtraTag[]" },
+            { "XtraValue[count]",                       "XtraValue[]" },
             { "TrickPlayEntry[]",                       "TrickPlayEntry[]" },
             { "MtdtEntry[ entry_count ]",               "MtdtEntry[]" },
             { "RectRecord",                             "RectRecord" },
@@ -4399,7 +4415,9 @@ namespace SharpMP4
             { "unsigned int(8)[6]",                     "byte[]" },
             { "unsigned int(8)[256]",                   "byte[]" },
             { "unsigned int(8)[512]",                   "byte[]" },
+            { "char[tagLength]",                        "byte[]" },
             { "unsigned int(8)[constant_IV_size]",      "byte[]" },
+            { "unsigned int(8)[length-6]",              "byte[]" },
             { "unsigned int(Per_Sample_IV_Size*8)",     "byte[]" },
             { "EC3SpecificEntry[numIndSub + 1]",        "EC3SpecificEntry[]" },
             { "SampleEncryptionSubsample(version)[subsample_count]", "SampleEncryptionSubsample[]" },

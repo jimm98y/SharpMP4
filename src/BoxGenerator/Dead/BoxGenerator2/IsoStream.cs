@@ -885,10 +885,10 @@ namespace SharpMP4
 
         internal ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, T c, out T value) where T : IMp4Serializable
         {
-            ulong size = c.Read(this, readSize - boxSize);
-            value = c;
             c.Parent = parent;
             Log.Debug($"CLS:{GetIndentation(c)}{c.DisplayName}");
+            ulong size = c.Read(this, readSize - boxSize);
+            value = c;
             return size;
         }
 
