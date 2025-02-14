@@ -166,7 +166,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class WindowsMediaXtraBox() extends Box('Xtra') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class WindowsMediaXtraBox() extends Box('Xtra') {\r\n bit(8) data[]; \r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1201,6 +1201,13 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class UuidBasedProtectionSystemSpecificHeaderBox() extends FullBox('uuid d08a4f1810f34a82b6c832d8aba183d3') {\r\n\t unsigned int(8) systemID[16];\r\n unsigned int(32) count;\r\n unsigned int(8) data[count];\r\n }"
+    },
+
+
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class MicrosoftWindowsVersionBox() extends Box('uuid 5ca708fb328e4205a861650eca0a9596') {\r\n\t unsigned int(16) unknown1;\r\n unsigned int(16) count;\r\n char version[count];\r\n }"
     }
   ]
 }

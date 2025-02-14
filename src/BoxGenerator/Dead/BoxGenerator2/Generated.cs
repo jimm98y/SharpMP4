@@ -540,6 +540,7 @@ namespace SharpMP4
                 case "uuid": return new UserBox(uuid);
                 case "uuid 50524f4621d24fcebb88695cfac9c740": return new PspProfExtensionBox();
                 case "uuid 55534d5421d24fcebb88695cfac9c740": return new PspUsmtExtensionBox();
+                case "uuid 5ca708fb328e4205a861650eca0a9596": return new MicrosoftWindowsVersionBox();
                 case "uuid 6d1d9b0542d544e680e2141daff757b2": return new TfxdBox();
                 case "uuid 8974dbce7be74c5184f97148f9882554": return new PiffTrackEncryptionBox();
                 case "uuid a2394f525a9b4f14a2446c427c648df4": return new PiffSampleEncryptionBox();
@@ -49221,6 +49222,56 @@ namespace SharpMP4
             boxSize += 16 * 8; // systemID
             boxSize += 32; // count
             boxSize += (uint)count * 8; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class MicrosoftWindowsVersionBox() extends Box('uuid 5ca708fb328e4205a861650eca0a9596') {
+         unsigned int(32) count;
+     char version[count];
+     }
+    */
+    public class MicrosoftWindowsVersionBox : Box
+    {
+        public const string TYPE = "uuid";
+        public override string DisplayName { get { return "MicrosoftWindowsVersionBox"; } }
+
+        protected uint count;
+        public uint Count { get { return this.count; } set { this.count = value; } }
+
+        protected byte[] version;
+        public byte[] Version { get { return this.version; } set { this.version = value; } }
+
+        public MicrosoftWindowsVersionBox() : base("uuid", Convert.FromHexString("5ca708fb328e4205a861650eca0a9596"))
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.count);
+            boxSize += stream.ReadUInt8Array((uint)count, out this.version);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.count);
+            boxSize += stream.WriteUInt8Array((uint)count, this.version);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // count
+            boxSize += (ulong)count * 8; // version
             return boxSize;
         }
     }
