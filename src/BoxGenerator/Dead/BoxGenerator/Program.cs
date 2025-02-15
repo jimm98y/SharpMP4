@@ -294,10 +294,11 @@ partial class Program
             SkipWhitespaces.Then(Char('[')).Then(Any.AtLeastOnceUntil(Char(']')))
         ).Select(x => (PseudoCode)x);
 
-    private static Parser<char, string> MultiBoxType => Map((box, otherBox) => $"'{box}' or '{otherBox}'",
-        BoxType.Before(SkipWhitespaces),
-        String("or").Then(SkipWhitespaces).Then(BoxType)
-    );
+    private static Parser<char, string> MultiBoxType => 
+        Map((box, otherBox) => $"'{box}' or '{otherBox}'",
+            BoxType.Before(SkipWhitespaces),
+            String("or").Then(SkipWhitespaces).Then(BoxType)
+        );
 
     private static Parser<char, PseudoExtendedClass> ExtendedClass =>
         Map((extendedBoxName, oldBoxType, boxType, parameters, descriptorTag) => new PseudoExtendedClass(extendedBoxName, oldBoxType, boxType, parameters, descriptorTag),
@@ -329,29 +330,18 @@ partial class Program
     private static Parser<char, string> LineComment<T>(Parser<char, T> lineCommentStart)
     {
         if (lineCommentStart == null)
-        {
             throw new ArgumentNullException(nameof(lineCommentStart));
-        }
-
-        var eol = Try(EndOfLine).IgnoreResult();
-        return lineCommentStart
-            .Then(Any.Until(End.Or(eol)), (first, rest) => string.Concat(rest));
+        Parser<char, Unit> eol = Try(EndOfLine).IgnoreResult();
+        return lineCommentStart.Then(Any.Until(End.Or(eol)), (first, rest) => string.Concat(rest));
     }
 
     private static Parser<char, string> BlockComment<T, U>(Parser<char, T> blockCommentStart, Parser<char, U> blockCommentEnd)
     {
         if (blockCommentStart == null)
-        {
             throw new ArgumentNullException(nameof(blockCommentStart));
-        }
-
         if (blockCommentEnd == null)
-        {
             throw new ArgumentNullException(nameof(blockCommentEnd));
-        }
-
-        return blockCommentStart
-            .Then(Any.Until(blockCommentEnd), (first, rest) => string.Concat(rest));
+        return blockCommentStart.Then(Any.Until(blockCommentEnd), (first, rest) => string.Concat(rest));
     }
 
     private static Parser<char, string> FieldTypeWorkaround =>
@@ -414,8 +404,7 @@ partial class Program
             Try(String("case 0b110: ")),
             Try(String("case 0b111: ")),
             Try(String("FieldLength = (large_size + 1) * 16")) // WORKAROUND
-            )
-        .Labelled("field type");
+            );
 
     static void Main(string[] args)
     {
