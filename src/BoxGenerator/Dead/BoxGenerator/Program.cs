@@ -420,40 +420,7 @@ partial class Program
     public static Parser<char, PseudoCode> CodeBlock => Try(Block).Or(Try(RepeatingBlock).Or(Try(Method).Or(Try(Field).Or(Comment))));
     public static Parser<char, IEnumerable<PseudoCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
-    public static Parser<char, string> ClassType =>
-        OneOf(
-            Try(String("()")),
-            Try(String("(unsigned int(32) format)")),
-            Try(String("(bit(24) flags)")),
-            Try(String("(fmt)")),
-            Try(String("(codingname)")),
-            Try(String("(handler_type)")),
-            Try(String("(referenceType)")),
-            Try(String("(unsigned int(32) reference_type)")),
-            Try(String("(grouping_type, version, flags)")),
-            Try(String("('snut')")),
-            Try(String("('msrc')")),
-            Try(String("('cstg')")),
-            Try(String("('alte')")),
-            Try(String("(name)")),
-            Try(String("(uuid)")),
-            Try(String("(property_type)")),
-            Try(String("(samplingFrequencyIndex, channelConfiguration, audioObjectType)")),
-            Try(String("(samplingFrequencyIndex,\r\n  channelConfiguration,\r\n  audioObjectType)")),
-            Try(String("(channelConfiguration)")),
-            Try(String("(num_sublayers)")),
-            Try(String("(code)")),
-            Try(String("(property_type, version, flags)")),
-            Try(String("(unsigned int(32) extension_type)")),
-            Try(String("('vvcb', version, flags)")),
-            Try(String("(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)")),
-            Try(String("(unsigned int(32) grouping_type)")),
-            Try(String("(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)")),            
-            Try(String("(unsigned int(8) OutputChannelCount)")),         
-            Try(String("(entry_type, bit(24) flags)")),
-            Try(String("(version, flags, Per_Sample_IV_Size)")),
-            Try(String("(samplingFrequencyIndex)"))
-            ).Labelled("class type");
+    public static Parser<char, string> ClassType => Parentheses;
 
     public static Parser<char, string> DescriptorTag =>
        OneOf(
@@ -1481,6 +1448,7 @@ namespace SharpMP4
             { "(entry_type, bit(24) flags)",        "string entry_type, uint flags" },
             { "(samplingFrequencyIndex)",           "int samplingFrequencyIndex" },
             { "(version, flags, Per_Sample_IV_Size)",  "byte version, uint flags, byte Per_Sample_IV_Size" },
+            { "(version)",                          "byte version" },
             };
             return map[classType];
         }
