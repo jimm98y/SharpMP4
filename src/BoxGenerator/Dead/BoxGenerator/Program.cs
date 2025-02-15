@@ -217,51 +217,117 @@ public class PseudoRepeatingBlock : PseudoCode
 
 partial class Program
 {
-    public static Parser<char, string> Identifier =>
-        LetterOrDigit.Then(Token(c => char.IsLetterOrDigit(c) || c == '_').Labelled("letter or digit or _").ManyString(), (first, rest) => first + rest);
+    private static Parser<char, string> Identifier => LetterOrDigit.Then(Token(c => char.IsLetterOrDigit(c) || c == '_').ManyString(), (first, rest) => first + rest);
+    private static Parser<char, string> IdentifierWithSpace => Token(c => char.IsLetterOrDigit(c) || c == '_' || c == ' ' || c == '©' || c == '-').ManyString();
+    private static Parser<char, char> LetterOrDigitOrUnderscore => Token(c => char.IsLetterOrDigit(c) || c == '_');
+    private static Parser<char, char> LetterOrDigitOrUnderscoreOrDot => Token(c => char.IsLetterOrDigit(c) || c == '_' || c == '.');
+    private static Parser<char, string> Parentheses => Char('(').Then(Rec(() => Expr).Until(Char(')'))).Select(x => $"({string.Concat(x)})");
+    private static Parser<char, string> Expr => OneOf(Rec(() => Parentheses), AnyCharE);
+    private static Parser<char, string> AnyCharE => AnyCharExcept('(', ')').AtLeastOnceString();
 
-    public static Parser<char, string> IdentifierWithSpace =>
-        Token(c => char.IsLetterOrDigit(c) || c == '_' || c == ' ' || c == '©' || c == '-').Labelled("letter or digit or _ or space").ManyString();
+    private static Parser<char, string> BoxName => Identifier;
+    private static Parser<char, string> FieldName => Identifier;
+    private static Parser<char, string> MethodName => Identifier;
 
-    public static Parser<char, string> BoxType =>
-        Char('\'').Then(IdentifierWithSpace).Before(Char('\''));
+    private static Parser<char, string> BoxType => Char('\'').Then(IdentifierWithSpace).Before(Char('\''));
+    private static Parser<char, string> OldBoxType => Char('\'').Then(Char('!')).Then(IdentifierWithSpace).Before(Char('\'')).Before(Char(',')).Before(SkipWhitespaces);
+    private static Parser<char, string> ClassType => Parentheses;
 
-    public static Parser<char, string> OldBoxType =>
-        Char('\'').Then(Char('!')).Then(IdentifierWithSpace).Before(Char('\'')).Before(Char(',')).Before(SkipWhitespaces);
+    private static Parser<char, string> Parameter => SkipWhitespaces.Then(LetterOrDigitOrUnderscore.ManyString());
+    private static Parser<char, string> ParameterValue => Char('=').Then(SkipWhitespaces).Then(LetterOrDigit.ManyString());
+    private static Parser<char, (string Name, Maybe<string> Value)> ParameterFull => Map((name, value) => (name, value), Parameter.Before(SkipWhitespaces), Try(ParameterValue).Optional());
+    private static Parser<char, IEnumerable<(string Name, Maybe<string> Value)>> Parameters => ParameterFull.SeparatedAndOptionallyTerminated(Char(','));
 
-    public static Parser<char, string> BoxName =>
-        Identifier.Labelled("box name");
+    private static Parser<char, string> TagValue => LetterOrDigitOrUnderscoreOrDot.ManyString();
+    private static Parser<char, string> DescriptorTag => SkipWhitespaces.Then(Try(String("ProfileLevelIndicationIndexDescrTag")).Or(String("tag=").Then(TagValue)));
 
-    public static Parser<char, char> LetterOrDigitOrUnderscore { get; } = Token(c => char.IsLetterOrDigit(c) || c == '_').Labelled("letter or digit or underscore");
-    public static Parser<char, char> LetterOrDigitOrUnderscoreOrDot { get; } = Token(c => char.IsLetterOrDigit(c) || c == '_' || c == '.').Labelled("letter or digit or underscore or dot");
-    public static Parser<char, string> Parameter =>
-        SkipWhitespaces.Then(LetterOrDigitOrUnderscore.ManyString());
+    private static Parser<char, string> FieldArray => Char('[').Then(Any.Until(Char(']'))).Select(x => $"[{string.Concat(x)}]");
+    private static Parser<char, IEnumerable<PseudoCode>> SingleBlock => Try(Method).Or(Field).Repeat(1);
+    private static Parser<char, PseudoCode> CodeBlock => Try(Block).Or(Try(RepeatingBlock).Or(Try(Method).Or(Try(Field).Or(Comment))));
+    private static Parser<char, IEnumerable<PseudoCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
-    public static Parser<char, string> ParameterValue =>
-        Char('=').Then(SkipWhitespaces).Then(LetterOrDigit.ManyString());
-
-    public static Parser<char, (string Name, Maybe<string> Value)> ParameterFull =>
-        Map((name, value) => (name, value),
-            Parameter.Before(SkipWhitespaces),
-            Try(ParameterValue).Optional()
+    private static Parser<char, PseudoType> FieldType =>
+        Map((aligned, template, cons, sign, type, param) => new PseudoType(aligned, template, cons, sign, type, param),
+            Try(String("aligned").Before(SkipWhitespaces)).Optional(),
+            Try(String("template").Before(SkipWhitespaces)).Optional(),
+            Try(String("const").Before(SkipWhitespaces)).Optional(),
+            Try(OneOf(Try(String("signed")), Try(String("unsigned"))).Before(Try(Char('_')).Optional()).Before(SkipWhitespaces)).Optional(),
+            Identifier.Before(SkipWhitespaces),
+            Try(Parentheses).Optional()
         );
 
-    public static Parser<char, IEnumerable<(string Name, Maybe<string> Value)>> Parameters =>
-        ParameterFull.SeparatedAndOptionallyTerminated(Char(','));
+    private static Parser<char, PseudoCode> Field =>
+        Map((type, array, name, value, comment) => new PseudoField(type, array, name, value, comment),
+            Try(FieldTypeWorkaround.Select(x => new PseudoType() { Type = x })).Or(FieldType).Before(SkipWhitespaces),
+            Try(FieldArray.Before(SkipWhitespaces)).Optional(),
+            Try(FieldName.Before(SkipWhitespaces)).Optional(),
+            Try(Any.Until(Char(';')).Before(SkipWhitespaces)).Or(Try(Any.Until(Char('\n')).Before(SkipWhitespaces))).Optional(),
+            Try(LineComment(String("//"))).Optional()
+        ).Select(x => (PseudoCode)x);
 
-    private static Parser<char, string> Parentheses =>
-        Char('(').Then(Rec(() => Expr).Until(Char(')'))).Select(x => $"({string.Concat(x)})");
+    private static Parser<char, PseudoCode> Method =>
+        Map((name, value, comment) => new PseudoField(new PseudoType() { Type = name }, new Maybe<string>(), new Maybe<string>(name), new Maybe<IEnumerable<char>>(), comment),
+            MethodName.Before(SkipWhitespaces).Before(Char('(')),
+            Any.Until(Char(')')).Before(Char(';')).Before(SkipWhitespaces),
+            Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()
+        ).Select(x => (PseudoCode)x);
 
-    private static Parser<char, string> Expr =>
-        OneOf(
-            Rec(() => Parentheses),
-            AnyCharE
-            );
+    private static Parser<char, PseudoCode> Block =>
+        Map((type, condition, comment, content) => new PseudoBlock(type, condition, comment, content),
+            OneOf(
+                Try(String("else if")),
+                Try(String("if")),
+                Try(String("else")),
+                Try(String("do ")),
+                Try(String("for")),
+                Try(String("while")),
+                Try(String("switch"))
+                ).Before(SkipWhitespaces),
+            Try(Parentheses).Optional(),
+            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
+            SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
+        ).Select(x => (PseudoCode)x);
 
-    private static Parser<char, string> AnyCharE =>
-            AnyCharExcept('(', ')').AtLeastOnceString();
+    private static Parser<char, PseudoCode> RepeatingBlock =>
+        Map((content, array) => new PseudoRepeatingBlock(content, array),
+            SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock)))),
+            SkipWhitespaces.Then(Char('[')).Then(Any.AtLeastOnceUntil(Char(']')))
+        ).Select(x => (PseudoCode)x);
 
-    public static Parser<char, string> LineComment<T>(Parser<char, T> lineCommentStart)
+    private static Parser<char, PseudoExtendedClass> ExtendedClass =>
+        Map((extendedBoxName, oldBoxType, boxType, parameters, descriptorTag) => new PseudoExtendedClass(extendedBoxName, oldBoxType, boxType, parameters, descriptorTag),
+            SkipWhitespaces.Then(Try(String("extends")).Optional()).Then(SkipWhitespaces).Then(Try(BoxName).Optional()),
+            SkipWhitespaces.Then(Try(Char('(')).Optional()).Then(Try(OldBoxType).Optional()),
+            SkipWhitespaces.Then(
+                    Try(String("'avc2' or 'avc4'")).Or(
+                    Try(String("'svc1' or 'svc2'"))).Or(
+                    Try(String("'vvc1' or 'vvi1'"))).Or(
+                    Try(String("'evs1' or 'evs2'"))).Or(
+                    Try(String("'avc1' or 'avc3'"))).Or(
+                    Try(BoxType)).Optional()),
+            SkipWhitespaces.Then(Try(Char(',')).Optional()).Then(Try(Parameters).Optional()).Before(Try(Char(')')).Optional()).Before(SkipWhitespaces).Optional(),
+            SkipWhitespaces.Then(Try(Char(':').Then(SkipWhitespaces).Then(String("bit(8)")).Then(SkipWhitespaces).Then(DescriptorTag).Before(SkipWhitespaces))).Optional()
+        );
+
+    private static Parser<char, PseudoClass> Box =>
+        Map((comment, alignment, boxName, classType, extended, fields, endComment, endOffset) => new PseudoClass(comment, alignment, boxName, classType, extended, fields, endComment, endOffset),
+            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
+            SkipWhitespaces.Then(Try(String("abstract")).Optional()).Before(SkipWhitespaces).Before(Try(String("aligned(8)")).Optional()).Before(SkipWhitespaces).Before(Try(String("expandable(228-1)")).Optional()),
+            SkipWhitespaces.Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
+            SkipWhitespaces.Then(Try(ClassType).Optional()),
+            SkipWhitespaces.Then(Try(ExtendedClass).Optional()),
+            Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}')),
+            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
+            CurrentOffset
+        );
+    private static Parser<char, IEnumerable<PseudoClass>> Boxes => SkipWhitespaces.Then(Box.SeparatedAndOptionallyTerminated(SkipWhitespaces));
+
+    private static Parser<char, PseudoCode> Comment =>
+        Map((comment) => new PseudoComment(comment),
+            Try(LineComment(String("//"))).Or(BlockComment(String("/*"), String("*/")))
+        ).Select(x => (PseudoCode)x);
+
+    private static Parser<char, string> LineComment<T>(Parser<char, T> lineCommentStart)
     {
         if (lineCommentStart == null)
         {
@@ -270,11 +336,10 @@ partial class Program
 
         var eol = Try(EndOfLine).IgnoreResult();
         return lineCommentStart
-            .Then(Any.Until(End.Or(eol)), (first, rest) => string.Concat(rest))
-            .Labelled("line comment");
+            .Then(Any.Until(End.Or(eol)), (first, rest) => string.Concat(rest));
     }
 
-    public static Parser<char, string> BlockComment<T, U>(Parser<char, T> blockCommentStart, Parser<char, U> blockCommentEnd)
+    private static Parser<char, string> BlockComment<T, U>(Parser<char, T> blockCommentStart, Parser<char, U> blockCommentEnd)
     {
         if (blockCommentStart == null)
         {
@@ -287,11 +352,10 @@ partial class Program
         }
 
         return blockCommentStart
-            .Then(Any.Until(blockCommentEnd), (first, rest) => string.Concat(rest))
-            .Labelled("block comment");
+            .Then(Any.Until(blockCommentEnd), (first, rest) => string.Concat(rest));
     }
 
-    public static Parser<char, string> FieldTypeWorkaround =>
+    private static Parser<char, string> FieldTypeWorkaround =>
         OneOf(
             Try(String("int downmix_instructions_count = 1")), // WORKAROUND
             Try(String("int i, j")), // WORKAROUND
@@ -353,108 +417,6 @@ partial class Program
             Try(String("FieldLength = (large_size + 1) * 16")) // WORKAROUND
             )
         .Labelled("field type");
-
-    public static Parser<char, string> FieldName =>
-        Identifier.Labelled("field name");
-
-    public static Parser<char, PseudoCode> Comment =>
-    Map((comment) => new PseudoComment(comment),
-        Try(LineComment(String("//"))).Or(BlockComment(String("/*"), String("*/")))
-    ).Select(x => (PseudoCode)x);
-
-    private static Parser<char, string> FieldArray =>
-        Char('[').Then(Any.Until(Char(']'))).Select(x => $"[{string.Concat(x)}]");
-
-    private static Parser<char, PseudoType> FieldType =>
-        Map((aligned, template, cons, sign, type, param) => new PseudoType(aligned, template, cons, sign, type, param),
-            Try(String("aligned").Before(SkipWhitespaces)).Optional(),
-            Try(String("template").Before(SkipWhitespaces)).Optional(),
-            Try(String("const").Before(SkipWhitespaces)).Optional(),
-            Try(OneOf(Try(String("signed")), Try(String("unsigned"))).Before(Try(Char('_')).Optional()).Before(SkipWhitespaces)).Optional(),
-            Identifier.Before(SkipWhitespaces),
-            Try(Parentheses).Optional()
-        );
-
-    public static Parser<char, PseudoCode> Field =>
-        Map((type, array, name, value, comment) => new PseudoField(type, array, name, value, comment),
-            Try(FieldTypeWorkaround.Select(x => new PseudoType() { Type = x })).Or(FieldType).Before(SkipWhitespaces),
-            Try(FieldArray.Before(SkipWhitespaces)).Optional(),
-            Try(FieldName.Before(SkipWhitespaces)).Optional(),
-            Try(Any.Until(Char(';')).Before(SkipWhitespaces)).Or(Try(Any.Until(Char('\n')).Before(SkipWhitespaces))).Optional(),
-            Try(LineComment(String("//"))).Optional()
-        ).Select(x => (PseudoCode)x);
-
-    public static Parser<char, string> MethodName =>
-        Identifier.Labelled("field name");
-
-    public static Parser<char, PseudoCode> Method =>
-        Map((name, value, comment) => new PseudoField(new PseudoType() { Type = name }, new Maybe<string>(), new Maybe<string>(name), new Maybe<IEnumerable<char>>(), comment),
-            MethodName.Before(SkipWhitespaces).Before(Char('(')),
-            Any.Until(Char(')')).Before(Char(';')).Before(SkipWhitespaces),
-            Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()
-        ).Select(x => (PseudoCode)x);
-
-    public static Parser<char, PseudoCode> Block =>
-        Map((type, condition, comment, content) => new PseudoBlock(type, condition, comment, content),
-            OneOf(
-                Try(String("else if")), 
-                Try(String("if")), 
-                Try(String("else")),
-                Try(String("do ")),
-                Try(String("for")),
-                Try(String("while")),
-                Try(String("switch"))
-                ).Before(SkipWhitespaces),
-            Try(Parentheses).Optional(),
-            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
-            SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
-        ).Select(x => (PseudoCode)x);
-
-    public static Parser<char, PseudoCode> RepeatingBlock =>
-        Map((content, array) => new PseudoRepeatingBlock(content, array),
-            SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock)))),
-            SkipWhitespaces.Then(Char('[')).Then(Any.AtLeastOnceUntil(Char(']')))
-        ).Select(x => (PseudoCode)x);
-
-
-    public static Parser<char, IEnumerable<PseudoCode>> SingleBlock => Try(Method).Or(Field).Repeat(1);
-    public static Parser<char, PseudoCode> CodeBlock => Try(Block).Or(Try(RepeatingBlock).Or(Try(Method).Or(Try(Field).Or(Comment))));
-    public static Parser<char, IEnumerable<PseudoCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
-
-    public static Parser<char, string> ClassType => Parentheses;
-
-    public static Parser<char, string> Tag => LetterOrDigitOrUnderscoreOrDot.ManyString();
-
-    public static Parser<char, string> DescriptorTag =>
-        SkipWhitespaces.Then(Try(String("ProfileLevelIndicationIndexDescrTag")).Or(String("tag=").Then(Tag))).Labelled("descriptor tag");
-
-    public static Parser<char, PseudoExtendedClass> ExtendedClass => Map((extendedBoxName, oldBoxType, boxType, parameters, descriptorTag) => new PseudoExtendedClass(extendedBoxName, oldBoxType, boxType, parameters, descriptorTag),
-            SkipWhitespaces.Then(Try(String("extends")).Optional()).Then(SkipWhitespaces).Then(Try(BoxName).Optional()),
-            SkipWhitespaces.Then(Try(Char('(')).Optional()).Then(Try(OldBoxType).Optional()),
-            SkipWhitespaces.Then(
-                    Try(String("'avc2' or 'avc4'")).Or(
-                    Try(String("'svc1' or 'svc2'"))).Or(
-                    Try(String("'vvc1' or 'vvi1'"))).Or(
-                    Try(String("'evs1' or 'evs2'"))).Or(
-                    Try(String("'avc1' or 'avc3'"))).Or(
-                    Try(BoxType)).Optional()),
-            SkipWhitespaces.Then(Try(Char(',')).Optional()).Then(Try(Parameters).Optional()).Before(Try(Char(')')).Optional()).Before(SkipWhitespaces).Optional(),
-            SkipWhitespaces.Then(Try(Char(':').Then(SkipWhitespaces).Then(String("bit(8)")).Then(SkipWhitespaces).Then(DescriptorTag).Before(SkipWhitespaces))).Optional()
-        );
-
-    public static Parser<char, PseudoClass> Box =>
-        Map((comment, alignment, boxName, classType, extended, fields, endComment, endOffset) => new PseudoClass(comment, alignment, boxName, classType, extended, fields, endComment, endOffset),
-            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
-            SkipWhitespaces.Then(Try(String("abstract")).Optional()).Before(SkipWhitespaces).Before(Try(String("aligned(8)")).Optional()).Before(SkipWhitespaces).Before(Try(String("expandable(228-1)")).Optional()),
-            SkipWhitespaces.Then(String("class")).Then(SkipWhitespaces).Then(Identifier),
-            SkipWhitespaces.Then(Try(ClassType).Optional()),
-            SkipWhitespaces.Then(Try(ExtendedClass).Optional()),
-            Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}')),
-            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
-            CurrentOffset
-        );
-
-    public static Parser<char, IEnumerable<PseudoClass>> Boxes => SkipWhitespaces.Then(Box.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
     static void Main(string[] args)
     {
@@ -676,7 +638,7 @@ partial class Program
         containers = containers.Distinct().ToList();
 
         Console.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
-        string js = Newtonsoft.Json.JsonConvert.SerializeObject(ret.Values.ToArray());
+        string js = JsonConvert.SerializeObject(ret.Values.ToArray());
         File.WriteAllText("result.json", js);
 
         string resultCode = 
@@ -724,28 +686,8 @@ namespace SharpMP4
 
         // add additional boxes
         string[] audioSampleEntryTypes = new string[]
-        {
-            "samr", 
-            "sawb", 
-            "mp4a", 
-            "drms", 
-            "alac", 
-            "owma", 
-            "ac-3", 
-            "ec-3", 
-            "mlpa", 
-            "dtsl", 
-            "dtsh", 
-            "dtse", 
-            "Opus", 
-            "enca", 
-            "resa", 
-            "sevc", 
-            "sqcp", 
-            "ssmv",
-            "lpcm",
-            "dtsc",
-            "sowt",
+        { 
+            "samr","sawb","mp4a","drms","alac","owma","ac-3","ec-3","mlpa","dtsl","dtsh","dtse","Opus","enca","resa","sevc","sqcp","ssmv","lpcm","dtsc","sowt",
         };
         foreach(var type in audioSampleEntryTypes)
         {
@@ -754,57 +696,9 @@ namespace SharpMP4
         }
         string[] visualSampleEntryTypes = new string[]
         {
-            "mp4v", 
-            "s263", 
-            "drmi", 
-            "encv", 
-            "resv",
-            "icpv",
-            "hvc1",
-            "hvc2",
-            "hvc3",
-            "lhv1",
-            "lhe1",
-            "hev1",
-            "hev2",
-            "hev3",
-            "avcp",
-            "mvc1",
-            "mvc2",
-            "mvc3",
-            "mvc4",
-            "mvd1",
-            "mvd2",
-            "mvd3",
-            "mvd4",
-            "a3d1",
-            "a3d2",
-            "a3d3",
-            "a3d4",
-            "svc1",
-            "svc2",
-            "hvt1",
-            "lht1",
-            "hvt3",
-            "hvt2",
-            "vvc1",
-            "vvi1",
-            "vvs1",
-            "vvcN",
-            "evc1",
-            "evs1",
-            "evs2",
-            "av01",
-            "avc1",
-            "avc2",
-            "avc3",
-            "avc4",
-            "vp08",
-            "vp09",
-            "vp10",
-            "apcn",
-            "dvhe",
-            "dvav",
+            "mp4v","s263","drmi","encv","resv","icpv","hvc1","hvc2","hvc3","lhv1","lhe1","hev1","hev2","hev3","avcp","mvc1","mvc2","mvc3","mvc4","mvd1","mvd2",
+            "mvd3","mvd4","a3d1","a3d2","a3d3","a3d4","svc1","svc2","hvt1","lht1","hvt3","hvt2","vvc1","vvi1","vvs1","vvcN","evc1","evs1","evs2","av01","avc1",
+            "avc2","avc3","avc4","vp08","vp09","vp10","apcn","dvhe","dvav",
         };
         foreach (var type in visualSampleEntryTypes)
         {
