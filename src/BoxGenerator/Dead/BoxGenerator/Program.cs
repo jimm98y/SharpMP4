@@ -24,6 +24,38 @@ public interface PseudoCode
 {
 }
 
+
+public class PseudoType : PseudoCode
+{
+    public string Aligned { get; set; }
+    public string Template { get; set; }
+    public string Cons { get; set; }
+    public string Sign { get; set; }
+    public string Type { get; set; }
+    public string Param { get; set; }
+
+    public PseudoType()
+    {
+
+    }
+
+    public PseudoType(Maybe<string> aligned, Maybe<string> template, Maybe<string> cons, Maybe<string> sign, string type, Maybe<string> param)
+    {
+        this.Aligned = aligned.GetValueOrDefault();
+        this.Template = template.GetValueOrDefault();
+        this.Cons = cons.GetValueOrDefault();
+        this.Sign = sign.GetValueOrDefault();
+        this.Type = type;
+        this.Param = param.GetValueOrDefault();
+    }
+
+    public override string ToString()
+    {
+        var fields = new string[] { Aligned, Template, Cons, Sign, Type, Param };
+        return string.Join(" ", fields.Where(x => !string.IsNullOrEmpty(x))).Replace($"{Type} {Param}", $"{Type}{Param}");
+    }
+}
+
 public class PseudoClass : PseudoCode
 {
     public ParsedBoxType ParsedBoxType { get; set; }
@@ -108,7 +140,7 @@ public class PseudoField : PseudoCode
 
     }
 
-    public PseudoField(string type, Maybe<string> array, Maybe<string> name, Maybe<IEnumerable<char>> value, Maybe<string> comment)
+    public PseudoField(PseudoType type, Maybe<string> array, Maybe<string> name, Maybe<IEnumerable<char>> value, Maybe<string> comment)
     {
         Type = type;
         FieldArray = array.GetValueOrDefault();
@@ -117,7 +149,7 @@ public class PseudoField : PseudoCode
         Comment = comment.GetValueOrDefault();
     }
 
-    public string Type { get; set; }
+    public PseudoType Type { get; set; }
     public string FieldArray { get; set; }
     public string Name { get; set; }
     public string Value { get; set; }
@@ -258,7 +290,7 @@ partial class Program
             .Labelled("block comment");
     }
 
-    public static Parser<char, string> FieldType =>
+    public static Parser<char, string> FieldTypeWorkaround =>
         OneOf(
             Try(String("int downmix_instructions_count = 1")), // WORKAROUND
             Try(String("int i, j")), // WORKAROUND
@@ -317,294 +349,7 @@ partial class Program
             Try(String("case 0b101:\r\n                // this segment is always in binary as stated in Section 11.4 \r\n                font_file")),
             Try(String("case 0b110: ")),
             Try(String("case 0b111: ")),
-            Try(String("FieldLength = (large_size + 1) * 16")), // WORKAROUND
-
-            Try(String("unsigned int(8 * OutputChannelCount)")),
-            Try(String("unsigned int(64)")),
-            Try(String("unsigned int(48)")),
-            Try(String("unsigned int(32)")),
-            Try(String("unsigned int(31)")),
-            Try(String("unsigned_int(32)")),
-            Try(String("unsigned int(24)")),
-            Try(String("unsigned int(29)")),
-            Try(String("unsigned int(28)")),
-            Try(String("unsigned int(26)")),
-            Try(String("unsigned int(16)")),
-            Try(String("unsigned_int(16)")),
-            Try(String("unsigned int(15)")),
-            Try(String("unsigned int(12)")),
-            Try(String("signed int(12)")),
-            Try(String("unsigned int(10)")),
-            Try(String("unsigned int(9)")),
-            Try(String("unsigned int(8)")),
-            Try(String("unsigned int(7)")),
-            Try(String("unsigned int(6)")),
-            Try(String("unsigned int(5)")),
-            Try(String("unsigned int(4)")),
-            Try(String("unsigned int(3)")),
-            Try(String("unsigned int(2)")),
-            Try(String("unsigned int(1)")),
-            Try(String("unsigned int (32)")),
-            Try(String("unsigned int(f(pattern_size_code))")),
-            Try(String("unsigned int(f(index_size_code))")),
-            Try(String("unsigned int(f(count_size_code))")),
-            Try(String("unsigned int(base_offset_size*8)")),
-            Try(String("unsigned int(offset_size*8)")),
-            Try(String("unsigned int(length_size*8)")),
-            Try(String("unsigned int(index_size*8)")),
-            Try(String("unsigned int(field_size)")),
-            Try(String("unsigned int((length_size_of_traf_num+1) * 8)")),
-            Try(String("unsigned int((length_size_of_trun_num+1) * 8)")),
-            Try(String("unsigned int((length_size_of_sample_num+1) * 8)")),
-            Try(String("unsigned int(8*size-64)")),
-            Try(String("unsigned int(subgroupIdLen)")),
-            Try(String("unsigned int(Per_Sample_IV_Size*8)")),
-            Try(String("const unsigned int(8)")),
-            Try(String("const unsigned int(32)")),
-            Try(String("const unsigned int(16)")),
-            Try(String("const unsigned int(26)")),
-            Try(String("template int(32)")),
-            Try(String("template int(16)")),
-            Try(String("template unsigned int(30)")),
-            Try(String("template unsigned int(32)")),
-            Try(String("template unsigned int(16)")),
-            Try(String("template unsigned int(8)")),
-            Try(String("int(64)")),
-            Try(String("int(32)")),
-            Try(String("int(16)")),
-            Try(String("int(8)")),
-            Try(String("int(4)")),
-            Try(String("int")),
-            Try(String("const bit(16)")),
-            Try(String("const bit(1)")),
-            Try(String("bit(1)")),
-            Try(String("bit(2)")),
-            Try(String("bit(3)")),
-            Try(String("bit(4)")),
-            Try(String("bit(5)")),
-            Try(String("bit(6)")),
-            Try(String("bit(7)")),
-            Try(String("bit(8)")),
-            Try(String("bit(9)")),
-            Try(String("bit(13)")),
-            Try(String("bit(14)")),
-            Try(String("bit(15)")),
-            Try(String("bit(16)")),
-            Try(String("bit(24)")),
-            Try(String("bit(31)")),
-            Try(String("bit(8 ceil(size / 8) \u2013 size)")),
-            Try(String("bit(8* ps_nalu_length)")),
-            Try(String("bit(8*nalUnitLength)")),
-            Try(String("bit(8*sequenceParameterSetLength)")),
-            Try(String("bit(8*pictureParameterSetLength)")),
-            Try(String("bit(8*sequenceParameterSetExtLength)")),
-            Try(String("unsigned int(8*num_bytes_constraint_info - 2)")),
-            Try(String("bit(8*nal_unit_length)")),
-            Try(String("bit(timeStampLength)")),
-            Try(String("bit(length-3)")),
-            Try(String("bit(length)")),
-            Try(String("utf8string")),
-            Try(String("utfstring")),
-            Try(String("utf8list")),
-            Try(String("boxstring")),
-            Try(String("string")),
-            Try(String("bit(32)")),
-            Try(String("uint(32)")),
-            Try(String("uint(16)")),
-            Try(String("uint(64)")),
-            Try(String("uint(8)")),
-            Try(String("uint(7)")),
-            Try(String("uint(1)")),
-            Try(String("signed   int(64)")),
-            Try(String("signed int(32)")),
-            Try(String("signed int (16)")),
-            Try(String("signed int(16)")),
-            Try(String("signed int (8)")),
-            Try(String("signed int(64)")),
-            Try(String("signed   int(32)")),
-            Try(String("signed   int(8)")),
-            Try(String("RectRecord")),
-            Try(String("StyleRecord")),
-            Try(String("Box()")),
-            Try(String("Box")),
-            Try(String("SchemeTypeBox")),
-            Try(String("SchemeInformationBox")),
-            Try(String("ItemPropertyContainerBox")),
-            Try(String("ItemPropertyAssociationBox")),
-            Try(String("char")),
-            Try(String("loudness")),
-            Try(String("ICC_profile")),
-            Try(String("OriginalFormatBox(fmt)")),
-            Try(String("DataEntryBaseBox(entry_type, entry_flags)")),
-            Try(String("ItemInfoEntry")),
-            Try(String("TypeCombinationBox")),
-            Try(String("FilePartitionBox")),
-            Try(String("FECReservoirBox")),
-            Try(String("FileReservoirBox")),
-            Try(String("PartitionEntry")),
-            Try(String("FDSessionGroupBox")),
-            Try(String("GroupIdToNameBox")),
-            Try(String("base64string")),
-            Try(String("ProtectionSchemeInfoBox")),
-            Try(String("SingleItemTypeReferenceBoxLarge")),
-            Try(String("SingleItemTypeReferenceBox")),
-            Try(String("HandlerBox(handler_type)")),
-            Try(String("PrimaryItemBox")),
-            Try(String("DataInformationBox")),
-            Try(String("ItemLocationBox")),
-            Try(String("ItemProtectionBox")),
-            Try(String("ItemInfoBox")),
-            Try(String("IPMPControlBox")),
-            Try(String("ItemReferenceBox")),
-            Try(String("ItemDataBox")),
-            Try(String("TrackReferenceTypeBox")),
-            Try(String("MetaDataKeyBox")),
-            Try(String("TierInfoBox")),
-            Try(String("MultiviewRelationAttributeBox")),
-            Try(String("TierBitRateBox")),
-            Try(String("BufferingBox")),
-            Try(String("MultiviewSceneInfoBox")),
-            Try(String("MVDDecoderConfigurationRecord")),
-            Try(String("MVDDepthResolutionBox")),
-            Try(String("MVCDecoderConfigurationRecord()")),
-            Try(String("AVCDecoderConfigurationRecord()")),
-            Try(String("HEVCDecoderConfigurationRecord()")),
-            Try(String("LHEVCDecoderConfigurationRecord()")),
-            Try(String("SVCDecoderConfigurationRecord()")),
-            Try(String("HEVCTileTierLevelConfigurationRecord()")),
-            Try(String("EVCDecoderConfigurationRecord()")),
-            Try(String("VvcDecoderConfigurationRecord()")),
-            Try(String("EVCSliceComponentTrackConfigurationRecord()")),
-            Try(String("SampleGroupDescriptionEntry (grouping_type)")),
-            Try(String("Descriptor")),
-            Try(String("WebVTTConfigurationBox")),
-            Try(String("WebVTTSourceLabelBox")),
-            Try(String("OperatingPointsRecord")),
-            Try(String("VvcSubpicIDEntry")),
-            Try(String("VvcSubpicOrderEntry")),
-            Try(String("URIInitBox")),
-            Try(String("URIBox")),
-            Try(String("CleanApertureBox")),
-            Try(String("PixelAspectRatioBox")),
-            Try(String("DownMixInstructions()")),
-            Try(String("DRCCoefficientsBasic()")),
-            Try(String("DRCInstructionsBasic()")),
-            Try(String("DRCCoefficientsUniDRC()")),
-            Try(String("DRCInstructionsUniDRC()")),
-            Try(String("HEVCConfigurationBox")),
-            Try(String("LHEVCConfigurationBox")),
-            Try(String("AVCConfigurationBox")),
-            Try(String("SVCConfigurationBox")),
-            Try(String("ScalabilityInformationSEIBox")),
-            Try(String("SVCPriorityAssignmentBox")),
-            Try(String("ViewScalabilityInformationSEIBox")),
-            Try(String("ViewIdentifierBox")),
-            Try(String("MVCConfigurationBox")),
-            Try(String("MVCViewPriorityAssignmentBox")),
-            Try(String("IntrinsicCameraParametersBox")),
-            Try(String("ExtrinsicCameraParametersBox")),
-            Try(String("MVCDConfigurationBox")),
-            Try(String("MVDScalabilityInformationSEIBox")),
-            Try(String("A3DConfigurationBox")),
-            Try(String("VvcOperatingPointsRecord")),
-            Try(String("VVCSubpicIDRewritingInfomationStruct()")),
-            Try(String("MPEG4ExtensionDescriptorsBox ()")),
-            Try(String("MPEG4ExtensionDescriptorsBox()")),
-            Try(String("MPEG4ExtensionDescriptorsBox")),
-            Try(String("bit(8*dci_nal_unit_length)")),
-            Try(String("DependencyInfo")),
-            Try(String("VvcPTLRecord(0)")),
-            Try(String("EVCSliceComponentTrackConfigurationBox")),
-            Try(String("SVCMetadataSampleConfigBox")),
-            Try(String("SVCPriorityLayerInfoBox")),
-            Try(String("EVCConfigurationBox")),
-            Try(String("VvcNALUConfigBox")),
-            Try(String("VvcConfigurationBox")),
-            Try(String("HEVCTileConfigurationBox")),
-            Try(String("MetaDataKeyTableBox()")),
-            Try(String("BitRateBox ()")),
-            Try(String("TrackLoudnessInfo")),
-            Try(String("AlbumLoudnessInfo")),           
-            Try(String("VvcPTLRecord(num_sublayers)")),           
-            Try(String("VvcPTLRecord(ptl_max_temporal_id[i]+1)")),           
-            // added
-            Try(String("MultiLanguageString")), 
-            Try(String("AdobeChapterRecord")), 
-            Try(String("ThreeGPPKeyword")), 
-            Try(String("IodsSample")), 
-            Try(String("EC3SpecificEntry")), 
-            Try(String("ProtectionSystemSpecificKeyID")), 
-            Try(String("TrickPlayEntry")), 
-            Try(String("MtdtEntry")), 
-            Try(String("SampleEncryptionSample(version, flags, Per_Sample_IV_Size)")), 
-            Try(String("SampleEncryptionSubsample(version)")), 
-            Try(String("XtraTag")), 
-            Try(String("XtraValue")), 
-            Try(String("ViprEntry")), 
-            // descriptors
-            Try(String("DecoderConfigDescriptor")),
-            Try(String("SLConfigDescriptor")),
-            Try(String("IPI_DescrPointer")),
-            Try(String("IP_IdentificationDataSet")),
-            Try(String("IP_IdentificationDataSet")),
-            Try(String("IPMP_DescriptorPointer")),
-            Try(String("LanguageDescriptor")),
-            Try(String("QoS_Descriptor")),
-            Try(String("ES_Descriptor")),
-            Try(String("RegistrationDescriptor")),
-            Try(String("ExtensionDescriptor")),
-            Try(String("ProfileLevelIndicationIndexDescriptor")),
-            Try(String("DecoderSpecificInfo")),
-            Try(String("QoS_Qualifier")),
-            Try(String("double(32)")),
-            Try(String("fixedpoint1616")),
-            Try(String("GetAudioObjectType()")),
-            Try(String("bslbf(header_size * 8)")),
-            Try(String("bslbf(trailer_size * 8)")),
-            Try(String("bslbf(aux_size * 8)")),
-            Try(String("bslbf(11)")),
-            Try(String("bslbf(5)")),
-            Try(String("bslbf(4)")),
-            Try(String("bslbf(1)")),
-            Try(String("uimsbf(32)")),
-            Try(String("uimsbf(24)")),
-            Try(String("uimsbf(18)")),
-            Try(String("uimsbf(16)")),
-            Try(String("uimsbf(14)")),
-            Try(String("uimsbf(12)")),
-            Try(String("uimsbf(10)")),
-            Try(String("uimsbf(8)")),
-            Try(String("uimsbf(7)")),
-            Try(String("uimsbf(6)")),
-            Try(String("uimsbf(5)")),
-            Try(String("uimsbf(4)")),
-            Try(String("uimsbf(3)")),
-            Try(String("uimsbf(2)")),
-            Try(String("uimsbf(1)")),
-            Try(String("SpatialSpecificConfig()")),
-            Try(String("ALSSpecificConfig()")),
-            Try(String("ErrorProtectionSpecificConfig()")),
-            Try(String("program_config_element()")),
-            Try(String("byte_alignment()")),
-            Try(String("CelpHeader(samplingFrequencyIndex)")),
-            Try(String("CelpBWSenhHeader()")),
-            Try(String("HVXCconfig()")),
-            Try(String("TTS_Sequence()")),
-            Try(String("ER_SC_CelpHeader(samplingFrequencyIndex)")),
-            Try(String("ErHVXCconfig()")),
-            Try(String("PARAconfig()")),
-            Try(String("HILNenexConfig()")),
-            Try(String("HILNconfig()")),
-            Try(String("ld_sbr_header(channelConfiguration)")),
-            Try(String("sbr_header()")),
-            Try(String("AV1SampleEntry")),
-            Try(String("AV1CodecConfigurationBox")),
-            Try(String("AV1CodecConfigurationRecord")),
-            Try(String("vluimsbf8")),
-            Try(String("byte(urlMIDIStream_length)")),
-            Try(String("aligned bit(3)")),
-            Try(String("aligned bit(1)")),
-            Try(String("bit"))
+            Try(String("FieldLength = (large_size + 1) * 16")) // WORKAROUND
             )
         .Labelled("field type");
 
@@ -619,9 +364,19 @@ partial class Program
     private static Parser<char, string> FieldArray =>
         Char('[').Then(Any.Until(Char(']'))).Select(x => $"[{string.Concat(x)}]");
 
+    private static Parser<char, PseudoType> FieldType =>
+        Map((aligned, template, cons, sign, type, param) => new PseudoType(aligned, template, cons, sign, type, param),
+            Try(String("aligned").Before(SkipWhitespaces)).Optional(),
+            Try(String("template").Before(SkipWhitespaces)).Optional(),
+            Try(String("const").Before(SkipWhitespaces)).Optional(),
+            Try(OneOf(Try(String("signed")), Try(String("unsigned"))).Before(Try(Char('_')).Optional()).Before(SkipWhitespaces)).Optional(),
+            Identifier.Before(SkipWhitespaces),
+            Try(Parentheses).Optional()
+        );
+
     public static Parser<char, PseudoCode> Field =>
         Map((type, array, name, value, comment) => new PseudoField(type, array, name, value, comment),
-            FieldType.Before(SkipWhitespaces),
+            Try(FieldTypeWorkaround.Select(x => new PseudoType() { Type = x })).Or(FieldType).Before(SkipWhitespaces),
             Try(FieldArray.Before(SkipWhitespaces)).Optional(),
             Try(FieldName.Before(SkipWhitespaces)).Optional(),
             Try(Any.Until(Char(';')).Before(SkipWhitespaces)).Or(Try(Any.Until(Char('\n')).Before(SkipWhitespaces))).Optional(),
@@ -632,7 +387,7 @@ partial class Program
         Identifier.Labelled("field name");
 
     public static Parser<char, PseudoCode> Method =>
-        Map((name, value, comment) => new PseudoField(name, new Maybe<string>(), new Maybe<string>(name), new Maybe<IEnumerable<char>>(), comment),
+        Map((name, value, comment) => new PseudoField(new PseudoType() { Type = name }, new Maybe<string>(), new Maybe<string>(name), new Maybe<IEnumerable<char>>(), comment),
             MethodName.Before(SkipWhitespaces).Before(Char('(')),
             Any.Until(Char(')')).Before(Char(';')).Before(SkipWhitespaces),
             Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()
@@ -644,7 +399,7 @@ partial class Program
                 Try(String("else if")), 
                 Try(String("if")), 
                 Try(String("else")),
-                Try(String("do")),
+                Try(String("do ")),
                 Try(String("for")),
                 Try(String("while")),
                 Try(String("switch"))
@@ -1424,29 +1179,29 @@ namespace SharpMP4
 
         if (b.BoxName == "GASpecificConfig" || b.BoxName == "SLSSpecificConfig")
         {
-            fields.Add(new PseudoField() { Name = "audioObjectType", Type = "unsigned int(8)" });
-            fields.Add(new PseudoField() { Name = "channelConfiguration", Type = "signed int(32)" });
-            fields.Add(new PseudoField() { Name = "samplingFrequencyIndex", Type = "signed int(32)" });
+            fields.Add(new PseudoField() { Name = "audioObjectType", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
+            fields.Add(new PseudoField() { Name = "channelConfiguration", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
+            fields.Add(new PseudoField() { Name = "samplingFrequencyIndex", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
             ctorContent = "\t\tthis.audioObjectType = audioObjectType;\r\n\t\tthis.channelConfiguration = channelConfiguration;\r\n\t\tthis.samplingFrequencyIndex = samplingFrequencyIndex;\r\n";
         }
         else if (b.BoxName == "CelpSpecificConfig" || b.BoxName == "ER_SC_CelpHeader" || b.BoxName == "ErrorResilientCelpSpecificConfig")
         {
-            fields.Add(new PseudoField() { Name = "samplingFrequencyIndex", Type = "signed int(32)" });
+            fields.Add(new PseudoField() { Name = "samplingFrequencyIndex", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
             ctorContent = "\t\tthis.samplingFrequencyIndex = samplingFrequencyIndex;\r\n";
         }
         else if(b.BoxName == "SSCSpecificConfig" || b.BoxName == "ld_sbr_header" || b.BoxName == "ELDSpecificConfig")
         {
-            fields.Add(new PseudoField() { Name = "channelConfiguration", Type = "signed int(32)" });
+            fields.Add(new PseudoField() { Name = "channelConfiguration", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
             ctorContent = "\t\tthis.channelConfiguration = channelConfiguration;\r\n";
         }
         else if (b.BoxName == "VvcPTLRecord")
         {
-            fields.Add(new PseudoField() { Name = "num_sublayers", Type = "unsigned int(8)" });
+            fields.Add(new PseudoField() { Name = "num_sublayers", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
             ctorContent = "\t\tthis.num_sublayers = num_sublayers;\r\n";
         }
         else if (b.BoxName == "ChannelMappingTable")
         {
-            fields.Add(new PseudoField() { Name = "OutputChannelCount", Type = "unsigned int(8)" });
+            fields.Add(new PseudoField() { Name = "OutputChannelCount", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
             ctorContent = "\t\tthis.OutputChannelCount = OutputChannelCount;\r\n";
         }
         else if(b.BoxName == "BoxHeader")
@@ -1455,23 +1210,23 @@ namespace SharpMP4
         }
         else if(b.BoxName == "SampleEncryptionSample")
         {
-            fields.Add(new PseudoField() { Name = "version", Type = "unsigned int(8)" });
-            fields.Add(new PseudoField() { Name = "flags", Type = "unsigned int(32)" });
-            fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = "unsigned int(8)" });
+            fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
+            fields.Add(new PseudoField() { Name = "flags", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(32)")) });
+            fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
             ctorContent = "\t\tthis.version = version;\r\n\t\tthis.flags = flags;\r\n\t\tthis.Per_Sample_IV_Size = Per_Sample_IV_Size;\r\n";
         }
         else if(b.BoxName == "SampleEncryptionSubsample")
         {
-            fields.Add(new PseudoField() { Name = "version", Type = "unsigned int(8)" });
+            fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
             ctorContent = "\t\tthis.version = version;\r\n";
         }
         else if(b.BoxName == "SampleEncryptionBox")
         {
-            fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = "unsigned int(8)", Value = " = 16; // TODO: get from the 'tenc' box" });
+            fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")), Value = " = 16; // TODO: get from the 'tenc' box" });
         }
         else if(b.BoxName == "SampleGroupDescriptionEntry")
         {
-            fields.Add(new PseudoField() { Name = "children", Type = "Box[]" });
+            fields.Add(new PseudoField() { Name = "children", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), "Box", new Maybe<string>()), FieldArray = "[]" });
         }
         else if(b.BoxName == "FullBox")
         {
@@ -1686,7 +1441,7 @@ namespace SharpMP4
             return null;
 
         if (string.IsNullOrEmpty(x.FieldArray))
-            return x.Type;
+            return x.Type.ToString();
         else
             return $"{x.Type}{x.FieldArray}";
     }
@@ -1835,11 +1590,11 @@ namespace SharpMP4
             {
                 field.Parent = parent; // keep track of parent blocks
 
-                if (IsWorkaround(field.Type))
+                if (IsWorkaround(field.Type.Type))
                     continue;
 
                 string value = field.Value;
-                string tp = field.Type;
+                string tp = GetFieldType(field);
 
                 if (string.IsNullOrEmpty(tp) && !string.IsNullOrEmpty(field.Name))
                     tp = field.Name?.Replace("[]", "").Replace("()", "");
@@ -1849,7 +1604,7 @@ namespace SharpMP4
                     // TODO: incorrectly parsed type
                     if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
                     {
-                        field.Type = tp + value;
+                        field.FieldArray = value;
                     }
                 }
 
@@ -1874,8 +1629,8 @@ namespace SharpMP4
         string name = GetFieldName(field);
         if (!ret.TryAdd(name, field))
         {
-            if (name.StartsWith("reserved") || name == "pre_defined" || field.Type.StartsWith("SingleItemTypeReferenceBox") ||
-                (field.Type == "signed   int(32)" && ret[name].Type == "unsigned int(32)") ||
+            if (name.StartsWith("reserved") || name == "pre_defined" || GetFieldType(field).StartsWith("SingleItemTypeReferenceBox") ||
+                (GetFieldType(field) == "signed int(32)" && GetFieldType(ret[name]) == "unsigned int(32)") ||
                 field.Name == "min_initial_alt_startup_offset" || field.Name == "target_rate_share") // special case: requires nesting
             {
                 int i = 0;
@@ -1888,15 +1643,15 @@ namespace SharpMP4
                 field.Name = updatedName;
                 //Debug.WriteLine($"-Resolved: {name} => {updatedName}");
             }
-            else if(field.Type == ret[name].Type && GetNestedInLoop(field) == GetNestedInLoop(ret[name]))
+            else if(GetFieldType(field) == GetFieldType(ret[name]) && GetNestedInLoop(field) == GetNestedInLoop(ret[name]))
             {
                 //Debug.WriteLine($"-Resolved: fields are the same");
             }
             else
             {
                 // try to resolve the conflict using the type size
-                string type1 = GetCalculateSizeMethod(field.Type);
-                string type2 = GetCalculateSizeMethod(ret[name].Type);
+                string type1 = GetCalculateSizeMethod(GetFieldType(field));
+                string type2 = GetCalculateSizeMethod(GetFieldType(ret[name]));
                 int type1Size;
                 if (int.TryParse(type1, out type1Size))
                 {
@@ -1910,16 +1665,16 @@ namespace SharpMP4
                     }
                 }
 
-                if(field.Type == "unsigned int(64)[ entry_count ]" && ret[name].Type == "unsigned int(32)[ entry_count ]")
+                if(GetFieldType(field) == "unsigned int(64)[ entry_count ]" && GetFieldType(ret[name]) == "unsigned int(32)[ entry_count ]")
                 {
                     ret[name] = field;
                     return;
                 }
-                else if(field.Type == "unsigned int(16)[3]" && ret[name].Type == "unsigned int(32)[3]")
+                else if(GetFieldType(field) == "unsigned int(16)[3]" && GetFieldType(ret[name]) == "unsigned int(32)[3]")
                 {
                     return;
                 }
-                else if (field.Type == "aligned bit(1)" && ret[name].Type == "bit")
+                else if (GetFieldType(field) == "aligned bit(1)" && GetFieldType(ret[name]) == "bit")
                 {
                     return;
                 }
@@ -2469,7 +2224,7 @@ namespace SharpMP4
         {
             condition = FixForCycleCondition(condition);
         }
-        else if (blockType == "do")
+        else if (blockType == "do ")
         {
             blockType = "while";
             condition = "(true)";
@@ -2845,15 +2600,13 @@ namespace SharpMP4
             { "uint(8)",                                "stream.ReadUInt8(" },
             { "uint(7)",                                "stream.ReadBits(7, " },
             { "uint(1)",                                "stream.ReadBits(1, " },
-            { "signed   int(64)",                       "stream.ReadInt64(" },
             { "signed int(32)",                         "stream.ReadInt32(" },
             { "signed int (16)",                        "stream.ReadInt16(" },
             { "signed int(16)[grid_pos_view_id[i]]",    "stream.ReadInt16(" },
             { "signed int(16)",                         "stream.ReadInt16(" },
             { "signed int (8)",                         "stream.ReadInt8(" },
             { "signed int(64)",                         "stream.ReadInt64(" },
-            { "signed   int(32)",                       "stream.ReadInt32(" },
-            { "signed   int(8)",                        "stream.ReadInt8(" },
+            { "signed int(8)",                        "stream.ReadInt8(" },
             { "Box()[]",                                "stream.ReadBox(boxSize, readSize, this, " },
             { "Box[]",                                  "stream.ReadBox(boxSize, readSize, this, " },
             { "Box",                                    "stream.ReadBox(boxSize, readSize, this, " },
@@ -2970,9 +2723,9 @@ namespace SharpMP4
             { "unsigned int(32)[i]",                    "stream.ReadUInt32(" },
             { "unsigned int(32)[j]",                    "stream.ReadUInt32(" },
             { "unsigned int(8)[j][k]",                  "stream.ReadUInt8(" },
-            { "signed   int(64)[j][k]",                 "stream.ReadInt64(" },
+            { "signed int(64)[j][k]",                 "stream.ReadInt64(" },
             { "unsigned int(8)[j]",                     "stream.ReadUInt8(" },
-            { "signed   int(64)[j]",                    "stream.ReadInt64(" },
+            { "signed int(64)[j]",                    "stream.ReadInt64(" },
             { "char[]",                                 "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
             { "string[method_count]",                   "stream.ReadStringArray(method_count, " },
             { "ItemInfoExtension",                      "stream.ReadClass(boxSize, readSize, this, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), " },
@@ -3278,15 +3031,13 @@ namespace SharpMP4
             { "uint(8)",                                "8" },
             { "uint(7)",                                "7" },
             { "uint(1)",                                "1" },
-            { "signed   int(64)",                       "64" },
             { "signed int(32)",                         "32" },
             { "signed int (16)",                        "16" },
             { "signed int(16)[grid_pos_view_id[i]]",    "16" },
             { "signed int(16)",                         "16" },
             { "signed int (8)",                         "8" },
             { "signed int(64)",                         "64" },
-            { "signed   int(32)",                       "32" },
-            { "signed   int(8)",                        "8" },
+            { "signed int(8)",                        "8" },
             { "Box()[]",                                "IsoStream.CalculateBoxSize(value)" },
             { "Box[]",                                  "IsoStream.CalculateBoxSize(value)" },
             { "Box",                                    "IsoStream.CalculateBoxSize(value)" },
@@ -3403,8 +3154,8 @@ namespace SharpMP4
             { "unsigned int(32)[j]",                    "32" },
             { "unsigned int(8)[j][k]",                  "8" },
             { "unsigned int(8)[j]",                     "8" },
-            { "signed   int(64)[j][k]",                 "64" },
-            { "signed   int(64)[j]",                    "64" },
+            { "signed int(64)[j][k]",                 "64" },
+            { "signed int(64)[j]",                    "64" },
             { "char[]",                                 "(ulong)value.Length * 8" },
             { "string[method_count]",                   "IsoStream.CalculateStringSize(value)" },
             { "ItemInfoExtension",                      "IsoStream.CalculateClassSize(value)" },
@@ -3710,15 +3461,13 @@ namespace SharpMP4
             { "uint(8)",                                "stream.WriteUInt8(" },
             { "uint(7)",                                "stream.WriteBits(7, " },
             { "uint(1)",                                "stream.WriteBits(1, " },
-            { "signed   int(64)",                       "stream.WriteInt64(" },
+            { "signed int(64)",                       "stream.WriteInt64(" },
             { "signed int(32)",                         "stream.WriteInt32(" },
             { "signed int (16)",                        "stream.WriteInt16(" },
             { "signed int(16)[grid_pos_view_id[i]]",    "stream.WriteInt16(" },
             { "signed int(16)",                         "stream.WriteInt16(" },
             { "signed int (8)",                         "stream.WriteInt8(" },
-            { "signed int(64)",                         "stream.WriteInt64(" },
-            { "signed   int(32)",                       "stream.WriteInt32(" },
-            { "signed   int(8)",                        "stream.WriteInt8(" },
+            { "signed int(8)",                        "stream.WriteInt8(" },
             { "Box()[]",                                "stream.WriteBox(" },
             { "Box[]",                                  "stream.WriteBox(" },
             { "Box",                                    "stream.WriteBox(" },
@@ -3834,9 +3583,9 @@ namespace SharpMP4
             { "unsigned int(32)[i]",                    "stream.WriteUInt32(" },
             { "unsigned int(32)[j]",                    "stream.WriteUInt32(" },
             { "unsigned int(8)[j][k]",                  "stream.WriteUInt8(" },
-            { "signed   int(64)[j][k]",                 "stream.WriteInt64(" },
+            { "signed int(64)[j][k]",                 "stream.WriteInt64(" },
             { "unsigned int(8)[j]",                     "stream.WriteUInt8(" },
-            { "signed   int(64)[j]",                    "stream.WriteInt64(" },
+            { "signed int(64)[j]",                    "stream.WriteInt64(" },
             { "char[]",                                 "stream.WriteUInt8ArrayTillEnd(" },
             { "string[method_count]",                   "stream.WriteStringArray(method_count, " },
              { "ItemInfoExtension",                     "stream.WriteClass(" },
@@ -4186,15 +3935,13 @@ namespace SharpMP4
             { "uint(8)",                                "byte" },
             { "uint(7)",                                "byte" },
             { "uint(1)",                                "byte" },
-            { "signed   int(64)",                       "long" },
+            { "signed int(64)",                       "long" },
             { "signed int(32)",                         "int" },
             { "signed int (16)",                        "short" },
             { "signed int(16)[grid_pos_view_id[i]]",    "short[]" },
             { "signed int(16)",                         "short" },
             { "signed int (8)",                         "sbyte" },
-            { "signed int(64)",                         "long" },
-            { "signed   int(32)",                       "int" },
-            { "signed   int(8)",                        "sbyte" },
+            { "signed int(8)",                        "sbyte" },
             { "Box()[]",                                "Box[]" },
             { "Box[]",                                  "Box[]" },
             { "Box",                                    "Box" },
@@ -4299,8 +4046,8 @@ namespace SharpMP4
             { "MetaDataKeyTableBox()",                  "MetaDataKeyTableBox" },
             { "BitRateBox ()",                          "BitRateBox" },
             { "char[count]",                            "byte[]" },
-            { "signed   int(64)[j][k]",                 "long[][]" },
-            { "signed   int(64)[j]",                    "long[]" },
+            { "signed int(64)[j][k]",                 "long[][]" },
+            { "signed int(64)[j]",                    "long[]" },
             { "unsigned int(8)[j][k]",                  "byte[][]" },
             { "unsigned int(8)[j]",                     "byte[]" },
             { "signed int(32)[ c ]",                    "int[]" },
@@ -4495,6 +4242,7 @@ namespace SharpMP4
 
     static partial void HelloFrom(string name);
 }
+
 
 public static class StringExtensions
 {
