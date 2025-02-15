@@ -227,7 +227,6 @@ partial class Program
 
     private static Parser<char, string> BoxName => Identifier;
     private static Parser<char, string> FieldName => Identifier;
-    private static Parser<char, string> MethodName => Identifier;
 
     private static Parser<char, string> BoxType => Char('\'').Then(IdentifierWithSpace).Before(Char('\''));
     private static Parser<char, string> OldBoxType => Char('\'').Then(Char('!')).Then(IdentifierWithSpace).Before(Char('\'')).Before(Char(',')).Before(SkipWhitespaces);
