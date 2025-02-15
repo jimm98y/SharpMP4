@@ -294,17 +294,16 @@ partial class Program
             SkipWhitespaces.Then(Char('[')).Then(Any.AtLeastOnceUntil(Char(']')))
         ).Select(x => (PseudoCode)x);
 
+    private static Parser<char, string> MultiBoxType => Map((box, otherBox) => $"'{box}' or '{otherBox}'",
+        BoxType.Before(SkipWhitespaces),
+        String("or").Then(SkipWhitespaces).Then(BoxType)
+    );
+
     private static Parser<char, PseudoExtendedClass> ExtendedClass =>
         Map((extendedBoxName, oldBoxType, boxType, parameters, descriptorTag) => new PseudoExtendedClass(extendedBoxName, oldBoxType, boxType, parameters, descriptorTag),
             SkipWhitespaces.Then(Try(String("extends")).Optional()).Then(SkipWhitespaces).Then(Try(BoxName).Optional()),
             SkipWhitespaces.Then(Try(Char('(')).Optional()).Then(Try(OldBoxType).Optional()),
-            SkipWhitespaces.Then(
-                    Try(String("'avc2' or 'avc4'")).Or(
-                    Try(String("'svc1' or 'svc2'"))).Or(
-                    Try(String("'vvc1' or 'vvi1'"))).Or(
-                    Try(String("'evs1' or 'evs2'"))).Or(
-                    Try(String("'avc1' or 'avc3'"))).Or(
-                    Try(BoxType)).Optional()),
+            SkipWhitespaces.Then(Try(MultiBoxType).Or(Try(BoxType)).Optional()),
             SkipWhitespaces.Then(Try(Char(',')).Optional()).Then(Try(Parameters).Optional()).Before(Try(Char(')')).Optional()).Before(SkipWhitespaces).Optional(),
             SkipWhitespaces.Then(Try(Char(':').Then(SkipWhitespaces).Then(String("bit(8)")).Then(SkipWhitespaces).Then(DescriptorTag).Before(SkipWhitespaces))).Optional()
         );
