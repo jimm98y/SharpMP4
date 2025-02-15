@@ -242,8 +242,8 @@ partial class Program
     private static Parser<char, string> DescriptorTag => SkipWhitespaces.Then(Try(String("ProfileLevelIndicationIndexDescrTag")).Or(String("tag=").Then(TagValue)));
 
     private static Parser<char, string> FieldArray => Char('[').Then(Any.Until(Char(']'))).Select(x => $"[{string.Concat(x)}]");
-    private static Parser<char, IEnumerable<PseudoCode>> SingleBlock => Try(Method).Or(Field).Repeat(1);
-    private static Parser<char, PseudoCode> CodeBlock => Try(Block).Or(Try(RepeatingBlock).Or(Try(Method).Or(Try(Field).Or(Comment))));
+    private static Parser<char, IEnumerable<PseudoCode>> SingleBlock => Field.Repeat(1);
+    private static Parser<char, PseudoCode> CodeBlock => Try(Block).Or(Try(RepeatingBlock).Or(Try(Field).Or(Comment)));
     private static Parser<char, IEnumerable<PseudoCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
     private static Parser<char, PseudoType> FieldType =>
@@ -263,13 +263,6 @@ partial class Program
             Try(FieldName.Before(SkipWhitespaces)).Optional(),
             Try(Any.Until(Char(';')).Before(SkipWhitespaces)).Or(Try(Any.Until(Char('\n')).Before(SkipWhitespaces))).Optional(),
             Try(LineComment(String("//"))).Optional()
-        ).Select(x => (PseudoCode)x);
-
-    private static Parser<char, PseudoCode> Method =>
-        Map((name, value, comment) => new PseudoField(new PseudoType() { Type = name }, new Maybe<string>(), new Maybe<string>(name), new Maybe<IEnumerable<char>>(), comment),
-            MethodName.Before(SkipWhitespaces).Before(Char('(')),
-            Any.Until(Char(')')).Before(Char(';')).Before(SkipWhitespaces),
-            Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()
         ).Select(x => (PseudoCode)x);
 
     private static Parser<char, PseudoCode> Block =>
@@ -1053,7 +1046,7 @@ namespace SharpMP4
         }
         else if(b.BoxName == "SampleGroupDescriptionEntry")
         {
-            fields.Add(new PseudoField() { Name = "children", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), "Box", new Maybe<string>()), FieldArray = "[]" });
+            fields.Add(new PseudoField() { Name = "children", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), "Box()", new Maybe<string>()), FieldArray = "[]" });
         }
         else if(b.BoxName == "FullBox")
         {
@@ -1639,7 +1632,7 @@ namespace SharpMP4
                 }
 
                 string readMethod = GetReadMethod(GetFieldType(field as PseudoField));
-                if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox"&& b.BoxName != "SampleGroupDescriptionEntry"
+                if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry"
                      && b.BoxName != "ItemReferenceBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox")
                 {
                     string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
@@ -1649,10 +1642,13 @@ namespace SharpMP4
                 }
                 else
                 {
-                    if(b.BoxName == "SampleGroupDescriptionEntry" && tt == "Box[]")
+                    if(b.BoxName == "SampleGroupDescriptionEntry")
                     {
-                        tt = "List<Box>";
-                        value = "= new List<Box>()";
+                        if (tt == "Box[]")
+                        {
+                            tt = "List<Box>";
+                            value = "= new List<Box>()";
+                        }
                     }
 
                     return $"\r\n\tprotected {tt} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
@@ -1845,7 +1841,15 @@ namespace SharpMP4
         string name = Sanitize((field as PseudoField)?.Name);
         if (string.IsNullOrEmpty(name))
         {
-            name = GetType(GetFieldType(field as PseudoField))?.Replace("[]", "");
+            if ((field as PseudoField).Type.Type.StartsWith("byte_"))
+            {
+                // byte_alignment would otherwise produce a name "byte"
+                name = "byte_alignment";
+            }
+            else
+            {
+                name = GetType(GetFieldType(field as PseudoField))?.Replace("[]", "");
+            }
         }
 
         return name;
@@ -2193,7 +2197,7 @@ namespace SharpMP4
                             string variableType = GetType(GetFieldType(req));
                             int indexesTypeDef = GetFieldTypeDef(req).Count(x => x == '[');
                             int indexesType = variableType.Count(x => x == '[');
-                            string variableName = req.Name + suffix;
+                            string variableName = GetFieldName(req) + suffix;
                             if (variableType.Contains("[]"))
                             {
                                 int diff = (indexesType - indexesTypeDef);
@@ -2422,6 +2426,7 @@ namespace SharpMP4
             { "signed int(8)",                        "stream.ReadInt8(" },
             { "Box()[]",                                "stream.ReadBox(boxSize, readSize, this, " },
             { "Box[]",                                  "stream.ReadBox(boxSize, readSize, this, " },
+            { "Box()",                                    "stream.ReadBox(boxSize, readSize, this, " },
             { "Box",                                    "stream.ReadBox(boxSize, readSize, this, " },
             { "SchemeTypeBox",                          "stream.ReadBox(boxSize, readSize, this, " },
             { "SchemeInformationBox",                   "stream.ReadBox(boxSize, readSize, this, " },
@@ -2458,9 +2463,12 @@ namespace SharpMP4
             { "ItemDataBox",                            "stream.ReadBox(boxSize, readSize, this, " },
             { "TrackReferenceTypeBox[]",                "stream.ReadBox(boxSize, readSize, this, " },
             { "MetaDataKeyBox[]",                       "stream.ReadBox(boxSize, readSize, this, " },
+            { "TierInfoBox()",                            "stream.ReadBox(boxSize, readSize, this, " },
             { "TierInfoBox",                            "stream.ReadBox(boxSize, readSize, this, " },
             { "MultiviewRelationAttributeBox",          "stream.ReadBox(boxSize, readSize, this, " },
+            { "TierBitRateBox()",                         "stream.ReadBox(boxSize, readSize, this, " },
             { "TierBitRateBox",                         "stream.ReadBox(boxSize, readSize, this, " },
+            { "BufferingBox()",                           "stream.ReadBox(boxSize, readSize, this, " },
             { "BufferingBox",                           "stream.ReadBox(boxSize, readSize, this, " },
             { "MultiviewSceneInfoBox",                  "stream.ReadBox(boxSize, readSize, this, " },
             { "MVDDecoderConfigurationRecord",          "stream.ReadClass(boxSize, readSize, this, new MVDDecoderConfigurationRecord(), " },
@@ -2474,7 +2482,6 @@ namespace SharpMP4
             { "EVCDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, this, new EVCDecoderConfigurationRecord(), " },
             { "VvcDecoderConfigurationRecord()",        "stream.ReadClass(boxSize, readSize, this, new VvcDecoderConfigurationRecord(), " },
             { "EVCSliceComponentTrackConfigurationRecord()", "stream.ReadClass(boxSize, readSize, this, new EVCSliceComponentTrackConfigurationRecord(), " },
-            { "SampleGroupDescriptionEntry(grouping_type)", "stream.ReadEntry(boxSize, readSize, this, IsoStream.ToFourCC(grouping_type), " },
             { "Descriptor[0 .. 255]",                   "stream.ReadDescriptor(boxSize, readSize, this, " },
             { "Descriptor[count]",                      "stream.ReadDescriptor(boxSize, readSize, this, " },
             { "Descriptor",                             "stream.ReadDescriptor(boxSize, readSize, this, " },
@@ -2499,7 +2506,7 @@ namespace SharpMP4
             { "ScalabilityInformationSEIBox",           "stream.ReadBox(boxSize, readSize, this, " },
             { "SVCPriorityAssignmentBox",               "stream.ReadBox(boxSize, readSize, this, " },
             { "ViewScalabilityInformationSEIBox",       "stream.ReadBox(boxSize, readSize, this, " },
-            { "ViewIdentifierBox",                      "stream.ReadBox(boxSize, readSize, this, " },
+            { "ViewIdentifierBox()",                      "stream.ReadBox(boxSize, readSize, this, " },
             { "MVCConfigurationBox",                    "stream.ReadBox(boxSize, readSize, this, " },
             { "MVCViewPriorityAssignmentBox",           "stream.ReadBox(boxSize, readSize, this, " },
             { "IntrinsicCameraParametersBox",           "stream.ReadBox(boxSize, readSize, this, " },
@@ -2523,7 +2530,7 @@ namespace SharpMP4
             { "VvcConfigurationBox",                    "stream.ReadBox(boxSize, readSize, this, " },
             { "HEVCTileConfigurationBox",               "stream.ReadBox(boxSize, readSize, this, " },
             { "MetaDataKeyTableBox()",                  "stream.ReadBox(boxSize, readSize, this, " },
-            { "BitRateBox ()",                          "stream.ReadBox(boxSize, readSize, this, " },
+            { "BitRateBox()",                          "stream.ReadBox(boxSize, readSize, this, " },
             { "char[count]",                            "stream.ReadUInt8Array((uint)count, " },
             { "signed int(32)[ c ]",                    "stream.ReadInt32(" },
             { "unsigned int(8)[]",                      "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
@@ -2541,41 +2548,41 @@ namespace SharpMP4
             { "signed int(64)[j]",                    "stream.ReadInt64(" },
             { "char[]",                                 "stream.ReadUInt8ArrayTillEnd(boxSize, readSize, " },
             { "string[method_count]",                   "stream.ReadStringArray(method_count, " },
-            { "ItemInfoExtension",                      "stream.ReadClass(boxSize, readSize, this, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), " },
-            { "SampleGroupDescriptionEntry",            "stream.ReadEntry(boxSize, readSize, this, IsoStream.ToFourCC(grouping_type), " },
-            { "SampleEntry",                            "stream.ReadBox(boxSize, readSize, this, " },
-            { "SampleConstructor",                      "stream.ReadBox(boxSize, readSize, this, " },
-            { "InlineConstructor",                      "stream.ReadBox(boxSize, readSize, this, " },
-            { "SampleConstructorFromTrackGroup",        "stream.ReadBox(boxSize, readSize, this, " },
-            { "NALUStartInlineConstructor",             "stream.ReadBox(boxSize, readSize, this, " },
+            { "ItemInfoExtension(extension_type)",                      "stream.ReadClass(boxSize, readSize, this, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), " },
+            { "SampleGroupDescriptionEntry(grouping_type)",            "stream.ReadEntry(boxSize, readSize, this, IsoStream.ToFourCC(grouping_type), " },
+            { "SampleEntry()",                            "stream.ReadBox(boxSize, readSize, this, " },
+            { "SampleConstructor()",                      "stream.ReadBox(boxSize, readSize, this, " },
+            { "InlineConstructor()",                      "stream.ReadBox(boxSize, readSize, this, " },
+            { "SampleConstructorFromTrackGroup()",        "stream.ReadBox(boxSize, readSize, this, " },
+            { "NALUStartInlineConstructor()",             "stream.ReadBox(boxSize, readSize, this, " },
             { "MPEG4BitRateBox",                        "stream.ReadBox(boxSize, readSize, this, " },
-            { "ChannelLayout",                          "stream.ReadBox(boxSize, readSize, this, " },
-            { "UniDrcConfigExtension",                  "stream.ReadBox(boxSize, readSize, this, " },
-            { "SamplingRateBox",                        "stream.ReadBox(boxSize, readSize, this, " },
-            { "TextConfigBox",                          "stream.ReadBox(boxSize, readSize, this, " },
+            { "ChannelLayout()",                          "stream.ReadBox(boxSize, readSize, this, " },
+            { "UniDrcConfigExtension()",                  "stream.ReadBox(boxSize, readSize, this, " },
+            { "SamplingRateBox()",                        "stream.ReadBox(boxSize, readSize, this, " },
+            { "TextConfigBox()",                          "stream.ReadBox(boxSize, readSize, this, " },
             { "MetaDataKeyTableBox",                    "stream.ReadBox(boxSize, readSize, this, " },
             { "BitRateBox",                             "stream.ReadBox(boxSize, readSize, this, " },
             { "CompleteTrackInfoBox",                   "stream.ReadBox(boxSize, readSize, this, " },
-            { "TierDependencyBox",                      "stream.ReadBox(boxSize, readSize, this, " },
+            { "TierDependencyBox()",                      "stream.ReadBox(boxSize, readSize, this, " },
             { "InitialParameterSetBox",                 "stream.ReadBox(boxSize, readSize, this, " },
-            { "PriorityRangeBox",                       "stream.ReadBox(boxSize, readSize, this, " },
+            { "PriorityRangeBox()",                       "stream.ReadBox(boxSize, readSize, this, " },
             { "ViewPriorityBox",                        "stream.ReadBox(boxSize, readSize, this, " },
             { "SVCDependencyRangeBox",                  "stream.ReadBox(boxSize, readSize, this, " },
             { "RectRegionBox",                          "stream.ReadBox(boxSize, readSize, this, " },
             { "IroiInfoBox",                            "stream.ReadBox(boxSize, readSize, this, " },
             { "TranscodingInfoBox",                     "stream.ReadBox(boxSize, readSize, this, " },
-            { "MetaDataKeyDeclarationBox",              "stream.ReadBox(boxSize, readSize, this, " },
-            { "MetaDataDatatypeBox",                    "stream.ReadBox(boxSize, readSize, this, " },
-            { "MetaDataLocaleBox",                      "stream.ReadBox(boxSize, readSize, this, " },
-            { "MetaDataSetupBox",                       "stream.ReadBox(boxSize, readSize, this, " },
-            { "MetaDataExtensionsBox",                  "stream.ReadBox(boxSize, readSize, this, " },
+            { "MetaDataKeyDeclarationBox()",              "stream.ReadBox(boxSize, readSize, this, " },
+            { "MetaDataDatatypeBox()",                    "stream.ReadBox(boxSize, readSize, this, " },
+            { "MetaDataLocaleBox()",                      "stream.ReadBox(boxSize, readSize, this, " },
+            { "MetaDataSetupBox()",                       "stream.ReadBox(boxSize, readSize, this, " },
+            { "MetaDataExtensionsBox()",                  "stream.ReadBox(boxSize, readSize, this, " },
             { "TrackLoudnessInfo[]",                    "stream.ReadBox(boxSize, readSize, this, " },
             { "AlbumLoudnessInfo[]",                    "stream.ReadBox(boxSize, readSize, this, " },
             { "VvcPTLRecord(num_sublayers)",            "stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord(num_sublayers)," },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord((byte)(ptl_max_temporal_id[i]+1)), " },
             { "OpusSpecificBox",                        "stream.ReadBox(boxSize, readSize, this, " },
             { "unsigned int(8 * OutputChannelCount)",   "stream.ReadUInt8Array((uint)OutputChannelCount, " },
-            { "ChannelMappingTable",                    "stream.ReadClass(boxSize, readSize, this, new ChannelMappingTable(_OutputChannelCount), " },
+            { "ChannelMappingTable(OutputChannelCount)",                    "stream.ReadClass(boxSize, readSize, this, new ChannelMappingTable(_OutputChannelCount), " },
             // descriptors
             { "DecoderConfigDescriptor",                "stream.ReadDescriptor(boxSize, readSize, this, " },
             { "SLConfigDescriptor",                     "stream.ReadDescriptor(boxSize, readSize, this, " },
@@ -2650,7 +2657,7 @@ namespace SharpMP4
             { "PARAconfig",                             "stream.ReadClass(boxSize, readSize, this, new PARAconfig(), " },
             { "HILNenexConfig",                         "stream.ReadClass(boxSize, readSize, this, new HILNenexConfig(), " },
             { "HILNconfig",                             "stream.ReadClass(boxSize, readSize, this, new HILNconfig(), " },
-            { "ld_sbr_header",                          "stream.ReadClass(boxSize, readSize, this, new ld_sbr_header(channelConfiguration), " },
+            { "ld_sbr_header(channelConfiguration)",                          "stream.ReadClass(boxSize, readSize, this, new ld_sbr_header(channelConfiguration), " },
             { "sbr_header",                             "stream.ReadClass(boxSize, readSize, this, new sbr_header(), " },
             { "uimsbf(1)[i]",                           "stream.ReadUimsbf(" },
             { "uimsbf(8)[i]",                           "stream.ReadUimsbf(8, " },
@@ -2715,7 +2722,13 @@ namespace SharpMP4
             { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "stream.ReadClass(boxSize, readSize, this, (uint)sample_count, () => new SampleEncryptionSample(version, flags, Per_Sample_IV_Size), " },
             { "SampleEncryptionSubsample(version)[subsample_count]", "stream.ReadClass(boxSize, readSize, this, (uint)subsample_count, () => new SampleEncryptionSubsample(version), " },
         };
-        return map[type];
+
+        if(map.ContainsKey(type))
+            return map[type];
+        else if(map.ContainsKey(type.Replace("()","")))
+            return map[type.Replace("()", "")];
+        else
+            throw new Exception();
     }
 
     private static string GetCalculateSizeMethod(string type)
@@ -2853,6 +2866,7 @@ namespace SharpMP4
             { "signed int(8)",                        "8" },
             { "Box()[]",                                "IsoStream.CalculateBoxSize(value)" },
             { "Box[]",                                  "IsoStream.CalculateBoxSize(value)" },
+            { "Box()",                                    "IsoStream.CalculateBoxSize(value)" },
             { "Box",                                    "IsoStream.CalculateBoxSize(value)" },
             { "SchemeTypeBox",                          "IsoStream.CalculateBoxSize(value)" },
             { "SchemeInformationBox",                   "IsoStream.CalculateBoxSize(value)" },
@@ -2888,9 +2902,12 @@ namespace SharpMP4
             { "ItemDataBox",                            "IsoStream.CalculateBoxSize(value)" },
             { "TrackReferenceTypeBox[]",               "IsoStream.CalculateBoxSize(value)" },
             { "MetaDataKeyBox[]",                       "IsoStream.CalculateBoxSize(value)" },
+            { "TierInfoBox()",                            "IsoStream.CalculateBoxSize(value)" },
             { "TierInfoBox",                            "IsoStream.CalculateBoxSize(value)" },
             { "MultiviewRelationAttributeBox",          "IsoStream.CalculateBoxSize(value)" },
+            { "TierBitRateBox()",                         "IsoStream.CalculateBoxSize(value)" },
             { "TierBitRateBox",                         "IsoStream.CalculateBoxSize(value)" },
+            { "BufferingBox()",                           "IsoStream.CalculateBoxSize(value)" },
             { "BufferingBox",                           "IsoStream.CalculateBoxSize(value)" },
             { "MultiviewSceneInfoBox",                  "IsoStream.CalculateBoxSize(value)" },
             { "MVDDecoderConfigurationRecord",          "IsoStream.CalculateClassSize(value)" },
@@ -2904,7 +2921,6 @@ namespace SharpMP4
             { "EVCDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
             { "VvcDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
             { "EVCSliceComponentTrackConfigurationRecord()", "IsoStream.CalculateClassSize(value)" },
-            { "SampleGroupDescriptionEntry (grouping_type)", "IsoStream.CalculateEntrySize(value)" },
             { "Descriptor[0 .. 255]",                   "IsoStream.CalculateDescriptorSize(value)" },
             { "Descriptor[count]",                      "IsoStream.CalculateDescriptorSize(value)" },
             { "Descriptor",                             "IsoStream.CalculateDescriptorSize(value)" },
@@ -2929,7 +2945,7 @@ namespace SharpMP4
             { "ScalabilityInformationSEIBox",           "IsoStream.CalculateBoxSize(value)" },
             { "SVCPriorityAssignmentBox",               "IsoStream.CalculateBoxSize(value)" },
             { "ViewScalabilityInformationSEIBox",       "IsoStream.CalculateBoxSize(value)" },
-            { "ViewIdentifierBox",                      "IsoStream.CalculateBoxSize(value)" },
+            { "ViewIdentifierBox()",                      "IsoStream.CalculateBoxSize(value)" },
             { "MVCConfigurationBox",                    "IsoStream.CalculateBoxSize(value)" },
             { "MVCViewPriorityAssignmentBox",           "IsoStream.CalculateBoxSize(value)" },
             { "IntrinsicCameraParametersBox",           "IsoStream.CalculateBoxSize(value)" },
@@ -2953,7 +2969,7 @@ namespace SharpMP4
             { "VvcConfigurationBox",                    "IsoStream.CalculateBoxSize(value)" },
             { "HEVCTileConfigurationBox",               "IsoStream.CalculateBoxSize(value)" },
             { "MetaDataKeyTableBox()",                  "IsoStream.CalculateBoxSize(value)" },
-            { "BitRateBox ()",                          "IsoStream.CalculateBoxSize(value)" },
+            { "BitRateBox()",                          "IsoStream.CalculateBoxSize(value)" },
             { "char[count]",                            "(ulong)count * 8" },
             { "signed int(32)[ c ]",                    "32" },
             { "unsigned int(8)[]",                      "(ulong)value.Length * 8" },
@@ -2971,41 +2987,41 @@ namespace SharpMP4
             { "signed int(64)[j]",                    "64" },
             { "char[]",                                 "(ulong)value.Length * 8" },
             { "string[method_count]",                   "IsoStream.CalculateStringSize(value)" },
-            { "ItemInfoExtension",                      "IsoStream.CalculateClassSize(value)" },
-            { "SampleGroupDescriptionEntry",            "IsoStream.CalculateEntrySize(value)" },
-            { "SampleEntry",                            "IsoStream.CalculateBoxSize(value)" },
-            { "SampleConstructor",                      "IsoStream.CalculateBoxSize(value)" },
-            { "InlineConstructor",                      "IsoStream.CalculateBoxSize(value)" },
-            { "SampleConstructorFromTrackGroup",        "IsoStream.CalculateBoxSize(value)" },
-            { "NALUStartInlineConstructor",             "IsoStream.CalculateBoxSize(value)" },
+            { "ItemInfoExtension(extension_type)",                      "IsoStream.CalculateClassSize(value)" },
+            { "SampleGroupDescriptionEntry(grouping_type)",            "IsoStream.CalculateEntrySize(value)" },
+            { "SampleEntry()",                            "IsoStream.CalculateBoxSize(value)" },
+            { "SampleConstructor()",                      "IsoStream.CalculateBoxSize(value)" },
+            { "InlineConstructor()",                      "IsoStream.CalculateBoxSize(value)" },
+            { "SampleConstructorFromTrackGroup()",        "IsoStream.CalculateBoxSize(value)" },
+            { "NALUStartInlineConstructor()",             "IsoStream.CalculateBoxSize(value)" },
             { "MPEG4BitRateBox",                        "IsoStream.CalculateBoxSize(value)" },
-            { "ChannelLayout",                          "IsoStream.CalculateBoxSize(value)" },
-            { "UniDrcConfigExtension",                  "IsoStream.CalculateBoxSize(value)" },
-            { "SamplingRateBox",                        "IsoStream.CalculateBoxSize(value)" },
-            { "TextConfigBox",                          "IsoStream.CalculateBoxSize(value)" },
+            { "ChannelLayout()",                          "IsoStream.CalculateBoxSize(value)" },
+            { "UniDrcConfigExtension()",                  "IsoStream.CalculateBoxSize(value)" },
+            { "SamplingRateBox()",                        "IsoStream.CalculateBoxSize(value)" },
+            { "TextConfigBox()",                          "IsoStream.CalculateBoxSize(value)" },
             { "MetaDataKeyTableBox",                    "IsoStream.CalculateBoxSize(value)" },
             { "BitRateBox",                             "IsoStream.CalculateBoxSize(value)" },
             { "CompleteTrackInfoBox",                   "IsoStream.CalculateBoxSize(value)" },
-            { "TierDependencyBox",                      "IsoStream.CalculateBoxSize(value)" },
+            { "TierDependencyBox()",                      "IsoStream.CalculateBoxSize(value)" },
             { "InitialParameterSetBox",                 "IsoStream.CalculateBoxSize(value)" },
-            { "PriorityRangeBox",                       "IsoStream.CalculateBoxSize(value)" },
+            { "PriorityRangeBox()",                       "IsoStream.CalculateBoxSize(value)" },
             { "ViewPriorityBox",                        "IsoStream.CalculateBoxSize(value)" },
             { "SVCDependencyRangeBox",                  "IsoStream.CalculateBoxSize(value)" },
             { "RectRegionBox",                          "IsoStream.CalculateBoxSize(value)" },
             { "IroiInfoBox",                            "IsoStream.CalculateBoxSize(value)" },
             { "TranscodingInfoBox",                     "IsoStream.CalculateBoxSize(value)" },
-            { "MetaDataKeyDeclarationBox",              "IsoStream.CalculateBoxSize(value)" },
-            { "MetaDataDatatypeBox",                    "IsoStream.CalculateBoxSize(value)" },
-            { "MetaDataLocaleBox",                      "IsoStream.CalculateBoxSize(value)" },
-            { "MetaDataSetupBox",                       "IsoStream.CalculateBoxSize(value)" },
-            { "MetaDataExtensionsBox",                  "IsoStream.CalculateBoxSize(value)" },
+            { "MetaDataKeyDeclarationBox()",              "IsoStream.CalculateBoxSize(value)" },
+            { "MetaDataDatatypeBox()",                    "IsoStream.CalculateBoxSize(value)" },
+            { "MetaDataLocaleBox()",                      "IsoStream.CalculateBoxSize(value)" },
+            { "MetaDataSetupBox()",                       "IsoStream.CalculateBoxSize(value)" },
+            { "MetaDataExtensionsBox()",                  "IsoStream.CalculateBoxSize(value)" },
             { "TrackLoudnessInfo[]",                    "IsoStream.CalculateBoxSize(value)" },
             { "AlbumLoudnessInfo[]",                    "IsoStream.CalculateBoxSize(value)" },
             { "VvcPTLRecord(num_sublayers)",            "IsoStream.CalculateClassSize(value)" },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "IsoStream.CalculateClassSize(value)" },
             { "OpusSpecificBox",                        "IsoStream.CalculateBoxSize(value)" },
             { "unsigned int(8 * OutputChannelCount)",   "(ulong)(OutputChannelCount * 8)" },
-            { "ChannelMappingTable",                    "IsoStream.CalculateClassSize(value)" },
+            { "ChannelMappingTable(OutputChannelCount)",                    "IsoStream.CalculateClassSize(value)" },
             // descriptors
             { "DecoderConfigDescriptor",                "IsoStream.CalculateDescriptorSize(value)" },
             { "SLConfigDescriptor",                     "IsoStream.CalculateDescriptorSize(value)" },
@@ -3080,7 +3096,7 @@ namespace SharpMP4
             { "PARAconfig",                             "IsoStream.CalculateClassSize(value)" },
             { "HILNenexConfig",                         "IsoStream.CalculateClassSize(value)" },
             { "HILNconfig",                             "IsoStream.CalculateClassSize(value)" },
-            { "ld_sbr_header",                          "IsoStream.CalculateClassSize(value)" },
+            { "ld_sbr_header(channelConfiguration)",                          "IsoStream.CalculateClassSize(value)" },
             { "sbr_header",                             "IsoStream.CalculateClassSize(value)" },
             { "uimsbf(1)[i]",                           "1" },
             { "uimsbf(8)[i]",                           "8" },
@@ -3145,7 +3161,12 @@ namespace SharpMP4
             { "SampleEncryptionSubsample(version)[subsample_count]", "IsoStream.CalculateClassSize(value)" },
             { "unsigned int(Per_Sample_IV_Size*8)",     "(uint)Per_Sample_IV_Size * 8" },
        };
-        return map[type];
+        if (map.ContainsKey(type))
+            return map[type];
+        else if (map.ContainsKey(type.Replace("()", "")))
+            return map[type.Replace("()", "")];
+        else
+            throw new Exception();
     }
 
     private static string GetWriteMethod(string type)
@@ -3283,6 +3304,7 @@ namespace SharpMP4
             { "signed int(8)",                        "stream.WriteInt8(" },
             { "Box()[]",                                "stream.WriteBox(" },
             { "Box[]",                                  "stream.WriteBox(" },
+            { "Box()",                                    "stream.WriteBox(" },
             { "Box",                                    "stream.WriteBox(" },
             { "SchemeTypeBox",                          "stream.WriteBox(" },
             { "SchemeInformationBox",                   "stream.WriteBox(" },
@@ -3318,9 +3340,12 @@ namespace SharpMP4
             { "ItemDataBox",                            "stream.WriteBox(" },
             { "TrackReferenceTypeBox[]",               "stream.WriteBox(" },
             { "MetaDataKeyBox[]",                       "stream.WriteBox(" },
+            { "TierInfoBox()",                            "stream.WriteBox(" },
             { "TierInfoBox",                            "stream.WriteBox(" },
             { "MultiviewRelationAttributeBox",          "stream.WriteBox(" },
+            { "TierBitRateBox()",                         "stream.WriteBox(" },
             { "TierBitRateBox",                         "stream.WriteBox(" },
+            { "BufferingBox()",                           "stream.WriteBox(" },
             { "BufferingBox",                           "stream.WriteBox(" },
             { "MultiviewSceneInfoBox",                  "stream.WriteBox(" },
             { "MVDDecoderConfigurationRecord",          "stream.WriteClass(" },
@@ -3334,7 +3359,6 @@ namespace SharpMP4
             { "EVCDecoderConfigurationRecord()",        "stream.WriteClass(" },
             { "VvcDecoderConfigurationRecord()",        "stream.WriteClass(" },
             { "EVCSliceComponentTrackConfigurationRecord()", "stream.WriteClass(" },
-            { "SampleGroupDescriptionEntry (grouping_type)", "stream.WriteEntry(" },
             { "Descriptor[0 .. 255]",                   "stream.WriteDescriptor(" },
             { "Descriptor[count]",                      "stream.WriteDescriptor(" },
             { "Descriptor",                             "stream.WriteDescriptor(" },
@@ -3359,7 +3383,7 @@ namespace SharpMP4
             { "ScalabilityInformationSEIBox",           "stream.WriteBox(" },
             { "SVCPriorityAssignmentBox",               "stream.WriteBox(" },
             { "ViewScalabilityInformationSEIBox",       "stream.WriteBox(" },
-            { "ViewIdentifierBox",                      "stream.WriteBox(" },
+            { "ViewIdentifierBox()",                      "stream.WriteBox(" },
             { "MVCConfigurationBox",                    "stream.WriteBox(" },
             { "MVCViewPriorityAssignmentBox",           "stream.WriteBox(" },
             { "IntrinsicCameraParametersBox",           "stream.WriteBox(" },
@@ -3383,7 +3407,7 @@ namespace SharpMP4
             { "VvcConfigurationBox",                    "stream.WriteBox(" },
             { "HEVCTileConfigurationBox",               "stream.WriteBox(" },
             { "MetaDataKeyTableBox()",                  "stream.WriteBox(" },
-            { "BitRateBox ()",                          "stream.WriteBox(" },
+            { "BitRateBox()",                          "stream.WriteBox(" },
             { "char[count]",                            "stream.WriteUInt8Array((uint)count, " },
             { "signed int(32)[ c ]",                    "stream.WriteInt32(" },
             { "unsigned int(8)[]",                      "stream.WriteUInt8ArrayTillEnd(" },
@@ -3401,41 +3425,41 @@ namespace SharpMP4
             { "signed int(64)[j]",                    "stream.WriteInt64(" },
             { "char[]",                                 "stream.WriteUInt8ArrayTillEnd(" },
             { "string[method_count]",                   "stream.WriteStringArray(method_count, " },
-             { "ItemInfoExtension",                     "stream.WriteClass(" },
-            { "SampleGroupDescriptionEntry",            "stream.WriteEntry(" },
-            { "SampleEntry",                            "stream.WriteBox(" },
-            { "SampleConstructor",                      "stream.WriteBox(" },
-            { "InlineConstructor",                      "stream.WriteBox(" },
-            { "SampleConstructorFromTrackGroup",        "stream.WriteBox(" },
-            { "NALUStartInlineConstructor",             "stream.WriteBox(" },
+             { "ItemInfoExtension(extension_type)",                     "stream.WriteClass(" },
+            { "SampleGroupDescriptionEntry(grouping_type)",            "stream.WriteEntry(" },
+            { "SampleEntry()",                            "stream.WriteBox(" },
+            { "SampleConstructor()",                      "stream.WriteBox(" },
+            { "InlineConstructor()",                      "stream.WriteBox(" },
+            { "SampleConstructorFromTrackGroup()",        "stream.WriteBox(" },
+            { "NALUStartInlineConstructor()",             "stream.WriteBox(" },
             { "MPEG4BitRateBox",                        "stream.WriteBox(" },
-            { "ChannelLayout",                          "stream.WriteBox(" },
-            { "UniDrcConfigExtension",                  "stream.WriteBox(" },
-            { "SamplingRateBox",                        "stream.WriteBox(" },
-            { "TextConfigBox",                          "stream.WriteBox(" },
+            { "ChannelLayout()",                          "stream.WriteBox(" },
+            { "UniDrcConfigExtension()",                  "stream.WriteBox(" },
+            { "SamplingRateBox()",                        "stream.WriteBox(" },
+            { "TextConfigBox()",                          "stream.WriteBox(" },
             { "MetaDataKeyTableBox",                    "stream.WriteBox(" },
             { "BitRateBox",                             "stream.WriteBox(" },
             { "CompleteTrackInfoBox",                   "stream.WriteBox(" },
-            { "TierDependencyBox",                      "stream.WriteBox(" },
+            { "TierDependencyBox()",                      "stream.WriteBox(" },
             { "InitialParameterSetBox",                 "stream.WriteBox(" },
-            { "PriorityRangeBox",                       "stream.WriteBox(" },
+            { "PriorityRangeBox()",                       "stream.WriteBox(" },
             { "ViewPriorityBox",                        "stream.WriteBox(" },
             { "SVCDependencyRangeBox",                  "stream.WriteBox(" },
             { "RectRegionBox",                          "stream.WriteBox(" },
             { "IroiInfoBox",                            "stream.WriteBox(" },
             { "TranscodingInfoBox",                     "stream.WriteBox(" },
-            { "MetaDataKeyDeclarationBox",              "stream.WriteBox(" },
-            { "MetaDataDatatypeBox",                    "stream.WriteBox(" },
-            { "MetaDataLocaleBox",                      "stream.WriteBox(" },
-            { "MetaDataSetupBox",                       "stream.WriteBox(" },
-            { "MetaDataExtensionsBox",                  "stream.WriteBox(" },
+            { "MetaDataKeyDeclarationBox()",              "stream.WriteBox(" },
+            { "MetaDataDatatypeBox()",                    "stream.WriteBox(" },
+            { "MetaDataLocaleBox()",                      "stream.WriteBox(" },
+            { "MetaDataSetupBox()",                       "stream.WriteBox(" },
+            { "MetaDataExtensionsBox()",                  "stream.WriteBox(" },
             { "TrackLoudnessInfo[]",                    "stream.WriteBox(" },
             { "AlbumLoudnessInfo[]",                    "stream.WriteBox(" },
             { "VvcPTLRecord(num_sublayers)",            "stream.WriteClass(" },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "stream.WriteClass(" },
             { "OpusSpecificBox",                        "stream.WriteBox(" },
             { "unsigned int(8 * OutputChannelCount)",   "stream.WriteUInt8Array((uint)OutputChannelCount, " },
-            { "ChannelMappingTable",                    "stream.WriteClass(" },
+            { "ChannelMappingTable(OutputChannelCount)",                    "stream.WriteClass(" },
             // descriptors
             { "DecoderConfigDescriptor",                "stream.WriteDescriptor(" },
             { "SLConfigDescriptor",                     "stream.WriteDescriptor(" },
@@ -3510,7 +3534,7 @@ namespace SharpMP4
             { "PARAconfig",                             "stream.WriteClass(" },
             { "HILNenexConfig",                         "stream.WriteClass(" },
             { "HILNconfig",                             "stream.WriteClass(" },
-            { "ld_sbr_header",                          "stream.WriteClass(" },
+            { "ld_sbr_header(channelConfiguration)",                          "stream.WriteClass(" },
             { "sbr_header",                             "stream.WriteClass(" },
             { "uimsbf(1)[i]",                           "stream.WriteUimsbf(" },
             { "uimsbf(8)[i]",                           "stream.WriteUimsbf(8, " },
@@ -3575,7 +3599,12 @@ namespace SharpMP4
             { "unsigned int(Per_Sample_IV_Size*8)",     "stream.WriteUInt8Array((uint)Per_Sample_IV_Size, " },
             { "SampleEncryptionSubsample(version)[subsample_count]", "stream.WriteClass(" },
         };
-        return map[type];
+        if (map.ContainsKey(type))
+            return map[type];
+        else if (map.ContainsKey(type.Replace("()", "")))
+            return map[type.Replace("()", "")];
+        else
+            throw new Exception();
     }
 
     private static bool IsWorkaround(string type)
@@ -3757,6 +3786,7 @@ namespace SharpMP4
             { "signed int(8)",                        "sbyte" },
             { "Box()[]",                                "Box[]" },
             { "Box[]",                                  "Box[]" },
+            { "Box()",                                    "Box" },
             { "Box",                                    "Box" },
             { "SchemeTypeBox",                          "SchemeTypeBox" },
             { "SchemeInformationBox",                   "SchemeInformationBox" },
@@ -3792,9 +3822,12 @@ namespace SharpMP4
             { "ItemDataBox",                            "ItemDataBox" },
             { "TrackReferenceTypeBox[]",               "TrackReferenceTypeBox[]" },
             { "MetaDataKeyBox[]",                       "MetaDataKeyBox[]" },
+            { "TierInfoBox()",                            "TierInfoBox" },
             { "TierInfoBox",                            "TierInfoBox" },
             { "MultiviewRelationAttributeBox",          "MultiviewRelationAttributeBox" },
+            { "TierBitRateBox()",                         "TierBitRateBox" },
             { "TierBitRateBox",                         "TierBitRateBox" },
+            { "BufferingBox()",                           "BufferingBox" },
             { "BufferingBox",                           "BufferingBox" },
             { "MultiviewSceneInfoBox",                  "MultiviewSceneInfoBox" },
             { "MVDDecoderConfigurationRecord",          "MVDDecoderConfigurationRecord" },
@@ -3808,7 +3841,6 @@ namespace SharpMP4
             { "EVCDecoderConfigurationRecord()",        "EVCDecoderConfigurationRecord" },
             { "VvcDecoderConfigurationRecord()",        "VvcDecoderConfigurationRecord" },
             { "EVCSliceComponentTrackConfigurationRecord()", "EVCSliceComponentTrackConfigurationRecord" },
-            { "SampleGroupDescriptionEntry (grouping_type)", "SampleGroupDescriptionEntry" },
             { "Descriptor[0 .. 255]",                   "Descriptor[]" },
             { "Descriptor[count]",                      "Descriptor[]" },
             { "Descriptor",                             "Descriptor" },
@@ -3833,7 +3865,7 @@ namespace SharpMP4
             { "ScalabilityInformationSEIBox",           "ScalabilityInformationSEIBox" },
             { "SVCPriorityAssignmentBox",               "SVCPriorityAssignmentBox" },
             { "ViewScalabilityInformationSEIBox",       "ViewScalabilityInformationSEIBox" },
-            { "ViewIdentifierBox",                      "ViewIdentifierBox" },
+            { "ViewIdentifierBox()",                      "ViewIdentifierBox" },
             { "MVCConfigurationBox",                    "MVCConfigurationBox" },
             { "MVCViewPriorityAssignmentBox",           "MVCViewPriorityAssignmentBox" },
             { "IntrinsicCameraParametersBox",           "IntrinsicCameraParametersBox" },
@@ -3857,7 +3889,7 @@ namespace SharpMP4
             { "VvcConfigurationBox",                    "VvcConfigurationBox" },
             { "HEVCTileConfigurationBox",               "HEVCTileConfigurationBox" },
             { "MetaDataKeyTableBox()",                  "MetaDataKeyTableBox" },
-            { "BitRateBox ()",                          "BitRateBox" },
+            { "BitRateBox()",                          "BitRateBox" },
             { "char[count]",                            "byte[]" },
             { "signed int(64)[j][k]",                 "long[][]" },
             { "signed int(64)[j]",                    "long[]" },
@@ -3877,41 +3909,41 @@ namespace SharpMP4
             { "loudness[]",                             "int[]" },
             { "ItemPropertyAssociationBox[]",           "ItemPropertyAssociationBox[]" },
             { "string[method_count]",                   "BinaryUTF8String[]" },
-            { "ItemInfoExtension",                      "ItemInfoExtension" },
-            { "SampleGroupDescriptionEntry",            "SampleGroupDescriptionEntry" },
-            { "SampleEntry",                            "SampleEntry" },
-            { "SampleConstructor",                      "SampleConstructor" },
-            { "InlineConstructor",                      "InlineConstructor" },
-            { "SampleConstructorFromTrackGroup",        "SampleConstructorFromTrackGroup" },
-            { "NALUStartInlineConstructor",             "NALUStartInlineConstructor" },
+            { "ItemInfoExtension(extension_type)",                      "ItemInfoExtension" },
+            { "SampleGroupDescriptionEntry(grouping_type)",            "SampleGroupDescriptionEntry" },
+            { "SampleEntry()",                            "SampleEntry" },
+            { "SampleConstructor()",                      "SampleConstructor" },
+            { "InlineConstructor()",                      "InlineConstructor" },
+            { "SampleConstructorFromTrackGroup()",        "SampleConstructorFromTrackGroup" },
+            { "NALUStartInlineConstructor()",             "NALUStartInlineConstructor" },
             { "MPEG4BitRateBox",                        "MPEG4BitRateBox" },
-            { "ChannelLayout",                          "ChannelLayout" },
-            { "UniDrcConfigExtension",                  "UniDrcConfigExtension" },
-            { "SamplingRateBox",                        "SamplingRateBox" },
-            { "TextConfigBox",                          "TextConfigBox" },
+            { "ChannelLayout()",                          "ChannelLayout" },
+            { "UniDrcConfigExtension()",                  "UniDrcConfigExtension" },
+            { "SamplingRateBox()",                        "SamplingRateBox" },
+            { "TextConfigBox()",                          "TextConfigBox" },
             { "MetaDataKeyTableBox",                    "MetaDataKeyTableBox" },
             { "BitRateBox",                             "BitRateBox" },
             { "CompleteTrackInfoBox",                   "CompleteTrackInfoBox" },
-            { "TierDependencyBox",                      "TierDependencyBox" },
+            { "TierDependencyBox()",                      "TierDependencyBox" },
             { "InitialParameterSetBox",                 "InitialParameterSetBox" },
-            { "PriorityRangeBox",                       "PriorityRangeBox" },
+            { "PriorityRangeBox()",                       "PriorityRangeBox" },
             { "ViewPriorityBox",                        "ViewPriorityBox" },
             { "SVCDependencyRangeBox",                  "SVCDependencyRangeBox" },
             { "RectRegionBox",                          "RectRegionBox" },
             { "IroiInfoBox",                            "IroiInfoBox" },
             { "TranscodingInfoBox",                     "TranscodingInfoBox" },
-            { "MetaDataKeyDeclarationBox",              "MetaDataKeyDeclarationBox" },
-            { "MetaDataDatatypeBox",                    "MetaDataDatatypeBox" },
-            { "MetaDataLocaleBox",                      "MetaDataLocaleBox" },
-            { "MetaDataSetupBox",                       "MetaDataSetupBox" },
-            { "MetaDataExtensionsBox",                  "MetaDataExtensionsBox" },
+            { "MetaDataKeyDeclarationBox()",              "MetaDataKeyDeclarationBox" },
+            { "MetaDataDatatypeBox()",                    "MetaDataDatatypeBox" },
+            { "MetaDataLocaleBox()",                      "MetaDataLocaleBox" },
+            { "MetaDataSetupBox()",                       "MetaDataSetupBox" },
+            { "MetaDataExtensionsBox()",                  "MetaDataExtensionsBox" },
             { "TrackLoudnessInfo[]",                    "TrackLoudnessInfo[]" },
             { "AlbumLoudnessInfo[]",                    "AlbumLoudnessInfo[]" },
             { "VvcPTLRecord(num_sublayers)",            "VvcPTLRecord" },
             { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "VvcPTLRecord[]" },
             { "OpusSpecificBox",                        "OpusSpecificBox" },
             { "unsigned int(8 * OutputChannelCount)",   "byte[]" },
-            { "ChannelMappingTable",                    "ChannelMappingTable" },
+            { "ChannelMappingTable(OutputChannelCount)",                    "ChannelMappingTable" },
             // descriptors
             { "DecoderConfigDescriptor",                "DecoderConfigDescriptor" },
             { "SLConfigDescriptor",                     "SLConfigDescriptor" },
@@ -3986,7 +4018,7 @@ namespace SharpMP4
             { "PARAconfig",                             "PARAconfig" },
             { "HILNenexConfig",                         "HILNenexConfig" },
             { "HILNconfig",                             "HILNconfig" },
-            { "ld_sbr_header",                          "ld_sbr_header" },
+            { "ld_sbr_header(channelConfiguration)",                          "ld_sbr_header" },
             { "sbr_header",                             "sbr_header" },
             { "uimsbf(1)[i]",                           "bool[]" },
             { "uimsbf(8)[i]",                           "byte[]" },
@@ -4050,7 +4082,12 @@ namespace SharpMP4
             { "SampleEncryptionSubsample(version)[subsample_count]", "SampleEncryptionSubsample[]" },
             { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "SampleEncryptionSample[]" },
         };
-        return map[type];
+        if (map.ContainsKey(type))
+            return map[type];
+        else if (map.ContainsKey(type.Replace("()", "")))
+            return map[type.Replace("()", "")];
+        else
+            throw new Exception();
     }
 
     static partial void HelloFrom(string name);
