@@ -108,15 +108,17 @@ public class PseudoField : PseudoCode
 
     }
 
-    public PseudoField(string type, Maybe<string> name, Maybe<IEnumerable<char>> value, Maybe<string> comment)
+    public PseudoField(string type, Maybe<string> array, Maybe<string> name, Maybe<IEnumerable<char>> value, Maybe<string> comment)
     {
         Type = type;
+        FieldArray = array.GetValueOrDefault();
         Name = name.GetValueOrDefault();
         Value = value.HasValue ? string.IsNullOrEmpty(string.Concat(value.GetValueOrDefault())) ? null : string.Concat(value.GetValueOrDefault()) : null;
         Comment = comment.GetValueOrDefault();
     }
 
     public string Type { get; set; }
+    public string FieldArray { get; set; }
     public string Name { get; set; }
     public string Value { get; set; }
     public string Comment { get; set; }
@@ -320,8 +322,6 @@ partial class Program
             Try(String("unsigned int(8 * OutputChannelCount)")),
             Try(String("unsigned int(64)")),
             Try(String("unsigned int(48)")),
-            Try(String("template int(32)[9]")),
-            Try(String("unsigned int(32)[3]")),
             Try(String("unsigned int(32)")),
             Try(String("unsigned int(31)")),
             Try(String("unsigned_int(32)")),
@@ -335,17 +335,10 @@ partial class Program
             Try(String("unsigned int(12)")),
             Try(String("signed int(12)")),
             Try(String("unsigned int(10)")),
-            Try(String("unsigned int(8)[length]")),
-            Try(String("unsigned int(8)[32]")),
-            Try(String("unsigned int(8)[20]")),
-            Try(String("unsigned int(8)[16]")),
-            Try(String("unsigned int(8)[14]")),
-            Try(String("unsigned int(8)[constant_IV_size]")),
             Try(String("unsigned int(9)")),
             Try(String("unsigned int(8)")),
             Try(String("unsigned int(7)")),
             Try(String("unsigned int(6)")),
-            Try(String("unsigned int(5)[3]")),
             Try(String("unsigned int(5)")),
             Try(String("unsigned int(4)")),
             Try(String("unsigned int(3)")),
@@ -366,18 +359,14 @@ partial class Program
             Try(String("unsigned int(8*size-64)")),
             Try(String("unsigned int(subgroupIdLen)")),
             Try(String("unsigned int(Per_Sample_IV_Size*8)")),
-            Try(String("const unsigned int(8)[6]")),
-            Try(String("const unsigned int(32)[2]")),
-            Try(String("const unsigned int(32)[3]")),
+            Try(String("const unsigned int(8)")),
             Try(String("const unsigned int(32)")),
-            Try(String("const unsigned int(16)[3]")),
             Try(String("const unsigned int(16)")),
             Try(String("const unsigned int(26)")),
             Try(String("template int(32)")),
             Try(String("template int(16)")),
             Try(String("template unsigned int(30)")),
             Try(String("template unsigned int(32)")),
-            Try(String("template unsigned int(16)[3]")),
             Try(String("template unsigned int(16)")),
             Try(String("template unsigned int(8)")),
             Try(String("int(64)")),
@@ -419,12 +408,10 @@ partial class Program
             Try(String("utf8list")),
             Try(String("boxstring")),
             Try(String("string")),
-            Try(String("bit(32)[6]")),
             Try(String("bit(32)")),
             Try(String("uint(32)")),
             Try(String("uint(16)")),
             Try(String("uint(64)")),
-            Try(String("uint(8)[32]")), // compressor_name
             Try(String("uint(8)")),
             Try(String("uint(7)")),
             Try(String("uint(1)")),
@@ -438,8 +425,7 @@ partial class Program
             Try(String("signed   int(8)")),
             Try(String("RectRecord")),
             Try(String("StyleRecord")),
-            Try(String("Box()[]")),
-            Try(String("Box[]")),
+            Try(String("Box()")),
             Try(String("Box")),
             Try(String("SchemeTypeBox")),
             Try(String("SchemeInformationBox")),
@@ -450,7 +436,7 @@ partial class Program
             Try(String("ICC_profile")),
             Try(String("OriginalFormatBox(fmt)")),
             Try(String("DataEntryBaseBox(entry_type, entry_flags)")),
-            Try(String("ItemInfoEntry[ entry_count ]")),
+            Try(String("ItemInfoEntry")),
             Try(String("TypeCombinationBox")),
             Try(String("FilePartitionBox")),
             Try(String("FECReservoirBox")),
@@ -471,8 +457,8 @@ partial class Program
             Try(String("IPMPControlBox")),
             Try(String("ItemReferenceBox")),
             Try(String("ItemDataBox")),
-            Try(String("TrackReferenceTypeBox []")),
-            Try(String("MetaDataKeyBox[]")),
+            Try(String("TrackReferenceTypeBox")),
+            Try(String("MetaDataKeyBox")),
             Try(String("TierInfoBox")),
             Try(String("MultiviewRelationAttributeBox")),
             Try(String("TierBitRateBox")),
@@ -500,11 +486,11 @@ partial class Program
             Try(String("URIBox")),
             Try(String("CleanApertureBox")),
             Try(String("PixelAspectRatioBox")),
-            Try(String("DownMixInstructions() []")),
-            Try(String("DRCCoefficientsBasic() []")),
-            Try(String("DRCInstructionsBasic() []")),
-            Try(String("DRCCoefficientsUniDRC() []")),
-            Try(String("DRCInstructionsUniDRC() []")),
+            Try(String("DownMixInstructions()")),
+            Try(String("DRCCoefficientsBasic()")),
+            Try(String("DRCInstructionsBasic()")),
+            Try(String("DRCCoefficientsUniDRC()")),
+            Try(String("DRCInstructionsUniDRC()")),
             Try(String("HEVCConfigurationBox")),
             Try(String("LHEVCConfigurationBox")),
             Try(String("AVCConfigurationBox")),
@@ -537,8 +523,8 @@ partial class Program
             Try(String("HEVCTileConfigurationBox")),
             Try(String("MetaDataKeyTableBox()")),
             Try(String("BitRateBox ()")),
-            Try(String("TrackLoudnessInfo[]")),
-            Try(String("AlbumLoudnessInfo[]")),           
+            Try(String("TrackLoudnessInfo")),
+            Try(String("AlbumLoudnessInfo")),           
             Try(String("VvcPTLRecord(num_sublayers)")),           
             Try(String("VvcPTLRecord(ptl_max_temporal_id[i]+1)")),           
             // added
@@ -630,10 +616,13 @@ partial class Program
         Try(LineComment(String("//"))).Or(BlockComment(String("/*"), String("*/")))
     ).Select(x => (PseudoCode)x);
 
+    private static Parser<char, string> FieldArray =>
+        Char('[').Then(Any.Until(Char(']'))).Select(x => $"[{string.Concat(x)}]");
 
     public static Parser<char, PseudoCode> Field =>
-        Map((type, name, value, comment) => new PseudoField(type, name, value, comment),
+        Map((type, array, name, value, comment) => new PseudoField(type, array, name, value, comment),
             FieldType.Before(SkipWhitespaces),
+            Try(FieldArray.Before(SkipWhitespaces)).Optional(),
             Try(FieldName.Before(SkipWhitespaces)).Optional(),
             Try(Any.Until(Char(';')).Before(SkipWhitespaces)).Or(Try(Any.Until(Char('\n')).Before(SkipWhitespaces))).Optional(),
             Try(LineComment(String("//"))).Optional()
@@ -643,7 +632,7 @@ partial class Program
         Identifier.Labelled("field name");
 
     public static Parser<char, PseudoCode> Method =>
-        Map((name, value, comment) => new PseudoField(name, new Maybe<string>(name), new Maybe<IEnumerable<char>>(), comment),
+        Map((name, value, comment) => new PseudoField(name, new Maybe<string>(), new Maybe<string>(name), new Maybe<IEnumerable<char>>(), comment),
             MethodName.Before(SkipWhitespaces).Before(Char('(')),
             Any.Until(Char(')')).Before(Char(';')).Before(SkipWhitespaces),
             Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()
@@ -1489,8 +1478,8 @@ namespace SharpMP4
             ctorContent = "\t\tthis.version = v;\r\n\t\t this.flags = f;";
         }
 
-        bool hasBoxes = (fields.Select(x => GetReadMethod(x.Type).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "ItemReferenceBox") || b.Syntax.Contains("other boxes from derived specifications");
-        bool hasDescriptors = fields.Select(x => GetReadMethod(x.Type).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
+        bool hasBoxes = (fields.Select(x => GetReadMethod(GetFieldType(x)).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "ItemReferenceBox") || b.Syntax.Contains("other boxes from derived specifications");
+        bool hasDescriptors = fields.Select(x => GetReadMethod(GetFieldType(x)).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
 
         foreach (var field in fields)
         {
@@ -1689,6 +1678,17 @@ namespace SharpMP4
         cls += "}\r\n";
 
         return cls;
+    }
+
+    private static string GetFieldType(PseudoField x)
+    {
+        if (x == null)
+            return null;
+
+        if (string.IsNullOrEmpty(x.FieldArray))
+            return x.Type;
+        else
+            return $"{x.Type}{x.FieldArray}";
     }
 
     private static string GetCtorParams(string classType, IList<(string Name, string Value)> parameters)
@@ -1952,14 +1952,14 @@ namespace SharpMP4
             comment = "";
         }
         string value = (field as PseudoField)?.Value;
-        string tp = (field as PseudoField)?.Type;
+        string tp = GetFieldType(field as PseudoField);
 
         if (string.IsNullOrEmpty(tp) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
             tp = (field as PseudoField)?.Name?.Replace("[]", "").Replace("()", "");
 
         if (!string.IsNullOrEmpty(tp))
         {
-            if (IsWorkaround((field as PseudoField)?.Type))
+            if (IsWorkaround(GetFieldType(field as PseudoField)))
                 return "";
             else
             {
@@ -1969,7 +1969,7 @@ namespace SharpMP4
                     value = "";
                 }
 
-                string tt = GetType((field as PseudoField)?.Type);
+                string tt = GetType(GetFieldType(field as PseudoField));
                 if (!string.IsNullOrEmpty(value) && value.StartsWith('('))
                 {
                     value = "";
@@ -2055,7 +2055,7 @@ namespace SharpMP4
                     }
                 }
 
-                string readMethod = GetReadMethod((field as PseudoField)?.Type);
+                string readMethod = GetReadMethod(GetFieldType(field as PseudoField));
                 if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox"&& b.BoxName != "SampleGroupDescriptionEntry"
                      && b.BoxName != "ItemReferenceBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox")
                 {
@@ -2262,7 +2262,7 @@ namespace SharpMP4
         string name = Sanitize((field as PseudoField)?.Name);
         if (string.IsNullOrEmpty(name))
         {
-            name = GetType((field as PseudoField)?.Type)?.Replace("[]", "");
+            name = GetType(GetFieldType(field as PseudoField))?.Replace("[]", "");
         }
 
         return name;
@@ -2289,7 +2289,7 @@ namespace SharpMP4
             return BuildComment(b, comment, level, methodType);
         }
 
-        string tt = (field as PseudoField)?.Type;
+        string tt = GetFieldType(field as PseudoField);
 
         if (string.IsNullOrEmpty(tt) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
             tt = (field as PseudoField)?.Name?.Replace("[]", "").Replace("()", "");
@@ -2603,7 +2603,7 @@ namespace SharpMP4
                     {
                         foreach (var req in block.RequiresAllocation)
                         {
-                            bool hasBoxes = GetReadMethod(req.Type).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "SampleGroupDescriptionBox";
+                            bool hasBoxes = GetReadMethod(GetFieldType(req)).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "SampleGroupDescriptionBox";
                             if (hasBoxes)
                                 continue;
 
@@ -2622,7 +2622,7 @@ namespace SharpMP4
                                 }
                             }
 
-                            string variableType = GetType(req.Type);
+                            string variableType = GetType(GetFieldType(req));
                             int indexesTypeDef = GetFieldTypeDef(req).Count(x => x == '[');
                             int indexesType = variableType.Count(x => x == '[');
                             string variableName = req.Name + suffix;
@@ -2890,7 +2890,7 @@ namespace SharpMP4
             { "IPMPControlBox",                         "stream.ReadBox(boxSize, readSize, this, " },
             { "ItemReferenceBox",                       "stream.ReadBox(boxSize, readSize, this, " },
             { "ItemDataBox",                            "stream.ReadBox(boxSize, readSize, this, " },
-            { "TrackReferenceTypeBox []",               "stream.ReadBox(boxSize, readSize, this, " },
+            { "TrackReferenceTypeBox[]",                "stream.ReadBox(boxSize, readSize, this, " },
             { "MetaDataKeyBox[]",                       "stream.ReadBox(boxSize, readSize, this, " },
             { "TierInfoBox",                            "stream.ReadBox(boxSize, readSize, this, " },
             { "MultiviewRelationAttributeBox",          "stream.ReadBox(boxSize, readSize, this, " },
@@ -2921,11 +2921,11 @@ namespace SharpMP4
             { "URIBox",                                 "stream.ReadBox(boxSize, readSize, this, " },
             { "CleanApertureBox",                       "stream.ReadBox(boxSize, readSize, this, " },
             { "PixelAspectRatioBox",                    "stream.ReadBox(boxSize, readSize, this, " },
-            { "DownMixInstructions() []",               "stream.ReadBox(boxSize, readSize, this, " },
-            { "DRCCoefficientsBasic() []",              "stream.ReadBox(boxSize, readSize, this, " },
-            { "DRCInstructionsBasic() []",              "stream.ReadBox(boxSize, readSize, this, " },
-            { "DRCCoefficientsUniDRC() []",             "stream.ReadBox(boxSize, readSize, this, " },
-            { "DRCInstructionsUniDRC() []",             "stream.ReadBox(boxSize, readSize, this, " },
+            { "DownMixInstructions()[]",               "stream.ReadBox(boxSize, readSize, this, " },
+            { "DRCCoefficientsBasic()[]",              "stream.ReadBox(boxSize, readSize, this, " },
+            { "DRCInstructionsBasic()[]",              "stream.ReadBox(boxSize, readSize, this, " },
+            { "DRCCoefficientsUniDRC()[]",             "stream.ReadBox(boxSize, readSize, this, " },
+            { "DRCInstructionsUniDRC()[]",             "stream.ReadBox(boxSize, readSize, this, " },
             { "HEVCConfigurationBox",                   "stream.ReadBox(boxSize, readSize, this, " },
             { "LHEVCConfigurationBox",                  "stream.ReadBox(boxSize, readSize, this, " },
             { "AVCConfigurationBox",                    "stream.ReadBox(boxSize, readSize, this, " },
@@ -3322,7 +3322,7 @@ namespace SharpMP4
             { "IPMPControlBox",                         "IsoStream.CalculateBoxSize(value)" },
             { "ItemReferenceBox",                       "IsoStream.CalculateBoxSize(value)" },
             { "ItemDataBox",                            "IsoStream.CalculateBoxSize(value)" },
-            { "TrackReferenceTypeBox []",               "IsoStream.CalculateBoxSize(value)" },
+            { "TrackReferenceTypeBox[]",               "IsoStream.CalculateBoxSize(value)" },
             { "MetaDataKeyBox[]",                       "IsoStream.CalculateBoxSize(value)" },
             { "TierInfoBox",                            "IsoStream.CalculateBoxSize(value)" },
             { "MultiviewRelationAttributeBox",          "IsoStream.CalculateBoxSize(value)" },
@@ -3353,11 +3353,11 @@ namespace SharpMP4
             { "URIBox",                                 "IsoStream.CalculateBoxSize(value)" },
             { "CleanApertureBox",                       "IsoStream.CalculateBoxSize(value)" },
             { "PixelAspectRatioBox",                    "IsoStream.CalculateBoxSize(value)" },
-            { "DownMixInstructions() []",               "IsoStream.CalculateBoxSize(value)" },
-            { "DRCCoefficientsBasic() []",              "IsoStream.CalculateBoxSize(value)" },
-            { "DRCInstructionsBasic() []",              "IsoStream.CalculateBoxSize(value)" },
-            { "DRCCoefficientsUniDRC() []",             "IsoStream.CalculateBoxSize(value)" },
-            { "DRCInstructionsUniDRC() []",             "IsoStream.CalculateBoxSize(value)" },
+            { "DownMixInstructions()[]",               "IsoStream.CalculateBoxSize(value)" },
+            { "DRCCoefficientsBasic()[]",              "IsoStream.CalculateBoxSize(value)" },
+            { "DRCInstructionsBasic()[]",              "IsoStream.CalculateBoxSize(value)" },
+            { "DRCCoefficientsUniDRC()[]",             "IsoStream.CalculateBoxSize(value)" },
+            { "DRCInstructionsUniDRC()[]",             "IsoStream.CalculateBoxSize(value)" },
             { "HEVCConfigurationBox",                   "IsoStream.CalculateBoxSize(value)" },
             { "LHEVCConfigurationBox",                  "IsoStream.CalculateBoxSize(value)" },
             { "AVCConfigurationBox",                    "IsoStream.CalculateBoxSize(value)" },
@@ -3754,7 +3754,7 @@ namespace SharpMP4
             { "IPMPControlBox",                         "stream.WriteBox(" },
             { "ItemReferenceBox",                       "stream.WriteBox(" },
             { "ItemDataBox",                            "stream.WriteBox(" },
-            { "TrackReferenceTypeBox []",               "stream.WriteBox(" },
+            { "TrackReferenceTypeBox[]",               "stream.WriteBox(" },
             { "MetaDataKeyBox[]",                       "stream.WriteBox(" },
             { "TierInfoBox",                            "stream.WriteBox(" },
             { "MultiviewRelationAttributeBox",          "stream.WriteBox(" },
@@ -3785,11 +3785,11 @@ namespace SharpMP4
             { "URIBox",                                 "stream.WriteBox(" },
             { "CleanApertureBox",                       "stream.WriteBox(" },
             { "PixelAspectRatioBox",                    "stream.WriteBox(" },
-            { "DownMixInstructions() []",               "stream.WriteBox(" },
-            { "DRCCoefficientsBasic() []",              "stream.WriteBox(" },
-            { "DRCInstructionsBasic() []",              "stream.WriteBox(" },
-            { "DRCCoefficientsUniDRC() []",             "stream.WriteBox(" },
-            { "DRCInstructionsUniDRC() []",             "stream.WriteBox(" },
+            { "DownMixInstructions()[]",               "stream.WriteBox(" },
+            { "DRCCoefficientsBasic()[]",              "stream.WriteBox(" },
+            { "DRCInstructionsBasic()[]",              "stream.WriteBox(" },
+            { "DRCCoefficientsUniDRC()[]",             "stream.WriteBox(" },
+            { "DRCInstructionsUniDRC()[]",             "stream.WriteBox(" },
             { "HEVCConfigurationBox",                   "stream.WriteBox(" },
             { "LHEVCConfigurationBox",                  "stream.WriteBox(" },
             { "AVCConfigurationBox",                    "stream.WriteBox(" },
@@ -4230,7 +4230,7 @@ namespace SharpMP4
             { "IPMPControlBox",                         "IPMPControlBox" },
             { "ItemReferenceBox",                       "ItemReferenceBox" },
             { "ItemDataBox",                            "ItemDataBox" },
-            { "TrackReferenceTypeBox []",               "TrackReferenceTypeBox[]" },
+            { "TrackReferenceTypeBox[]",               "TrackReferenceTypeBox[]" },
             { "MetaDataKeyBox[]",                       "MetaDataKeyBox[]" },
             { "TierInfoBox",                            "TierInfoBox" },
             { "MultiviewRelationAttributeBox",          "MultiviewRelationAttributeBox" },
@@ -4261,11 +4261,11 @@ namespace SharpMP4
             { "URIBox",                                 "URIBox" },
             { "CleanApertureBox",                       "CleanApertureBox" },
             { "PixelAspectRatioBox",                    "PixelAspectRatioBox" },
-            { "DownMixInstructions() []",               "DownMixInstructions[]" },
-            { "DRCCoefficientsBasic() []",              "DRCCoefficientsBasic[]" },
-            { "DRCInstructionsBasic() []",              "DRCInstructionsBasic[]" },
-            { "DRCCoefficientsUniDRC() []",             "DRCCoefficientsUniDRC[]" },
-            { "DRCInstructionsUniDRC() []",             "DRCInstructionsUniDRC[]" },
+            { "DownMixInstructions()[]",               "DownMixInstructions[]" },
+            { "DRCCoefficientsBasic()[]",              "DRCCoefficientsBasic[]" },
+            { "DRCInstructionsBasic()[]",              "DRCInstructionsBasic[]" },
+            { "DRCCoefficientsUniDRC()[]",             "DRCCoefficientsUniDRC[]" },
+            { "DRCInstructionsUniDRC()[]",             "DRCInstructionsUniDRC[]" },
             { "HEVCConfigurationBox",                   "HEVCConfigurationBox" },
             { "LHEVCConfigurationBox",                  "LHEVCConfigurationBox" },
             { "AVCConfigurationBox",                    "AVCConfigurationBox" },
