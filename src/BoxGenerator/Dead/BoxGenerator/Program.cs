@@ -233,6 +233,7 @@ partial class Program
         Identifier.Labelled("box name");
 
     public static Parser<char, char> LetterOrDigitOrUnderscore { get; } = Token(c => char.IsLetterOrDigit(c) || c == '_').Labelled("letter or digit or underscore");
+    public static Parser<char, char> LetterOrDigitOrUnderscoreOrDot { get; } = Token(c => char.IsLetterOrDigit(c) || c == '_' || c == '.').Labelled("letter or digit or underscore or dot");
     public static Parser<char, string> Parameter =>
         SkipWhitespaces.Then(LetterOrDigitOrUnderscore.ManyString());
 
@@ -422,33 +423,10 @@ partial class Program
 
     public static Parser<char, string> ClassType => Parentheses;
 
+    public static Parser<char, string> Tag => LetterOrDigitOrUnderscoreOrDot.ManyString();
+
     public static Parser<char, string> DescriptorTag =>
-       OneOf(
-           Try(String("tag=DecSpecificInfoTag")),
-           Try(String("tag=ES_DescrTag")),
-           Try(String("tag=SLConfigDescrTag")),
-           Try(String("tag=DecoderConfigDescrTag")),
-           Try(String("ProfileLevelIndicationIndexDescrTag")),
-           Try(String("tag=IPI_DescrPointerTag")),
-           Try(String("tag=ContentIdentDescrTag..SupplContentIdentDescrTag")),
-           Try(String("tag=IPMP_DescrPointerTag")),
-           Try(String("tag=LanguageDescrTag")),
-           Try(String("tag=QoS_DescrTag")),
-           Try(String("tag=0x01..0xff")),
-           Try(String("tag=0x01")),
-           Try(String("tag=0x02")),
-           Try(String("tag=0x03")),
-           Try(String("tag=0x04")),
-           Try(String("tag=0x41")),
-           Try(String("tag=0x42")),
-           Try(String("tag=0x43")),
-           Try(String("tag=RegistrationDescrTag")),
-           Try(String("tag=ExtDescrTagStartRange..ExtDescrTagEndRange")),
-           Try(String("tag=OCIDescrTagStartRange..OCIDescrTagEndRange")),
-           Try(String("tag=MP4_IOD_Tag")),
-           Try(String("tag=IPMP_DescrTag")),
-           Try(String("tag=0"))
-           ).Labelled("descriptor tag");
+        SkipWhitespaces.Then(Try(String("ProfileLevelIndicationIndexDescrTag")).Or(String("tag=").Then(Tag))).Labelled("descriptor tag");
 
     public static Parser<char, PseudoExtendedClass> ExtendedClass => Map((extendedBoxName, oldBoxType, boxType, parameters, descriptorTag) => new PseudoExtendedClass(extendedBoxName, oldBoxType, boxType, parameters, descriptorTag),
             SkipWhitespaces.Then(Try(String("extends")).Optional()).Then(SkipWhitespaces).Then(Try(BoxName).Optional()),
@@ -987,10 +965,10 @@ namespace SharpMP4
 
         foreach(var item in descriptors)
         {
-            if (!item.Key.StartsWith("tag=0x"))
+            if (!item.Key.StartsWith("0x"))
             {
-                string key = "DescriptorTags." + item.Key.Replace("tag=", "");
-                if (item.Key == "tag=DecSpecificInfoTag")
+                string key = "DescriptorTags." + item.Key;
+                if (item.Key == "DecSpecificInfoTag")
                 {
                     factory += $"               case {key}: return new GenericDecoderSpecificInfo(); // TODO: choose the specific descriptor\r\n";
                 }
@@ -1115,7 +1093,7 @@ namespace SharpMP4
         {
             if (!b.Extended.DescriptorTag.Contains(".."))
             {
-                string tag = b.Extended.DescriptorTag.Replace("tag=", "");
+                string tag = b.Extended.DescriptorTag;
                 if(!tag.StartsWith("0"))
                 {
                     tag = "DescriptorTags." + tag;
@@ -1124,7 +1102,7 @@ namespace SharpMP4
             }
             else
             {
-                string[] tags = b.Extended.DescriptorTag.Replace("tag=", "").Split("..");
+                string[] tags = b.Extended.DescriptorTag.Split("..");
                 if (!tags[0].StartsWith("0"))
                 {
                     tags[0] = "DescriptorTags." + tags[0];
@@ -1258,7 +1236,7 @@ namespace SharpMP4
             {
                 if (!b.Extended.DescriptorTag.Contains(".."))
                 {
-                    string tag = b.Extended.DescriptorTag.Replace("tag=", "");
+                    string tag = b.Extended.DescriptorTag;
                     if (!tag.StartsWith("0"))
                     {
                         tag = "DescriptorTags." + tag;
