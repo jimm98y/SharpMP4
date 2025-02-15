@@ -737,31 +737,28 @@ namespace SharpMP4
             switch (chunk_type)
             {
                 case 0b000:
-                    mainscore_file sco;
+                    bit(8) sco[chunk_length];
                     break;
                 case 0b001:
-                    bit(8) partID; // ID of the part at which the following info refers 
-                    part_file npf;
+                    bit(8) part[chunk_length]; // ID of the part at which the following info refers 
                     break;
                 case 0b010:
                     // this segment is always in binary as stated in Section 9 
-                    synch_file sync;
+                    bit(8) sync[chunk_length];
                     break;
                 case 0b011:
-                    format_file fmt;
+                    bit(8) fmt[chunk_length];
                     break;
                 case 0b100:
-                    bit(8) partID;
-                    bit(8) lyricID;
-                    lyrics_file lyr;
-                    break;
+                    bit(8) lyrics[chunk_length];
+      break;
                 case 0b101:
                     // this segment is always in binary as stated in Section 11.4 
-                    font_file fon;
+                    bit(8) fon[chunk_length];
                     break;
-                case 0b110: reserved;
+                case 0b110: // reserved;
                 break;
-                case 0b111: reserved;
+                case 0b111: // reserved;
                 break;
             }
             aligned bit(1) more_data;
@@ -829,8 +826,8 @@ namespace SharpMP4
         protected byte[] sco;
         public byte[] Sco { get { return this.sco; } set { this.sco = value; } }
 
-        protected byte[] npf;
-        public byte[] Npf { get { return this.npf; } set { this.npf = value; } }
+        protected byte[] part;  //  ID of the part at which the following info refers 
+        public byte[] Part { get { return this.part; } set { this.part = value; } }
 
         protected byte[] sync;
         public byte[] Sync { get { return this.sync; } set { this.sync = value; } }
@@ -838,20 +835,14 @@ namespace SharpMP4
         protected byte[] fmt;
         public byte[] Fmt { get { return this.fmt; } set { this.fmt = value; } }
 
-        protected byte[] lyr;
-        public byte[] Lyr { get { return this.lyr; } set { this.lyr = value; } }
+        protected byte[] lyrics;
+        public byte[] Lyrics { get { return this.lyrics; } set { this.lyrics = value; } }
 
         protected byte[] fon;
         public byte[] Fon { get { return this.fon; } set { this.fon = value; } }
 
-        protected byte[] reserved00;
-        public byte[] Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
-
-        protected byte[] reserved000;
-        public byte[] Reserved000 { get { return this.reserved000; } set { this.reserved000 = value; } }
-
-        protected byte reserved1;  // for alignment 
-        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+        protected byte reserved00;  // for alignment 
+        public byte Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
 
         public SymbolicMusicSpecificConfig() : base()
         {
@@ -899,34 +890,42 @@ namespace SharpMP4
                 switch (chunk_type)
                 {
                     case 0b000:
-                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.sco);
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.sco);
                         break;
+
                     case 0b001:
-                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.npf);
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.part); // ID of the part at which the following info refers 
                         break;
+
                     case 0b010:
-                        // this segment is always in binary as stated in Section 9 
-                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.sync);
+                        /*  this segment is always in binary as stated in Section 9  */
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.sync);
                         break;
+
                     case 0b011:
-                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.fmt);
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.fmt);
                         break;
+
                     case 0b100:
-                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.lyr);
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.lyrics);
                         break;
+
                     case 0b101:
-                        // this segment is always in binary as stated in Section 11.4 
-                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.fon);
+                        /*  this segment is always in binary as stated in Section 11.4  */
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.fon);
                         break;
+
                     case 0b110:
-                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.reserved00);
+                        /*  reserved; */
                         break;
+
                     case 0b111:
-                        boxSize += stream.ReadBits((uint)(8 * chunk_length), out this.reserved000);
+                        /*  reserved; */
                         break;
+
                 }
                 boxSize += stream.ReadAlignedBits(1, out this.more_data);
-                boxSize += stream.ReadBits(7, out this.reserved1); //for alignment 
+                boxSize += stream.ReadBits(7, out this.reserved00); //for alignment 
             }
             return boxSize;
         }
@@ -973,32 +972,42 @@ namespace SharpMP4
                 switch (chunk_type)
                 {
                     case 0b000:
-                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.sco);
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.sco);
                         break;
+
                     case 0b001:
-                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.npf);
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.part); // ID of the part at which the following info refers 
                         break;
+
                     case 0b010:
-                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.sync);
+                        /*  this segment is always in binary as stated in Section 9  */
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.sync);
                         break;
+
                     case 0b011:
-                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.fmt);
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.fmt);
                         break;
+
                     case 0b100:
-                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.lyr);
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.lyrics);
                         break;
+
                     case 0b101:
-                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.fon);
+                        /*  this segment is always in binary as stated in Section 11.4  */
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.fon);
                         break;
+
                     case 0b110:
-                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.reserved00);
+                        /*  reserved; */
                         break;
+
                     case 0b111:
-                        boxSize += stream.WriteBits((uint)(8 * chunk_length), this.reserved000);
+                        /*  reserved; */
                         break;
+
                 }
                 boxSize += stream.WriteAlignedBits(1, this.more_data);
-                boxSize += stream.WriteBits(7, this.reserved1); //for alignment 
+                boxSize += stream.WriteBits(7, this.reserved00); //for alignment 
             }
             return boxSize;
         }
@@ -1045,32 +1054,42 @@ namespace SharpMP4
                 switch (chunk_type)
                 {
                     case 0b000:
-                        boxSize += (ulong)((uint)(8 * chunk_length)); // sco
+                        boxSize += (ulong)(chunk_length * 8); // sco
                         break;
+
                     case 0b001:
-                        boxSize += (ulong)((uint)(8 * chunk_length)); // npf
+                        boxSize += (ulong)(chunk_length * 8); // part
                         break;
+
                     case 0b010:
-                        boxSize += (ulong)((uint)(8 * chunk_length)); // sync
+                        /*  this segment is always in binary as stated in Section 9  */
+                        boxSize += (ulong)(chunk_length * 8); // sync
                         break;
+
                     case 0b011:
-                        boxSize += (ulong)((uint)(8 * chunk_length)); // fmt
+                        boxSize += (ulong)(chunk_length * 8); // fmt
                         break;
+
                     case 0b100:
-                        boxSize += (ulong)((uint)(8 * chunk_length)); // lyr
+                        boxSize += (ulong)(chunk_length * 8); // lyrics
                         break;
+
                     case 0b101:
-                        boxSize += (ulong)((uint)(8 * chunk_length)); // fon
+                        /*  this segment is always in binary as stated in Section 11.4  */
+                        boxSize += (ulong)(chunk_length * 8); // fon
                         break;
+
                     case 0b110:
-                        boxSize += (ulong)((uint)(8 * chunk_length)); // reserved00
+                        /*  reserved; */
                         break;
+
                     case 0b111:
-                        boxSize += (ulong)((uint)(8 * chunk_length)); // reserved000
+                        /*  reserved; */
                         break;
+
                 }
                 boxSize += (ulong)1; // more_data
-                boxSize += 7; // reserved1
+                boxSize += 7; // reserved00
             }
             return boxSize;
         }
@@ -31075,64 +31094,82 @@ namespace SharpMP4
                 case 23:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.GASpecificConfig);
                     break;
+
                 case 8:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new CelpSpecificConfig(samplingFrequencyIndex), out this.CelpSpecificConfig);
                     break;
+
                 case 9:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new HvxcSpecificConfig(), out this.HvxcSpecificConfig);
                     break;
+
                 case 12:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new TTSSpecificConfig(), out this.TTSSpecificConfig);
                     break;
+
                 case 13:
                 case 14:
                 case 15:
                 case 16:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new StructuredAudioSpecificConfig(), out this.StructuredAudioSpecificConfig);
                     break;
+
                 case 24:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorResilientCelpSpecificConfig(samplingFrequencyIndex), out this.ErrorResilientCelpSpecificConfig);
                     break;
+
                 case 25:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorResilientHvxcSpecificConfig(), out this.ErrorResilientHvxcSpecificConfig);
                     break;
+
                 case 26:
                 case 27:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new ParametricSpecificConfig(), out this.ParametricSpecificConfig);
                     break;
+
                 case 28:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new SSCSpecificConfig(channelConfiguration), out this.SSCSpecificConfig);
                     break;
+
                 case 30:
                     boxSize += stream.ReadUimsbf(out this.sacPayloadEmbedding);
                     boxSize += stream.ReadClass(boxSize, readSize, this, new SpatialSpecificConfig(), out this.SpatialSpecificConfig);
                     break;
+
                 case 32:
                 case 33:
                 case 34:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new MPEG_1_2_SpecificConfig(), out this.MPEG_1_2_SpecificConfig);
                     break;
+
                 case 35:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new DSTSpecificConfig(channelConfiguration), out this.DSTSpecificConfig);
                     break;
+
                 case 36:
                     boxSize += stream.ReadBslbf(5, out this.fillBits);
                     boxSize += stream.ReadClass(boxSize, readSize, this, new ALSSpecificConfig(), out this.ALSSpecificConfig);
                     break;
+
                 case 37:
                 case 38:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.SLSSpecificConfig);
                     break;
+
                 case 39:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new ELDSpecificConfig(channelConfiguration), out this.ELDSpecificConfig);
                     break;
+
                 case 40:
                 case 41:
                     boxSize += stream.ReadClass(boxSize, readSize, this, new SymbolicMusicSpecificConfig(), out this.SymbolicMusicSpecificConfig);
                     break;
+
                 default:
-                    /* reserved */
+
+                    /*  reserved  */
                     break;
+
             }
 
             switch (audioObjectType.AudioObjectType)
@@ -31165,6 +31202,7 @@ namespace SharpMP4
                         }
                     }
                     break;
+
             }
 
             if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode(boxSize, readSize) >= 16)
@@ -31278,64 +31316,82 @@ namespace SharpMP4
                 case 23:
                     boxSize += stream.WriteClass(this.GASpecificConfig);
                     break;
+
                 case 8:
                     boxSize += stream.WriteClass(this.CelpSpecificConfig);
                     break;
+
                 case 9:
                     boxSize += stream.WriteClass(this.HvxcSpecificConfig);
                     break;
+
                 case 12:
                     boxSize += stream.WriteClass(this.TTSSpecificConfig);
                     break;
+
                 case 13:
                 case 14:
                 case 15:
                 case 16:
                     boxSize += stream.WriteClass(this.StructuredAudioSpecificConfig);
                     break;
+
                 case 24:
                     boxSize += stream.WriteClass(this.ErrorResilientCelpSpecificConfig);
                     break;
+
                 case 25:
                     boxSize += stream.WriteClass(this.ErrorResilientHvxcSpecificConfig);
                     break;
+
                 case 26:
                 case 27:
                     boxSize += stream.WriteClass(this.ParametricSpecificConfig);
                     break;
+
                 case 28:
                     boxSize += stream.WriteClass(this.SSCSpecificConfig);
                     break;
+
                 case 30:
                     boxSize += stream.WriteUimsbf(this.sacPayloadEmbedding);
                     boxSize += stream.WriteClass(this.SpatialSpecificConfig);
                     break;
+
                 case 32:
                 case 33:
                 case 34:
                     boxSize += stream.WriteClass(this.MPEG_1_2_SpecificConfig);
                     break;
+
                 case 35:
                     boxSize += stream.WriteClass(this.DSTSpecificConfig);
                     break;
+
                 case 36:
                     boxSize += stream.WriteBslbf(5, this.fillBits);
                     boxSize += stream.WriteClass(this.ALSSpecificConfig);
                     break;
+
                 case 37:
                 case 38:
                     boxSize += stream.WriteClass(this.SLSSpecificConfig);
                     break;
+
                 case 39:
                     boxSize += stream.WriteClass(this.ELDSpecificConfig);
                     break;
+
                 case 40:
                 case 41:
                     boxSize += stream.WriteClass(this.SymbolicMusicSpecificConfig);
                     break;
+
                 default:
-                    /* reserved */
+
+                    /*  reserved  */
                     break;
+
             }
 
             switch (audioObjectType.AudioObjectType)
@@ -31368,6 +31424,7 @@ namespace SharpMP4
                         }
                     }
                     break;
+
             }
 
             if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
@@ -31481,62 +31538,82 @@ namespace SharpMP4
                 case 23:
                     boxSize += IsoStream.CalculateClassSize(GASpecificConfig); // GASpecificConfig
                     break;
+
                 case 8:
                     boxSize += IsoStream.CalculateClassSize(CelpSpecificConfig); // CelpSpecificConfig
                     break;
+
                 case 9:
                     boxSize += IsoStream.CalculateClassSize(HvxcSpecificConfig); // HvxcSpecificConfig
                     break;
+
                 case 12:
                     boxSize += IsoStream.CalculateClassSize(TTSSpecificConfig); // TTSSpecificConfig
                     break;
+
                 case 13:
                 case 14:
                 case 15:
                 case 16:
                     boxSize += IsoStream.CalculateClassSize(StructuredAudioSpecificConfig); // StructuredAudioSpecificConfig
                     break;
+
                 case 24:
                     boxSize += IsoStream.CalculateClassSize(ErrorResilientCelpSpecificConfig); // ErrorResilientCelpSpecificConfig
                     break;
+
                 case 25:
                     boxSize += IsoStream.CalculateClassSize(ErrorResilientHvxcSpecificConfig); // ErrorResilientHvxcSpecificConfig
                     break;
+
                 case 26:
                 case 27:
                     boxSize += IsoStream.CalculateClassSize(ParametricSpecificConfig); // ParametricSpecificConfig
                     break;
+
                 case 28:
                     boxSize += IsoStream.CalculateClassSize(SSCSpecificConfig); // SSCSpecificConfig
                     break;
-                    boxSize += boxSize += 1; // sacPayloadEmbedding
+
+                case 30:
+                    boxSize += 1; // sacPayloadEmbedding
                     boxSize += IsoStream.CalculateClassSize(SpatialSpecificConfig); // SpatialSpecificConfig
                     break;
+
                 case 32:
                 case 33:
                 case 34:
                     boxSize += IsoStream.CalculateClassSize(MPEG_1_2_SpecificConfig); // MPEG_1_2_SpecificConfig
                     break;
+
                 case 35:
                     boxSize += IsoStream.CalculateClassSize(DSTSpecificConfig); // DSTSpecificConfig
                     break;
-                    boxSize += boxSize += 5; // fillBits
+
+                case 36:
+                    boxSize += 5; // fillBits
                     boxSize += IsoStream.CalculateClassSize(ALSSpecificConfig); // ALSSpecificConfig
                     break;
+
                 case 37:
                 case 38:
                     boxSize += IsoStream.CalculateClassSize(SLSSpecificConfig); // SLSSpecificConfig
                     break;
+
                 case 39:
                     boxSize += IsoStream.CalculateClassSize(ELDSpecificConfig); // ELDSpecificConfig
                     break;
+
                 case 40:
                 case 41:
                     boxSize += IsoStream.CalculateClassSize(SymbolicMusicSpecificConfig); // SymbolicMusicSpecificConfig
                     break;
+
                 default:
-                    /* reserved */
+
+                    /*  reserved  */
                     break;
+
             }
 
             switch (audioObjectType.AudioObjectType)
@@ -31569,6 +31646,7 @@ namespace SharpMP4
                         }
                     }
                     break;
+
             }
 
             if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
@@ -34447,6 +34525,9 @@ namespace SharpMP4
         protected ushort eldExtLenAddAdd;
         public ushort EldExtLenAddAdd { get { return this.eldExtLenAddAdd; } set { this.eldExtLenAddAdd = value; } }
 
+        protected int cntt;
+        public int Cntt { get { return this.cntt; } set { this.cntt = value; } }
+
         protected byte[] other_byte;
         public byte[] OtherByte { get { return this.other_byte; } set { this.other_byte = value; } }
 
@@ -34500,7 +34581,8 @@ namespace SharpMP4
                 {
                     /*  add future eld extension configs here  */
                     default:
-                        int cntt;
+
+                        boxSize += stream.ReadInt32(out this.cntt);
 
                         this.other_byte = new byte[len];
                         for (int cnt = 0; cnt < len; cnt++)
@@ -34508,6 +34590,7 @@ namespace SharpMP4
                             boxSize += stream.ReadUimsbf(8, out this.other_byte[cnt]);
                         }
                         break;
+
                 }
                 boxSize += stream.ReadBslbf(4, out this.eldExtType);
             }
@@ -34556,13 +34639,15 @@ namespace SharpMP4
                 {
                     /*  add future eld extension configs here  */
                     default:
-                        int cntt;
+
+                        boxSize += stream.WriteInt32(this.cntt);
 
                         for (int cnt = 0; cnt < len; cnt++)
                         {
                             boxSize += stream.WriteUimsbf(8, this.other_byte[cnt]);
                         }
                         break;
+
                 }
                 boxSize += stream.WriteBslbf(4, this.eldExtType);
             }
@@ -34611,13 +34696,15 @@ namespace SharpMP4
                 {
                     /*  add future eld extension configs here  */
                     default:
-                        int cntt;
+
+                        boxSize += 32; // cntt
 
                         for (int cnt = 0; cnt < len; cnt++)
                         {
                             boxSize += 8; // other_byte
                         }
                         break;
+
                 }
                 boxSize += 4; // eldExtType
             }
@@ -34685,20 +34772,26 @@ namespace SharpMP4
                 case 2:
                     numSbrHeader = 1;
                     break;
+
                 case 3:
                     numSbrHeader = 2;
                     break;
+
                 case 4:
                 case 5:
                 case 6:
                     numSbrHeader = 3;
                     break;
+
                 case 7:
                     numSbrHeader = 4;
                     break;
+
                 default:
+
                     numSbrHeader = 0;
                     break;
+
             }
 
             this.sbr_header = new sbr_header[numSbrHeader];
@@ -34721,20 +34814,26 @@ namespace SharpMP4
                 case 2:
                     numSbrHeader = 1;
                     break;
+
                 case 3:
                     numSbrHeader = 2;
                     break;
+
                 case 4:
                 case 5:
                 case 6:
                     numSbrHeader = 3;
                     break;
+
                 case 7:
                     numSbrHeader = 4;
                     break;
+
                 default:
+
                     numSbrHeader = 0;
                     break;
+
             }
 
             for (int el = 0; el < numSbrHeader; el++)
@@ -34756,20 +34855,26 @@ namespace SharpMP4
                 case 2:
                     numSbrHeader = 1;
                     break;
+
                 case 3:
                     numSbrHeader = 2;
                     break;
+
                 case 4:
                 case 5:
                 case 6:
                     numSbrHeader = 3;
                     break;
+
                 case 7:
                     numSbrHeader = 4;
                     break;
+
                 default:
+
                     numSbrHeader = 0;
                     break;
+
             }
 
             for (int el = 0; el < numSbrHeader; el++)
