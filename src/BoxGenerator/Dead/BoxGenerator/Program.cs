@@ -173,6 +173,23 @@ public class PseudoComment : PseudoCode
     public string Comment { get; }
 }
 
+public class PseudoCase : PseudoCode
+{
+    public PseudoCase()
+    {
+        
+    }
+
+    public PseudoCase(string cs, string op = "")
+    {
+        Cs = cs;
+        Op = op;
+    }
+
+    public string Cs { get; }
+    public string Op { get; }
+}
+
 public class PseudoBlock : PseudoCode
 {
     public PseudoBlock()
@@ -242,7 +259,7 @@ partial class Program
 
     private static Parser<char, string> FieldArray => Char('[').Then(Any.Until(Char(']'))).Select(x => $"[{string.Concat(x)}]");
     private static Parser<char, IEnumerable<PseudoCode>> SingleBlock => Field.Repeat(1);
-    private static Parser<char, PseudoCode> CodeBlock => Try(Block).Or(Try(RepeatingBlock).Or(Try(Field).Or(Comment)));
+    private static Parser<char, PseudoCode> CodeBlock => Try(SwitchBlock).Or(Try(Block).Or(Try(RepeatingBlock).Or(Try(Field).Or(Comment))));
     private static Parser<char, IEnumerable<PseudoCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
     private static Parser<char, PseudoType> FieldType =>
@@ -272,13 +289,29 @@ partial class Program
                 Try(String("else")),
                 Try(String("do ")),
                 Try(String("for")),
-                Try(String("while")),
-                Try(String("switch"))
+                Try(String("while"))
                 ).Before(SkipWhitespaces),
             Try(Parentheses).Optional(),
             SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
             SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
         ).Select(x => (PseudoCode)x);
+
+
+    private static Parser<char, PseudoCode> CaseBlock => Map((cs, op) => new PseudoCase(cs, op), String("case").Before(SkipWhitespaces), AnyCharExcept(':').AtLeastOnceString().Before(SkipWhitespaces).Before(Char(':')).Before(SkipWhitespaces)).Select(x => (PseudoCode)x);
+    private static Parser<char, PseudoCode> DefaultBlock => Map((cs) => new PseudoCase(cs), String("default").Before(SkipWhitespaces).Before(Char(':')).Before(SkipWhitespaces).Select(x => $"{x}:")).Select(x => (PseudoCode)x);
+    private static Parser<char, PseudoCode> BreakBlock => Map((cs) => new PseudoCase(cs), String("break").Before(SkipWhitespaces).Before(Char(';')).Before(SkipWhitespaces).Select(x => $"{x}:")).Select(x => (PseudoCode)x);
+
+    private static Parser<char, PseudoCode> SwitchBlock =>
+        Map((type, condition, comment, content) => new PseudoBlock(type, condition, comment, content),
+            String("switch"),
+            SkipWhitespaces.Then(Try(Parentheses).Optional()),
+            SkipWhitespaces.Then(Try(LineComment(String("//"))).Or(Try(BlockComment(String("/*"), String("*/")))).Optional()),
+            SkipWhitespaces.Then(Try(Rec(() => SwitchCaseBlocks).Between(Char('{'), Char('}'))))
+        ).Select(x => (PseudoCode)x);
+
+    private static Parser<char, PseudoCode> SwitchCaseBlock => Try(CaseBlock).Or(Try(DefaultBlock).Or(Try(BreakBlock).Or(Try(Block).Or(Try(Field).Or(Comment)))));
+
+    private static Parser<char, IEnumerable<PseudoCode>> SwitchCaseBlocks => SkipWhitespaces.Then(SwitchCaseBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
     private static Parser<char, PseudoCode> RepeatingBlock =>
         Map((content, array) => new PseudoRepeatingBlock(content, array),
@@ -357,45 +390,18 @@ partial class Program
             Try(String("extensionAudioObjectType = 5")), // WORKAROUND
             Try(String("sbrPresentFlag = 1")), // WORKAROUND
             Try(String("psPresentFlag = 1")), // WORKAROUND
-            Try(String("case 1:\r\n    case 2:\r\n    case 3:\r\n    case 4:\r\n    case 6:\r\n    case 7:\r\n    case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n      GASpecificConfig()")),
-            Try(String("case 8:\r\n      CelpSpecificConfig()")),
-            Try(String("case 9:\r\n      HvxcSpecificConfig()")),
-            Try(String("case 12:\r\n      TTSSpecificConfig()")),
-            Try(String("case 13:\r\n    case 14:\r\n    case 15:\r\n    case 16:\r\n      StructuredAudioSpecificConfig()")),
-            Try(String("case 24:\r\n      ErrorResilientCelpSpecificConfig()")),
-            Try(String("case 25:\r\n      ErrorResilientHvxcSpecificConfig()")),
-            Try(String("case 26:\r\n    case 27:\r\n      ParametricSpecificConfig()")),
-            Try(String("case 28:\r\n      SSCSpecificConfig()")),
-            Try(String("case 30:\r\n      uimsbf(1)")),
-            Try(String("case 32:\r\n    case 33:\r\n    case 34:\r\n      MPEG_1_2_SpecificConfig()")),
-            Try(String("case 35:\r\n      DSTSpecificConfig()")),
-            Try(String("case 36:\r\n      bslbf(5)")),
-            Try(String("case 37:\r\n    case 38:\r\n      SLSSpecificConfig()")),
-            Try(String("case 39:\r\n      ELDSpecificConfig(channelConfiguration)")),
-            Try(String("case 40:\r\n    case 41:\r\n      SymbolicMusicSpecificConfig()")),
-            Try(String("default:\r\n      /* reserved */\r\n      break")),
-            Try(String("case 17:\r\n    case 19:\r\n    case 20:\r\n    case 21:\r\n    case 22:\r\n    case 23:\r\n    case 24:\r\n    case 25:\r\n    case 26:\r\n    case 27:\r\n    case 39:\r\n      bslbf(2)")),
             Try(String("break")),
             Try(String("audioObjectType = 32 + audioObjectTypeExt")),
             Try(String("return audioObjectType")),
             Try(String("len = eldExtLen")),
             Try(String("len += eldExtLenAddAdd")),
             Try(String("len += eldExtLenAdd")),
-            Try(String("default:\r\n        int cntt")),
-            Try(String("case 1:\r\n    case 2:\r\n      numSbrHeader = 1")),
-            Try(String("case 3:\r\n      numSbrHeader = 2")),
-            Try(String("case 4:\r\n    case 5:\r\n    case 6:\r\n      numSbrHeader = 3")),
-            Try(String("case 7:\r\n      numSbrHeader = 4")),
-            Try(String("default:\r\n      numSbrHeader = 0")),
-            Try(String("case 0b000:\r\n                mainscore_file")),
-            Try(String("case 0b001:\r\n                bit(8) partID; // ID of the part at which the following info refers \r\n                part_file")),
-            Try(String("case 0b010:\r\n                // this segment is always in binary as stated in Section 9 \r\n                synch_file")),
-            Try(String("case 0b011:\r\n                format_file")),
-            Try(String("case 0b100:\r\n                bit(8) partID;\r\n                bit(8) lyricID;\r\n                lyrics_file")),
-            Try(String("case 0b101:\r\n                // this segment is always in binary as stated in Section 11.4 \r\n                font_file")),
-            Try(String("case 0b110: ")),
-            Try(String("case 0b111: ")),
-            Try(String("FieldLength = (large_size + 1) * 16")) // WORKAROUND
+            Try(String("FieldLength = (large_size + 1) * 16")), // WORKAROUND
+            Try(String("numSbrHeader = 1")), // WORKAROUND
+            Try(String("numSbrHeader = 2")), // WORKAROUND
+            Try(String("numSbrHeader = 3")), // WORKAROUND
+            Try(String("numSbrHeader = 4")), // WORKAROUND
+            Try(String("numSbrHeader = 0")) // WORKAROUND
             );
 
     static void Main(string[] args)
@@ -1875,6 +1881,12 @@ namespace SharpMP4
             return BuildComment(b, comment, level, methodType);
         }
 
+        var swcase = field as PseudoCase;
+        if(swcase != null)
+        {
+            return BuildSwitchCase(b, swcase, level, methodType);
+        }
+
         string tt = GetFieldType(field as PseudoField);
 
         if (string.IsNullOrEmpty(tt) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
@@ -1979,6 +1991,22 @@ namespace SharpMP4
             return $"{spacing}{boxSize}{m}; // {name}";
     }
 
+    private static string BuildSwitchCase(PseudoClass b, PseudoCase swcase, int level, MethodType methodType)
+    {
+        string spacing = GetSpacing(level);
+        if (string.IsNullOrEmpty(swcase.Op))
+        {
+            if (swcase.Cs == "default:")
+                return $"{spacing}default:\r\n";
+            else
+                return $"{spacing}break;\r\n";
+        }
+        else
+        {
+            return $"{spacing}{swcase.Cs} {swcase.Op}:";
+        }
+    }
+
     private static string BuildRepeatingBlock(PseudoClass b, PseudoBlock parent, PseudoBlock? block, int level, MethodType methodType)
     {
         if (b.BoxName == "TrackRunBox")
@@ -2006,7 +2034,7 @@ namespace SharpMP4
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[size-10]" && value != "[tagLength]" && value != "[length-6]" && value != "[3]" && value != "[16]" && value != "[14]" && value != "[4]" && value != "[6]" && value != "[32]" && value != "[36]" && value != "[256]" && value != "[512]" &&
+            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[size-10]" && value != "[tagLength]" && value != "[length-6]" && value != "[3]" && value != "[16]" && value != "[14]" && value != "[4]" && value != "[6]" && value != "[32]" && value != "[36]" && value != "[256]" && value != "[512]" && value != "[chunk_length]" &&
             value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]" && value != "[numIndSub + 1]")
         {
             return value;
@@ -2350,6 +2378,7 @@ namespace SharpMP4
             { "unsigned int((length_size_of_trun_num+1) * 8)", "stream.ReadUInt8Array((uint)(length_size_of_trun_num+1), " },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.ReadUInt8Array((uint)(length_size_of_sample_num+1), " },
             { "unsigned int(8*size-64)",                "stream.ReadUInt8Array((uint)(size-8), " },
+            { "bit(8)[chunk_length]",                   "stream.ReadUInt8Array((uint)chunk_length, " },
             { "unsigned int(subgroupIdLen)[i]",         "stream.ReadUInt32(" },
             { "const unsigned int(8)[6]",               "stream.ReadUInt8Array(6, " },
             { "const unsigned int(32)[2]",              "stream.ReadUInt32Array(2, " },
@@ -2609,6 +2638,7 @@ namespace SharpMP4
             { "bslbf(11)",                              "stream.ReadBslbf(11, " },
             { "bslbf(5)",                               "stream.ReadBslbf(5, " },
             { "bslbf(4)",                               "stream.ReadBslbf(4, " },
+            { "bslbf(2)",                               "stream.ReadBslbf(2, " },
             { "bslbf(1)",                               "stream.ReadBslbf(" },
             { "uimsbf(32)",                             "stream.ReadUimsbf(32, " },
             { "uimsbf(24)",                             "stream.ReadUimsbf(24, " },
@@ -2720,6 +2750,20 @@ namespace SharpMP4
             { "EC3SpecificEntry[numIndSub + 1]",        "stream.ReadClass(boxSize, readSize, this, (uint)numIndSub + 1, " },
             { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "stream.ReadClass(boxSize, readSize, this, (uint)sample_count, () => new SampleEncryptionSample(version, flags, Per_Sample_IV_Size), " },
             { "SampleEncryptionSubsample(version)[subsample_count]", "stream.ReadClass(boxSize, readSize, this, (uint)subsample_count, () => new SampleEncryptionSubsample(version), " },
+            { "CelpSpecificConfig()",                   "stream.ReadClass(boxSize, readSize, this, new CelpSpecificConfig(samplingFrequencyIndex), " },
+            { "HvxcSpecificConfig()",                   "stream.ReadClass(boxSize, readSize, this, new HvxcSpecificConfig(), " },
+            { "TTSSpecificConfig()",                    "stream.ReadClass(boxSize, readSize, this, new TTSSpecificConfig(), " },
+            { "ErrorResilientCelpSpecificConfig()",     "stream.ReadClass(boxSize, readSize, this, new ErrorResilientCelpSpecificConfig(samplingFrequencyIndex), " },
+            { "ErrorResilientHvxcSpecificConfig()",     "stream.ReadClass(boxSize, readSize, this, new ErrorResilientHvxcSpecificConfig(), " },
+            { "SSCSpecificConfig()",                    "stream.ReadClass(boxSize, readSize, this, new SSCSpecificConfig(channelConfiguration), " },
+            { "DSTSpecificConfig()",                    "stream.ReadClass(boxSize, readSize, this, new DSTSpecificConfig(channelConfiguration), " },
+            { "ELDSpecificConfig(channelConfiguration)","stream.ReadClass(boxSize, readSize, this, new ELDSpecificConfig(channelConfiguration), " },
+            { "GASpecificConfig()",                     "stream.ReadClass(boxSize, readSize, this, new GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), " },
+            { "StructuredAudioSpecificConfig()",        "stream.ReadClass(boxSize, readSize, this, new StructuredAudioSpecificConfig(), " },
+            { "ParametricSpecificConfig()",             "stream.ReadClass(boxSize, readSize, this, new ParametricSpecificConfig(), " },
+            { "MPEG_1_2_SpecificConfig()",              "stream.ReadClass(boxSize, readSize, this, new MPEG_1_2_SpecificConfig(), " },
+            { "SLSSpecificConfig()",                    "stream.ReadClass(boxSize, readSize, this, new SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), " },
+            { "SymbolicMusicSpecificConfig()",          "stream.ReadClass(boxSize, readSize, this, new SymbolicMusicSpecificConfig(), " },
         };
 
         if(map.ContainsKey(type))
@@ -2727,7 +2771,7 @@ namespace SharpMP4
         else if(map.ContainsKey(type.Replace("()","")))
             return map[type.Replace("()", "")];
         else
-            throw new Exception();
+            throw new NotSupportedException(type);
     }
 
     private static string GetCalculateSizeMethod(string type)
@@ -2790,6 +2834,7 @@ namespace SharpMP4
             { "unsigned int((length_size_of_trun_num+1) * 8)", "(ulong)(length_size_of_trun_num+1) * 8" },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "(ulong)(length_size_of_sample_num+1) * 8" },
             { "unsigned int(8*size-64)",                "(ulong)(size - 8) * 8" },
+            { "bit(8)[chunk_length]",                "(ulong)(chunk_length * 8)" },
             { "unsigned int(subgroupIdLen)[i]",         "32" },
             { "const unsigned int(8)[6]",               "6 * 8" },
             { "const unsigned int(32)[2]",              "2 * 32" },
@@ -3048,6 +3093,7 @@ namespace SharpMP4
             { "bslbf(11)",                              "11" },
             { "bslbf(5)",                               "5" },
             { "bslbf(4)",                               "4" },
+            { "bslbf(2)",                               "2" },
             { "bslbf(1)",                               "1" },
             { "uimsbf(32)",                             "32" },
             { "uimsbf(24)",                             "24" },
@@ -3159,13 +3205,27 @@ namespace SharpMP4
             { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "IsoStream.CalculateClassSize(value)" },
             { "SampleEncryptionSubsample(version)[subsample_count]", "IsoStream.CalculateClassSize(value)" },
             { "unsigned int(Per_Sample_IV_Size*8)",     "(uint)Per_Sample_IV_Size * 8" },
+            { "CelpSpecificConfig()",                   "IsoStream.CalculateClassSize(value)" },
+            { "HvxcSpecificConfig()",                   "IsoStream.CalculateClassSize(value)" },
+            { "TTSSpecificConfig()",                    "IsoStream.CalculateClassSize(value)" },
+            { "ErrorResilientCelpSpecificConfig()",     "IsoStream.CalculateClassSize(value)" },
+            { "ErrorResilientHvxcSpecificConfig()",     "IsoStream.CalculateClassSize(value)" },
+            { "SSCSpecificConfig()",                    "IsoStream.CalculateClassSize(value)" },
+            { "DSTSpecificConfig()",                    "IsoStream.CalculateClassSize(value)" },
+            { "ELDSpecificConfig(channelConfiguration)","IsoStream.CalculateClassSize(value)" },
+            { "GASpecificConfig()",                     "IsoStream.CalculateClassSize(value)" },
+            { "StructuredAudioSpecificConfig()",        "IsoStream.CalculateClassSize(value)" },
+            { "ParametricSpecificConfig()",             "IsoStream.CalculateClassSize(value)" },
+            { "MPEG_1_2_SpecificConfig()",              "IsoStream.CalculateClassSize(value)" },
+            { "SLSSpecificConfig()",                    "IsoStream.CalculateClassSize(value)" },
+            { "SymbolicMusicSpecificConfig()",          "IsoStream.CalculateClassSize(value)" },
        };
         if (map.ContainsKey(type))
             return map[type];
         else if (map.ContainsKey(type.Replace("()", "")))
             return map[type.Replace("()", "")];
         else
-            throw new Exception();
+            throw new NotSupportedException(type);
     }
 
     private static string GetWriteMethod(string type)
@@ -3228,6 +3288,7 @@ namespace SharpMP4
             { "unsigned int((length_size_of_trun_num+1) * 8)", "stream.WriteUInt8Array((uint)(length_size_of_trun_num+1), " },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.WriteUInt8Array((uint)(length_size_of_sample_num+1), " },
             { "unsigned int(8*size-64)",                "stream.WriteUInt8Array((uint)(size-8), " },
+            { "bit(8)[chunk_length]",                "stream.WriteUInt8Array((uint)chunk_length, " },
             { "unsigned int(subgroupIdLen)[i]",         "stream.WriteUInt32(" },
             { "const unsigned int(8)[6]",               "stream.WriteUInt8Array(6, " },
             { "const unsigned int(32)[2]",              "stream.WriteUInt32Array(2, " },
@@ -3486,6 +3547,7 @@ namespace SharpMP4
             { "bslbf(11)",                              "stream.WriteBslbf(11, " },
             { "bslbf(5)",                               "stream.WriteBslbf(5, " },
             { "bslbf(4)",                               "stream.WriteBslbf(4, " },
+            { "bslbf(2)",                               "stream.WriteBslbf(2, " },
             { "bslbf(1)",                               "stream.WriteBslbf(" },
             { "uimsbf(32)",                             "stream.WriteUimsbf(32, " },
             { "uimsbf(24)",                             "stream.WriteUimsbf(24, " },
@@ -3597,13 +3659,27 @@ namespace SharpMP4
             { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]",        "stream.WriteClass(" },
             { "unsigned int(Per_Sample_IV_Size*8)",     "stream.WriteUInt8Array((uint)Per_Sample_IV_Size, " },
             { "SampleEncryptionSubsample(version)[subsample_count]", "stream.WriteClass(" },
+            { "CelpSpecificConfig()",                   "stream.WriteClass(" },
+            { "HvxcSpecificConfig()",                   "stream.WriteClass(" },
+            { "TTSSpecificConfig()",                    "stream.WriteClass(" },
+            { "ErrorResilientCelpSpecificConfig()",     "stream.WriteClass(" },
+            { "ErrorResilientHvxcSpecificConfig()",     "stream.WriteClass(" },
+            { "SSCSpecificConfig()",                    "stream.WriteClass(" },
+            { "DSTSpecificConfig()",                    "stream.WriteClass(" },
+            { "ELDSpecificConfig(channelConfiguration)","stream.WriteClass(" },
+            { "GASpecificConfig()",                     "stream.WriteClass(" },
+            { "StructuredAudioSpecificConfig()",        "stream.WriteClass(" },
+            { "ParametricSpecificConfig()",             "stream.WriteClass(" },
+            { "MPEG_1_2_SpecificConfig()",              "stream.WriteClass(" },
+            { "SLSSpecificConfig()",                    "stream.WriteClass(" },
+            { "SymbolicMusicSpecificConfig()",          "stream.WriteClass(" },
         };
         if (map.ContainsKey(type))
             return map[type];
         else if (map.ContainsKey(type.Replace("()", "")))
             return map[type.Replace("()", "")];
         else
-            throw new Exception();
+            throw new NotSupportedException(type);
     }
 
     private static bool IsWorkaround(string type)
@@ -3647,7 +3723,12 @@ namespace SharpMP4
             "case 3:\r\n      numSbrHeader = 2",
             "case 4:\r\n    case 5:\r\n    case 6:\r\n      numSbrHeader = 3",
             "case 7:\r\n      numSbrHeader = 4",
-            "default:\r\n      numSbrHeader = 0"
+            "default:\r\n      numSbrHeader = 0",
+            "numSbrHeader = 1",
+            "numSbrHeader = 2",
+            "numSbrHeader = 3",
+            "numSbrHeader = 4",
+            "numSbrHeader = 0",
         };
         return map.Contains(type);
     }
@@ -3710,6 +3791,7 @@ namespace SharpMP4
             { "unsigned int((length_size_of_trun_num+1) * 8)", "byte[]" },
             { "unsigned int((length_size_of_sample_num+1) * 8)", "byte[]" },
             { "unsigned int(8*size-64)",                "byte[]" },
+            { "bit(8)[chunk_length]",                   "byte[]" },
             { "unsigned int(subgroupIdLen)[i]",         "uint[]" },
             { "const unsigned int(8)[6]",               "byte[]" },
             { "const unsigned int(32)[2]",              "uint[]" },
@@ -3969,6 +4051,7 @@ namespace SharpMP4
             { "bslbf(11)",                              "ushort" },
             { "bslbf(5)",                               "byte" },
             { "bslbf(4)",                               "byte" },
+            { "bslbf(2)",                               "byte" },
             { "bslbf(1)",                               "bool" },
             { "uimsbf(32)",                             "uint" },
             { "uimsbf(24)",                             "uint" },
@@ -4080,13 +4163,27 @@ namespace SharpMP4
             { "EC3SpecificEntry[numIndSub + 1]",        "EC3SpecificEntry[]" },
             { "SampleEncryptionSubsample(version)[subsample_count]", "SampleEncryptionSubsample[]" },
             { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "SampleEncryptionSample[]" },
+            { "CelpSpecificConfig()",                   "CelpSpecificConfig" },
+            { "HvxcSpecificConfig()",                   "HvxcSpecificConfig" },
+            { "TTSSpecificConfig()",                    "TTSSpecificConfig" },
+            { "ErrorResilientCelpSpecificConfig()",     "ErrorResilientCelpSpecificConfig" },
+            { "ErrorResilientHvxcSpecificConfig()",     "ErrorResilientHvxcSpecificConfig" },
+            { "SSCSpecificConfig()",                    "SSCSpecificConfig" },
+            { "DSTSpecificConfig()",                    "DSTSpecificConfig" },
+            { "ELDSpecificConfig(channelConfiguration)","ELDSpecificConfig" },
+            { "GASpecificConfig()",                     "GASpecificConfig" },
+            { "StructuredAudioSpecificConfig()",        "StructuredAudioSpecificConfig" },
+            { "ParametricSpecificConfig()",             "ParametricSpecificConfig" },
+            { "MPEG_1_2_SpecificConfig()",              "MPEG_1_2_SpecificConfig" },
+            { "SLSSpecificConfig()",                    "SLSSpecificConfig" },
+            { "SymbolicMusicSpecificConfig()",          "SymbolicMusicSpecificConfig" },
         };
         if (map.ContainsKey(type))
             return map[type];
         else if (map.ContainsKey(type.Replace("()", "")))
             return map[type.Replace("()", "")];
         else
-            throw new Exception();
+            throw new NotSupportedException(type);
     }
 
     static partial void HelloFrom(string name);
