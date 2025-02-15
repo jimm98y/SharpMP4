@@ -678,7 +678,6 @@ namespace SharpMP4
         {
             switch (tag)
             {
-                case DescriptorTags.ProfileLevelIndicationIndexDescrTag: return new ProfileLevelIndicationIndexDescriptor();
                 case DescriptorTags.DecoderConfigDescrTag: return new DecoderConfigDescriptor();
                 case DescriptorTags.DecSpecificInfoTag: return new GenericDecoderSpecificInfo(); // TODO: choose the specific descriptor
                 case DescriptorTags.ES_DescrTag: return new ES_Descriptor();
@@ -687,6 +686,7 @@ namespace SharpMP4
                 case DescriptorTags.IPMP_DescrTag: return new IPMP_Descriptor();
                 case DescriptorTags.LanguageDescrTag: return new LanguageDescriptor();
                 case DescriptorTags.MP4_IOD_Tag: return new IOD_Descriptor();
+                case DescriptorTags.ProfileLevelIndicationIndexDescrTag: return new ProfileLevelIndicationIndexDescriptor();
                 case DescriptorTags.QoS_DescrTag: return new QoS_Descriptor();
                 case DescriptorTags.RegistrationDescrTag: return new RegistrationDescriptor();
                 case DescriptorTags.SLConfigDescrTag: return new SLConfigDescriptor();
