@@ -2165,22 +2165,7 @@ namespace SharpMP4
                 return "for (int i = 0; i < sample_count; i++)\r\n            {\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += 32;\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += 32;\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = 32;\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += 32;\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = 32;\r\n                    }\r\n                }\r\n            }";
             }
         }
-        else if (b.BoxName == "SampleEncryptionBox")
-        {
-            if (methodType == MethodType.Read)
-            {
-                return "";
-            }
-            else if(methodType == MethodType.Write)
-            {
-                return "";
-            }
-            else if (methodType == MethodType.Size)
-            {
-                return "";
-            }
-        }
-
+        
         throw new NotImplementedException();
     }
 
