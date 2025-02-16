@@ -20,6 +20,8 @@ public enum MethodType
 
 partial class Program
 {
+    static Dictionary<string, PseudoClass> parsedClasses = null;
+
     static void Main(string[] args)
     {
         string[] jsonFiles = Directory.GetFiles("Definitions", "*.json");
@@ -28,7 +30,7 @@ partial class Program
         int duplicated = 0;
         int fail = 0;
 
-        Dictionary<string, PseudoClass> ret = new Dictionary<string, PseudoClass>();
+        parsedClasses = new Dictionary<string, PseudoClass>();
         List<PseudoClass> duplicates = new List<PseudoClass>();
         List<string> containers = new List<string>();
 
@@ -76,7 +78,7 @@ partial class Program
                             item.Syntax = GetSampleCode(sample, offset, item.CurrentOffset);
                             offset = item.CurrentOffset;
 
-                            if (ret.TryAdd(item.BoxName, item))
+                            if (parsedClasses.TryAdd(item.BoxName, item))
                             {
                                 success++;
                             }
@@ -86,9 +88,9 @@ partial class Program
                                 duplicates.Add(item);
                                 Debug.WriteLine($"Duplicated: {item.BoxName}");
 
-                                if (item.Extended != null && item.Extended.BoxType != ret[item.BoxName].Extended.BoxType)
+                                if (item.Extended != null && item.Extended.BoxType != parsedClasses[item.BoxName].Extended.BoxType)
                                 {
-                                    if (!ret.TryAdd($"{item.BoxName}_{item.Extended.BoxType}", item))
+                                    if (!parsedClasses.TryAdd($"{item.BoxName}_{item.Extended.BoxType}", item))
                                     {
                                         LogConsole($"Duplicated and failed to add: {item.BoxName}");
                                     }
@@ -114,10 +116,10 @@ partial class Program
         // post-processing
         containers = containers.Distinct().ToList();
 
-        foreach (var item in ret)
+        foreach (var item in parsedClasses)
         {
             // determine the box type
-            var ancestors = GetClassAncestors(ret, item.Value);
+            var ancestors = GetClassAncestors(item.Value.BoxName);
 
             if (ancestors.Any())
             {
@@ -211,7 +213,7 @@ partial class Program
                     item.Value.Syntax.Contains("other boxes from derived specifications") ||
                     (item.Value.Extended != null && containers.Contains(item.Value.Extended.BoxType)) || containers.Contains(item.Value.BoxName) ||
                     item.Value.FlattenedFields.FirstOrDefault(x =>
-                        x.Type.Type == "Box" || GetClassAncestors(ret, ret.Values.FirstOrDefault(y => y.BoxName == x.Type.Type)).LastOrDefault(c => c.EndsWith("Box")) != null) != null
+                        x.Type.Type == "Box" || GetClassAncestors(x.Type.Type).LastOrDefault(c => c.EndsWith("Box")) != null) != null
                 ) ||
                 item.Value.BoxName == "DefaultHevcExtractorConstructorBox"; // DefaultHevcExtractorConstructorBox is a container, but the *constructor boxes have currently unknown syntax
         }
@@ -219,7 +221,7 @@ partial class Program
         // collect all boxes, entries and descriptors
         SortedDictionary<string, List<PseudoClass>> boxes = new SortedDictionary<string, List<PseudoClass>>();
         SortedDictionary<string, List<PseudoClass>> entries = new SortedDictionary<string, List<PseudoClass>>();
-        foreach (var item in ret)
+        foreach (var item in parsedClasses)
         {
             if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.BoxType))
             {
@@ -241,7 +243,7 @@ partial class Program
         }
 
         SortedDictionary<string, List<PseudoClass>> descriptors = new SortedDictionary<string, List<PseudoClass>>();
-        foreach (var item in ret)
+        foreach (var item in parsedClasses)
         {
             if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.DescriptorTag) && string.IsNullOrEmpty(item.Value.Abstract))
             {
@@ -267,36 +269,36 @@ partial class Program
         foreach (var type in audioSampleEntryTypes)
         {
             if (!boxes.ContainsKey(type))
-                boxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value });
+                boxes.Add(type, new List<PseudoClass>() { parsedClasses.First(x => x.Value.BoxName == "AudioSampleEntry").Value });
             else
-                boxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value };
+                boxes[type] = new List<PseudoClass>() { parsedClasses.First(x => x.Value.BoxName == "AudioSampleEntry").Value };
         }
 
         foreach (var type in visualSampleEntryTypes)
         {
             if (!boxes.ContainsKey(type))
-                boxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
+                boxes.Add(type, new List<PseudoClass>() { parsedClasses.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
             else
-                boxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value };
+                boxes[type] = new List<PseudoClass>() { parsedClasses.First(x => x.Value.BoxName == "VisualSampleEntry").Value };
         }
 
         if (!boxes.ContainsKey("mp4s"))
-            boxes.Add("mp4s", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value });
+            boxes.Add("mp4s", new List<PseudoClass>() { parsedClasses.First(x => x.Value.BoxName == "MpegSampleEntry").Value });
         else
-            boxes["mp4s"] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value };
+            boxes["mp4s"] = new List<PseudoClass>() { parsedClasses.First(x => x.Value.BoxName == "MpegSampleEntry").Value };
 
         if (!boxes.ContainsKey("dimg"))
-            boxes.Add("dimg", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "SingleItemTypeReferenceBox").Value });
+            boxes.Add("dimg", new List<PseudoClass>() { parsedClasses.First(x => x.Value.BoxName == "SingleItemTypeReferenceBox").Value });
 
         if (!boxes.ContainsKey("cdsc"))
-            boxes.Add("cdsc", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "TrackReferenceTypeBox").Value });
+            boxes.Add("cdsc", new List<PseudoClass>() { parsedClasses.First(x => x.Value.BoxName == "TrackReferenceTypeBox").Value });
 
         LogConsole($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
 
-        string code = GenerateParser(ret, containers, boxes, entries, descriptors);
+        string code = GenerateParser(containers, boxes, entries, descriptors);
     }
 
-    private static string GenerateParser(Dictionary<string, PseudoClass> ret, List<string> containers, SortedDictionary<string, List<PseudoClass>> boxes, SortedDictionary<string, List<PseudoClass>> entries, SortedDictionary<string, List<PseudoClass>> descriptors)
+    private static string GenerateParser(List<string> containers, SortedDictionary<string, List<PseudoClass>> boxes, SortedDictionary<string, List<PseudoClass>> entries, SortedDictionary<string, List<PseudoClass>> descriptors)
     {
         string resultCode =
         @"using System;
@@ -484,11 +486,12 @@ namespace SharpMP4
 ";
         resultCode += factory;
 
-        foreach (var b in ret.Values.ToArray())
+        foreach (var b in parsedClasses.Values.ToArray())
         {
             string code = BuildCode(b, containers);
             resultCode += code + "\r\n\r\n";
         }
+
         resultCode +=
 @"
 }
@@ -502,20 +505,19 @@ namespace SharpMP4
         Console.WriteLine(v);
     }
 
-    private static string[] GetClassAncestors(Dictionary<string, PseudoClass> items, PseudoClass item)
+    private static string[] GetClassAncestors(string item)
     {
         // find all ancestors of the box/entry/class/descriptor - this allows us to determine the type of the class
         List<string> extended = new List<string>();
-        if (item != null && item.Extended != null)
+
+        // right now this algorithm is terribly inefficient, but it works
+        PseudoClass it = parsedClasses.Values.SingleOrDefault(x => x.BoxName == item);
+        while (it != null && !string.IsNullOrEmpty(it.Extended.BoxName))
         {
-            // right now this algorithm is terribly inefficient, but it works
-            var it = item;
-            while (it != null && !string.IsNullOrEmpty(it.Extended.BoxName))
-            {
-                extended.Add(it.Extended.BoxName);
-                it = items.Values.SingleOrDefault(x => x.BoxName == it.Extended.BoxName);
-            }
+            extended.Add(it.Extended.BoxName);
+            it = parsedClasses.Values.SingleOrDefault(x => x.BoxName == it.Extended.BoxName);
         }
+
         return extended.ToArray();
     }
 
@@ -2727,8 +2729,8 @@ namespace SharpMP4
 
     private static string GetCalculateSizeMethod(PseudoField field)
     {
+        var info = GetTypeInfo(field);
         
-
 
         string type = GetFieldType(field);
         Dictionary<string, string> map = new Dictionary<string, string>
@@ -3174,14 +3176,16 @@ namespace SharpMP4
 
     public class FieldTypeInfo
     {
-        public bool IsNumber { get; set; }
-        public bool IsFloatingPoint { get; set; }
-        public bool IsString { get; set; }
-        public bool IsSigned { get; set; }
-        public int ArrayDimensions { get; set; }
-        public int FieldSize { get; set; }
-        public string TypeName { get; set; }
-        public string FieldArray { get; set; }
+        public bool IsNumber { get; internal set; }
+        public bool IsFloatingPoint { get; internal set; }
+        public bool IsString { get; internal set; }
+        public bool IsSigned { get; internal set; }
+        public int ArrayDimensions { get; internal set; }
+        public int FieldSize { get; internal set; }
+        public string FieldSizeParam { get; internal set; }
+        public string TypeName { get; internal set; }
+        public string FieldArray { get; internal set; }
+        public string[] Ancestors { get; internal set; }
     }
 
     private static FieldTypeInfo GetTypeInfo(PseudoField field)
@@ -3289,6 +3293,7 @@ namespace SharpMP4
                     // not a number
                     //Debug.WriteLine($"GetType - number: {fieldType.Type} {innerParam}");
                     fieldSize = -1; // we cannot determine the size, we'll use byte[]
+                    info.FieldSizeParam = innerParam;
                 }
                 info.FieldSize = fieldSize;
             }
@@ -3306,6 +3311,11 @@ namespace SharpMP4
 
         if (info.IsNumber && info.FieldSize == 0)
             throw new NotSupportedException($"{fieldType.Type} is unknown");
+
+        if(!info.IsNumber && !info.IsString && !info.IsFloatingPoint)
+        {
+            info.Ancestors = GetClassAncestors(fieldType.Type);
+        }
 
         return info;
     }
