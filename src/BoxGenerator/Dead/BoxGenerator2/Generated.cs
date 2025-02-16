@@ -698,397 +698,1650 @@ namespace SharpMP4
     }
 
     /*
-    class SymbolicMusicSpecificConfig
-    {  // the bitstream header  
-        bit(4) version; //version of this specification is 0b0000 
-
-        unsigned int(12) pictureWidth; // rendering window X size 
-        unsigned int(12) pictureHight; // rendering window Y size 
-
-        bit(1) isScoreMultiwindow; // 0: one window only – 1: multiple windows 
-
-        unsigned int(8) numberOfParts; // parts of the main score 
-
-        unsigned int(3) notationFormat; // CWMN or other sets 
-
-        vluimsbf8 urlMIDIStream_length; //length in bytes 
-        byte(urlMIDIStream_length) urlMIDIStream; // reference to the MIDI stream, as url 
-        bit(2) codingType; // coding of the XML chunks 
-        vluimsbf8 length; //length in bits of decoder configuration, unsigned integer 
-        // start of decoderConfiguration 
-        if (codingType == 0b11) { 
-           bit(3) decoderInitConfig; 
-           if (decoderInitConfig == 0b000) { 
-               bit(length-3)  decoderInit; 
-           }
-        } else
-        {
-          bit(length) reserved;
-        }
-        // end of decoderConfiguration 
-        bit more_data; // 1 if yes, 0 if no 
-        while (more_data)
-        {
-            aligned bit(3) chunk_type;
-            bit(5) reserved; // for alignment 
-            vluimsbf8 chunk_length;  // length of the chunk in byte 
-            switch (chunk_type)
-            {
-                case 0b000:
-                    bit(8) sco[chunk_length];
-                    break;
-                case 0b001:
-                    bit(8) part[chunk_length]; // ID of the part at which the following info refers 
-                    break;
-                case 0b010:
-                    // this segment is always in binary as stated in Section 9 
-                    bit(8) sync[chunk_length];
-                    break;
-                case 0b011:
-                    bit(8) fmt[chunk_length];
-                    break;
-                case 0b100:
-                    bit(8) lyrics[chunk_length];
-      break;
-                case 0b101:
-                    // this segment is always in binary as stated in Section 11.4 
-                    bit(8) fon[chunk_length];
-                    break;
-                case 0b110: // reserved;
-                break;
-                case 0b111: // reserved;
-                break;
-            }
-            aligned bit(1) more_data;
-            bit(7) reserved; //for alignment 
-        } 
-    } 
+    abstract aligned(8) expandable(228-1) class BaseDescriptor : bit(8) tag=0 {
+     // empty. To be filled by classes extending this class.
+     }
     */
-    public class SymbolicMusicSpecificConfig : IMp4Serializable
+    public abstract class BaseDescriptor : Descriptor
     {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "SymbolicMusicSpecificConfig"; } }
+        public const byte TYPE = 0;
+        public override string DisplayName { get { return "BaseDescriptor"; } }
 
-        protected byte version;  // version of this specification is 0b0000 
-        public byte Version { get { return this.version; } set { this.version = value; } }
-
-        protected ushort pictureWidth;  //  rendering window X size 
-        public ushort PictureWidth { get { return this.pictureWidth; } set { this.pictureWidth = value; } }
-
-        protected ushort pictureHight;  //  rendering window Y size 
-        public ushort PictureHight { get { return this.pictureHight; } set { this.pictureHight = value; } }
-
-        protected bool isScoreMultiwindow;  //  0: one window only – 1: multiple windows 
-        public bool IsScoreMultiwindow { get { return this.isScoreMultiwindow; } set { this.isScoreMultiwindow = value; } }
-
-        protected byte numberOfParts;  //  parts of the main score 
-        public byte NumberOfParts { get { return this.numberOfParts; } set { this.numberOfParts = value; } }
-
-        protected byte notationFormat;  //  CWMN or other sets 
-        public byte NotationFormat { get { return this.notationFormat; } set { this.notationFormat = value; } }
-
-        protected byte urlMIDIStream_length;  // length in bytes 
-        public byte UrlMIDIStreamLength { get { return this.urlMIDIStream_length; } set { this.urlMIDIStream_length = value; } }
-
-        protected byte[] urlMIDIStream;  //  reference to the MIDI stream, as url 
-        public byte[] UrlMIDIStream { get { return this.urlMIDIStream; } set { this.urlMIDIStream = value; } }
-
-        protected byte codingType;  //  coding of the XML chunks 
-        public byte CodingType { get { return this.codingType; } set { this.codingType = value; } }
-
-        protected byte length;  // length in bits of decoder configuration, unsigned integer 
-        public byte Length { get { return this.length; } set { this.length = value; } }
-
-        protected byte decoderInitConfig;
-        public byte DecoderInitConfig { get { return this.decoderInitConfig; } set { this.decoderInitConfig = value; } }
-
-        protected byte[] decoderInit;
-        public byte[] DecoderInit { get { return this.decoderInit; } set { this.decoderInit = value; } }
-
-        protected byte[] reserved;
-        public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected bool more_data;  //  1 if yes, 0 if no 
-        public bool MoreData { get { return this.more_data; } set { this.more_data = value; } }
-
-        protected byte chunk_type;
-        public byte ChunkType { get { return this.chunk_type; } set { this.chunk_type = value; } }
-
-        protected byte reserved0;  //  for alignment 
-        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected byte chunk_length;  //  length of the chunk in byte 
-        public byte ChunkLength { get { return this.chunk_length; } set { this.chunk_length = value; } }
-
-        protected byte[] sco;
-        public byte[] Sco { get { return this.sco; } set { this.sco = value; } }
-
-        protected byte[] part;  //  ID of the part at which the following info refers 
-        public byte[] Part { get { return this.part; } set { this.part = value; } }
-
-        protected byte[] sync;
-        public byte[] Sync { get { return this.sync; } set { this.sync = value; } }
-
-        protected byte[] fmt;
-        public byte[] Fmt { get { return this.fmt; } set { this.fmt = value; } }
-
-        protected byte[] lyrics;
-        public byte[] Lyrics { get { return this.lyrics; } set { this.lyrics = value; } }
-
-        protected byte[] fon;
-        public byte[] Fon { get { return this.fon; } set { this.fon = value; } }
-
-        protected byte reserved00;  // for alignment 
-        public byte Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
-
-        public SymbolicMusicSpecificConfig() : base()
+        public BaseDescriptor(byte tag) : base(tag)
         {
         }
 
-        public virtual ulong Read(IsoStream stream, ulong readSize)
+        public override ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            /*  the bitstream header   */
-            boxSize += stream.ReadBits(4, out this.version); //version of this specification is 0b0000 
-            boxSize += stream.ReadBits(12, out this.pictureWidth); // rendering window X size 
-            boxSize += stream.ReadBits(12, out this.pictureHight); // rendering window Y size 
-            boxSize += stream.ReadBit(out this.isScoreMultiwindow); // 0: one window only – 1: multiple windows 
-            boxSize += stream.ReadUInt8(out this.numberOfParts); // parts of the main score 
-            boxSize += stream.ReadBits(3, out this.notationFormat); // CWMN or other sets 
-            boxSize += stream.ReadUimsbf(8, out this.urlMIDIStream_length); //length in bytes 
-            boxSize += stream.ReadUInt8Array((uint)urlMIDIStream_length, out this.urlMIDIStream); // reference to the MIDI stream, as url 
-            boxSize += stream.ReadBits(2, out this.codingType); // coding of the XML chunks 
-            boxSize += stream.ReadUimsbf(8, out this.length); //length in bits of decoder configuration, unsigned integer 
-            /*  start of decoderConfiguration  */
-
-            if (codingType == 0b11)
-            {
-                boxSize += stream.ReadBits(3, out this.decoderInitConfig);
-
-                if (decoderInitConfig == 0b000)
-                {
-                    boxSize += stream.ReadBits((uint)(length - 3), out this.decoderInit);
-                }
-            }
-
-            else
-            {
-                boxSize += stream.ReadBits(length, out this.reserved);
-            }
-            /*  end of decoderConfiguration  */
-            boxSize += stream.ReadBit(out this.more_data); // 1 if yes, 0 if no 
-
-            while (more_data)
-            {
-                boxSize += stream.ReadAlignedBits(3, out this.chunk_type);
-                boxSize += stream.ReadBits(5, out this.reserved0); // for alignment 
-                boxSize += stream.ReadUimsbf(8, out this.chunk_length); // length of the chunk in byte 
-
-                switch (chunk_type)
-                {
-                    case 0b000:
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.sco);
-                        break;
-
-                    case 0b001:
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.part); // ID of the part at which the following info refers 
-                        break;
-
-                    case 0b010:
-                        /*  this segment is always in binary as stated in Section 9  */
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.sync);
-                        break;
-
-                    case 0b011:
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.fmt);
-                        break;
-
-                    case 0b100:
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.lyrics);
-                        break;
-
-                    case 0b101:
-                        /*  this segment is always in binary as stated in Section 11.4  */
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.fon);
-                        break;
-
-                    case 0b110:
-                        /*  reserved; */
-                        break;
-
-                    case 0b111:
-                        /*  reserved; */
-                        break;
-
-                }
-                boxSize += stream.ReadAlignedBits(1, out this.more_data);
-                boxSize += stream.ReadBits(7, out this.reserved00); //for alignment 
-            }
+            /*  empty. To be filled by classes extending this class. */
             return boxSize;
         }
 
-        public virtual ulong Write(IsoStream stream)
+        public override ulong Write(IsoStream stream)
         {
             ulong boxSize = 0;
-            /*  the bitstream header   */
-            boxSize += stream.WriteBits(4, this.version); //version of this specification is 0b0000 
-            boxSize += stream.WriteBits(12, this.pictureWidth); // rendering window X size 
-            boxSize += stream.WriteBits(12, this.pictureHight); // rendering window Y size 
-            boxSize += stream.WriteBit(this.isScoreMultiwindow); // 0: one window only – 1: multiple windows 
-            boxSize += stream.WriteUInt8(this.numberOfParts); // parts of the main score 
-            boxSize += stream.WriteBits(3, this.notationFormat); // CWMN or other sets 
-            boxSize += stream.WriteUimsbf(8, this.urlMIDIStream_length); //length in bytes 
-            boxSize += stream.WriteUInt8Array((uint)urlMIDIStream_length, this.urlMIDIStream); // reference to the MIDI stream, as url 
-            boxSize += stream.WriteBits(2, this.codingType); // coding of the XML chunks 
-            boxSize += stream.WriteUimsbf(8, this.length); //length in bits of decoder configuration, unsigned integer 
-            /*  start of decoderConfiguration  */
-
-            if (codingType == 0b11)
-            {
-                boxSize += stream.WriteBits(3, this.decoderInitConfig);
-
-                if (decoderInitConfig == 0b000)
-                {
-                    boxSize += stream.WriteBits((uint)(length - 3), this.decoderInit);
-                }
-            }
-
-            else
-            {
-                boxSize += stream.WriteBits(length, this.reserved);
-            }
-            /*  end of decoderConfiguration  */
-            boxSize += stream.WriteBit(this.more_data); // 1 if yes, 0 if no 
-
-            while (more_data)
-            {
-                boxSize += stream.WriteAlignedBits(3, this.chunk_type);
-                boxSize += stream.WriteBits(5, this.reserved0); // for alignment 
-                boxSize += stream.WriteUimsbf(8, this.chunk_length); // length of the chunk in byte 
-
-                switch (chunk_type)
-                {
-                    case 0b000:
-                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.sco);
-                        break;
-
-                    case 0b001:
-                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.part); // ID of the part at which the following info refers 
-                        break;
-
-                    case 0b010:
-                        /*  this segment is always in binary as stated in Section 9  */
-                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.sync);
-                        break;
-
-                    case 0b011:
-                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.fmt);
-                        break;
-
-                    case 0b100:
-                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.lyrics);
-                        break;
-
-                    case 0b101:
-                        /*  this segment is always in binary as stated in Section 11.4  */
-                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.fon);
-                        break;
-
-                    case 0b110:
-                        /*  reserved; */
-                        break;
-
-                    case 0b111:
-                        /*  reserved; */
-                        break;
-
-                }
-                boxSize += stream.WriteAlignedBits(1, this.more_data);
-                boxSize += stream.WriteBits(7, this.reserved00); //for alignment 
-            }
+            /*  empty. To be filled by classes extending this class. */
             return boxSize;
         }
 
-        public virtual ulong CalculateSize()
+        public override ulong CalculateSize()
         {
             ulong boxSize = 0;
-            /*  the bitstream header   */
-            boxSize += 4; // version
-            boxSize += 12; // pictureWidth
-            boxSize += 12; // pictureHight
-            boxSize += 1; // isScoreMultiwindow
-            boxSize += 8; // numberOfParts
-            boxSize += 3; // notationFormat
-            boxSize += 8; // urlMIDIStream_length
-            boxSize += (ulong)(urlMIDIStream_length * 8); // urlMIDIStream
-            boxSize += 2; // codingType
-            boxSize += 8; // length
-            /*  start of decoderConfiguration  */
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
 
-            if (codingType == 0b11)
+
+    /*
+    abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag
+     {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public abstract class DecoderSpecificInfo : BaseDescriptor
+    {
+        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+        public override string DisplayName { get { return "DecoderSpecificInfo"; } }
+
+        public DecoderSpecificInfo() : base(DescriptorTags.DecSpecificInfoTag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ES_Descriptor extends BaseDescriptor : bit(8) tag=ES_DescrTag {
+     bit(16) ES_ID;
+     bit(1) streamDependenceFlag;
+     bit(1) URL_Flag;
+     bit(1) OCRstreamFlag;
+     bit(5) streamPriority;
+     if (streamDependenceFlag)
+     bit(16) dependsOn_ES_ID;
+     if (URL_Flag) {
+     bit(8) URLlength;
+     bit(8) URLstring[URLlength];
+     }
+     if (OCRstreamFlag)
+     bit(16) OCR_ES_Id;
+     DecoderConfigDescriptor decConfigDescr;
+     SLConfigDescriptor slConfigDescr;
+     IPI_DescrPointer ipiPtr[0 .. 1];
+     IP_IdentificationDataSet ipIDS[0 .. 255];
+     IPMP_DescriptorPointer ipmpDescrPtr[0 .. 255];
+     LanguageDescriptor langDescr[0 .. 255];
+     QoS_Descriptor qosDescr[0 .. 1];
+     RegistrationDescriptor regDescr[0 .. 1];
+     ExtensionDescriptor extDescr[0 .. 255];
+     }
+    */
+    public class ES_Descriptor : BaseDescriptor
+    {
+        public const byte TYPE = DescriptorTags.ES_DescrTag;
+        public override string DisplayName { get { return "ES_Descriptor"; } }
+
+        protected ushort ES_ID;
+        public ushort ESID { get { return this.ES_ID; } set { this.ES_ID = value; } }
+
+        protected bool streamDependenceFlag;
+        public bool StreamDependenceFlag { get { return this.streamDependenceFlag; } set { this.streamDependenceFlag = value; } }
+
+        protected bool URL_Flag;
+        public bool URLFlag { get { return this.URL_Flag; } set { this.URL_Flag = value; } }
+
+        protected bool OCRstreamFlag;
+        public bool _OCRstreamFlag { get { return this.OCRstreamFlag; } set { this.OCRstreamFlag = value; } }
+
+        protected byte streamPriority;
+        public byte StreamPriority { get { return this.streamPriority; } set { this.streamPriority = value; } }
+
+        protected ushort dependsOn_ES_ID;
+        public ushort DependsOnESID { get { return this.dependsOn_ES_ID; } set { this.dependsOn_ES_ID = value; } }
+
+        protected byte URLlength;
+        public byte _URLlength { get { return this.URLlength; } set { this.URLlength = value; } }
+
+        protected byte[] URLstring;
+        public byte[] _URLstring { get { return this.URLstring; } set { this.URLstring = value; } }
+
+        protected ushort OCR_ES_Id;
+        public ushort OCRESId { get { return this.OCR_ES_Id; } set { this.OCR_ES_Id = value; } }
+        public DecoderConfigDescriptor DecConfigDescr { get { return this.children.OfType<DecoderConfigDescriptor>().FirstOrDefault(); } }
+        public SLConfigDescriptor SlConfigDescr { get { return this.children.OfType<SLConfigDescriptor>().FirstOrDefault(); } }
+        public IPI_DescrPointer IpiPtr { get { return this.children.OfType<IPI_DescrPointer>().FirstOrDefault(); } }
+        public IEnumerable<IP_IdentificationDataSet> IpIDS { get { return this.children.OfType<IP_IdentificationDataSet>(); } }
+        public IEnumerable<IPMP_DescriptorPointer> IpmpDescrPtr { get { return this.children.OfType<IPMP_DescriptorPointer>(); } }
+        public LanguageDescriptor LangDescr { get { return this.children.OfType<LanguageDescriptor>().FirstOrDefault(); } }
+        public QoS_Descriptor QosDescr { get { return this.children.OfType<QoS_Descriptor>().FirstOrDefault(); } }
+        public RegistrationDescriptor RegDescr { get { return this.children.OfType<RegistrationDescriptor>().FirstOrDefault(); } }
+        public IEnumerable<ExtensionDescriptor> ExtDescr { get { return this.children.OfType<ExtensionDescriptor>(); } }
+
+        public ES_Descriptor() : base(DescriptorTags.ES_DescrTag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.ES_ID);
+            boxSize += stream.ReadBit(out this.streamDependenceFlag);
+            boxSize += stream.ReadBit(out this.URL_Flag);
+            boxSize += stream.ReadBit(out this.OCRstreamFlag);
+            boxSize += stream.ReadBits(5, out this.streamPriority);
+
+            if (streamDependenceFlag)
             {
-                boxSize += 3; // decoderInitConfig
-
-                if (decoderInitConfig == 0b000)
-                {
-                    boxSize += (ulong)(length - 3); // decoderInit
-                }
+                boxSize += stream.ReadUInt16(out this.dependsOn_ES_ID);
             }
 
-            else
+            if (URL_Flag)
             {
-                boxSize += (ulong)length; // reserved
+                boxSize += stream.ReadUInt8(out this.URLlength);
+                boxSize += stream.ReadUInt8Array((uint)URLlength, out this.URLstring);
             }
-            /*  end of decoderConfiguration  */
-            boxSize += 1; // more_data
 
-            while (more_data)
+            if (OCRstreamFlag)
             {
-                boxSize += (ulong)3; // chunk_type
-                boxSize += 5; // reserved0
-                boxSize += 8; // chunk_length
-
-                switch (chunk_type)
-                {
-                    case 0b000:
-                        boxSize += (ulong)(chunk_length * 8); // sco
-                        break;
-
-                    case 0b001:
-                        boxSize += (ulong)(chunk_length * 8); // part
-                        break;
-
-                    case 0b010:
-                        /*  this segment is always in binary as stated in Section 9  */
-                        boxSize += (ulong)(chunk_length * 8); // sync
-                        break;
-
-                    case 0b011:
-                        boxSize += (ulong)(chunk_length * 8); // fmt
-                        break;
-
-                    case 0b100:
-                        boxSize += (ulong)(chunk_length * 8); // lyrics
-                        break;
-
-                    case 0b101:
-                        /*  this segment is always in binary as stated in Section 11.4  */
-                        boxSize += (ulong)(chunk_length * 8); // fon
-                        break;
-
-                    case 0b110:
-                        /*  reserved; */
-                        break;
-
-                    case 0b111:
-                        /*  reserved; */
-                        break;
-
-                }
-                boxSize += (ulong)1; // more_data
-                boxSize += 7; // reserved00
+                boxSize += stream.ReadUInt16(out this.OCR_ES_Id);
             }
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.decConfigDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.slConfigDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipiPtr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipIDS); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipmpDescrPtr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.langDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.qosDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.regDescr); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.extDescr); 
+            boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.ES_ID);
+            boxSize += stream.WriteBit(this.streamDependenceFlag);
+            boxSize += stream.WriteBit(this.URL_Flag);
+            boxSize += stream.WriteBit(this.OCRstreamFlag);
+            boxSize += stream.WriteBits(5, this.streamPriority);
+
+            if (streamDependenceFlag)
+            {
+                boxSize += stream.WriteUInt16(this.dependsOn_ES_ID);
+            }
+
+            if (URL_Flag)
+            {
+                boxSize += stream.WriteUInt8(this.URLlength);
+                boxSize += stream.WriteUInt8Array((uint)URLlength, this.URLstring);
+            }
+
+            if (OCRstreamFlag)
+            {
+                boxSize += stream.WriteUInt16(this.OCR_ES_Id);
+            }
+            // boxSize += stream.WriteDescriptor( this.decConfigDescr); 
+            // boxSize += stream.WriteDescriptor( this.slConfigDescr); 
+            // boxSize += stream.WriteDescriptor( this.ipiPtr); 
+            // boxSize += stream.WriteDescriptor( this.ipIDS); 
+            // boxSize += stream.WriteDescriptor( this.ipmpDescrPtr); 
+            // boxSize += stream.WriteDescriptor( this.langDescr); 
+            // boxSize += stream.WriteDescriptor( this.qosDescr); 
+            // boxSize += stream.WriteDescriptor( this.regDescr); 
+            // boxSize += stream.WriteDescriptor( this.extDescr); 
+            boxSize += stream.WriteDescriptorsTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // ES_ID
+            boxSize += 1; // streamDependenceFlag
+            boxSize += 1; // URL_Flag
+            boxSize += 1; // OCRstreamFlag
+            boxSize += 5; // streamPriority
+
+            if (streamDependenceFlag)
+            {
+                boxSize += 16; // dependsOn_ES_ID
+            }
+
+            if (URL_Flag)
+            {
+                boxSize += 8; // URLlength
+                boxSize += (ulong)(URLlength * 8); // URLstring
+            }
+
+            if (OCRstreamFlag)
+            {
+                boxSize += 16; // OCR_ES_Id
+            }
+            // boxSize += IsoStream.CalculateDescriptorSize(decConfigDescr); // decConfigDescr
+            // boxSize += IsoStream.CalculateDescriptorSize(slConfigDescr); // slConfigDescr
+            // boxSize += IsoStream.CalculateDescriptorSize(ipiPtr); // ipiPtr
+            // boxSize += IsoStream.CalculateDescriptorSize(ipIDS); // ipIDS
+            // boxSize += IsoStream.CalculateDescriptorSize(ipmpDescrPtr); // ipmpDescrPtr
+            // boxSize += IsoStream.CalculateDescriptorSize(langDescr); // langDescr
+            // boxSize += IsoStream.CalculateDescriptorSize(qosDescr); // qosDescr
+            // boxSize += IsoStream.CalculateDescriptorSize(regDescr); // regDescr
+            // boxSize += IsoStream.CalculateDescriptorSize(extDescr); // extDescr
+            boxSize += IsoStream.CalculateDescriptors(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class SLConfigDescriptor extends BaseDescriptor : bit(8) tag=SLConfigDescrTag {
+     bit(8) predefined;
+     if (predefined==0) {
+     bit(1) useAccessUnitStartFlag;
+     bit(1) useAccessUnitEndFlag;
+     bit(1) useRandomAccessPointFlag;
+     bit(1) hasRandomAccessUnitsOnlyFlag;
+     bit(1) usePaddingFlag;
+     bit(1) useTimeStampsFlag;
+     bit(1) useIdleFlag;
+     bit(1) durationFlag;
+     bit(32) timeStampResolution;
+     bit(32) OCRResolution;
+     bit(8) timeStampLength; // must be <= 64
+     bit(8) OCRLength; // must be <= 64
+     bit(8) AU_Length; // must be <= 32
+     bit(8) instantBitrateLength;
+     bit(4) degradationPriorityLength;
+     bit(5) AU_seqNumLength; // must be <= 16
+     bit(5) packetSeqNumLength; // must be <= 16
+     bit(2) reserved=0b11;
+     }
+     if (durationFlag) {
+     bit(32) timeScale;
+     bit(16) accessUnitDuration;
+     bit(16) compositionUnitDuration;
+     }
+     if (!useTimeStampsFlag) {
+     bit(timeStampLength) startDecodingTimeStamp;
+     bit(timeStampLength) startCompositionTimeStamp;
+     }
+     bit(8) ocr[]; // OCR stream flag, reserved, OCR_ES_id 
+     }
+    */
+    public class SLConfigDescriptor : BaseDescriptor
+    {
+        public const byte TYPE = DescriptorTags.SLConfigDescrTag;
+        public override string DisplayName { get { return "SLConfigDescriptor"; } }
+
+        protected byte predefined;
+        public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
+
+        protected bool useAccessUnitStartFlag;
+        public bool UseAccessUnitStartFlag { get { return this.useAccessUnitStartFlag; } set { this.useAccessUnitStartFlag = value; } }
+
+        protected bool useAccessUnitEndFlag;
+        public bool UseAccessUnitEndFlag { get { return this.useAccessUnitEndFlag; } set { this.useAccessUnitEndFlag = value; } }
+
+        protected bool useRandomAccessPointFlag;
+        public bool UseRandomAccessPointFlag { get { return this.useRandomAccessPointFlag; } set { this.useRandomAccessPointFlag = value; } }
+
+        protected bool hasRandomAccessUnitsOnlyFlag;
+        public bool HasRandomAccessUnitsOnlyFlag { get { return this.hasRandomAccessUnitsOnlyFlag; } set { this.hasRandomAccessUnitsOnlyFlag = value; } }
+
+        protected bool usePaddingFlag;
+        public bool UsePaddingFlag { get { return this.usePaddingFlag; } set { this.usePaddingFlag = value; } }
+
+        protected bool useTimeStampsFlag;
+        public bool UseTimeStampsFlag { get { return this.useTimeStampsFlag; } set { this.useTimeStampsFlag = value; } }
+
+        protected bool useIdleFlag;
+        public bool UseIdleFlag { get { return this.useIdleFlag; } set { this.useIdleFlag = value; } }
+
+        protected bool durationFlag;
+        public bool DurationFlag { get { return this.durationFlag; } set { this.durationFlag = value; } }
+
+        protected uint timeStampResolution;
+        public uint TimeStampResolution { get { return this.timeStampResolution; } set { this.timeStampResolution = value; } }
+
+        protected uint OCRResolution;
+        public uint _OCRResolution { get { return this.OCRResolution; } set { this.OCRResolution = value; } }
+
+        protected byte timeStampLength;  //  must be <= 64
+        public byte TimeStampLength { get { return this.timeStampLength; } set { this.timeStampLength = value; } }
+
+        protected byte OCRLength;  //  must be <= 64
+        public byte _OCRLength { get { return this.OCRLength; } set { this.OCRLength = value; } }
+
+        protected byte AU_Length;  //  must be <= 32
+        public byte AULength { get { return this.AU_Length; } set { this.AU_Length = value; } }
+
+        protected byte instantBitrateLength;
+        public byte InstantBitrateLength { get { return this.instantBitrateLength; } set { this.instantBitrateLength = value; } }
+
+        protected byte degradationPriorityLength;
+        public byte DegradationPriorityLength { get { return this.degradationPriorityLength; } set { this.degradationPriorityLength = value; } }
+
+        protected byte AU_seqNumLength;  //  must be <= 16
+        public byte AUSeqNumLength { get { return this.AU_seqNumLength; } set { this.AU_seqNumLength = value; } }
+
+        protected byte packetSeqNumLength;  //  must be <= 16
+        public byte PacketSeqNumLength { get { return this.packetSeqNumLength; } set { this.packetSeqNumLength = value; } }
+
+        protected byte reserved = 0b11;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected uint timeScale;
+        public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
+
+        protected ushort accessUnitDuration;
+        public ushort AccessUnitDuration { get { return this.accessUnitDuration; } set { this.accessUnitDuration = value; } }
+
+        protected ushort compositionUnitDuration;
+        public ushort CompositionUnitDuration { get { return this.compositionUnitDuration; } set { this.compositionUnitDuration = value; } }
+
+        protected byte[] startDecodingTimeStamp;
+        public byte[] StartDecodingTimeStamp { get { return this.startDecodingTimeStamp; } set { this.startDecodingTimeStamp = value; } }
+
+        protected byte[] startCompositionTimeStamp;
+        public byte[] StartCompositionTimeStamp { get { return this.startCompositionTimeStamp; } set { this.startCompositionTimeStamp = value; } }
+
+        protected byte[] ocr;  //  OCR stream flag, reserved, OCR_ES_id 
+        public byte[] Ocr { get { return this.ocr; } set { this.ocr = value; } }
+
+        public SLConfigDescriptor() : base(DescriptorTags.SLConfigDescrTag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.predefined);
+
+            if (predefined == 0)
+            {
+                boxSize += stream.ReadBit(out this.useAccessUnitStartFlag);
+                boxSize += stream.ReadBit(out this.useAccessUnitEndFlag);
+                boxSize += stream.ReadBit(out this.useRandomAccessPointFlag);
+                boxSize += stream.ReadBit(out this.hasRandomAccessUnitsOnlyFlag);
+                boxSize += stream.ReadBit(out this.usePaddingFlag);
+                boxSize += stream.ReadBit(out this.useTimeStampsFlag);
+                boxSize += stream.ReadBit(out this.useIdleFlag);
+                boxSize += stream.ReadBit(out this.durationFlag);
+                boxSize += stream.ReadUInt32(out this.timeStampResolution);
+                boxSize += stream.ReadUInt32(out this.OCRResolution);
+                boxSize += stream.ReadUInt8(out this.timeStampLength); // must be <= 64
+                boxSize += stream.ReadUInt8(out this.OCRLength); // must be <= 64
+                boxSize += stream.ReadUInt8(out this.AU_Length); // must be <= 32
+                boxSize += stream.ReadUInt8(out this.instantBitrateLength);
+                boxSize += stream.ReadBits(4, out this.degradationPriorityLength);
+                boxSize += stream.ReadBits(5, out this.AU_seqNumLength); // must be <= 16
+                boxSize += stream.ReadBits(5, out this.packetSeqNumLength); // must be <= 16
+                boxSize += stream.ReadBits(2, out this.reserved);
+            }
+
+            if (durationFlag)
+            {
+                boxSize += stream.ReadUInt32(out this.timeScale);
+                boxSize += stream.ReadUInt16(out this.accessUnitDuration);
+                boxSize += stream.ReadUInt16(out this.compositionUnitDuration);
+            }
+
+            if (!useTimeStampsFlag)
+            {
+                boxSize += stream.ReadUInt8Array((uint)timeStampLength, out this.startDecodingTimeStamp);
+                boxSize += stream.ReadUInt8Array((uint)timeStampLength, out this.startCompositionTimeStamp);
+            }
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.ocr); // OCR stream flag, reserved, OCR_ES_id 
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.predefined);
+
+            if (predefined == 0)
+            {
+                boxSize += stream.WriteBit(this.useAccessUnitStartFlag);
+                boxSize += stream.WriteBit(this.useAccessUnitEndFlag);
+                boxSize += stream.WriteBit(this.useRandomAccessPointFlag);
+                boxSize += stream.WriteBit(this.hasRandomAccessUnitsOnlyFlag);
+                boxSize += stream.WriteBit(this.usePaddingFlag);
+                boxSize += stream.WriteBit(this.useTimeStampsFlag);
+                boxSize += stream.WriteBit(this.useIdleFlag);
+                boxSize += stream.WriteBit(this.durationFlag);
+                boxSize += stream.WriteUInt32(this.timeStampResolution);
+                boxSize += stream.WriteUInt32(this.OCRResolution);
+                boxSize += stream.WriteUInt8(this.timeStampLength); // must be <= 64
+                boxSize += stream.WriteUInt8(this.OCRLength); // must be <= 64
+                boxSize += stream.WriteUInt8(this.AU_Length); // must be <= 32
+                boxSize += stream.WriteUInt8(this.instantBitrateLength);
+                boxSize += stream.WriteBits(4, this.degradationPriorityLength);
+                boxSize += stream.WriteBits(5, this.AU_seqNumLength); // must be <= 16
+                boxSize += stream.WriteBits(5, this.packetSeqNumLength); // must be <= 16
+                boxSize += stream.WriteBits(2, this.reserved);
+            }
+
+            if (durationFlag)
+            {
+                boxSize += stream.WriteUInt32(this.timeScale);
+                boxSize += stream.WriteUInt16(this.accessUnitDuration);
+                boxSize += stream.WriteUInt16(this.compositionUnitDuration);
+            }
+
+            if (!useTimeStampsFlag)
+            {
+                boxSize += stream.WriteUInt8Array((uint)timeStampLength, this.startDecodingTimeStamp);
+                boxSize += stream.WriteUInt8Array((uint)timeStampLength, this.startCompositionTimeStamp);
+            }
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.ocr); // OCR stream flag, reserved, OCR_ES_id 
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // predefined
+
+            if (predefined == 0)
+            {
+                boxSize += 1; // useAccessUnitStartFlag
+                boxSize += 1; // useAccessUnitEndFlag
+                boxSize += 1; // useRandomAccessPointFlag
+                boxSize += 1; // hasRandomAccessUnitsOnlyFlag
+                boxSize += 1; // usePaddingFlag
+                boxSize += 1; // useTimeStampsFlag
+                boxSize += 1; // useIdleFlag
+                boxSize += 1; // durationFlag
+                boxSize += 32; // timeStampResolution
+                boxSize += 32; // OCRResolution
+                boxSize += 8; // timeStampLength
+                boxSize += 8; // OCRLength
+                boxSize += 8; // AU_Length
+                boxSize += 8; // instantBitrateLength
+                boxSize += 4; // degradationPriorityLength
+                boxSize += 5; // AU_seqNumLength
+                boxSize += 5; // packetSeqNumLength
+                boxSize += 2; // reserved
+            }
+
+            if (durationFlag)
+            {
+                boxSize += 32; // timeScale
+                boxSize += 16; // accessUnitDuration
+                boxSize += 16; // compositionUnitDuration
+            }
+
+            if (!useTimeStampsFlag)
+            {
+                boxSize += (ulong)timeStampLength; // startDecodingTimeStamp
+                boxSize += (ulong)timeStampLength; // startCompositionTimeStamp
+            }
+            boxSize += 8 * (ulong)ocr.Length; // ocr
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class DecoderConfigDescriptor extends BaseDescriptor : bit(8) tag=DecoderConfigDescrTag {
+     bit(8) objectTypeIndication;
+     bit(6) streamType;
+     bit(1) upStream;
+     const bit(1) reserved=1;
+     bit(24) bufferSizeDB;
+     bit(32) maxBitrate;
+     bit(32) avgBitrate;
+     DecoderSpecificInfo decSpecificInfo[0 .. 1];
+     ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
+     }
+    */
+    public class DecoderConfigDescriptor : BaseDescriptor
+    {
+        public const byte TYPE = DescriptorTags.DecoderConfigDescrTag;
+        public override string DisplayName { get { return "DecoderConfigDescriptor"; } }
+
+        protected byte objectTypeIndication;
+        public byte ObjectTypeIndication { get { return this.objectTypeIndication; } set { this.objectTypeIndication = value; } }
+
+        protected byte streamType;
+        public byte StreamType { get { return this.streamType; } set { this.streamType = value; } }
+
+        protected bool upStream;
+        public bool UpStream { get { return this.upStream; } set { this.upStream = value; } }
+
+        protected bool reserved = true;
+        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected uint bufferSizeDB;
+        public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
+
+        protected uint maxBitrate;
+        public uint MaxBitrate { get { return this.maxBitrate; } set { this.maxBitrate = value; } }
+
+        protected uint avgBitrate;
+        public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
+        public IEnumerable<DecoderSpecificInfo> DecSpecificInfo { get { return this.children.OfType<DecoderSpecificInfo>(); } }
+        public IEnumerable<ProfileLevelIndicationIndexDescriptor> ProfileLevelIndicationIndexDescr { get { return this.children.OfType<ProfileLevelIndicationIndexDescriptor>(); } }
+
+        public DecoderConfigDescriptor() : base(DescriptorTags.DecoderConfigDescrTag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.objectTypeIndication);
+            boxSize += stream.ReadBits(6, out this.streamType);
+            boxSize += stream.ReadBit(out this.upStream);
+            boxSize += stream.ReadBit(out this.reserved);
+            boxSize += stream.ReadBits(24, out this.bufferSizeDB);
+            boxSize += stream.ReadUInt32(out this.maxBitrate);
+            boxSize += stream.ReadUInt32(out this.avgBitrate);
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.decSpecificInfo); 
+            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.profileLevelIndicationIndexDescr); 
+            boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this, objectTypeIndication);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.objectTypeIndication);
+            boxSize += stream.WriteBits(6, this.streamType);
+            boxSize += stream.WriteBit(this.upStream);
+            boxSize += stream.WriteBit(this.reserved);
+            boxSize += stream.WriteBits(24, this.bufferSizeDB);
+            boxSize += stream.WriteUInt32(this.maxBitrate);
+            boxSize += stream.WriteUInt32(this.avgBitrate);
+            // boxSize += stream.WriteDescriptor( this.decSpecificInfo); 
+            // boxSize += stream.WriteDescriptor( this.profileLevelIndicationIndexDescr); 
+            boxSize += stream.WriteDescriptorsTillEnd(this, objectTypeIndication);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // objectTypeIndication
+            boxSize += 6; // streamType
+            boxSize += 1; // upStream
+            boxSize += 1; // reserved
+            boxSize += 24; // bufferSizeDB
+            boxSize += 32; // maxBitrate
+            boxSize += 32; // avgBitrate
+                           // boxSize += IsoStream.CalculateDescriptorSize(decSpecificInfo); // decSpecificInfo
+                           // boxSize += IsoStream.CalculateDescriptorSize(profileLevelIndicationIndexDescr); // profileLevelIndicationIndexDescr
+            boxSize += IsoStream.CalculateDescriptors(this, objectTypeIndication);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ProfileLevelIndicationIndexDescriptor () extends BaseDescriptor
+     : bit(8) ProfileLevelIndicationIndexDescrTag {
+     bit(8) profileLevelIndicationIndex;
+     }
+    */
+    public class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
+    {
+        public const byte TYPE = DescriptorTags.ProfileLevelIndicationIndexDescrTag;
+        public override string DisplayName { get { return "ProfileLevelIndicationIndexDescriptor"; } }
+
+        protected byte profileLevelIndicationIndex;
+        public byte ProfileLevelIndicationIndex { get { return this.profileLevelIndicationIndex; } set { this.profileLevelIndicationIndex = value; } }
+
+        public ProfileLevelIndicationIndexDescriptor() : base(DescriptorTags.ProfileLevelIndicationIndexDescrTag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.profileLevelIndicationIndex);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.profileLevelIndicationIndex);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // profileLevelIndicationIndex
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class IPI_DescrPointer extends BaseDescriptor : bit(8) tag=IPI_DescrPointerTag {
+     bit(16) IPI_ES_Id;
+     }
+    */
+    public class IPI_DescrPointer : BaseDescriptor
+    {
+        public const byte TYPE = DescriptorTags.IPI_DescrPointerTag;
+        public override string DisplayName { get { return "IPI_DescrPointer"; } }
+
+        protected ushort IPI_ES_Id;
+        public ushort IPIESId { get { return this.IPI_ES_Id; } set { this.IPI_ES_Id = value; } }
+
+        public IPI_DescrPointer() : base(DescriptorTags.IPI_DescrPointerTag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.IPI_ES_Id);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.IPI_ES_Id);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // IPI_ES_Id
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class IP_IdentificationDataSet extends BaseDescriptor
+     : bit(8) tag=ContentIdentDescrTag..SupplContentIdentDescrTag
+     {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public abstract class IP_IdentificationDataSet : BaseDescriptor
+    {
+        public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
+        public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag; public override string DisplayName { get { return "IP_IdentificationDataSet"; } }
+
+        public IP_IdentificationDataSet(byte tag) : base(tag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class IPMP_DescriptorPointer extends BaseDescriptor : bit(8) tag=IPMP_DescrPointerTag {
+     bit(8) IPMP_DescriptorID;
+     }
+    */
+    public class IPMP_DescriptorPointer : BaseDescriptor
+    {
+        public const byte TYPE = DescriptorTags.IPMP_DescrPointerTag;
+        public override string DisplayName { get { return "IPMP_DescriptorPointer"; } }
+
+        protected byte IPMP_DescriptorID;
+        public byte IPMPDescriptorID { get { return this.IPMP_DescriptorID; } set { this.IPMP_DescriptorID = value; } }
+
+        public IPMP_DescriptorPointer() : base(DescriptorTags.IPMP_DescrPointerTag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.IPMP_DescriptorID);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.IPMP_DescriptorID);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // IPMP_DescriptorID
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class OCI_Descriptor extends BaseDescriptor : bit(8) tag=OCIDescrTagStartRange..OCIDescrTagEndRange
+    {
+     // empty. To be filled by classes extending this class.
+    }
+    */
+    public abstract class OCI_Descriptor : BaseDescriptor
+    {
+        public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
+        public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange; public override string DisplayName { get { return "OCI_Descriptor"; } }
+
+        public OCI_Descriptor(byte tag) : base(tag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class LanguageDescriptor extends OCI_Descriptor : bit(8) tag=LanguageDescrTag {
+     bit(24) languageCode;
+     }
+    */
+    public class LanguageDescriptor : OCI_Descriptor
+    {
+        public const byte TYPE = DescriptorTags.LanguageDescrTag;
+        public override string DisplayName { get { return "LanguageDescriptor"; } }
+
+        protected uint languageCode;
+        public uint LanguageCode { get { return this.languageCode; } set { this.languageCode = value; } }
+
+        public LanguageDescriptor() : base(DescriptorTags.LanguageDescrTag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBits(24, out this.languageCode);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBits(24, this.languageCode);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 24; // languageCode
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class IPMPDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+     // IPMP system specific configuration information
+     }
+    */
+    public class IPMPDecoderConfiguration : DecoderSpecificInfo
+    {
+        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+        public override string DisplayName { get { return "IPMPDecoderConfiguration"; } }
+
+        public IPMPDecoderConfiguration() : base()
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            /*  IPMP system specific configuration information */
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            /*  IPMP system specific configuration information */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  IPMP system specific configuration information */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class OCIDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+     bit(8) versionLabel = 0x01;
+     }
+    */
+    public class OCIDecoderConfiguration : DecoderSpecificInfo
+    {
+        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+        public override string DisplayName { get { return "OCIDecoderConfiguration"; } }
+
+        protected byte versionLabel = 0x01;
+        public byte VersionLabel { get { return this.versionLabel; } set { this.versionLabel = value; } }
+
+        public OCIDecoderConfiguration() : base()
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.versionLabel);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.versionLabel);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // versionLabel
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class JPEG_DecoderConfig extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+     int(16) headerLength;
+     int(16) Xdensity;
+     int(16) Ydensity;
+     int(8) numComponents;
+     }
+    */
+    public class JPEG_DecoderConfig : DecoderSpecificInfo
+    {
+        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+        public override string DisplayName { get { return "JPEG_DecoderConfig"; } }
+
+        protected short headerLength;
+        public short HeaderLength { get { return this.headerLength; } set { this.headerLength = value; } }
+
+        protected short Xdensity;
+        public short _Xdensity { get { return this.Xdensity; } set { this.Xdensity = value; } }
+
+        protected short Ydensity;
+        public short _Ydensity { get { return this.Ydensity; } set { this.Ydensity = value; } }
+
+        protected sbyte numComponents;
+        public sbyte NumComponents { get { return this.numComponents; } set { this.numComponents = value; } }
+
+        public JPEG_DecoderConfig() : base()
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadInt16(out this.headerLength);
+            boxSize += stream.ReadInt16(out this.Xdensity);
+            boxSize += stream.ReadInt16(out this.Ydensity);
+            boxSize += stream.ReadInt8(out this.numComponents);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteInt16(this.headerLength);
+            boxSize += stream.WriteInt16(this.Xdensity);
+            boxSize += stream.WriteInt16(this.Ydensity);
+            boxSize += stream.WriteInt8(this.numComponents);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // headerLength
+            boxSize += 16; // Xdensity
+            boxSize += 16; // Ydensity
+            boxSize += 8; // numComponents
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class GenericDecoderSpecificInfo extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+     bit(8) data[];
+     }
+    */
+    public class GenericDecoderSpecificInfo : DecoderSpecificInfo
+    {
+        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+        public override string DisplayName { get { return "GenericDecoderSpecificInfo"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public GenericDecoderSpecificInfo() : base()
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8 * (ulong)data.Length; // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class QoS_Descriptor extends BaseDescriptor : bit(8) tag=QoS_DescrTag {
+     bit(8) predefined;
+     if (predefined==0) {
+     QoS_Qualifier qualifiers[];
+     }
+     }
+    */
+    public class QoS_Descriptor : BaseDescriptor
+    {
+        public const byte TYPE = DescriptorTags.QoS_DescrTag;
+        public override string DisplayName { get { return "QoS_Descriptor"; } }
+
+        protected byte predefined;
+        public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
+        public IEnumerable<QoS_Qualifier> Qualifiers { get { return this.children.OfType<QoS_Qualifier>(); } }
+
+        public QoS_Descriptor() : base(DescriptorTags.QoS_DescrTag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.predefined);
+
+            if (predefined == 0)
+            {
+                // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.qualifiers); 
+            }
+            boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.predefined);
+
+            if (predefined == 0)
+            {
+                // boxSize += stream.WriteDescriptor( this.qualifiers); 
+            }
+            boxSize += stream.WriteDescriptorsTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // predefined
+
+            if (predefined == 0)
+            {
+                // boxSize += IsoStream.CalculateDescriptorSize(qualifiers); // qualifiers
+            }
+            boxSize += IsoStream.CalculateDescriptors(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract aligned(8) expandable(228-1) class QoS_Qualifier : bit(8) tag=0x01..0xff {
+     // empty. To be filled by classes extending this class.
+     }
+
+    */
+    public abstract class QoS_Qualifier : Descriptor
+    {
+        public byte TagMin { get; set; } = 0x01;
+        public byte TagMax { get; set; } = 0xff; public override string DisplayName { get { return "QoS_Qualifier"; } }
+
+        public QoS_Qualifier(byte tag) : base(tag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class QoS_Qualifier_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x01 {
+     unsigned int(32) MAX_DELAY;
+     }
+
+    */
+    public class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
+    {
+        public const byte TYPE = 0x01;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_DELAY"; } }
+
+        protected uint MAX_DELAY;
+        public uint MAXDELAY { get { return this.MAX_DELAY; } set { this.MAX_DELAY = value; } }
+
+        public QoS_Qualifier_MAX_DELAY() : base(0x01)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.MAX_DELAY);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.MAX_DELAY);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_DELAY
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class QoS_Qualifier_PREF_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x02 {
+     unsigned int(32) PREF_MAX_DELAY;
+     }
+
+    */
+    public class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
+    {
+        public const byte TYPE = 0x02;
+        public override string DisplayName { get { return "QoS_Qualifier_PREF_MAX_DELAY"; } }
+
+        protected uint PREF_MAX_DELAY;
+        public uint PREFMAXDELAY { get { return this.PREF_MAX_DELAY; } set { this.PREF_MAX_DELAY = value; } }
+
+        public QoS_Qualifier_PREF_MAX_DELAY() : base(0x02)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.PREF_MAX_DELAY);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.PREF_MAX_DELAY);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // PREF_MAX_DELAY
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class QoS_Qualifier_LOSS_PROB extends QoS_Qualifier : bit(8) tag=0x03 {
+     double(32) LOSS_PROB;
+     }
+
+    */
+    public class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
+    {
+        public const byte TYPE = 0x03;
+        public override string DisplayName { get { return "QoS_Qualifier_LOSS_PROB"; } }
+
+        protected double LOSS_PROB;
+        public double LOSSPROB { get { return this.LOSS_PROB; } set { this.LOSS_PROB = value; } }
+
+        public QoS_Qualifier_LOSS_PROB() : base(0x03)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadDouble32(out this.LOSS_PROB);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteDouble32(this.LOSS_PROB);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // LOSS_PROB
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class QoS_Qualifier_MAX_GAP_LOSS extends QoS_Qualifier : bit(8) tag=0x04 {
+     unsigned int(32) MAX_GAP_LOSS;
+     }
+
+    */
+    public class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
+    {
+        public const byte TYPE = 0x04;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_GAP_LOSS"; } }
+
+        protected uint MAX_GAP_LOSS;
+        public uint MAXGAPLOSS { get { return this.MAX_GAP_LOSS; } set { this.MAX_GAP_LOSS = value; } }
+
+        public QoS_Qualifier_MAX_GAP_LOSS() : base(0x04)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.MAX_GAP_LOSS);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.MAX_GAP_LOSS);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_GAP_LOSS
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class QoS_Qualifier_MAX_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x41 {
+     unsigned int(32) MAX_AU_SIZE;
+     }
+
+    */
+    public class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
+    {
+        public const byte TYPE = 0x41;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_AU_SIZE"; } }
+
+        protected uint MAX_AU_SIZE;
+        public uint MAXAUSIZE { get { return this.MAX_AU_SIZE; } set { this.MAX_AU_SIZE = value; } }
+
+        public QoS_Qualifier_MAX_AU_SIZE() : base(0x41)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.MAX_AU_SIZE);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.MAX_AU_SIZE);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_AU_SIZE
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class QoS_Qualifier_AVG_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x42 {
+     unsigned int(32) AVG_AU_SIZE;
+     }
+
+    */
+    public class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
+    {
+        public const byte TYPE = 0x42;
+        public override string DisplayName { get { return "QoS_Qualifier_AVG_AU_SIZE"; } }
+
+        protected uint AVG_AU_SIZE;
+        public uint AVGAUSIZE { get { return this.AVG_AU_SIZE; } set { this.AVG_AU_SIZE = value; } }
+
+        public QoS_Qualifier_AVG_AU_SIZE() : base(0x42)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.AVG_AU_SIZE);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.AVG_AU_SIZE);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // AVG_AU_SIZE
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class QoS_Qualifier_MAX_AU_RATE extends QoS_Qualifier : bit(8) tag=0x43 {
+     unsigned int(32) MAX_AU_RATE;
+     }
+    */
+    public class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
+    {
+        public const byte TYPE = 0x43;
+        public override string DisplayName { get { return "QoS_Qualifier_MAX_AU_RATE"; } }
+
+        protected uint MAX_AU_RATE;
+        public uint MAXAURATE { get { return this.MAX_AU_RATE; } set { this.MAX_AU_RATE = value; } }
+
+        public QoS_Qualifier_MAX_AU_RATE() : base(0x43)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.MAX_AU_RATE);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.MAX_AU_RATE);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // MAX_AU_RATE
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class RegistrationDescriptor extends BaseDescriptor : bit(8) tag=RegistrationDescrTag {
+     bit(32) formatIdentifier;
+     bit(8) additionalIdentificationInfo[sizeOfInstance-4];
+     }
+    */
+    public class RegistrationDescriptor : BaseDescriptor
+    {
+        public const byte TYPE = DescriptorTags.RegistrationDescrTag;
+        public override string DisplayName { get { return "RegistrationDescriptor"; } }
+
+        protected uint formatIdentifier;
+        public uint FormatIdentifier { get { return this.formatIdentifier; } set { this.formatIdentifier = value; } }
+
+        protected byte[] additionalIdentificationInfo;
+        public byte[] AdditionalIdentificationInfo { get { return this.additionalIdentificationInfo; } set { this.additionalIdentificationInfo = value; } }
+
+        public RegistrationDescriptor() : base(DescriptorTags.RegistrationDescrTag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.formatIdentifier);
+            boxSize += stream.ReadUInt8Array((uint)(sizeOfInstance - 4), out this.additionalIdentificationInfo);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.formatIdentifier);
+            boxSize += stream.WriteUInt8Array((uint)(sizeOfInstance - 4), this.additionalIdentificationInfo);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // formatIdentifier
+            boxSize += (ulong)(sizeOfInstance - 4) * 8; // additionalIdentificationInfo
+            return boxSize;
+        }
+    }
+
+
+    /*
+    abstract class ExtensionDescriptor extends BaseDescriptor : bit(8) tag=ExtDescrTagStartRange..ExtDescrTagEndRange {
+     // empty. To be filled by classes extending this class.
+     }
+    */
+    public abstract class ExtensionDescriptor : BaseDescriptor
+    {
+        public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
+        public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange; public override string DisplayName { get { return "ExtensionDescriptor"; } }
+
+        public ExtensionDescriptor(byte tag) : base(tag)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  empty. To be filled by classes extending this class. */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ESDBox
+     extends FullBox('esds', version = 0, 0) {
+     ES_Descriptor ES;
+     }
+    */
+    public class ESDBox : FullBox
+    {
+        public const string TYPE = "esds";
+        public override string DisplayName { get { return "ESDBox"; } }
+
+        protected ES_Descriptor ES;
+        public ES_Descriptor _ES { get { return this.ES; } set { this.ES = value; } }
+
+        public ESDBox() : base("esds", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.ES);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteDescriptor(this.ES);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateDescriptorSize(ES); // ES
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MpegSampleEntry() extends SampleEntry ('mp4s') {
+     Box ES;
+     }
+    */
+    public class MpegSampleEntry : SampleEntry
+    {
+        public const string TYPE = "mp4s";
+        public override string DisplayName { get { return "MpegSampleEntry"; } }
+        public Box _ES { get { return this.children.OfType<Box>().FirstOrDefault(); } }
+
+        public MpegSampleEntry() : base("mp4s")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ES); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.ES); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(ES); // ES
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -2749,2940 +4002,6 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ViewPriorityBox extends Box ('vipr') {
-     ViprEntry entries[]; 
-    } 
-
-    */
-    public class ViewPriorityBox : Box
-    {
-        public const string TYPE = "vipr";
-        public override string DisplayName { get { return "ViewPriorityBox"; } }
-
-        protected ViprEntry[] entries;
-        public ViprEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
-
-        public ViewPriorityBox() : base("vipr")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, out this.entries);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteClass(this.entries);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateClassSize(entries); // entries
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class ViprEntry() {
-     unsigned int(6) reserved = 0; 
-      unsigned int(10) view_id; 
-      unsigned int(32) content_priority_id;
-     }
-
-    */
-    public class ViprEntry : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "ViprEntry"; } }
-
-        protected byte reserved = 0;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected ushort view_id;
-        public ushort ViewId { get { return this.view_id; } set { this.view_id = value; } }
-
-        protected uint content_priority_id;
-        public uint ContentPriorityId { get { return this.content_priority_id; } set { this.content_priority_id = value; } }
-
-        public ViprEntry() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadBits(6, out this.reserved);
-            boxSize += stream.ReadBits(10, out this.view_id);
-            boxSize += stream.ReadUInt32(out this.content_priority_id);
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteBits(6, this.reserved);
-            boxSize += stream.WriteBits(10, this.view_id);
-            boxSize += stream.WriteUInt32(this.content_priority_id);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 6; // reserved
-            boxSize += 10; // view_id
-            boxSize += 32; // content_priority_id
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class DependencyInfo  
-    { 
-    unsigned int(8)   subSeqDirectionFlag; 
-    unsigned int(8)   layerNumber; 
-    unsigned int(16)  subSequenceIdentifier; 
-    } 
-
-    */
-    public class DependencyInfo : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "DependencyInfo"; } }
-
-        protected byte subSeqDirectionFlag;
-        public byte SubSeqDirectionFlag { get { return this.subSeqDirectionFlag; } set { this.subSeqDirectionFlag = value; } }
-
-        protected byte layerNumber;
-        public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
-
-        protected ushort subSequenceIdentifier;
-        public ushort SubSequenceIdentifier { get { return this.subSequenceIdentifier; } set { this.subSequenceIdentifier = value; } }
-
-        public DependencyInfo() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUInt8(out this.subSeqDirectionFlag);
-            boxSize += stream.ReadUInt8(out this.layerNumber);
-            boxSize += stream.ReadUInt16(out this.subSequenceIdentifier);
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUInt8(this.subSeqDirectionFlag);
-            boxSize += stream.WriteUInt8(this.layerNumber);
-            boxSize += stream.WriteUInt16(this.subSequenceIdentifier);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 8; // subSeqDirectionFlag
-            boxSize += 8; // layerNumber
-            boxSize += 16; // subSequenceIdentifier
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss') 
-    { 
-      unsigned int(16) subSequenceIdentifer; 
-      unsigned int(8)  layerNumber;  
-      unsigned int(1)  durationFlag; 
-      unsigned int(1)  avgRateFlag; 
-      unsigned int(6)  reserved = 0;  
-      if (durationFlag) 
-       unsigned int(32) duration; 
-      if (avgRateFlag) 
-      {
-       unsigned int(8)  accurateStatisticsFlag; 
-       unsigned int(16) avgBitRate; 
-       unsigned int(16) avgFrameRate; 
-      }
-      unsigned int(8) numReferences; 
-      DependencyInfo dependency[numReferences]; 
-     } 
-
-    */
-    public class AVCSubSequenceEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "avss";
-        public override string DisplayName { get { return "AVCSubSequenceEntry"; } }
-
-        protected ushort subSequenceIdentifer;
-        public ushort SubSequenceIdentifer { get { return this.subSequenceIdentifer; } set { this.subSequenceIdentifer = value; } }
-
-        protected byte layerNumber;
-        public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
-
-        protected bool durationFlag;
-        public bool DurationFlag { get { return this.durationFlag; } set { this.durationFlag = value; } }
-
-        protected bool avgRateFlag;
-        public bool AvgRateFlag { get { return this.avgRateFlag; } set { this.avgRateFlag = value; } }
-
-        protected byte reserved = 0;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected uint duration;
-        public uint Duration { get { return this.duration; } set { this.duration = value; } }
-
-        protected byte accurateStatisticsFlag;
-        public byte AccurateStatisticsFlag { get { return this.accurateStatisticsFlag; } set { this.accurateStatisticsFlag = value; } }
-
-        protected ushort avgBitRate;
-        public ushort AvgBitRate { get { return this.avgBitRate; } set { this.avgBitRate = value; } }
-
-        protected ushort avgFrameRate;
-        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
-
-        protected byte numReferences;
-        public byte NumReferences { get { return this.numReferences; } set { this.numReferences = value; } }
-
-        protected DependencyInfo[] dependency;
-        public DependencyInfo[] Dependency { get { return this.dependency; } set { this.dependency = value; } }
-
-        public AVCSubSequenceEntry() : base("avss")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.subSequenceIdentifer);
-            boxSize += stream.ReadUInt8(out this.layerNumber);
-            boxSize += stream.ReadBit(out this.durationFlag);
-            boxSize += stream.ReadBit(out this.avgRateFlag);
-            boxSize += stream.ReadBits(6, out this.reserved);
-
-            if (durationFlag)
-            {
-                boxSize += stream.ReadUInt32(out this.duration);
-            }
-
-            if (avgRateFlag)
-            {
-                boxSize += stream.ReadUInt8(out this.accurateStatisticsFlag);
-                boxSize += stream.ReadUInt16(out this.avgBitRate);
-                boxSize += stream.ReadUInt16(out this.avgFrameRate);
-            }
-            boxSize += stream.ReadUInt8(out this.numReferences);
-            boxSize += stream.ReadClass(boxSize, readSize, this, out this.dependency);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.subSequenceIdentifer);
-            boxSize += stream.WriteUInt8(this.layerNumber);
-            boxSize += stream.WriteBit(this.durationFlag);
-            boxSize += stream.WriteBit(this.avgRateFlag);
-            boxSize += stream.WriteBits(6, this.reserved);
-
-            if (durationFlag)
-            {
-                boxSize += stream.WriteUInt32(this.duration);
-            }
-
-            if (avgRateFlag)
-            {
-                boxSize += stream.WriteUInt8(this.accurateStatisticsFlag);
-                boxSize += stream.WriteUInt16(this.avgBitRate);
-                boxSize += stream.WriteUInt16(this.avgFrameRate);
-            }
-            boxSize += stream.WriteUInt8(this.numReferences);
-            boxSize += stream.WriteClass(this.dependency);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // subSequenceIdentifer
-            boxSize += 8; // layerNumber
-            boxSize += 1; // durationFlag
-            boxSize += 1; // avgRateFlag
-            boxSize += 6; // reserved
-
-            if (durationFlag)
-            {
-                boxSize += 32; // duration
-            }
-
-            if (avgRateFlag)
-            {
-                boxSize += 8; // accurateStatisticsFlag
-                boxSize += 16; // avgBitRate
-                boxSize += 16; // avgFrameRate
-            }
-            boxSize += 8; // numReferences
-            boxSize += IsoStream.CalculateClassSize(dependency); // dependency
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) { 
-     unsigned int(6)  
-     reserved=0;  
-     unsigned int(10)  ref_view_id; 
-     unsigned int(32) prec_focal_length; 
-     unsigned int(32) prec_principal_point; 
-     unsigned int(32) prec_skew_factor; 
-     unsigned int(8) exponent_focal_length_x; 
-     signed   int(64) mantissa_focal_length_x; 
-     unsigned int(8) exponent_focal_length_y; 
-     signed   int(64) mantissa_focal_length_y;  
-     unsigned int(8) exponent_principal_point_x; 
-     signed   int(64) mantissa_principal_point_x; 
-     unsigned int(8) exponent_principal_point_y; 
-     signed   int(64) mantissa_principal_point_y; 
-     unsigned int(8) exponent_skew_factor; 
-     signed   int(64) mantissa_skew_factor; 
-    } 
-    */
-    public class IntrinsicCameraParametersBox : FullBox
-    {
-        public const string TYPE = "icam";
-        public override string DisplayName { get { return "IntrinsicCameraParametersBox"; } }
-
-        protected byte reserved = 0;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected ushort ref_view_id;
-        public ushort RefViewId { get { return this.ref_view_id; } set { this.ref_view_id = value; } }
-
-        protected uint prec_focal_length;
-        public uint PrecFocalLength { get { return this.prec_focal_length; } set { this.prec_focal_length = value; } }
-
-        protected uint prec_principal_point;
-        public uint PrecPrincipalPoint { get { return this.prec_principal_point; } set { this.prec_principal_point = value; } }
-
-        protected uint prec_skew_factor;
-        public uint PrecSkewFactor { get { return this.prec_skew_factor; } set { this.prec_skew_factor = value; } }
-
-        protected byte exponent_focal_length_x;
-        public byte ExponentFocalLengthx { get { return this.exponent_focal_length_x; } set { this.exponent_focal_length_x = value; } }
-
-        protected long mantissa_focal_length_x;
-        public long MantissaFocalLengthx { get { return this.mantissa_focal_length_x; } set { this.mantissa_focal_length_x = value; } }
-
-        protected byte exponent_focal_length_y;
-        public byte ExponentFocalLengthy { get { return this.exponent_focal_length_y; } set { this.exponent_focal_length_y = value; } }
-
-        protected long mantissa_focal_length_y;
-        public long MantissaFocalLengthy { get { return this.mantissa_focal_length_y; } set { this.mantissa_focal_length_y = value; } }
-
-        protected byte exponent_principal_point_x;
-        public byte ExponentPrincipalPointx { get { return this.exponent_principal_point_x; } set { this.exponent_principal_point_x = value; } }
-
-        protected long mantissa_principal_point_x;
-        public long MantissaPrincipalPointx { get { return this.mantissa_principal_point_x; } set { this.mantissa_principal_point_x = value; } }
-
-        protected byte exponent_principal_point_y;
-        public byte ExponentPrincipalPointy { get { return this.exponent_principal_point_y; } set { this.exponent_principal_point_y = value; } }
-
-        protected long mantissa_principal_point_y;
-        public long MantissaPrincipalPointy { get { return this.mantissa_principal_point_y; } set { this.mantissa_principal_point_y = value; } }
-
-        protected byte exponent_skew_factor;
-        public byte ExponentSkewFactor { get { return this.exponent_skew_factor; } set { this.exponent_skew_factor = value; } }
-
-        protected long mantissa_skew_factor;
-        public long MantissaSkewFactor { get { return this.mantissa_skew_factor; } set { this.mantissa_skew_factor = value; } }
-
-        public IntrinsicCameraParametersBox(uint flags = 0) : base("icam", 0, flags)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBits(6, out this.reserved);
-            boxSize += stream.ReadBits(10, out this.ref_view_id);
-            boxSize += stream.ReadUInt32(out this.prec_focal_length);
-            boxSize += stream.ReadUInt32(out this.prec_principal_point);
-            boxSize += stream.ReadUInt32(out this.prec_skew_factor);
-            boxSize += stream.ReadUInt8(out this.exponent_focal_length_x);
-            boxSize += stream.ReadInt64(out this.mantissa_focal_length_x);
-            boxSize += stream.ReadUInt8(out this.exponent_focal_length_y);
-            boxSize += stream.ReadInt64(out this.mantissa_focal_length_y);
-            boxSize += stream.ReadUInt8(out this.exponent_principal_point_x);
-            boxSize += stream.ReadInt64(out this.mantissa_principal_point_x);
-            boxSize += stream.ReadUInt8(out this.exponent_principal_point_y);
-            boxSize += stream.ReadInt64(out this.mantissa_principal_point_y);
-            boxSize += stream.ReadUInt8(out this.exponent_skew_factor);
-            boxSize += stream.ReadInt64(out this.mantissa_skew_factor);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBits(6, this.reserved);
-            boxSize += stream.WriteBits(10, this.ref_view_id);
-            boxSize += stream.WriteUInt32(this.prec_focal_length);
-            boxSize += stream.WriteUInt32(this.prec_principal_point);
-            boxSize += stream.WriteUInt32(this.prec_skew_factor);
-            boxSize += stream.WriteUInt8(this.exponent_focal_length_x);
-            boxSize += stream.WriteInt64(this.mantissa_focal_length_x);
-            boxSize += stream.WriteUInt8(this.exponent_focal_length_y);
-            boxSize += stream.WriteInt64(this.mantissa_focal_length_y);
-            boxSize += stream.WriteUInt8(this.exponent_principal_point_x);
-            boxSize += stream.WriteInt64(this.mantissa_principal_point_x);
-            boxSize += stream.WriteUInt8(this.exponent_principal_point_y);
-            boxSize += stream.WriteInt64(this.mantissa_principal_point_y);
-            boxSize += stream.WriteUInt8(this.exponent_skew_factor);
-            boxSize += stream.WriteInt64(this.mantissa_skew_factor);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 6; // reserved
-            boxSize += 10; // ref_view_id
-            boxSize += 32; // prec_focal_length
-            boxSize += 32; // prec_principal_point
-            boxSize += 32; // prec_skew_factor
-            boxSize += 8; // exponent_focal_length_x
-            boxSize += 64; // mantissa_focal_length_x
-            boxSize += 8; // exponent_focal_length_y
-            boxSize += 64; // mantissa_focal_length_y
-            boxSize += 8; // exponent_principal_point_x
-            boxSize += 64; // mantissa_principal_point_x
-            boxSize += 8; // exponent_principal_point_y
-            boxSize += 64; // mantissa_principal_point_y
-            boxSize += 8; // exponent_skew_factor
-            boxSize += 64; // mantissa_skew_factor
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) { 
-     unsigned int(6)  reserved=0; 
-     unsigned int(10)  ref_view_id; 
-     unsigned int(8) prec_rotation_param; 
-     unsigned int(8) prec_translation_param; 
-     for (j=1; j<=3; j++) { /* row *//*   
-      for (k=1; k<=3; k++) { /* column *//* 
-       unsigned int(8) exponent_r[j][k]; 
-       signed   int(64) mantissa_r [j][k]; 
-      } 
-      unsigned int(8) exponent_t[j]; 
-      signed   int(64) mantissa_t[j]; 
-     } 
-    }
-    */
-    public class ExtrinsicCameraParametersBox : FullBox
-    {
-        public const string TYPE = "ecam";
-        public override string DisplayName { get { return "ExtrinsicCameraParametersBox"; } }
-
-        protected byte reserved = 0;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected ushort ref_view_id;
-        public ushort RefViewId { get { return this.ref_view_id; } set { this.ref_view_id = value; } }
-
-        protected byte prec_rotation_param;
-        public byte PrecRotationParam { get { return this.prec_rotation_param; } set { this.prec_rotation_param = value; } }
-
-        protected byte prec_translation_param;
-        public byte PrecTranslationParam { get { return this.prec_translation_param; } set { this.prec_translation_param = value; } }
-
-        protected byte[][] exponent_r;
-        public byte[][] Exponentr { get { return this.exponent_r; } set { this.exponent_r = value; } }
-
-        protected long[][] mantissa_r;
-        public long[][] Mantissar { get { return this.mantissa_r; } set { this.mantissa_r = value; } }
-
-        protected byte[] exponent_t;
-        public byte[] Exponentt { get { return this.exponent_t; } set { this.exponent_t = value; } }
-
-        protected long[] mantissa_t;
-        public long[] Mantissat { get { return this.mantissa_t; } set { this.mantissa_t = value; } }
-
-        public ExtrinsicCameraParametersBox(uint flags = 0) : base("ecam", 0, flags)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBits(6, out this.reserved);
-            boxSize += stream.ReadBits(10, out this.ref_view_id);
-            boxSize += stream.ReadUInt8(out this.prec_rotation_param);
-            boxSize += stream.ReadUInt8(out this.prec_translation_param);
-
-            this.exponent_r = new byte[3][];
-            this.mantissa_r = new long[3][];
-            this.exponent_t = new byte[3];
-            this.mantissa_t = new long[3];
-            for (int j = 0; j < 3; j++)
-            {
-                /*  row  */
-
-                this.exponent_r[j] = new byte[3];
-                this.mantissa_r[j] = new long[3];
-                for (int k = 0; k < 3; k++)
-                {
-                    /*  column  */
-                    boxSize += stream.ReadUInt8(out this.exponent_r[j][k]);
-                    boxSize += stream.ReadInt64(out this.mantissa_r[j][k]);
-                }
-                boxSize += stream.ReadUInt8(out this.exponent_t[j]);
-                boxSize += stream.ReadInt64(out this.mantissa_t[j]);
-            }
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBits(6, this.reserved);
-            boxSize += stream.WriteBits(10, this.ref_view_id);
-            boxSize += stream.WriteUInt8(this.prec_rotation_param);
-            boxSize += stream.WriteUInt8(this.prec_translation_param);
-
-            for (int j = 0; j < 3; j++)
-            {
-                /*  row  */
-
-                for (int k = 0; k < 3; k++)
-                {
-                    /*  column  */
-                    boxSize += stream.WriteUInt8(this.exponent_r[j][k]);
-                    boxSize += stream.WriteInt64(this.mantissa_r[j][k]);
-                }
-                boxSize += stream.WriteUInt8(this.exponent_t[j]);
-                boxSize += stream.WriteInt64(this.mantissa_t[j]);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 6; // reserved
-            boxSize += 10; // ref_view_id
-            boxSize += 8; // prec_rotation_param
-            boxSize += 8; // prec_translation_param
-
-            for (int j = 0; j < 3; j++)
-            {
-                /*  row  */
-
-                for (int k = 0; k < 3; k++)
-                {
-                    /*  column  */
-                    boxSize += 8; // exponent_r
-                    boxSize += 64; // mantissa_r
-                }
-                boxSize += 8; // exponent_t
-                boxSize += 64; // mantissa_t
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class AVCDecoderConfigurationRecord { 
-     unsigned int(8) configurationVersion = 1; 
-     unsigned int(8) AVCProfileIndication; 
-     unsigned int(8) profile_compatibility; 
-     unsigned int(8) AVCLevelIndication;  
-     bit(6) reserved = '111111'b; 
-     unsigned int(2) lengthSizeMinusOne;  
-     bit(3) reserved = '111'b; 
-     unsigned int(5) numOfSequenceParameterSets; 
-     for (i=0; i< numOfSequenceParameterSets;  i++) { 
-      unsigned int(16) sequenceParameterSetLength ; 
-      bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
-     } 
-     unsigned int(8) numOfPictureParameterSets; 
-     for (i=0; i< numOfPictureParameterSets;  i++) { 
-      unsigned int(16) pictureParameterSetLength; 
-      bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
-     } 
-     if( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
-        AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 ) 
-     { 
-      bit(6) reserved = '111111'b; 
-      unsigned int(2) chroma_format; 
-      bit(5) reserved = '11111'b; 
-      unsigned int(3) bit_depth_luma_minus8; 
-      bit(5) reserved = '11111'b; 
-      unsigned int(3) bit_depth_chroma_minus8; 
-      unsigned int(8) numOfSequenceParameterSetExt; 
-      for (i=0; i< numOfSequenceParameterSetExt; i++) { 
-       unsigned int(16) sequenceParameterSetExtLength; 
-       bit(8*sequenceParameterSetExtLength) sequenceParameterSetExtNALUnit; 
-      }
-     } 
-    }
-    */
-    public class AVCDecoderConfigurationRecord : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "AVCDecoderConfigurationRecord"; } }
-
-        protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
-
-        protected byte AVCProfileIndication;
-        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
-
-        protected byte profile_compatibility;
-        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
-
-        protected byte AVCLevelIndication;
-        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
-
-        protected byte reserved = 0b111111;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
-
-        protected byte reserved0 = 0b111;
-        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected byte numOfSequenceParameterSets;
-        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
-
-        protected ushort[] sequenceParameterSetLength;
-        public ushort[] SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
-
-        protected byte[][] sequenceParameterSetNALUnit;
-        public byte[][] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
-
-        protected byte numOfPictureParameterSets;
-        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
-
-        protected ushort[] pictureParameterSetLength;
-        public ushort[] PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
-
-        protected byte[][] pictureParameterSetNALUnit;
-        public byte[][] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
-
-        protected byte reserved1 = 0b111111;
-        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-        protected byte chroma_format;
-        public byte ChromaFormat { get { return this.chroma_format; } set { this.chroma_format = value; } }
-
-        protected byte reserved00 = 0b11111;
-        public byte Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
-
-        protected byte bit_depth_luma_minus8;
-        public byte BitDepthLumaMinus8 { get { return this.bit_depth_luma_minus8; } set { this.bit_depth_luma_minus8 = value; } }
-
-        protected byte reserved10 = 0b11111;
-        public byte Reserved10 { get { return this.reserved10; } set { this.reserved10 = value; } }
-
-        protected byte bit_depth_chroma_minus8;
-        public byte BitDepthChromaMinus8 { get { return this.bit_depth_chroma_minus8; } set { this.bit_depth_chroma_minus8 = value; } }
-
-        protected byte numOfSequenceParameterSetExt;
-        public byte NumOfSequenceParameterSetExt { get { return this.numOfSequenceParameterSetExt; } set { this.numOfSequenceParameterSetExt = value; } }
-
-        protected ushort[] sequenceParameterSetExtLength;
-        public ushort[] SequenceParameterSetExtLength { get { return this.sequenceParameterSetExtLength; } set { this.sequenceParameterSetExtLength = value; } }
-
-        protected byte[][] sequenceParameterSetExtNALUnit;
-        public byte[][] SequenceParameterSetExtNALUnit { get { return this.sequenceParameterSetExtNALUnit; } set { this.sequenceParameterSetExtNALUnit = value; } }
-        public bool HasExtensions { get; set; } = false;
-
-        public AVCDecoderConfigurationRecord() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUInt8(out this.configurationVersion);
-            boxSize += stream.ReadUInt8(out this.AVCProfileIndication);
-            boxSize += stream.ReadUInt8(out this.profile_compatibility);
-            boxSize += stream.ReadUInt8(out this.AVCLevelIndication);
-            boxSize += stream.ReadBits(6, out this.reserved);
-            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
-            boxSize += stream.ReadBits(3, out this.reserved0);
-            boxSize += stream.ReadBits(5, out this.numOfSequenceParameterSets);
-
-            this.sequenceParameterSetLength = new ushort[numOfSequenceParameterSets];
-            this.sequenceParameterSetNALUnit = new byte[numOfSequenceParameterSets][];
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
-            {
-                boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
-            }
-            boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
-
-            this.pictureParameterSetLength = new ushort[numOfPictureParameterSets];
-            this.pictureParameterSetNALUnit = new byte[numOfPictureParameterSets][];
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
-            }
-
-            if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize; else HasExtensions = true;
-            if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
-        AVCProfileIndication == 122 || AVCProfileIndication == 144)
-            {
-                boxSize += stream.ReadBits(6, out this.reserved1);
-                boxSize += stream.ReadBits(2, out this.chroma_format);
-                boxSize += stream.ReadBits(5, out this.reserved00);
-                boxSize += stream.ReadBits(3, out this.bit_depth_luma_minus8);
-                boxSize += stream.ReadBits(5, out this.reserved10);
-                boxSize += stream.ReadBits(3, out this.bit_depth_chroma_minus8);
-                boxSize += stream.ReadUInt8(out this.numOfSequenceParameterSetExt);
-
-                this.sequenceParameterSetExtLength = new ushort[numOfSequenceParameterSetExt];
-                this.sequenceParameterSetExtNALUnit = new byte[numOfSequenceParameterSetExt][];
-                for (int i = 0; i < numOfSequenceParameterSetExt; i++)
-                {
-                    boxSize += stream.ReadUInt16(out this.sequenceParameterSetExtLength[i]);
-                    boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetExtLength[i], out this.sequenceParameterSetExtNALUnit[i]);
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUInt8(this.configurationVersion);
-            boxSize += stream.WriteUInt8(this.AVCProfileIndication);
-            boxSize += stream.WriteUInt8(this.profile_compatibility);
-            boxSize += stream.WriteUInt8(this.AVCLevelIndication);
-            boxSize += stream.WriteBits(6, this.reserved);
-            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
-            boxSize += stream.WriteBits(3, this.reserved0);
-            boxSize += stream.WriteBits(5, this.numOfSequenceParameterSets);
-
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
-            {
-                boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
-                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
-            }
-            boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
-
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
-                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
-            }
-
-            if (!HasExtensions) return boxSize;
-            if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
-        AVCProfileIndication == 122 || AVCProfileIndication == 144)
-            {
-                boxSize += stream.WriteBits(6, this.reserved1);
-                boxSize += stream.WriteBits(2, this.chroma_format);
-                boxSize += stream.WriteBits(5, this.reserved00);
-                boxSize += stream.WriteBits(3, this.bit_depth_luma_minus8);
-                boxSize += stream.WriteBits(5, this.reserved10);
-                boxSize += stream.WriteBits(3, this.bit_depth_chroma_minus8);
-                boxSize += stream.WriteUInt8(this.numOfSequenceParameterSetExt);
-
-                for (int i = 0; i < numOfSequenceParameterSetExt; i++)
-                {
-                    boxSize += stream.WriteUInt16(this.sequenceParameterSetExtLength[i]);
-                    boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetExtLength[i], this.sequenceParameterSetExtNALUnit[i]);
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 8; // configurationVersion
-            boxSize += 8; // AVCProfileIndication
-            boxSize += 8; // profile_compatibility
-            boxSize += 8; // AVCLevelIndication
-            boxSize += 6; // reserved
-            boxSize += 2; // lengthSizeMinusOne
-            boxSize += 3; // reserved0
-            boxSize += 5; // numOfSequenceParameterSets
-
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
-            {
-                boxSize += 16; // sequenceParameterSetLength
-                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
-            }
-            boxSize += 8; // numOfPictureParameterSets
-
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += 16; // pictureParameterSetLength
-                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
-            }
-
-            if (!HasExtensions) return boxSize;
-            if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
-        AVCProfileIndication == 122 || AVCProfileIndication == 144)
-            {
-                boxSize += 6; // reserved1
-                boxSize += 2; // chroma_format
-                boxSize += 5; // reserved00
-                boxSize += 3; // bit_depth_luma_minus8
-                boxSize += 5; // reserved10
-                boxSize += 3; // bit_depth_chroma_minus8
-                boxSize += 8; // numOfSequenceParameterSetExt
-
-                for (int i = 0; i < numOfSequenceParameterSetExt; i++)
-                {
-                    boxSize += 16; // sequenceParameterSetExtLength
-                    boxSize += (ulong)sequenceParameterSetExtLength[i] * 8; // sequenceParameterSetExtNALUnit
-                }
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class MVCDecoderConfigurationRecord { 
-    unsigned int(8) configurationVersion = 1; 
-    unsigned int(8) AVCProfileIndication; 
-    unsigned int(8) profile_compatibility; 
-    unsigned int(8) AVCLevelIndication;  
-     bit(1) complete_representation; 
-     bit(1) explicit_au_track; 
-    bit(4) reserved = '1111'b; 
-    unsigned int(2) lengthSizeMinusOne;  
-    bit(1) reserved = '0'b; 
-    unsigned int(7) numOfSequenceParameterSets; 
-    for (i=0; i< numOfSequenceParameterSets; i++) { 
-    unsigned int(16) sequenceParameterSetLength ; 
-      bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
-     } 
-    unsigned int(8) numOfPictureParameterSets; 
-    for (i=0; i< numOfPictureParameterSets; i++) { 
-      unsigned int(16) pictureParameterSetLength; 
-      bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
-     } 
-    }
-    */
-    public class MVCDecoderConfigurationRecord : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "MVCDecoderConfigurationRecord"; } }
-
-        protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
-
-        protected byte AVCProfileIndication;
-        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
-
-        protected byte profile_compatibility;
-        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
-
-        protected byte AVCLevelIndication;
-        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
-
-        protected bool complete_representation;
-        public bool CompleteRepresentation { get { return this.complete_representation; } set { this.complete_representation = value; } }
-
-        protected bool explicit_au_track;
-        public bool ExplicitAuTrack { get { return this.explicit_au_track; } set { this.explicit_au_track = value; } }
-
-        protected byte reserved = 0b1111;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
-
-        protected bool reserved0 = false;
-        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected byte numOfSequenceParameterSets;
-        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
-
-        protected ushort[] sequenceParameterSetLength;
-        public ushort[] SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
-
-        protected byte[][] sequenceParameterSetNALUnit;
-        public byte[][] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
-
-        protected byte numOfPictureParameterSets;
-        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
-
-        protected ushort[] pictureParameterSetLength;
-        public ushort[] PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
-
-        protected byte[][] pictureParameterSetNALUnit;
-        public byte[][] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
-
-        public MVCDecoderConfigurationRecord() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUInt8(out this.configurationVersion);
-            boxSize += stream.ReadUInt8(out this.AVCProfileIndication);
-            boxSize += stream.ReadUInt8(out this.profile_compatibility);
-            boxSize += stream.ReadUInt8(out this.AVCLevelIndication);
-            boxSize += stream.ReadBit(out this.complete_representation);
-            boxSize += stream.ReadBit(out this.explicit_au_track);
-            boxSize += stream.ReadBits(4, out this.reserved);
-            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
-            boxSize += stream.ReadBit(out this.reserved0);
-            boxSize += stream.ReadBits(7, out this.numOfSequenceParameterSets);
-
-            this.sequenceParameterSetLength = new ushort[numOfSequenceParameterSets];
-            this.sequenceParameterSetNALUnit = new byte[numOfSequenceParameterSets][];
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
-            {
-                boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
-            }
-            boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
-
-            this.pictureParameterSetLength = new ushort[numOfPictureParameterSets];
-            this.pictureParameterSetNALUnit = new byte[numOfPictureParameterSets][];
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUInt8(this.configurationVersion);
-            boxSize += stream.WriteUInt8(this.AVCProfileIndication);
-            boxSize += stream.WriteUInt8(this.profile_compatibility);
-            boxSize += stream.WriteUInt8(this.AVCLevelIndication);
-            boxSize += stream.WriteBit(this.complete_representation);
-            boxSize += stream.WriteBit(this.explicit_au_track);
-            boxSize += stream.WriteBits(4, this.reserved);
-            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
-            boxSize += stream.WriteBit(this.reserved0);
-            boxSize += stream.WriteBits(7, this.numOfSequenceParameterSets);
-
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
-            {
-                boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
-                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
-            }
-            boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
-
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
-                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 8; // configurationVersion
-            boxSize += 8; // AVCProfileIndication
-            boxSize += 8; // profile_compatibility
-            boxSize += 8; // AVCLevelIndication
-            boxSize += 1; // complete_representation
-            boxSize += 1; // explicit_au_track
-            boxSize += 4; // reserved
-            boxSize += 2; // lengthSizeMinusOne
-            boxSize += 1; // reserved0
-            boxSize += 7; // numOfSequenceParameterSets
-
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
-            {
-                boxSize += 16; // sequenceParameterSetLength
-                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
-            }
-            boxSize += 8; // numOfPictureParameterSets
-
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += 16; // pictureParameterSetLength
-                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SVCDecoderConfigurationRecord { 
-    unsigned int(8) configurationVersion = 1; 
-    unsigned int(8) AVCProfileIndication; 
-    unsigned int(8) profile_compatibility; 
-    unsigned int(8) AVCLevelIndication;  
-     bit(1) complete_represenation; 
-    bit(5) reserved = '11111'b; 
-    unsigned int(2) lengthSizeMinusOne;  
-    bit(1) reserved = '0'b; 
-    unsigned int(7) numOfSequenceParameterSets; 
-    for (i=0; i< numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++) { 
-    unsigned int(16) sequenceParameterSetLength ; 
-      bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
-     } 
-    unsigned int(8) numOfPictureParameterSets; 
-    for (i=0; i< numOfPictureParameterSets; i++) { 
-      unsigned int(16) pictureParameterSetLength; 
-      bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
-     } 
-    }
-    */
-    public class SVCDecoderConfigurationRecord : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "SVCDecoderConfigurationRecord"; } }
-
-        protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
-
-        protected byte AVCProfileIndication;
-        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
-
-        protected byte profile_compatibility;
-        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
-
-        protected byte AVCLevelIndication;
-        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
-
-        protected bool complete_represenation;
-        public bool CompleteRepresenation { get { return this.complete_represenation; } set { this.complete_represenation = value; } }
-
-        protected byte reserved = 0b11111;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
-
-        protected bool reserved0 = false;
-        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected byte numOfSequenceParameterSets;
-        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
-
-        protected ushort[] sequenceParameterSetLength;
-        public ushort[] SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
-
-        protected byte[][] sequenceParameterSetNALUnit;
-        public byte[][] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
-
-        protected byte numOfPictureParameterSets;
-        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
-
-        protected ushort[] pictureParameterSetLength;
-        public ushort[] PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
-
-        protected byte[][] pictureParameterSetNALUnit;
-        public byte[][] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
-
-        public SVCDecoderConfigurationRecord() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUInt8(out this.configurationVersion);
-            boxSize += stream.ReadUInt8(out this.AVCProfileIndication);
-            boxSize += stream.ReadUInt8(out this.profile_compatibility);
-            boxSize += stream.ReadUInt8(out this.AVCLevelIndication);
-            boxSize += stream.ReadBit(out this.complete_represenation);
-            boxSize += stream.ReadBits(5, out this.reserved);
-            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
-            boxSize += stream.ReadBit(out this.reserved0);
-            boxSize += stream.ReadBits(7, out this.numOfSequenceParameterSets);
-
-            this.sequenceParameterSetLength = new ushort[0];
-            this.sequenceParameterSetNALUnit = new byte[0][];
-            for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
-            {
-                boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
-            }
-            boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
-
-            this.pictureParameterSetLength = new ushort[numOfPictureParameterSets];
-            this.pictureParameterSetNALUnit = new byte[numOfPictureParameterSets][];
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUInt8(this.configurationVersion);
-            boxSize += stream.WriteUInt8(this.AVCProfileIndication);
-            boxSize += stream.WriteUInt8(this.profile_compatibility);
-            boxSize += stream.WriteUInt8(this.AVCLevelIndication);
-            boxSize += stream.WriteBit(this.complete_represenation);
-            boxSize += stream.WriteBits(5, this.reserved);
-            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
-            boxSize += stream.WriteBit(this.reserved0);
-            boxSize += stream.WriteBits(7, this.numOfSequenceParameterSets);
-
-            for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
-            {
-                boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
-                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
-            }
-            boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
-
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
-                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 8; // configurationVersion
-            boxSize += 8; // AVCProfileIndication
-            boxSize += 8; // profile_compatibility
-            boxSize += 8; // AVCLevelIndication
-            boxSize += 1; // complete_represenation
-            boxSize += 5; // reserved
-            boxSize += 2; // lengthSizeMinusOne
-            boxSize += 1; // reserved0
-            boxSize += 7; // numOfSequenceParameterSets
-
-            for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
-            {
-                boxSize += 16; // sequenceParameterSetLength
-                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
-            }
-            boxSize += 8; // numOfPictureParameterSets
-
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += 16; // pictureParameterSetLength
-                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class HEVCDecoderConfigurationRecord {
-        unsigned int(8) configurationVersion = 1;
-        unsigned int(2) general_profile_space;
-        unsigned int(1) general_tier_flag;
-        unsigned int(5) general_profile_idc;
-        unsigned int(32) general_profile_compatibility_flags;
-        unsigned int(48) general_constraint_indicator_flags;
-        unsigned int(8) general_level_idc;
-        bit(4) reserved = '1111'b;
-        unsigned int(12) min_spatial_segmentation_idc;
-        bit(6) reserved = '111111'b;
-        unsigned int(2) parallelismType;
-        bit(6) reserved = '111111'b;
-        unsigned int(2) chromaFormat;
-        bit(5) reserved = '11111'b;
-        unsigned int(3) bitDepthLumaMinus8;
-        bit(5) reserved = '11111'b;
-        unsigned int(3) bitDepthChromaMinus8;
-        bit(16) avgFrameRate;
-        bit(2) constantFrameRate;
-        bit(3) numTemporalLayers;
-        bit(1) temporalIdNested;
-        unsigned int(2) lengthSizeMinusOne; 
-        unsigned int(8) numOfArrays;
-        for (j=0; j < numOfArrays; j++) {
-            bit(1) array_completeness;
-            unsigned int(1) reserved = 0;
-            unsigned int(6) NAL_unit_type;
-            unsigned int(16) numNalus;
-            for (i=0; i< numNalus; i++) {
-                unsigned int(16) nalUnitLength;
-                bit(8*nalUnitLength) nalUnit;
-            }
-        }
-    }
-    */
-    public class HEVCDecoderConfigurationRecord : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "HEVCDecoderConfigurationRecord"; } }
-
-        protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
-
-        protected byte general_profile_space;
-        public byte GeneralProfileSpace { get { return this.general_profile_space; } set { this.general_profile_space = value; } }
-
-        protected bool general_tier_flag;
-        public bool GeneralTierFlag { get { return this.general_tier_flag; } set { this.general_tier_flag = value; } }
-
-        protected byte general_profile_idc;
-        public byte GeneralProfileIdc { get { return this.general_profile_idc; } set { this.general_profile_idc = value; } }
-
-        protected uint general_profile_compatibility_flags;
-        public uint GeneralProfileCompatibilityFlags { get { return this.general_profile_compatibility_flags; } set { this.general_profile_compatibility_flags = value; } }
-
-        protected ulong general_constraint_indicator_flags;
-        public ulong GeneralConstraintIndicatorFlags { get { return this.general_constraint_indicator_flags; } set { this.general_constraint_indicator_flags = value; } }
-
-        protected byte general_level_idc;
-        public byte GeneralLevelIdc { get { return this.general_level_idc; } set { this.general_level_idc = value; } }
-
-        protected byte reserved = 0b1111;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected ushort min_spatial_segmentation_idc;
-        public ushort MinSpatialSegmentationIdc { get { return this.min_spatial_segmentation_idc; } set { this.min_spatial_segmentation_idc = value; } }
-
-        protected byte reserved0 = 0b111111;
-        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected byte parallelismType;
-        public byte ParallelismType { get { return this.parallelismType; } set { this.parallelismType = value; } }
-
-        protected byte reserved1 = 0b111111;
-        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-        protected byte chromaFormat;
-        public byte ChromaFormat { get { return this.chromaFormat; } set { this.chromaFormat = value; } }
-
-        protected byte reserved2 = 0b11111;
-        public byte Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
-
-        protected byte bitDepthLumaMinus8;
-        public byte BitDepthLumaMinus8 { get { return this.bitDepthLumaMinus8; } set { this.bitDepthLumaMinus8 = value; } }
-
-        protected byte reserved3 = 0b11111;
-        public byte Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
-
-        protected byte bitDepthChromaMinus8;
-        public byte BitDepthChromaMinus8 { get { return this.bitDepthChromaMinus8; } set { this.bitDepthChromaMinus8 = value; } }
-
-        protected ushort avgFrameRate;
-        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
-
-        protected byte constantFrameRate;
-        public byte ConstantFrameRate { get { return this.constantFrameRate; } set { this.constantFrameRate = value; } }
-
-        protected byte numTemporalLayers;
-        public byte NumTemporalLayers { get { return this.numTemporalLayers; } set { this.numTemporalLayers = value; } }
-
-        protected bool temporalIdNested;
-        public bool TemporalIdNested { get { return this.temporalIdNested; } set { this.temporalIdNested = value; } }
-
-        protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
-
-        protected byte numOfArrays;
-        public byte NumOfArrays { get { return this.numOfArrays; } set { this.numOfArrays = value; } }
-
-        protected bool[] array_completeness;
-        public bool[] ArrayCompleteness { get { return this.array_completeness; } set { this.array_completeness = value; } }
-
-        protected bool[] reserved4;
-        public bool[] Reserved4 { get { return this.reserved4; } set { this.reserved4 = value; } }
-
-        protected byte[] NAL_unit_type;
-        public byte[] NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
-
-        protected ushort[] numNalus;
-        public ushort[] NumNalus { get { return this.numNalus; } set { this.numNalus = value; } }
-
-        protected ushort[][] nalUnitLength;
-        public ushort[][] NalUnitLength { get { return this.nalUnitLength; } set { this.nalUnitLength = value; } }
-
-        protected byte[][][] nalUnit;
-        public byte[][][] NalUnit { get { return this.nalUnit; } set { this.nalUnit = value; } }
-
-        public HEVCDecoderConfigurationRecord() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUInt8(out this.configurationVersion);
-            boxSize += stream.ReadBits(2, out this.general_profile_space);
-            boxSize += stream.ReadBit(out this.general_tier_flag);
-            boxSize += stream.ReadBits(5, out this.general_profile_idc);
-            boxSize += stream.ReadUInt32(out this.general_profile_compatibility_flags);
-            boxSize += stream.ReadUInt48(out this.general_constraint_indicator_flags);
-            boxSize += stream.ReadUInt8(out this.general_level_idc);
-            boxSize += stream.ReadBits(4, out this.reserved);
-            boxSize += stream.ReadBits(12, out this.min_spatial_segmentation_idc);
-            boxSize += stream.ReadBits(6, out this.reserved0);
-            boxSize += stream.ReadBits(2, out this.parallelismType);
-            boxSize += stream.ReadBits(6, out this.reserved1);
-            boxSize += stream.ReadBits(2, out this.chromaFormat);
-            boxSize += stream.ReadBits(5, out this.reserved2);
-            boxSize += stream.ReadBits(3, out this.bitDepthLumaMinus8);
-            boxSize += stream.ReadBits(5, out this.reserved3);
-            boxSize += stream.ReadBits(3, out this.bitDepthChromaMinus8);
-            boxSize += stream.ReadUInt16(out this.avgFrameRate);
-            boxSize += stream.ReadBits(2, out this.constantFrameRate);
-            boxSize += stream.ReadBits(3, out this.numTemporalLayers);
-            boxSize += stream.ReadBit(out this.temporalIdNested);
-            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
-            boxSize += stream.ReadUInt8(out this.numOfArrays);
-
-            this.array_completeness = new bool[numOfArrays];
-            this.reserved4 = new bool[numOfArrays];
-            this.NAL_unit_type = new byte[numOfArrays];
-            this.numNalus = new ushort[numOfArrays];
-            this.nalUnitLength = new ushort[numOfArrays][];
-            this.nalUnit = new byte[numOfArrays][][];
-            for (int j = 0; j < numOfArrays; j++)
-            {
-                boxSize += stream.ReadBit(out this.array_completeness[j]);
-                boxSize += stream.ReadBit(out this.reserved4[j]);
-                boxSize += stream.ReadBits(6, out this.NAL_unit_type[j]);
-                boxSize += stream.ReadUInt16(out this.numNalus[j]);
-
-                this.nalUnitLength[j] = new ushort[numNalus[j]];
-                this.nalUnit[j] = new byte[numNalus[j]][];
-                for (int i = 0; i < numNalus[j]; i++)
-                {
-                    boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
-                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUInt8(this.configurationVersion);
-            boxSize += stream.WriteBits(2, this.general_profile_space);
-            boxSize += stream.WriteBit(this.general_tier_flag);
-            boxSize += stream.WriteBits(5, this.general_profile_idc);
-            boxSize += stream.WriteUInt32(this.general_profile_compatibility_flags);
-            boxSize += stream.WriteUInt48(this.general_constraint_indicator_flags);
-            boxSize += stream.WriteUInt8(this.general_level_idc);
-            boxSize += stream.WriteBits(4, this.reserved);
-            boxSize += stream.WriteBits(12, this.min_spatial_segmentation_idc);
-            boxSize += stream.WriteBits(6, this.reserved0);
-            boxSize += stream.WriteBits(2, this.parallelismType);
-            boxSize += stream.WriteBits(6, this.reserved1);
-            boxSize += stream.WriteBits(2, this.chromaFormat);
-            boxSize += stream.WriteBits(5, this.reserved2);
-            boxSize += stream.WriteBits(3, this.bitDepthLumaMinus8);
-            boxSize += stream.WriteBits(5, this.reserved3);
-            boxSize += stream.WriteBits(3, this.bitDepthChromaMinus8);
-            boxSize += stream.WriteUInt16(this.avgFrameRate);
-            boxSize += stream.WriteBits(2, this.constantFrameRate);
-            boxSize += stream.WriteBits(3, this.numTemporalLayers);
-            boxSize += stream.WriteBit(this.temporalIdNested);
-            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
-            boxSize += stream.WriteUInt8(this.numOfArrays);
-
-            for (int j = 0; j < numOfArrays; j++)
-            {
-                boxSize += stream.WriteBit(this.array_completeness[j]);
-                boxSize += stream.WriteBit(this.reserved4[j]);
-                boxSize += stream.WriteBits(6, this.NAL_unit_type[j]);
-                boxSize += stream.WriteUInt16(this.numNalus[j]);
-
-                for (int i = 0; i < numNalus[j]; i++)
-                {
-                    boxSize += stream.WriteUInt16(this.nalUnitLength[j][i]);
-                    boxSize += stream.WriteUInt8Array((uint)nalUnitLength[j][i], this.nalUnit[j][i]);
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 8; // configurationVersion
-            boxSize += 2; // general_profile_space
-            boxSize += 1; // general_tier_flag
-            boxSize += 5; // general_profile_idc
-            boxSize += 32; // general_profile_compatibility_flags
-            boxSize += 48; // general_constraint_indicator_flags
-            boxSize += 8; // general_level_idc
-            boxSize += 4; // reserved
-            boxSize += 12; // min_spatial_segmentation_idc
-            boxSize += 6; // reserved0
-            boxSize += 2; // parallelismType
-            boxSize += 6; // reserved1
-            boxSize += 2; // chromaFormat
-            boxSize += 5; // reserved2
-            boxSize += 3; // bitDepthLumaMinus8
-            boxSize += 5; // reserved3
-            boxSize += 3; // bitDepthChromaMinus8
-            boxSize += 16; // avgFrameRate
-            boxSize += 2; // constantFrameRate
-            boxSize += 3; // numTemporalLayers
-            boxSize += 1; // temporalIdNested
-            boxSize += 2; // lengthSizeMinusOne
-            boxSize += 8; // numOfArrays
-
-            for (int j = 0; j < numOfArrays; j++)
-            {
-                boxSize += 1; // array_completeness
-                boxSize += 1; // reserved4
-                boxSize += 6; // NAL_unit_type
-                boxSize += 16; // numNalus
-
-                for (int i = 0; i < numNalus[j]; i++)
-                {
-                    boxSize += 16; // nalUnitLength
-                    boxSize += (ulong)nalUnitLength[j][i] * 8; // nalUnit
-                }
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class VvcPTLRecord(num_sublayers) {
-        bit(2) reserved = 0;
-        unsigned int(6) num_bytes_constraint_info;
-        unsigned int(7) general_profile_idc;
-        unsigned int(1) general_tier_flag;
-        unsigned int(8) general_level_idc;
-        unsigned int(1) ptl_frame_only_constraint_flag;
-        unsigned int(1) ptl_multi_layer_enabled_flag;
-        unsigned int(8*num_bytes_constraint_info - 2) general_constraint_info;
-        for (i=num_sublayers - 2; i >= 0; i--)
-            unsigned int(1) ptl_sublayer_level_present_flag[i];
-        for (j=num_sublayers; j<=8 && num_sublayers > 1; j++)
-            bit(1) ptl_reserved_zero_bit = 0;
-        for (i=num_sublayers-2; i >= 0; i--) {
-            if (ptl_sublayer_level_present_flag[i])
-                unsigned int(8) sublayer_level_idc[i];
-            }
-        unsigned int(8) ptl_num_sub_profiles;
-        for (j=0; j < ptl_num_sub_profiles; j++)
-            unsigned int(32) general_sub_profile_idc[j];
-    } 
-    */
-    public class VvcPTLRecord : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "VvcPTLRecord"; } }
-
-        protected byte reserved = 0;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected byte num_bytes_constraint_info;
-        public byte NumBytesConstraintInfo { get { return this.num_bytes_constraint_info; } set { this.num_bytes_constraint_info = value; } }
-
-        protected byte general_profile_idc;
-        public byte GeneralProfileIdc { get { return this.general_profile_idc; } set { this.general_profile_idc = value; } }
-
-        protected bool general_tier_flag;
-        public bool GeneralTierFlag { get { return this.general_tier_flag; } set { this.general_tier_flag = value; } }
-
-        protected byte general_level_idc;
-        public byte GeneralLevelIdc { get { return this.general_level_idc; } set { this.general_level_idc = value; } }
-
-        protected bool ptl_frame_only_constraint_flag;
-        public bool PtlFrameOnlyConstraintFlag { get { return this.ptl_frame_only_constraint_flag; } set { this.ptl_frame_only_constraint_flag = value; } }
-
-        protected bool ptl_multi_layer_enabled_flag;
-        public bool PtlMultiLayerEnabledFlag { get { return this.ptl_multi_layer_enabled_flag; } set { this.ptl_multi_layer_enabled_flag = value; } }
-
-        protected byte[] general_constraint_info;
-        public byte[] GeneralConstraintInfo { get { return this.general_constraint_info; } set { this.general_constraint_info = value; } }
-
-        protected bool[] ptl_sublayer_level_present_flag;
-        public bool[] PtlSublayerLevelPresentFlag { get { return this.ptl_sublayer_level_present_flag; } set { this.ptl_sublayer_level_present_flag = value; } }
-
-        protected bool[] ptl_reserved_zero_bit;
-        public bool[] PtlReservedZeroBit { get { return this.ptl_reserved_zero_bit; } set { this.ptl_reserved_zero_bit = value; } }
-
-        protected byte[] sublayer_level_idc;
-        public byte[] SublayerLevelIdc { get { return this.sublayer_level_idc; } set { this.sublayer_level_idc = value; } }
-
-        protected byte ptl_num_sub_profiles;
-        public byte PtlNumSubProfiles { get { return this.ptl_num_sub_profiles; } set { this.ptl_num_sub_profiles = value; } }
-
-        protected uint[] general_sub_profile_idc;
-        public uint[] GeneralSubProfileIdc { get { return this.general_sub_profile_idc; } set { this.general_sub_profile_idc = value; } }
-
-        protected byte num_sublayers;
-        public byte NumSublayers { get { return this.num_sublayers; } set { this.num_sublayers = value; } }
-
-        public VvcPTLRecord(byte num_sublayers) : base()
-        {
-            this.num_sublayers = num_sublayers;
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadBits(2, out this.reserved);
-            boxSize += stream.ReadBits(6, out this.num_bytes_constraint_info);
-            boxSize += stream.ReadBits(7, out this.general_profile_idc);
-            boxSize += stream.ReadBit(out this.general_tier_flag);
-            boxSize += stream.ReadUInt8(out this.general_level_idc);
-            boxSize += stream.ReadBit(out this.ptl_frame_only_constraint_flag);
-            boxSize += stream.ReadBit(out this.ptl_multi_layer_enabled_flag);
-            boxSize += stream.ReadBits((uint)(8 * num_bytes_constraint_info - 2), out this.general_constraint_info);
-
-            this.ptl_sublayer_level_present_flag = new bool[num_sublayers - 1];
-            for (int i = num_sublayers - 2; i >= 0; i--)
-            {
-                boxSize += stream.ReadBit(out this.ptl_sublayer_level_present_flag[i]);
-            }
-
-            this.ptl_reserved_zero_bit = new bool[9];
-            for (int j = num_sublayers; j <= 8 && num_sublayers > 1; j++)
-            {
-                boxSize += stream.ReadBit(out this.ptl_reserved_zero_bit[j]);
-            }
-
-            this.sublayer_level_idc = new byte[num_sublayers - 1];
-            for (int i = num_sublayers - 2; i >= 0; i--)
-            {
-
-                if (ptl_sublayer_level_present_flag[i])
-                {
-                    boxSize += stream.ReadUInt8(out this.sublayer_level_idc[i]);
-                }
-            }
-            boxSize += stream.ReadUInt8(out this.ptl_num_sub_profiles);
-
-            this.general_sub_profile_idc = new uint[ptl_num_sub_profiles];
-            for (int j = 0; j < ptl_num_sub_profiles; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.general_sub_profile_idc[j]);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteBits(2, this.reserved);
-            boxSize += stream.WriteBits(6, this.num_bytes_constraint_info);
-            boxSize += stream.WriteBits(7, this.general_profile_idc);
-            boxSize += stream.WriteBit(this.general_tier_flag);
-            boxSize += stream.WriteUInt8(this.general_level_idc);
-            boxSize += stream.WriteBit(this.ptl_frame_only_constraint_flag);
-            boxSize += stream.WriteBit(this.ptl_multi_layer_enabled_flag);
-            boxSize += stream.WriteBits((uint)(8 * num_bytes_constraint_info - 2), this.general_constraint_info);
-
-            for (int i = num_sublayers - 2; i >= 0; i--)
-            {
-                boxSize += stream.WriteBit(this.ptl_sublayer_level_present_flag[i]);
-            }
-
-            for (int j = num_sublayers; j <= 8 && num_sublayers > 1; j++)
-            {
-                boxSize += stream.WriteBit(this.ptl_reserved_zero_bit[j]);
-            }
-
-            for (int i = num_sublayers - 2; i >= 0; i--)
-            {
-
-                if (ptl_sublayer_level_present_flag[i])
-                {
-                    boxSize += stream.WriteUInt8(this.sublayer_level_idc[i]);
-                }
-            }
-            boxSize += stream.WriteUInt8(this.ptl_num_sub_profiles);
-
-            for (int j = 0; j < ptl_num_sub_profiles; j++)
-            {
-                boxSize += stream.WriteUInt32(this.general_sub_profile_idc[j]);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 2; // reserved
-            boxSize += 6; // num_bytes_constraint_info
-            boxSize += 7; // general_profile_idc
-            boxSize += 1; // general_tier_flag
-            boxSize += 8; // general_level_idc
-            boxSize += 1; // ptl_frame_only_constraint_flag
-            boxSize += 1; // ptl_multi_layer_enabled_flag
-            boxSize += (uint)(8 * num_bytes_constraint_info - 2); // general_constraint_info
-
-            for (int i = num_sublayers - 2; i >= 0; i--)
-            {
-                boxSize += 1; // ptl_sublayer_level_present_flag
-            }
-
-            for (int j = num_sublayers; j <= 8 && num_sublayers > 1; j++)
-            {
-                boxSize += 1; // ptl_reserved_zero_bit
-            }
-
-            for (int i = num_sublayers - 2; i >= 0; i--)
-            {
-
-                if (ptl_sublayer_level_present_flag[i])
-                {
-                    boxSize += 8; // sublayer_level_idc
-                }
-            }
-            boxSize += 8; // ptl_num_sub_profiles
-
-            for (int j = 0; j < ptl_num_sub_profiles; j++)
-            {
-                boxSize += 32; // general_sub_profile_idc
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class VvcDecoderConfigurationRecord {
-        bit(5) reserved = '11111'b;
-        unsigned int(2) LengthSizeMinusOne;
-        unsigned int(1) ptl_present_flag;
-        if (ptl_present_flag) {
-            unsigned int(9) ols_idx;
-            unsigned int(3) num_sublayers;
-            unsigned int(2) constant_frame_rate;
-            unsigned int(2) chroma_format_idc;
-            unsigned int(3) bit_depth_minus8;
-            bit(5) reserved = '11111'b;
-            VvcPTLRecord(num_sublayers) native_ptl;
-            unsigned_int(16) max_picture_width;
-            unsigned_int(16) max_picture_height;
-            unsigned int(16) avg_frame_rate;
-        }
-        unsigned int(8) num_of_arrays;
-        for (j=0; j < num_of_arrays; j++) {
-            unsigned int(1) array_completeness;
-            bit(2) reserved = 0;
-            unsigned int(5) NAL_unit_type;
-            if (NAL_unit_type != DCI_NUT  &&  NAL_unit_type != OPI_NUT) {
-                unsigned int(16) num_nalus;
-            for (i=0; i< num_nalus; i++) {
-                unsigned int(16) nal_unit_length;
-                bit(8*nal_unit_length) nal_unit;
-            }
-            }
-        }
-    }
-    */
-    public class VvcDecoderConfigurationRecord : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "VvcDecoderConfigurationRecord"; } }
-
-        protected byte reserved = 0b11111;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected byte LengthSizeMinusOne;
-        public byte _LengthSizeMinusOne { get { return this.LengthSizeMinusOne; } set { this.LengthSizeMinusOne = value; } }
-
-        protected bool ptl_present_flag;
-        public bool PtlPresentFlag { get { return this.ptl_present_flag; } set { this.ptl_present_flag = value; } }
-
-        protected ushort ols_idx;
-        public ushort OlsIdx { get { return this.ols_idx; } set { this.ols_idx = value; } }
-
-        protected byte num_sublayers;
-        public byte NumSublayers { get { return this.num_sublayers; } set { this.num_sublayers = value; } }
-
-        protected byte constant_frame_rate;
-        public byte ConstantFrameRate { get { return this.constant_frame_rate; } set { this.constant_frame_rate = value; } }
-
-        protected byte chroma_format_idc;
-        public byte ChromaFormatIdc { get { return this.chroma_format_idc; } set { this.chroma_format_idc = value; } }
-
-        protected byte bit_depth_minus8;
-        public byte BitDepthMinus8 { get { return this.bit_depth_minus8; } set { this.bit_depth_minus8 = value; } }
-
-        protected byte reserved0 = 0b11111;
-        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected VvcPTLRecord native_ptl;
-        public VvcPTLRecord NativePtl { get { return this.native_ptl; } set { this.native_ptl = value; } }
-
-        protected ushort max_picture_width;
-        public ushort MaxPictureWidth { get { return this.max_picture_width; } set { this.max_picture_width = value; } }
-
-        protected ushort max_picture_height;
-        public ushort MaxPictureHeight { get { return this.max_picture_height; } set { this.max_picture_height = value; } }
-
-        protected ushort avg_frame_rate;
-        public ushort AvgFrameRate { get { return this.avg_frame_rate; } set { this.avg_frame_rate = value; } }
-
-        protected byte num_of_arrays;
-        public byte NumOfArrays { get { return this.num_of_arrays; } set { this.num_of_arrays = value; } }
-
-        protected bool[] array_completeness;
-        public bool[] ArrayCompleteness { get { return this.array_completeness; } set { this.array_completeness = value; } }
-
-        protected byte[] reserved1;
-        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-        protected byte[] NAL_unit_type;
-        public byte[] NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
-
-        protected ushort[] num_nalus;
-        public ushort[] NumNalus { get { return this.num_nalus; } set { this.num_nalus = value; } }
-
-        protected ushort[][] nal_unit_length;
-        public ushort[][] NalUnitLength { get { return this.nal_unit_length; } set { this.nal_unit_length = value; } }
-
-        protected byte[][][] nal_unit;
-        public byte[][][] NalUnit { get { return this.nal_unit; } set { this.nal_unit = value; } }
-
-        public VvcDecoderConfigurationRecord() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            const int OPI_NUT = 12;
-            const int DCI_NUT = 13;
-
-            boxSize += stream.ReadBits(5, out this.reserved);
-            boxSize += stream.ReadBits(2, out this.LengthSizeMinusOne);
-            boxSize += stream.ReadBit(out this.ptl_present_flag);
-
-            if (ptl_present_flag)
-            {
-                boxSize += stream.ReadBits(9, out this.ols_idx);
-                boxSize += stream.ReadBits(3, out this.num_sublayers);
-                boxSize += stream.ReadBits(2, out this.constant_frame_rate);
-                boxSize += stream.ReadBits(2, out this.chroma_format_idc);
-                boxSize += stream.ReadBits(3, out this.bit_depth_minus8);
-                boxSize += stream.ReadBits(5, out this.reserved0);
-                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord(num_sublayers), out this.native_ptl);
-                boxSize += stream.ReadUInt16(out this.max_picture_width);
-                boxSize += stream.ReadUInt16(out this.max_picture_height);
-                boxSize += stream.ReadUInt16(out this.avg_frame_rate);
-            }
-            boxSize += stream.ReadUInt8(out this.num_of_arrays);
-
-            this.array_completeness = new bool[num_of_arrays];
-            this.reserved1 = new byte[num_of_arrays];
-            this.NAL_unit_type = new byte[num_of_arrays];
-            this.num_nalus = new ushort[num_of_arrays];
-            this.nal_unit_length = new ushort[num_of_arrays][];
-            this.nal_unit = new byte[num_of_arrays][][];
-            for (int j = 0; j < num_of_arrays; j++)
-            {
-                boxSize += stream.ReadBit(out this.array_completeness[j]);
-                boxSize += stream.ReadBits(2, out this.reserved1[j]);
-                boxSize += stream.ReadBits(5, out this.NAL_unit_type[j]);
-
-                if (NAL_unit_type[j] != DCI_NUT && NAL_unit_type[j] != OPI_NUT)
-                {
-                    boxSize += stream.ReadUInt16(out this.num_nalus[j]);
-
-                    this.nal_unit_length[j] = new ushort[num_nalus[j]];
-                    this.nal_unit[j] = new byte[num_nalus[j]][];
-                    for (int i = 0; i < num_nalus[j]; i++)
-                    {
-                        boxSize += stream.ReadUInt16(out this.nal_unit_length[j][i]);
-                        boxSize += stream.ReadUInt8Array((uint)nal_unit_length[j][i], out this.nal_unit[j][i]);
-                    }
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            const int OPI_NUT = 12;
-            const int DCI_NUT = 13;
-
-            boxSize += stream.WriteBits(5, this.reserved);
-            boxSize += stream.WriteBits(2, this.LengthSizeMinusOne);
-            boxSize += stream.WriteBit(this.ptl_present_flag);
-
-            if (ptl_present_flag)
-            {
-                boxSize += stream.WriteBits(9, this.ols_idx);
-                boxSize += stream.WriteBits(3, this.num_sublayers);
-                boxSize += stream.WriteBits(2, this.constant_frame_rate);
-                boxSize += stream.WriteBits(2, this.chroma_format_idc);
-                boxSize += stream.WriteBits(3, this.bit_depth_minus8);
-                boxSize += stream.WriteBits(5, this.reserved0);
-                boxSize += stream.WriteClass(this.native_ptl);
-                boxSize += stream.WriteUInt16(this.max_picture_width);
-                boxSize += stream.WriteUInt16(this.max_picture_height);
-                boxSize += stream.WriteUInt16(this.avg_frame_rate);
-            }
-            boxSize += stream.WriteUInt8(this.num_of_arrays);
-
-            for (int j = 0; j < num_of_arrays; j++)
-            {
-                boxSize += stream.WriteBit(this.array_completeness[j]);
-                boxSize += stream.WriteBits(2, this.reserved1[j]);
-                boxSize += stream.WriteBits(5, this.NAL_unit_type[j]);
-
-                if (NAL_unit_type[j] != DCI_NUT && NAL_unit_type[j] != OPI_NUT)
-                {
-                    boxSize += stream.WriteUInt16(this.num_nalus[j]);
-
-                    for (int i = 0; i < num_nalus[j]; i++)
-                    {
-                        boxSize += stream.WriteUInt16(this.nal_unit_length[j][i]);
-                        boxSize += stream.WriteUInt8Array((uint)nal_unit_length[j][i], this.nal_unit[j][i]);
-                    }
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            const int OPI_NUT = 12;
-            const int DCI_NUT = 13;
-
-            boxSize += 5; // reserved
-            boxSize += 2; // LengthSizeMinusOne
-            boxSize += 1; // ptl_present_flag
-
-            if (ptl_present_flag)
-            {
-                boxSize += 9; // ols_idx
-                boxSize += 3; // num_sublayers
-                boxSize += 2; // constant_frame_rate
-                boxSize += 2; // chroma_format_idc
-                boxSize += 3; // bit_depth_minus8
-                boxSize += 5; // reserved0
-                boxSize += IsoStream.CalculateClassSize(native_ptl); // native_ptl
-                boxSize += 16; // max_picture_width
-                boxSize += 16; // max_picture_height
-                boxSize += 16; // avg_frame_rate
-            }
-            boxSize += 8; // num_of_arrays
-
-            for (int j = 0; j < num_of_arrays; j++)
-            {
-                boxSize += 1; // array_completeness
-                boxSize += 2; // reserved1
-                boxSize += 5; // NAL_unit_type
-
-                if (NAL_unit_type[j] != DCI_NUT && NAL_unit_type[j] != OPI_NUT)
-                {
-                    boxSize += 16; // num_nalus
-
-                    for (int i = 0; i < num_nalus[j]; i++)
-                    {
-                        boxSize += 16; // nal_unit_length
-                        boxSize += (ulong)nal_unit_length[j][i] * 8; // nal_unit
-                    }
-                }
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class MVDDecoderConfigurationRecord { 
-    unsigned int(8) configurationVersion = 1; 
-    unsigned int(8) AVCProfileIndication; 
-    unsigned int(8) profile_compatibility; 
-    unsigned int(8) AVCLevelIndication;  
-     bit(1) complete_representation; 
-     bit(1) explicit_au_track; 
-    bit(4) reserved = '1111'b; 
-    unsigned int(2) lengthSizeMinusOne;  
-    bit(1) reserved = '0'b; 
-    unsigned int(7) numOfSequenceParameterSets; 
-    for (i=0; i< numOfSequenceParameterSets; i++) { 
-    unsigned int(16) sequenceParameterSetLength ; 
-      bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
-     } 
-    unsigned int(8) numOfPictureParameterSets; 
-    for (i=0; i< numOfPictureParameterSets; i++) { 
-      unsigned int(16) pictureParameterSetLength; 
-      bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
-     } 
-    }
-    */
-    public class MVDDecoderConfigurationRecord : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "MVDDecoderConfigurationRecord"; } }
-
-        protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
-
-        protected byte AVCProfileIndication;
-        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
-
-        protected byte profile_compatibility;
-        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
-
-        protected byte AVCLevelIndication;
-        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
-
-        protected bool complete_representation;
-        public bool CompleteRepresentation { get { return this.complete_representation; } set { this.complete_representation = value; } }
-
-        protected bool explicit_au_track;
-        public bool ExplicitAuTrack { get { return this.explicit_au_track; } set { this.explicit_au_track = value; } }
-
-        protected byte reserved = 0b1111;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
-
-        protected bool reserved0 = false;
-        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected byte numOfSequenceParameterSets;
-        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
-
-        protected ushort[] sequenceParameterSetLength;
-        public ushort[] SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
-
-        protected byte[][] sequenceParameterSetNALUnit;
-        public byte[][] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
-
-        protected byte numOfPictureParameterSets;
-        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
-
-        protected ushort[] pictureParameterSetLength;
-        public ushort[] PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
-
-        protected byte[][] pictureParameterSetNALUnit;
-        public byte[][] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
-
-        public MVDDecoderConfigurationRecord() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUInt8(out this.configurationVersion);
-            boxSize += stream.ReadUInt8(out this.AVCProfileIndication);
-            boxSize += stream.ReadUInt8(out this.profile_compatibility);
-            boxSize += stream.ReadUInt8(out this.AVCLevelIndication);
-            boxSize += stream.ReadBit(out this.complete_representation);
-            boxSize += stream.ReadBit(out this.explicit_au_track);
-            boxSize += stream.ReadBits(4, out this.reserved);
-            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
-            boxSize += stream.ReadBit(out this.reserved0);
-            boxSize += stream.ReadBits(7, out this.numOfSequenceParameterSets);
-
-            this.sequenceParameterSetLength = new ushort[numOfSequenceParameterSets];
-            this.sequenceParameterSetNALUnit = new byte[numOfSequenceParameterSets][];
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
-            {
-                boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
-            }
-            boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
-
-            this.pictureParameterSetLength = new ushort[numOfPictureParameterSets];
-            this.pictureParameterSetNALUnit = new byte[numOfPictureParameterSets][];
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUInt8(this.configurationVersion);
-            boxSize += stream.WriteUInt8(this.AVCProfileIndication);
-            boxSize += stream.WriteUInt8(this.profile_compatibility);
-            boxSize += stream.WriteUInt8(this.AVCLevelIndication);
-            boxSize += stream.WriteBit(this.complete_representation);
-            boxSize += stream.WriteBit(this.explicit_au_track);
-            boxSize += stream.WriteBits(4, this.reserved);
-            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
-            boxSize += stream.WriteBit(this.reserved0);
-            boxSize += stream.WriteBits(7, this.numOfSequenceParameterSets);
-
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
-            {
-                boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
-                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
-            }
-            boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
-
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
-                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 8; // configurationVersion
-            boxSize += 8; // AVCProfileIndication
-            boxSize += 8; // profile_compatibility
-            boxSize += 8; // AVCLevelIndication
-            boxSize += 1; // complete_representation
-            boxSize += 1; // explicit_au_track
-            boxSize += 4; // reserved
-            boxSize += 2; // lengthSizeMinusOne
-            boxSize += 1; // reserved0
-            boxSize += 7; // numOfSequenceParameterSets
-
-            for (int i = 0; i < numOfSequenceParameterSets; i++)
-            {
-                boxSize += 16; // sequenceParameterSetLength
-                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
-            }
-            boxSize += 8; // numOfPictureParameterSets
-
-            for (int i = 0; i < numOfPictureParameterSets; i++)
-            {
-                boxSize += 16; // pictureParameterSetLength
-                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class VvcOperatingPointsRecord { 
-    unsigned int(8) num_profile_tier_level_minus1;
-    for (i=0; i<=num_profile_tier_level_minus1; i++) { 
-     unsigned int(8) ptl_max_temporal_id[i]; 
-     VvcPTLRecord(ptl_max_temporal_id[i]+1) ptl[i];
-    } 
-    unsigned int(1) all_independent_layers_flag; 
-    bit(7) reserved = 0; 
-    if (all_independent_layers_flag){ 
-     unsigned int(1) each_layer_is_an_ols_flag; 
-     bit(7) reserved = 0; 
-    } 
-    else 
-     unsigned int(8) ols_mode_idc; 
-    unsigned int(16) num_operating_points; 
-    for (i=0; i<num_operating_points; i++) { 
-     unsigned int(16) output_layer_set_idx; 
-     unsigned int(8) ptl_idx; 
-     unsigned int(8) max_temporal_id; 
-     unsigned int(8) layer_count; 
-     for (j=0; j<layer_count; j++) { 
-      unsigned int(6) layer_id; 
-      unsigned int(1) is_outputlayer;
-      bit(1) reserved = 0;
-     }
-     bit(6) reserved = 0; 
-     unsigned int(1) frame_rate_info_flag;
-     unsigned int(1) bit_rate_info_flag;
-     if (frame_rate_info_flag) { 
-      unsigned int(16) avgFrameRate; 
-      bit(6) reserved = 0; 
-      unsigned int(2) constantFrameRate;
-     } 
-     if (bit_rate_info_flag) { 
-      unsigned int(32) maxBitRate; 
-      unsigned int(32) avgBitRate;
-     }
-    }
-    unsigned int(8) max_layer_count; 
-    for (i=0; i<max_layer_count; i++) { 
-     unsigned int(8) layerID; 
-     unsigned int(8) num_direct_ref_layers; 
-     for (j=0; j<num_direct_ref_layers; j++) 
-      unsigned int(8) direct_ref_layerID; 
-     unsigned int(8) max_tid_il_ref_pics_plus1; 
-     }
-    }
-
-    */
-    public class VvcOperatingPointsRecord : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "VvcOperatingPointsRecord"; } }
-
-        protected byte num_profile_tier_level_minus1;
-        public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }
-
-        protected byte[] ptl_max_temporal_id;
-        public byte[] PtlMaxTemporalId { get { return this.ptl_max_temporal_id; } set { this.ptl_max_temporal_id = value; } }
-
-        protected VvcPTLRecord[] ptl;
-        public VvcPTLRecord[] Ptl { get { return this.ptl; } set { this.ptl = value; } }
-
-        protected bool all_independent_layers_flag;
-        public bool AllIndependentLayersFlag { get { return this.all_independent_layers_flag; } set { this.all_independent_layers_flag = value; } }
-
-        protected byte reserved = 0;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected bool each_layer_is_an_ols_flag;
-        public bool EachLayerIsAnOlsFlag { get { return this.each_layer_is_an_ols_flag; } set { this.each_layer_is_an_ols_flag = value; } }
-
-        protected byte reserved0 = 0;
-        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected byte ols_mode_idc;
-        public byte OlsModeIdc { get { return this.ols_mode_idc; } set { this.ols_mode_idc = value; } }
-
-        protected ushort num_operating_points;
-        public ushort NumOperatingPoints { get { return this.num_operating_points; } set { this.num_operating_points = value; } }
-
-        protected ushort[] output_layer_set_idx;
-        public ushort[] OutputLayerSetIdx { get { return this.output_layer_set_idx; } set { this.output_layer_set_idx = value; } }
-
-        protected byte[] ptl_idx;
-        public byte[] PtlIdx { get { return this.ptl_idx; } set { this.ptl_idx = value; } }
-
-        protected byte[] max_temporal_id;
-        public byte[] MaxTemporalId { get { return this.max_temporal_id; } set { this.max_temporal_id = value; } }
-
-        protected byte[] layer_count;
-        public byte[] LayerCount { get { return this.layer_count; } set { this.layer_count = value; } }
-
-        protected byte[][] layer_id;
-        public byte[][] LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
-
-        protected bool[][] is_outputlayer;
-        public bool[][] IsOutputlayer { get { return this.is_outputlayer; } set { this.is_outputlayer = value; } }
-
-        protected bool[][] reserved1;
-        public bool[][] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-        protected byte[] reserved00;
-        public byte[] Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
-
-        protected bool[] frame_rate_info_flag;
-        public bool[] FrameRateInfoFlag { get { return this.frame_rate_info_flag; } set { this.frame_rate_info_flag = value; } }
-
-        protected bool[] bit_rate_info_flag;
-        public bool[] BitRateInfoFlag { get { return this.bit_rate_info_flag; } set { this.bit_rate_info_flag = value; } }
-
-        protected ushort[] avgFrameRate;
-        public ushort[] AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
-
-        protected byte[] reserved10;
-        public byte[] Reserved10 { get { return this.reserved10; } set { this.reserved10 = value; } }
-
-        protected byte[] constantFrameRate;
-        public byte[] ConstantFrameRate { get { return this.constantFrameRate; } set { this.constantFrameRate = value; } }
-
-        protected uint[] maxBitRate;
-        public uint[] MaxBitRate { get { return this.maxBitRate; } set { this.maxBitRate = value; } }
-
-        protected uint[] avgBitRate;
-        public uint[] AvgBitRate { get { return this.avgBitRate; } set { this.avgBitRate = value; } }
-
-        protected byte max_layer_count;
-        public byte MaxLayerCount { get { return this.max_layer_count; } set { this.max_layer_count = value; } }
-
-        protected byte[] layerID;
-        public byte[] LayerID { get { return this.layerID; } set { this.layerID = value; } }
-
-        protected byte[] num_direct_ref_layers;
-        public byte[] NumDirectRefLayers { get { return this.num_direct_ref_layers; } set { this.num_direct_ref_layers = value; } }
-
-        protected byte[][] direct_ref_layerID;
-        public byte[][] DirectRefLayerID { get { return this.direct_ref_layerID; } set { this.direct_ref_layerID = value; } }
-
-        protected byte[] max_tid_il_ref_pics_plus1;
-        public byte[] MaxTidIlRefPicsPlus1 { get { return this.max_tid_il_ref_pics_plus1; } set { this.max_tid_il_ref_pics_plus1 = value; } }
-
-        public VvcOperatingPointsRecord() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUInt8(out this.num_profile_tier_level_minus1);
-
-            this.ptl_max_temporal_id = new byte[num_profile_tier_level_minus1 + 1];
-            this.ptl = new VvcPTLRecord[num_profile_tier_level_minus1 + 1];
-            for (int i = 0; i <= num_profile_tier_level_minus1; i++)
-            {
-                boxSize += stream.ReadUInt8(out this.ptl_max_temporal_id[i]);
-                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord((byte)(ptl_max_temporal_id[i] + 1)), out this.ptl[i]);
-            }
-            boxSize += stream.ReadBit(out this.all_independent_layers_flag);
-            boxSize += stream.ReadBits(7, out this.reserved);
-
-            if (all_independent_layers_flag)
-            {
-                boxSize += stream.ReadBit(out this.each_layer_is_an_ols_flag);
-                boxSize += stream.ReadBits(7, out this.reserved0);
-            }
-
-            else
-            {
-                boxSize += stream.ReadUInt8(out this.ols_mode_idc);
-            }
-            boxSize += stream.ReadUInt16(out this.num_operating_points);
-
-            this.output_layer_set_idx = new ushort[num_operating_points];
-            this.ptl_idx = new byte[num_operating_points];
-            this.max_temporal_id = new byte[num_operating_points];
-            this.layer_count = new byte[num_operating_points];
-            this.layer_id = new byte[num_operating_points][];
-            this.is_outputlayer = new bool[num_operating_points][];
-            this.reserved1 = new bool[num_operating_points][];
-            this.reserved00 = new byte[num_operating_points];
-            this.frame_rate_info_flag = new bool[num_operating_points];
-            this.bit_rate_info_flag = new bool[num_operating_points];
-            this.avgFrameRate = new ushort[num_operating_points];
-            this.reserved10 = new byte[num_operating_points];
-            this.constantFrameRate = new byte[num_operating_points];
-            this.maxBitRate = new uint[num_operating_points];
-            this.avgBitRate = new uint[num_operating_points];
-            for (int i = 0; i < num_operating_points; i++)
-            {
-                boxSize += stream.ReadUInt16(out this.output_layer_set_idx[i]);
-                boxSize += stream.ReadUInt8(out this.ptl_idx[i]);
-                boxSize += stream.ReadUInt8(out this.max_temporal_id[i]);
-                boxSize += stream.ReadUInt8(out this.layer_count[i]);
-
-                this.layer_id[i] = new byte[layer_count[i]];
-                this.is_outputlayer[i] = new bool[layer_count[i]];
-                this.reserved1[i] = new bool[layer_count[i]];
-                for (int j = 0; j < layer_count[i]; j++)
-                {
-                    boxSize += stream.ReadBits(6, out this.layer_id[i][j]);
-                    boxSize += stream.ReadBit(out this.is_outputlayer[i][j]);
-                    boxSize += stream.ReadBit(out this.reserved1[i][j]);
-                }
-                boxSize += stream.ReadBits(6, out this.reserved00[i]);
-                boxSize += stream.ReadBit(out this.frame_rate_info_flag[i]);
-                boxSize += stream.ReadBit(out this.bit_rate_info_flag[i]);
-
-                if (frame_rate_info_flag[i])
-                {
-                    boxSize += stream.ReadUInt16(out this.avgFrameRate[i]);
-                    boxSize += stream.ReadBits(6, out this.reserved10[i]);
-                    boxSize += stream.ReadBits(2, out this.constantFrameRate[i]);
-                }
-
-                if (bit_rate_info_flag[i])
-                {
-                    boxSize += stream.ReadUInt32(out this.maxBitRate[i]);
-                    boxSize += stream.ReadUInt32(out this.avgBitRate[i]);
-                }
-            }
-            boxSize += stream.ReadUInt8(out this.max_layer_count);
-
-            this.layerID = new byte[max_layer_count];
-            this.num_direct_ref_layers = new byte[max_layer_count];
-            this.direct_ref_layerID = new byte[max_layer_count][];
-            this.max_tid_il_ref_pics_plus1 = new byte[max_layer_count];
-            for (int i = 0; i < max_layer_count; i++)
-            {
-                boxSize += stream.ReadUInt8(out this.layerID[i]);
-                boxSize += stream.ReadUInt8(out this.num_direct_ref_layers[i]);
-
-                this.direct_ref_layerID[i] = new byte[num_direct_ref_layers[i]];
-                for (int j = 0; j < num_direct_ref_layers[i]; j++)
-                {
-                    boxSize += stream.ReadUInt8(out this.direct_ref_layerID[i][j]);
-                }
-                boxSize += stream.ReadUInt8(out this.max_tid_il_ref_pics_plus1[i]);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUInt8(this.num_profile_tier_level_minus1);
-
-            for (int i = 0; i <= num_profile_tier_level_minus1; i++)
-            {
-                boxSize += stream.WriteUInt8(this.ptl_max_temporal_id[i]);
-                boxSize += stream.WriteClass(this.ptl[i]);
-            }
-            boxSize += stream.WriteBit(this.all_independent_layers_flag);
-            boxSize += stream.WriteBits(7, this.reserved);
-
-            if (all_independent_layers_flag)
-            {
-                boxSize += stream.WriteBit(this.each_layer_is_an_ols_flag);
-                boxSize += stream.WriteBits(7, this.reserved0);
-            }
-
-            else
-            {
-                boxSize += stream.WriteUInt8(this.ols_mode_idc);
-            }
-            boxSize += stream.WriteUInt16(this.num_operating_points);
-
-            for (int i = 0; i < num_operating_points; i++)
-            {
-                boxSize += stream.WriteUInt16(this.output_layer_set_idx[i]);
-                boxSize += stream.WriteUInt8(this.ptl_idx[i]);
-                boxSize += stream.WriteUInt8(this.max_temporal_id[i]);
-                boxSize += stream.WriteUInt8(this.layer_count[i]);
-
-                for (int j = 0; j < layer_count[i]; j++)
-                {
-                    boxSize += stream.WriteBits(6, this.layer_id[i][j]);
-                    boxSize += stream.WriteBit(this.is_outputlayer[i][j]);
-                    boxSize += stream.WriteBit(this.reserved1[i][j]);
-                }
-                boxSize += stream.WriteBits(6, this.reserved00[i]);
-                boxSize += stream.WriteBit(this.frame_rate_info_flag[i]);
-                boxSize += stream.WriteBit(this.bit_rate_info_flag[i]);
-
-                if (frame_rate_info_flag[i])
-                {
-                    boxSize += stream.WriteUInt16(this.avgFrameRate[i]);
-                    boxSize += stream.WriteBits(6, this.reserved10[i]);
-                    boxSize += stream.WriteBits(2, this.constantFrameRate[i]);
-                }
-
-                if (bit_rate_info_flag[i])
-                {
-                    boxSize += stream.WriteUInt32(this.maxBitRate[i]);
-                    boxSize += stream.WriteUInt32(this.avgBitRate[i]);
-                }
-            }
-            boxSize += stream.WriteUInt8(this.max_layer_count);
-
-            for (int i = 0; i < max_layer_count; i++)
-            {
-                boxSize += stream.WriteUInt8(this.layerID[i]);
-                boxSize += stream.WriteUInt8(this.num_direct_ref_layers[i]);
-
-                for (int j = 0; j < num_direct_ref_layers[i]; j++)
-                {
-                    boxSize += stream.WriteUInt8(this.direct_ref_layerID[i][j]);
-                }
-                boxSize += stream.WriteUInt8(this.max_tid_il_ref_pics_plus1[i]);
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 8; // num_profile_tier_level_minus1
-
-            for (int i = 0; i <= num_profile_tier_level_minus1; i++)
-            {
-                boxSize += 8; // ptl_max_temporal_id
-                boxSize += IsoStream.CalculateClassSize(ptl); // ptl
-            }
-            boxSize += 1; // all_independent_layers_flag
-            boxSize += 7; // reserved
-
-            if (all_independent_layers_flag)
-            {
-                boxSize += 1; // each_layer_is_an_ols_flag
-                boxSize += 7; // reserved0
-            }
-
-            else
-            {
-                boxSize += 8; // ols_mode_idc
-            }
-            boxSize += 16; // num_operating_points
-
-            for (int i = 0; i < num_operating_points; i++)
-            {
-                boxSize += 16; // output_layer_set_idx
-                boxSize += 8; // ptl_idx
-                boxSize += 8; // max_temporal_id
-                boxSize += 8; // layer_count
-
-                for (int j = 0; j < layer_count[i]; j++)
-                {
-                    boxSize += 6; // layer_id
-                    boxSize += 1; // is_outputlayer
-                    boxSize += 1; // reserved1
-                }
-                boxSize += 6; // reserved00
-                boxSize += 1; // frame_rate_info_flag
-                boxSize += 1; // bit_rate_info_flag
-
-                if (frame_rate_info_flag[i])
-                {
-                    boxSize += 16; // avgFrameRate
-                    boxSize += 6; // reserved10
-                    boxSize += 2; // constantFrameRate
-                }
-
-                if (bit_rate_info_flag[i])
-                {
-                    boxSize += 32; // maxBitRate
-                    boxSize += 32; // avgBitRate
-                }
-            }
-            boxSize += 8; // max_layer_count
-
-            for (int i = 0; i < max_layer_count; i++)
-            {
-                boxSize += 8; // layerID
-                boxSize += 8; // num_direct_ref_layers
-
-                for (int j = 0; j < num_direct_ref_layers[i]; j++)
-                {
-                    boxSize += 8; // direct_ref_layerID
-                }
-                boxSize += 8; // max_tid_il_ref_pics_plus1
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EVCDecoderConfigurationRecord {
-    unsigned int(8) configurationVersion=1;
-    unsigned int(8) profile_idc;
-    unsigned int(8) level_idc;
-     unsigned int(32) toolset_idc;
-    unsigned int(2) chroma_format_idc;
-     unsigned int(3) bit_depth_luma_minus8;
-    unsigned int(3) bit_depth_chroma_minus8;
-    unsigned int(32) pic_width_in_luma_samples;
-    unsigned int(32) pic_height_in_luma_samples;
-    unsigned int(5) reserved='00000'b;
-    unsigned int(1) sps_in_stream;
-     unsigned int(1) pps_in_stream;
-    unsigned int(1) aps_in_stream;
-     unsigned int(8) numOfArrays;
-     for (j=0; j<numOfArrays; j++) {
-    bit(2) reserved='00'b;
-    unsigned int(6) NAL_unit_type;
-     unsigned int(16) numNalus;
-    for (i=0; i<numNalus; i++) {
-     unsigned int(16) nalUnitLength;
-    bit(8*nalUnitLength) nalUnit;
-    }
-    }
-    }
-    */
-    public class EVCDecoderConfigurationRecord : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "EVCDecoderConfigurationRecord"; } }
-
-        protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
-
-        protected byte profile_idc;
-        public byte ProfileIdc { get { return this.profile_idc; } set { this.profile_idc = value; } }
-
-        protected byte level_idc;
-        public byte LevelIdc { get { return this.level_idc; } set { this.level_idc = value; } }
-
-        protected uint toolset_idc;
-        public uint ToolsetIdc { get { return this.toolset_idc; } set { this.toolset_idc = value; } }
-
-        protected byte chroma_format_idc;
-        public byte ChromaFormatIdc { get { return this.chroma_format_idc; } set { this.chroma_format_idc = value; } }
-
-        protected byte bit_depth_luma_minus8;
-        public byte BitDepthLumaMinus8 { get { return this.bit_depth_luma_minus8; } set { this.bit_depth_luma_minus8 = value; } }
-
-        protected byte bit_depth_chroma_minus8;
-        public byte BitDepthChromaMinus8 { get { return this.bit_depth_chroma_minus8; } set { this.bit_depth_chroma_minus8 = value; } }
-
-        protected uint pic_width_in_luma_samples;
-        public uint PicWidthInLumaSamples { get { return this.pic_width_in_luma_samples; } set { this.pic_width_in_luma_samples = value; } }
-
-        protected uint pic_height_in_luma_samples;
-        public uint PicHeightInLumaSamples { get { return this.pic_height_in_luma_samples; } set { this.pic_height_in_luma_samples = value; } }
-
-        protected byte reserved = 0b00000;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected bool sps_in_stream;
-        public bool SpsInStream { get { return this.sps_in_stream; } set { this.sps_in_stream = value; } }
-
-        protected bool pps_in_stream;
-        public bool PpsInStream { get { return this.pps_in_stream; } set { this.pps_in_stream = value; } }
-
-        protected bool aps_in_stream;
-        public bool ApsInStream { get { return this.aps_in_stream; } set { this.aps_in_stream = value; } }
-
-        protected byte numOfArrays;
-        public byte NumOfArrays { get { return this.numOfArrays; } set { this.numOfArrays = value; } }
-
-        protected byte[] reserved0;
-        public byte[] Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected byte[] NAL_unit_type;
-        public byte[] NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
-
-        protected ushort[] numNalus;
-        public ushort[] NumNalus { get { return this.numNalus; } set { this.numNalus = value; } }
-
-        protected ushort[][] nalUnitLength;
-        public ushort[][] NalUnitLength { get { return this.nalUnitLength; } set { this.nalUnitLength = value; } }
-
-        protected byte[][][] nalUnit;
-        public byte[][][] NalUnit { get { return this.nalUnit; } set { this.nalUnit = value; } }
-
-        public EVCDecoderConfigurationRecord() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUInt8(out this.configurationVersion);
-            boxSize += stream.ReadUInt8(out this.profile_idc);
-            boxSize += stream.ReadUInt8(out this.level_idc);
-            boxSize += stream.ReadUInt32(out this.toolset_idc);
-            boxSize += stream.ReadBits(2, out this.chroma_format_idc);
-            boxSize += stream.ReadBits(3, out this.bit_depth_luma_minus8);
-            boxSize += stream.ReadBits(3, out this.bit_depth_chroma_minus8);
-            boxSize += stream.ReadUInt32(out this.pic_width_in_luma_samples);
-            boxSize += stream.ReadUInt32(out this.pic_height_in_luma_samples);
-            boxSize += stream.ReadBits(5, out this.reserved);
-            boxSize += stream.ReadBit(out this.sps_in_stream);
-            boxSize += stream.ReadBit(out this.pps_in_stream);
-            boxSize += stream.ReadBit(out this.aps_in_stream);
-            boxSize += stream.ReadUInt8(out this.numOfArrays);
-
-            this.reserved0 = new byte[numOfArrays];
-            this.NAL_unit_type = new byte[numOfArrays];
-            this.numNalus = new ushort[numOfArrays];
-            this.nalUnitLength = new ushort[numOfArrays][];
-            this.nalUnit = new byte[numOfArrays][][];
-            for (int j = 0; j < numOfArrays; j++)
-            {
-                boxSize += stream.ReadBits(2, out this.reserved0[j]);
-                boxSize += stream.ReadBits(6, out this.NAL_unit_type[j]);
-                boxSize += stream.ReadUInt16(out this.numNalus[j]);
-
-                this.nalUnitLength[j] = new ushort[numNalus[j]];
-                this.nalUnit[j] = new byte[numNalus[j]][];
-                for (int i = 0; i < numNalus[j]; i++)
-                {
-                    boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
-                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUInt8(this.configurationVersion);
-            boxSize += stream.WriteUInt8(this.profile_idc);
-            boxSize += stream.WriteUInt8(this.level_idc);
-            boxSize += stream.WriteUInt32(this.toolset_idc);
-            boxSize += stream.WriteBits(2, this.chroma_format_idc);
-            boxSize += stream.WriteBits(3, this.bit_depth_luma_minus8);
-            boxSize += stream.WriteBits(3, this.bit_depth_chroma_minus8);
-            boxSize += stream.WriteUInt32(this.pic_width_in_luma_samples);
-            boxSize += stream.WriteUInt32(this.pic_height_in_luma_samples);
-            boxSize += stream.WriteBits(5, this.reserved);
-            boxSize += stream.WriteBit(this.sps_in_stream);
-            boxSize += stream.WriteBit(this.pps_in_stream);
-            boxSize += stream.WriteBit(this.aps_in_stream);
-            boxSize += stream.WriteUInt8(this.numOfArrays);
-
-            for (int j = 0; j < numOfArrays; j++)
-            {
-                boxSize += stream.WriteBits(2, this.reserved0[j]);
-                boxSize += stream.WriteBits(6, this.NAL_unit_type[j]);
-                boxSize += stream.WriteUInt16(this.numNalus[j]);
-
-                for (int i = 0; i < numNalus[j]; i++)
-                {
-                    boxSize += stream.WriteUInt16(this.nalUnitLength[j][i]);
-                    boxSize += stream.WriteUInt8Array((uint)nalUnitLength[j][i], this.nalUnit[j][i]);
-                }
-            }
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 8; // configurationVersion
-            boxSize += 8; // profile_idc
-            boxSize += 8; // level_idc
-            boxSize += 32; // toolset_idc
-            boxSize += 2; // chroma_format_idc
-            boxSize += 3; // bit_depth_luma_minus8
-            boxSize += 3; // bit_depth_chroma_minus8
-            boxSize += 32; // pic_width_in_luma_samples
-            boxSize += 32; // pic_height_in_luma_samples
-            boxSize += 5; // reserved
-            boxSize += 1; // sps_in_stream
-            boxSize += 1; // pps_in_stream
-            boxSize += 1; // aps_in_stream
-            boxSize += 8; // numOfArrays
-
-            for (int j = 0; j < numOfArrays; j++)
-            {
-                boxSize += 2; // reserved0
-                boxSize += 6; // NAL_unit_type
-                boxSize += 16; // numNalus
-
-                for (int i = 0; i < numNalus[j]; i++)
-                {
-                    boxSize += 16; // nalUnitLength
-                    boxSize += (ulong)nalUnitLength[j][i] * 8; // nalUnit
-                }
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class LHEVCDecoderConfigurationRecord {
-    unsigned int(8) configurationVersion = 1;
-    unsigned int(2) general_profile_space;
-    unsigned int(1) general_tier_flag;
-    unsigned int(5) general_profile_idc;
-    unsigned int(32) general_profile_compatibility_flags;
-    unsigned int(48) general_constraint_indicator_flags;
-    unsigned int(8) general_level_idc;
-    bit(1) complete_representation;
-    bit(3) reserved = '111'b;
-    unsigned int(12) min_spatial_segmentation_idc;
-    bit(6) reserved = '111111'b;
-    unsigned int(2) parallelismType;
-    bit(6) reserved = '111111'b;
-    unsigned int(2) chromaFormat;
-    bit(5) reserved = '11111'b;
-    unsigned int(3) bitDepthLumaMinus8;
-    bit(5) reserved = '11111'b;
-    unsigned int(3) bitDepthChromaMinus8;
-    bit(16) avgFrameRate;
-    bit(2) constantFrameRate;
-    bit(3) numTemporalLayers;
-    bit(1) temporalIdNested;
-    unsigned int(2) lengthSizeMinusOne;
-    unsigned int(8) numOfArrays;
-    for (j = 0; j <numOfArrays; j ++) {
-    bit(1) array_completeness;
-    unsigned int(1) reserved = 0;
-    unsigned int(6) NAL_unit_type;
-    unsigned int(16) numNalus;
-    for (i = 0; i <numNalus; i ++) {
-    unsigned int(16) nalUnitLength;
-    bit(8*nalUnitLength) nalUnit;
-    }
-    }
-    unsigned int(16) operationPointIdx;
-    }
-    */
-    public class LHEVCDecoderConfigurationRecord : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "LHEVCDecoderConfigurationRecord"; } }
-
-        protected byte configurationVersion = 1;
-        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
-
-        protected byte general_profile_space;
-        public byte GeneralProfileSpace { get { return this.general_profile_space; } set { this.general_profile_space = value; } }
-
-        protected bool general_tier_flag;
-        public bool GeneralTierFlag { get { return this.general_tier_flag; } set { this.general_tier_flag = value; } }
-
-        protected byte general_profile_idc;
-        public byte GeneralProfileIdc { get { return this.general_profile_idc; } set { this.general_profile_idc = value; } }
-
-        protected uint general_profile_compatibility_flags;
-        public uint GeneralProfileCompatibilityFlags { get { return this.general_profile_compatibility_flags; } set { this.general_profile_compatibility_flags = value; } }
-
-        protected ulong general_constraint_indicator_flags;
-        public ulong GeneralConstraintIndicatorFlags { get { return this.general_constraint_indicator_flags; } set { this.general_constraint_indicator_flags = value; } }
-
-        protected byte general_level_idc;
-        public byte GeneralLevelIdc { get { return this.general_level_idc; } set { this.general_level_idc = value; } }
-
-        protected bool complete_representation;
-        public bool CompleteRepresentation { get { return this.complete_representation; } set { this.complete_representation = value; } }
-
-        protected byte reserved = 0b111;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected ushort min_spatial_segmentation_idc;
-        public ushort MinSpatialSegmentationIdc { get { return this.min_spatial_segmentation_idc; } set { this.min_spatial_segmentation_idc = value; } }
-
-        protected byte reserved0 = 0b111111;
-        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected byte parallelismType;
-        public byte ParallelismType { get { return this.parallelismType; } set { this.parallelismType = value; } }
-
-        protected byte reserved1 = 0b111111;
-        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-        protected byte chromaFormat;
-        public byte ChromaFormat { get { return this.chromaFormat; } set { this.chromaFormat = value; } }
-
-        protected byte reserved2 = 0b11111;
-        public byte Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
-
-        protected byte bitDepthLumaMinus8;
-        public byte BitDepthLumaMinus8 { get { return this.bitDepthLumaMinus8; } set { this.bitDepthLumaMinus8 = value; } }
-
-        protected byte reserved3 = 0b11111;
-        public byte Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
-
-        protected byte bitDepthChromaMinus8;
-        public byte BitDepthChromaMinus8 { get { return this.bitDepthChromaMinus8; } set { this.bitDepthChromaMinus8 = value; } }
-
-        protected ushort avgFrameRate;
-        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
-
-        protected byte constantFrameRate;
-        public byte ConstantFrameRate { get { return this.constantFrameRate; } set { this.constantFrameRate = value; } }
-
-        protected byte numTemporalLayers;
-        public byte NumTemporalLayers { get { return this.numTemporalLayers; } set { this.numTemporalLayers = value; } }
-
-        protected bool temporalIdNested;
-        public bool TemporalIdNested { get { return this.temporalIdNested; } set { this.temporalIdNested = value; } }
-
-        protected byte lengthSizeMinusOne;
-        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
-
-        protected byte numOfArrays;
-        public byte NumOfArrays { get { return this.numOfArrays; } set { this.numOfArrays = value; } }
-
-        protected bool[] array_completeness;
-        public bool[] ArrayCompleteness { get { return this.array_completeness; } set { this.array_completeness = value; } }
-
-        protected bool[] reserved4;
-        public bool[] Reserved4 { get { return this.reserved4; } set { this.reserved4 = value; } }
-
-        protected byte[] NAL_unit_type;
-        public byte[] NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
-
-        protected ushort[] numNalus;
-        public ushort[] NumNalus { get { return this.numNalus; } set { this.numNalus = value; } }
-
-        protected ushort[][] nalUnitLength;
-        public ushort[][] NalUnitLength { get { return this.nalUnitLength; } set { this.nalUnitLength = value; } }
-
-        protected byte[][][] nalUnit;
-        public byte[][][] NalUnit { get { return this.nalUnit; } set { this.nalUnit = value; } }
-
-        protected ushort operationPointIdx;
-        public ushort OperationPointIdx { get { return this.operationPointIdx; } set { this.operationPointIdx = value; } }
-
-        public LHEVCDecoderConfigurationRecord() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUInt8(out this.configurationVersion);
-            boxSize += stream.ReadBits(2, out this.general_profile_space);
-            boxSize += stream.ReadBit(out this.general_tier_flag);
-            boxSize += stream.ReadBits(5, out this.general_profile_idc);
-            boxSize += stream.ReadUInt32(out this.general_profile_compatibility_flags);
-            boxSize += stream.ReadUInt48(out this.general_constraint_indicator_flags);
-            boxSize += stream.ReadUInt8(out this.general_level_idc);
-            boxSize += stream.ReadBit(out this.complete_representation);
-            boxSize += stream.ReadBits(3, out this.reserved);
-            boxSize += stream.ReadBits(12, out this.min_spatial_segmentation_idc);
-            boxSize += stream.ReadBits(6, out this.reserved0);
-            boxSize += stream.ReadBits(2, out this.parallelismType);
-            boxSize += stream.ReadBits(6, out this.reserved1);
-            boxSize += stream.ReadBits(2, out this.chromaFormat);
-            boxSize += stream.ReadBits(5, out this.reserved2);
-            boxSize += stream.ReadBits(3, out this.bitDepthLumaMinus8);
-            boxSize += stream.ReadBits(5, out this.reserved3);
-            boxSize += stream.ReadBits(3, out this.bitDepthChromaMinus8);
-            boxSize += stream.ReadUInt16(out this.avgFrameRate);
-            boxSize += stream.ReadBits(2, out this.constantFrameRate);
-            boxSize += stream.ReadBits(3, out this.numTemporalLayers);
-            boxSize += stream.ReadBit(out this.temporalIdNested);
-            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
-            boxSize += stream.ReadUInt8(out this.numOfArrays);
-
-            this.array_completeness = new bool[numOfArrays];
-            this.reserved4 = new bool[numOfArrays];
-            this.NAL_unit_type = new byte[numOfArrays];
-            this.numNalus = new ushort[numOfArrays];
-            this.nalUnitLength = new ushort[numOfArrays][];
-            this.nalUnit = new byte[numOfArrays][][];
-            for (int j = 0; j < numOfArrays; j++)
-            {
-                boxSize += stream.ReadBit(out this.array_completeness[j]);
-                boxSize += stream.ReadBit(out this.reserved4[j]);
-                boxSize += stream.ReadBits(6, out this.NAL_unit_type[j]);
-                boxSize += stream.ReadUInt16(out this.numNalus[j]);
-
-                this.nalUnitLength[j] = new ushort[numNalus[j]];
-                this.nalUnit[j] = new byte[numNalus[j]][];
-                for (int i = 0; i < numNalus[j]; i++)
-                {
-                    boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
-                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
-                }
-            }
-            boxSize += stream.ReadUInt16(out this.operationPointIdx);
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUInt8(this.configurationVersion);
-            boxSize += stream.WriteBits(2, this.general_profile_space);
-            boxSize += stream.WriteBit(this.general_tier_flag);
-            boxSize += stream.WriteBits(5, this.general_profile_idc);
-            boxSize += stream.WriteUInt32(this.general_profile_compatibility_flags);
-            boxSize += stream.WriteUInt48(this.general_constraint_indicator_flags);
-            boxSize += stream.WriteUInt8(this.general_level_idc);
-            boxSize += stream.WriteBit(this.complete_representation);
-            boxSize += stream.WriteBits(3, this.reserved);
-            boxSize += stream.WriteBits(12, this.min_spatial_segmentation_idc);
-            boxSize += stream.WriteBits(6, this.reserved0);
-            boxSize += stream.WriteBits(2, this.parallelismType);
-            boxSize += stream.WriteBits(6, this.reserved1);
-            boxSize += stream.WriteBits(2, this.chromaFormat);
-            boxSize += stream.WriteBits(5, this.reserved2);
-            boxSize += stream.WriteBits(3, this.bitDepthLumaMinus8);
-            boxSize += stream.WriteBits(5, this.reserved3);
-            boxSize += stream.WriteBits(3, this.bitDepthChromaMinus8);
-            boxSize += stream.WriteUInt16(this.avgFrameRate);
-            boxSize += stream.WriteBits(2, this.constantFrameRate);
-            boxSize += stream.WriteBits(3, this.numTemporalLayers);
-            boxSize += stream.WriteBit(this.temporalIdNested);
-            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
-            boxSize += stream.WriteUInt8(this.numOfArrays);
-
-            for (int j = 0; j < numOfArrays; j++)
-            {
-                boxSize += stream.WriteBit(this.array_completeness[j]);
-                boxSize += stream.WriteBit(this.reserved4[j]);
-                boxSize += stream.WriteBits(6, this.NAL_unit_type[j]);
-                boxSize += stream.WriteUInt16(this.numNalus[j]);
-
-                for (int i = 0; i < numNalus[j]; i++)
-                {
-                    boxSize += stream.WriteUInt16(this.nalUnitLength[j][i]);
-                    boxSize += stream.WriteUInt8Array((uint)nalUnitLength[j][i], this.nalUnit[j][i]);
-                }
-            }
-            boxSize += stream.WriteUInt16(this.operationPointIdx);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 8; // configurationVersion
-            boxSize += 2; // general_profile_space
-            boxSize += 1; // general_tier_flag
-            boxSize += 5; // general_profile_idc
-            boxSize += 32; // general_profile_compatibility_flags
-            boxSize += 48; // general_constraint_indicator_flags
-            boxSize += 8; // general_level_idc
-            boxSize += 1; // complete_representation
-            boxSize += 3; // reserved
-            boxSize += 12; // min_spatial_segmentation_idc
-            boxSize += 6; // reserved0
-            boxSize += 2; // parallelismType
-            boxSize += 6; // reserved1
-            boxSize += 2; // chromaFormat
-            boxSize += 5; // reserved2
-            boxSize += 3; // bitDepthLumaMinus8
-            boxSize += 5; // reserved3
-            boxSize += 3; // bitDepthChromaMinus8
-            boxSize += 16; // avgFrameRate
-            boxSize += 2; // constantFrameRate
-            boxSize += 3; // numTemporalLayers
-            boxSize += 1; // temporalIdNested
-            boxSize += 2; // lengthSizeMinusOne
-            boxSize += 8; // numOfArrays
-
-            for (int j = 0; j < numOfArrays; j++)
-            {
-                boxSize += 1; // array_completeness
-                boxSize += 1; // reserved4
-                boxSize += 6; // NAL_unit_type
-                boxSize += 16; // numNalus
-
-                for (int i = 0; i < numNalus[j]; i++)
-                {
-                    boxSize += 16; // nalUnitLength
-                    boxSize += (ulong)nalUnitLength[j][i] * 8; // nalUnit
-                }
-            }
-            boxSize += 16; // operationPointIdx
             return boxSize;
         }
     }
@@ -17470,6 +15789,5617 @@ namespace SharpMP4
 
 
     /*
+    class AudioSampleEntry(codingname) extends SampleEntry (codingname) {
+        unsigned int(16) soundversion = 0;
+        unsigned int(16) reserved1 = 0;
+        unsigned int(32) reserved2 = 0;
+        unsigned int(16) channelcount;
+        template unsigned int(16) samplesize = 16;
+
+        unsigned int(16) pre_defined = 0;
+        const unsigned int(16) reserved = 0;
+        template unsigned int(32) samplerate;
+
+        if(codingname != 'mlpa') {
+            samplerate = samplerate >> 16;
+        }
+
+        if(soundversion == 1 || soundversion == 2) {
+           unsigned int(32) samplesPerPacket;
+           unsigned int(32) bytesPerPacket;
+           unsigned int(32) bytesPerFrame;
+           unsigned int(32) bytesPerSample;
+        }
+
+        if(soundversion == 2) {
+           unsigned int(8)[20] soundVersion2Data;
+        }
+
+        ChannelLayout();
+        // we permit any number of DownMix or DRC boxes: 
+        DownMixInstructions() [];
+        DRCCoefficientsBasic() [];
+        DRCInstructionsBasic() [];
+        DRCCoefficientsUniDRC() [];
+        DRCInstructionsUniDRC() [];
+        // we permit only one DRC Extension box:
+        UniDrcConfigExtension();
+        // optional boxes follow
+        SamplingRateBox();
+        Box (); // further boxes as needed
+    }
+    */
+    public class AudioSampleEntry : SampleEntry
+    {
+        public override string DisplayName { get { return "AudioSampleEntry"; } }
+
+        protected ushort soundversion = 0;
+        public ushort Soundversion { get { return this.soundversion; } set { this.soundversion = value; } }
+
+        protected ushort reserved1 = 0;
+        public ushort Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected uint reserved2 = 0;
+        public uint Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+        protected ushort channelcount;
+        public ushort Channelcount { get { return this.channelcount; } set { this.channelcount = value; } }
+
+        protected ushort samplesize = 16;
+        public ushort Samplesize { get { return this.samplesize; } set { this.samplesize = value; } }
+
+        protected ushort pre_defined = 0;
+        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
+
+        protected ushort reserved = 0;
+        public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected uint samplerate;
+        public uint Samplerate { get { return this.samplerate; } set { this.samplerate = value; } }
+
+        protected uint samplesPerPacket;
+        public uint SamplesPerPacket { get { return this.samplesPerPacket; } set { this.samplesPerPacket = value; } }
+
+        protected uint bytesPerPacket;
+        public uint BytesPerPacket { get { return this.bytesPerPacket; } set { this.bytesPerPacket = value; } }
+
+        protected uint bytesPerFrame;
+        public uint BytesPerFrame { get { return this.bytesPerFrame; } set { this.bytesPerFrame = value; } }
+
+        protected uint bytesPerSample;
+        public uint BytesPerSample { get { return this.bytesPerSample; } set { this.bytesPerSample = value; } }
+
+        protected byte[] soundVersion2Data;
+        public byte[] SoundVersion2Data { get { return this.soundVersion2Data; } set { this.soundVersion2Data = value; } }
+        public ChannelLayout _ChannelLayout { get { return this.children.OfType<ChannelLayout>().FirstOrDefault(); } }
+        public IEnumerable<DownMixInstructions> _DownMixInstructions { get { return this.children.OfType<DownMixInstructions>(); } }
+        public IEnumerable<DRCCoefficientsBasic> _DRCCoefficientsBasic { get { return this.children.OfType<DRCCoefficientsBasic>(); } }
+        public IEnumerable<DRCInstructionsBasic> _DRCInstructionsBasic { get { return this.children.OfType<DRCInstructionsBasic>(); } }
+        public IEnumerable<DRCCoefficientsUniDRC> _DRCCoefficientsUniDRC { get { return this.children.OfType<DRCCoefficientsUniDRC>(); } }
+        public IEnumerable<DRCInstructionsUniDRC> _DRCInstructionsUniDRC { get { return this.children.OfType<DRCInstructionsUniDRC>(); } }
+        public UniDrcConfigExtension _UniDrcConfigExtension { get { return this.children.OfType<UniDrcConfigExtension>().FirstOrDefault(); } }
+        public SamplingRateBox _SamplingRateBox { get { return this.children.OfType<SamplingRateBox>().FirstOrDefault(); } }
+        public Box _Box { get { return this.children.OfType<Box>().FirstOrDefault(); } }
+
+        public AudioSampleEntry(string codingname = "") : base(codingname)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.soundversion);
+            boxSize += stream.ReadUInt16(out this.reserved1);
+            boxSize += stream.ReadUInt32(out this.reserved2);
+            boxSize += stream.ReadUInt16(out this.channelcount);
+            boxSize += stream.ReadUInt16(out this.samplesize);
+            boxSize += stream.ReadUInt16(out this.pre_defined);
+            boxSize += stream.ReadUInt16(out this.reserved);
+            boxSize += stream.ReadUInt32(out this.samplerate);
+
+            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
+            {
+                // samplerate = samplerate >> 16
+            }
+
+            if (soundversion == 1 || soundversion == 2)
+            {
+                boxSize += stream.ReadUInt32(out this.samplesPerPacket);
+                boxSize += stream.ReadUInt32(out this.bytesPerPacket);
+                boxSize += stream.ReadUInt32(out this.bytesPerFrame);
+                boxSize += stream.ReadUInt32(out this.bytesPerSample);
+            }
+
+            if (soundversion == 2)
+            {
+                boxSize += stream.ReadUInt8Array(20, out this.soundVersion2Data);
+            }
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DownMixInstructions); 
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsBasic); 
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsBasic); 
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsUniDRC); 
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.UniDrcConfigExtension); // optional boxes follow
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SamplingRateBox); 
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.Box); // further boxes as needed
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.soundversion);
+            boxSize += stream.WriteUInt16(this.reserved1);
+            boxSize += stream.WriteUInt32(this.reserved2);
+            boxSize += stream.WriteUInt16(this.channelcount);
+            boxSize += stream.WriteUInt16(this.samplesize);
+            boxSize += stream.WriteUInt16(this.pre_defined);
+            boxSize += stream.WriteUInt16(this.reserved);
+            boxSize += stream.WriteUInt32(this.samplerate);
+
+            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
+            {
+                // samplerate = samplerate >> 16
+            }
+
+            if (soundversion == 1 || soundversion == 2)
+            {
+                boxSize += stream.WriteUInt32(this.samplesPerPacket);
+                boxSize += stream.WriteUInt32(this.bytesPerPacket);
+                boxSize += stream.WriteUInt32(this.bytesPerFrame);
+                boxSize += stream.WriteUInt32(this.bytesPerSample);
+            }
+
+            if (soundversion == 2)
+            {
+                boxSize += stream.WriteUInt8Array(20, this.soundVersion2Data);
+            }
+            // boxSize += stream.WriteBox( this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
+            // boxSize += stream.WriteBox( this.DownMixInstructions); 
+            // boxSize += stream.WriteBox( this.DRCCoefficientsBasic); 
+            // boxSize += stream.WriteBox( this.DRCInstructionsBasic); 
+            // boxSize += stream.WriteBox( this.DRCCoefficientsUniDRC); 
+            // boxSize += stream.WriteBox( this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+            // boxSize += stream.WriteBox( this.UniDrcConfigExtension); // optional boxes follow
+            // boxSize += stream.WriteBox( this.SamplingRateBox); 
+            // boxSize += stream.WriteBox( this.Box); // further boxes as needed
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // soundversion
+            boxSize += 16; // reserved1
+            boxSize += 32; // reserved2
+            boxSize += 16; // channelcount
+            boxSize += 16; // samplesize
+            boxSize += 16; // pre_defined
+            boxSize += 16; // reserved
+            boxSize += 32; // samplerate
+
+            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
+            {
+                // samplerate = samplerate >> 16
+            }
+
+            if (soundversion == 1 || soundversion == 2)
+            {
+                boxSize += 32; // samplesPerPacket
+                boxSize += 32; // bytesPerPacket
+                boxSize += 32; // bytesPerFrame
+                boxSize += 32; // bytesPerSample
+            }
+
+            if (soundversion == 2)
+            {
+                boxSize += 20 * 8; // soundVersion2Data
+            }
+            // boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
+            // boxSize += IsoStream.CalculateBoxSize(DownMixInstructions); // DownMixInstructions
+            // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+            // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsBasic); // DRCInstructionsBasic
+            // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+            // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+            // boxSize += IsoStream.CalculateBoxSize(UniDrcConfigExtension); // UniDrcConfigExtension
+            // boxSize += IsoStream.CalculateBoxSize(SamplingRateBox); // SamplingRateBox
+            // boxSize += IsoStream.CalculateBoxSize(Box); // Box
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){
+        unsigned int(16) entry_version;	// shall be 1, 
+        // and shall be in an stsd with version ==1
+        const unsigned int(16)[3] reserved = 0;
+        template unsigned int(16) channelcount;	// shall be correct
+        template unsigned int(16) samplesize = 16;
+        unsigned int(16) pre_defined = 0;
+        const unsigned int(16) reserved = 0 ;
+        template unsigned int(32) samplerate = 1<<16;
+        // optional boxes follow
+        SamplingRateBox();
+        Box ();		// further boxes as needed
+        ChannelLayout();
+        DownMixInstructions() [];
+        DRCCoefficientsBasic() [];
+        DRCInstructionsBasic() [];
+        DRCCoefficientsUniDRC() [];
+        DRCInstructionsUniDRC() [];
+        // we permit only one DRC Extension box:
+        UniDrcConfigExtension();
+        // optional boxes follow
+        ChannelLayout();
+    }
+    */
+    public class AudioSampleEntryV1 : SampleEntry
+    {
+        public override string DisplayName { get { return "AudioSampleEntryV1"; } }
+
+        protected ushort entry_version;  //  shall be 1, 
+        public ushort EntryVersion { get { return this.entry_version; } set { this.entry_version = value; } }
+
+        protected ushort[] reserved = [];
+        public ushort[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected ushort channelcount;  //  shall be correct
+        public ushort Channelcount { get { return this.channelcount; } set { this.channelcount = value; } }
+
+        protected ushort samplesize = 16;
+        public ushort Samplesize { get { return this.samplesize; } set { this.samplesize = value; } }
+
+        protected ushort pre_defined = 0;
+        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
+
+        protected ushort reserved0 = 0;
+        public ushort Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected uint samplerate = 1 << 16;  //  optional boxes follow
+        public uint Samplerate { get { return this.samplerate; } set { this.samplerate = value; } }
+        public SamplingRateBox _SamplingRateBox { get { return this.children.OfType<SamplingRateBox>().FirstOrDefault(); } }
+        public Box _Box { get { return this.children.OfType<Box>().FirstOrDefault(); } }
+        public ChannelLayout _ChannelLayout { get { return this.children.OfType<ChannelLayout>().FirstOrDefault(); } }
+        public IEnumerable<DownMixInstructions> _DownMixInstructions { get { return this.children.OfType<DownMixInstructions>(); } }
+        public IEnumerable<DRCCoefficientsBasic> _DRCCoefficientsBasic { get { return this.children.OfType<DRCCoefficientsBasic>(); } }
+        public IEnumerable<DRCInstructionsBasic> _DRCInstructionsBasic { get { return this.children.OfType<DRCInstructionsBasic>(); } }
+        public IEnumerable<DRCCoefficientsUniDRC> _DRCCoefficientsUniDRC { get { return this.children.OfType<DRCCoefficientsUniDRC>(); } }
+        public IEnumerable<DRCInstructionsUniDRC> _DRCInstructionsUniDRC { get { return this.children.OfType<DRCInstructionsUniDRC>(); } }
+        public UniDrcConfigExtension _UniDrcConfigExtension { get { return this.children.OfType<UniDrcConfigExtension>().FirstOrDefault(); } }
+
+        public AudioSampleEntryV1(string codingname = "") : base(codingname)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.entry_version); // shall be 1, 
+            /*  and shall be in an stsd with version ==1 */
+            boxSize += stream.ReadUInt16Array(3, out this.reserved);
+            boxSize += stream.ReadUInt16(out this.channelcount); // shall be correct
+            boxSize += stream.ReadUInt16(out this.samplesize);
+            boxSize += stream.ReadUInt16(out this.pre_defined);
+            boxSize += stream.ReadUInt16(out this.reserved0);
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(out this.samplerate); // optional boxes follow
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SamplingRateBox); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.Box); // further boxes as needed
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DownMixInstructions); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsBasic); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsBasic); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsUniDRC); 
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+                                                                                                          // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.UniDrcConfigExtension); // optional boxes follow
+                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.entry_version); // shall be 1, 
+            /*  and shall be in an stsd with version ==1 */
+            boxSize += stream.WriteUInt16Array(3, this.reserved);
+            boxSize += stream.WriteUInt16(this.channelcount); // shall be correct
+            boxSize += stream.WriteUInt16(this.samplesize);
+            boxSize += stream.WriteUInt16(this.pre_defined);
+            boxSize += stream.WriteUInt16(this.reserved0);
+            boxSize += stream.WriteUInt32(this.samplerate); // optional boxes follow
+                                                            // boxSize += stream.WriteBox( this.SamplingRateBox); 
+                                                            // boxSize += stream.WriteBox( this.Box); // further boxes as needed
+                                                            // boxSize += stream.WriteBox( this.ChannelLayout); 
+                                                            // boxSize += stream.WriteBox( this.DownMixInstructions); 
+                                                            // boxSize += stream.WriteBox( this.DRCCoefficientsBasic); 
+                                                            // boxSize += stream.WriteBox( this.DRCInstructionsBasic); 
+                                                            // boxSize += stream.WriteBox( this.DRCCoefficientsUniDRC); 
+                                                            // boxSize += stream.WriteBox( this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+                                                            // boxSize += stream.WriteBox( this.UniDrcConfigExtension); // optional boxes follow
+                                                            // boxSize += stream.WriteBox( this.ChannelLayout); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // entry_version
+            /*  and shall be in an stsd with version ==1 */
+            boxSize += 3 * 16; // reserved
+            boxSize += 16; // channelcount
+            boxSize += 16; // samplesize
+            boxSize += 16; // pre_defined
+            boxSize += 16; // reserved0
+            boxSize += 32; // samplerate
+                           // boxSize += IsoStream.CalculateBoxSize(SamplingRateBox); // SamplingRateBox
+                           // boxSize += IsoStream.CalculateBoxSize(Box); // Box
+                           // boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
+                           // boxSize += IsoStream.CalculateBoxSize(DownMixInstructions); // DownMixInstructions
+                           // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
+                           // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsBasic); // DRCInstructionsBasic
+                           // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
+                           // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
+                           // boxSize += IsoStream.CalculateBoxSize(UniDrcConfigExtension); // UniDrcConfigExtension
+                           // boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class FontSampleEntry(codingname) extends SampleEntry (codingname){
+        //other boxes from derived specifications
+    }
+    */
+    public class FontSampleEntry : SampleEntry
+    {
+        public override string DisplayName { get { return "FontSampleEntry"; } }
+
+        public FontSampleEntry(string codingname = "") : base(codingname)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            /* other boxes from derived specifications */
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            /* other boxes from derived specifications */
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /* other boxes from derived specifications */
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MetaDataSampleEntry(codingname) extends SampleEntry (codingname) {
+    }
+    */
+    public class MetaDataSampleEntry : SampleEntry
+    {
+        public override string DisplayName { get { return "MetaDataSampleEntry"; } }
+
+        public MetaDataSampleEntry(string codingname = "") : base(codingname)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class GenericSampleEntry extends Box('encv') {
+        // ProtectionSchemeInfoBox {
+            // OriginalFormatBox;	// data_format is 'resv'
+            // SchemeTypeBox;
+            // SchemeInformationBox;
+        // }
+    // tRestrictedSchemeInfoBox {
+            // OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1'
+            // SchemeTypeBox;
+            // SchemeInformationBox;
+        // }
+        // Boxes specific to the untransformed sample entry type
+        // For 'avc1', these would include AVCConfigurationBox
+    }
+    */
+    public class GenericSampleEntry : Box
+    {
+        public const string TYPE = "encv";
+        public override string DisplayName { get { return "GenericSampleEntry"; } }
+
+        public GenericSampleEntry() : base("encv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            /*  ProtectionSchemeInfoBox { */
+            /*  OriginalFormatBox;	// data_format is 'resv' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  tRestrictedSchemeInfoBox { */
+            /*  OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  Boxes specific to the untransformed sample entry type */
+            /*  For 'avc1', these would include AVCConfigurationBox */
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            /*  ProtectionSchemeInfoBox { */
+            /*  OriginalFormatBox;	// data_format is 'resv' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  tRestrictedSchemeInfoBox { */
+            /*  OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  Boxes specific to the untransformed sample entry type */
+            /*  For 'avc1', these would include AVCConfigurationBox */
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            /*  ProtectionSchemeInfoBox { */
+            /*  OriginalFormatBox;	// data_format is 'resv' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  tRestrictedSchemeInfoBox { */
+            /*  OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1' */
+            /*  SchemeTypeBox; */
+            /*  SchemeInformationBox; */
+            /*  } */
+            /*  Boxes specific to the untransformed sample entry type */
+            /*  For 'avc1', these would include AVCConfigurationBox */
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class XMLMetaDataSampleEntry() extends MetaDataSampleEntry ('metx') {
+        utf8string content_encoding; // optional
+        utf8list namespace;
+        utf8list schema_location; // optional
+    }
+    */
+    public class XMLMetaDataSampleEntry : MetaDataSampleEntry
+    {
+        public const string TYPE = "metx";
+        public override string DisplayName { get { return "XMLMetaDataSampleEntry"; } }
+
+        protected BinaryUTF8String content_encoding;  //  optional
+        public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+
+        protected BinaryUTF8String ns;
+        public BinaryUTF8String Ns { get { return this.ns; } set { this.ns = value; } }
+
+        protected BinaryUTF8String schema_location;  //  optional
+        public BinaryUTF8String SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
+
+        public XMLMetaDataSampleEntry() : base("metx")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.ns);
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.schema_location); // optional
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional
+            boxSize += stream.WriteStringZeroTerminated(this.ns);
+            boxSize += stream.WriteStringZeroTerminated(this.schema_location); // optional
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(content_encoding); // content_encoding
+            boxSize += IsoStream.CalculateStringSize(ns); // ns
+            boxSize += IsoStream.CalculateStringSize(schema_location); // schema_location
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class TextMetaDataSampleEntry() extends MetaDataSampleEntry ('mett') {
+        utf8string content_encoding; // optional
+        utf8string mime_format;
+        TextConfigBox (); // optional
+    }
+    */
+    public class TextMetaDataSampleEntry : MetaDataSampleEntry
+    {
+        public const string TYPE = "mett";
+        public override string DisplayName { get { return "TextMetaDataSampleEntry"; } }
+
+        protected BinaryUTF8String content_encoding;  //  optional
+        public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
+
+        protected BinaryUTF8String mime_format;
+        public BinaryUTF8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
+        public TextConfigBox _TextConfigBox { get { return this.children.OfType<TextConfigBox>().FirstOrDefault(); } }
+
+        public TextMetaDataSampleEntry() : base("mett")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.mime_format);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional
+            boxSize += stream.WriteStringZeroTerminated(this.mime_format);
+            // boxSize += stream.WriteBox( this.TextConfigBox); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(content_encoding); // content_encoding
+            boxSize += IsoStream.CalculateStringSize(mime_format); // mime_format
+                                                                   // boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class URIMetaSampleEntry() extends MetaDataSampleEntry ('urim') {
+        URIBox			the_label;
+        URIInitBox		init;		// optional
+    }
+    */
+    public class URIMetaSampleEntry : MetaDataSampleEntry
+    {
+        public const string TYPE = "urim";
+        public override string DisplayName { get { return "URIMetaSampleEntry"; } }
+        public URIBox TheLabel { get { return this.children.OfType<URIBox>().FirstOrDefault(); } }
+        public URIInitBox Init { get { return this.children.OfType<URIInitBox>().FirstOrDefault(); } }
+
+        public URIMetaSampleEntry() : base("urim")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.the_label); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.init); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.the_label); 
+            // boxSize += stream.WriteBox( this.init); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(the_label); // the_label
+            // boxSize += IsoStream.CalculateBoxSize(init); // init
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class BoxedMetaDataSampleEntry 
+        extends MetaDataSampleEntry ('mebx') {
+        MetaDataKeyTableBox();				// mandatory
+        BitRateBox ();							// optional
+    }
+    */
+    public class BoxedMetaDataSampleEntry : MetaDataSampleEntry
+    {
+        public const string TYPE = "mebx";
+        public override string DisplayName { get { return "BoxedMetaDataSampleEntry"; } }
+        public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return this.children.OfType<MetaDataKeyTableBox>().FirstOrDefault(); } }
+        public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
+
+        public BoxedMetaDataSampleEntry() : base("mebx")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataKeyTableBox); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.MetaDataKeyTableBox); // mandatory
+            // boxSize += stream.WriteBox( this.BitRateBox); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(MetaDataKeyTableBox); // MetaDataKeyTableBox
+            // boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class FDHintSampleEntry() extends HintSampleEntry ('fdp ') {
+        unsigned int(16)	hinttrackversion = 1;
+        unsigned int(16)	highestcompatibleversion = 1;
+        unsigned int(16)	partition_entry_ID;
+        unsigned int(16)	FEC_overhead;
+    }
+    */
+    public class FDHintSampleEntry : HintSampleEntry
+    {
+        public const string TYPE = "fdp ";
+        public override string DisplayName { get { return "FDHintSampleEntry"; } }
+
+        protected ushort hinttrackversion = 1;
+        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
+
+        protected ushort highestcompatibleversion = 1;
+        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
+
+        protected ushort partition_entry_ID;
+        public ushort PartitionEntryID { get { return this.partition_entry_ID; } set { this.partition_entry_ID = value; } }
+
+        protected ushort FEC_overhead;
+        public ushort FECOverhead { get { return this.FEC_overhead; } set { this.FEC_overhead = value; } }
+
+        public FDHintSampleEntry() : base("fdp ")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.hinttrackversion);
+            boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
+            boxSize += stream.ReadUInt16(out this.partition_entry_ID);
+            boxSize += stream.ReadUInt16(out this.FEC_overhead);
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.hinttrackversion);
+            boxSize += stream.WriteUInt16(this.highestcompatibleversion);
+            boxSize += stream.WriteUInt16(this.partition_entry_ID);
+            boxSize += stream.WriteUInt16(this.FEC_overhead);
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // hinttrackversion
+            boxSize += 16; // highestcompatibleversion
+            boxSize += 16; // partition_entry_ID
+            boxSize += 16; // FEC_overhead
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class IncompleteAVCSampleEntry() extends VisualSampleEntry ('icpv'){
+        CompleteTrackInfoBox();
+        AVCConfigurationBox config;
+    }
+    */
+    public class IncompleteAVCSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "icpv";
+        public override string DisplayName { get { return "IncompleteAVCSampleEntry"; } }
+        public CompleteTrackInfoBox _CompleteTrackInfoBox { get { return this.children.OfType<CompleteTrackInfoBox>().FirstOrDefault(); } }
+        public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
+
+        public IncompleteAVCSampleEntry() : base("icpv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.CompleteTrackInfoBox); 
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.CompleteTrackInfoBox); 
+            // boxSize += stream.WriteBox( this.config); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(CompleteTrackInfoBox); // CompleteTrackInfoBox
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ProtectedMPEG2TransportStreamSampleEntry
+        extends MPEG2TSSampleEntry('pm2t') {
+        ProtectionSchemeInfoBox		SchemeInformation;
+    }
+    */
+    public class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEntry
+    {
+        public const string TYPE = "pm2t";
+        public override string DisplayName { get { return "ProtectedMPEG2TransportStreamSampleEntry"; } }
+        public ProtectionSchemeInfoBox _SchemeInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
+
+        public ProtectedMPEG2TransportStreamSampleEntry() : base("pm2t")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SchemeInformation); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.SchemeInformation); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(SchemeInformation); // SchemeInformation
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ProtectedRtpReceptionHintSampleEntry
+        extends RtpReceptionHintSampleEntry ('prtp') {
+        ProtectionSchemeInfoBox		SchemeInformation;
+    }
+    */
+    public class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
+    {
+        public const string TYPE = "prtp";
+        public override string DisplayName { get { return "ProtectedRtpReceptionHintSampleEntry"; } }
+        public ProtectionSchemeInfoBox _SchemeInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
+
+        public ProtectedRtpReceptionHintSampleEntry() : base("prtp")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SchemeInformation); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.SchemeInformation); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(SchemeInformation); // SchemeInformation
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MPEG2TSReceptionSampleEntry extends MPEG2TSSampleEntry('rm2t') {}
+    */
+    public class MPEG2TSReceptionSampleEntry : MPEG2TSSampleEntry
+    {
+        public const string TYPE = "rm2t";
+        public override string DisplayName { get { return "MPEG2TSReceptionSampleEntry"; } }
+
+        public MPEG2TSReceptionSampleEntry() : base("rm2t")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ReceivedRtpHintSampleEntry() extends HintSampleEntry ('rrtp') {
+        uint(16)		hinttrackversion = 1;
+        uint(16)		highestcompatibleversion = 1;
+        uint(32)		maxpacketsize;
+    }
+    */
+    public class ReceivedRtpHintSampleEntry : HintSampleEntry
+    {
+        public const string TYPE = "rrtp";
+        public override string DisplayName { get { return "ReceivedRtpHintSampleEntry"; } }
+
+        protected ushort hinttrackversion = 1;
+        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
+
+        protected ushort highestcompatibleversion = 1;
+        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
+
+        protected uint maxpacketsize;
+        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
+
+        public ReceivedRtpHintSampleEntry() : base("rrtp")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.hinttrackversion);
+            boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
+            boxSize += stream.ReadUInt32(out this.maxpacketsize);
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.hinttrackversion);
+            boxSize += stream.WriteUInt16(this.highestcompatibleversion);
+            boxSize += stream.WriteUInt32(this.maxpacketsize);
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // hinttrackversion
+            boxSize += 16; // highestcompatibleversion
+            boxSize += 32; // maxpacketsize
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ReceivedSrtpHintSampleEntry() extends HintSampleEntry ('rsrp') {
+        uint(16)		hinttrackversion = 1;
+        uint(16)		highestcompatibleversion = 1;
+        uint(32)		maxpacketsize;
+    }
+    */
+    public class ReceivedSrtpHintSampleEntry : HintSampleEntry
+    {
+        public const string TYPE = "rsrp";
+        public override string DisplayName { get { return "ReceivedSrtpHintSampleEntry"; } }
+
+        protected ushort hinttrackversion = 1;
+        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
+
+        protected ushort highestcompatibleversion = 1;
+        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
+
+        protected uint maxpacketsize;
+        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
+
+        public ReceivedSrtpHintSampleEntry() : base("rsrp")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.hinttrackversion);
+            boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
+            boxSize += stream.ReadUInt32(out this.maxpacketsize);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.hinttrackversion);
+            boxSize += stream.WriteUInt16(this.highestcompatibleversion);
+            boxSize += stream.WriteUInt32(this.maxpacketsize);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // hinttrackversion
+            boxSize += 16; // highestcompatibleversion
+            boxSize += 32; // maxpacketsize
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HintSampleEntry() extends SampleEntry (protocol) {
+    }
+    */
+    public class HintSampleEntry : SampleEntry
+    {
+        public override string DisplayName { get { return "HintSampleEntry"; } }
+
+        public HintSampleEntry(string protocol) : base(protocol)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MPEG2TSServerSampleEntry extends MPEG2TSSampleEntry('sm2t') {}
+    */
+    public class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
+    {
+        public const string TYPE = "sm2t";
+        public override string DisplayName { get { return "MPEG2TSServerSampleEntry"; } }
+
+        public MPEG2TSServerSampleEntry() : base("sm2t")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class SrtpHintSampleEntry() extends HintSampleEntry ('srtp') {
+        uint(16)		hinttrackversion = 1;
+        uint(16)		highestcompatibleversion = 1;
+        uint(32)		maxpacketsize;
+    }
+    */
+    public class SrtpHintSampleEntry : HintSampleEntry
+    {
+        public const string TYPE = "srtp";
+        public override string DisplayName { get { return "SrtpHintSampleEntry"; } }
+
+        protected ushort hinttrackversion = 1;
+        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
+
+        protected ushort highestcompatibleversion = 1;
+        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
+
+        protected uint maxpacketsize;
+        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
+
+        public SrtpHintSampleEntry() : base("srtp")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.hinttrackversion);
+            boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
+            boxSize += stream.ReadUInt32(out this.maxpacketsize);
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.hinttrackversion);
+            boxSize += stream.WriteUInt16(this.highestcompatibleversion);
+            boxSize += stream.WriteUInt32(this.maxpacketsize);
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // hinttrackversion
+            boxSize += 16; // highestcompatibleversion
+            boxSize += 32; // maxpacketsize
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class HapticSampleEntry(codingname)
+        extends SampleEntry(codingname) {
+        Box()[]	otherboxes;
+    }
+    */
+    public class HapticSampleEntry : SampleEntry
+    {
+        public override string DisplayName { get { return "HapticSampleEntry"; } }
+        public IEnumerable<Box> Otherboxes { get { return this.children.OfType<Box>(); } }
+
+        public HapticSampleEntry(string codingname = "") : base(codingname)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.otherboxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.otherboxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(otherboxes); // otherboxes
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class VolumetricVisualSampleEntry(codingname) 
+        extends SampleEntry (codingname){
+        unsigned int(8)[32] compressorname;
+        // other boxes from derived specifications
+    }
+    */
+    public class VolumetricVisualSampleEntry : SampleEntry
+    {
+        public override string DisplayName { get { return "VolumetricVisualSampleEntry"; } }
+
+        protected byte[] compressorname;  //  other boxes from derived specifications
+        public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
+
+        public VolumetricVisualSampleEntry(string codingname = "") : base(codingname)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8Array(32, out this.compressorname); // other boxes from derived specifications
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8Array(32, this.compressorname); // other boxes from derived specifications
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32 * 8; // compressorname
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class VisualSampleEntry(codingname) extends SampleEntry (codingname){
+        unsigned int(16) pre_defined = 0;
+        const unsigned int(16) reserved = 0;
+        unsigned int(32)[3]	pre_defined = 0;
+        unsigned int(16)	width;
+        unsigned int(16)	height;
+        template unsigned int(32)	horizresolution = 0x00480000;	// 72 dpi
+        template unsigned int(32)	vertresolution  = 0x00480000;	// 72 dpi
+        const unsigned int(32)	reserved = 0;
+        template unsigned int(16)	frame_count = 1;
+        uint(8)[32]	compressorname;
+        template unsigned int(16)	depth = 0x0018;
+        int(16)	pre_defined = -1;
+        // other boxes from derived specifications
+        CleanApertureBox			clap;		// optional
+        PixelAspectRatioBox		pasp;		// optional
+    }
+
+    */
+    public class VisualSampleEntry : SampleEntry
+    {
+        public override string DisplayName { get { return "VisualSampleEntry"; } }
+
+        protected ushort pre_defined = 0;
+        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
+
+        protected ushort reserved = 0;
+        public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected uint[] pre_defined0 = [];
+        public uint[] PreDefined0 { get { return this.pre_defined0; } set { this.pre_defined0 = value; } }
+
+        protected ushort width;
+        public ushort Width { get { return this.width; } set { this.width = value; } }
+
+        protected ushort height;
+        public ushort Height { get { return this.height; } set { this.height = value; } }
+
+        protected uint horizresolution = 0x00480000;  //  72 dpi
+        public uint Horizresolution { get { return this.horizresolution; } set { this.horizresolution = value; } }
+
+        protected uint vertresolution = 0x00480000;  //  72 dpi
+        public uint Vertresolution { get { return this.vertresolution; } set { this.vertresolution = value; } }
+
+        protected uint reserved0 = 0;
+        public uint Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected ushort frame_count = 1;
+        public ushort FrameCount { get { return this.frame_count; } set { this.frame_count = value; } }
+
+        protected byte[] compressorname;
+        public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
+
+        protected ushort depth = 0x0018;
+        public ushort Depth { get { return this.depth; } set { this.depth = value; } }
+
+        protected short pre_defined1 = -1;  //  other boxes from derived specifications
+        public short PreDefined1 { get { return this.pre_defined1; } set { this.pre_defined1 = value; } }
+        public CleanApertureBox Clap { get { return this.children.OfType<CleanApertureBox>().FirstOrDefault(); } }
+        public PixelAspectRatioBox Pasp { get { return this.children.OfType<PixelAspectRatioBox>().FirstOrDefault(); } }
+
+        public VisualSampleEntry(string codingname = "") : base(codingname)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.pre_defined);
+            boxSize += stream.ReadUInt16(out this.reserved);
+            boxSize += stream.ReadUInt32Array(3, out this.pre_defined0);
+            boxSize += stream.ReadUInt16(out this.width);
+            boxSize += stream.ReadUInt16(out this.height);
+            boxSize += stream.ReadUInt32(out this.horizresolution); // 72 dpi
+            boxSize += stream.ReadUInt32(out this.vertresolution); // 72 dpi
+            boxSize += stream.ReadUInt32(out this.reserved0);
+            boxSize += stream.ReadUInt16(out this.frame_count);
+            boxSize += stream.ReadUInt8Array(32, out this.compressorname);
+            boxSize += stream.ReadUInt16(out this.depth);
+            boxSize += stream.ReadInt16(out this.pre_defined1); // other boxes from derived specifications
+                                                                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.clap); // optional
+                                                                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.pasp); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.pre_defined);
+            boxSize += stream.WriteUInt16(this.reserved);
+            boxSize += stream.WriteUInt32Array(3, this.pre_defined0);
+            boxSize += stream.WriteUInt16(this.width);
+            boxSize += stream.WriteUInt16(this.height);
+            boxSize += stream.WriteUInt32(this.horizresolution); // 72 dpi
+            boxSize += stream.WriteUInt32(this.vertresolution); // 72 dpi
+            boxSize += stream.WriteUInt32(this.reserved0);
+            boxSize += stream.WriteUInt16(this.frame_count);
+            boxSize += stream.WriteUInt8Array(32, this.compressorname);
+            boxSize += stream.WriteUInt16(this.depth);
+            boxSize += stream.WriteInt16(this.pre_defined1); // other boxes from derived specifications
+                                                             // boxSize += stream.WriteBox( this.clap); // optional
+                                                             // boxSize += stream.WriteBox( this.pasp); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // pre_defined
+            boxSize += 16; // reserved
+            boxSize += 3 * 32; // pre_defined0
+            boxSize += 16; // width
+            boxSize += 16; // height
+            boxSize += 32; // horizresolution
+            boxSize += 32; // vertresolution
+            boxSize += 32; // reserved0
+            boxSize += 16; // frame_count
+            boxSize += 32 * 8; // compressorname
+            boxSize += 16; // depth
+            boxSize += 16; // pre_defined1
+                           // boxSize += IsoStream.CalculateBoxSize(clap); // clap
+                           // boxSize += IsoStream.CalculateBoxSize(pasp); // pasp
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class RtpHintSampleEntry() extends HintSampleEntry ('rtp ') {
+        uint(16)		hinttrackversion = 1;
+        uint(16)		highestcompatibleversion = 1;
+        uint(32)		maxpacketsize;
+    }
+    */
+    public class RtpHintSampleEntry : HintSampleEntry
+    {
+        public const string TYPE = "rtp ";
+        public override string DisplayName { get { return "RtpHintSampleEntry"; } }
+
+        protected ushort hinttrackversion = 1;
+        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
+
+        protected ushort highestcompatibleversion = 1;
+        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
+
+        protected uint maxpacketsize;
+        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
+
+        public RtpHintSampleEntry() : base("rtp ")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.hinttrackversion);
+            boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
+            boxSize += stream.ReadUInt32(out this.maxpacketsize);
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.hinttrackversion);
+            boxSize += stream.WriteUInt16(this.highestcompatibleversion);
+            boxSize += stream.WriteUInt32(this.maxpacketsize);
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // hinttrackversion
+            boxSize += 16; // highestcompatibleversion
+            boxSize += 32; // maxpacketsize
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
+    extends FullBox(grouping_type, version, flags) {
+        unsigned int(32) group_id;
+        unsigned int(32) num_entities_in_group;
+        for(i=0; i<num_entities_in_group; i++)
+            unsigned int(32) entity_id;
+    // the remaining data may be specified for a particular grouping_type
+    }
+    */
+    public class EntityToGroupBox : FullBox
+    {
+        public override string DisplayName { get { return "EntityToGroupBox"; } }
+
+        protected uint group_id;
+        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
+
+        protected uint num_entities_in_group;
+        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
+
+        protected uint[] entity_id;  //  the remaining data may be specified for a particular grouping_type
+        public uint[] EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
+
+        public EntityToGroupBox(string grouping_type, byte version, uint flags) : base(grouping_type, version, flags)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.group_id);
+            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
+
+            this.entity_id = new uint[num_entities_in_group];
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += stream.ReadUInt32(out this.entity_id[i]); // the remaining data may be specified for a particular grouping_type
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.group_id);
+            boxSize += stream.WriteUInt32(this.num_entities_in_group);
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += stream.WriteUInt32(this.entity_id[i]); // the remaining data may be specified for a particular grouping_type
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // group_id
+            boxSize += 32; // num_entities_in_group
+
+            for (int i = 0; i < num_entities_in_group; i++)
+            {
+                boxSize += 32; // entity_id
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class BrandProperty extends GeneralTypeBox ('brnd') 
+    { }
+    */
+    public class BrandProperty : GeneralTypeBox
+    {
+        public const string TYPE = "brnd";
+        public override string DisplayName { get { return "BrandProperty"; } }
+
+        public BrandProperty() : base("brnd")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
+        unsigned int(16) from_item_ID;
+        unsigned int(16) reference_count;
+        for (j=0; j<reference_count; j++) {
+            unsigned int(16) to_item_ID;
+        }
+    }
+
+
+
+    */
+    public class SingleItemTypeReferenceBox : Box
+    {
+        public override string DisplayName { get { return "SingleItemTypeReferenceBox"; } }
+
+        protected ushort from_item_ID;
+        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
+
+        protected ushort reference_count;
+        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
+
+        protected ushort[] to_item_ID;
+        public ushort[] ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
+
+        public SingleItemTypeReferenceBox(string referenceType) : base(referenceType)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.from_item_ID);
+            boxSize += stream.ReadUInt16(out this.reference_count);
+
+            this.to_item_ID = new ushort[reference_count];
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += stream.ReadUInt16(out this.to_item_ID[j]);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.from_item_ID);
+            boxSize += stream.WriteUInt16(this.reference_count);
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += stream.WriteUInt16(this.to_item_ID[j]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 16; // to_item_ID
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
+        unsigned int(32) from_item_ID;
+        unsigned int(16) reference_count;
+        for (j=0; j<reference_count; j++) {
+            unsigned int(32) to_item_ID;
+        }
+    }
+    */
+    public class SingleItemTypeReferenceBoxLarge : Box
+    {
+        public override string DisplayName { get { return "SingleItemTypeReferenceBoxLarge"; } }
+
+        protected uint from_item_ID;
+        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
+
+        protected ushort reference_count;
+        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
+
+        protected uint[] to_item_ID;
+        public uint[] ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
+
+        public SingleItemTypeReferenceBoxLarge(string referenceType) : base(referenceType)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.from_item_ID);
+            boxSize += stream.ReadUInt16(out this.reference_count);
+
+            this.to_item_ID = new uint[reference_count];
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += stream.ReadUInt32(out this.to_item_ID[j]);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.from_item_ID);
+            boxSize += stream.WriteUInt16(this.reference_count);
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += stream.WriteUInt32(this.to_item_ID[j]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // from_item_ID
+            boxSize += 16; // reference_count
+
+            for (int j = 0; j < reference_count; j++)
+            {
+                boxSize += 32; // to_item_ID
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AlternativeStartupEntry() extends VisualSampleGroupEntry ('alst')
+    {
+        unsigned int(16) roll_count;
+        unsigned int(16) first_output_sample;
+        for (i=1; i <= roll_count; i++)
+            unsigned int(32) sample_offset[i];
+        j=1;
+        do { // optional, until the end of the structure
+            unsigned int(16) num_output_samples[j];
+            unsigned int(16) num_total_samples[j];
+            j++;
+        }
+    }
+    */
+    public class AlternativeStartupEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "alst";
+        public override string DisplayName { get { return "AlternativeStartupEntry"; } }
+
+        protected ushort roll_count;
+        public ushort RollCount { get { return this.roll_count; } set { this.roll_count = value; } }
+
+        protected ushort first_output_sample;
+        public ushort FirstOutputSample { get { return this.first_output_sample; } set { this.first_output_sample = value; } }
+
+        protected uint[] sample_offset;
+        public uint[] SampleOffset { get { return this.sample_offset; } set { this.sample_offset = value; } }
+
+        protected ushort[] num_output_samples;
+        public ushort[] NumOutputSamples { get { return this.num_output_samples; } set { this.num_output_samples = value; } }
+
+        protected ushort[] num_total_samples;
+        public ushort[] NumTotalSamples { get { return this.num_total_samples; } set { this.num_total_samples = value; } }
+
+        public AlternativeStartupEntry() : base("alst")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.roll_count);
+            boxSize += stream.ReadUInt16(out this.first_output_sample);
+
+            this.sample_offset = new uint[roll_count];
+            for (int i = 0; i < roll_count; i++)
+            {
+                boxSize += stream.ReadUInt32(out this.sample_offset[i]);
+            }
+            int j = 1;
+
+            while (true)
+            {
+                /*  optional, until the end of the structure */
+                boxSize += stream.ReadUInt16(out this.num_output_samples[j]);
+                boxSize += stream.ReadUInt16(out this.num_total_samples[j]);
+                j++;
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.roll_count);
+            boxSize += stream.WriteUInt16(this.first_output_sample);
+
+            for (int i = 0; i < roll_count; i++)
+            {
+                boxSize += stream.WriteUInt32(this.sample_offset[i]);
+            }
+            int j = 1;
+
+            while (true)
+            {
+                /*  optional, until the end of the structure */
+                boxSize += stream.WriteUInt16(this.num_output_samples[j]);
+                boxSize += stream.WriteUInt16(this.num_total_samples[j]);
+                j++;
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // roll_count
+            boxSize += 16; // first_output_sample
+
+            for (int i = 0; i < roll_count; i++)
+            {
+                boxSize += 32; // sample_offset
+            }
+            int j = 1;
+
+            while (true)
+            {
+                /*  optional, until the end of the structure */
+                boxSize += 16; // num_output_samples
+                boxSize += 16; // num_total_samples
+                j++;
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class VisualDRAPEntry() 
+    extends VisualSampleGroupEntry('drap') {
+        unsigned int(3) DRAP_type;
+        unsigned int(29) reserved = 0;
+    }
+    */
+    public class VisualDRAPEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "drap";
+        public override string DisplayName { get { return "VisualDRAPEntry"; } }
+
+        protected byte DRAP_type;
+        public byte DRAPType { get { return this.DRAP_type; } set { this.DRAP_type = value; } }
+
+        protected uint reserved = 0;
+        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        public VisualDRAPEntry() : base("drap")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBits(3, out this.DRAP_type);
+            boxSize += stream.ReadBits(29, out this.reserved);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBits(3, this.DRAP_type);
+            boxSize += stream.WriteBits(29, this.reserved);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 3; // DRAP_type
+            boxSize += 29; // reserved
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AudioPreRollEntry() extends AudioSampleGroupEntry ('prol')
+    {
+        signed int(16) roll_distance;
+    }
+    */
+    public class AudioPreRollEntry : AudioSampleGroupEntry
+    {
+        public const string TYPE = "prol";
+        public override string DisplayName { get { return "AudioPreRollEntry"; } }
+
+        protected short roll_distance;
+        public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
+
+        public AudioPreRollEntry() : base("prol")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadInt16(out this.roll_distance);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteInt16(this.roll_distance);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // roll_distance
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class VisualRandomAccessEntry() extends VisualSampleGroupEntry ('rap ')
+    {
+        unsigned int(1) num_leading_samples_known;
+        unsigned int(7) num_leading_samples;
+    }
+    */
+    public class VisualRandomAccessEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "rap ";
+        public override string DisplayName { get { return "VisualRandomAccessEntry"; } }
+
+        protected bool num_leading_samples_known;
+        public bool NumLeadingSamplesKnown { get { return this.num_leading_samples_known; } set { this.num_leading_samples_known = value; } }
+
+        protected byte num_leading_samples;
+        public byte NumLeadingSamples { get { return this.num_leading_samples; } set { this.num_leading_samples = value; } }
+
+        public VisualRandomAccessEntry() : base("rap ")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.num_leading_samples_known);
+            boxSize += stream.ReadBits(7, out this.num_leading_samples);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.num_leading_samples_known);
+            boxSize += stream.WriteBits(7, this.num_leading_samples);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // num_leading_samples_known
+            boxSize += 7; // num_leading_samples
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class RateShareEntry() extends SampleGroupDescriptionEntry('rash') {
+        unsigned int(16)	operation_point_count;
+        if (operation_point_count == 1) {
+            unsigned int(16)		target_rate_share;
+        }
+        else {
+            for (i=0; i < operation_point_count; i++) {
+                unsigned int(32)	available_bitrate;
+                unsigned int(16)	target_rate_share;
+            }
+        }
+        unsigned int(32)	maximum_bitrate;
+        unsigned int(32)	minimum_bitrate;
+        unsigned int(8)	discard_priority;
+    }
+    */
+    public class RateShareEntry : SampleGroupDescriptionEntry
+    {
+        public const string TYPE = "rash";
+        public override string DisplayName { get { return "RateShareEntry"; } }
+
+        protected ushort operation_point_count;
+        public ushort OperationPointCount { get { return this.operation_point_count; } set { this.operation_point_count = value; } }
+
+        protected ushort target_rate_share;
+        public ushort TargetRateShare { get { return this.target_rate_share; } set { this.target_rate_share = value; } }
+
+        protected uint[] available_bitrate;
+        public uint[] AvailableBitrate { get { return this.available_bitrate; } set { this.available_bitrate = value; } }
+
+        protected ushort[] target_rate_share0;
+        public ushort[] TargetRateShare0 { get { return this.target_rate_share0; } set { this.target_rate_share0 = value; } }
+
+        protected uint maximum_bitrate;
+        public uint MaximumBitrate { get { return this.maximum_bitrate; } set { this.maximum_bitrate = value; } }
+
+        protected uint minimum_bitrate;
+        public uint MinimumBitrate { get { return this.minimum_bitrate; } set { this.minimum_bitrate = value; } }
+
+        protected byte discard_priority;
+        public byte DiscardPriority { get { return this.discard_priority; } set { this.discard_priority = value; } }
+
+        public RateShareEntry() : base("rash")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.operation_point_count);
+
+            if (operation_point_count == 1)
+            {
+                boxSize += stream.ReadUInt16(out this.target_rate_share);
+            }
+
+            else
+            {
+
+                this.available_bitrate = new uint[operation_point_count];
+                this.target_rate_share0 = new ushort[operation_point_count];
+                for (int i = 0; i < operation_point_count; i++)
+                {
+                    boxSize += stream.ReadUInt32(out this.available_bitrate[i]);
+                    boxSize += stream.ReadUInt16(out this.target_rate_share0[i]);
+                }
+            }
+            boxSize += stream.ReadUInt32(out this.maximum_bitrate);
+            boxSize += stream.ReadUInt32(out this.minimum_bitrate);
+            boxSize += stream.ReadUInt8(out this.discard_priority);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.operation_point_count);
+
+            if (operation_point_count == 1)
+            {
+                boxSize += stream.WriteUInt16(this.target_rate_share);
+            }
+
+            else
+            {
+
+                for (int i = 0; i < operation_point_count; i++)
+                {
+                    boxSize += stream.WriteUInt32(this.available_bitrate[i]);
+                    boxSize += stream.WriteUInt16(this.target_rate_share0[i]);
+                }
+            }
+            boxSize += stream.WriteUInt32(this.maximum_bitrate);
+            boxSize += stream.WriteUInt32(this.minimum_bitrate);
+            boxSize += stream.WriteUInt8(this.discard_priority);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // operation_point_count
+
+            if (operation_point_count == 1)
+            {
+                boxSize += 16; // target_rate_share
+            }
+
+            else
+            {
+
+                for (int i = 0; i < operation_point_count; i++)
+                {
+                    boxSize += 32; // available_bitrate
+                    boxSize += 16; // target_rate_share0
+                }
+            }
+            boxSize += 32; // maximum_bitrate
+            boxSize += 32; // minimum_bitrate
+            boxSize += 8; // discard_priority
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AudioRollRecoveryEntry() extends AudioSampleGroupEntry ('roll')
+    {
+        signed int(16) roll_distance;
+    }
+    */
+    public class AudioRollRecoveryEntry : AudioSampleGroupEntry
+    {
+        public const string TYPE = "roll";
+        public override string DisplayName { get { return "AudioRollRecoveryEntry"; } }
+
+        protected short roll_distance;
+        public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
+
+        public AudioRollRecoveryEntry() : base("roll")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadInt16(out this.roll_distance);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteInt16(this.roll_distance);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // roll_distance
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class SAPEntry() extends  SampleGroupDescriptionEntry('sap ')
+    {
+        unsigned int(1) dependent_flag;
+        unsigned int(3) reserved;
+        unsigned int(4) SAP_type;
+    }
+    */
+    public class SAPEntry : SampleGroupDescriptionEntry
+    {
+        public const string TYPE = "sap ";
+        public override string DisplayName { get { return "SAPEntry"; } }
+
+        protected bool dependent_flag;
+        public bool DependentFlag { get { return this.dependent_flag; } set { this.dependent_flag = value; } }
+
+        protected byte reserved;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected byte SAP_type;
+        public byte SAPType { get { return this.SAP_type; } set { this.SAP_type = value; } }
+
+        public SAPEntry() : base("sap ")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.dependent_flag);
+            boxSize += stream.ReadBits(3, out this.reserved);
+            boxSize += stream.ReadBits(4, out this.SAP_type);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.dependent_flag);
+            boxSize += stream.WriteBits(3, this.reserved);
+            boxSize += stream.WriteBits(4, this.SAP_type);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // dependent_flag
+            boxSize += 3; // reserved
+            boxSize += 4; // SAP_type
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class SampleToMetadataItemEntry() 
+    extends SampleGroupDescriptionEntry('stmi') {
+        unsigned int(32) meta_box_handler_type;
+        unsigned int(32) num_items;
+        for(i = 0; i < num_items; i++) {
+            unsigned int(32) item_id[i];
+        }
+    }
+    */
+    public class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
+    {
+        public const string TYPE = "stmi";
+        public override string DisplayName { get { return "SampleToMetadataItemEntry"; } }
+
+        protected uint meta_box_handler_type;
+        public uint MetaBoxHandlerType { get { return this.meta_box_handler_type; } set { this.meta_box_handler_type = value; } }
+
+        protected uint num_items;
+        public uint NumItems { get { return this.num_items; } set { this.num_items = value; } }
+
+        protected uint[] item_id;
+        public uint[] ItemId { get { return this.item_id; } set { this.item_id = value; } }
+
+        public SampleToMetadataItemEntry() : base("stmi")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.meta_box_handler_type);
+            boxSize += stream.ReadUInt32(out this.num_items);
+
+            this.item_id = new uint[num_items];
+            for (int i = 0; i < num_items; i++)
+            {
+                boxSize += stream.ReadUInt32(out this.item_id[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.meta_box_handler_type);
+            boxSize += stream.WriteUInt32(this.num_items);
+
+            for (int i = 0; i < num_items; i++)
+            {
+                boxSize += stream.WriteUInt32(this.item_id[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // meta_box_handler_type
+            boxSize += 32; // num_items
+
+            for (int i = 0; i < num_items; i++)
+            {
+                boxSize += 32; // item_id
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class TemporalLevelEntry() extends VisualSampleGroupEntry('tele')
+    {
+        bit(1)	level_independently_decodable;
+        bit(7)	reserved=0;
+    }
+    */
+    public class TemporalLevelEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "tele";
+        public override string DisplayName { get { return "TemporalLevelEntry"; } }
+
+        protected bool level_independently_decodable;
+        public bool LevelIndependentlyDecodable { get { return this.level_independently_decodable; } set { this.level_independently_decodable = value; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        public TemporalLevelEntry() : base("tele")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.level_independently_decodable);
+            boxSize += stream.ReadBits(7, out this.reserved);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.level_independently_decodable);
+            boxSize += stream.WriteBits(7, this.reserved);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // level_independently_decodable
+            boxSize += 7; // reserved
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class PixelAspectRatioEntry() extends VisualSampleGroupEntry ('pasr'){
+        unsigned int(32) hSpacing;
+        unsigned int(32) vSpacing;
+    }
+    */
+    public class PixelAspectRatioEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "pasr";
+        public override string DisplayName { get { return "PixelAspectRatioEntry"; } }
+
+        protected uint hSpacing;
+        public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
+
+        protected uint vSpacing;
+        public uint VSpacing { get { return this.vSpacing; } set { this.vSpacing = value; } }
+
+        public PixelAspectRatioEntry() : base("pasr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.hSpacing);
+            boxSize += stream.ReadUInt32(out this.vSpacing);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.hSpacing);
+            boxSize += stream.WriteUInt32(this.vSpacing);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // hSpacing
+            boxSize += 32; // vSpacing
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class CleanApertureEntry() extends VisualSampleGroupEntry ('casg'){
+        unsigned int(32) cleanApertureWidthN;
+        unsigned int(32) cleanApertureWidthD;
+
+        unsigned int(32) cleanApertureHeightN;
+        unsigned int(32) cleanApertureHeightD;
+
+
+        unsigned int(32) horizOffN;
+        unsigned int(32) horizOffD;
+
+
+        unsigned int(32) vertOffN;
+        unsigned int(32) vertOffD;
+
+    }
+    */
+    public class CleanApertureEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "casg";
+        public override string DisplayName { get { return "CleanApertureEntry"; } }
+
+        protected uint cleanApertureWidthN;
+        public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
+
+        protected uint cleanApertureWidthD;
+        public uint CleanApertureWidthD { get { return this.cleanApertureWidthD; } set { this.cleanApertureWidthD = value; } }
+
+        protected uint cleanApertureHeightN;
+        public uint CleanApertureHeightN { get { return this.cleanApertureHeightN; } set { this.cleanApertureHeightN = value; } }
+
+        protected uint cleanApertureHeightD;
+        public uint CleanApertureHeightD { get { return this.cleanApertureHeightD; } set { this.cleanApertureHeightD = value; } }
+
+        protected uint horizOffN;
+        public uint HorizOffN { get { return this.horizOffN; } set { this.horizOffN = value; } }
+
+        protected uint horizOffD;
+        public uint HorizOffD { get { return this.horizOffD; } set { this.horizOffD = value; } }
+
+        protected uint vertOffN;
+        public uint VertOffN { get { return this.vertOffN; } set { this.vertOffN = value; } }
+
+        protected uint vertOffD;
+        public uint VertOffD { get { return this.vertOffD; } set { this.vertOffD = value; } }
+
+        public CleanApertureEntry() : base("casg")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.cleanApertureWidthN);
+            boxSize += stream.ReadUInt32(out this.cleanApertureWidthD);
+            boxSize += stream.ReadUInt32(out this.cleanApertureHeightN);
+            boxSize += stream.ReadUInt32(out this.cleanApertureHeightD);
+            boxSize += stream.ReadUInt32(out this.horizOffN);
+            boxSize += stream.ReadUInt32(out this.horizOffD);
+            boxSize += stream.ReadUInt32(out this.vertOffN);
+            boxSize += stream.ReadUInt32(out this.vertOffD);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.cleanApertureWidthN);
+            boxSize += stream.WriteUInt32(this.cleanApertureWidthD);
+            boxSize += stream.WriteUInt32(this.cleanApertureHeightN);
+            boxSize += stream.WriteUInt32(this.cleanApertureHeightD);
+            boxSize += stream.WriteUInt32(this.horizOffN);
+            boxSize += stream.WriteUInt32(this.horizOffD);
+            boxSize += stream.WriteUInt32(this.vertOffN);
+            boxSize += stream.WriteUInt32(this.vertOffD);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // cleanApertureWidthN
+            boxSize += 32; // cleanApertureWidthD
+            boxSize += 32; // cleanApertureHeightN
+            boxSize += 32; // cleanApertureHeightD
+            boxSize += 32; // horizOffN
+            boxSize += 32; // horizOffD
+            boxSize += 32; // vertOffN
+            boxSize += 32; // vertOffD
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TrackGroupTypeBox('msrc') extends FullBox('msrc', version = 0, flags = 0)
+    {
+        unsigned int(32) track_group_id;
+        // the remaining data may be specified 
+        //  for a particular track_group_type
+    }
+    */
+    public class TrackGroupTypeBox : FullBox
+    {
+        public const string TYPE = "msrc";
+        public override string DisplayName { get { return "TrackGroupTypeBox"; } }
+
+        protected uint track_group_id;  //  the remaining data may be specified 
+        public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
+
+        public TrackGroupTypeBox(string boxtype = "msrc") : base("msrc", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.track_group_id); // the remaining data may be specified 
+            /*   for a particular track_group_type */
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.track_group_id); // the remaining data may be specified 
+            /*   for a particular track_group_type */
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // track_group_id
+            /*   for a particular track_group_type */
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class StereoVideoGroupBox extends TrackGroupTypeBox('ster') 
+    {
+        unsigned int(1) left_view_flag;
+        bit(31) reserved;
+    }
+    */
+    public class StereoVideoGroupBox : TrackGroupTypeBox
+    {
+        public const string TYPE = "ster";
+        public override string DisplayName { get { return "StereoVideoGroupBox"; } }
+
+        protected bool left_view_flag;
+        public bool LeftViewFlag { get { return this.left_view_flag; } set { this.left_view_flag = value; } }
+
+        protected uint reserved;
+        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        public StereoVideoGroupBox() : base("ster")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.left_view_flag);
+            boxSize += stream.ReadBits(31, out this.reserved);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.left_view_flag);
+            boxSize += stream.WriteBits(31, this.reserved);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // left_view_flag
+            boxSize += 31; // reserved
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
+        unsigned int(32) track_IDs[];
+    }
+    */
+    public class TrackReferenceTypeBox : Box
+    {
+        public override string DisplayName { get { return "TrackReferenceTypeBox"; } }
+
+        protected uint[] track_IDs;
+        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
+
+        public TrackReferenceTypeBox(string reference_type) : base(reference_type)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize, out this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32ArrayTillEnd(this.track_IDs);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)track_IDs.Length * 32; // track_IDs
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ViewPriorityBox extends Box ('vipr') {
+     ViprEntry entries[]; 
+    } 
+
+    */
+    public class ViewPriorityBox : Box
+    {
+        public const string TYPE = "vipr";
+        public override string DisplayName { get { return "ViewPriorityBox"; } }
+
+        protected ViprEntry[] entries;
+        public ViprEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
+
+        public ViewPriorityBox() : base("vipr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadClass(boxSize, readSize, this, out this.entries);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteClass(this.entries);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateClassSize(entries); // entries
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ViprEntry() {
+     unsigned int(6) reserved = 0; 
+      unsigned int(10) view_id; 
+      unsigned int(32) content_priority_id;
+     }
+
+    */
+    public class ViprEntry : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ViprEntry"; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected ushort view_id;
+        public ushort ViewId { get { return this.view_id; } set { this.view_id = value; } }
+
+        protected uint content_priority_id;
+        public uint ContentPriorityId { get { return this.content_priority_id; } set { this.content_priority_id = value; } }
+
+        public ViprEntry() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadBits(6, out this.reserved);
+            boxSize += stream.ReadBits(10, out this.view_id);
+            boxSize += stream.ReadUInt32(out this.content_priority_id);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteBits(6, this.reserved);
+            boxSize += stream.WriteBits(10, this.view_id);
+            boxSize += stream.WriteUInt32(this.content_priority_id);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 6; // reserved
+            boxSize += 10; // view_id
+            boxSize += 32; // content_priority_id
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class DependencyInfo  
+    { 
+    unsigned int(8)   subSeqDirectionFlag; 
+    unsigned int(8)   layerNumber; 
+    unsigned int(16)  subSequenceIdentifier; 
+    } 
+
+    */
+    public class DependencyInfo : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "DependencyInfo"; } }
+
+        protected byte subSeqDirectionFlag;
+        public byte SubSeqDirectionFlag { get { return this.subSeqDirectionFlag; } set { this.subSeqDirectionFlag = value; } }
+
+        protected byte layerNumber;
+        public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
+
+        protected ushort subSequenceIdentifier;
+        public ushort SubSequenceIdentifier { get { return this.subSequenceIdentifier; } set { this.subSequenceIdentifier = value; } }
+
+        public DependencyInfo() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt8(out this.subSeqDirectionFlag);
+            boxSize += stream.ReadUInt8(out this.layerNumber);
+            boxSize += stream.ReadUInt16(out this.subSequenceIdentifier);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt8(this.subSeqDirectionFlag);
+            boxSize += stream.WriteUInt8(this.layerNumber);
+            boxSize += stream.WriteUInt16(this.subSequenceIdentifier);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // subSeqDirectionFlag
+            boxSize += 8; // layerNumber
+            boxSize += 16; // subSequenceIdentifier
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss') 
+    { 
+      unsigned int(16) subSequenceIdentifer; 
+      unsigned int(8)  layerNumber;  
+      unsigned int(1)  durationFlag; 
+      unsigned int(1)  avgRateFlag; 
+      unsigned int(6)  reserved = 0;  
+      if (durationFlag) 
+       unsigned int(32) duration; 
+      if (avgRateFlag) 
+      {
+       unsigned int(8)  accurateStatisticsFlag; 
+       unsigned int(16) avgBitRate; 
+       unsigned int(16) avgFrameRate; 
+      }
+      unsigned int(8) numReferences; 
+      DependencyInfo dependency[numReferences]; 
+     } 
+
+    */
+    public class AVCSubSequenceEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "avss";
+        public override string DisplayName { get { return "AVCSubSequenceEntry"; } }
+
+        protected ushort subSequenceIdentifer;
+        public ushort SubSequenceIdentifer { get { return this.subSequenceIdentifer; } set { this.subSequenceIdentifer = value; } }
+
+        protected byte layerNumber;
+        public byte LayerNumber { get { return this.layerNumber; } set { this.layerNumber = value; } }
+
+        protected bool durationFlag;
+        public bool DurationFlag { get { return this.durationFlag; } set { this.durationFlag = value; } }
+
+        protected bool avgRateFlag;
+        public bool AvgRateFlag { get { return this.avgRateFlag; } set { this.avgRateFlag = value; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected uint duration;
+        public uint Duration { get { return this.duration; } set { this.duration = value; } }
+
+        protected byte accurateStatisticsFlag;
+        public byte AccurateStatisticsFlag { get { return this.accurateStatisticsFlag; } set { this.accurateStatisticsFlag = value; } }
+
+        protected ushort avgBitRate;
+        public ushort AvgBitRate { get { return this.avgBitRate; } set { this.avgBitRate = value; } }
+
+        protected ushort avgFrameRate;
+        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
+
+        protected byte numReferences;
+        public byte NumReferences { get { return this.numReferences; } set { this.numReferences = value; } }
+
+        protected DependencyInfo[] dependency;
+        public DependencyInfo[] Dependency { get { return this.dependency; } set { this.dependency = value; } }
+
+        public AVCSubSequenceEntry() : base("avss")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.subSequenceIdentifer);
+            boxSize += stream.ReadUInt8(out this.layerNumber);
+            boxSize += stream.ReadBit(out this.durationFlag);
+            boxSize += stream.ReadBit(out this.avgRateFlag);
+            boxSize += stream.ReadBits(6, out this.reserved);
+
+            if (durationFlag)
+            {
+                boxSize += stream.ReadUInt32(out this.duration);
+            }
+
+            if (avgRateFlag)
+            {
+                boxSize += stream.ReadUInt8(out this.accurateStatisticsFlag);
+                boxSize += stream.ReadUInt16(out this.avgBitRate);
+                boxSize += stream.ReadUInt16(out this.avgFrameRate);
+            }
+            boxSize += stream.ReadUInt8(out this.numReferences);
+            boxSize += stream.ReadClass(boxSize, readSize, this, out this.dependency);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.subSequenceIdentifer);
+            boxSize += stream.WriteUInt8(this.layerNumber);
+            boxSize += stream.WriteBit(this.durationFlag);
+            boxSize += stream.WriteBit(this.avgRateFlag);
+            boxSize += stream.WriteBits(6, this.reserved);
+
+            if (durationFlag)
+            {
+                boxSize += stream.WriteUInt32(this.duration);
+            }
+
+            if (avgRateFlag)
+            {
+                boxSize += stream.WriteUInt8(this.accurateStatisticsFlag);
+                boxSize += stream.WriteUInt16(this.avgBitRate);
+                boxSize += stream.WriteUInt16(this.avgFrameRate);
+            }
+            boxSize += stream.WriteUInt8(this.numReferences);
+            boxSize += stream.WriteClass(this.dependency);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // subSequenceIdentifer
+            boxSize += 8; // layerNumber
+            boxSize += 1; // durationFlag
+            boxSize += 1; // avgRateFlag
+            boxSize += 6; // reserved
+
+            if (durationFlag)
+            {
+                boxSize += 32; // duration
+            }
+
+            if (avgRateFlag)
+            {
+                boxSize += 8; // accurateStatisticsFlag
+                boxSize += 16; // avgBitRate
+                boxSize += 16; // avgFrameRate
+            }
+            boxSize += 8; // numReferences
+            boxSize += IsoStream.CalculateClassSize(dependency); // dependency
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) { 
+     unsigned int(6)  
+     reserved=0;  
+     unsigned int(10)  ref_view_id; 
+     unsigned int(32) prec_focal_length; 
+     unsigned int(32) prec_principal_point; 
+     unsigned int(32) prec_skew_factor; 
+     unsigned int(8) exponent_focal_length_x; 
+     signed   int(64) mantissa_focal_length_x; 
+     unsigned int(8) exponent_focal_length_y; 
+     signed   int(64) mantissa_focal_length_y;  
+     unsigned int(8) exponent_principal_point_x; 
+     signed   int(64) mantissa_principal_point_x; 
+     unsigned int(8) exponent_principal_point_y; 
+     signed   int(64) mantissa_principal_point_y; 
+     unsigned int(8) exponent_skew_factor; 
+     signed   int(64) mantissa_skew_factor; 
+    } 
+    */
+    public class IntrinsicCameraParametersBox : FullBox
+    {
+        public const string TYPE = "icam";
+        public override string DisplayName { get { return "IntrinsicCameraParametersBox"; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected ushort ref_view_id;
+        public ushort RefViewId { get { return this.ref_view_id; } set { this.ref_view_id = value; } }
+
+        protected uint prec_focal_length;
+        public uint PrecFocalLength { get { return this.prec_focal_length; } set { this.prec_focal_length = value; } }
+
+        protected uint prec_principal_point;
+        public uint PrecPrincipalPoint { get { return this.prec_principal_point; } set { this.prec_principal_point = value; } }
+
+        protected uint prec_skew_factor;
+        public uint PrecSkewFactor { get { return this.prec_skew_factor; } set { this.prec_skew_factor = value; } }
+
+        protected byte exponent_focal_length_x;
+        public byte ExponentFocalLengthx { get { return this.exponent_focal_length_x; } set { this.exponent_focal_length_x = value; } }
+
+        protected long mantissa_focal_length_x;
+        public long MantissaFocalLengthx { get { return this.mantissa_focal_length_x; } set { this.mantissa_focal_length_x = value; } }
+
+        protected byte exponent_focal_length_y;
+        public byte ExponentFocalLengthy { get { return this.exponent_focal_length_y; } set { this.exponent_focal_length_y = value; } }
+
+        protected long mantissa_focal_length_y;
+        public long MantissaFocalLengthy { get { return this.mantissa_focal_length_y; } set { this.mantissa_focal_length_y = value; } }
+
+        protected byte exponent_principal_point_x;
+        public byte ExponentPrincipalPointx { get { return this.exponent_principal_point_x; } set { this.exponent_principal_point_x = value; } }
+
+        protected long mantissa_principal_point_x;
+        public long MantissaPrincipalPointx { get { return this.mantissa_principal_point_x; } set { this.mantissa_principal_point_x = value; } }
+
+        protected byte exponent_principal_point_y;
+        public byte ExponentPrincipalPointy { get { return this.exponent_principal_point_y; } set { this.exponent_principal_point_y = value; } }
+
+        protected long mantissa_principal_point_y;
+        public long MantissaPrincipalPointy { get { return this.mantissa_principal_point_y; } set { this.mantissa_principal_point_y = value; } }
+
+        protected byte exponent_skew_factor;
+        public byte ExponentSkewFactor { get { return this.exponent_skew_factor; } set { this.exponent_skew_factor = value; } }
+
+        protected long mantissa_skew_factor;
+        public long MantissaSkewFactor { get { return this.mantissa_skew_factor; } set { this.mantissa_skew_factor = value; } }
+
+        public IntrinsicCameraParametersBox(uint flags = 0) : base("icam", 0, flags)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBits(6, out this.reserved);
+            boxSize += stream.ReadBits(10, out this.ref_view_id);
+            boxSize += stream.ReadUInt32(out this.prec_focal_length);
+            boxSize += stream.ReadUInt32(out this.prec_principal_point);
+            boxSize += stream.ReadUInt32(out this.prec_skew_factor);
+            boxSize += stream.ReadUInt8(out this.exponent_focal_length_x);
+            boxSize += stream.ReadInt64(out this.mantissa_focal_length_x);
+            boxSize += stream.ReadUInt8(out this.exponent_focal_length_y);
+            boxSize += stream.ReadInt64(out this.mantissa_focal_length_y);
+            boxSize += stream.ReadUInt8(out this.exponent_principal_point_x);
+            boxSize += stream.ReadInt64(out this.mantissa_principal_point_x);
+            boxSize += stream.ReadUInt8(out this.exponent_principal_point_y);
+            boxSize += stream.ReadInt64(out this.mantissa_principal_point_y);
+            boxSize += stream.ReadUInt8(out this.exponent_skew_factor);
+            boxSize += stream.ReadInt64(out this.mantissa_skew_factor);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBits(6, this.reserved);
+            boxSize += stream.WriteBits(10, this.ref_view_id);
+            boxSize += stream.WriteUInt32(this.prec_focal_length);
+            boxSize += stream.WriteUInt32(this.prec_principal_point);
+            boxSize += stream.WriteUInt32(this.prec_skew_factor);
+            boxSize += stream.WriteUInt8(this.exponent_focal_length_x);
+            boxSize += stream.WriteInt64(this.mantissa_focal_length_x);
+            boxSize += stream.WriteUInt8(this.exponent_focal_length_y);
+            boxSize += stream.WriteInt64(this.mantissa_focal_length_y);
+            boxSize += stream.WriteUInt8(this.exponent_principal_point_x);
+            boxSize += stream.WriteInt64(this.mantissa_principal_point_x);
+            boxSize += stream.WriteUInt8(this.exponent_principal_point_y);
+            boxSize += stream.WriteInt64(this.mantissa_principal_point_y);
+            boxSize += stream.WriteUInt8(this.exponent_skew_factor);
+            boxSize += stream.WriteInt64(this.mantissa_skew_factor);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 6; // reserved
+            boxSize += 10; // ref_view_id
+            boxSize += 32; // prec_focal_length
+            boxSize += 32; // prec_principal_point
+            boxSize += 32; // prec_skew_factor
+            boxSize += 8; // exponent_focal_length_x
+            boxSize += 64; // mantissa_focal_length_x
+            boxSize += 8; // exponent_focal_length_y
+            boxSize += 64; // mantissa_focal_length_y
+            boxSize += 8; // exponent_principal_point_x
+            boxSize += 64; // mantissa_principal_point_x
+            boxSize += 8; // exponent_principal_point_y
+            boxSize += 64; // mantissa_principal_point_y
+            boxSize += 8; // exponent_skew_factor
+            boxSize += 64; // mantissa_skew_factor
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) { 
+     unsigned int(6)  reserved=0; 
+     unsigned int(10)  ref_view_id; 
+     unsigned int(8) prec_rotation_param; 
+     unsigned int(8) prec_translation_param; 
+     for (j=1; j<=3; j++) { /* row *//*   
+      for (k=1; k<=3; k++) { /* column *//* 
+       unsigned int(8) exponent_r[j][k]; 
+       signed   int(64) mantissa_r [j][k]; 
+      } 
+      unsigned int(8) exponent_t[j]; 
+      signed   int(64) mantissa_t[j]; 
+     } 
+    }
+    */
+    public class ExtrinsicCameraParametersBox : FullBox
+    {
+        public const string TYPE = "ecam";
+        public override string DisplayName { get { return "ExtrinsicCameraParametersBox"; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected ushort ref_view_id;
+        public ushort RefViewId { get { return this.ref_view_id; } set { this.ref_view_id = value; } }
+
+        protected byte prec_rotation_param;
+        public byte PrecRotationParam { get { return this.prec_rotation_param; } set { this.prec_rotation_param = value; } }
+
+        protected byte prec_translation_param;
+        public byte PrecTranslationParam { get { return this.prec_translation_param; } set { this.prec_translation_param = value; } }
+
+        protected byte[][] exponent_r;
+        public byte[][] Exponentr { get { return this.exponent_r; } set { this.exponent_r = value; } }
+
+        protected long[][] mantissa_r;
+        public long[][] Mantissar { get { return this.mantissa_r; } set { this.mantissa_r = value; } }
+
+        protected byte[] exponent_t;
+        public byte[] Exponentt { get { return this.exponent_t; } set { this.exponent_t = value; } }
+
+        protected long[] mantissa_t;
+        public long[] Mantissat { get { return this.mantissa_t; } set { this.mantissa_t = value; } }
+
+        public ExtrinsicCameraParametersBox(uint flags = 0) : base("ecam", 0, flags)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBits(6, out this.reserved);
+            boxSize += stream.ReadBits(10, out this.ref_view_id);
+            boxSize += stream.ReadUInt8(out this.prec_rotation_param);
+            boxSize += stream.ReadUInt8(out this.prec_translation_param);
+
+            this.exponent_r = new byte[3][];
+            this.mantissa_r = new long[3][];
+            this.exponent_t = new byte[3];
+            this.mantissa_t = new long[3];
+            for (int j = 0; j < 3; j++)
+            {
+                /*  row  */
+
+                this.exponent_r[j] = new byte[3];
+                this.mantissa_r[j] = new long[3];
+                for (int k = 0; k < 3; k++)
+                {
+                    /*  column  */
+                    boxSize += stream.ReadUInt8(out this.exponent_r[j][k]);
+                    boxSize += stream.ReadInt64(out this.mantissa_r[j][k]);
+                }
+                boxSize += stream.ReadUInt8(out this.exponent_t[j]);
+                boxSize += stream.ReadInt64(out this.mantissa_t[j]);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBits(6, this.reserved);
+            boxSize += stream.WriteBits(10, this.ref_view_id);
+            boxSize += stream.WriteUInt8(this.prec_rotation_param);
+            boxSize += stream.WriteUInt8(this.prec_translation_param);
+
+            for (int j = 0; j < 3; j++)
+            {
+                /*  row  */
+
+                for (int k = 0; k < 3; k++)
+                {
+                    /*  column  */
+                    boxSize += stream.WriteUInt8(this.exponent_r[j][k]);
+                    boxSize += stream.WriteInt64(this.mantissa_r[j][k]);
+                }
+                boxSize += stream.WriteUInt8(this.exponent_t[j]);
+                boxSize += stream.WriteInt64(this.mantissa_t[j]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 6; // reserved
+            boxSize += 10; // ref_view_id
+            boxSize += 8; // prec_rotation_param
+            boxSize += 8; // prec_translation_param
+
+            for (int j = 0; j < 3; j++)
+            {
+                /*  row  */
+
+                for (int k = 0; k < 3; k++)
+                {
+                    /*  column  */
+                    boxSize += 8; // exponent_r
+                    boxSize += 64; // mantissa_r
+                }
+                boxSize += 8; // exponent_t
+                boxSize += 64; // mantissa_t
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AVCDecoderConfigurationRecord { 
+     unsigned int(8) configurationVersion = 1; 
+     unsigned int(8) AVCProfileIndication; 
+     unsigned int(8) profile_compatibility; 
+     unsigned int(8) AVCLevelIndication;  
+     bit(6) reserved = '111111'b; 
+     unsigned int(2) lengthSizeMinusOne;  
+     bit(3) reserved = '111'b; 
+     unsigned int(5) numOfSequenceParameterSets; 
+     for (i=0; i< numOfSequenceParameterSets;  i++) { 
+      unsigned int(16) sequenceParameterSetLength ; 
+      bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
+     } 
+     unsigned int(8) numOfPictureParameterSets; 
+     for (i=0; i< numOfPictureParameterSets;  i++) { 
+      unsigned int(16) pictureParameterSetLength; 
+      bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
+     } 
+     if( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
+        AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 ) 
+     { 
+      bit(6) reserved = '111111'b; 
+      unsigned int(2) chroma_format; 
+      bit(5) reserved = '11111'b; 
+      unsigned int(3) bit_depth_luma_minus8; 
+      bit(5) reserved = '11111'b; 
+      unsigned int(3) bit_depth_chroma_minus8; 
+      unsigned int(8) numOfSequenceParameterSetExt; 
+      for (i=0; i< numOfSequenceParameterSetExt; i++) { 
+       unsigned int(16) sequenceParameterSetExtLength; 
+       bit(8*sequenceParameterSetExtLength) sequenceParameterSetExtNALUnit; 
+      }
+     } 
+    }
+    */
+    public class AVCDecoderConfigurationRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "AVCDecoderConfigurationRecord"; } }
+
+        protected byte configurationVersion = 1;
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
+
+        protected byte AVCProfileIndication;
+        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
+
+        protected byte profile_compatibility;
+        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
+
+        protected byte AVCLevelIndication;
+        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
+
+        protected byte reserved = 0b111111;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected byte lengthSizeMinusOne;
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
+
+        protected byte reserved0 = 0b111;
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte numOfSequenceParameterSets;
+        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
+
+        protected ushort[] sequenceParameterSetLength;
+        public ushort[] SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
+
+        protected byte[][] sequenceParameterSetNALUnit;
+        public byte[][] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
+
+        protected byte numOfPictureParameterSets;
+        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
+
+        protected ushort[] pictureParameterSetLength;
+        public ushort[] PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
+
+        protected byte[][] pictureParameterSetNALUnit;
+        public byte[][] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
+
+        protected byte reserved1 = 0b111111;
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected byte chroma_format;
+        public byte ChromaFormat { get { return this.chroma_format; } set { this.chroma_format = value; } }
+
+        protected byte reserved00 = 0b11111;
+        public byte Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
+
+        protected byte bit_depth_luma_minus8;
+        public byte BitDepthLumaMinus8 { get { return this.bit_depth_luma_minus8; } set { this.bit_depth_luma_minus8 = value; } }
+
+        protected byte reserved10 = 0b11111;
+        public byte Reserved10 { get { return this.reserved10; } set { this.reserved10 = value; } }
+
+        protected byte bit_depth_chroma_minus8;
+        public byte BitDepthChromaMinus8 { get { return this.bit_depth_chroma_minus8; } set { this.bit_depth_chroma_minus8 = value; } }
+
+        protected byte numOfSequenceParameterSetExt;
+        public byte NumOfSequenceParameterSetExt { get { return this.numOfSequenceParameterSetExt; } set { this.numOfSequenceParameterSetExt = value; } }
+
+        protected ushort[] sequenceParameterSetExtLength;
+        public ushort[] SequenceParameterSetExtLength { get { return this.sequenceParameterSetExtLength; } set { this.sequenceParameterSetExtLength = value; } }
+
+        protected byte[][] sequenceParameterSetExtNALUnit;
+        public byte[][] SequenceParameterSetExtNALUnit { get { return this.sequenceParameterSetExtNALUnit; } set { this.sequenceParameterSetExtNALUnit = value; } }
+        public bool HasExtensions { get; set; } = false;
+
+        public AVCDecoderConfigurationRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt8(out this.configurationVersion);
+            boxSize += stream.ReadUInt8(out this.AVCProfileIndication);
+            boxSize += stream.ReadUInt8(out this.profile_compatibility);
+            boxSize += stream.ReadUInt8(out this.AVCLevelIndication);
+            boxSize += stream.ReadBits(6, out this.reserved);
+            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
+            boxSize += stream.ReadBits(3, out this.reserved0);
+            boxSize += stream.ReadBits(5, out this.numOfSequenceParameterSets);
+
+            this.sequenceParameterSetLength = new ushort[numOfSequenceParameterSets];
+            this.sequenceParameterSetNALUnit = new byte[numOfSequenceParameterSets][];
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
+                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+            }
+            boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
+
+            this.pictureParameterSetLength = new ushort[numOfPictureParameterSets];
+            this.pictureParameterSetNALUnit = new byte[numOfPictureParameterSets][];
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
+                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+            }
+
+            if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize; else HasExtensions = true;
+            if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
+        AVCProfileIndication == 122 || AVCProfileIndication == 144)
+            {
+                boxSize += stream.ReadBits(6, out this.reserved1);
+                boxSize += stream.ReadBits(2, out this.chroma_format);
+                boxSize += stream.ReadBits(5, out this.reserved00);
+                boxSize += stream.ReadBits(3, out this.bit_depth_luma_minus8);
+                boxSize += stream.ReadBits(5, out this.reserved10);
+                boxSize += stream.ReadBits(3, out this.bit_depth_chroma_minus8);
+                boxSize += stream.ReadUInt8(out this.numOfSequenceParameterSetExt);
+
+                this.sequenceParameterSetExtLength = new ushort[numOfSequenceParameterSetExt];
+                this.sequenceParameterSetExtNALUnit = new byte[numOfSequenceParameterSetExt][];
+                for (int i = 0; i < numOfSequenceParameterSetExt; i++)
+                {
+                    boxSize += stream.ReadUInt16(out this.sequenceParameterSetExtLength[i]);
+                    boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetExtLength[i], out this.sequenceParameterSetExtNALUnit[i]);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt8(this.configurationVersion);
+            boxSize += stream.WriteUInt8(this.AVCProfileIndication);
+            boxSize += stream.WriteUInt8(this.profile_compatibility);
+            boxSize += stream.WriteUInt8(this.AVCLevelIndication);
+            boxSize += stream.WriteBits(6, this.reserved);
+            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
+            boxSize += stream.WriteBits(3, this.reserved0);
+            boxSize += stream.WriteBits(5, this.numOfSequenceParameterSets);
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
+                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
+            }
+            boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
+                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
+            }
+
+            if (!HasExtensions) return boxSize;
+            if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
+        AVCProfileIndication == 122 || AVCProfileIndication == 144)
+            {
+                boxSize += stream.WriteBits(6, this.reserved1);
+                boxSize += stream.WriteBits(2, this.chroma_format);
+                boxSize += stream.WriteBits(5, this.reserved00);
+                boxSize += stream.WriteBits(3, this.bit_depth_luma_minus8);
+                boxSize += stream.WriteBits(5, this.reserved10);
+                boxSize += stream.WriteBits(3, this.bit_depth_chroma_minus8);
+                boxSize += stream.WriteUInt8(this.numOfSequenceParameterSetExt);
+
+                for (int i = 0; i < numOfSequenceParameterSetExt; i++)
+                {
+                    boxSize += stream.WriteUInt16(this.sequenceParameterSetExtLength[i]);
+                    boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetExtLength[i], this.sequenceParameterSetExtNALUnit[i]);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // configurationVersion
+            boxSize += 8; // AVCProfileIndication
+            boxSize += 8; // profile_compatibility
+            boxSize += 8; // AVCLevelIndication
+            boxSize += 6; // reserved
+            boxSize += 2; // lengthSizeMinusOne
+            boxSize += 3; // reserved0
+            boxSize += 5; // numOfSequenceParameterSets
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += 16; // sequenceParameterSetLength
+                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
+            }
+            boxSize += 8; // numOfPictureParameterSets
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += 16; // pictureParameterSetLength
+                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
+            }
+
+            if (!HasExtensions) return boxSize;
+            if (AVCProfileIndication == 100 || AVCProfileIndication == 110 ||
+        AVCProfileIndication == 122 || AVCProfileIndication == 144)
+            {
+                boxSize += 6; // reserved1
+                boxSize += 2; // chroma_format
+                boxSize += 5; // reserved00
+                boxSize += 3; // bit_depth_luma_minus8
+                boxSize += 5; // reserved10
+                boxSize += 3; // bit_depth_chroma_minus8
+                boxSize += 8; // numOfSequenceParameterSetExt
+
+                for (int i = 0; i < numOfSequenceParameterSetExt; i++)
+                {
+                    boxSize += 16; // sequenceParameterSetExtLength
+                    boxSize += (ulong)sequenceParameterSetExtLength[i] * 8; // sequenceParameterSetExtNALUnit
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class MVCDecoderConfigurationRecord { 
+    unsigned int(8) configurationVersion = 1; 
+    unsigned int(8) AVCProfileIndication; 
+    unsigned int(8) profile_compatibility; 
+    unsigned int(8) AVCLevelIndication;  
+     bit(1) complete_representation; 
+     bit(1) explicit_au_track; 
+    bit(4) reserved = '1111'b; 
+    unsigned int(2) lengthSizeMinusOne;  
+    bit(1) reserved = '0'b; 
+    unsigned int(7) numOfSequenceParameterSets; 
+    for (i=0; i< numOfSequenceParameterSets; i++) { 
+    unsigned int(16) sequenceParameterSetLength ; 
+      bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
+     } 
+    unsigned int(8) numOfPictureParameterSets; 
+    for (i=0; i< numOfPictureParameterSets; i++) { 
+      unsigned int(16) pictureParameterSetLength; 
+      bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
+     } 
+    }
+    */
+    public class MVCDecoderConfigurationRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "MVCDecoderConfigurationRecord"; } }
+
+        protected byte configurationVersion = 1;
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
+
+        protected byte AVCProfileIndication;
+        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
+
+        protected byte profile_compatibility;
+        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
+
+        protected byte AVCLevelIndication;
+        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
+
+        protected bool complete_representation;
+        public bool CompleteRepresentation { get { return this.complete_representation; } set { this.complete_representation = value; } }
+
+        protected bool explicit_au_track;
+        public bool ExplicitAuTrack { get { return this.explicit_au_track; } set { this.explicit_au_track = value; } }
+
+        protected byte reserved = 0b1111;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected byte lengthSizeMinusOne;
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
+
+        protected bool reserved0 = false;
+        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte numOfSequenceParameterSets;
+        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
+
+        protected ushort[] sequenceParameterSetLength;
+        public ushort[] SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
+
+        protected byte[][] sequenceParameterSetNALUnit;
+        public byte[][] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
+
+        protected byte numOfPictureParameterSets;
+        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
+
+        protected ushort[] pictureParameterSetLength;
+        public ushort[] PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
+
+        protected byte[][] pictureParameterSetNALUnit;
+        public byte[][] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
+
+        public MVCDecoderConfigurationRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt8(out this.configurationVersion);
+            boxSize += stream.ReadUInt8(out this.AVCProfileIndication);
+            boxSize += stream.ReadUInt8(out this.profile_compatibility);
+            boxSize += stream.ReadUInt8(out this.AVCLevelIndication);
+            boxSize += stream.ReadBit(out this.complete_representation);
+            boxSize += stream.ReadBit(out this.explicit_au_track);
+            boxSize += stream.ReadBits(4, out this.reserved);
+            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
+            boxSize += stream.ReadBit(out this.reserved0);
+            boxSize += stream.ReadBits(7, out this.numOfSequenceParameterSets);
+
+            this.sequenceParameterSetLength = new ushort[numOfSequenceParameterSets];
+            this.sequenceParameterSetNALUnit = new byte[numOfSequenceParameterSets][];
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
+                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+            }
+            boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
+
+            this.pictureParameterSetLength = new ushort[numOfPictureParameterSets];
+            this.pictureParameterSetNALUnit = new byte[numOfPictureParameterSets][];
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
+                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt8(this.configurationVersion);
+            boxSize += stream.WriteUInt8(this.AVCProfileIndication);
+            boxSize += stream.WriteUInt8(this.profile_compatibility);
+            boxSize += stream.WriteUInt8(this.AVCLevelIndication);
+            boxSize += stream.WriteBit(this.complete_representation);
+            boxSize += stream.WriteBit(this.explicit_au_track);
+            boxSize += stream.WriteBits(4, this.reserved);
+            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
+            boxSize += stream.WriteBit(this.reserved0);
+            boxSize += stream.WriteBits(7, this.numOfSequenceParameterSets);
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
+                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
+            }
+            boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
+                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // configurationVersion
+            boxSize += 8; // AVCProfileIndication
+            boxSize += 8; // profile_compatibility
+            boxSize += 8; // AVCLevelIndication
+            boxSize += 1; // complete_representation
+            boxSize += 1; // explicit_au_track
+            boxSize += 4; // reserved
+            boxSize += 2; // lengthSizeMinusOne
+            boxSize += 1; // reserved0
+            boxSize += 7; // numOfSequenceParameterSets
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += 16; // sequenceParameterSetLength
+                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
+            }
+            boxSize += 8; // numOfPictureParameterSets
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += 16; // pictureParameterSetLength
+                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class SVCDecoderConfigurationRecord { 
+    unsigned int(8) configurationVersion = 1; 
+    unsigned int(8) AVCProfileIndication; 
+    unsigned int(8) profile_compatibility; 
+    unsigned int(8) AVCLevelIndication;  
+     bit(1) complete_represenation; 
+    bit(5) reserved = '11111'b; 
+    unsigned int(2) lengthSizeMinusOne;  
+    bit(1) reserved = '0'b; 
+    unsigned int(7) numOfSequenceParameterSets; 
+    for (i=0; i< numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++) { 
+    unsigned int(16) sequenceParameterSetLength ; 
+      bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
+     } 
+    unsigned int(8) numOfPictureParameterSets; 
+    for (i=0; i< numOfPictureParameterSets; i++) { 
+      unsigned int(16) pictureParameterSetLength; 
+      bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
+     } 
+    }
+    */
+    public class SVCDecoderConfigurationRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SVCDecoderConfigurationRecord"; } }
+
+        protected byte configurationVersion = 1;
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
+
+        protected byte AVCProfileIndication;
+        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
+
+        protected byte profile_compatibility;
+        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
+
+        protected byte AVCLevelIndication;
+        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
+
+        protected bool complete_represenation;
+        public bool CompleteRepresenation { get { return this.complete_represenation; } set { this.complete_represenation = value; } }
+
+        protected byte reserved = 0b11111;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected byte lengthSizeMinusOne;
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
+
+        protected bool reserved0 = false;
+        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte numOfSequenceParameterSets;
+        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
+
+        protected ushort[] sequenceParameterSetLength;
+        public ushort[] SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
+
+        protected byte[][] sequenceParameterSetNALUnit;
+        public byte[][] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
+
+        protected byte numOfPictureParameterSets;
+        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
+
+        protected ushort[] pictureParameterSetLength;
+        public ushort[] PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
+
+        protected byte[][] pictureParameterSetNALUnit;
+        public byte[][] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
+
+        public SVCDecoderConfigurationRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt8(out this.configurationVersion);
+            boxSize += stream.ReadUInt8(out this.AVCProfileIndication);
+            boxSize += stream.ReadUInt8(out this.profile_compatibility);
+            boxSize += stream.ReadUInt8(out this.AVCLevelIndication);
+            boxSize += stream.ReadBit(out this.complete_represenation);
+            boxSize += stream.ReadBits(5, out this.reserved);
+            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
+            boxSize += stream.ReadBit(out this.reserved0);
+            boxSize += stream.ReadBits(7, out this.numOfSequenceParameterSets);
+
+            this.sequenceParameterSetLength = new ushort[0];
+            this.sequenceParameterSetNALUnit = new byte[0][];
+            for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
+            {
+                boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
+                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+            }
+            boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
+
+            this.pictureParameterSetLength = new ushort[numOfPictureParameterSets];
+            this.pictureParameterSetNALUnit = new byte[numOfPictureParameterSets][];
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
+                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt8(this.configurationVersion);
+            boxSize += stream.WriteUInt8(this.AVCProfileIndication);
+            boxSize += stream.WriteUInt8(this.profile_compatibility);
+            boxSize += stream.WriteUInt8(this.AVCLevelIndication);
+            boxSize += stream.WriteBit(this.complete_represenation);
+            boxSize += stream.WriteBits(5, this.reserved);
+            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
+            boxSize += stream.WriteBit(this.reserved0);
+            boxSize += stream.WriteBits(7, this.numOfSequenceParameterSets);
+
+            for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
+            {
+                boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
+                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
+            }
+            boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
+                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // configurationVersion
+            boxSize += 8; // AVCProfileIndication
+            boxSize += 8; // profile_compatibility
+            boxSize += 8; // AVCLevelIndication
+            boxSize += 1; // complete_represenation
+            boxSize += 5; // reserved
+            boxSize += 2; // lengthSizeMinusOne
+            boxSize += 1; // reserved0
+            boxSize += 7; // numOfSequenceParameterSets
+
+            for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
+            {
+                boxSize += 16; // sequenceParameterSetLength
+                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
+            }
+            boxSize += 8; // numOfPictureParameterSets
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += 16; // pictureParameterSetLength
+                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class HEVCDecoderConfigurationRecord {
+        unsigned int(8) configurationVersion = 1;
+        unsigned int(2) general_profile_space;
+        unsigned int(1) general_tier_flag;
+        unsigned int(5) general_profile_idc;
+        unsigned int(32) general_profile_compatibility_flags;
+        unsigned int(48) general_constraint_indicator_flags;
+        unsigned int(8) general_level_idc;
+        bit(4) reserved = '1111'b;
+        unsigned int(12) min_spatial_segmentation_idc;
+        bit(6) reserved = '111111'b;
+        unsigned int(2) parallelismType;
+        bit(6) reserved = '111111'b;
+        unsigned int(2) chromaFormat;
+        bit(5) reserved = '11111'b;
+        unsigned int(3) bitDepthLumaMinus8;
+        bit(5) reserved = '11111'b;
+        unsigned int(3) bitDepthChromaMinus8;
+        bit(16) avgFrameRate;
+        bit(2) constantFrameRate;
+        bit(3) numTemporalLayers;
+        bit(1) temporalIdNested;
+        unsigned int(2) lengthSizeMinusOne; 
+        unsigned int(8) numOfArrays;
+        for (j=0; j < numOfArrays; j++) {
+            bit(1) array_completeness;
+            unsigned int(1) reserved = 0;
+            unsigned int(6) NAL_unit_type;
+            unsigned int(16) numNalus;
+            for (i=0; i< numNalus; i++) {
+                unsigned int(16) nalUnitLength;
+                bit(8*nalUnitLength) nalUnit;
+            }
+        }
+    }
+    */
+    public class HEVCDecoderConfigurationRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "HEVCDecoderConfigurationRecord"; } }
+
+        protected byte configurationVersion = 1;
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
+
+        protected byte general_profile_space;
+        public byte GeneralProfileSpace { get { return this.general_profile_space; } set { this.general_profile_space = value; } }
+
+        protected bool general_tier_flag;
+        public bool GeneralTierFlag { get { return this.general_tier_flag; } set { this.general_tier_flag = value; } }
+
+        protected byte general_profile_idc;
+        public byte GeneralProfileIdc { get { return this.general_profile_idc; } set { this.general_profile_idc = value; } }
+
+        protected uint general_profile_compatibility_flags;
+        public uint GeneralProfileCompatibilityFlags { get { return this.general_profile_compatibility_flags; } set { this.general_profile_compatibility_flags = value; } }
+
+        protected ulong general_constraint_indicator_flags;
+        public ulong GeneralConstraintIndicatorFlags { get { return this.general_constraint_indicator_flags; } set { this.general_constraint_indicator_flags = value; } }
+
+        protected byte general_level_idc;
+        public byte GeneralLevelIdc { get { return this.general_level_idc; } set { this.general_level_idc = value; } }
+
+        protected byte reserved = 0b1111;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected ushort min_spatial_segmentation_idc;
+        public ushort MinSpatialSegmentationIdc { get { return this.min_spatial_segmentation_idc; } set { this.min_spatial_segmentation_idc = value; } }
+
+        protected byte reserved0 = 0b111111;
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte parallelismType;
+        public byte ParallelismType { get { return this.parallelismType; } set { this.parallelismType = value; } }
+
+        protected byte reserved1 = 0b111111;
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected byte chromaFormat;
+        public byte ChromaFormat { get { return this.chromaFormat; } set { this.chromaFormat = value; } }
+
+        protected byte reserved2 = 0b11111;
+        public byte Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+        protected byte bitDepthLumaMinus8;
+        public byte BitDepthLumaMinus8 { get { return this.bitDepthLumaMinus8; } set { this.bitDepthLumaMinus8 = value; } }
+
+        protected byte reserved3 = 0b11111;
+        public byte Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
+
+        protected byte bitDepthChromaMinus8;
+        public byte BitDepthChromaMinus8 { get { return this.bitDepthChromaMinus8; } set { this.bitDepthChromaMinus8 = value; } }
+
+        protected ushort avgFrameRate;
+        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
+
+        protected byte constantFrameRate;
+        public byte ConstantFrameRate { get { return this.constantFrameRate; } set { this.constantFrameRate = value; } }
+
+        protected byte numTemporalLayers;
+        public byte NumTemporalLayers { get { return this.numTemporalLayers; } set { this.numTemporalLayers = value; } }
+
+        protected bool temporalIdNested;
+        public bool TemporalIdNested { get { return this.temporalIdNested; } set { this.temporalIdNested = value; } }
+
+        protected byte lengthSizeMinusOne;
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
+
+        protected byte numOfArrays;
+        public byte NumOfArrays { get { return this.numOfArrays; } set { this.numOfArrays = value; } }
+
+        protected bool[] array_completeness;
+        public bool[] ArrayCompleteness { get { return this.array_completeness; } set { this.array_completeness = value; } }
+
+        protected bool[] reserved4;
+        public bool[] Reserved4 { get { return this.reserved4; } set { this.reserved4 = value; } }
+
+        protected byte[] NAL_unit_type;
+        public byte[] NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
+
+        protected ushort[] numNalus;
+        public ushort[] NumNalus { get { return this.numNalus; } set { this.numNalus = value; } }
+
+        protected ushort[][] nalUnitLength;
+        public ushort[][] NalUnitLength { get { return this.nalUnitLength; } set { this.nalUnitLength = value; } }
+
+        protected byte[][][] nalUnit;
+        public byte[][][] NalUnit { get { return this.nalUnit; } set { this.nalUnit = value; } }
+
+        public HEVCDecoderConfigurationRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt8(out this.configurationVersion);
+            boxSize += stream.ReadBits(2, out this.general_profile_space);
+            boxSize += stream.ReadBit(out this.general_tier_flag);
+            boxSize += stream.ReadBits(5, out this.general_profile_idc);
+            boxSize += stream.ReadUInt32(out this.general_profile_compatibility_flags);
+            boxSize += stream.ReadUInt48(out this.general_constraint_indicator_flags);
+            boxSize += stream.ReadUInt8(out this.general_level_idc);
+            boxSize += stream.ReadBits(4, out this.reserved);
+            boxSize += stream.ReadBits(12, out this.min_spatial_segmentation_idc);
+            boxSize += stream.ReadBits(6, out this.reserved0);
+            boxSize += stream.ReadBits(2, out this.parallelismType);
+            boxSize += stream.ReadBits(6, out this.reserved1);
+            boxSize += stream.ReadBits(2, out this.chromaFormat);
+            boxSize += stream.ReadBits(5, out this.reserved2);
+            boxSize += stream.ReadBits(3, out this.bitDepthLumaMinus8);
+            boxSize += stream.ReadBits(5, out this.reserved3);
+            boxSize += stream.ReadBits(3, out this.bitDepthChromaMinus8);
+            boxSize += stream.ReadUInt16(out this.avgFrameRate);
+            boxSize += stream.ReadBits(2, out this.constantFrameRate);
+            boxSize += stream.ReadBits(3, out this.numTemporalLayers);
+            boxSize += stream.ReadBit(out this.temporalIdNested);
+            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
+            boxSize += stream.ReadUInt8(out this.numOfArrays);
+
+            this.array_completeness = new bool[numOfArrays];
+            this.reserved4 = new bool[numOfArrays];
+            this.NAL_unit_type = new byte[numOfArrays];
+            this.numNalus = new ushort[numOfArrays];
+            this.nalUnitLength = new ushort[numOfArrays][];
+            this.nalUnit = new byte[numOfArrays][][];
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += stream.ReadBit(out this.array_completeness[j]);
+                boxSize += stream.ReadBit(out this.reserved4[j]);
+                boxSize += stream.ReadBits(6, out this.NAL_unit_type[j]);
+                boxSize += stream.ReadUInt16(out this.numNalus[j]);
+
+                this.nalUnitLength[j] = new ushort[numNalus[j]];
+                this.nalUnit[j] = new byte[numNalus[j]][];
+                for (int i = 0; i < numNalus[j]; i++)
+                {
+                    boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
+                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt8(this.configurationVersion);
+            boxSize += stream.WriteBits(2, this.general_profile_space);
+            boxSize += stream.WriteBit(this.general_tier_flag);
+            boxSize += stream.WriteBits(5, this.general_profile_idc);
+            boxSize += stream.WriteUInt32(this.general_profile_compatibility_flags);
+            boxSize += stream.WriteUInt48(this.general_constraint_indicator_flags);
+            boxSize += stream.WriteUInt8(this.general_level_idc);
+            boxSize += stream.WriteBits(4, this.reserved);
+            boxSize += stream.WriteBits(12, this.min_spatial_segmentation_idc);
+            boxSize += stream.WriteBits(6, this.reserved0);
+            boxSize += stream.WriteBits(2, this.parallelismType);
+            boxSize += stream.WriteBits(6, this.reserved1);
+            boxSize += stream.WriteBits(2, this.chromaFormat);
+            boxSize += stream.WriteBits(5, this.reserved2);
+            boxSize += stream.WriteBits(3, this.bitDepthLumaMinus8);
+            boxSize += stream.WriteBits(5, this.reserved3);
+            boxSize += stream.WriteBits(3, this.bitDepthChromaMinus8);
+            boxSize += stream.WriteUInt16(this.avgFrameRate);
+            boxSize += stream.WriteBits(2, this.constantFrameRate);
+            boxSize += stream.WriteBits(3, this.numTemporalLayers);
+            boxSize += stream.WriteBit(this.temporalIdNested);
+            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
+            boxSize += stream.WriteUInt8(this.numOfArrays);
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += stream.WriteBit(this.array_completeness[j]);
+                boxSize += stream.WriteBit(this.reserved4[j]);
+                boxSize += stream.WriteBits(6, this.NAL_unit_type[j]);
+                boxSize += stream.WriteUInt16(this.numNalus[j]);
+
+                for (int i = 0; i < numNalus[j]; i++)
+                {
+                    boxSize += stream.WriteUInt16(this.nalUnitLength[j][i]);
+                    boxSize += stream.WriteUInt8Array((uint)nalUnitLength[j][i], this.nalUnit[j][i]);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // configurationVersion
+            boxSize += 2; // general_profile_space
+            boxSize += 1; // general_tier_flag
+            boxSize += 5; // general_profile_idc
+            boxSize += 32; // general_profile_compatibility_flags
+            boxSize += 48; // general_constraint_indicator_flags
+            boxSize += 8; // general_level_idc
+            boxSize += 4; // reserved
+            boxSize += 12; // min_spatial_segmentation_idc
+            boxSize += 6; // reserved0
+            boxSize += 2; // parallelismType
+            boxSize += 6; // reserved1
+            boxSize += 2; // chromaFormat
+            boxSize += 5; // reserved2
+            boxSize += 3; // bitDepthLumaMinus8
+            boxSize += 5; // reserved3
+            boxSize += 3; // bitDepthChromaMinus8
+            boxSize += 16; // avgFrameRate
+            boxSize += 2; // constantFrameRate
+            boxSize += 3; // numTemporalLayers
+            boxSize += 1; // temporalIdNested
+            boxSize += 2; // lengthSizeMinusOne
+            boxSize += 8; // numOfArrays
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += 1; // array_completeness
+                boxSize += 1; // reserved4
+                boxSize += 6; // NAL_unit_type
+                boxSize += 16; // numNalus
+
+                for (int i = 0; i < numNalus[j]; i++)
+                {
+                    boxSize += 16; // nalUnitLength
+                    boxSize += (ulong)nalUnitLength[j][i] * 8; // nalUnit
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class VvcPTLRecord(num_sublayers) {
+        bit(2) reserved = 0;
+        unsigned int(6) num_bytes_constraint_info;
+        unsigned int(7) general_profile_idc;
+        unsigned int(1) general_tier_flag;
+        unsigned int(8) general_level_idc;
+        unsigned int(1) ptl_frame_only_constraint_flag;
+        unsigned int(1) ptl_multi_layer_enabled_flag;
+        unsigned int(8*num_bytes_constraint_info - 2) general_constraint_info;
+        for (i=num_sublayers - 2; i >= 0; i--)
+            unsigned int(1) ptl_sublayer_level_present_flag[i];
+        for (j=num_sublayers; j<=8 && num_sublayers > 1; j++)
+            bit(1) ptl_reserved_zero_bit = 0;
+        for (i=num_sublayers-2; i >= 0; i--) {
+            if (ptl_sublayer_level_present_flag[i])
+                unsigned int(8) sublayer_level_idc[i];
+            }
+        unsigned int(8) ptl_num_sub_profiles;
+        for (j=0; j < ptl_num_sub_profiles; j++)
+            unsigned int(32) general_sub_profile_idc[j];
+    } 
+    */
+    public class VvcPTLRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "VvcPTLRecord"; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected byte num_bytes_constraint_info;
+        public byte NumBytesConstraintInfo { get { return this.num_bytes_constraint_info; } set { this.num_bytes_constraint_info = value; } }
+
+        protected byte general_profile_idc;
+        public byte GeneralProfileIdc { get { return this.general_profile_idc; } set { this.general_profile_idc = value; } }
+
+        protected bool general_tier_flag;
+        public bool GeneralTierFlag { get { return this.general_tier_flag; } set { this.general_tier_flag = value; } }
+
+        protected byte general_level_idc;
+        public byte GeneralLevelIdc { get { return this.general_level_idc; } set { this.general_level_idc = value; } }
+
+        protected bool ptl_frame_only_constraint_flag;
+        public bool PtlFrameOnlyConstraintFlag { get { return this.ptl_frame_only_constraint_flag; } set { this.ptl_frame_only_constraint_flag = value; } }
+
+        protected bool ptl_multi_layer_enabled_flag;
+        public bool PtlMultiLayerEnabledFlag { get { return this.ptl_multi_layer_enabled_flag; } set { this.ptl_multi_layer_enabled_flag = value; } }
+
+        protected byte[] general_constraint_info;
+        public byte[] GeneralConstraintInfo { get { return this.general_constraint_info; } set { this.general_constraint_info = value; } }
+
+        protected bool[] ptl_sublayer_level_present_flag;
+        public bool[] PtlSublayerLevelPresentFlag { get { return this.ptl_sublayer_level_present_flag; } set { this.ptl_sublayer_level_present_flag = value; } }
+
+        protected bool[] ptl_reserved_zero_bit;
+        public bool[] PtlReservedZeroBit { get { return this.ptl_reserved_zero_bit; } set { this.ptl_reserved_zero_bit = value; } }
+
+        protected byte[] sublayer_level_idc;
+        public byte[] SublayerLevelIdc { get { return this.sublayer_level_idc; } set { this.sublayer_level_idc = value; } }
+
+        protected byte ptl_num_sub_profiles;
+        public byte PtlNumSubProfiles { get { return this.ptl_num_sub_profiles; } set { this.ptl_num_sub_profiles = value; } }
+
+        protected uint[] general_sub_profile_idc;
+        public uint[] GeneralSubProfileIdc { get { return this.general_sub_profile_idc; } set { this.general_sub_profile_idc = value; } }
+
+        protected byte num_sublayers;
+        public byte NumSublayers { get { return this.num_sublayers; } set { this.num_sublayers = value; } }
+
+        public VvcPTLRecord(byte num_sublayers) : base()
+        {
+            this.num_sublayers = num_sublayers;
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadBits(2, out this.reserved);
+            boxSize += stream.ReadBits(6, out this.num_bytes_constraint_info);
+            boxSize += stream.ReadBits(7, out this.general_profile_idc);
+            boxSize += stream.ReadBit(out this.general_tier_flag);
+            boxSize += stream.ReadUInt8(out this.general_level_idc);
+            boxSize += stream.ReadBit(out this.ptl_frame_only_constraint_flag);
+            boxSize += stream.ReadBit(out this.ptl_multi_layer_enabled_flag);
+            boxSize += stream.ReadBits((uint)(8 * num_bytes_constraint_info - 2), out this.general_constraint_info);
+
+            this.ptl_sublayer_level_present_flag = new bool[num_sublayers - 1];
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+                boxSize += stream.ReadBit(out this.ptl_sublayer_level_present_flag[i]);
+            }
+
+            this.ptl_reserved_zero_bit = new bool[9];
+            for (int j = num_sublayers; j <= 8 && num_sublayers > 1; j++)
+            {
+                boxSize += stream.ReadBit(out this.ptl_reserved_zero_bit[j]);
+            }
+
+            this.sublayer_level_idc = new byte[num_sublayers - 1];
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+
+                if (ptl_sublayer_level_present_flag[i])
+                {
+                    boxSize += stream.ReadUInt8(out this.sublayer_level_idc[i]);
+                }
+            }
+            boxSize += stream.ReadUInt8(out this.ptl_num_sub_profiles);
+
+            this.general_sub_profile_idc = new uint[ptl_num_sub_profiles];
+            for (int j = 0; j < ptl_num_sub_profiles; j++)
+            {
+                boxSize += stream.ReadUInt32(out this.general_sub_profile_idc[j]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteBits(2, this.reserved);
+            boxSize += stream.WriteBits(6, this.num_bytes_constraint_info);
+            boxSize += stream.WriteBits(7, this.general_profile_idc);
+            boxSize += stream.WriteBit(this.general_tier_flag);
+            boxSize += stream.WriteUInt8(this.general_level_idc);
+            boxSize += stream.WriteBit(this.ptl_frame_only_constraint_flag);
+            boxSize += stream.WriteBit(this.ptl_multi_layer_enabled_flag);
+            boxSize += stream.WriteBits((uint)(8 * num_bytes_constraint_info - 2), this.general_constraint_info);
+
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+                boxSize += stream.WriteBit(this.ptl_sublayer_level_present_flag[i]);
+            }
+
+            for (int j = num_sublayers; j <= 8 && num_sublayers > 1; j++)
+            {
+                boxSize += stream.WriteBit(this.ptl_reserved_zero_bit[j]);
+            }
+
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+
+                if (ptl_sublayer_level_present_flag[i])
+                {
+                    boxSize += stream.WriteUInt8(this.sublayer_level_idc[i]);
+                }
+            }
+            boxSize += stream.WriteUInt8(this.ptl_num_sub_profiles);
+
+            for (int j = 0; j < ptl_num_sub_profiles; j++)
+            {
+                boxSize += stream.WriteUInt32(this.general_sub_profile_idc[j]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 2; // reserved
+            boxSize += 6; // num_bytes_constraint_info
+            boxSize += 7; // general_profile_idc
+            boxSize += 1; // general_tier_flag
+            boxSize += 8; // general_level_idc
+            boxSize += 1; // ptl_frame_only_constraint_flag
+            boxSize += 1; // ptl_multi_layer_enabled_flag
+            boxSize += (uint)(8 * num_bytes_constraint_info - 2); // general_constraint_info
+
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+                boxSize += 1; // ptl_sublayer_level_present_flag
+            }
+
+            for (int j = num_sublayers; j <= 8 && num_sublayers > 1; j++)
+            {
+                boxSize += 1; // ptl_reserved_zero_bit
+            }
+
+            for (int i = num_sublayers - 2; i >= 0; i--)
+            {
+
+                if (ptl_sublayer_level_present_flag[i])
+                {
+                    boxSize += 8; // sublayer_level_idc
+                }
+            }
+            boxSize += 8; // ptl_num_sub_profiles
+
+            for (int j = 0; j < ptl_num_sub_profiles; j++)
+            {
+                boxSize += 32; // general_sub_profile_idc
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class VvcDecoderConfigurationRecord {
+        bit(5) reserved = '11111'b;
+        unsigned int(2) LengthSizeMinusOne;
+        unsigned int(1) ptl_present_flag;
+        if (ptl_present_flag) {
+            unsigned int(9) ols_idx;
+            unsigned int(3) num_sublayers;
+            unsigned int(2) constant_frame_rate;
+            unsigned int(2) chroma_format_idc;
+            unsigned int(3) bit_depth_minus8;
+            bit(5) reserved = '11111'b;
+            VvcPTLRecord(num_sublayers) native_ptl;
+            unsigned_int(16) max_picture_width;
+            unsigned_int(16) max_picture_height;
+            unsigned int(16) avg_frame_rate;
+        }
+        unsigned int(8) num_of_arrays;
+        for (j=0; j < num_of_arrays; j++) {
+            unsigned int(1) array_completeness;
+            bit(2) reserved = 0;
+            unsigned int(5) NAL_unit_type;
+            if (NAL_unit_type != DCI_NUT  &&  NAL_unit_type != OPI_NUT) {
+                unsigned int(16) num_nalus;
+            for (i=0; i< num_nalus; i++) {
+                unsigned int(16) nal_unit_length;
+                bit(8*nal_unit_length) nal_unit;
+            }
+            }
+        }
+    }
+    */
+    public class VvcDecoderConfigurationRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "VvcDecoderConfigurationRecord"; } }
+
+        protected byte reserved = 0b11111;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected byte LengthSizeMinusOne;
+        public byte _LengthSizeMinusOne { get { return this.LengthSizeMinusOne; } set { this.LengthSizeMinusOne = value; } }
+
+        protected bool ptl_present_flag;
+        public bool PtlPresentFlag { get { return this.ptl_present_flag; } set { this.ptl_present_flag = value; } }
+
+        protected ushort ols_idx;
+        public ushort OlsIdx { get { return this.ols_idx; } set { this.ols_idx = value; } }
+
+        protected byte num_sublayers;
+        public byte NumSublayers { get { return this.num_sublayers; } set { this.num_sublayers = value; } }
+
+        protected byte constant_frame_rate;
+        public byte ConstantFrameRate { get { return this.constant_frame_rate; } set { this.constant_frame_rate = value; } }
+
+        protected byte chroma_format_idc;
+        public byte ChromaFormatIdc { get { return this.chroma_format_idc; } set { this.chroma_format_idc = value; } }
+
+        protected byte bit_depth_minus8;
+        public byte BitDepthMinus8 { get { return this.bit_depth_minus8; } set { this.bit_depth_minus8 = value; } }
+
+        protected byte reserved0 = 0b11111;
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected VvcPTLRecord native_ptl;
+        public VvcPTLRecord NativePtl { get { return this.native_ptl; } set { this.native_ptl = value; } }
+
+        protected ushort max_picture_width;
+        public ushort MaxPictureWidth { get { return this.max_picture_width; } set { this.max_picture_width = value; } }
+
+        protected ushort max_picture_height;
+        public ushort MaxPictureHeight { get { return this.max_picture_height; } set { this.max_picture_height = value; } }
+
+        protected ushort avg_frame_rate;
+        public ushort AvgFrameRate { get { return this.avg_frame_rate; } set { this.avg_frame_rate = value; } }
+
+        protected byte num_of_arrays;
+        public byte NumOfArrays { get { return this.num_of_arrays; } set { this.num_of_arrays = value; } }
+
+        protected bool[] array_completeness;
+        public bool[] ArrayCompleteness { get { return this.array_completeness; } set { this.array_completeness = value; } }
+
+        protected byte[] reserved1;
+        public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected byte[] NAL_unit_type;
+        public byte[] NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
+
+        protected ushort[] num_nalus;
+        public ushort[] NumNalus { get { return this.num_nalus; } set { this.num_nalus = value; } }
+
+        protected ushort[][] nal_unit_length;
+        public ushort[][] NalUnitLength { get { return this.nal_unit_length; } set { this.nal_unit_length = value; } }
+
+        protected byte[][][] nal_unit;
+        public byte[][][] NalUnit { get { return this.nal_unit; } set { this.nal_unit = value; } }
+
+        public VvcDecoderConfigurationRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            const int OPI_NUT = 12;
+            const int DCI_NUT = 13;
+
+            boxSize += stream.ReadBits(5, out this.reserved);
+            boxSize += stream.ReadBits(2, out this.LengthSizeMinusOne);
+            boxSize += stream.ReadBit(out this.ptl_present_flag);
+
+            if (ptl_present_flag)
+            {
+                boxSize += stream.ReadBits(9, out this.ols_idx);
+                boxSize += stream.ReadBits(3, out this.num_sublayers);
+                boxSize += stream.ReadBits(2, out this.constant_frame_rate);
+                boxSize += stream.ReadBits(2, out this.chroma_format_idc);
+                boxSize += stream.ReadBits(3, out this.bit_depth_minus8);
+                boxSize += stream.ReadBits(5, out this.reserved0);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord(num_sublayers), out this.native_ptl);
+                boxSize += stream.ReadUInt16(out this.max_picture_width);
+                boxSize += stream.ReadUInt16(out this.max_picture_height);
+                boxSize += stream.ReadUInt16(out this.avg_frame_rate);
+            }
+            boxSize += stream.ReadUInt8(out this.num_of_arrays);
+
+            this.array_completeness = new bool[num_of_arrays];
+            this.reserved1 = new byte[num_of_arrays];
+            this.NAL_unit_type = new byte[num_of_arrays];
+            this.num_nalus = new ushort[num_of_arrays];
+            this.nal_unit_length = new ushort[num_of_arrays][];
+            this.nal_unit = new byte[num_of_arrays][][];
+            for (int j = 0; j < num_of_arrays; j++)
+            {
+                boxSize += stream.ReadBit(out this.array_completeness[j]);
+                boxSize += stream.ReadBits(2, out this.reserved1[j]);
+                boxSize += stream.ReadBits(5, out this.NAL_unit_type[j]);
+
+                if (NAL_unit_type[j] != DCI_NUT && NAL_unit_type[j] != OPI_NUT)
+                {
+                    boxSize += stream.ReadUInt16(out this.num_nalus[j]);
+
+                    this.nal_unit_length[j] = new ushort[num_nalus[j]];
+                    this.nal_unit[j] = new byte[num_nalus[j]][];
+                    for (int i = 0; i < num_nalus[j]; i++)
+                    {
+                        boxSize += stream.ReadUInt16(out this.nal_unit_length[j][i]);
+                        boxSize += stream.ReadUInt8Array((uint)nal_unit_length[j][i], out this.nal_unit[j][i]);
+                    }
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            const int OPI_NUT = 12;
+            const int DCI_NUT = 13;
+
+            boxSize += stream.WriteBits(5, this.reserved);
+            boxSize += stream.WriteBits(2, this.LengthSizeMinusOne);
+            boxSize += stream.WriteBit(this.ptl_present_flag);
+
+            if (ptl_present_flag)
+            {
+                boxSize += stream.WriteBits(9, this.ols_idx);
+                boxSize += stream.WriteBits(3, this.num_sublayers);
+                boxSize += stream.WriteBits(2, this.constant_frame_rate);
+                boxSize += stream.WriteBits(2, this.chroma_format_idc);
+                boxSize += stream.WriteBits(3, this.bit_depth_minus8);
+                boxSize += stream.WriteBits(5, this.reserved0);
+                boxSize += stream.WriteClass(this.native_ptl);
+                boxSize += stream.WriteUInt16(this.max_picture_width);
+                boxSize += stream.WriteUInt16(this.max_picture_height);
+                boxSize += stream.WriteUInt16(this.avg_frame_rate);
+            }
+            boxSize += stream.WriteUInt8(this.num_of_arrays);
+
+            for (int j = 0; j < num_of_arrays; j++)
+            {
+                boxSize += stream.WriteBit(this.array_completeness[j]);
+                boxSize += stream.WriteBits(2, this.reserved1[j]);
+                boxSize += stream.WriteBits(5, this.NAL_unit_type[j]);
+
+                if (NAL_unit_type[j] != DCI_NUT && NAL_unit_type[j] != OPI_NUT)
+                {
+                    boxSize += stream.WriteUInt16(this.num_nalus[j]);
+
+                    for (int i = 0; i < num_nalus[j]; i++)
+                    {
+                        boxSize += stream.WriteUInt16(this.nal_unit_length[j][i]);
+                        boxSize += stream.WriteUInt8Array((uint)nal_unit_length[j][i], this.nal_unit[j][i]);
+                    }
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            const int OPI_NUT = 12;
+            const int DCI_NUT = 13;
+
+            boxSize += 5; // reserved
+            boxSize += 2; // LengthSizeMinusOne
+            boxSize += 1; // ptl_present_flag
+
+            if (ptl_present_flag)
+            {
+                boxSize += 9; // ols_idx
+                boxSize += 3; // num_sublayers
+                boxSize += 2; // constant_frame_rate
+                boxSize += 2; // chroma_format_idc
+                boxSize += 3; // bit_depth_minus8
+                boxSize += 5; // reserved0
+                boxSize += IsoStream.CalculateClassSize(native_ptl); // native_ptl
+                boxSize += 16; // max_picture_width
+                boxSize += 16; // max_picture_height
+                boxSize += 16; // avg_frame_rate
+            }
+            boxSize += 8; // num_of_arrays
+
+            for (int j = 0; j < num_of_arrays; j++)
+            {
+                boxSize += 1; // array_completeness
+                boxSize += 2; // reserved1
+                boxSize += 5; // NAL_unit_type
+
+                if (NAL_unit_type[j] != DCI_NUT && NAL_unit_type[j] != OPI_NUT)
+                {
+                    boxSize += 16; // num_nalus
+
+                    for (int i = 0; i < num_nalus[j]; i++)
+                    {
+                        boxSize += 16; // nal_unit_length
+                        boxSize += (ulong)nal_unit_length[j][i] * 8; // nal_unit
+                    }
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class MVDDecoderConfigurationRecord { 
+    unsigned int(8) configurationVersion = 1; 
+    unsigned int(8) AVCProfileIndication; 
+    unsigned int(8) profile_compatibility; 
+    unsigned int(8) AVCLevelIndication;  
+     bit(1) complete_representation; 
+     bit(1) explicit_au_track; 
+    bit(4) reserved = '1111'b; 
+    unsigned int(2) lengthSizeMinusOne;  
+    bit(1) reserved = '0'b; 
+    unsigned int(7) numOfSequenceParameterSets; 
+    for (i=0; i< numOfSequenceParameterSets; i++) { 
+    unsigned int(16) sequenceParameterSetLength ; 
+      bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
+     } 
+    unsigned int(8) numOfPictureParameterSets; 
+    for (i=0; i< numOfPictureParameterSets; i++) { 
+      unsigned int(16) pictureParameterSetLength; 
+      bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
+     } 
+    }
+    */
+    public class MVDDecoderConfigurationRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "MVDDecoderConfigurationRecord"; } }
+
+        protected byte configurationVersion = 1;
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
+
+        protected byte AVCProfileIndication;
+        public byte _AVCProfileIndication { get { return this.AVCProfileIndication; } set { this.AVCProfileIndication = value; } }
+
+        protected byte profile_compatibility;
+        public byte ProfileCompatibility { get { return this.profile_compatibility; } set { this.profile_compatibility = value; } }
+
+        protected byte AVCLevelIndication;
+        public byte _AVCLevelIndication { get { return this.AVCLevelIndication; } set { this.AVCLevelIndication = value; } }
+
+        protected bool complete_representation;
+        public bool CompleteRepresentation { get { return this.complete_representation; } set { this.complete_representation = value; } }
+
+        protected bool explicit_au_track;
+        public bool ExplicitAuTrack { get { return this.explicit_au_track; } set { this.explicit_au_track = value; } }
+
+        protected byte reserved = 0b1111;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected byte lengthSizeMinusOne;
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
+
+        protected bool reserved0 = false;
+        public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte numOfSequenceParameterSets;
+        public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
+
+        protected ushort[] sequenceParameterSetLength;
+        public ushort[] SequenceParameterSetLength { get { return this.sequenceParameterSetLength; } set { this.sequenceParameterSetLength = value; } }
+
+        protected byte[][] sequenceParameterSetNALUnit;
+        public byte[][] SequenceParameterSetNALUnit { get { return this.sequenceParameterSetNALUnit; } set { this.sequenceParameterSetNALUnit = value; } }
+
+        protected byte numOfPictureParameterSets;
+        public byte NumOfPictureParameterSets { get { return this.numOfPictureParameterSets; } set { this.numOfPictureParameterSets = value; } }
+
+        protected ushort[] pictureParameterSetLength;
+        public ushort[] PictureParameterSetLength { get { return this.pictureParameterSetLength; } set { this.pictureParameterSetLength = value; } }
+
+        protected byte[][] pictureParameterSetNALUnit;
+        public byte[][] PictureParameterSetNALUnit { get { return this.pictureParameterSetNALUnit; } set { this.pictureParameterSetNALUnit = value; } }
+
+        public MVDDecoderConfigurationRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt8(out this.configurationVersion);
+            boxSize += stream.ReadUInt8(out this.AVCProfileIndication);
+            boxSize += stream.ReadUInt8(out this.profile_compatibility);
+            boxSize += stream.ReadUInt8(out this.AVCLevelIndication);
+            boxSize += stream.ReadBit(out this.complete_representation);
+            boxSize += stream.ReadBit(out this.explicit_au_track);
+            boxSize += stream.ReadBits(4, out this.reserved);
+            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
+            boxSize += stream.ReadBit(out this.reserved0);
+            boxSize += stream.ReadBits(7, out this.numOfSequenceParameterSets);
+
+            this.sequenceParameterSetLength = new ushort[numOfSequenceParameterSets];
+            this.sequenceParameterSetNALUnit = new byte[numOfSequenceParameterSets][];
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
+                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+            }
+            boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
+
+            this.pictureParameterSetLength = new ushort[numOfPictureParameterSets];
+            this.pictureParameterSetNALUnit = new byte[numOfPictureParameterSets][];
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
+                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt8(this.configurationVersion);
+            boxSize += stream.WriteUInt8(this.AVCProfileIndication);
+            boxSize += stream.WriteUInt8(this.profile_compatibility);
+            boxSize += stream.WriteUInt8(this.AVCLevelIndication);
+            boxSize += stream.WriteBit(this.complete_representation);
+            boxSize += stream.WriteBit(this.explicit_au_track);
+            boxSize += stream.WriteBits(4, this.reserved);
+            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
+            boxSize += stream.WriteBit(this.reserved0);
+            boxSize += stream.WriteBits(7, this.numOfSequenceParameterSets);
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += stream.WriteUInt16(this.sequenceParameterSetLength[i]);
+                boxSize += stream.WriteUInt8Array((uint)sequenceParameterSetLength[i], this.sequenceParameterSetNALUnit[i]);
+            }
+            boxSize += stream.WriteUInt8(this.numOfPictureParameterSets);
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += stream.WriteUInt16(this.pictureParameterSetLength[i]);
+                boxSize += stream.WriteUInt8Array((uint)pictureParameterSetLength[i], this.pictureParameterSetNALUnit[i]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // configurationVersion
+            boxSize += 8; // AVCProfileIndication
+            boxSize += 8; // profile_compatibility
+            boxSize += 8; // AVCLevelIndication
+            boxSize += 1; // complete_representation
+            boxSize += 1; // explicit_au_track
+            boxSize += 4; // reserved
+            boxSize += 2; // lengthSizeMinusOne
+            boxSize += 1; // reserved0
+            boxSize += 7; // numOfSequenceParameterSets
+
+            for (int i = 0; i < numOfSequenceParameterSets; i++)
+            {
+                boxSize += 16; // sequenceParameterSetLength
+                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
+            }
+            boxSize += 8; // numOfPictureParameterSets
+
+            for (int i = 0; i < numOfPictureParameterSets; i++)
+            {
+                boxSize += 16; // pictureParameterSetLength
+                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class VvcOperatingPointsRecord { 
+    unsigned int(8) num_profile_tier_level_minus1;
+    for (i=0; i<=num_profile_tier_level_minus1; i++) { 
+     unsigned int(8) ptl_max_temporal_id[i]; 
+     VvcPTLRecord(ptl_max_temporal_id[i]+1) ptl[i];
+    } 
+    unsigned int(1) all_independent_layers_flag; 
+    bit(7) reserved = 0; 
+    if (all_independent_layers_flag){ 
+     unsigned int(1) each_layer_is_an_ols_flag; 
+     bit(7) reserved = 0; 
+    } 
+    else 
+     unsigned int(8) ols_mode_idc; 
+    unsigned int(16) num_operating_points; 
+    for (i=0; i<num_operating_points; i++) { 
+     unsigned int(16) output_layer_set_idx; 
+     unsigned int(8) ptl_idx; 
+     unsigned int(8) max_temporal_id; 
+     unsigned int(8) layer_count; 
+     for (j=0; j<layer_count; j++) { 
+      unsigned int(6) layer_id; 
+      unsigned int(1) is_outputlayer;
+      bit(1) reserved = 0;
+     }
+     bit(6) reserved = 0; 
+     unsigned int(1) frame_rate_info_flag;
+     unsigned int(1) bit_rate_info_flag;
+     if (frame_rate_info_flag) { 
+      unsigned int(16) avgFrameRate; 
+      bit(6) reserved = 0; 
+      unsigned int(2) constantFrameRate;
+     } 
+     if (bit_rate_info_flag) { 
+      unsigned int(32) maxBitRate; 
+      unsigned int(32) avgBitRate;
+     }
+    }
+    unsigned int(8) max_layer_count; 
+    for (i=0; i<max_layer_count; i++) { 
+     unsigned int(8) layerID; 
+     unsigned int(8) num_direct_ref_layers; 
+     for (j=0; j<num_direct_ref_layers; j++) 
+      unsigned int(8) direct_ref_layerID; 
+     unsigned int(8) max_tid_il_ref_pics_plus1; 
+     }
+    }
+
+    */
+    public class VvcOperatingPointsRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "VvcOperatingPointsRecord"; } }
+
+        protected byte num_profile_tier_level_minus1;
+        public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }
+
+        protected byte[] ptl_max_temporal_id;
+        public byte[] PtlMaxTemporalId { get { return this.ptl_max_temporal_id; } set { this.ptl_max_temporal_id = value; } }
+
+        protected VvcPTLRecord[] ptl;
+        public VvcPTLRecord[] Ptl { get { return this.ptl; } set { this.ptl = value; } }
+
+        protected bool all_independent_layers_flag;
+        public bool AllIndependentLayersFlag { get { return this.all_independent_layers_flag; } set { this.all_independent_layers_flag = value; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool each_layer_is_an_ols_flag;
+        public bool EachLayerIsAnOlsFlag { get { return this.each_layer_is_an_ols_flag; } set { this.each_layer_is_an_ols_flag = value; } }
+
+        protected byte reserved0 = 0;
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte ols_mode_idc;
+        public byte OlsModeIdc { get { return this.ols_mode_idc; } set { this.ols_mode_idc = value; } }
+
+        protected ushort num_operating_points;
+        public ushort NumOperatingPoints { get { return this.num_operating_points; } set { this.num_operating_points = value; } }
+
+        protected ushort[] output_layer_set_idx;
+        public ushort[] OutputLayerSetIdx { get { return this.output_layer_set_idx; } set { this.output_layer_set_idx = value; } }
+
+        protected byte[] ptl_idx;
+        public byte[] PtlIdx { get { return this.ptl_idx; } set { this.ptl_idx = value; } }
+
+        protected byte[] max_temporal_id;
+        public byte[] MaxTemporalId { get { return this.max_temporal_id; } set { this.max_temporal_id = value; } }
+
+        protected byte[] layer_count;
+        public byte[] LayerCount { get { return this.layer_count; } set { this.layer_count = value; } }
+
+        protected byte[][] layer_id;
+        public byte[][] LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
+
+        protected bool[][] is_outputlayer;
+        public bool[][] IsOutputlayer { get { return this.is_outputlayer; } set { this.is_outputlayer = value; } }
+
+        protected bool[][] reserved1;
+        public bool[][] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected byte[] reserved00;
+        public byte[] Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
+
+        protected bool[] frame_rate_info_flag;
+        public bool[] FrameRateInfoFlag { get { return this.frame_rate_info_flag; } set { this.frame_rate_info_flag = value; } }
+
+        protected bool[] bit_rate_info_flag;
+        public bool[] BitRateInfoFlag { get { return this.bit_rate_info_flag; } set { this.bit_rate_info_flag = value; } }
+
+        protected ushort[] avgFrameRate;
+        public ushort[] AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
+
+        protected byte[] reserved10;
+        public byte[] Reserved10 { get { return this.reserved10; } set { this.reserved10 = value; } }
+
+        protected byte[] constantFrameRate;
+        public byte[] ConstantFrameRate { get { return this.constantFrameRate; } set { this.constantFrameRate = value; } }
+
+        protected uint[] maxBitRate;
+        public uint[] MaxBitRate { get { return this.maxBitRate; } set { this.maxBitRate = value; } }
+
+        protected uint[] avgBitRate;
+        public uint[] AvgBitRate { get { return this.avgBitRate; } set { this.avgBitRate = value; } }
+
+        protected byte max_layer_count;
+        public byte MaxLayerCount { get { return this.max_layer_count; } set { this.max_layer_count = value; } }
+
+        protected byte[] layerID;
+        public byte[] LayerID { get { return this.layerID; } set { this.layerID = value; } }
+
+        protected byte[] num_direct_ref_layers;
+        public byte[] NumDirectRefLayers { get { return this.num_direct_ref_layers; } set { this.num_direct_ref_layers = value; } }
+
+        protected byte[][] direct_ref_layerID;
+        public byte[][] DirectRefLayerID { get { return this.direct_ref_layerID; } set { this.direct_ref_layerID = value; } }
+
+        protected byte[] max_tid_il_ref_pics_plus1;
+        public byte[] MaxTidIlRefPicsPlus1 { get { return this.max_tid_il_ref_pics_plus1; } set { this.max_tid_il_ref_pics_plus1 = value; } }
+
+        public VvcOperatingPointsRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt8(out this.num_profile_tier_level_minus1);
+
+            this.ptl_max_temporal_id = new byte[num_profile_tier_level_minus1 + 1];
+            this.ptl = new VvcPTLRecord[num_profile_tier_level_minus1 + 1];
+            for (int i = 0; i <= num_profile_tier_level_minus1; i++)
+            {
+                boxSize += stream.ReadUInt8(out this.ptl_max_temporal_id[i]);
+                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord((byte)(ptl_max_temporal_id[i] + 1)), out this.ptl[i]);
+            }
+            boxSize += stream.ReadBit(out this.all_independent_layers_flag);
+            boxSize += stream.ReadBits(7, out this.reserved);
+
+            if (all_independent_layers_flag)
+            {
+                boxSize += stream.ReadBit(out this.each_layer_is_an_ols_flag);
+                boxSize += stream.ReadBits(7, out this.reserved0);
+            }
+
+            else
+            {
+                boxSize += stream.ReadUInt8(out this.ols_mode_idc);
+            }
+            boxSize += stream.ReadUInt16(out this.num_operating_points);
+
+            this.output_layer_set_idx = new ushort[num_operating_points];
+            this.ptl_idx = new byte[num_operating_points];
+            this.max_temporal_id = new byte[num_operating_points];
+            this.layer_count = new byte[num_operating_points];
+            this.layer_id = new byte[num_operating_points][];
+            this.is_outputlayer = new bool[num_operating_points][];
+            this.reserved1 = new bool[num_operating_points][];
+            this.reserved00 = new byte[num_operating_points];
+            this.frame_rate_info_flag = new bool[num_operating_points];
+            this.bit_rate_info_flag = new bool[num_operating_points];
+            this.avgFrameRate = new ushort[num_operating_points];
+            this.reserved10 = new byte[num_operating_points];
+            this.constantFrameRate = new byte[num_operating_points];
+            this.maxBitRate = new uint[num_operating_points];
+            this.avgBitRate = new uint[num_operating_points];
+            for (int i = 0; i < num_operating_points; i++)
+            {
+                boxSize += stream.ReadUInt16(out this.output_layer_set_idx[i]);
+                boxSize += stream.ReadUInt8(out this.ptl_idx[i]);
+                boxSize += stream.ReadUInt8(out this.max_temporal_id[i]);
+                boxSize += stream.ReadUInt8(out this.layer_count[i]);
+
+                this.layer_id[i] = new byte[layer_count[i]];
+                this.is_outputlayer[i] = new bool[layer_count[i]];
+                this.reserved1[i] = new bool[layer_count[i]];
+                for (int j = 0; j < layer_count[i]; j++)
+                {
+                    boxSize += stream.ReadBits(6, out this.layer_id[i][j]);
+                    boxSize += stream.ReadBit(out this.is_outputlayer[i][j]);
+                    boxSize += stream.ReadBit(out this.reserved1[i][j]);
+                }
+                boxSize += stream.ReadBits(6, out this.reserved00[i]);
+                boxSize += stream.ReadBit(out this.frame_rate_info_flag[i]);
+                boxSize += stream.ReadBit(out this.bit_rate_info_flag[i]);
+
+                if (frame_rate_info_flag[i])
+                {
+                    boxSize += stream.ReadUInt16(out this.avgFrameRate[i]);
+                    boxSize += stream.ReadBits(6, out this.reserved10[i]);
+                    boxSize += stream.ReadBits(2, out this.constantFrameRate[i]);
+                }
+
+                if (bit_rate_info_flag[i])
+                {
+                    boxSize += stream.ReadUInt32(out this.maxBitRate[i]);
+                    boxSize += stream.ReadUInt32(out this.avgBitRate[i]);
+                }
+            }
+            boxSize += stream.ReadUInt8(out this.max_layer_count);
+
+            this.layerID = new byte[max_layer_count];
+            this.num_direct_ref_layers = new byte[max_layer_count];
+            this.direct_ref_layerID = new byte[max_layer_count][];
+            this.max_tid_il_ref_pics_plus1 = new byte[max_layer_count];
+            for (int i = 0; i < max_layer_count; i++)
+            {
+                boxSize += stream.ReadUInt8(out this.layerID[i]);
+                boxSize += stream.ReadUInt8(out this.num_direct_ref_layers[i]);
+
+                this.direct_ref_layerID[i] = new byte[num_direct_ref_layers[i]];
+                for (int j = 0; j < num_direct_ref_layers[i]; j++)
+                {
+                    boxSize += stream.ReadUInt8(out this.direct_ref_layerID[i][j]);
+                }
+                boxSize += stream.ReadUInt8(out this.max_tid_il_ref_pics_plus1[i]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt8(this.num_profile_tier_level_minus1);
+
+            for (int i = 0; i <= num_profile_tier_level_minus1; i++)
+            {
+                boxSize += stream.WriteUInt8(this.ptl_max_temporal_id[i]);
+                boxSize += stream.WriteClass(this.ptl[i]);
+            }
+            boxSize += stream.WriteBit(this.all_independent_layers_flag);
+            boxSize += stream.WriteBits(7, this.reserved);
+
+            if (all_independent_layers_flag)
+            {
+                boxSize += stream.WriteBit(this.each_layer_is_an_ols_flag);
+                boxSize += stream.WriteBits(7, this.reserved0);
+            }
+
+            else
+            {
+                boxSize += stream.WriteUInt8(this.ols_mode_idc);
+            }
+            boxSize += stream.WriteUInt16(this.num_operating_points);
+
+            for (int i = 0; i < num_operating_points; i++)
+            {
+                boxSize += stream.WriteUInt16(this.output_layer_set_idx[i]);
+                boxSize += stream.WriteUInt8(this.ptl_idx[i]);
+                boxSize += stream.WriteUInt8(this.max_temporal_id[i]);
+                boxSize += stream.WriteUInt8(this.layer_count[i]);
+
+                for (int j = 0; j < layer_count[i]; j++)
+                {
+                    boxSize += stream.WriteBits(6, this.layer_id[i][j]);
+                    boxSize += stream.WriteBit(this.is_outputlayer[i][j]);
+                    boxSize += stream.WriteBit(this.reserved1[i][j]);
+                }
+                boxSize += stream.WriteBits(6, this.reserved00[i]);
+                boxSize += stream.WriteBit(this.frame_rate_info_flag[i]);
+                boxSize += stream.WriteBit(this.bit_rate_info_flag[i]);
+
+                if (frame_rate_info_flag[i])
+                {
+                    boxSize += stream.WriteUInt16(this.avgFrameRate[i]);
+                    boxSize += stream.WriteBits(6, this.reserved10[i]);
+                    boxSize += stream.WriteBits(2, this.constantFrameRate[i]);
+                }
+
+                if (bit_rate_info_flag[i])
+                {
+                    boxSize += stream.WriteUInt32(this.maxBitRate[i]);
+                    boxSize += stream.WriteUInt32(this.avgBitRate[i]);
+                }
+            }
+            boxSize += stream.WriteUInt8(this.max_layer_count);
+
+            for (int i = 0; i < max_layer_count; i++)
+            {
+                boxSize += stream.WriteUInt8(this.layerID[i]);
+                boxSize += stream.WriteUInt8(this.num_direct_ref_layers[i]);
+
+                for (int j = 0; j < num_direct_ref_layers[i]; j++)
+                {
+                    boxSize += stream.WriteUInt8(this.direct_ref_layerID[i][j]);
+                }
+                boxSize += stream.WriteUInt8(this.max_tid_il_ref_pics_plus1[i]);
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // num_profile_tier_level_minus1
+
+            for (int i = 0; i <= num_profile_tier_level_minus1; i++)
+            {
+                boxSize += 8; // ptl_max_temporal_id
+                boxSize += IsoStream.CalculateClassSize(ptl); // ptl
+            }
+            boxSize += 1; // all_independent_layers_flag
+            boxSize += 7; // reserved
+
+            if (all_independent_layers_flag)
+            {
+                boxSize += 1; // each_layer_is_an_ols_flag
+                boxSize += 7; // reserved0
+            }
+
+            else
+            {
+                boxSize += 8; // ols_mode_idc
+            }
+            boxSize += 16; // num_operating_points
+
+            for (int i = 0; i < num_operating_points; i++)
+            {
+                boxSize += 16; // output_layer_set_idx
+                boxSize += 8; // ptl_idx
+                boxSize += 8; // max_temporal_id
+                boxSize += 8; // layer_count
+
+                for (int j = 0; j < layer_count[i]; j++)
+                {
+                    boxSize += 6; // layer_id
+                    boxSize += 1; // is_outputlayer
+                    boxSize += 1; // reserved1
+                }
+                boxSize += 6; // reserved00
+                boxSize += 1; // frame_rate_info_flag
+                boxSize += 1; // bit_rate_info_flag
+
+                if (frame_rate_info_flag[i])
+                {
+                    boxSize += 16; // avgFrameRate
+                    boxSize += 6; // reserved10
+                    boxSize += 2; // constantFrameRate
+                }
+
+                if (bit_rate_info_flag[i])
+                {
+                    boxSize += 32; // maxBitRate
+                    boxSize += 32; // avgBitRate
+                }
+            }
+            boxSize += 8; // max_layer_count
+
+            for (int i = 0; i < max_layer_count; i++)
+            {
+                boxSize += 8; // layerID
+                boxSize += 8; // num_direct_ref_layers
+
+                for (int j = 0; j < num_direct_ref_layers[i]; j++)
+                {
+                    boxSize += 8; // direct_ref_layerID
+                }
+                boxSize += 8; // max_tid_il_ref_pics_plus1
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class EVCDecoderConfigurationRecord {
+    unsigned int(8) configurationVersion=1;
+    unsigned int(8) profile_idc;
+    unsigned int(8) level_idc;
+     unsigned int(32) toolset_idc;
+    unsigned int(2) chroma_format_idc;
+     unsigned int(3) bit_depth_luma_minus8;
+    unsigned int(3) bit_depth_chroma_minus8;
+    unsigned int(32) pic_width_in_luma_samples;
+    unsigned int(32) pic_height_in_luma_samples;
+    unsigned int(5) reserved='00000'b;
+    unsigned int(1) sps_in_stream;
+     unsigned int(1) pps_in_stream;
+    unsigned int(1) aps_in_stream;
+     unsigned int(8) numOfArrays;
+     for (j=0; j<numOfArrays; j++) {
+    bit(2) reserved='00'b;
+    unsigned int(6) NAL_unit_type;
+     unsigned int(16) numNalus;
+    for (i=0; i<numNalus; i++) {
+     unsigned int(16) nalUnitLength;
+    bit(8*nalUnitLength) nalUnit;
+    }
+    }
+    }
+    */
+    public class EVCDecoderConfigurationRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "EVCDecoderConfigurationRecord"; } }
+
+        protected byte configurationVersion = 1;
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
+
+        protected byte profile_idc;
+        public byte ProfileIdc { get { return this.profile_idc; } set { this.profile_idc = value; } }
+
+        protected byte level_idc;
+        public byte LevelIdc { get { return this.level_idc; } set { this.level_idc = value; } }
+
+        protected uint toolset_idc;
+        public uint ToolsetIdc { get { return this.toolset_idc; } set { this.toolset_idc = value; } }
+
+        protected byte chroma_format_idc;
+        public byte ChromaFormatIdc { get { return this.chroma_format_idc; } set { this.chroma_format_idc = value; } }
+
+        protected byte bit_depth_luma_minus8;
+        public byte BitDepthLumaMinus8 { get { return this.bit_depth_luma_minus8; } set { this.bit_depth_luma_minus8 = value; } }
+
+        protected byte bit_depth_chroma_minus8;
+        public byte BitDepthChromaMinus8 { get { return this.bit_depth_chroma_minus8; } set { this.bit_depth_chroma_minus8 = value; } }
+
+        protected uint pic_width_in_luma_samples;
+        public uint PicWidthInLumaSamples { get { return this.pic_width_in_luma_samples; } set { this.pic_width_in_luma_samples = value; } }
+
+        protected uint pic_height_in_luma_samples;
+        public uint PicHeightInLumaSamples { get { return this.pic_height_in_luma_samples; } set { this.pic_height_in_luma_samples = value; } }
+
+        protected byte reserved = 0b00000;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool sps_in_stream;
+        public bool SpsInStream { get { return this.sps_in_stream; } set { this.sps_in_stream = value; } }
+
+        protected bool pps_in_stream;
+        public bool PpsInStream { get { return this.pps_in_stream; } set { this.pps_in_stream = value; } }
+
+        protected bool aps_in_stream;
+        public bool ApsInStream { get { return this.aps_in_stream; } set { this.aps_in_stream = value; } }
+
+        protected byte numOfArrays;
+        public byte NumOfArrays { get { return this.numOfArrays; } set { this.numOfArrays = value; } }
+
+        protected byte[] reserved0;
+        public byte[] Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte[] NAL_unit_type;
+        public byte[] NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
+
+        protected ushort[] numNalus;
+        public ushort[] NumNalus { get { return this.numNalus; } set { this.numNalus = value; } }
+
+        protected ushort[][] nalUnitLength;
+        public ushort[][] NalUnitLength { get { return this.nalUnitLength; } set { this.nalUnitLength = value; } }
+
+        protected byte[][][] nalUnit;
+        public byte[][][] NalUnit { get { return this.nalUnit; } set { this.nalUnit = value; } }
+
+        public EVCDecoderConfigurationRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt8(out this.configurationVersion);
+            boxSize += stream.ReadUInt8(out this.profile_idc);
+            boxSize += stream.ReadUInt8(out this.level_idc);
+            boxSize += stream.ReadUInt32(out this.toolset_idc);
+            boxSize += stream.ReadBits(2, out this.chroma_format_idc);
+            boxSize += stream.ReadBits(3, out this.bit_depth_luma_minus8);
+            boxSize += stream.ReadBits(3, out this.bit_depth_chroma_minus8);
+            boxSize += stream.ReadUInt32(out this.pic_width_in_luma_samples);
+            boxSize += stream.ReadUInt32(out this.pic_height_in_luma_samples);
+            boxSize += stream.ReadBits(5, out this.reserved);
+            boxSize += stream.ReadBit(out this.sps_in_stream);
+            boxSize += stream.ReadBit(out this.pps_in_stream);
+            boxSize += stream.ReadBit(out this.aps_in_stream);
+            boxSize += stream.ReadUInt8(out this.numOfArrays);
+
+            this.reserved0 = new byte[numOfArrays];
+            this.NAL_unit_type = new byte[numOfArrays];
+            this.numNalus = new ushort[numOfArrays];
+            this.nalUnitLength = new ushort[numOfArrays][];
+            this.nalUnit = new byte[numOfArrays][][];
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += stream.ReadBits(2, out this.reserved0[j]);
+                boxSize += stream.ReadBits(6, out this.NAL_unit_type[j]);
+                boxSize += stream.ReadUInt16(out this.numNalus[j]);
+
+                this.nalUnitLength[j] = new ushort[numNalus[j]];
+                this.nalUnit[j] = new byte[numNalus[j]][];
+                for (int i = 0; i < numNalus[j]; i++)
+                {
+                    boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
+                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt8(this.configurationVersion);
+            boxSize += stream.WriteUInt8(this.profile_idc);
+            boxSize += stream.WriteUInt8(this.level_idc);
+            boxSize += stream.WriteUInt32(this.toolset_idc);
+            boxSize += stream.WriteBits(2, this.chroma_format_idc);
+            boxSize += stream.WriteBits(3, this.bit_depth_luma_minus8);
+            boxSize += stream.WriteBits(3, this.bit_depth_chroma_minus8);
+            boxSize += stream.WriteUInt32(this.pic_width_in_luma_samples);
+            boxSize += stream.WriteUInt32(this.pic_height_in_luma_samples);
+            boxSize += stream.WriteBits(5, this.reserved);
+            boxSize += stream.WriteBit(this.sps_in_stream);
+            boxSize += stream.WriteBit(this.pps_in_stream);
+            boxSize += stream.WriteBit(this.aps_in_stream);
+            boxSize += stream.WriteUInt8(this.numOfArrays);
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += stream.WriteBits(2, this.reserved0[j]);
+                boxSize += stream.WriteBits(6, this.NAL_unit_type[j]);
+                boxSize += stream.WriteUInt16(this.numNalus[j]);
+
+                for (int i = 0; i < numNalus[j]; i++)
+                {
+                    boxSize += stream.WriteUInt16(this.nalUnitLength[j][i]);
+                    boxSize += stream.WriteUInt8Array((uint)nalUnitLength[j][i], this.nalUnit[j][i]);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // configurationVersion
+            boxSize += 8; // profile_idc
+            boxSize += 8; // level_idc
+            boxSize += 32; // toolset_idc
+            boxSize += 2; // chroma_format_idc
+            boxSize += 3; // bit_depth_luma_minus8
+            boxSize += 3; // bit_depth_chroma_minus8
+            boxSize += 32; // pic_width_in_luma_samples
+            boxSize += 32; // pic_height_in_luma_samples
+            boxSize += 5; // reserved
+            boxSize += 1; // sps_in_stream
+            boxSize += 1; // pps_in_stream
+            boxSize += 1; // aps_in_stream
+            boxSize += 8; // numOfArrays
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += 2; // reserved0
+                boxSize += 6; // NAL_unit_type
+                boxSize += 16; // numNalus
+
+                for (int i = 0; i < numNalus[j]; i++)
+                {
+                    boxSize += 16; // nalUnitLength
+                    boxSize += (ulong)nalUnitLength[j][i] * 8; // nalUnit
+                }
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class LHEVCDecoderConfigurationRecord {
+    unsigned int(8) configurationVersion = 1;
+    unsigned int(2) general_profile_space;
+    unsigned int(1) general_tier_flag;
+    unsigned int(5) general_profile_idc;
+    unsigned int(32) general_profile_compatibility_flags;
+    unsigned int(48) general_constraint_indicator_flags;
+    unsigned int(8) general_level_idc;
+    bit(1) complete_representation;
+    bit(3) reserved = '111'b;
+    unsigned int(12) min_spatial_segmentation_idc;
+    bit(6) reserved = '111111'b;
+    unsigned int(2) parallelismType;
+    bit(6) reserved = '111111'b;
+    unsigned int(2) chromaFormat;
+    bit(5) reserved = '11111'b;
+    unsigned int(3) bitDepthLumaMinus8;
+    bit(5) reserved = '11111'b;
+    unsigned int(3) bitDepthChromaMinus8;
+    bit(16) avgFrameRate;
+    bit(2) constantFrameRate;
+    bit(3) numTemporalLayers;
+    bit(1) temporalIdNested;
+    unsigned int(2) lengthSizeMinusOne;
+    unsigned int(8) numOfArrays;
+    for (j = 0; j <numOfArrays; j ++) {
+    bit(1) array_completeness;
+    unsigned int(1) reserved = 0;
+    unsigned int(6) NAL_unit_type;
+    unsigned int(16) numNalus;
+    for (i = 0; i <numNalus; i ++) {
+    unsigned int(16) nalUnitLength;
+    bit(8*nalUnitLength) nalUnit;
+    }
+    }
+    unsigned int(16) operationPointIdx;
+    }
+    */
+    public class LHEVCDecoderConfigurationRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "LHEVCDecoderConfigurationRecord"; } }
+
+        protected byte configurationVersion = 1;
+        public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
+
+        protected byte general_profile_space;
+        public byte GeneralProfileSpace { get { return this.general_profile_space; } set { this.general_profile_space = value; } }
+
+        protected bool general_tier_flag;
+        public bool GeneralTierFlag { get { return this.general_tier_flag; } set { this.general_tier_flag = value; } }
+
+        protected byte general_profile_idc;
+        public byte GeneralProfileIdc { get { return this.general_profile_idc; } set { this.general_profile_idc = value; } }
+
+        protected uint general_profile_compatibility_flags;
+        public uint GeneralProfileCompatibilityFlags { get { return this.general_profile_compatibility_flags; } set { this.general_profile_compatibility_flags = value; } }
+
+        protected ulong general_constraint_indicator_flags;
+        public ulong GeneralConstraintIndicatorFlags { get { return this.general_constraint_indicator_flags; } set { this.general_constraint_indicator_flags = value; } }
+
+        protected byte general_level_idc;
+        public byte GeneralLevelIdc { get { return this.general_level_idc; } set { this.general_level_idc = value; } }
+
+        protected bool complete_representation;
+        public bool CompleteRepresentation { get { return this.complete_representation; } set { this.complete_representation = value; } }
+
+        protected byte reserved = 0b111;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected ushort min_spatial_segmentation_idc;
+        public ushort MinSpatialSegmentationIdc { get { return this.min_spatial_segmentation_idc; } set { this.min_spatial_segmentation_idc = value; } }
+
+        protected byte reserved0 = 0b111111;
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte parallelismType;
+        public byte ParallelismType { get { return this.parallelismType; } set { this.parallelismType = value; } }
+
+        protected byte reserved1 = 0b111111;
+        public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+        protected byte chromaFormat;
+        public byte ChromaFormat { get { return this.chromaFormat; } set { this.chromaFormat = value; } }
+
+        protected byte reserved2 = 0b11111;
+        public byte Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+        protected byte bitDepthLumaMinus8;
+        public byte BitDepthLumaMinus8 { get { return this.bitDepthLumaMinus8; } set { this.bitDepthLumaMinus8 = value; } }
+
+        protected byte reserved3 = 0b11111;
+        public byte Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
+
+        protected byte bitDepthChromaMinus8;
+        public byte BitDepthChromaMinus8 { get { return this.bitDepthChromaMinus8; } set { this.bitDepthChromaMinus8 = value; } }
+
+        protected ushort avgFrameRate;
+        public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
+
+        protected byte constantFrameRate;
+        public byte ConstantFrameRate { get { return this.constantFrameRate; } set { this.constantFrameRate = value; } }
+
+        protected byte numTemporalLayers;
+        public byte NumTemporalLayers { get { return this.numTemporalLayers; } set { this.numTemporalLayers = value; } }
+
+        protected bool temporalIdNested;
+        public bool TemporalIdNested { get { return this.temporalIdNested; } set { this.temporalIdNested = value; } }
+
+        protected byte lengthSizeMinusOne;
+        public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
+
+        protected byte numOfArrays;
+        public byte NumOfArrays { get { return this.numOfArrays; } set { this.numOfArrays = value; } }
+
+        protected bool[] array_completeness;
+        public bool[] ArrayCompleteness { get { return this.array_completeness; } set { this.array_completeness = value; } }
+
+        protected bool[] reserved4;
+        public bool[] Reserved4 { get { return this.reserved4; } set { this.reserved4 = value; } }
+
+        protected byte[] NAL_unit_type;
+        public byte[] NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
+
+        protected ushort[] numNalus;
+        public ushort[] NumNalus { get { return this.numNalus; } set { this.numNalus = value; } }
+
+        protected ushort[][] nalUnitLength;
+        public ushort[][] NalUnitLength { get { return this.nalUnitLength; } set { this.nalUnitLength = value; } }
+
+        protected byte[][][] nalUnit;
+        public byte[][][] NalUnit { get { return this.nalUnit; } set { this.nalUnit = value; } }
+
+        protected ushort operationPointIdx;
+        public ushort OperationPointIdx { get { return this.operationPointIdx; } set { this.operationPointIdx = value; } }
+
+        public LHEVCDecoderConfigurationRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt8(out this.configurationVersion);
+            boxSize += stream.ReadBits(2, out this.general_profile_space);
+            boxSize += stream.ReadBit(out this.general_tier_flag);
+            boxSize += stream.ReadBits(5, out this.general_profile_idc);
+            boxSize += stream.ReadUInt32(out this.general_profile_compatibility_flags);
+            boxSize += stream.ReadUInt48(out this.general_constraint_indicator_flags);
+            boxSize += stream.ReadUInt8(out this.general_level_idc);
+            boxSize += stream.ReadBit(out this.complete_representation);
+            boxSize += stream.ReadBits(3, out this.reserved);
+            boxSize += stream.ReadBits(12, out this.min_spatial_segmentation_idc);
+            boxSize += stream.ReadBits(6, out this.reserved0);
+            boxSize += stream.ReadBits(2, out this.parallelismType);
+            boxSize += stream.ReadBits(6, out this.reserved1);
+            boxSize += stream.ReadBits(2, out this.chromaFormat);
+            boxSize += stream.ReadBits(5, out this.reserved2);
+            boxSize += stream.ReadBits(3, out this.bitDepthLumaMinus8);
+            boxSize += stream.ReadBits(5, out this.reserved3);
+            boxSize += stream.ReadBits(3, out this.bitDepthChromaMinus8);
+            boxSize += stream.ReadUInt16(out this.avgFrameRate);
+            boxSize += stream.ReadBits(2, out this.constantFrameRate);
+            boxSize += stream.ReadBits(3, out this.numTemporalLayers);
+            boxSize += stream.ReadBit(out this.temporalIdNested);
+            boxSize += stream.ReadBits(2, out this.lengthSizeMinusOne);
+            boxSize += stream.ReadUInt8(out this.numOfArrays);
+
+            this.array_completeness = new bool[numOfArrays];
+            this.reserved4 = new bool[numOfArrays];
+            this.NAL_unit_type = new byte[numOfArrays];
+            this.numNalus = new ushort[numOfArrays];
+            this.nalUnitLength = new ushort[numOfArrays][];
+            this.nalUnit = new byte[numOfArrays][][];
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += stream.ReadBit(out this.array_completeness[j]);
+                boxSize += stream.ReadBit(out this.reserved4[j]);
+                boxSize += stream.ReadBits(6, out this.NAL_unit_type[j]);
+                boxSize += stream.ReadUInt16(out this.numNalus[j]);
+
+                this.nalUnitLength[j] = new ushort[numNalus[j]];
+                this.nalUnit[j] = new byte[numNalus[j]][];
+                for (int i = 0; i < numNalus[j]; i++)
+                {
+                    boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
+                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
+                }
+            }
+            boxSize += stream.ReadUInt16(out this.operationPointIdx);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt8(this.configurationVersion);
+            boxSize += stream.WriteBits(2, this.general_profile_space);
+            boxSize += stream.WriteBit(this.general_tier_flag);
+            boxSize += stream.WriteBits(5, this.general_profile_idc);
+            boxSize += stream.WriteUInt32(this.general_profile_compatibility_flags);
+            boxSize += stream.WriteUInt48(this.general_constraint_indicator_flags);
+            boxSize += stream.WriteUInt8(this.general_level_idc);
+            boxSize += stream.WriteBit(this.complete_representation);
+            boxSize += stream.WriteBits(3, this.reserved);
+            boxSize += stream.WriteBits(12, this.min_spatial_segmentation_idc);
+            boxSize += stream.WriteBits(6, this.reserved0);
+            boxSize += stream.WriteBits(2, this.parallelismType);
+            boxSize += stream.WriteBits(6, this.reserved1);
+            boxSize += stream.WriteBits(2, this.chromaFormat);
+            boxSize += stream.WriteBits(5, this.reserved2);
+            boxSize += stream.WriteBits(3, this.bitDepthLumaMinus8);
+            boxSize += stream.WriteBits(5, this.reserved3);
+            boxSize += stream.WriteBits(3, this.bitDepthChromaMinus8);
+            boxSize += stream.WriteUInt16(this.avgFrameRate);
+            boxSize += stream.WriteBits(2, this.constantFrameRate);
+            boxSize += stream.WriteBits(3, this.numTemporalLayers);
+            boxSize += stream.WriteBit(this.temporalIdNested);
+            boxSize += stream.WriteBits(2, this.lengthSizeMinusOne);
+            boxSize += stream.WriteUInt8(this.numOfArrays);
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += stream.WriteBit(this.array_completeness[j]);
+                boxSize += stream.WriteBit(this.reserved4[j]);
+                boxSize += stream.WriteBits(6, this.NAL_unit_type[j]);
+                boxSize += stream.WriteUInt16(this.numNalus[j]);
+
+                for (int i = 0; i < numNalus[j]; i++)
+                {
+                    boxSize += stream.WriteUInt16(this.nalUnitLength[j][i]);
+                    boxSize += stream.WriteUInt8Array((uint)nalUnitLength[j][i], this.nalUnit[j][i]);
+                }
+            }
+            boxSize += stream.WriteUInt16(this.operationPointIdx);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // configurationVersion
+            boxSize += 2; // general_profile_space
+            boxSize += 1; // general_tier_flag
+            boxSize += 5; // general_profile_idc
+            boxSize += 32; // general_profile_compatibility_flags
+            boxSize += 48; // general_constraint_indicator_flags
+            boxSize += 8; // general_level_idc
+            boxSize += 1; // complete_representation
+            boxSize += 3; // reserved
+            boxSize += 12; // min_spatial_segmentation_idc
+            boxSize += 6; // reserved0
+            boxSize += 2; // parallelismType
+            boxSize += 6; // reserved1
+            boxSize += 2; // chromaFormat
+            boxSize += 5; // reserved2
+            boxSize += 3; // bitDepthLumaMinus8
+            boxSize += 5; // reserved3
+            boxSize += 3; // bitDepthChromaMinus8
+            boxSize += 16; // avgFrameRate
+            boxSize += 2; // constantFrameRate
+            boxSize += 3; // numTemporalLayers
+            boxSize += 1; // temporalIdNested
+            boxSize += 2; // lengthSizeMinusOne
+            boxSize += 8; // numOfArrays
+
+            for (int j = 0; j < numOfArrays; j++)
+            {
+                boxSize += 1; // array_completeness
+                boxSize += 1; // reserved4
+                boxSize += 6; // NAL_unit_type
+                boxSize += 16; // numNalus
+
+                for (int i = 0; i < numNalus[j]; i++)
+                {
+                    boxSize += 16; // nalUnitLength
+                    boxSize += (ulong)nalUnitLength[j][i] * 8; // nalUnit
+                }
+            }
+            boxSize += 16; // operationPointIdx
+            return boxSize;
+        }
+    }
+
+
+    /*
     class IroiInfoBox extends Box('iroi'){
         unsigned int(2) iroi_type;
         bit(6) reserved = 0;
@@ -21008,3053 +24938,6 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateClassSize(config); // config
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class WebVTTConfigurationBox extends Box('vttC') {
-        boxstring	config;
-    }
-    */
-    public class WebVTTConfigurationBox : Box
-    {
-        public const string TYPE = "vttC";
-        public override string DisplayName { get { return "WebVTTConfigurationBox"; } }
-
-        protected BinaryUTF8String config;
-        public BinaryUTF8String Config { get { return this.config; } set { this.config = value; } }
-
-        public WebVTTConfigurationBox() : base("vttC")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.config);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.config);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateStringSize(config); // config
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class WebVTTSourceLabelBox extends Box('vlab') {
-        boxstring	source_label;
-    }
-    */
-    public class WebVTTSourceLabelBox : Box
-    {
-        public const string TYPE = "vlab";
-        public override string DisplayName { get { return "WebVTTSourceLabelBox"; } }
-
-        protected BinaryUTF8String source_label;
-        public BinaryUTF8String SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
-
-        public WebVTTSourceLabelBox() : base("vlab")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.source_label);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.source_label);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateStringSize(source_label); // source_label
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class WVTTSampleEntry() extends PlainTextSampleEntry ('wvtt'){
-        WebVTTConfigurationBox	config;
-        WebVTTSourceLabelBox		label;	// recommended
-        BitRateBox (); 					// optional
-    }
-    */
-    public class WVTTSampleEntry : PlainTextSampleEntry
-    {
-        public const string TYPE = "wvtt";
-        public override string DisplayName { get { return "WVTTSampleEntry"; } }
-        public WebVTTConfigurationBox Config { get { return this.children.OfType<WebVTTConfigurationBox>().FirstOrDefault(); } }
-        public WebVTTSourceLabelBox Label { get { return this.children.OfType<WebVTTSourceLabelBox>().FirstOrDefault(); } }
-        public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
-
-        public WVTTSampleEntry() : base("wvtt")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.label); // recommended
-            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            // boxSize += stream.WriteBox( this.config); 
-            // boxSize += stream.WriteBox( this.label); // recommended
-            // boxSize += stream.WriteBox( this.BitRateBox); // optional
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(config); // config
-            // boxSize += IsoStream.CalculateBoxSize(label); // label
-            // boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class AuxiliaryTypeInfoBox extends FullBox ('auxi', 0, 0)
-    {
-        string aux_track_type;
-    }
-    */
-    public class AuxiliaryTypeInfoBox : FullBox
-    {
-        public const string TYPE = "auxi";
-        public override string DisplayName { get { return "AuxiliaryTypeInfoBox"; } }
-
-        protected BinaryUTF8String aux_track_type;
-        public BinaryUTF8String AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
-
-        public AuxiliaryTypeInfoBox() : base("auxi", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.aux_track_type);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.aux_track_type);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateStringSize(aux_track_type); // aux_track_type
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class CodingConstraintsBox extends FullBox('ccst', version = 0, flags = 0){
-        unsigned int(1) all_ref_pics_intra;
-        unsigned int(1) intra_pred_used;
-        unsigned int(4) max_ref_per_pic;
-        unsigned int(26) reserved;
-    }
-
-    */
-    public class CodingConstraintsBox : FullBox
-    {
-        public const string TYPE = "ccst";
-        public override string DisplayName { get { return "CodingConstraintsBox"; } }
-
-        protected bool all_ref_pics_intra;
-        public bool AllRefPicsIntra { get { return this.all_ref_pics_intra; } set { this.all_ref_pics_intra = value; } }
-
-        protected bool intra_pred_used;
-        public bool IntraPredUsed { get { return this.intra_pred_used; } set { this.intra_pred_used = value; } }
-
-        protected byte max_ref_per_pic;
-        public byte MaxRefPerPic { get { return this.max_ref_per_pic; } set { this.max_ref_per_pic = value; } }
-
-        protected uint reserved;
-        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        public CodingConstraintsBox() : base("ccst", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBit(out this.all_ref_pics_intra);
-            boxSize += stream.ReadBit(out this.intra_pred_used);
-            boxSize += stream.ReadBits(4, out this.max_ref_per_pic);
-            boxSize += stream.ReadBits(26, out this.reserved);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBit(this.all_ref_pics_intra);
-            boxSize += stream.WriteBit(this.intra_pred_used);
-            boxSize += stream.WriteBits(4, this.max_ref_per_pic);
-            boxSize += stream.WriteBits(26, this.reserved);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 1; // all_ref_pics_intra
-            boxSize += 1; // intra_pred_used
-            boxSize += 4; // max_ref_per_pic
-            boxSize += 26; // reserved
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class MD5IntegrityBox()
-    extends FullBox('md5i', version = 0, flags) {
-        unsigned int(8)[16] input_MD5;
-        unsigned int(32) input_4cc;
-        if (input_4cc == 'sgpd') {
-            unsigned int(32) grouping_type;
-            if (flags&1)
-                unsigned int(32) grouping_type_parameter;
-            unsigned int(32) num_entries;
-            for(i=0; i<num_entries; i++) {
-                unsigned int(32) group_description_index[i];
-            }
-        }
-    }
-    */
-    public class MD5IntegrityBox : FullBox
-    {
-        public const string TYPE = "md5i";
-        public override string DisplayName { get { return "MD5IntegrityBox"; } }
-
-        protected byte[] input_MD5;
-        public byte[] InputMD5 { get { return this.input_MD5; } set { this.input_MD5 = value; } }
-
-        protected uint input_4cc;
-        public uint Input4cc { get { return this.input_4cc; } set { this.input_4cc = value; } }
-
-        protected uint grouping_type;
-        public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
-
-        protected uint grouping_type_parameter;
-        public uint GroupingTypeParameter { get { return this.grouping_type_parameter; } set { this.grouping_type_parameter = value; } }
-
-        protected uint num_entries;
-        public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
-
-        protected uint[] group_description_index;
-        public uint[] GroupDescriptionIndex { get { return this.group_description_index; } set { this.group_description_index = value; } }
-
-        public MD5IntegrityBox(uint flags = 0) : base("md5i", 0, flags)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array(16, out this.input_MD5);
-            boxSize += stream.ReadUInt32(out this.input_4cc);
-
-            if (input_4cc == IsoStream.FromFourCC("sgpd"))
-            {
-                boxSize += stream.ReadUInt32(out this.grouping_type);
-
-                if ((flags & 1) == 1)
-                {
-                    boxSize += stream.ReadUInt32(out this.grouping_type_parameter);
-                }
-                boxSize += stream.ReadUInt32(out this.num_entries);
-
-                this.group_description_index = new uint[num_entries];
-                for (int i = 0; i < num_entries; i++)
-                {
-                    boxSize += stream.ReadUInt32(out this.group_description_index[i]);
-                }
-            }
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8Array(16, this.input_MD5);
-            boxSize += stream.WriteUInt32(this.input_4cc);
-
-            if (input_4cc == IsoStream.FromFourCC("sgpd"))
-            {
-                boxSize += stream.WriteUInt32(this.grouping_type);
-
-                if ((flags & 1) == 1)
-                {
-                    boxSize += stream.WriteUInt32(this.grouping_type_parameter);
-                }
-                boxSize += stream.WriteUInt32(this.num_entries);
-
-                for (int i = 0; i < num_entries; i++)
-                {
-                    boxSize += stream.WriteUInt32(this.group_description_index[i]);
-                }
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16 * 8; // input_MD5
-            boxSize += 32; // input_4cc
-
-            if (input_4cc == IsoStream.FromFourCC("sgpd"))
-            {
-                boxSize += 32; // grouping_type
-
-                if ((flags & 1) == 1)
-                {
-                    boxSize += 32; // grouping_type_parameter
-                }
-                boxSize += 32; // num_entries
-
-                for (int i = 0; i < num_entries; i++)
-                {
-                    boxSize += 32; // group_description_index
-                }
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AudioSampleEntry(codingname) extends SampleEntry (codingname) {
-        unsigned int(16) soundversion = 0;
-        unsigned int(16) reserved1 = 0;
-        unsigned int(32) reserved2 = 0;
-        unsigned int(16) channelcount;
-        template unsigned int(16) samplesize = 16;
-
-        unsigned int(16) pre_defined = 0;
-        const unsigned int(16) reserved = 0;
-        template unsigned int(32) samplerate;
-
-        if(codingname != 'mlpa') {
-            samplerate = samplerate >> 16;
-        }
-
-        if(soundversion == 1 || soundversion == 2) {
-           unsigned int(32) samplesPerPacket;
-           unsigned int(32) bytesPerPacket;
-           unsigned int(32) bytesPerFrame;
-           unsigned int(32) bytesPerSample;
-        }
-
-        if(soundversion == 2) {
-           unsigned int(8)[20] soundVersion2Data;
-        }
-
-        ChannelLayout();
-        // we permit any number of DownMix or DRC boxes: 
-        DownMixInstructions() [];
-        DRCCoefficientsBasic() [];
-        DRCInstructionsBasic() [];
-        DRCCoefficientsUniDRC() [];
-        DRCInstructionsUniDRC() [];
-        // we permit only one DRC Extension box:
-        UniDrcConfigExtension();
-        // optional boxes follow
-        SamplingRateBox();
-        Box (); // further boxes as needed
-    }
-    */
-    public class AudioSampleEntry : SampleEntry
-    {
-        public override string DisplayName { get { return "AudioSampleEntry"; } }
-
-        protected ushort soundversion = 0;
-        public ushort Soundversion { get { return this.soundversion; } set { this.soundversion = value; } }
-
-        protected ushort reserved1 = 0;
-        public ushort Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-        protected uint reserved2 = 0;
-        public uint Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
-
-        protected ushort channelcount;
-        public ushort Channelcount { get { return this.channelcount; } set { this.channelcount = value; } }
-
-        protected ushort samplesize = 16;
-        public ushort Samplesize { get { return this.samplesize; } set { this.samplesize = value; } }
-
-        protected ushort pre_defined = 0;
-        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
-
-        protected ushort reserved = 0;
-        public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected uint samplerate;
-        public uint Samplerate { get { return this.samplerate; } set { this.samplerate = value; } }
-
-        protected uint samplesPerPacket;
-        public uint SamplesPerPacket { get { return this.samplesPerPacket; } set { this.samplesPerPacket = value; } }
-
-        protected uint bytesPerPacket;
-        public uint BytesPerPacket { get { return this.bytesPerPacket; } set { this.bytesPerPacket = value; } }
-
-        protected uint bytesPerFrame;
-        public uint BytesPerFrame { get { return this.bytesPerFrame; } set { this.bytesPerFrame = value; } }
-
-        protected uint bytesPerSample;
-        public uint BytesPerSample { get { return this.bytesPerSample; } set { this.bytesPerSample = value; } }
-
-        protected byte[] soundVersion2Data;
-        public byte[] SoundVersion2Data { get { return this.soundVersion2Data; } set { this.soundVersion2Data = value; } }
-        public ChannelLayout _ChannelLayout { get { return this.children.OfType<ChannelLayout>().FirstOrDefault(); } }
-        public IEnumerable<DownMixInstructions> _DownMixInstructions { get { return this.children.OfType<DownMixInstructions>(); } }
-        public IEnumerable<DRCCoefficientsBasic> _DRCCoefficientsBasic { get { return this.children.OfType<DRCCoefficientsBasic>(); } }
-        public IEnumerable<DRCInstructionsBasic> _DRCInstructionsBasic { get { return this.children.OfType<DRCInstructionsBasic>(); } }
-        public IEnumerable<DRCCoefficientsUniDRC> _DRCCoefficientsUniDRC { get { return this.children.OfType<DRCCoefficientsUniDRC>(); } }
-        public IEnumerable<DRCInstructionsUniDRC> _DRCInstructionsUniDRC { get { return this.children.OfType<DRCInstructionsUniDRC>(); } }
-        public UniDrcConfigExtension _UniDrcConfigExtension { get { return this.children.OfType<UniDrcConfigExtension>().FirstOrDefault(); } }
-        public SamplingRateBox _SamplingRateBox { get { return this.children.OfType<SamplingRateBox>().FirstOrDefault(); } }
-        public Box _Box { get { return this.children.OfType<Box>().FirstOrDefault(); } }
-
-        public AudioSampleEntry(string codingname = "") : base(codingname)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.soundversion);
-            boxSize += stream.ReadUInt16(out this.reserved1);
-            boxSize += stream.ReadUInt32(out this.reserved2);
-            boxSize += stream.ReadUInt16(out this.channelcount);
-            boxSize += stream.ReadUInt16(out this.samplesize);
-            boxSize += stream.ReadUInt16(out this.pre_defined);
-            boxSize += stream.ReadUInt16(out this.reserved);
-            boxSize += stream.ReadUInt32(out this.samplerate);
-
-            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
-            {
-                // samplerate = samplerate >> 16
-            }
-
-            if (soundversion == 1 || soundversion == 2)
-            {
-                boxSize += stream.ReadUInt32(out this.samplesPerPacket);
-                boxSize += stream.ReadUInt32(out this.bytesPerPacket);
-                boxSize += stream.ReadUInt32(out this.bytesPerFrame);
-                boxSize += stream.ReadUInt32(out this.bytesPerSample);
-            }
-
-            if (soundversion == 2)
-            {
-                boxSize += stream.ReadUInt8Array(20, out this.soundVersion2Data);
-            }
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DownMixInstructions); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsBasic); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsBasic); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsUniDRC); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.UniDrcConfigExtension); // optional boxes follow
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SamplingRateBox); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.Box); // further boxes as needed
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.soundversion);
-            boxSize += stream.WriteUInt16(this.reserved1);
-            boxSize += stream.WriteUInt32(this.reserved2);
-            boxSize += stream.WriteUInt16(this.channelcount);
-            boxSize += stream.WriteUInt16(this.samplesize);
-            boxSize += stream.WriteUInt16(this.pre_defined);
-            boxSize += stream.WriteUInt16(this.reserved);
-            boxSize += stream.WriteUInt32(this.samplerate);
-
-            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
-            {
-                // samplerate = samplerate >> 16
-            }
-
-            if (soundversion == 1 || soundversion == 2)
-            {
-                boxSize += stream.WriteUInt32(this.samplesPerPacket);
-                boxSize += stream.WriteUInt32(this.bytesPerPacket);
-                boxSize += stream.WriteUInt32(this.bytesPerFrame);
-                boxSize += stream.WriteUInt32(this.bytesPerSample);
-            }
-
-            if (soundversion == 2)
-            {
-                boxSize += stream.WriteUInt8Array(20, this.soundVersion2Data);
-            }
-            // boxSize += stream.WriteBox( this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
-            // boxSize += stream.WriteBox( this.DownMixInstructions); 
-            // boxSize += stream.WriteBox( this.DRCCoefficientsBasic); 
-            // boxSize += stream.WriteBox( this.DRCInstructionsBasic); 
-            // boxSize += stream.WriteBox( this.DRCCoefficientsUniDRC); 
-            // boxSize += stream.WriteBox( this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-            // boxSize += stream.WriteBox( this.UniDrcConfigExtension); // optional boxes follow
-            // boxSize += stream.WriteBox( this.SamplingRateBox); 
-            // boxSize += stream.WriteBox( this.Box); // further boxes as needed
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // soundversion
-            boxSize += 16; // reserved1
-            boxSize += 32; // reserved2
-            boxSize += 16; // channelcount
-            boxSize += 16; // samplesize
-            boxSize += 16; // pre_defined
-            boxSize += 16; // reserved
-            boxSize += 32; // samplerate
-
-            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
-            {
-                // samplerate = samplerate >> 16
-            }
-
-            if (soundversion == 1 || soundversion == 2)
-            {
-                boxSize += 32; // samplesPerPacket
-                boxSize += 32; // bytesPerPacket
-                boxSize += 32; // bytesPerFrame
-                boxSize += 32; // bytesPerSample
-            }
-
-            if (soundversion == 2)
-            {
-                boxSize += 20 * 8; // soundVersion2Data
-            }
-            // boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
-            // boxSize += IsoStream.CalculateBoxSize(DownMixInstructions); // DownMixInstructions
-            // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
-            // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsBasic); // DRCInstructionsBasic
-            // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
-            // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
-            // boxSize += IsoStream.CalculateBoxSize(UniDrcConfigExtension); // UniDrcConfigExtension
-            // boxSize += IsoStream.CalculateBoxSize(SamplingRateBox); // SamplingRateBox
-            // boxSize += IsoStream.CalculateBoxSize(Box); // Box
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){
-        unsigned int(16) entry_version;	// shall be 1, 
-        // and shall be in an stsd with version ==1
-        const unsigned int(16)[3] reserved = 0;
-        template unsigned int(16) channelcount;	// shall be correct
-        template unsigned int(16) samplesize = 16;
-        unsigned int(16) pre_defined = 0;
-        const unsigned int(16) reserved = 0 ;
-        template unsigned int(32) samplerate = 1<<16;
-        // optional boxes follow
-        SamplingRateBox();
-        Box ();		// further boxes as needed
-        ChannelLayout();
-        DownMixInstructions() [];
-        DRCCoefficientsBasic() [];
-        DRCInstructionsBasic() [];
-        DRCCoefficientsUniDRC() [];
-        DRCInstructionsUniDRC() [];
-        // we permit only one DRC Extension box:
-        UniDrcConfigExtension();
-        // optional boxes follow
-        ChannelLayout();
-    }
-    */
-    public class AudioSampleEntryV1 : SampleEntry
-    {
-        public override string DisplayName { get { return "AudioSampleEntryV1"; } }
-
-        protected ushort entry_version;  //  shall be 1, 
-        public ushort EntryVersion { get { return this.entry_version; } set { this.entry_version = value; } }
-
-        protected ushort[] reserved = [];
-        public ushort[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected ushort channelcount;  //  shall be correct
-        public ushort Channelcount { get { return this.channelcount; } set { this.channelcount = value; } }
-
-        protected ushort samplesize = 16;
-        public ushort Samplesize { get { return this.samplesize; } set { this.samplesize = value; } }
-
-        protected ushort pre_defined = 0;
-        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
-
-        protected ushort reserved0 = 0;
-        public ushort Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected uint samplerate = 1 << 16;  //  optional boxes follow
-        public uint Samplerate { get { return this.samplerate; } set { this.samplerate = value; } }
-        public SamplingRateBox _SamplingRateBox { get { return this.children.OfType<SamplingRateBox>().FirstOrDefault(); } }
-        public Box _Box { get { return this.children.OfType<Box>().FirstOrDefault(); } }
-        public ChannelLayout _ChannelLayout { get { return this.children.OfType<ChannelLayout>().FirstOrDefault(); } }
-        public IEnumerable<DownMixInstructions> _DownMixInstructions { get { return this.children.OfType<DownMixInstructions>(); } }
-        public IEnumerable<DRCCoefficientsBasic> _DRCCoefficientsBasic { get { return this.children.OfType<DRCCoefficientsBasic>(); } }
-        public IEnumerable<DRCInstructionsBasic> _DRCInstructionsBasic { get { return this.children.OfType<DRCInstructionsBasic>(); } }
-        public IEnumerable<DRCCoefficientsUniDRC> _DRCCoefficientsUniDRC { get { return this.children.OfType<DRCCoefficientsUniDRC>(); } }
-        public IEnumerable<DRCInstructionsUniDRC> _DRCInstructionsUniDRC { get { return this.children.OfType<DRCInstructionsUniDRC>(); } }
-        public UniDrcConfigExtension _UniDrcConfigExtension { get { return this.children.OfType<UniDrcConfigExtension>().FirstOrDefault(); } }
-
-        public AudioSampleEntryV1(string codingname = "") : base(codingname)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.entry_version); // shall be 1, 
-            /*  and shall be in an stsd with version ==1 */
-            boxSize += stream.ReadUInt16Array(3, out this.reserved);
-            boxSize += stream.ReadUInt16(out this.channelcount); // shall be correct
-            boxSize += stream.ReadUInt16(out this.samplesize);
-            boxSize += stream.ReadUInt16(out this.pre_defined);
-            boxSize += stream.ReadUInt16(out this.reserved0);
-            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(out this.samplerate); // optional boxes follow
-                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SamplingRateBox); 
-                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.Box); // further boxes as needed
-                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); 
-                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DownMixInstructions); 
-                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsBasic); 
-                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsBasic); 
-                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsUniDRC); 
-                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-                                                                                                          // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.UniDrcConfigExtension); // optional boxes follow
-                                                                                                          // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); 
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.entry_version); // shall be 1, 
-            /*  and shall be in an stsd with version ==1 */
-            boxSize += stream.WriteUInt16Array(3, this.reserved);
-            boxSize += stream.WriteUInt16(this.channelcount); // shall be correct
-            boxSize += stream.WriteUInt16(this.samplesize);
-            boxSize += stream.WriteUInt16(this.pre_defined);
-            boxSize += stream.WriteUInt16(this.reserved0);
-            boxSize += stream.WriteUInt32(this.samplerate); // optional boxes follow
-                                                            // boxSize += stream.WriteBox( this.SamplingRateBox); 
-                                                            // boxSize += stream.WriteBox( this.Box); // further boxes as needed
-                                                            // boxSize += stream.WriteBox( this.ChannelLayout); 
-                                                            // boxSize += stream.WriteBox( this.DownMixInstructions); 
-                                                            // boxSize += stream.WriteBox( this.DRCCoefficientsBasic); 
-                                                            // boxSize += stream.WriteBox( this.DRCInstructionsBasic); 
-                                                            // boxSize += stream.WriteBox( this.DRCCoefficientsUniDRC); 
-                                                            // boxSize += stream.WriteBox( this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-                                                            // boxSize += stream.WriteBox( this.UniDrcConfigExtension); // optional boxes follow
-                                                            // boxSize += stream.WriteBox( this.ChannelLayout); 
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // entry_version
-            /*  and shall be in an stsd with version ==1 */
-            boxSize += 3 * 16; // reserved
-            boxSize += 16; // channelcount
-            boxSize += 16; // samplesize
-            boxSize += 16; // pre_defined
-            boxSize += 16; // reserved0
-            boxSize += 32; // samplerate
-                           // boxSize += IsoStream.CalculateBoxSize(SamplingRateBox); // SamplingRateBox
-                           // boxSize += IsoStream.CalculateBoxSize(Box); // Box
-                           // boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
-                           // boxSize += IsoStream.CalculateBoxSize(DownMixInstructions); // DownMixInstructions
-                           // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsBasic); // DRCCoefficientsBasic
-                           // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsBasic); // DRCInstructionsBasic
-                           // boxSize += IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC); // DRCCoefficientsUniDRC
-                           // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
-                           // boxSize += IsoStream.CalculateBoxSize(UniDrcConfigExtension); // UniDrcConfigExtension
-                           // boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class FontSampleEntry(codingname) extends SampleEntry (codingname){
-        //other boxes from derived specifications
-    }
-    */
-    public class FontSampleEntry : SampleEntry
-    {
-        public override string DisplayName { get { return "FontSampleEntry"; } }
-
-        public FontSampleEntry(string codingname = "") : base(codingname)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            /* other boxes from derived specifications */
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            /* other boxes from derived specifications */
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /* other boxes from derived specifications */
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class MetaDataSampleEntry(codingname) extends SampleEntry (codingname) {
-    }
-    */
-    public class MetaDataSampleEntry : SampleEntry
-    {
-        public override string DisplayName { get { return "MetaDataSampleEntry"; } }
-
-        public MetaDataSampleEntry(string codingname = "") : base(codingname)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class GenericSampleEntry extends Box('encv') {
-        // ProtectionSchemeInfoBox {
-            // OriginalFormatBox;	// data_format is 'resv'
-            // SchemeTypeBox;
-            // SchemeInformationBox;
-        // }
-    // tRestrictedSchemeInfoBox {
-            // OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1'
-            // SchemeTypeBox;
-            // SchemeInformationBox;
-        // }
-        // Boxes specific to the untransformed sample entry type
-        // For 'avc1', these would include AVCConfigurationBox
-    }
-    */
-    public class GenericSampleEntry : Box
-    {
-        public const string TYPE = "encv";
-        public override string DisplayName { get { return "GenericSampleEntry"; } }
-
-        public GenericSampleEntry() : base("encv")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            /*  ProtectionSchemeInfoBox { */
-            /*  OriginalFormatBox;	// data_format is 'resv' */
-            /*  SchemeTypeBox; */
-            /*  SchemeInformationBox; */
-            /*  } */
-            /*  tRestrictedSchemeInfoBox { */
-            /*  OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1' */
-            /*  SchemeTypeBox; */
-            /*  SchemeInformationBox; */
-            /*  } */
-            /*  Boxes specific to the untransformed sample entry type */
-            /*  For 'avc1', these would include AVCConfigurationBox */
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            /*  ProtectionSchemeInfoBox { */
-            /*  OriginalFormatBox;	// data_format is 'resv' */
-            /*  SchemeTypeBox; */
-            /*  SchemeInformationBox; */
-            /*  } */
-            /*  tRestrictedSchemeInfoBox { */
-            /*  OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1' */
-            /*  SchemeTypeBox; */
-            /*  SchemeInformationBox; */
-            /*  } */
-            /*  Boxes specific to the untransformed sample entry type */
-            /*  For 'avc1', these would include AVCConfigurationBox */
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /*  ProtectionSchemeInfoBox { */
-            /*  OriginalFormatBox;	// data_format is 'resv' */
-            /*  SchemeTypeBox; */
-            /*  SchemeInformationBox; */
-            /*  } */
-            /*  tRestrictedSchemeInfoBox { */
-            /*  OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1' */
-            /*  SchemeTypeBox; */
-            /*  SchemeInformationBox; */
-            /*  } */
-            /*  Boxes specific to the untransformed sample entry type */
-            /*  For 'avc1', these would include AVCConfigurationBox */
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class XMLMetaDataSampleEntry() extends MetaDataSampleEntry ('metx') {
-        utf8string content_encoding; // optional
-        utf8list namespace;
-        utf8list schema_location; // optional
-    }
-    */
-    public class XMLMetaDataSampleEntry : MetaDataSampleEntry
-    {
-        public const string TYPE = "metx";
-        public override string DisplayName { get { return "XMLMetaDataSampleEntry"; } }
-
-        protected BinaryUTF8String content_encoding;  //  optional
-        public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
-
-        protected BinaryUTF8String ns;
-        public BinaryUTF8String Ns { get { return this.ns; } set { this.ns = value; } }
-
-        protected BinaryUTF8String schema_location;  //  optional
-        public BinaryUTF8String SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
-
-        public XMLMetaDataSampleEntry() : base("metx")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.ns);
-            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.schema_location); // optional
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional
-            boxSize += stream.WriteStringZeroTerminated(this.ns);
-            boxSize += stream.WriteStringZeroTerminated(this.schema_location); // optional
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateStringSize(content_encoding); // content_encoding
-            boxSize += IsoStream.CalculateStringSize(ns); // ns
-            boxSize += IsoStream.CalculateStringSize(schema_location); // schema_location
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class TextMetaDataSampleEntry() extends MetaDataSampleEntry ('mett') {
-        utf8string content_encoding; // optional
-        utf8string mime_format;
-        TextConfigBox (); // optional
-    }
-    */
-    public class TextMetaDataSampleEntry : MetaDataSampleEntry
-    {
-        public const string TYPE = "mett";
-        public override string DisplayName { get { return "TextMetaDataSampleEntry"; } }
-
-        protected BinaryUTF8String content_encoding;  //  optional
-        public BinaryUTF8String ContentEncoding { get { return this.content_encoding; } set { this.content_encoding = value; } }
-
-        protected BinaryUTF8String mime_format;
-        public BinaryUTF8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
-        public TextConfigBox _TextConfigBox { get { return this.children.OfType<TextConfigBox>().FirstOrDefault(); } }
-
-        public TextMetaDataSampleEntry() : base("mett")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.content_encoding); // optional
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.mime_format);
-            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox); // optional
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.content_encoding); // optional
-            boxSize += stream.WriteStringZeroTerminated(this.mime_format);
-            // boxSize += stream.WriteBox( this.TextConfigBox); // optional
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateStringSize(content_encoding); // content_encoding
-            boxSize += IsoStream.CalculateStringSize(mime_format); // mime_format
-                                                                   // boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class URIMetaSampleEntry() extends MetaDataSampleEntry ('urim') {
-        URIBox			the_label;
-        URIInitBox		init;		// optional
-    }
-    */
-    public class URIMetaSampleEntry : MetaDataSampleEntry
-    {
-        public const string TYPE = "urim";
-        public override string DisplayName { get { return "URIMetaSampleEntry"; } }
-        public URIBox TheLabel { get { return this.children.OfType<URIBox>().FirstOrDefault(); } }
-        public URIInitBox Init { get { return this.children.OfType<URIInitBox>().FirstOrDefault(); } }
-
-        public URIMetaSampleEntry() : base("urim")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.the_label); 
-            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.init); // optional
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            // boxSize += stream.WriteBox( this.the_label); 
-            // boxSize += stream.WriteBox( this.init); // optional
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(the_label); // the_label
-            // boxSize += IsoStream.CalculateBoxSize(init); // init
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class BoxedMetaDataSampleEntry 
-        extends MetaDataSampleEntry ('mebx') {
-        MetaDataKeyTableBox();				// mandatory
-        BitRateBox ();							// optional
-    }
-    */
-    public class BoxedMetaDataSampleEntry : MetaDataSampleEntry
-    {
-        public const string TYPE = "mebx";
-        public override string DisplayName { get { return "BoxedMetaDataSampleEntry"; } }
-        public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return this.children.OfType<MetaDataKeyTableBox>().FirstOrDefault(); } }
-        public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
-
-        public BoxedMetaDataSampleEntry() : base("mebx")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataKeyTableBox); // mandatory
-            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            // boxSize += stream.WriteBox( this.MetaDataKeyTableBox); // mandatory
-            // boxSize += stream.WriteBox( this.BitRateBox); // optional
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(MetaDataKeyTableBox); // MetaDataKeyTableBox
-            // boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class FDHintSampleEntry() extends HintSampleEntry ('fdp ') {
-        unsigned int(16)	hinttrackversion = 1;
-        unsigned int(16)	highestcompatibleversion = 1;
-        unsigned int(16)	partition_entry_ID;
-        unsigned int(16)	FEC_overhead;
-    }
-    */
-    public class FDHintSampleEntry : HintSampleEntry
-    {
-        public const string TYPE = "fdp ";
-        public override string DisplayName { get { return "FDHintSampleEntry"; } }
-
-        protected ushort hinttrackversion = 1;
-        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
-
-        protected ushort highestcompatibleversion = 1;
-        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
-
-        protected ushort partition_entry_ID;
-        public ushort PartitionEntryID { get { return this.partition_entry_ID; } set { this.partition_entry_ID = value; } }
-
-        protected ushort FEC_overhead;
-        public ushort FECOverhead { get { return this.FEC_overhead; } set { this.FEC_overhead = value; } }
-
-        public FDHintSampleEntry() : base("fdp ")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.hinttrackversion);
-            boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
-            boxSize += stream.ReadUInt16(out this.partition_entry_ID);
-            boxSize += stream.ReadUInt16(out this.FEC_overhead);
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.hinttrackversion);
-            boxSize += stream.WriteUInt16(this.highestcompatibleversion);
-            boxSize += stream.WriteUInt16(this.partition_entry_ID);
-            boxSize += stream.WriteUInt16(this.FEC_overhead);
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // hinttrackversion
-            boxSize += 16; // highestcompatibleversion
-            boxSize += 16; // partition_entry_ID
-            boxSize += 16; // FEC_overhead
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class IncompleteAVCSampleEntry() extends VisualSampleEntry ('icpv'){
-        CompleteTrackInfoBox();
-        AVCConfigurationBox config;
-    }
-    */
-    public class IncompleteAVCSampleEntry : VisualSampleEntry
-    {
-        public const string TYPE = "icpv";
-        public override string DisplayName { get { return "IncompleteAVCSampleEntry"; } }
-        public CompleteTrackInfoBox _CompleteTrackInfoBox { get { return this.children.OfType<CompleteTrackInfoBox>().FirstOrDefault(); } }
-        public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
-
-        public IncompleteAVCSampleEntry() : base("icpv")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.CompleteTrackInfoBox); 
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            // boxSize += stream.WriteBox( this.CompleteTrackInfoBox); 
-            // boxSize += stream.WriteBox( this.config); 
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(CompleteTrackInfoBox); // CompleteTrackInfoBox
-            // boxSize += IsoStream.CalculateBoxSize(config); // config
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ProtectedMPEG2TransportStreamSampleEntry
-        extends MPEG2TSSampleEntry('pm2t') {
-        ProtectionSchemeInfoBox		SchemeInformation;
-    }
-    */
-    public class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEntry
-    {
-        public const string TYPE = "pm2t";
-        public override string DisplayName { get { return "ProtectedMPEG2TransportStreamSampleEntry"; } }
-        public ProtectionSchemeInfoBox _SchemeInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
-
-        public ProtectedMPEG2TransportStreamSampleEntry() : base("pm2t")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SchemeInformation); 
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            // boxSize += stream.WriteBox( this.SchemeInformation); 
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(SchemeInformation); // SchemeInformation
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ProtectedRtpReceptionHintSampleEntry
-        extends RtpReceptionHintSampleEntry ('prtp') {
-        ProtectionSchemeInfoBox		SchemeInformation;
-    }
-    */
-    public class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
-    {
-        public const string TYPE = "prtp";
-        public override string DisplayName { get { return "ProtectedRtpReceptionHintSampleEntry"; } }
-        public ProtectionSchemeInfoBox _SchemeInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
-
-        public ProtectedRtpReceptionHintSampleEntry() : base("prtp")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SchemeInformation); 
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            // boxSize += stream.WriteBox( this.SchemeInformation); 
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(SchemeInformation); // SchemeInformation
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class MPEG2TSReceptionSampleEntry extends MPEG2TSSampleEntry('rm2t') {}
-    */
-    public class MPEG2TSReceptionSampleEntry : MPEG2TSSampleEntry
-    {
-        public const string TYPE = "rm2t";
-        public override string DisplayName { get { return "MPEG2TSReceptionSampleEntry"; } }
-
-        public MPEG2TSReceptionSampleEntry() : base("rm2t")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ReceivedRtpHintSampleEntry() extends HintSampleEntry ('rrtp') {
-        uint(16)		hinttrackversion = 1;
-        uint(16)		highestcompatibleversion = 1;
-        uint(32)		maxpacketsize;
-    }
-    */
-    public class ReceivedRtpHintSampleEntry : HintSampleEntry
-    {
-        public const string TYPE = "rrtp";
-        public override string DisplayName { get { return "ReceivedRtpHintSampleEntry"; } }
-
-        protected ushort hinttrackversion = 1;
-        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
-
-        protected ushort highestcompatibleversion = 1;
-        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
-
-        protected uint maxpacketsize;
-        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
-
-        public ReceivedRtpHintSampleEntry() : base("rrtp")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.hinttrackversion);
-            boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
-            boxSize += stream.ReadUInt32(out this.maxpacketsize);
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.hinttrackversion);
-            boxSize += stream.WriteUInt16(this.highestcompatibleversion);
-            boxSize += stream.WriteUInt32(this.maxpacketsize);
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // hinttrackversion
-            boxSize += 16; // highestcompatibleversion
-            boxSize += 32; // maxpacketsize
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ReceivedSrtpHintSampleEntry() extends HintSampleEntry ('rsrp') {
-        uint(16)		hinttrackversion = 1;
-        uint(16)		highestcompatibleversion = 1;
-        uint(32)		maxpacketsize;
-    }
-    */
-    public class ReceivedSrtpHintSampleEntry : HintSampleEntry
-    {
-        public const string TYPE = "rsrp";
-        public override string DisplayName { get { return "ReceivedSrtpHintSampleEntry"; } }
-
-        protected ushort hinttrackversion = 1;
-        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
-
-        protected ushort highestcompatibleversion = 1;
-        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
-
-        protected uint maxpacketsize;
-        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
-
-        public ReceivedSrtpHintSampleEntry() : base("rsrp")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.hinttrackversion);
-            boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
-            boxSize += stream.ReadUInt32(out this.maxpacketsize);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.hinttrackversion);
-            boxSize += stream.WriteUInt16(this.highestcompatibleversion);
-            boxSize += stream.WriteUInt32(this.maxpacketsize);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // hinttrackversion
-            boxSize += 16; // highestcompatibleversion
-            boxSize += 32; // maxpacketsize
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class HintSampleEntry() extends SampleEntry (protocol) {
-    }
-    */
-    public class HintSampleEntry : SampleEntry
-    {
-        public override string DisplayName { get { return "HintSampleEntry"; } }
-
-        public HintSampleEntry(string protocol) : base(protocol)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class MPEG2TSServerSampleEntry extends MPEG2TSSampleEntry('sm2t') {}
-    */
-    public class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
-    {
-        public const string TYPE = "sm2t";
-        public override string DisplayName { get { return "MPEG2TSServerSampleEntry"; } }
-
-        public MPEG2TSServerSampleEntry() : base("sm2t")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class SrtpHintSampleEntry() extends HintSampleEntry ('srtp') {
-        uint(16)		hinttrackversion = 1;
-        uint(16)		highestcompatibleversion = 1;
-        uint(32)		maxpacketsize;
-    }
-    */
-    public class SrtpHintSampleEntry : HintSampleEntry
-    {
-        public const string TYPE = "srtp";
-        public override string DisplayName { get { return "SrtpHintSampleEntry"; } }
-
-        protected ushort hinttrackversion = 1;
-        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
-
-        protected ushort highestcompatibleversion = 1;
-        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
-
-        protected uint maxpacketsize;
-        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
-
-        public SrtpHintSampleEntry() : base("srtp")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.hinttrackversion);
-            boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
-            boxSize += stream.ReadUInt32(out this.maxpacketsize);
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.hinttrackversion);
-            boxSize += stream.WriteUInt16(this.highestcompatibleversion);
-            boxSize += stream.WriteUInt32(this.maxpacketsize);
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // hinttrackversion
-            boxSize += 16; // highestcompatibleversion
-            boxSize += 32; // maxpacketsize
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class HapticSampleEntry(codingname)
-        extends SampleEntry(codingname) {
-        Box()[]	otherboxes;
-    }
-    */
-    public class HapticSampleEntry : SampleEntry
-    {
-        public override string DisplayName { get { return "HapticSampleEntry"; } }
-        public IEnumerable<Box> Otherboxes { get { return this.children.OfType<Box>(); } }
-
-        public HapticSampleEntry(string codingname = "") : base(codingname)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.otherboxes); 
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            // boxSize += stream.WriteBox( this.otherboxes); 
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(otherboxes); // otherboxes
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class VolumetricVisualSampleEntry(codingname) 
-        extends SampleEntry (codingname){
-        unsigned int(8)[32] compressorname;
-        // other boxes from derived specifications
-    }
-    */
-    public class VolumetricVisualSampleEntry : SampleEntry
-    {
-        public override string DisplayName { get { return "VolumetricVisualSampleEntry"; } }
-
-        protected byte[] compressorname;  //  other boxes from derived specifications
-        public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
-
-        public VolumetricVisualSampleEntry(string codingname = "") : base(codingname)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array(32, out this.compressorname); // other boxes from derived specifications
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8Array(32, this.compressorname); // other boxes from derived specifications
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32 * 8; // compressorname
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class VisualSampleEntry(codingname) extends SampleEntry (codingname){
-        unsigned int(16) pre_defined = 0;
-        const unsigned int(16) reserved = 0;
-        unsigned int(32)[3]	pre_defined = 0;
-        unsigned int(16)	width;
-        unsigned int(16)	height;
-        template unsigned int(32)	horizresolution = 0x00480000;	// 72 dpi
-        template unsigned int(32)	vertresolution  = 0x00480000;	// 72 dpi
-        const unsigned int(32)	reserved = 0;
-        template unsigned int(16)	frame_count = 1;
-        uint(8)[32]	compressorname;
-        template unsigned int(16)	depth = 0x0018;
-        int(16)	pre_defined = -1;
-        // other boxes from derived specifications
-        CleanApertureBox			clap;		// optional
-        PixelAspectRatioBox		pasp;		// optional
-    }
-
-    */
-    public class VisualSampleEntry : SampleEntry
-    {
-        public override string DisplayName { get { return "VisualSampleEntry"; } }
-
-        protected ushort pre_defined = 0;
-        public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
-
-        protected ushort reserved = 0;
-        public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected uint[] pre_defined0 = [];
-        public uint[] PreDefined0 { get { return this.pre_defined0; } set { this.pre_defined0 = value; } }
-
-        protected ushort width;
-        public ushort Width { get { return this.width; } set { this.width = value; } }
-
-        protected ushort height;
-        public ushort Height { get { return this.height; } set { this.height = value; } }
-
-        protected uint horizresolution = 0x00480000;  //  72 dpi
-        public uint Horizresolution { get { return this.horizresolution; } set { this.horizresolution = value; } }
-
-        protected uint vertresolution = 0x00480000;  //  72 dpi
-        public uint Vertresolution { get { return this.vertresolution; } set { this.vertresolution = value; } }
-
-        protected uint reserved0 = 0;
-        public uint Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected ushort frame_count = 1;
-        public ushort FrameCount { get { return this.frame_count; } set { this.frame_count = value; } }
-
-        protected byte[] compressorname;
-        public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
-
-        protected ushort depth = 0x0018;
-        public ushort Depth { get { return this.depth; } set { this.depth = value; } }
-
-        protected short pre_defined1 = -1;  //  other boxes from derived specifications
-        public short PreDefined1 { get { return this.pre_defined1; } set { this.pre_defined1 = value; } }
-        public CleanApertureBox Clap { get { return this.children.OfType<CleanApertureBox>().FirstOrDefault(); } }
-        public PixelAspectRatioBox Pasp { get { return this.children.OfType<PixelAspectRatioBox>().FirstOrDefault(); } }
-
-        public VisualSampleEntry(string codingname = "") : base(codingname)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.pre_defined);
-            boxSize += stream.ReadUInt16(out this.reserved);
-            boxSize += stream.ReadUInt32Array(3, out this.pre_defined0);
-            boxSize += stream.ReadUInt16(out this.width);
-            boxSize += stream.ReadUInt16(out this.height);
-            boxSize += stream.ReadUInt32(out this.horizresolution); // 72 dpi
-            boxSize += stream.ReadUInt32(out this.vertresolution); // 72 dpi
-            boxSize += stream.ReadUInt32(out this.reserved0);
-            boxSize += stream.ReadUInt16(out this.frame_count);
-            boxSize += stream.ReadUInt8Array(32, out this.compressorname);
-            boxSize += stream.ReadUInt16(out this.depth);
-            boxSize += stream.ReadInt16(out this.pre_defined1); // other boxes from derived specifications
-                                                                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.clap); // optional
-                                                                // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.pasp); // optional
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.pre_defined);
-            boxSize += stream.WriteUInt16(this.reserved);
-            boxSize += stream.WriteUInt32Array(3, this.pre_defined0);
-            boxSize += stream.WriteUInt16(this.width);
-            boxSize += stream.WriteUInt16(this.height);
-            boxSize += stream.WriteUInt32(this.horizresolution); // 72 dpi
-            boxSize += stream.WriteUInt32(this.vertresolution); // 72 dpi
-            boxSize += stream.WriteUInt32(this.reserved0);
-            boxSize += stream.WriteUInt16(this.frame_count);
-            boxSize += stream.WriteUInt8Array(32, this.compressorname);
-            boxSize += stream.WriteUInt16(this.depth);
-            boxSize += stream.WriteInt16(this.pre_defined1); // other boxes from derived specifications
-                                                             // boxSize += stream.WriteBox( this.clap); // optional
-                                                             // boxSize += stream.WriteBox( this.pasp); // optional
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // pre_defined
-            boxSize += 16; // reserved
-            boxSize += 3 * 32; // pre_defined0
-            boxSize += 16; // width
-            boxSize += 16; // height
-            boxSize += 32; // horizresolution
-            boxSize += 32; // vertresolution
-            boxSize += 32; // reserved0
-            boxSize += 16; // frame_count
-            boxSize += 32 * 8; // compressorname
-            boxSize += 16; // depth
-            boxSize += 16; // pre_defined1
-                           // boxSize += IsoStream.CalculateBoxSize(clap); // clap
-                           // boxSize += IsoStream.CalculateBoxSize(pasp); // pasp
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class RtpHintSampleEntry() extends HintSampleEntry ('rtp ') {
-        uint(16)		hinttrackversion = 1;
-        uint(16)		highestcompatibleversion = 1;
-        uint(32)		maxpacketsize;
-    }
-    */
-    public class RtpHintSampleEntry : HintSampleEntry
-    {
-        public const string TYPE = "rtp ";
-        public override string DisplayName { get { return "RtpHintSampleEntry"; } }
-
-        protected ushort hinttrackversion = 1;
-        public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
-
-        protected ushort highestcompatibleversion = 1;
-        public ushort Highestcompatibleversion { get { return this.highestcompatibleversion; } set { this.highestcompatibleversion = value; } }
-
-        protected uint maxpacketsize;
-        public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
-
-        public RtpHintSampleEntry() : base("rtp ")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.hinttrackversion);
-            boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
-            boxSize += stream.ReadUInt32(out this.maxpacketsize);
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.hinttrackversion);
-            boxSize += stream.WriteUInt16(this.highestcompatibleversion);
-            boxSize += stream.WriteUInt32(this.maxpacketsize);
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // hinttrackversion
-            boxSize += 16; // highestcompatibleversion
-            boxSize += 32; // maxpacketsize
-            boxSize += IsoStream.CalculateBoxArray(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-    extends FullBox(grouping_type, version, flags) {
-        unsigned int(32) group_id;
-        unsigned int(32) num_entities_in_group;
-        for(i=0; i<num_entities_in_group; i++)
-            unsigned int(32) entity_id;
-    // the remaining data may be specified for a particular grouping_type
-    }
-    */
-    public class EntityToGroupBox : FullBox
-    {
-        public override string DisplayName { get { return "EntityToGroupBox"; } }
-
-        protected uint group_id;
-        public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
-
-        protected uint num_entities_in_group;
-        public uint NumEntitiesInGroup { get { return this.num_entities_in_group; } set { this.num_entities_in_group = value; } }
-
-        protected uint[] entity_id;  //  the remaining data may be specified for a particular grouping_type
-        public uint[] EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
-
-        public EntityToGroupBox(string grouping_type, byte version, uint flags) : base(grouping_type, version, flags)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.group_id);
-            boxSize += stream.ReadUInt32(out this.num_entities_in_group);
-
-            this.entity_id = new uint[num_entities_in_group];
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.entity_id[i]); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.group_id);
-            boxSize += stream.WriteUInt32(this.num_entities_in_group);
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += stream.WriteUInt32(this.entity_id[i]); // the remaining data may be specified for a particular grouping_type
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // group_id
-            boxSize += 32; // num_entities_in_group
-
-            for (int i = 0; i < num_entities_in_group; i++)
-            {
-                boxSize += 32; // entity_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class BrandProperty extends GeneralTypeBox ('brnd') 
-    { }
-    */
-    public class BrandProperty : GeneralTypeBox
-    {
-        public const string TYPE = "brnd";
-        public override string DisplayName { get { return "BrandProperty"; } }
-
-        public BrandProperty() : base("brnd")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
-        unsigned int(16) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(16) to_item_ID;
-        }
-    }
-
-
-
-    */
-    public class SingleItemTypeReferenceBox : Box
-    {
-        public override string DisplayName { get { return "SingleItemTypeReferenceBox"; } }
-
-        protected ushort from_item_ID;
-        public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected ushort[] to_item_ID;
-        public ushort[] ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBox(string referenceType) : base(referenceType)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            this.to_item_ID = new ushort[reference_count];
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt16(out this.to_item_ID[j]);
-            }
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt16(this.to_item_ID[j]);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 16; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(referenceType) {
-        unsigned int(32) from_item_ID;
-        unsigned int(16) reference_count;
-        for (j=0; j<reference_count; j++) {
-            unsigned int(32) to_item_ID;
-        }
-    }
-    */
-    public class SingleItemTypeReferenceBoxLarge : Box
-    {
-        public override string DisplayName { get { return "SingleItemTypeReferenceBoxLarge"; } }
-
-        protected uint from_item_ID;
-        public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
-
-        protected ushort reference_count;
-        public ushort ReferenceCount { get { return this.reference_count; } set { this.reference_count = value; } }
-
-        protected uint[] to_item_ID;
-        public uint[] ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
-
-        public SingleItemTypeReferenceBoxLarge(string referenceType) : base(referenceType)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.from_item_ID);
-            boxSize += stream.ReadUInt16(out this.reference_count);
-
-            this.to_item_ID = new uint[reference_count];
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.ReadUInt32(out this.to_item_ID[j]);
-            }
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.from_item_ID);
-            boxSize += stream.WriteUInt16(this.reference_count);
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += stream.WriteUInt32(this.to_item_ID[j]);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // from_item_ID
-            boxSize += 16; // reference_count
-
-            for (int j = 0; j < reference_count; j++)
-            {
-                boxSize += 32; // to_item_ID
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AlternativeStartupEntry() extends VisualSampleGroupEntry ('alst')
-    {
-        unsigned int(16) roll_count;
-        unsigned int(16) first_output_sample;
-        for (i=1; i <= roll_count; i++)
-            unsigned int(32) sample_offset[i];
-        j=1;
-        do { // optional, until the end of the structure
-            unsigned int(16) num_output_samples[j];
-            unsigned int(16) num_total_samples[j];
-            j++;
-        }
-    }
-    */
-    public class AlternativeStartupEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "alst";
-        public override string DisplayName { get { return "AlternativeStartupEntry"; } }
-
-        protected ushort roll_count;
-        public ushort RollCount { get { return this.roll_count; } set { this.roll_count = value; } }
-
-        protected ushort first_output_sample;
-        public ushort FirstOutputSample { get { return this.first_output_sample; } set { this.first_output_sample = value; } }
-
-        protected uint[] sample_offset;
-        public uint[] SampleOffset { get { return this.sample_offset; } set { this.sample_offset = value; } }
-
-        protected ushort[] num_output_samples;
-        public ushort[] NumOutputSamples { get { return this.num_output_samples; } set { this.num_output_samples = value; } }
-
-        protected ushort[] num_total_samples;
-        public ushort[] NumTotalSamples { get { return this.num_total_samples; } set { this.num_total_samples = value; } }
-
-        public AlternativeStartupEntry() : base("alst")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.roll_count);
-            boxSize += stream.ReadUInt16(out this.first_output_sample);
-
-            this.sample_offset = new uint[roll_count];
-            for (int i = 0; i < roll_count; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.sample_offset[i]);
-            }
-            int j = 1;
-
-            while (true)
-            {
-                /*  optional, until the end of the structure */
-                boxSize += stream.ReadUInt16(out this.num_output_samples[j]);
-                boxSize += stream.ReadUInt16(out this.num_total_samples[j]);
-                j++;
-            }
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.roll_count);
-            boxSize += stream.WriteUInt16(this.first_output_sample);
-
-            for (int i = 0; i < roll_count; i++)
-            {
-                boxSize += stream.WriteUInt32(this.sample_offset[i]);
-            }
-            int j = 1;
-
-            while (true)
-            {
-                /*  optional, until the end of the structure */
-                boxSize += stream.WriteUInt16(this.num_output_samples[j]);
-                boxSize += stream.WriteUInt16(this.num_total_samples[j]);
-                j++;
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // roll_count
-            boxSize += 16; // first_output_sample
-
-            for (int i = 0; i < roll_count; i++)
-            {
-                boxSize += 32; // sample_offset
-            }
-            int j = 1;
-
-            while (true)
-            {
-                /*  optional, until the end of the structure */
-                boxSize += 16; // num_output_samples
-                boxSize += 16; // num_total_samples
-                j++;
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class VisualDRAPEntry() 
-    extends VisualSampleGroupEntry('drap') {
-        unsigned int(3) DRAP_type;
-        unsigned int(29) reserved = 0;
-    }
-    */
-    public class VisualDRAPEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "drap";
-        public override string DisplayName { get { return "VisualDRAPEntry"; } }
-
-        protected byte DRAP_type;
-        public byte DRAPType { get { return this.DRAP_type; } set { this.DRAP_type = value; } }
-
-        protected uint reserved = 0;
-        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        public VisualDRAPEntry() : base("drap")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBits(3, out this.DRAP_type);
-            boxSize += stream.ReadBits(29, out this.reserved);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBits(3, this.DRAP_type);
-            boxSize += stream.WriteBits(29, this.reserved);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 3; // DRAP_type
-            boxSize += 29; // reserved
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AudioPreRollEntry() extends AudioSampleGroupEntry ('prol')
-    {
-        signed int(16) roll_distance;
-    }
-    */
-    public class AudioPreRollEntry : AudioSampleGroupEntry
-    {
-        public const string TYPE = "prol";
-        public override string DisplayName { get { return "AudioPreRollEntry"; } }
-
-        protected short roll_distance;
-        public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
-
-        public AudioPreRollEntry() : base("prol")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadInt16(out this.roll_distance);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteInt16(this.roll_distance);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // roll_distance
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class VisualRandomAccessEntry() extends VisualSampleGroupEntry ('rap ')
-    {
-        unsigned int(1) num_leading_samples_known;
-        unsigned int(7) num_leading_samples;
-    }
-    */
-    public class VisualRandomAccessEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "rap ";
-        public override string DisplayName { get { return "VisualRandomAccessEntry"; } }
-
-        protected bool num_leading_samples_known;
-        public bool NumLeadingSamplesKnown { get { return this.num_leading_samples_known; } set { this.num_leading_samples_known = value; } }
-
-        protected byte num_leading_samples;
-        public byte NumLeadingSamples { get { return this.num_leading_samples; } set { this.num_leading_samples = value; } }
-
-        public VisualRandomAccessEntry() : base("rap ")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBit(out this.num_leading_samples_known);
-            boxSize += stream.ReadBits(7, out this.num_leading_samples);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBit(this.num_leading_samples_known);
-            boxSize += stream.WriteBits(7, this.num_leading_samples);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 1; // num_leading_samples_known
-            boxSize += 7; // num_leading_samples
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class RateShareEntry() extends SampleGroupDescriptionEntry('rash') {
-        unsigned int(16)	operation_point_count;
-        if (operation_point_count == 1) {
-            unsigned int(16)		target_rate_share;
-        }
-        else {
-            for (i=0; i < operation_point_count; i++) {
-                unsigned int(32)	available_bitrate;
-                unsigned int(16)	target_rate_share;
-            }
-        }
-        unsigned int(32)	maximum_bitrate;
-        unsigned int(32)	minimum_bitrate;
-        unsigned int(8)	discard_priority;
-    }
-    */
-    public class RateShareEntry : SampleGroupDescriptionEntry
-    {
-        public const string TYPE = "rash";
-        public override string DisplayName { get { return "RateShareEntry"; } }
-
-        protected ushort operation_point_count;
-        public ushort OperationPointCount { get { return this.operation_point_count; } set { this.operation_point_count = value; } }
-
-        protected ushort target_rate_share;
-        public ushort TargetRateShare { get { return this.target_rate_share; } set { this.target_rate_share = value; } }
-
-        protected uint[] available_bitrate;
-        public uint[] AvailableBitrate { get { return this.available_bitrate; } set { this.available_bitrate = value; } }
-
-        protected ushort[] target_rate_share0;
-        public ushort[] TargetRateShare0 { get { return this.target_rate_share0; } set { this.target_rate_share0 = value; } }
-
-        protected uint maximum_bitrate;
-        public uint MaximumBitrate { get { return this.maximum_bitrate; } set { this.maximum_bitrate = value; } }
-
-        protected uint minimum_bitrate;
-        public uint MinimumBitrate { get { return this.minimum_bitrate; } set { this.minimum_bitrate = value; } }
-
-        protected byte discard_priority;
-        public byte DiscardPriority { get { return this.discard_priority; } set { this.discard_priority = value; } }
-
-        public RateShareEntry() : base("rash")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.operation_point_count);
-
-            if (operation_point_count == 1)
-            {
-                boxSize += stream.ReadUInt16(out this.target_rate_share);
-            }
-
-            else
-            {
-
-                this.available_bitrate = new uint[operation_point_count];
-                this.target_rate_share0 = new ushort[operation_point_count];
-                for (int i = 0; i < operation_point_count; i++)
-                {
-                    boxSize += stream.ReadUInt32(out this.available_bitrate[i]);
-                    boxSize += stream.ReadUInt16(out this.target_rate_share0[i]);
-                }
-            }
-            boxSize += stream.ReadUInt32(out this.maximum_bitrate);
-            boxSize += stream.ReadUInt32(out this.minimum_bitrate);
-            boxSize += stream.ReadUInt8(out this.discard_priority);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.operation_point_count);
-
-            if (operation_point_count == 1)
-            {
-                boxSize += stream.WriteUInt16(this.target_rate_share);
-            }
-
-            else
-            {
-
-                for (int i = 0; i < operation_point_count; i++)
-                {
-                    boxSize += stream.WriteUInt32(this.available_bitrate[i]);
-                    boxSize += stream.WriteUInt16(this.target_rate_share0[i]);
-                }
-            }
-            boxSize += stream.WriteUInt32(this.maximum_bitrate);
-            boxSize += stream.WriteUInt32(this.minimum_bitrate);
-            boxSize += stream.WriteUInt8(this.discard_priority);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // operation_point_count
-
-            if (operation_point_count == 1)
-            {
-                boxSize += 16; // target_rate_share
-            }
-
-            else
-            {
-
-                for (int i = 0; i < operation_point_count; i++)
-                {
-                    boxSize += 32; // available_bitrate
-                    boxSize += 16; // target_rate_share0
-                }
-            }
-            boxSize += 32; // maximum_bitrate
-            boxSize += 32; // minimum_bitrate
-            boxSize += 8; // discard_priority
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AudioRollRecoveryEntry() extends AudioSampleGroupEntry ('roll')
-    {
-        signed int(16) roll_distance;
-    }
-    */
-    public class AudioRollRecoveryEntry : AudioSampleGroupEntry
-    {
-        public const string TYPE = "roll";
-        public override string DisplayName { get { return "AudioRollRecoveryEntry"; } }
-
-        protected short roll_distance;
-        public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
-
-        public AudioRollRecoveryEntry() : base("roll")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadInt16(out this.roll_distance);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteInt16(this.roll_distance);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // roll_distance
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class SAPEntry() extends  SampleGroupDescriptionEntry('sap ')
-    {
-        unsigned int(1) dependent_flag;
-        unsigned int(3) reserved;
-        unsigned int(4) SAP_type;
-    }
-    */
-    public class SAPEntry : SampleGroupDescriptionEntry
-    {
-        public const string TYPE = "sap ";
-        public override string DisplayName { get { return "SAPEntry"; } }
-
-        protected bool dependent_flag;
-        public bool DependentFlag { get { return this.dependent_flag; } set { this.dependent_flag = value; } }
-
-        protected byte reserved;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected byte SAP_type;
-        public byte SAPType { get { return this.SAP_type; } set { this.SAP_type = value; } }
-
-        public SAPEntry() : base("sap ")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBit(out this.dependent_flag);
-            boxSize += stream.ReadBits(3, out this.reserved);
-            boxSize += stream.ReadBits(4, out this.SAP_type);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBit(this.dependent_flag);
-            boxSize += stream.WriteBits(3, this.reserved);
-            boxSize += stream.WriteBits(4, this.SAP_type);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 1; // dependent_flag
-            boxSize += 3; // reserved
-            boxSize += 4; // SAP_type
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class SampleToMetadataItemEntry() 
-    extends SampleGroupDescriptionEntry('stmi') {
-        unsigned int(32) meta_box_handler_type;
-        unsigned int(32) num_items;
-        for(i = 0; i < num_items; i++) {
-            unsigned int(32) item_id[i];
-        }
-    }
-    */
-    public class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
-    {
-        public const string TYPE = "stmi";
-        public override string DisplayName { get { return "SampleToMetadataItemEntry"; } }
-
-        protected uint meta_box_handler_type;
-        public uint MetaBoxHandlerType { get { return this.meta_box_handler_type; } set { this.meta_box_handler_type = value; } }
-
-        protected uint num_items;
-        public uint NumItems { get { return this.num_items; } set { this.num_items = value; } }
-
-        protected uint[] item_id;
-        public uint[] ItemId { get { return this.item_id; } set { this.item_id = value; } }
-
-        public SampleToMetadataItemEntry() : base("stmi")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.meta_box_handler_type);
-            boxSize += stream.ReadUInt32(out this.num_items);
-
-            this.item_id = new uint[num_items];
-            for (int i = 0; i < num_items; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.item_id[i]);
-            }
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.meta_box_handler_type);
-            boxSize += stream.WriteUInt32(this.num_items);
-
-            for (int i = 0; i < num_items; i++)
-            {
-                boxSize += stream.WriteUInt32(this.item_id[i]);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // meta_box_handler_type
-            boxSize += 32; // num_items
-
-            for (int i = 0; i < num_items; i++)
-            {
-                boxSize += 32; // item_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class TemporalLevelEntry() extends VisualSampleGroupEntry('tele')
-    {
-        bit(1)	level_independently_decodable;
-        bit(7)	reserved=0;
-    }
-    */
-    public class TemporalLevelEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "tele";
-        public override string DisplayName { get { return "TemporalLevelEntry"; } }
-
-        protected bool level_independently_decodable;
-        public bool LevelIndependentlyDecodable { get { return this.level_independently_decodable; } set { this.level_independently_decodable = value; } }
-
-        protected byte reserved = 0;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        public TemporalLevelEntry() : base("tele")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBit(out this.level_independently_decodable);
-            boxSize += stream.ReadBits(7, out this.reserved);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBit(this.level_independently_decodable);
-            boxSize += stream.WriteBits(7, this.reserved);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 1; // level_independently_decodable
-            boxSize += 7; // reserved
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class PixelAspectRatioEntry() extends VisualSampleGroupEntry ('pasr'){
-        unsigned int(32) hSpacing;
-        unsigned int(32) vSpacing;
-    }
-    */
-    public class PixelAspectRatioEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "pasr";
-        public override string DisplayName { get { return "PixelAspectRatioEntry"; } }
-
-        protected uint hSpacing;
-        public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
-
-        protected uint vSpacing;
-        public uint VSpacing { get { return this.vSpacing; } set { this.vSpacing = value; } }
-
-        public PixelAspectRatioEntry() : base("pasr")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.hSpacing);
-            boxSize += stream.ReadUInt32(out this.vSpacing);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.hSpacing);
-            boxSize += stream.WriteUInt32(this.vSpacing);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // hSpacing
-            boxSize += 32; // vSpacing
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class CleanApertureEntry() extends VisualSampleGroupEntry ('casg'){
-        unsigned int(32) cleanApertureWidthN;
-        unsigned int(32) cleanApertureWidthD;
-
-        unsigned int(32) cleanApertureHeightN;
-        unsigned int(32) cleanApertureHeightD;
-
-
-        unsigned int(32) horizOffN;
-        unsigned int(32) horizOffD;
-
-
-        unsigned int(32) vertOffN;
-        unsigned int(32) vertOffD;
-
-    }
-    */
-    public class CleanApertureEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "casg";
-        public override string DisplayName { get { return "CleanApertureEntry"; } }
-
-        protected uint cleanApertureWidthN;
-        public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
-
-        protected uint cleanApertureWidthD;
-        public uint CleanApertureWidthD { get { return this.cleanApertureWidthD; } set { this.cleanApertureWidthD = value; } }
-
-        protected uint cleanApertureHeightN;
-        public uint CleanApertureHeightN { get { return this.cleanApertureHeightN; } set { this.cleanApertureHeightN = value; } }
-
-        protected uint cleanApertureHeightD;
-        public uint CleanApertureHeightD { get { return this.cleanApertureHeightD; } set { this.cleanApertureHeightD = value; } }
-
-        protected uint horizOffN;
-        public uint HorizOffN { get { return this.horizOffN; } set { this.horizOffN = value; } }
-
-        protected uint horizOffD;
-        public uint HorizOffD { get { return this.horizOffD; } set { this.horizOffD = value; } }
-
-        protected uint vertOffN;
-        public uint VertOffN { get { return this.vertOffN; } set { this.vertOffN = value; } }
-
-        protected uint vertOffD;
-        public uint VertOffD { get { return this.vertOffD; } set { this.vertOffD = value; } }
-
-        public CleanApertureEntry() : base("casg")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.cleanApertureWidthN);
-            boxSize += stream.ReadUInt32(out this.cleanApertureWidthD);
-            boxSize += stream.ReadUInt32(out this.cleanApertureHeightN);
-            boxSize += stream.ReadUInt32(out this.cleanApertureHeightD);
-            boxSize += stream.ReadUInt32(out this.horizOffN);
-            boxSize += stream.ReadUInt32(out this.horizOffD);
-            boxSize += stream.ReadUInt32(out this.vertOffN);
-            boxSize += stream.ReadUInt32(out this.vertOffD);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.cleanApertureWidthN);
-            boxSize += stream.WriteUInt32(this.cleanApertureWidthD);
-            boxSize += stream.WriteUInt32(this.cleanApertureHeightN);
-            boxSize += stream.WriteUInt32(this.cleanApertureHeightD);
-            boxSize += stream.WriteUInt32(this.horizOffN);
-            boxSize += stream.WriteUInt32(this.horizOffD);
-            boxSize += stream.WriteUInt32(this.vertOffN);
-            boxSize += stream.WriteUInt32(this.vertOffD);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // cleanApertureWidthN
-            boxSize += 32; // cleanApertureWidthD
-            boxSize += 32; // cleanApertureHeightN
-            boxSize += 32; // cleanApertureHeightD
-            boxSize += 32; // horizOffN
-            boxSize += 32; // horizOffD
-            boxSize += 32; // vertOffN
-            boxSize += 32; // vertOffD
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackGroupTypeBox('msrc') extends FullBox('msrc', version = 0, flags = 0)
-    {
-        unsigned int(32) track_group_id;
-        // the remaining data may be specified 
-        //  for a particular track_group_type
-    }
-    */
-    public class TrackGroupTypeBox : FullBox
-    {
-        public const string TYPE = "msrc";
-        public override string DisplayName { get { return "TrackGroupTypeBox"; } }
-
-        protected uint track_group_id;  //  the remaining data may be specified 
-        public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
-
-        public TrackGroupTypeBox(string boxtype = "msrc") : base("msrc", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.track_group_id); // the remaining data may be specified 
-            /*   for a particular track_group_type */
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.track_group_id); // the remaining data may be specified 
-            /*   for a particular track_group_type */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // track_group_id
-            /*   for a particular track_group_type */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class StereoVideoGroupBox extends TrackGroupTypeBox('ster') 
-    {
-        unsigned int(1) left_view_flag;
-        bit(31) reserved;
-    }
-    */
-    public class StereoVideoGroupBox : TrackGroupTypeBox
-    {
-        public const string TYPE = "ster";
-        public override string DisplayName { get { return "StereoVideoGroupBox"; } }
-
-        protected bool left_view_flag;
-        public bool LeftViewFlag { get { return this.left_view_flag; } set { this.left_view_flag = value; } }
-
-        protected uint reserved;
-        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        public StereoVideoGroupBox() : base("ster")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBit(out this.left_view_flag);
-            boxSize += stream.ReadBits(31, out this.reserved);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBit(this.left_view_flag);
-            boxSize += stream.WriteBits(31, this.reserved);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 1; // left_view_flag
-            boxSize += 31; // reserved
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
-        unsigned int(32) track_IDs[];
-    }
-    */
-    public class TrackReferenceTypeBox : Box
-    {
-        public override string DisplayName { get { return "TrackReferenceTypeBox"; } }
-
-        protected uint[] track_IDs;
-        public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
-
-        public TrackReferenceTypeBox(string reference_type) : base(reference_type)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize, out this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32ArrayTillEnd(this.track_IDs);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += (ulong)track_IDs.Length * 32; // track_IDs
             return boxSize;
         }
     }
@@ -30155,3315 +31038,397 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class AuxiliaryTypeProperty
-    extends ItemFullProperty('auxC', version = 0, flags) {
-        string aux_type;
-        template unsigned int(8) aux_subtype[];
-            // until the end of the box, the semantics depend on the aux_type value
-    }
-    */
-    public class AuxiliaryTypeProperty : ItemFullProperty
-    {
-        public const string TYPE = "auxC";
-        public override string DisplayName { get { return "AuxiliaryTypeProperty"; } }
+    class SymbolicMusicSpecificConfig
+    {  // the bitstream header  
+        bit(4) version; //version of this specification is 0b0000 
 
-        protected BinaryUTF8String aux_type;
-        public BinaryUTF8String AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
+        unsigned int(12) pictureWidth; // rendering window X size 
+        unsigned int(12) pictureHight; // rendering window Y size 
 
-        protected byte[] aux_subtype;  //  until the end of the box, the semantics depend on the aux_type value
-        public byte[] AuxSubtype { get { return this.aux_subtype; } set { this.aux_subtype = value; } }
+        bit(1) isScoreMultiwindow; // 0: one window only – 1: multiple windows 
 
-        public AuxiliaryTypeProperty(uint flags = 0) : base("auxC", 0, flags)
+        unsigned int(8) numberOfParts; // parts of the main score 
+
+        unsigned int(3) notationFormat; // CWMN or other sets 
+
+        vluimsbf8 urlMIDIStream_length; //length in bytes 
+        byte(urlMIDIStream_length) urlMIDIStream; // reference to the MIDI stream, as url 
+        bit(2) codingType; // coding of the XML chunks 
+        vluimsbf8 length; //length in bits of decoder configuration, unsigned integer 
+        // start of decoderConfiguration 
+        if (codingType == 0b11) { 
+           bit(3) decoderInitConfig; 
+           if (decoderInitConfig == 0b000) { 
+               bit(length-3)  decoderInit; 
+           }
+        } else
         {
+          bit(length) reserved;
         }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
+        // end of decoderConfiguration 
+        bit more_data; // 1 if yes, 0 if no 
+        while (more_data)
         {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.aux_type);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.aux_type);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateStringSize(aux_type); // aux_type
-            boxSize += (ulong)aux_subtype.Length * 8; // aux_subtype
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class ImageMirror
-    extends ItemProperty('imir') {
-        unsigned int(7) reserved = 0;
-        unsigned int(1) axis;
-    }
-    */
-    public class ImageMirror : ItemProperty
-    {
-        public const string TYPE = "imir";
-        public override string DisplayName { get { return "ImageMirror"; } }
-
-        protected byte reserved = 0;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected bool axis;
-        public bool Axis { get { return this.axis; } set { this.axis = value; } }
-
-        public ImageMirror() : base("imir")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBits(7, out this.reserved);
-            boxSize += stream.ReadBit(out this.axis);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBits(7, this.reserved);
-            boxSize += stream.WriteBit(this.axis);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 7; // reserved
-            boxSize += 1; // axis
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class ImageRotation
-    extends ItemProperty('irot') {
-        unsigned int(6) reserved = 0;
-        unsigned int(2) angle;
-    }
-    */
-    public class ImageRotation : ItemProperty
-    {
-        public const string TYPE = "irot";
-        public override string DisplayName { get { return "ImageRotation"; } }
-
-        protected byte reserved = 0;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected byte angle;
-        public byte Angle { get { return this.angle; } set { this.angle = value; } }
-
-        public ImageRotation() : base("irot")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBits(6, out this.reserved);
-            boxSize += stream.ReadBits(2, out this.angle);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBits(6, this.reserved);
-            boxSize += stream.WriteBits(2, this.angle);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 6; // reserved
-            boxSize += 2; // angle
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class ImageSpatialExtentsProperty
-    extends ItemFullProperty('ispe', version = 0, flags = 0) {
-        unsigned int(32) image_width;
-        unsigned int(32) image_height;
-    }
-
-    */
-    public class ImageSpatialExtentsProperty : ItemFullProperty
-    {
-        public const string TYPE = "ispe";
-        public override string DisplayName { get { return "ImageSpatialExtentsProperty"; } }
-
-        protected uint image_width;
-        public uint ImageWidth { get { return this.image_width; } set { this.image_width = value; } }
-
-        protected uint image_height;
-        public uint ImageHeight { get { return this.image_height; } set { this.image_height = value; } }
-
-        public ImageSpatialExtentsProperty() : base("ispe", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.image_width);
-            boxSize += stream.ReadUInt32(out this.image_height);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.image_width);
-            boxSize += stream.WriteUInt32(this.image_height);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // image_width
-            boxSize += 32; // image_height
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class JPEGConfigurationBox extends Box('jpgC') {
-        unsigned int(8) JPEGprefix[];
-    }
-    */
-    public class JPEGConfigurationBox : Box
-    {
-        public const string TYPE = "jpgC";
-        public override string DisplayName { get { return "JPEGConfigurationBox"; } }
-
-        protected byte[] JPEGprefix;
-        public byte[] _JPEGprefix { get { return this.JPEGprefix; } set { this.JPEGprefix = value; } }
-
-        public JPEGConfigurationBox() : base("jpgC")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.JPEGprefix);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.JPEGprefix);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += (ulong)JPEGprefix.Length * 8; // JPEGprefix
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class LayerSelectorProperty
-    extends ItemProperty('lsel') {
-        unsigned int(16) layer_id;
-    }
-    */
-    public class LayerSelectorProperty : ItemProperty
-    {
-        public const string TYPE = "lsel";
-        public override string DisplayName { get { return "LayerSelectorProperty"; } }
-
-        protected ushort layer_id;
-        public ushort LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
-
-        public LayerSelectorProperty() : base("lsel")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.layer_id);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.layer_id);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // layer_id
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class OperatingPointsInformationProperty
-    extends ItemFullProperty('oinf', version = 0, flags = 0){
-        OperatingPointsRecord op_info; // specified in ISO/IEC 14496-15
-    }
-    */
-    public class OperatingPointsInformationProperty : ItemFullProperty
-    {
-        public const string TYPE = "oinf";
-        public override string DisplayName { get { return "OperatingPointsInformationProperty"; } }
-
-        protected OperatingPointsRecord op_info;  //  specified in ISO/IEC 14496-15
-        public OperatingPointsRecord OpInfo { get { return this.op_info; } set { this.op_info = value; } }
-
-        public OperatingPointsInformationProperty() : base("oinf", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new OperatingPointsRecord(), out this.op_info); // specified in ISO/IEC 14496-15
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteClass(this.op_info); // specified in ISO/IEC 14496-15
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateClassSize(op_info); // op_info
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class PixelInformationProperty
-    extends ItemFullProperty('pixi', version = 0, flags = 0){
-        unsigned int(8) num_channels;
-        for (i=0; i<num_channels; i++) {
-            unsigned int(8) bits_per_channel;
-        }
-    }
-    */
-    public class PixelInformationProperty : ItemFullProperty
-    {
-        public const string TYPE = "pixi";
-        public override string DisplayName { get { return "PixelInformationProperty"; } }
-
-        protected byte num_channels;
-        public byte NumChannels { get { return this.num_channels; } set { this.num_channels = value; } }
-
-        protected byte[] bits_per_channel;
-        public byte[] BitsPerChannel { get { return this.bits_per_channel; } set { this.bits_per_channel = value; } }
-
-        public PixelInformationProperty() : base("pixi", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.num_channels);
-
-            this.bits_per_channel = new byte[num_channels];
-            for (int i = 0; i < num_channels; i++)
+            aligned bit(3) chunk_type;
+            bit(5) reserved; // for alignment 
+            vluimsbf8 chunk_length;  // length of the chunk in byte 
+            switch (chunk_type)
             {
-                boxSize += stream.ReadUInt8(out this.bits_per_channel[i]);
+                case 0b000:
+                    bit(8) sco[chunk_length];
+                    break;
+                case 0b001:
+                    bit(8) part[chunk_length]; // ID of the part at which the following info refers 
+                    break;
+                case 0b010:
+                    // this segment is always in binary as stated in Section 9 
+                    bit(8) sync[chunk_length];
+                    break;
+                case 0b011:
+                    bit(8) fmt[chunk_length];
+                    break;
+                case 0b100:
+                    bit(8) lyrics[chunk_length];
+      break;
+                case 0b101:
+                    // this segment is always in binary as stated in Section 11.4 
+                    bit(8) fon[chunk_length];
+                    break;
+                case 0b110: // reserved;
+                break;
+                case 0b111: // reserved;
+                break;
+            }
+            aligned bit(1) more_data;
+            bit(7) reserved; //for alignment 
+        } 
+    } 
+    */
+    public class SymbolicMusicSpecificConfig : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "SymbolicMusicSpecificConfig"; } }
+
+        protected byte version;  // version of this specification is 0b0000 
+        public byte Version { get { return this.version; } set { this.version = value; } }
+
+        protected ushort pictureWidth;  //  rendering window X size 
+        public ushort PictureWidth { get { return this.pictureWidth; } set { this.pictureWidth = value; } }
+
+        protected ushort pictureHight;  //  rendering window Y size 
+        public ushort PictureHight { get { return this.pictureHight; } set { this.pictureHight = value; } }
+
+        protected bool isScoreMultiwindow;  //  0: one window only – 1: multiple windows 
+        public bool IsScoreMultiwindow { get { return this.isScoreMultiwindow; } set { this.isScoreMultiwindow = value; } }
+
+        protected byte numberOfParts;  //  parts of the main score 
+        public byte NumberOfParts { get { return this.numberOfParts; } set { this.numberOfParts = value; } }
+
+        protected byte notationFormat;  //  CWMN or other sets 
+        public byte NotationFormat { get { return this.notationFormat; } set { this.notationFormat = value; } }
+
+        protected byte urlMIDIStream_length;  // length in bytes 
+        public byte UrlMIDIStreamLength { get { return this.urlMIDIStream_length; } set { this.urlMIDIStream_length = value; } }
+
+        protected byte[] urlMIDIStream;  //  reference to the MIDI stream, as url 
+        public byte[] UrlMIDIStream { get { return this.urlMIDIStream; } set { this.urlMIDIStream = value; } }
+
+        protected byte codingType;  //  coding of the XML chunks 
+        public byte CodingType { get { return this.codingType; } set { this.codingType = value; } }
+
+        protected byte length;  // length in bits of decoder configuration, unsigned integer 
+        public byte Length { get { return this.length; } set { this.length = value; } }
+
+        protected byte decoderInitConfig;
+        public byte DecoderInitConfig { get { return this.decoderInitConfig; } set { this.decoderInitConfig = value; } }
+
+        protected byte[] decoderInit;
+        public byte[] DecoderInit { get { return this.decoderInit; } set { this.decoderInit = value; } }
+
+        protected byte[] reserved;
+        public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool more_data;  //  1 if yes, 0 if no 
+        public bool MoreData { get { return this.more_data; } set { this.more_data = value; } }
+
+        protected byte chunk_type;
+        public byte ChunkType { get { return this.chunk_type; } set { this.chunk_type = value; } }
+
+        protected byte reserved0;  //  for alignment 
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte chunk_length;  //  length of the chunk in byte 
+        public byte ChunkLength { get { return this.chunk_length; } set { this.chunk_length = value; } }
+
+        protected byte[] sco;
+        public byte[] Sco { get { return this.sco; } set { this.sco = value; } }
+
+        protected byte[] part;  //  ID of the part at which the following info refers 
+        public byte[] Part { get { return this.part; } set { this.part = value; } }
+
+        protected byte[] sync;
+        public byte[] Sync { get { return this.sync; } set { this.sync = value; } }
+
+        protected byte[] fmt;
+        public byte[] Fmt { get { return this.fmt; } set { this.fmt = value; } }
+
+        protected byte[] lyrics;
+        public byte[] Lyrics { get { return this.lyrics; } set { this.lyrics = value; } }
+
+        protected byte[] fon;
+        public byte[] Fon { get { return this.fon; } set { this.fon = value; } }
+
+        protected byte reserved00;  // for alignment 
+        public byte Reserved00 { get { return this.reserved00; } set { this.reserved00 = value; } }
+
+        public SymbolicMusicSpecificConfig() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            /*  the bitstream header   */
+            boxSize += stream.ReadBits(4, out this.version); //version of this specification is 0b0000 
+            boxSize += stream.ReadBits(12, out this.pictureWidth); // rendering window X size 
+            boxSize += stream.ReadBits(12, out this.pictureHight); // rendering window Y size 
+            boxSize += stream.ReadBit(out this.isScoreMultiwindow); // 0: one window only – 1: multiple windows 
+            boxSize += stream.ReadUInt8(out this.numberOfParts); // parts of the main score 
+            boxSize += stream.ReadBits(3, out this.notationFormat); // CWMN or other sets 
+            boxSize += stream.ReadUimsbf(8, out this.urlMIDIStream_length); //length in bytes 
+            boxSize += stream.ReadUInt8Array((uint)urlMIDIStream_length, out this.urlMIDIStream); // reference to the MIDI stream, as url 
+            boxSize += stream.ReadBits(2, out this.codingType); // coding of the XML chunks 
+            boxSize += stream.ReadUimsbf(8, out this.length); //length in bits of decoder configuration, unsigned integer 
+            /*  start of decoderConfiguration  */
+
+            if (codingType == 0b11)
+            {
+                boxSize += stream.ReadBits(3, out this.decoderInitConfig);
+
+                if (decoderInitConfig == 0b000)
+                {
+                    boxSize += stream.ReadBits((uint)(length - 3), out this.decoderInit);
+                }
+            }
+
+            else
+            {
+                boxSize += stream.ReadBits(length, out this.reserved);
+            }
+            /*  end of decoderConfiguration  */
+            boxSize += stream.ReadBit(out this.more_data); // 1 if yes, 0 if no 
+
+            while (more_data)
+            {
+                boxSize += stream.ReadAlignedBits(3, out this.chunk_type);
+                boxSize += stream.ReadBits(5, out this.reserved0); // for alignment 
+                boxSize += stream.ReadUimsbf(8, out this.chunk_length); // length of the chunk in byte 
+
+                switch (chunk_type)
+                {
+                    case 0b000:
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.sco);
+                        break;
+
+                    case 0b001:
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.part); // ID of the part at which the following info refers 
+                        break;
+
+                    case 0b010:
+                        /*  this segment is always in binary as stated in Section 9  */
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.sync);
+                        break;
+
+                    case 0b011:
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.fmt);
+                        break;
+
+                    case 0b100:
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.lyrics);
+                        break;
+
+                    case 0b101:
+                        /*  this segment is always in binary as stated in Section 11.4  */
+                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.fon);
+                        break;
+
+                    case 0b110:
+                        /*  reserved; */
+                        break;
+
+                    case 0b111:
+                        /*  reserved; */
+                        break;
+
+                }
+                boxSize += stream.ReadAlignedBits(1, out this.more_data);
+                boxSize += stream.ReadBits(7, out this.reserved00); //for alignment 
             }
             return boxSize;
         }
 
-        public override ulong Write(IsoStream stream)
+        public virtual ulong Write(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.num_channels);
+            /*  the bitstream header   */
+            boxSize += stream.WriteBits(4, this.version); //version of this specification is 0b0000 
+            boxSize += stream.WriteBits(12, this.pictureWidth); // rendering window X size 
+            boxSize += stream.WriteBits(12, this.pictureHight); // rendering window Y size 
+            boxSize += stream.WriteBit(this.isScoreMultiwindow); // 0: one window only – 1: multiple windows 
+            boxSize += stream.WriteUInt8(this.numberOfParts); // parts of the main score 
+            boxSize += stream.WriteBits(3, this.notationFormat); // CWMN or other sets 
+            boxSize += stream.WriteUimsbf(8, this.urlMIDIStream_length); //length in bytes 
+            boxSize += stream.WriteUInt8Array((uint)urlMIDIStream_length, this.urlMIDIStream); // reference to the MIDI stream, as url 
+            boxSize += stream.WriteBits(2, this.codingType); // coding of the XML chunks 
+            boxSize += stream.WriteUimsbf(8, this.length); //length in bits of decoder configuration, unsigned integer 
+            /*  start of decoderConfiguration  */
 
-            for (int i = 0; i < num_channels; i++)
+            if (codingType == 0b11)
             {
-                boxSize += stream.WriteUInt8(this.bits_per_channel[i]);
+                boxSize += stream.WriteBits(3, this.decoderInitConfig);
+
+                if (decoderInitConfig == 0b000)
+                {
+                    boxSize += stream.WriteBits((uint)(length - 3), this.decoderInit);
+                }
+            }
+
+            else
+            {
+                boxSize += stream.WriteBits(length, this.reserved);
+            }
+            /*  end of decoderConfiguration  */
+            boxSize += stream.WriteBit(this.more_data); // 1 if yes, 0 if no 
+
+            while (more_data)
+            {
+                boxSize += stream.WriteAlignedBits(3, this.chunk_type);
+                boxSize += stream.WriteBits(5, this.reserved0); // for alignment 
+                boxSize += stream.WriteUimsbf(8, this.chunk_length); // length of the chunk in byte 
+
+                switch (chunk_type)
+                {
+                    case 0b000:
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.sco);
+                        break;
+
+                    case 0b001:
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.part); // ID of the part at which the following info refers 
+                        break;
+
+                    case 0b010:
+                        /*  this segment is always in binary as stated in Section 9  */
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.sync);
+                        break;
+
+                    case 0b011:
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.fmt);
+                        break;
+
+                    case 0b100:
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.lyrics);
+                        break;
+
+                    case 0b101:
+                        /*  this segment is always in binary as stated in Section 11.4  */
+                        boxSize += stream.WriteUInt8Array((uint)chunk_length, this.fon);
+                        break;
+
+                    case 0b110:
+                        /*  reserved; */
+                        break;
+
+                    case 0b111:
+                        /*  reserved; */
+                        break;
+
+                }
+                boxSize += stream.WriteAlignedBits(1, this.more_data);
+                boxSize += stream.WriteBits(7, this.reserved00); //for alignment 
             }
             return boxSize;
         }
 
-        public override ulong CalculateSize()
+        public virtual ulong CalculateSize()
         {
             ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // num_channels
+            /*  the bitstream header   */
+            boxSize += 4; // version
+            boxSize += 12; // pictureWidth
+            boxSize += 12; // pictureHight
+            boxSize += 1; // isScoreMultiwindow
+            boxSize += 8; // numberOfParts
+            boxSize += 3; // notationFormat
+            boxSize += 8; // urlMIDIStream_length
+            boxSize += (ulong)(urlMIDIStream_length * 8); // urlMIDIStream
+            boxSize += 2; // codingType
+            boxSize += 8; // length
+            /*  start of decoderConfiguration  */
 
-            for (int i = 0; i < num_channels; i++)
+            if (codingType == 0b11)
             {
-                boxSize += 8; // bits_per_channel
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class RelativeLocationProperty
-    extends ItemFullProperty('rloc', version = 0, flags = 0)
-    {
-        unsigned int(32) horizontal_offset;
-        unsigned int(32) vertical_offset;
-    }
-    */
-    public class RelativeLocationProperty : ItemFullProperty
-    {
-        public const string TYPE = "rloc";
-        public override string DisplayName { get { return "RelativeLocationProperty"; } }
-
-        protected uint horizontal_offset;
-        public uint HorizontalOffset { get { return this.horizontal_offset; } set { this.horizontal_offset = value; } }
-
-        protected uint vertical_offset;
-        public uint VerticalOffset { get { return this.vertical_offset; } set { this.vertical_offset = value; } }
-
-        public RelativeLocationProperty() : base("rloc", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.horizontal_offset);
-            boxSize += stream.ReadUInt32(out this.vertical_offset);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.horizontal_offset);
-            boxSize += stream.WriteUInt32(this.vertical_offset);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // horizontal_offset
-            boxSize += 32; // vertical_offset
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class TargetOlsProperty
-    extends ItemFullProperty('tols', version = 0, flags = 0){
-        unsigned int(16) target_ols_idx;
-    }
-    */
-    public class TargetOlsProperty : ItemFullProperty
-    {
-        public const string TYPE = "tols";
-        public override string DisplayName { get { return "TargetOlsProperty"; } }
-
-        protected ushort target_ols_idx;
-        public ushort TargetOlsIdx { get { return this.target_ols_idx; } set { this.target_ols_idx = value; } }
-
-        public TargetOlsProperty() : base("tols", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.target_ols_idx);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.target_ols_idx);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // target_ols_idx
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class AutoExposureBracketingEntry
-    extends VisualSampleGroupEntry('aebr') {
-        int(8) exposure_step;
-        int(8) exposure_numerator;
-    }
-    */
-    public class AutoExposureBracketingEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "aebr";
-        public override string DisplayName { get { return "AutoExposureBracketingEntry"; } }
-
-        protected sbyte exposure_step;
-        public sbyte ExposureStep { get { return this.exposure_step; } set { this.exposure_step = value; } }
-
-        protected sbyte exposure_numerator;
-        public sbyte ExposureNumerator { get { return this.exposure_numerator; } set { this.exposure_numerator = value; } }
-
-        public AutoExposureBracketingEntry() : base("aebr")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadInt8(out this.exposure_step);
-            boxSize += stream.ReadInt8(out this.exposure_numerator);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteInt8(this.exposure_step);
-            boxSize += stream.WriteInt8(this.exposure_numerator);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // exposure_step
-            boxSize += 8; // exposure_numerator
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class FlashExposureBracketingEntry
-    extends VisualSampleGroupEntry('afbr') {
-        int(8) flash_exposure_numerator;
-        int(8) flash_exposure_denominator;
-    }
-    */
-    public class FlashExposureBracketingEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "afbr";
-        public override string DisplayName { get { return "FlashExposureBracketingEntry"; } }
-
-        protected sbyte flash_exposure_numerator;
-        public sbyte FlashExposureNumerator { get { return this.flash_exposure_numerator; } set { this.flash_exposure_numerator = value; } }
-
-        protected sbyte flash_exposure_denominator;
-        public sbyte FlashExposureDenominator { get { return this.flash_exposure_denominator; } set { this.flash_exposure_denominator = value; } }
-
-        public FlashExposureBracketingEntry() : base("afbr")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadInt8(out this.flash_exposure_numerator);
-            boxSize += stream.ReadInt8(out this.flash_exposure_denominator);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteInt8(this.flash_exposure_numerator);
-            boxSize += stream.WriteInt8(this.flash_exposure_denominator);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // flash_exposure_numerator
-            boxSize += 8; // flash_exposure_denominator
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class AccessibilityTextProperty
-    extends ItemFullProperty('altt', version = 0, flags = 0) {
-        utf8string alt_text;
-        utf8string alt_lang;
-    }
-
-    */
-    public class AccessibilityTextProperty : ItemFullProperty
-    {
-        public const string TYPE = "altt";
-        public override string DisplayName { get { return "AccessibilityTextProperty"; } }
-
-        protected BinaryUTF8String alt_text;
-        public BinaryUTF8String AltText { get { return this.alt_text; } set { this.alt_text = value; } }
-
-        protected BinaryUTF8String alt_lang;
-        public BinaryUTF8String AltLang { get { return this.alt_lang; } set { this.alt_lang = value; } }
-
-        public AccessibilityTextProperty() : base("altt", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.alt_text);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.alt_lang);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.alt_text);
-            boxSize += stream.WriteStringZeroTerminated(this.alt_lang);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateStringSize(alt_text); // alt_text
-            boxSize += IsoStream.CalculateStringSize(alt_lang); // alt_lang
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class CreationTimeProperty
-    extends ItemFullProperty('crtt', version = 0, flags = 0) {
-        unsigned int(64)  creation_time;
-    }
-
-    */
-    public class CreationTimeProperty : ItemFullProperty
-    {
-        public const string TYPE = "crtt";
-        public override string DisplayName { get { return "CreationTimeProperty"; } }
-
-        protected ulong creation_time;
-        public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
-
-        public CreationTimeProperty() : base("crtt", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt64(out this.creation_time);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt64(this.creation_time);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // creation_time
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class DepthOfFieldBracketingEntry
-    extends VisualSampleGroupEntry('dobr') {
-        int(8) f_stop_numerator;
-        int(8) f_stop_denominator;
-    }
-    */
-    public class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "dobr";
-        public override string DisplayName { get { return "DepthOfFieldBracketingEntry"; } }
-
-        protected sbyte f_stop_numerator;
-        public sbyte fStopNumerator { get { return this.f_stop_numerator; } set { this.f_stop_numerator = value; } }
-
-        protected sbyte f_stop_denominator;
-        public sbyte fStopDenominator { get { return this.f_stop_denominator; } set { this.f_stop_denominator = value; } }
-
-        public DepthOfFieldBracketingEntry() : base("dobr")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadInt8(out this.f_stop_numerator);
-            boxSize += stream.ReadInt8(out this.f_stop_denominator);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteInt8(this.f_stop_numerator);
-            boxSize += stream.WriteInt8(this.f_stop_denominator);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // f_stop_numerator
-            boxSize += 8; // f_stop_denominator
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class FocusBracketingEntry
-    extends VisualSampleGroupEntry('fobr') {
-        unsigned int(16) focus_distance_numerator;
-        unsigned int(16) focus_distance_denominator;
-    }
-    */
-    public class FocusBracketingEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "fobr";
-        public override string DisplayName { get { return "FocusBracketingEntry"; } }
-
-        protected ushort focus_distance_numerator;
-        public ushort FocusDistanceNumerator { get { return this.focus_distance_numerator; } set { this.focus_distance_numerator = value; } }
-
-        protected ushort focus_distance_denominator;
-        public ushort FocusDistanceDenominator { get { return this.focus_distance_denominator; } set { this.focus_distance_denominator = value; } }
-
-        public FocusBracketingEntry() : base("fobr")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.focus_distance_numerator);
-            boxSize += stream.ReadUInt16(out this.focus_distance_denominator);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.focus_distance_numerator);
-            boxSize += stream.WriteUInt16(this.focus_distance_denominator);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // focus_distance_numerator
-            boxSize += 16; // focus_distance_denominator
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class ImageScaling
-    extends ItemFullProperty('iscl', version = 0, flags = 0) {
-        unsigned int(16) target_width_numerator;
-        unsigned int(16) target_width_denominator;
-        unsigned int(16) target_height_numerator;
-        unsigned int(16) target_height_denominator;
-    }
-    */
-    public class ImageScaling : ItemFullProperty
-    {
-        public const string TYPE = "iscl";
-        public override string DisplayName { get { return "ImageScaling"; } }
-
-        protected ushort target_width_numerator;
-        public ushort TargetWidthNumerator { get { return this.target_width_numerator; } set { this.target_width_numerator = value; } }
-
-        protected ushort target_width_denominator;
-        public ushort TargetWidthDenominator { get { return this.target_width_denominator; } set { this.target_width_denominator = value; } }
-
-        protected ushort target_height_numerator;
-        public ushort TargetHeightNumerator { get { return this.target_height_numerator; } set { this.target_height_numerator = value; } }
-
-        protected ushort target_height_denominator;
-        public ushort TargetHeightDenominator { get { return this.target_height_denominator; } set { this.target_height_denominator = value; } }
-
-        public ImageScaling() : base("iscl", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.target_width_numerator);
-            boxSize += stream.ReadUInt16(out this.target_width_denominator);
-            boxSize += stream.ReadUInt16(out this.target_height_numerator);
-            boxSize += stream.ReadUInt16(out this.target_height_denominator);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.target_width_numerator);
-            boxSize += stream.WriteUInt16(this.target_width_denominator);
-            boxSize += stream.WriteUInt16(this.target_height_numerator);
-            boxSize += stream.WriteUInt16(this.target_height_denominator);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // target_width_numerator
-            boxSize += 16; // target_width_denominator
-            boxSize += 16; // target_height_numerator
-            boxSize += 16; // target_height_denominator
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class ModificationTimeProperty
-    extends ItemFullProperty('mdft', version = 0, flags = 0) {
-        unsigned int(64)  modification_time;
-    }
-
-    */
-    public class ModificationTimeProperty : ItemFullProperty
-    {
-        public const string TYPE = "mdft";
-        public override string DisplayName { get { return "ModificationTimeProperty"; } }
-
-        protected ulong modification_time;
-        public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }
-
-        public ModificationTimeProperty() : base("mdft", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt64(out this.modification_time);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt64(this.modification_time);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 64; // modification_time
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class PanoramaEntry
-    extends VisualSampleGroupEntry('pano') {
-        unsigned int(16) frame_number;
-    }
-
-    */
-    public class PanoramaEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "pano";
-        public override string DisplayName { get { return "PanoramaEntry"; } }
-
-        protected ushort frame_number;
-        public ushort FrameNumber { get { return this.frame_number; } set { this.frame_number = value; } }
-
-        public PanoramaEntry() : base("pano")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.frame_number);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.frame_number);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // frame_number
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class RequiredReferenceTypesProperty
-    extends ItemFullProperty('rref', version = 0, flags = 0){
-        unsigned int(8) reference_type_count;
-        for (i=0; i< reference_type_count; i++) {
-            unsigned int(32) reference_type[i];
-        }
-    }
-    */
-    public class RequiredReferenceTypesProperty : ItemFullProperty
-    {
-        public const string TYPE = "rref";
-        public override string DisplayName { get { return "RequiredReferenceTypesProperty"; } }
-
-        protected byte reference_type_count;
-        public byte ReferenceTypeCount { get { return this.reference_type_count; } set { this.reference_type_count = value; } }
-
-        protected uint[] reference_type;
-        public uint[] ReferenceType { get { return this.reference_type; } set { this.reference_type = value; } }
-
-        public RequiredReferenceTypesProperty() : base("rref", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.reference_type_count);
-
-            this.reference_type = new uint[reference_type_count];
-            for (int i = 0; i < reference_type_count; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.reference_type[i]);
-            }
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.reference_type_count);
-
-            for (int i = 0; i < reference_type_count; i++)
-            {
-                boxSize += stream.WriteUInt32(this.reference_type[i]);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // reference_type_count
-
-            for (int i = 0; i < reference_type_count; i++)
-            {
-                boxSize += 32; // reference_type
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class UserDescriptionProperty
-    extends ItemFullProperty('udes', version = 0, flags = 0){
-        utf8string lang;
-        utf8string name;
-        utf8string description;
-        utf8string tags;
-    }
-
-    */
-    public class UserDescriptionProperty : ItemFullProperty
-    {
-        public const string TYPE = "udes";
-        public override string DisplayName { get { return "UserDescriptionProperty"; } }
-
-        protected BinaryUTF8String lang;
-        public BinaryUTF8String Lang { get { return this.lang; } set { this.lang = value; } }
-
-        protected BinaryUTF8String name;
-        public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
-
-        protected BinaryUTF8String description;
-        public BinaryUTF8String Description { get { return this.description; } set { this.description = value; } }
-
-        protected BinaryUTF8String tags;
-        public BinaryUTF8String Tags { get { return this.tags; } set { this.tags = value; } }
-
-        public UserDescriptionProperty() : base("udes", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.lang);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.name);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.description);
-            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.tags);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteStringZeroTerminated(this.lang);
-            boxSize += stream.WriteStringZeroTerminated(this.name);
-            boxSize += stream.WriteStringZeroTerminated(this.description);
-            boxSize += stream.WriteStringZeroTerminated(this.tags);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateStringSize(lang); // lang
-            boxSize += IsoStream.CalculateStringSize(name); // name
-            boxSize += IsoStream.CalculateStringSize(description); // description
-            boxSize += IsoStream.CalculateStringSize(tags); // tags
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class WhiteBalanceBracketingEntry
-    extends VisualSampleGroupEntry('wbbr') {
-        unsigned int(16) blue_amber;
-        int(8) green_magenta;
-    }
-    */
-    public class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "wbbr";
-        public override string DisplayName { get { return "WhiteBalanceBracketingEntry"; } }
-
-        protected ushort blue_amber;
-        public ushort BlueAmber { get { return this.blue_amber; } set { this.blue_amber = value; } }
-
-        protected sbyte green_magenta;
-        public sbyte GreenMagenta { get { return this.green_magenta; } set { this.green_magenta = value; } }
-
-        public WhiteBalanceBracketingEntry() : base("wbbr")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.blue_amber);
-            boxSize += stream.ReadInt8(out this.green_magenta);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.blue_amber);
-            boxSize += stream.WriteInt8(this.green_magenta);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // blue_amber
-            boxSize += 8; // green_magenta
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class WipeTransitionEffectProperty
-    extends ItemFullProperty('wipe', version=0, flags=0) {
-        unsigned int(8) transition_direction;
-    }
-    */
-    public class WipeTransitionEffectProperty : ItemFullProperty
-    {
-        public const string TYPE = "wipe";
-        public override string DisplayName { get { return "WipeTransitionEffectProperty"; } }
-
-        protected byte transition_direction;
-        public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
-
-        public WipeTransitionEffectProperty() : base("wipe", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.transition_direction);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.transition_direction);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // transition_direction
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ZoomTransitionEffectProperty
-    extends ItemFullProperty('zoom', version=0, flags=0) {
-        unsigned int(1) transition_direction; 
-        unsigned int(7) transition_shape;
-    }
-    */
-    public class ZoomTransitionEffectProperty : ItemFullProperty
-    {
-        public const string TYPE = "zoom";
-        public override string DisplayName { get { return "ZoomTransitionEffectProperty"; } }
-
-        protected bool transition_direction;
-        public bool TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
-
-        protected byte transition_shape;
-        public byte TransitionShape { get { return this.transition_shape; } set { this.transition_shape = value; } }
-
-        public ZoomTransitionEffectProperty() : base("zoom", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBit(out this.transition_direction);
-            boxSize += stream.ReadBits(7, out this.transition_shape);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBit(this.transition_direction);
-            boxSize += stream.WriteBits(7, this.transition_shape);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 1; // transition_direction
-            boxSize += 7; // transition_shape
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class FadeTransitionEffectProperty
-    extends ItemFullProperty('fade', version=0, flags=0) {
-        unsigned int(8) transition_direction;
-    }
-    */
-    public class FadeTransitionEffectProperty : ItemFullProperty
-    {
-        public const string TYPE = "fade";
-        public override string DisplayName { get { return "FadeTransitionEffectProperty"; } }
-
-        protected byte transition_direction;
-        public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
-
-        public FadeTransitionEffectProperty() : base("fade", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.transition_direction);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.transition_direction);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // transition_direction
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class SplitTransitionEffectProperty
-    extends ItemFullProperty('splt', version=0, flags=0) {
-        unsigned int(8) transition_direction;
-    }
-    */
-    public class SplitTransitionEffectProperty : ItemFullProperty
-    {
-        public const string TYPE = "splt";
-        public override string DisplayName { get { return "SplitTransitionEffectProperty"; } }
-
-        protected byte transition_direction;
-        public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
-
-        public SplitTransitionEffectProperty() : base("splt", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.transition_direction);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.transition_direction);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // transition_direction
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class SuggestedTransitionPeriodProperty
-    extends ItemFullProperty('stpe', version=0, flags=0) {
-        unsigned int(8) transition_period;
-    }
-    */
-    public class SuggestedTransitionPeriodProperty : ItemFullProperty
-    {
-        public const string TYPE = "stpe";
-        public override string DisplayName { get { return "SuggestedTransitionPeriodProperty"; } }
-
-        protected byte transition_period;
-        public byte TransitionPeriod { get { return this.transition_period; } set { this.transition_period = value; } }
-
-        public SuggestedTransitionPeriodProperty() : base("stpe", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.transition_period);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.transition_period);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // transition_period
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class SuggestedTimeDisplayDurationProperty
-    extends ItemFullProperty('ssld', version=0, flags=0) {
-        unsigned int(16) duration;
-    }
-    */
-    public class SuggestedTimeDisplayDurationProperty : ItemFullProperty
-    {
-        public const string TYPE = "ssld";
-        public override string DisplayName { get { return "SuggestedTimeDisplayDurationProperty"; } }
-
-        protected ushort duration;
-        public ushort Duration { get { return this.duration; } set { this.duration = value; } }
-
-        public SuggestedTimeDisplayDurationProperty() : base("ssld", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.duration);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.duration);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // duration
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class MaskConfigurationProperty
-    extends ItemFullProperty('mskC', version = 0, flags = 0){
-        unsigned int(8) bits_per_pixel;
-    }
-    */
-    public class MaskConfigurationProperty : ItemFullProperty
-    {
-        public const string TYPE = "mskC";
-        public override string DisplayName { get { return "MaskConfigurationProperty"; } }
-
-        protected byte bits_per_pixel;
-        public byte BitsPerPixel { get { return this.bits_per_pixel; } set { this.bits_per_pixel = value; } }
-
-        public MaskConfigurationProperty() : base("mskC", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.bits_per_pixel);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.bits_per_pixel);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // bits_per_pixel
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class VvcSubpicIDProperty
-    extends ItemFullProperty('spid', version = 0, flags = 0){
-        VvcSubpicIDEntry sid_info; // specified in ISO/IEC 14496-15
-    }
-    */
-    public class VvcSubpicIDProperty : ItemFullProperty
-    {
-        public const string TYPE = "spid";
-        public override string DisplayName { get { return "VvcSubpicIDProperty"; } }
-
-        protected VvcSubpicIDEntry sid_info;  //  specified in ISO/IEC 14496-15
-        public VvcSubpicIDEntry SidInfo { get { return this.sid_info; } set { this.sid_info = value; } }
-
-        public VvcSubpicIDProperty() : base("spid", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadEntry(boxSize, readSize, this, TYPE, out this.sid_info); // specified in ISO/IEC 14496-15
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteEntry(this.sid_info); // specified in ISO/IEC 14496-15
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateEntrySize(sid_info); // sid_info
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class VvcSubpicOrderProperty
-    extends ItemFullProperty('spor', version = 0, flags = 0){
-        VvcSubpicOrderEntry sor_info; // specified in ISO/IEC 14496-15
-    }
-    */
-    public class VvcSubpicOrderProperty : ItemFullProperty
-    {
-        public const string TYPE = "spor";
-        public override string DisplayName { get { return "VvcSubpicOrderProperty"; } }
-
-        protected VvcSubpicOrderEntry sor_info;  //  specified in ISO/IEC 14496-15
-        public VvcSubpicOrderEntry SorInfo { get { return this.sor_info; } set { this.sor_info = value; } }
-
-        public VvcSubpicOrderProperty() : base("spor", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadEntry(boxSize, readSize, this, TYPE, out this.sor_info); // specified in ISO/IEC 14496-15
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteEntry(this.sor_info); // specified in ISO/IEC 14496-15
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateEntrySize(sor_info); // sor_info
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class VisualEquivalenceEntry() extends VisualSampleGroupEntry ('eqiv')
-    {
-        signed int(16)   time_offset;
-        unsigned int(16) timescale_multiplier;
-    }
-    */
-    public class VisualEquivalenceEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "eqiv";
-        public override string DisplayName { get { return "VisualEquivalenceEntry"; } }
-
-        protected short time_offset;
-        public short TimeOffset { get { return this.time_offset; } set { this.time_offset = value; } }
-
-        protected ushort timescale_multiplier;
-        public ushort TimescaleMultiplier { get { return this.timescale_multiplier; } set { this.timescale_multiplier = value; } }
-
-        public VisualEquivalenceEntry() : base("eqiv")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadInt16(out this.time_offset);
-            boxSize += stream.ReadUInt16(out this.timescale_multiplier);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteInt16(this.time_offset);
-            boxSize += stream.WriteUInt16(this.timescale_multiplier);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // time_offset
-            boxSize += 16; // timescale_multiplier
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class DirectReferenceSamplesList()
-    extends VisualSampleGroupEntry ('refs') {
-        unsigned int(32) sample_id;
-        unsigned int(8) num_direct_reference_samples;
-        for(i = 0; i < num_direct_reference_samples; i++) {
-            unsigned int(32)direct_reference_sample_id;
-        }
-    }
-    */
-    public class DirectReferenceSamplesList : VisualSampleGroupEntry
-    {
-        public const string TYPE = "refs";
-        public override string DisplayName { get { return "DirectReferenceSamplesList"; } }
-
-        protected uint sample_id;
-        public uint SampleId { get { return this.sample_id; } set { this.sample_id = value; } }
-
-        protected byte num_direct_reference_samples;
-        public byte NumDirectReferenceSamples { get { return this.num_direct_reference_samples; } set { this.num_direct_reference_samples = value; } }
-
-        protected uint[] direct_reference_sample_id;
-        public uint[] DirectReferenceSampleId { get { return this.direct_reference_sample_id; } set { this.direct_reference_sample_id = value; } }
-
-        public DirectReferenceSamplesList() : base("refs")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.sample_id);
-            boxSize += stream.ReadUInt8(out this.num_direct_reference_samples);
-
-            this.direct_reference_sample_id = new uint[num_direct_reference_samples];
-            for (int i = 0; i < num_direct_reference_samples; i++)
-            {
-                boxSize += stream.ReadUInt32(out this.direct_reference_sample_id[i]);
-            }
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.sample_id);
-            boxSize += stream.WriteUInt8(this.num_direct_reference_samples);
-
-            for (int i = 0; i < num_direct_reference_samples; i++)
-            {
-                boxSize += stream.WriteUInt32(this.direct_reference_sample_id[i]);
-            }
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // sample_id
-            boxSize += 8; // num_direct_reference_samples
-
-            for (int i = 0; i < num_direct_reference_samples; i++)
-            {
-                boxSize += 32; // direct_reference_sample_id
-            }
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract aligned(8) expandable(228-1) class BaseDescriptor : bit(8) tag=0 {
-     // empty. To be filled by classes extending this class.
-     }
-    */
-    public abstract class BaseDescriptor : Descriptor
-    {
-        public const byte TYPE = 0;
-        public override string DisplayName { get { return "BaseDescriptor"; } }
-
-        public BaseDescriptor(byte tag) : base(tag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag
-     {
-     // empty. To be filled by classes extending this class.
-     }
-    */
-    public abstract class DecoderSpecificInfo : BaseDescriptor
-    {
-        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
-        public override string DisplayName { get { return "DecoderSpecificInfo"; } }
-
-        public DecoderSpecificInfo() : base(DescriptorTags.DecSpecificInfoTag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ES_Descriptor extends BaseDescriptor : bit(8) tag=ES_DescrTag {
-     bit(16) ES_ID;
-     bit(1) streamDependenceFlag;
-     bit(1) URL_Flag;
-     bit(1) OCRstreamFlag;
-     bit(5) streamPriority;
-     if (streamDependenceFlag)
-     bit(16) dependsOn_ES_ID;
-     if (URL_Flag) {
-     bit(8) URLlength;
-     bit(8) URLstring[URLlength];
-     }
-     if (OCRstreamFlag)
-     bit(16) OCR_ES_Id;
-     DecoderConfigDescriptor decConfigDescr;
-     SLConfigDescriptor slConfigDescr;
-     IPI_DescrPointer ipiPtr[0 .. 1];
-     IP_IdentificationDataSet ipIDS[0 .. 255];
-     IPMP_DescriptorPointer ipmpDescrPtr[0 .. 255];
-     LanguageDescriptor langDescr[0 .. 255];
-     QoS_Descriptor qosDescr[0 .. 1];
-     RegistrationDescriptor regDescr[0 .. 1];
-     ExtensionDescriptor extDescr[0 .. 255];
-     }
-    */
-    public class ES_Descriptor : BaseDescriptor
-    {
-        public const byte TYPE = DescriptorTags.ES_DescrTag;
-        public override string DisplayName { get { return "ES_Descriptor"; } }
-
-        protected ushort ES_ID;
-        public ushort ESID { get { return this.ES_ID; } set { this.ES_ID = value; } }
-
-        protected bool streamDependenceFlag;
-        public bool StreamDependenceFlag { get { return this.streamDependenceFlag; } set { this.streamDependenceFlag = value; } }
-
-        protected bool URL_Flag;
-        public bool URLFlag { get { return this.URL_Flag; } set { this.URL_Flag = value; } }
-
-        protected bool OCRstreamFlag;
-        public bool _OCRstreamFlag { get { return this.OCRstreamFlag; } set { this.OCRstreamFlag = value; } }
-
-        protected byte streamPriority;
-        public byte StreamPriority { get { return this.streamPriority; } set { this.streamPriority = value; } }
-
-        protected ushort dependsOn_ES_ID;
-        public ushort DependsOnESID { get { return this.dependsOn_ES_ID; } set { this.dependsOn_ES_ID = value; } }
-
-        protected byte URLlength;
-        public byte _URLlength { get { return this.URLlength; } set { this.URLlength = value; } }
-
-        protected byte[] URLstring;
-        public byte[] _URLstring { get { return this.URLstring; } set { this.URLstring = value; } }
-
-        protected ushort OCR_ES_Id;
-        public ushort OCRESId { get { return this.OCR_ES_Id; } set { this.OCR_ES_Id = value; } }
-        public DecoderConfigDescriptor DecConfigDescr { get { return this.children.OfType<DecoderConfigDescriptor>().FirstOrDefault(); } }
-        public SLConfigDescriptor SlConfigDescr { get { return this.children.OfType<SLConfigDescriptor>().FirstOrDefault(); } }
-        public IPI_DescrPointer IpiPtr { get { return this.children.OfType<IPI_DescrPointer>().FirstOrDefault(); } }
-        public IEnumerable<IP_IdentificationDataSet> IpIDS { get { return this.children.OfType<IP_IdentificationDataSet>(); } }
-        public IEnumerable<IPMP_DescriptorPointer> IpmpDescrPtr { get { return this.children.OfType<IPMP_DescriptorPointer>(); } }
-        public LanguageDescriptor LangDescr { get { return this.children.OfType<LanguageDescriptor>().FirstOrDefault(); } }
-        public QoS_Descriptor QosDescr { get { return this.children.OfType<QoS_Descriptor>().FirstOrDefault(); } }
-        public RegistrationDescriptor RegDescr { get { return this.children.OfType<RegistrationDescriptor>().FirstOrDefault(); } }
-        public IEnumerable<ExtensionDescriptor> ExtDescr { get { return this.children.OfType<ExtensionDescriptor>(); } }
-
-        public ES_Descriptor() : base(DescriptorTags.ES_DescrTag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.ES_ID);
-            boxSize += stream.ReadBit(out this.streamDependenceFlag);
-            boxSize += stream.ReadBit(out this.URL_Flag);
-            boxSize += stream.ReadBit(out this.OCRstreamFlag);
-            boxSize += stream.ReadBits(5, out this.streamPriority);
-
-            if (streamDependenceFlag)
-            {
-                boxSize += stream.ReadUInt16(out this.dependsOn_ES_ID);
+                boxSize += 3; // decoderInitConfig
+
+                if (decoderInitConfig == 0b000)
+                {
+                    boxSize += (ulong)(length - 3); // decoderInit
+                }
             }
 
-            if (URL_Flag)
+            else
             {
-                boxSize += stream.ReadUInt8(out this.URLlength);
-                boxSize += stream.ReadUInt8Array((uint)URLlength, out this.URLstring);
+                boxSize += (ulong)length; // reserved
             }
+            /*  end of decoderConfiguration  */
+            boxSize += 1; // more_data
 
-            if (OCRstreamFlag)
+            while (more_data)
             {
-                boxSize += stream.ReadUInt16(out this.OCR_ES_Id);
+                boxSize += (ulong)3; // chunk_type
+                boxSize += 5; // reserved0
+                boxSize += 8; // chunk_length
+
+                switch (chunk_type)
+                {
+                    case 0b000:
+                        boxSize += (ulong)(chunk_length * 8); // sco
+                        break;
+
+                    case 0b001:
+                        boxSize += (ulong)(chunk_length * 8); // part
+                        break;
+
+                    case 0b010:
+                        /*  this segment is always in binary as stated in Section 9  */
+                        boxSize += (ulong)(chunk_length * 8); // sync
+                        break;
+
+                    case 0b011:
+                        boxSize += (ulong)(chunk_length * 8); // fmt
+                        break;
+
+                    case 0b100:
+                        boxSize += (ulong)(chunk_length * 8); // lyrics
+                        break;
+
+                    case 0b101:
+                        /*  this segment is always in binary as stated in Section 11.4  */
+                        boxSize += (ulong)(chunk_length * 8); // fon
+                        break;
+
+                    case 0b110:
+                        /*  reserved; */
+                        break;
+
+                    case 0b111:
+                        /*  reserved; */
+                        break;
+
+                }
+                boxSize += (ulong)1; // more_data
+                boxSize += 7; // reserved00
             }
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.decConfigDescr); 
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.slConfigDescr); 
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipiPtr); 
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipIDS); 
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.ipmpDescrPtr); 
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.langDescr); 
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.qosDescr); 
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.regDescr); 
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.extDescr); 
-            boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.ES_ID);
-            boxSize += stream.WriteBit(this.streamDependenceFlag);
-            boxSize += stream.WriteBit(this.URL_Flag);
-            boxSize += stream.WriteBit(this.OCRstreamFlag);
-            boxSize += stream.WriteBits(5, this.streamPriority);
-
-            if (streamDependenceFlag)
-            {
-                boxSize += stream.WriteUInt16(this.dependsOn_ES_ID);
-            }
-
-            if (URL_Flag)
-            {
-                boxSize += stream.WriteUInt8(this.URLlength);
-                boxSize += stream.WriteUInt8Array((uint)URLlength, this.URLstring);
-            }
-
-            if (OCRstreamFlag)
-            {
-                boxSize += stream.WriteUInt16(this.OCR_ES_Id);
-            }
-            // boxSize += stream.WriteDescriptor( this.decConfigDescr); 
-            // boxSize += stream.WriteDescriptor( this.slConfigDescr); 
-            // boxSize += stream.WriteDescriptor( this.ipiPtr); 
-            // boxSize += stream.WriteDescriptor( this.ipIDS); 
-            // boxSize += stream.WriteDescriptor( this.ipmpDescrPtr); 
-            // boxSize += stream.WriteDescriptor( this.langDescr); 
-            // boxSize += stream.WriteDescriptor( this.qosDescr); 
-            // boxSize += stream.WriteDescriptor( this.regDescr); 
-            // boxSize += stream.WriteDescriptor( this.extDescr); 
-            boxSize += stream.WriteDescriptorsTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // ES_ID
-            boxSize += 1; // streamDependenceFlag
-            boxSize += 1; // URL_Flag
-            boxSize += 1; // OCRstreamFlag
-            boxSize += 5; // streamPriority
-
-            if (streamDependenceFlag)
-            {
-                boxSize += 16; // dependsOn_ES_ID
-            }
-
-            if (URL_Flag)
-            {
-                boxSize += 8; // URLlength
-                boxSize += (ulong)(URLlength * 8); // URLstring
-            }
-
-            if (OCRstreamFlag)
-            {
-                boxSize += 16; // OCR_ES_Id
-            }
-            // boxSize += IsoStream.CalculateDescriptorSize(decConfigDescr); // decConfigDescr
-            // boxSize += IsoStream.CalculateDescriptorSize(slConfigDescr); // slConfigDescr
-            // boxSize += IsoStream.CalculateDescriptorSize(ipiPtr); // ipiPtr
-            // boxSize += IsoStream.CalculateDescriptorSize(ipIDS); // ipIDS
-            // boxSize += IsoStream.CalculateDescriptorSize(ipmpDescrPtr); // ipmpDescrPtr
-            // boxSize += IsoStream.CalculateDescriptorSize(langDescr); // langDescr
-            // boxSize += IsoStream.CalculateDescriptorSize(qosDescr); // qosDescr
-            // boxSize += IsoStream.CalculateDescriptorSize(regDescr); // regDescr
-            // boxSize += IsoStream.CalculateDescriptorSize(extDescr); // extDescr
-            boxSize += IsoStream.CalculateDescriptors(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class SLConfigDescriptor extends BaseDescriptor : bit(8) tag=SLConfigDescrTag {
-     bit(8) predefined;
-     if (predefined==0) {
-     bit(1) useAccessUnitStartFlag;
-     bit(1) useAccessUnitEndFlag;
-     bit(1) useRandomAccessPointFlag;
-     bit(1) hasRandomAccessUnitsOnlyFlag;
-     bit(1) usePaddingFlag;
-     bit(1) useTimeStampsFlag;
-     bit(1) useIdleFlag;
-     bit(1) durationFlag;
-     bit(32) timeStampResolution;
-     bit(32) OCRResolution;
-     bit(8) timeStampLength; // must be <= 64
-     bit(8) OCRLength; // must be <= 64
-     bit(8) AU_Length; // must be <= 32
-     bit(8) instantBitrateLength;
-     bit(4) degradationPriorityLength;
-     bit(5) AU_seqNumLength; // must be <= 16
-     bit(5) packetSeqNumLength; // must be <= 16
-     bit(2) reserved=0b11;
-     }
-     if (durationFlag) {
-     bit(32) timeScale;
-     bit(16) accessUnitDuration;
-     bit(16) compositionUnitDuration;
-     }
-     if (!useTimeStampsFlag) {
-     bit(timeStampLength) startDecodingTimeStamp;
-     bit(timeStampLength) startCompositionTimeStamp;
-     }
-     bit(8) ocr[]; // OCR stream flag, reserved, OCR_ES_id 
-     }
-    */
-    public class SLConfigDescriptor : BaseDescriptor
-    {
-        public const byte TYPE = DescriptorTags.SLConfigDescrTag;
-        public override string DisplayName { get { return "SLConfigDescriptor"; } }
-
-        protected byte predefined;
-        public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
-
-        protected bool useAccessUnitStartFlag;
-        public bool UseAccessUnitStartFlag { get { return this.useAccessUnitStartFlag; } set { this.useAccessUnitStartFlag = value; } }
-
-        protected bool useAccessUnitEndFlag;
-        public bool UseAccessUnitEndFlag { get { return this.useAccessUnitEndFlag; } set { this.useAccessUnitEndFlag = value; } }
-
-        protected bool useRandomAccessPointFlag;
-        public bool UseRandomAccessPointFlag { get { return this.useRandomAccessPointFlag; } set { this.useRandomAccessPointFlag = value; } }
-
-        protected bool hasRandomAccessUnitsOnlyFlag;
-        public bool HasRandomAccessUnitsOnlyFlag { get { return this.hasRandomAccessUnitsOnlyFlag; } set { this.hasRandomAccessUnitsOnlyFlag = value; } }
-
-        protected bool usePaddingFlag;
-        public bool UsePaddingFlag { get { return this.usePaddingFlag; } set { this.usePaddingFlag = value; } }
-
-        protected bool useTimeStampsFlag;
-        public bool UseTimeStampsFlag { get { return this.useTimeStampsFlag; } set { this.useTimeStampsFlag = value; } }
-
-        protected bool useIdleFlag;
-        public bool UseIdleFlag { get { return this.useIdleFlag; } set { this.useIdleFlag = value; } }
-
-        protected bool durationFlag;
-        public bool DurationFlag { get { return this.durationFlag; } set { this.durationFlag = value; } }
-
-        protected uint timeStampResolution;
-        public uint TimeStampResolution { get { return this.timeStampResolution; } set { this.timeStampResolution = value; } }
-
-        protected uint OCRResolution;
-        public uint _OCRResolution { get { return this.OCRResolution; } set { this.OCRResolution = value; } }
-
-        protected byte timeStampLength;  //  must be <= 64
-        public byte TimeStampLength { get { return this.timeStampLength; } set { this.timeStampLength = value; } }
-
-        protected byte OCRLength;  //  must be <= 64
-        public byte _OCRLength { get { return this.OCRLength; } set { this.OCRLength = value; } }
-
-        protected byte AU_Length;  //  must be <= 32
-        public byte AULength { get { return this.AU_Length; } set { this.AU_Length = value; } }
-
-        protected byte instantBitrateLength;
-        public byte InstantBitrateLength { get { return this.instantBitrateLength; } set { this.instantBitrateLength = value; } }
-
-        protected byte degradationPriorityLength;
-        public byte DegradationPriorityLength { get { return this.degradationPriorityLength; } set { this.degradationPriorityLength = value; } }
-
-        protected byte AU_seqNumLength;  //  must be <= 16
-        public byte AUSeqNumLength { get { return this.AU_seqNumLength; } set { this.AU_seqNumLength = value; } }
-
-        protected byte packetSeqNumLength;  //  must be <= 16
-        public byte PacketSeqNumLength { get { return this.packetSeqNumLength; } set { this.packetSeqNumLength = value; } }
-
-        protected byte reserved = 0b11;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected uint timeScale;
-        public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
-
-        protected ushort accessUnitDuration;
-        public ushort AccessUnitDuration { get { return this.accessUnitDuration; } set { this.accessUnitDuration = value; } }
-
-        protected ushort compositionUnitDuration;
-        public ushort CompositionUnitDuration { get { return this.compositionUnitDuration; } set { this.compositionUnitDuration = value; } }
-
-        protected byte[] startDecodingTimeStamp;
-        public byte[] StartDecodingTimeStamp { get { return this.startDecodingTimeStamp; } set { this.startDecodingTimeStamp = value; } }
-
-        protected byte[] startCompositionTimeStamp;
-        public byte[] StartCompositionTimeStamp { get { return this.startCompositionTimeStamp; } set { this.startCompositionTimeStamp = value; } }
-
-        protected byte[] ocr;  //  OCR stream flag, reserved, OCR_ES_id 
-        public byte[] Ocr { get { return this.ocr; } set { this.ocr = value; } }
-
-        public SLConfigDescriptor() : base(DescriptorTags.SLConfigDescrTag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.predefined);
-
-            if (predefined == 0)
-            {
-                boxSize += stream.ReadBit(out this.useAccessUnitStartFlag);
-                boxSize += stream.ReadBit(out this.useAccessUnitEndFlag);
-                boxSize += stream.ReadBit(out this.useRandomAccessPointFlag);
-                boxSize += stream.ReadBit(out this.hasRandomAccessUnitsOnlyFlag);
-                boxSize += stream.ReadBit(out this.usePaddingFlag);
-                boxSize += stream.ReadBit(out this.useTimeStampsFlag);
-                boxSize += stream.ReadBit(out this.useIdleFlag);
-                boxSize += stream.ReadBit(out this.durationFlag);
-                boxSize += stream.ReadUInt32(out this.timeStampResolution);
-                boxSize += stream.ReadUInt32(out this.OCRResolution);
-                boxSize += stream.ReadUInt8(out this.timeStampLength); // must be <= 64
-                boxSize += stream.ReadUInt8(out this.OCRLength); // must be <= 64
-                boxSize += stream.ReadUInt8(out this.AU_Length); // must be <= 32
-                boxSize += stream.ReadUInt8(out this.instantBitrateLength);
-                boxSize += stream.ReadBits(4, out this.degradationPriorityLength);
-                boxSize += stream.ReadBits(5, out this.AU_seqNumLength); // must be <= 16
-                boxSize += stream.ReadBits(5, out this.packetSeqNumLength); // must be <= 16
-                boxSize += stream.ReadBits(2, out this.reserved);
-            }
-
-            if (durationFlag)
-            {
-                boxSize += stream.ReadUInt32(out this.timeScale);
-                boxSize += stream.ReadUInt16(out this.accessUnitDuration);
-                boxSize += stream.ReadUInt16(out this.compositionUnitDuration);
-            }
-
-            if (!useTimeStampsFlag)
-            {
-                boxSize += stream.ReadUInt8Array((uint)timeStampLength, out this.startDecodingTimeStamp);
-                boxSize += stream.ReadUInt8Array((uint)timeStampLength, out this.startCompositionTimeStamp);
-            }
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.ocr); // OCR stream flag, reserved, OCR_ES_id 
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.predefined);
-
-            if (predefined == 0)
-            {
-                boxSize += stream.WriteBit(this.useAccessUnitStartFlag);
-                boxSize += stream.WriteBit(this.useAccessUnitEndFlag);
-                boxSize += stream.WriteBit(this.useRandomAccessPointFlag);
-                boxSize += stream.WriteBit(this.hasRandomAccessUnitsOnlyFlag);
-                boxSize += stream.WriteBit(this.usePaddingFlag);
-                boxSize += stream.WriteBit(this.useTimeStampsFlag);
-                boxSize += stream.WriteBit(this.useIdleFlag);
-                boxSize += stream.WriteBit(this.durationFlag);
-                boxSize += stream.WriteUInt32(this.timeStampResolution);
-                boxSize += stream.WriteUInt32(this.OCRResolution);
-                boxSize += stream.WriteUInt8(this.timeStampLength); // must be <= 64
-                boxSize += stream.WriteUInt8(this.OCRLength); // must be <= 64
-                boxSize += stream.WriteUInt8(this.AU_Length); // must be <= 32
-                boxSize += stream.WriteUInt8(this.instantBitrateLength);
-                boxSize += stream.WriteBits(4, this.degradationPriorityLength);
-                boxSize += stream.WriteBits(5, this.AU_seqNumLength); // must be <= 16
-                boxSize += stream.WriteBits(5, this.packetSeqNumLength); // must be <= 16
-                boxSize += stream.WriteBits(2, this.reserved);
-            }
-
-            if (durationFlag)
-            {
-                boxSize += stream.WriteUInt32(this.timeScale);
-                boxSize += stream.WriteUInt16(this.accessUnitDuration);
-                boxSize += stream.WriteUInt16(this.compositionUnitDuration);
-            }
-
-            if (!useTimeStampsFlag)
-            {
-                boxSize += stream.WriteUInt8Array((uint)timeStampLength, this.startDecodingTimeStamp);
-                boxSize += stream.WriteUInt8Array((uint)timeStampLength, this.startCompositionTimeStamp);
-            }
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.ocr); // OCR stream flag, reserved, OCR_ES_id 
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // predefined
-
-            if (predefined == 0)
-            {
-                boxSize += 1; // useAccessUnitStartFlag
-                boxSize += 1; // useAccessUnitEndFlag
-                boxSize += 1; // useRandomAccessPointFlag
-                boxSize += 1; // hasRandomAccessUnitsOnlyFlag
-                boxSize += 1; // usePaddingFlag
-                boxSize += 1; // useTimeStampsFlag
-                boxSize += 1; // useIdleFlag
-                boxSize += 1; // durationFlag
-                boxSize += 32; // timeStampResolution
-                boxSize += 32; // OCRResolution
-                boxSize += 8; // timeStampLength
-                boxSize += 8; // OCRLength
-                boxSize += 8; // AU_Length
-                boxSize += 8; // instantBitrateLength
-                boxSize += 4; // degradationPriorityLength
-                boxSize += 5; // AU_seqNumLength
-                boxSize += 5; // packetSeqNumLength
-                boxSize += 2; // reserved
-            }
-
-            if (durationFlag)
-            {
-                boxSize += 32; // timeScale
-                boxSize += 16; // accessUnitDuration
-                boxSize += 16; // compositionUnitDuration
-            }
-
-            if (!useTimeStampsFlag)
-            {
-                boxSize += (ulong)timeStampLength; // startDecodingTimeStamp
-                boxSize += (ulong)timeStampLength; // startCompositionTimeStamp
-            }
-            boxSize += 8 * (ulong)ocr.Length; // ocr
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class DecoderConfigDescriptor extends BaseDescriptor : bit(8) tag=DecoderConfigDescrTag {
-     bit(8) objectTypeIndication;
-     bit(6) streamType;
-     bit(1) upStream;
-     const bit(1) reserved=1;
-     bit(24) bufferSizeDB;
-     bit(32) maxBitrate;
-     bit(32) avgBitrate;
-     DecoderSpecificInfo decSpecificInfo[0 .. 1];
-     ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
-     }
-    */
-    public class DecoderConfigDescriptor : BaseDescriptor
-    {
-        public const byte TYPE = DescriptorTags.DecoderConfigDescrTag;
-        public override string DisplayName { get { return "DecoderConfigDescriptor"; } }
-
-        protected byte objectTypeIndication;
-        public byte ObjectTypeIndication { get { return this.objectTypeIndication; } set { this.objectTypeIndication = value; } }
-
-        protected byte streamType;
-        public byte StreamType { get { return this.streamType; } set { this.streamType = value; } }
-
-        protected bool upStream;
-        public bool UpStream { get { return this.upStream; } set { this.upStream = value; } }
-
-        protected bool reserved = true;
-        public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected uint bufferSizeDB;
-        public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
-
-        protected uint maxBitrate;
-        public uint MaxBitrate { get { return this.maxBitrate; } set { this.maxBitrate = value; } }
-
-        protected uint avgBitrate;
-        public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
-        public IEnumerable<DecoderSpecificInfo> DecSpecificInfo { get { return this.children.OfType<DecoderSpecificInfo>(); } }
-        public IEnumerable<ProfileLevelIndicationIndexDescriptor> ProfileLevelIndicationIndexDescr { get { return this.children.OfType<ProfileLevelIndicationIndexDescriptor>(); } }
-
-        public DecoderConfigDescriptor() : base(DescriptorTags.DecoderConfigDescrTag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.objectTypeIndication);
-            boxSize += stream.ReadBits(6, out this.streamType);
-            boxSize += stream.ReadBit(out this.upStream);
-            boxSize += stream.ReadBit(out this.reserved);
-            boxSize += stream.ReadBits(24, out this.bufferSizeDB);
-            boxSize += stream.ReadUInt32(out this.maxBitrate);
-            boxSize += stream.ReadUInt32(out this.avgBitrate);
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.decSpecificInfo); 
-            // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.profileLevelIndicationIndexDescr); 
-            boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this, objectTypeIndication);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.objectTypeIndication);
-            boxSize += stream.WriteBits(6, this.streamType);
-            boxSize += stream.WriteBit(this.upStream);
-            boxSize += stream.WriteBit(this.reserved);
-            boxSize += stream.WriteBits(24, this.bufferSizeDB);
-            boxSize += stream.WriteUInt32(this.maxBitrate);
-            boxSize += stream.WriteUInt32(this.avgBitrate);
-            // boxSize += stream.WriteDescriptor( this.decSpecificInfo); 
-            // boxSize += stream.WriteDescriptor( this.profileLevelIndicationIndexDescr); 
-            boxSize += stream.WriteDescriptorsTillEnd(this, objectTypeIndication);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // objectTypeIndication
-            boxSize += 6; // streamType
-            boxSize += 1; // upStream
-            boxSize += 1; // reserved
-            boxSize += 24; // bufferSizeDB
-            boxSize += 32; // maxBitrate
-            boxSize += 32; // avgBitrate
-                           // boxSize += IsoStream.CalculateDescriptorSize(decSpecificInfo); // decSpecificInfo
-                           // boxSize += IsoStream.CalculateDescriptorSize(profileLevelIndicationIndexDescr); // profileLevelIndicationIndexDescr
-            boxSize += IsoStream.CalculateDescriptors(this, objectTypeIndication);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class ProfileLevelIndicationIndexDescriptor () extends BaseDescriptor
-     : bit(8) ProfileLevelIndicationIndexDescrTag {
-     bit(8) profileLevelIndicationIndex;
-     }
-    */
-    public class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
-    {
-        public const byte TYPE = DescriptorTags.ProfileLevelIndicationIndexDescrTag;
-        public override string DisplayName { get { return "ProfileLevelIndicationIndexDescriptor"; } }
-
-        protected byte profileLevelIndicationIndex;
-        public byte ProfileLevelIndicationIndex { get { return this.profileLevelIndicationIndex; } set { this.profileLevelIndicationIndex = value; } }
-
-        public ProfileLevelIndicationIndexDescriptor() : base(DescriptorTags.ProfileLevelIndicationIndexDescrTag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.profileLevelIndicationIndex);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.profileLevelIndicationIndex);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // profileLevelIndicationIndex
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class IPI_DescrPointer extends BaseDescriptor : bit(8) tag=IPI_DescrPointerTag {
-     bit(16) IPI_ES_Id;
-     }
-    */
-    public class IPI_DescrPointer : BaseDescriptor
-    {
-        public const byte TYPE = DescriptorTags.IPI_DescrPointerTag;
-        public override string DisplayName { get { return "IPI_DescrPointer"; } }
-
-        protected ushort IPI_ES_Id;
-        public ushort IPIESId { get { return this.IPI_ES_Id; } set { this.IPI_ES_Id = value; } }
-
-        public IPI_DescrPointer() : base(DescriptorTags.IPI_DescrPointerTag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt16(out this.IPI_ES_Id);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt16(this.IPI_ES_Id);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // IPI_ES_Id
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract class IP_IdentificationDataSet extends BaseDescriptor
-     : bit(8) tag=ContentIdentDescrTag..SupplContentIdentDescrTag
-     {
-     // empty. To be filled by classes extending this class.
-     }
-    */
-    public abstract class IP_IdentificationDataSet : BaseDescriptor
-    {
-        public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
-        public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag; public override string DisplayName { get { return "IP_IdentificationDataSet"; } }
-
-        public IP_IdentificationDataSet(byte tag) : base(tag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class IPMP_DescriptorPointer extends BaseDescriptor : bit(8) tag=IPMP_DescrPointerTag {
-     bit(8) IPMP_DescriptorID;
-     }
-    */
-    public class IPMP_DescriptorPointer : BaseDescriptor
-    {
-        public const byte TYPE = DescriptorTags.IPMP_DescrPointerTag;
-        public override string DisplayName { get { return "IPMP_DescriptorPointer"; } }
-
-        protected byte IPMP_DescriptorID;
-        public byte IPMPDescriptorID { get { return this.IPMP_DescriptorID; } set { this.IPMP_DescriptorID = value; } }
-
-        public IPMP_DescriptorPointer() : base(DescriptorTags.IPMP_DescrPointerTag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.IPMP_DescriptorID);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.IPMP_DescriptorID);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // IPMP_DescriptorID
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract class OCI_Descriptor extends BaseDescriptor : bit(8) tag=OCIDescrTagStartRange..OCIDescrTagEndRange
-    {
-     // empty. To be filled by classes extending this class.
-    }
-    */
-    public abstract class OCI_Descriptor : BaseDescriptor
-    {
-        public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
-        public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange; public override string DisplayName { get { return "OCI_Descriptor"; } }
-
-        public OCI_Descriptor(byte tag) : base(tag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class LanguageDescriptor extends OCI_Descriptor : bit(8) tag=LanguageDescrTag {
-     bit(24) languageCode;
-     }
-    */
-    public class LanguageDescriptor : OCI_Descriptor
-    {
-        public const byte TYPE = DescriptorTags.LanguageDescrTag;
-        public override string DisplayName { get { return "LanguageDescriptor"; } }
-
-        protected uint languageCode;
-        public uint LanguageCode { get { return this.languageCode; } set { this.languageCode = value; } }
-
-        public LanguageDescriptor() : base(DescriptorTags.LanguageDescrTag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBits(24, out this.languageCode);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteBits(24, this.languageCode);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 24; // languageCode
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class IPMPDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
-     // IPMP system specific configuration information
-     }
-    */
-    public class IPMPDecoderConfiguration : DecoderSpecificInfo
-    {
-        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
-        public override string DisplayName { get { return "IPMPDecoderConfiguration"; } }
-
-        public IPMPDecoderConfiguration() : base()
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            /*  IPMP system specific configuration information */
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            /*  IPMP system specific configuration information */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /*  IPMP system specific configuration information */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class OCIDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
-     bit(8) versionLabel = 0x01;
-     }
-    */
-    public class OCIDecoderConfiguration : DecoderSpecificInfo
-    {
-        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
-        public override string DisplayName { get { return "OCIDecoderConfiguration"; } }
-
-        protected byte versionLabel = 0x01;
-        public byte VersionLabel { get { return this.versionLabel; } set { this.versionLabel = value; } }
-
-        public OCIDecoderConfiguration() : base()
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.versionLabel);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.versionLabel);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // versionLabel
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class JPEG_DecoderConfig extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
-     int(16) headerLength;
-     int(16) Xdensity;
-     int(16) Ydensity;
-     int(8) numComponents;
-     }
-    */
-    public class JPEG_DecoderConfig : DecoderSpecificInfo
-    {
-        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
-        public override string DisplayName { get { return "JPEG_DecoderConfig"; } }
-
-        protected short headerLength;
-        public short HeaderLength { get { return this.headerLength; } set { this.headerLength = value; } }
-
-        protected short Xdensity;
-        public short _Xdensity { get { return this.Xdensity; } set { this.Xdensity = value; } }
-
-        protected short Ydensity;
-        public short _Ydensity { get { return this.Ydensity; } set { this.Ydensity = value; } }
-
-        protected sbyte numComponents;
-        public sbyte NumComponents { get { return this.numComponents; } set { this.numComponents = value; } }
-
-        public JPEG_DecoderConfig() : base()
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadInt16(out this.headerLength);
-            boxSize += stream.ReadInt16(out this.Xdensity);
-            boxSize += stream.ReadInt16(out this.Ydensity);
-            boxSize += stream.ReadInt8(out this.numComponents);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteInt16(this.headerLength);
-            boxSize += stream.WriteInt16(this.Xdensity);
-            boxSize += stream.WriteInt16(this.Ydensity);
-            boxSize += stream.WriteInt8(this.numComponents);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 16; // headerLength
-            boxSize += 16; // Xdensity
-            boxSize += 16; // Ydensity
-            boxSize += 8; // numComponents
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class GenericDecoderSpecificInfo extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
-     bit(8) data[];
-     }
-    */
-    public class GenericDecoderSpecificInfo : DecoderSpecificInfo
-    {
-        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
-        public override string DisplayName { get { return "GenericDecoderSpecificInfo"; } }
-
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-        public GenericDecoderSpecificInfo() : base()
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class QoS_Descriptor extends BaseDescriptor : bit(8) tag=QoS_DescrTag {
-     bit(8) predefined;
-     if (predefined==0) {
-     QoS_Qualifier qualifiers[];
-     }
-     }
-    */
-    public class QoS_Descriptor : BaseDescriptor
-    {
-        public const byte TYPE = DescriptorTags.QoS_DescrTag;
-        public override string DisplayName { get { return "QoS_Descriptor"; } }
-
-        protected byte predefined;
-        public byte Predefined { get { return this.predefined; } set { this.predefined = value; } }
-        public IEnumerable<QoS_Qualifier> Qualifiers { get { return this.children.OfType<QoS_Qualifier>(); } }
-
-        public QoS_Descriptor() : base(DescriptorTags.QoS_DescrTag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.predefined);
-
-            if (predefined == 0)
-            {
-                // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.qualifiers); 
-            }
-            boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.predefined);
-
-            if (predefined == 0)
-            {
-                // boxSize += stream.WriteDescriptor( this.qualifiers); 
-            }
-            boxSize += stream.WriteDescriptorsTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // predefined
-
-            if (predefined == 0)
-            {
-                // boxSize += IsoStream.CalculateDescriptorSize(qualifiers); // qualifiers
-            }
-            boxSize += IsoStream.CalculateDescriptors(this);
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract aligned(8) expandable(228-1) class QoS_Qualifier : bit(8) tag=0x01..0xff {
-     // empty. To be filled by classes extending this class.
-     }
-
-    */
-    public abstract class QoS_Qualifier : Descriptor
-    {
-        public byte TagMin { get; set; } = 0x01;
-        public byte TagMax { get; set; } = 0xff; public override string DisplayName { get { return "QoS_Qualifier"; } }
-
-        public QoS_Qualifier(byte tag) : base(tag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class QoS_Qualifier_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x01 {
-     unsigned int(32) MAX_DELAY;
-     }
-
-    */
-    public class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
-    {
-        public const byte TYPE = 0x01;
-        public override string DisplayName { get { return "QoS_Qualifier_MAX_DELAY"; } }
-
-        protected uint MAX_DELAY;
-        public uint MAXDELAY { get { return this.MAX_DELAY; } set { this.MAX_DELAY = value; } }
-
-        public QoS_Qualifier_MAX_DELAY() : base(0x01)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.MAX_DELAY);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.MAX_DELAY);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // MAX_DELAY
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class QoS_Qualifier_PREF_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x02 {
-     unsigned int(32) PREF_MAX_DELAY;
-     }
-
-    */
-    public class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
-    {
-        public const byte TYPE = 0x02;
-        public override string DisplayName { get { return "QoS_Qualifier_PREF_MAX_DELAY"; } }
-
-        protected uint PREF_MAX_DELAY;
-        public uint PREFMAXDELAY { get { return this.PREF_MAX_DELAY; } set { this.PREF_MAX_DELAY = value; } }
-
-        public QoS_Qualifier_PREF_MAX_DELAY() : base(0x02)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.PREF_MAX_DELAY);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.PREF_MAX_DELAY);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // PREF_MAX_DELAY
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class QoS_Qualifier_LOSS_PROB extends QoS_Qualifier : bit(8) tag=0x03 {
-     double(32) LOSS_PROB;
-     }
-
-    */
-    public class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
-    {
-        public const byte TYPE = 0x03;
-        public override string DisplayName { get { return "QoS_Qualifier_LOSS_PROB"; } }
-
-        protected double LOSS_PROB;
-        public double LOSSPROB { get { return this.LOSS_PROB; } set { this.LOSS_PROB = value; } }
-
-        public QoS_Qualifier_LOSS_PROB() : base(0x03)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadDouble32(out this.LOSS_PROB);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteDouble32(this.LOSS_PROB);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // LOSS_PROB
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class QoS_Qualifier_MAX_GAP_LOSS extends QoS_Qualifier : bit(8) tag=0x04 {
-     unsigned int(32) MAX_GAP_LOSS;
-     }
-
-    */
-    public class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
-    {
-        public const byte TYPE = 0x04;
-        public override string DisplayName { get { return "QoS_Qualifier_MAX_GAP_LOSS"; } }
-
-        protected uint MAX_GAP_LOSS;
-        public uint MAXGAPLOSS { get { return this.MAX_GAP_LOSS; } set { this.MAX_GAP_LOSS = value; } }
-
-        public QoS_Qualifier_MAX_GAP_LOSS() : base(0x04)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.MAX_GAP_LOSS);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.MAX_GAP_LOSS);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // MAX_GAP_LOSS
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class QoS_Qualifier_MAX_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x41 {
-     unsigned int(32) MAX_AU_SIZE;
-     }
-
-    */
-    public class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
-    {
-        public const byte TYPE = 0x41;
-        public override string DisplayName { get { return "QoS_Qualifier_MAX_AU_SIZE"; } }
-
-        protected uint MAX_AU_SIZE;
-        public uint MAXAUSIZE { get { return this.MAX_AU_SIZE; } set { this.MAX_AU_SIZE = value; } }
-
-        public QoS_Qualifier_MAX_AU_SIZE() : base(0x41)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.MAX_AU_SIZE);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.MAX_AU_SIZE);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // MAX_AU_SIZE
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class QoS_Qualifier_AVG_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x42 {
-     unsigned int(32) AVG_AU_SIZE;
-     }
-
-    */
-    public class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
-    {
-        public const byte TYPE = 0x42;
-        public override string DisplayName { get { return "QoS_Qualifier_AVG_AU_SIZE"; } }
-
-        protected uint AVG_AU_SIZE;
-        public uint AVGAUSIZE { get { return this.AVG_AU_SIZE; } set { this.AVG_AU_SIZE = value; } }
-
-        public QoS_Qualifier_AVG_AU_SIZE() : base(0x42)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.AVG_AU_SIZE);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.AVG_AU_SIZE);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // AVG_AU_SIZE
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class QoS_Qualifier_MAX_AU_RATE extends QoS_Qualifier : bit(8) tag=0x43 {
-     unsigned int(32) MAX_AU_RATE;
-     }
-    */
-    public class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
-    {
-        public const byte TYPE = 0x43;
-        public override string DisplayName { get { return "QoS_Qualifier_MAX_AU_RATE"; } }
-
-        protected uint MAX_AU_RATE;
-        public uint MAXAURATE { get { return this.MAX_AU_RATE; } set { this.MAX_AU_RATE = value; } }
-
-        public QoS_Qualifier_MAX_AU_RATE() : base(0x43)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.MAX_AU_RATE);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.MAX_AU_RATE);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // MAX_AU_RATE
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class RegistrationDescriptor extends BaseDescriptor : bit(8) tag=RegistrationDescrTag {
-     bit(32) formatIdentifier;
-     bit(8) additionalIdentificationInfo[sizeOfInstance-4];
-     }
-    */
-    public class RegistrationDescriptor : BaseDescriptor
-    {
-        public const byte TYPE = DescriptorTags.RegistrationDescrTag;
-        public override string DisplayName { get { return "RegistrationDescriptor"; } }
-
-        protected uint formatIdentifier;
-        public uint FormatIdentifier { get { return this.formatIdentifier; } set { this.formatIdentifier = value; } }
-
-        protected byte[] additionalIdentificationInfo;
-        public byte[] AdditionalIdentificationInfo { get { return this.additionalIdentificationInfo; } set { this.additionalIdentificationInfo = value; } }
-
-        public RegistrationDescriptor() : base(DescriptorTags.RegistrationDescrTag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt32(out this.formatIdentifier);
-            boxSize += stream.ReadUInt8Array((uint)(sizeOfInstance - 4), out this.additionalIdentificationInfo);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.formatIdentifier);
-            boxSize += stream.WriteUInt8Array((uint)(sizeOfInstance - 4), this.additionalIdentificationInfo);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 32; // formatIdentifier
-            boxSize += (ulong)(sizeOfInstance - 4) * 8; // additionalIdentificationInfo
-            return boxSize;
-        }
-    }
-
-
-    /*
-    abstract class ExtensionDescriptor extends BaseDescriptor : bit(8) tag=ExtDescrTagStartRange..ExtDescrTagEndRange {
-     // empty. To be filled by classes extending this class.
-     }
-    */
-    public abstract class ExtensionDescriptor : BaseDescriptor
-    {
-        public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
-        public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange; public override string DisplayName { get { return "ExtensionDescriptor"; } }
-
-        public ExtensionDescriptor(byte tag) : base(tag)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            /*  empty. To be filled by classes extending this class. */
-            return boxSize;
-        }
-    }
-
-
-    /*
-    aligned(8) class ESDBox
-     extends FullBox('esds', version = 0, 0) {
-     ES_Descriptor ES;
-     }
-    */
-    public class ESDBox : FullBox
-    {
-        public const string TYPE = "esds";
-        public override string DisplayName { get { return "ESDBox"; } }
-
-        protected ES_Descriptor ES;
-        public ES_Descriptor _ES { get { return this.ES; } set { this.ES = value; } }
-
-        public ESDBox() : base("esds", 0, 0)
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadDescriptor(boxSize, readSize, this, out this.ES);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteDescriptor(this.ES);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateDescriptorSize(ES); // ES
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class MpegSampleEntry() extends SampleEntry ('mp4s') {
-     Box ES;
-     }
-    */
-    public class MpegSampleEntry : SampleEntry
-    {
-        public const string TYPE = "mp4s";
-        public override string DisplayName { get { return "MpegSampleEntry"; } }
-        public Box _ES { get { return this.children.OfType<Box>().FirstOrDefault(); } }
-
-        public MpegSampleEntry() : base("mp4s")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ES); 
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            // boxSize += stream.WriteBox( this.ES); 
-            boxSize += stream.WriteBoxArrayTillEnd(this);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(ES); // ES
-            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -38177,17 +36142,19 @@ namespace SharpMP4
 
 
     /*
-    class OpusSampleEntry() extends AudioSampleEntry ('Opus'){
-     OpusSpecificBox();
-     }
+    class WebVTTConfigurationBox extends Box('vttC') {
+        boxstring	config;
+    }
     */
-    public class OpusSampleEntry : AudioSampleEntry
+    public class WebVTTConfigurationBox : Box
     {
-        public const string TYPE = "Opus";
-        public override string DisplayName { get { return "OpusSampleEntry"; } }
-        public OpusSpecificBox _OpusSpecificBox { get { return this.children.OfType<OpusSpecificBox>().FirstOrDefault(); } }
+        public const string TYPE = "vttC";
+        public override string DisplayName { get { return "WebVTTConfigurationBox"; } }
 
-        public OpusSampleEntry() : base("Opus")
+        protected BinaryUTF8String config;
+        public BinaryUTF8String Config { get { return this.config; } set { this.config = value; } }
+
+        public WebVTTConfigurationBox() : base("vttC")
         {
         }
 
@@ -38195,8 +36162,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.OpusSpecificBox); 
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.config);
             return boxSize;
         }
 
@@ -38204,8 +36170,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            // boxSize += stream.WriteBox( this.OpusSpecificBox); 
-            boxSize += stream.WriteBoxArrayTillEnd(this);
+            boxSize += stream.WriteStringZeroTerminated(this.config);
             return boxSize;
         }
 
@@ -38213,114 +36178,26 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            // boxSize += IsoStream.CalculateBoxSize(OpusSpecificBox); // OpusSpecificBox
-            boxSize += IsoStream.CalculateBoxArray(this);
+            boxSize += IsoStream.CalculateStringSize(config); // config
             return boxSize;
         }
     }
 
 
     /*
-    class ChannelMappingTable (unsigned int(8) OutputChannelCount){
-     unsigned int(8) StreamCount;
-     unsigned int(8) CoupledCount;
-     unsigned int(8 * OutputChannelCount) ChannelMapping;
-     }
-
-
-    */
-    public class ChannelMappingTable : IMp4Serializable
-    {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "ChannelMappingTable"; } }
-
-        protected byte StreamCount;
-        public byte _StreamCount { get { return this.StreamCount; } set { this.StreamCount = value; } }
-
-        protected byte CoupledCount;
-        public byte _CoupledCount { get { return this.CoupledCount; } set { this.CoupledCount = value; } }
-
-        protected byte[] ChannelMapping;
-        public byte[] _ChannelMapping { get { return this.ChannelMapping; } set { this.ChannelMapping = value; } }
-
-        protected byte OutputChannelCount;
-        public byte _OutputChannelCount { get { return this.OutputChannelCount; } set { this.OutputChannelCount = value; } }
-
-        public ChannelMappingTable(byte OutputChannelCount) : base()
-        {
-            this.OutputChannelCount = OutputChannelCount;
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadUInt8(out this.StreamCount);
-            boxSize += stream.ReadUInt8(out this.CoupledCount);
-            boxSize += stream.ReadUInt8Array((uint)OutputChannelCount, out this.ChannelMapping);
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteUInt8(this.StreamCount);
-            boxSize += stream.WriteUInt8(this.CoupledCount);
-            boxSize += stream.WriteUInt8Array((uint)OutputChannelCount, this.ChannelMapping);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 8; // StreamCount
-            boxSize += 8; // CoupledCount
-            boxSize += (ulong)(OutputChannelCount * 8); // ChannelMapping
-            return boxSize;
-        }
+    class WebVTTSourceLabelBox extends Box('vlab') {
+        boxstring	source_label;
     }
-
-
-    /*
-    aligned(8) class OpusSpecificBox extends Box('dOps'){
-     unsigned int(8) Version;
-     unsigned int(8) OutputChannelCount;
-     unsigned int(16) PreSkip;
-     unsigned int(32) InputSampleRate;
-     signed int(16) OutputGain;
-     unsigned int(8) ChannelMappingFamily;
-     if (ChannelMappingFamily != 0) {
-     ChannelMappingTable(OutputChannelCount);
-     }
-     }
     */
-    public class OpusSpecificBox : Box
+    public class WebVTTSourceLabelBox : Box
     {
-        public const string TYPE = "dOps";
-        public override string DisplayName { get { return "OpusSpecificBox"; } }
+        public const string TYPE = "vlab";
+        public override string DisplayName { get { return "WebVTTSourceLabelBox"; } }
 
-        protected byte Version;
-        public byte _Version { get { return this.Version; } set { this.Version = value; } }
+        protected BinaryUTF8String source_label;
+        public BinaryUTF8String SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
 
-        protected byte OutputChannelCount;
-        public byte _OutputChannelCount { get { return this.OutputChannelCount; } set { this.OutputChannelCount = value; } }
-
-        protected ushort PreSkip;
-        public ushort _PreSkip { get { return this.PreSkip; } set { this.PreSkip = value; } }
-
-        protected uint InputSampleRate;
-        public uint _InputSampleRate { get { return this.InputSampleRate; } set { this.InputSampleRate = value; } }
-
-        protected short OutputGain;
-        public short _OutputGain { get { return this.OutputGain; } set { this.OutputGain = value; } }
-
-        protected byte ChannelMappingFamily;
-        public byte _ChannelMappingFamily { get { return this.ChannelMappingFamily; } set { this.ChannelMappingFamily = value; } }
-
-        protected ChannelMappingTable ChannelMappingTable;
-        public ChannelMappingTable _ChannelMappingTable { get { return this.ChannelMappingTable; } set { this.ChannelMappingTable = value; } }
-
-        public OpusSpecificBox() : base("dOps")
+        public WebVTTSourceLabelBox() : base("vlab")
         {
         }
 
@@ -38328,17 +36205,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.Version);
-            boxSize += stream.ReadUInt8(out this.OutputChannelCount);
-            boxSize += stream.ReadUInt16(out this.PreSkip);
-            boxSize += stream.ReadUInt32(out this.InputSampleRate);
-            boxSize += stream.ReadInt16(out this.OutputGain);
-            boxSize += stream.ReadUInt8(out this.ChannelMappingFamily);
-
-            if (ChannelMappingFamily != 0)
-            {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new ChannelMappingTable(_OutputChannelCount), out this.ChannelMappingTable);
-            }
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.source_label);
             return boxSize;
         }
 
@@ -38346,17 +36213,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.Version);
-            boxSize += stream.WriteUInt8(this.OutputChannelCount);
-            boxSize += stream.WriteUInt16(this.PreSkip);
-            boxSize += stream.WriteUInt32(this.InputSampleRate);
-            boxSize += stream.WriteInt16(this.OutputGain);
-            boxSize += stream.WriteUInt8(this.ChannelMappingFamily);
-
-            if (ChannelMappingFamily != 0)
-            {
-                boxSize += stream.WriteClass(this.ChannelMappingTable);
-            }
+            boxSize += stream.WriteStringZeroTerminated(this.source_label);
             return boxSize;
         }
 
@@ -38364,37 +36221,28 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8; // Version
-            boxSize += 8; // OutputChannelCount
-            boxSize += 16; // PreSkip
-            boxSize += 32; // InputSampleRate
-            boxSize += 16; // OutputGain
-            boxSize += 8; // ChannelMappingFamily
-
-            if (ChannelMappingFamily != 0)
-            {
-                boxSize += IsoStream.CalculateClassSize(ChannelMappingTable); // ChannelMappingTable
-            }
+            boxSize += IsoStream.CalculateStringSize(source_label); // source_label
             return boxSize;
         }
     }
 
 
     /*
-    class AV1SampleEntry
-    extends VisualSampleEntry('av01')
-    {
-      AV1CodecConfigurationBox config;
+    class WVTTSampleEntry() extends PlainTextSampleEntry ('wvtt'){
+        WebVTTConfigurationBox	config;
+        WebVTTSourceLabelBox		label;	// recommended
+        BitRateBox (); 					// optional
     }
-
     */
-    public class AV1SampleEntry : VisualSampleEntry
+    public class WVTTSampleEntry : PlainTextSampleEntry
     {
-        public const string TYPE = "av01";
-        public override string DisplayName { get { return "AV1SampleEntry"; } }
-        public AV1CodecConfigurationBox Config { get { return this.children.OfType<AV1CodecConfigurationBox>().FirstOrDefault(); } }
+        public const string TYPE = "wvtt";
+        public override string DisplayName { get { return "WVTTSampleEntry"; } }
+        public WebVTTConfigurationBox Config { get { return this.children.OfType<WebVTTConfigurationBox>().FirstOrDefault(); } }
+        public WebVTTSourceLabelBox Label { get { return this.children.OfType<WebVTTSourceLabelBox>().FirstOrDefault(); } }
+        public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
 
-        public AV1SampleEntry() : base("av01")
+        public WVTTSampleEntry() : base("wvtt")
         {
         }
 
@@ -38403,6 +36251,8 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.label); // recommended
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -38412,6 +36262,8 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.label); // recommended
+            // boxSize += stream.WriteBox( this.BitRateBox); // optional
             boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
@@ -38421,6 +36273,8 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(label); // label
+            // boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
@@ -38428,22 +36282,20 @@ namespace SharpMP4
 
 
     /*
-    class AV1CodecConfigurationBox
-    extends Box('av1C')
+    aligned(8) class AuxiliaryTypeInfoBox extends FullBox ('auxi', 0, 0)
     {
-      AV1CodecConfigurationRecord av1Config;
+        string aux_track_type;
     }
-
     */
-    public class AV1CodecConfigurationBox : Box
+    public class AuxiliaryTypeInfoBox : FullBox
     {
-        public const string TYPE = "av1C";
-        public override string DisplayName { get { return "AV1CodecConfigurationBox"; } }
+        public const string TYPE = "auxi";
+        public override string DisplayName { get { return "AuxiliaryTypeInfoBox"; } }
 
-        protected AV1CodecConfigurationRecord av1Config;
-        public AV1CodecConfigurationRecord Av1Config { get { return this.av1Config; } set { this.av1Config = value; } }
+        protected BinaryUTF8String aux_track_type;
+        public BinaryUTF8String AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
 
-        public AV1CodecConfigurationBox() : base("av1C")
+        public AuxiliaryTypeInfoBox() : base("auxi", 0, 0)
         {
         }
 
@@ -38451,7 +36303,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new AV1CodecConfigurationRecord(), out this.av1Config);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.aux_track_type);
             return boxSize;
         }
 
@@ -38459,7 +36311,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteClass(this.av1Config);
+            boxSize += stream.WriteStringZeroTerminated(this.aux_track_type);
             return boxSize;
         }
 
@@ -38467,206 +36319,39 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateClassSize(av1Config); // av1Config
+            boxSize += IsoStream.CalculateStringSize(aux_track_type); // aux_track_type
             return boxSize;
         }
     }
 
 
     /*
-    aligned(8) class AV1CodecConfigurationRecord
-    {
-      unsigned int(1) marker = 1;
-      unsigned int(7) version = 1;
-      unsigned int(3) seq_profile;
-      unsigned int(5) seq_level_idx_0;
-      unsigned int(1) seq_tier_0;
-      unsigned int(1) high_bitdepth;
-      unsigned int(1) twelve_bit;
-      unsigned int(1) monochrome;
-      unsigned int(1) chroma_subsampling_x;
-      unsigned int(1) chroma_subsampling_y;
-      unsigned int(2) chroma_sample_position;
-      unsigned int(3) reserved = 0;
-
-      unsigned int(1) initial_presentation_delay_present;
-      if(initial_presentation_delay_present) {
-        unsigned int(4) initial_presentation_delay_minus_one;
-      } else {
-        unsigned int(4) reserved = 0;
-      }
-
-      unsigned int(8) configOBUs[];
+    class CodingConstraintsBox extends FullBox('ccst', version = 0, flags = 0){
+        unsigned int(1) all_ref_pics_intra;
+        unsigned int(1) intra_pred_used;
+        unsigned int(4) max_ref_per_pic;
+        unsigned int(26) reserved;
     }
 
     */
-    public class AV1CodecConfigurationRecord : IMp4Serializable
+    public class CodingConstraintsBox : FullBox
     {
-        public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
-        public virtual string DisplayName { get { return "AV1CodecConfigurationRecord"; } }
+        public const string TYPE = "ccst";
+        public override string DisplayName { get { return "CodingConstraintsBox"; } }
 
-        protected bool marker = true;
-        public bool Marker { get { return this.marker; } set { this.marker = value; } }
+        protected bool all_ref_pics_intra;
+        public bool AllRefPicsIntra { get { return this.all_ref_pics_intra; } set { this.all_ref_pics_intra = value; } }
 
-        protected byte version = 1;
-        public byte Version { get { return this.version; } set { this.version = value; } }
+        protected bool intra_pred_used;
+        public bool IntraPredUsed { get { return this.intra_pred_used; } set { this.intra_pred_used = value; } }
 
-        protected byte seq_profile;
-        public byte SeqProfile { get { return this.seq_profile; } set { this.seq_profile = value; } }
+        protected byte max_ref_per_pic;
+        public byte MaxRefPerPic { get { return this.max_ref_per_pic; } set { this.max_ref_per_pic = value; } }
 
-        protected byte seq_level_idx_0;
-        public byte SeqLevelIdx0 { get { return this.seq_level_idx_0; } set { this.seq_level_idx_0 = value; } }
+        protected uint reserved;
+        public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        protected bool seq_tier_0;
-        public bool SeqTier0 { get { return this.seq_tier_0; } set { this.seq_tier_0 = value; } }
-
-        protected bool high_bitdepth;
-        public bool HighBitdepth { get { return this.high_bitdepth; } set { this.high_bitdepth = value; } }
-
-        protected bool twelve_bit;
-        public bool TwelveBit { get { return this.twelve_bit; } set { this.twelve_bit = value; } }
-
-        protected bool monochrome;
-        public bool Monochrome { get { return this.monochrome; } set { this.monochrome = value; } }
-
-        protected bool chroma_subsampling_x;
-        public bool ChromaSubsamplingx { get { return this.chroma_subsampling_x; } set { this.chroma_subsampling_x = value; } }
-
-        protected bool chroma_subsampling_y;
-        public bool ChromaSubsamplingy { get { return this.chroma_subsampling_y; } set { this.chroma_subsampling_y = value; } }
-
-        protected byte chroma_sample_position;
-        public byte ChromaSamplePosition { get { return this.chroma_sample_position; } set { this.chroma_sample_position = value; } }
-
-        protected byte reserved = 0;
-        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected bool initial_presentation_delay_present;
-        public bool InitialPresentationDelayPresent { get { return this.initial_presentation_delay_present; } set { this.initial_presentation_delay_present = value; } }
-
-        protected byte initial_presentation_delay_minus_one;
-        public byte InitialPresentationDelayMinusOne { get { return this.initial_presentation_delay_minus_one; } set { this.initial_presentation_delay_minus_one = value; } }
-
-        protected byte reserved0 = 0;
-        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
-
-        protected byte[] configOBUs;
-        public byte[] ConfigOBUs { get { return this.configOBUs; } set { this.configOBUs = value; } }
-
-        public AV1CodecConfigurationRecord() : base()
-        {
-        }
-
-        public virtual ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.ReadBit(out this.marker);
-            boxSize += stream.ReadBits(7, out this.version);
-            boxSize += stream.ReadBits(3, out this.seq_profile);
-            boxSize += stream.ReadBits(5, out this.seq_level_idx_0);
-            boxSize += stream.ReadBit(out this.seq_tier_0);
-            boxSize += stream.ReadBit(out this.high_bitdepth);
-            boxSize += stream.ReadBit(out this.twelve_bit);
-            boxSize += stream.ReadBit(out this.monochrome);
-            boxSize += stream.ReadBit(out this.chroma_subsampling_x);
-            boxSize += stream.ReadBit(out this.chroma_subsampling_y);
-            boxSize += stream.ReadBits(2, out this.chroma_sample_position);
-            boxSize += stream.ReadBits(3, out this.reserved);
-            boxSize += stream.ReadBit(out this.initial_presentation_delay_present);
-
-            if (initial_presentation_delay_present)
-            {
-                boxSize += stream.ReadBits(4, out this.initial_presentation_delay_minus_one);
-            }
-
-            else
-            {
-                boxSize += stream.ReadBits(4, out this.reserved0);
-            }
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.configOBUs);
-            return boxSize;
-        }
-
-        public virtual ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += stream.WriteBit(this.marker);
-            boxSize += stream.WriteBits(7, this.version);
-            boxSize += stream.WriteBits(3, this.seq_profile);
-            boxSize += stream.WriteBits(5, this.seq_level_idx_0);
-            boxSize += stream.WriteBit(this.seq_tier_0);
-            boxSize += stream.WriteBit(this.high_bitdepth);
-            boxSize += stream.WriteBit(this.twelve_bit);
-            boxSize += stream.WriteBit(this.monochrome);
-            boxSize += stream.WriteBit(this.chroma_subsampling_x);
-            boxSize += stream.WriteBit(this.chroma_subsampling_y);
-            boxSize += stream.WriteBits(2, this.chroma_sample_position);
-            boxSize += stream.WriteBits(3, this.reserved);
-            boxSize += stream.WriteBit(this.initial_presentation_delay_present);
-
-            if (initial_presentation_delay_present)
-            {
-                boxSize += stream.WriteBits(4, this.initial_presentation_delay_minus_one);
-            }
-
-            else
-            {
-                boxSize += stream.WriteBits(4, this.reserved0);
-            }
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.configOBUs);
-            return boxSize;
-        }
-
-        public virtual ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += 1; // marker
-            boxSize += 7; // version
-            boxSize += 3; // seq_profile
-            boxSize += 5; // seq_level_idx_0
-            boxSize += 1; // seq_tier_0
-            boxSize += 1; // high_bitdepth
-            boxSize += 1; // twelve_bit
-            boxSize += 1; // monochrome
-            boxSize += 1; // chroma_subsampling_x
-            boxSize += 1; // chroma_subsampling_y
-            boxSize += 2; // chroma_sample_position
-            boxSize += 3; // reserved
-            boxSize += 1; // initial_presentation_delay_present
-
-            if (initial_presentation_delay_present)
-            {
-                boxSize += 4; // initial_presentation_delay_minus_one
-            }
-
-            else
-            {
-                boxSize += 4; // reserved0
-            }
-            boxSize += (ulong)configOBUs.Length * 8; // configOBUs
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AV1ForwardKeyFrameSampleGroupEntry
-    extends VisualSampleGroupEntry('av1f')
-    {
-      unsigned int(8) fwd_distance;
-    }
-
-    */
-    public class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
-    {
-        public const string TYPE = "av1f";
-        public override string DisplayName { get { return "AV1ForwardKeyFrameSampleGroupEntry"; } }
-
-        protected byte fwd_distance;
-        public byte FwdDistance { get { return this.fwd_distance; } set { this.fwd_distance = value; } }
-
-        public AV1ForwardKeyFrameSampleGroupEntry() : base("av1f")
+        public CodingConstraintsBox() : base("ccst", 0, 0)
         {
         }
 
@@ -38674,7 +36359,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.fwd_distance);
+            boxSize += stream.ReadBit(out this.all_ref_pics_intra);
+            boxSize += stream.ReadBit(out this.intra_pred_used);
+            boxSize += stream.ReadBits(4, out this.max_ref_per_pic);
+            boxSize += stream.ReadBits(26, out this.reserved);
             return boxSize;
         }
 
@@ -38682,7 +36370,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.fwd_distance);
+            boxSize += stream.WriteBit(this.all_ref_pics_intra);
+            boxSize += stream.WriteBit(this.intra_pred_used);
+            boxSize += stream.WriteBits(4, this.max_ref_per_pic);
+            boxSize += stream.WriteBits(26, this.reserved);
             return boxSize;
         }
 
@@ -38690,25 +36381,55 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8; // fwd_distance
+            boxSize += 1; // all_ref_pics_intra
+            boxSize += 1; // intra_pred_used
+            boxSize += 4; // max_ref_per_pic
+            boxSize += 26; // reserved
             return boxSize;
         }
     }
 
 
     /*
-    class AV1SwitchFrameSampleGroupEntry
-    extends VisualSampleGroupEntry('av1s')
-    {
+    aligned(8) class MD5IntegrityBox()
+    extends FullBox('md5i', version = 0, flags) {
+        unsigned int(8)[16] input_MD5;
+        unsigned int(32) input_4cc;
+        if (input_4cc == 'sgpd') {
+            unsigned int(32) grouping_type;
+            if (flags&1)
+                unsigned int(32) grouping_type_parameter;
+            unsigned int(32) num_entries;
+            for(i=0; i<num_entries; i++) {
+                unsigned int(32) group_description_index[i];
+            }
+        }
     }
-
     */
-    public class AV1SwitchFrameSampleGroupEntry : VisualSampleGroupEntry
+    public class MD5IntegrityBox : FullBox
     {
-        public const string TYPE = "av1s";
-        public override string DisplayName { get { return "AV1SwitchFrameSampleGroupEntry"; } }
+        public const string TYPE = "md5i";
+        public override string DisplayName { get { return "MD5IntegrityBox"; } }
 
-        public AV1SwitchFrameSampleGroupEntry() : base("av1s")
+        protected byte[] input_MD5;
+        public byte[] InputMD5 { get { return this.input_MD5; } set { this.input_MD5 = value; } }
+
+        protected uint input_4cc;
+        public uint Input4cc { get { return this.input_4cc; } set { this.input_4cc = value; } }
+
+        protected uint grouping_type;
+        public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
+
+        protected uint grouping_type_parameter;
+        public uint GroupingTypeParameter { get { return this.grouping_type_parameter; } set { this.grouping_type_parameter = value; } }
+
+        protected uint num_entries;
+        public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
+
+        protected uint[] group_description_index;
+        public uint[] GroupDescriptionIndex { get { return this.group_description_index; } set { this.group_description_index = value; } }
+
+        public MD5IntegrityBox(uint flags = 0) : base("md5i", 0, flags)
         {
         }
 
@@ -38716,6 +36437,25 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8Array(16, out this.input_MD5);
+            boxSize += stream.ReadUInt32(out this.input_4cc);
+
+            if (input_4cc == IsoStream.FromFourCC("sgpd"))
+            {
+                boxSize += stream.ReadUInt32(out this.grouping_type);
+
+                if ((flags & 1) == 1)
+                {
+                    boxSize += stream.ReadUInt32(out this.grouping_type_parameter);
+                }
+                boxSize += stream.ReadUInt32(out this.num_entries);
+
+                this.group_description_index = new uint[num_entries];
+                for (int i = 0; i < num_entries; i++)
+                {
+                    boxSize += stream.ReadUInt32(out this.group_description_index[i]);
+                }
+            }
             return boxSize;
         }
 
@@ -38723,6 +36463,24 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8Array(16, this.input_MD5);
+            boxSize += stream.WriteUInt32(this.input_4cc);
+
+            if (input_4cc == IsoStream.FromFourCC("sgpd"))
+            {
+                boxSize += stream.WriteUInt32(this.grouping_type);
+
+                if ((flags & 1) == 1)
+                {
+                    boxSize += stream.WriteUInt32(this.grouping_type_parameter);
+                }
+                boxSize += stream.WriteUInt32(this.num_entries);
+
+                for (int i = 0; i < num_entries; i++)
+                {
+                    boxSize += stream.WriteUInt32(this.group_description_index[i]);
+                }
+            }
             return boxSize;
         }
 
@@ -38730,24 +36488,49 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
+            boxSize += 16 * 8; // input_MD5
+            boxSize += 32; // input_4cc
+
+            if (input_4cc == IsoStream.FromFourCC("sgpd"))
+            {
+                boxSize += 32; // grouping_type
+
+                if ((flags & 1) == 1)
+                {
+                    boxSize += 32; // grouping_type_parameter
+                }
+                boxSize += 32; // num_entries
+
+                for (int i = 0; i < num_entries; i++)
+                {
+                    boxSize += 32; // group_description_index
+                }
+            }
             return boxSize;
         }
     }
 
 
     /*
-    class AV1MetadataSampleGroupEntry
-    extends VisualSampleGroupEntry('av1M')
-    {
+    aligned(8) class AuxiliaryTypeProperty
+    extends ItemFullProperty('auxC', version = 0, flags) {
+        string aux_type;
+        template unsigned int(8) aux_subtype[];
+            // until the end of the box, the semantics depend on the aux_type value
     }
-
     */
-    public class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
+    public class AuxiliaryTypeProperty : ItemFullProperty
     {
-        public const string TYPE = "av1M";
-        public override string DisplayName { get { return "AV1MetadataSampleGroupEntry"; } }
+        public const string TYPE = "auxC";
+        public override string DisplayName { get { return "AuxiliaryTypeProperty"; } }
 
-        public AV1MetadataSampleGroupEntry() : base("av1M")
+        protected BinaryUTF8String aux_type;
+        public BinaryUTF8String AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
+
+        protected byte[] aux_subtype;  //  until the end of the box, the semantics depend on the aux_type value
+        public byte[] AuxSubtype { get { return this.aux_subtype; } set { this.aux_subtype = value; } }
+
+        public AuxiliaryTypeProperty(uint flags = 0) : base("auxC", 0, flags)
         {
         }
 
@@ -38755,6 +36538,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.aux_type);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
             return boxSize;
         }
 
@@ -38762,6 +36547,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
+            boxSize += stream.WriteStringZeroTerminated(this.aux_type);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
             return boxSize;
         }
 
@@ -38769,82 +36556,32 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(aux_type); // aux_type
+            boxSize += (ulong)aux_subtype.Length * 8; // aux_subtype
             return boxSize;
         }
     }
 
 
     /*
-    class OperatingPointSelectorProperty extends ItemProperty('a1op') {
-        unsigned int(8) op_index;
-    }
-
-    */
-    public class OperatingPointSelectorProperty : ItemProperty
-    {
-        public const string TYPE = "a1op";
-        public override string DisplayName { get { return "OperatingPointSelectorProperty"; } }
-
-        protected byte op_index;
-        public byte OpIndex { get { return this.op_index; } set { this.op_index = value; } }
-
-        public OperatingPointSelectorProperty() : base("a1op")
-        {
-        }
-
-        public override ulong Read(IsoStream stream, ulong readSize)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8(out this.op_index);
-            return boxSize;
-        }
-
-        public override ulong Write(IsoStream stream)
-        {
-            ulong boxSize = 0;
-            boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8(this.op_index);
-            return boxSize;
-        }
-
-        public override ulong CalculateSize()
-        {
-            ulong boxSize = 0;
-            boxSize += base.CalculateSize();
-            boxSize += 8; // op_index
-            return boxSize;
-        }
-    }
-
-
-    /*
-    class AV1LayeredImageIndexingProperty extends ItemProperty('a1lx') {
+    aligned(8) class ImageMirror
+    extends ItemProperty('imir') {
         unsigned int(7) reserved = 0;
-        unsigned int(1) large_size;
-        if(large_size) {
-           unsigned int(32) layer_size[3];
-        }
-        else {
-           unsigned int(16) layer_size[3];
-        }
+        unsigned int(1) axis;
     }
     */
-    public class AV1LayeredImageIndexingProperty : ItemProperty
+    public class ImageMirror : ItemProperty
     {
-        public const string TYPE = "a1lx";
-        public override string DisplayName { get { return "AV1LayeredImageIndexingProperty"; } }
+        public const string TYPE = "imir";
+        public override string DisplayName { get { return "ImageMirror"; } }
 
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        protected bool large_size;
-        public bool LargeSize { get { return this.large_size; } set { this.large_size = value; } }
+        protected bool axis;
+        public bool Axis { get { return this.axis; } set { this.axis = value; } }
 
-        protected uint[] layer_size;
-        public uint[] LayerSize { get { return this.layer_size; } set { this.layer_size = value; } }
-
-        public AV1LayeredImageIndexingProperty() : base("a1lx")
+        public ImageMirror() : base("imir")
         {
         }
 
@@ -38853,17 +36590,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadBits(7, out this.reserved);
-            boxSize += stream.ReadBit(out this.large_size);
-
-            if (large_size)
-            {
-                boxSize += stream.ReadUInt32Array(3, out this.layer_size);
-            }
-
-            else
-            {
-                boxSize += stream.ReadUInt16Array(3, out this.layer_size);
-            }
+            boxSize += stream.ReadBit(out this.axis);
             return boxSize;
         }
 
@@ -38872,17 +36599,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             boxSize += stream.WriteBits(7, this.reserved);
-            boxSize += stream.WriteBit(this.large_size);
-
-            if (large_size)
-            {
-                boxSize += stream.WriteUInt32Array(3, this.layer_size);
-            }
-
-            else
-            {
-                boxSize += stream.WriteUInt16Array(3, this.layer_size);
-            }
+            boxSize += stream.WriteBit(this.axis);
             return boxSize;
         }
 
@@ -38891,16 +36608,1568 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 7; // reserved
-            boxSize += 1; // large_size
+            boxSize += 1; // axis
+            return boxSize;
+        }
+    }
 
-            if (large_size)
+
+    /*
+    aligned(8) class ImageRotation
+    extends ItemProperty('irot') {
+        unsigned int(6) reserved = 0;
+        unsigned int(2) angle;
+    }
+    */
+    public class ImageRotation : ItemProperty
+    {
+        public const string TYPE = "irot";
+        public override string DisplayName { get { return "ImageRotation"; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected byte angle;
+        public byte Angle { get { return this.angle; } set { this.angle = value; } }
+
+        public ImageRotation() : base("irot")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBits(6, out this.reserved);
+            boxSize += stream.ReadBits(2, out this.angle);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBits(6, this.reserved);
+            boxSize += stream.WriteBits(2, this.angle);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 6; // reserved
+            boxSize += 2; // angle
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ImageSpatialExtentsProperty
+    extends ItemFullProperty('ispe', version = 0, flags = 0) {
+        unsigned int(32) image_width;
+        unsigned int(32) image_height;
+    }
+
+    */
+    public class ImageSpatialExtentsProperty : ItemFullProperty
+    {
+        public const string TYPE = "ispe";
+        public override string DisplayName { get { return "ImageSpatialExtentsProperty"; } }
+
+        protected uint image_width;
+        public uint ImageWidth { get { return this.image_width; } set { this.image_width = value; } }
+
+        protected uint image_height;
+        public uint ImageHeight { get { return this.image_height; } set { this.image_height = value; } }
+
+        public ImageSpatialExtentsProperty() : base("ispe", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.image_width);
+            boxSize += stream.ReadUInt32(out this.image_height);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.image_width);
+            boxSize += stream.WriteUInt32(this.image_height);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // image_width
+            boxSize += 32; // image_height
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class JPEGConfigurationBox extends Box('jpgC') {
+        unsigned int(8) JPEGprefix[];
+    }
+    */
+    public class JPEGConfigurationBox : Box
+    {
+        public const string TYPE = "jpgC";
+        public override string DisplayName { get { return "JPEGConfigurationBox"; } }
+
+        protected byte[] JPEGprefix;
+        public byte[] _JPEGprefix { get { return this.JPEGprefix; } set { this.JPEGprefix = value; } }
+
+        public JPEGConfigurationBox() : base("jpgC")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.JPEGprefix);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.JPEGprefix);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += (ulong)JPEGprefix.Length * 8; // JPEGprefix
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class LayerSelectorProperty
+    extends ItemProperty('lsel') {
+        unsigned int(16) layer_id;
+    }
+    */
+    public class LayerSelectorProperty : ItemProperty
+    {
+        public const string TYPE = "lsel";
+        public override string DisplayName { get { return "LayerSelectorProperty"; } }
+
+        protected ushort layer_id;
+        public ushort LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
+
+        public LayerSelectorProperty() : base("lsel")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.layer_id);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.layer_id);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // layer_id
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OperatingPointsInformationProperty
+    extends ItemFullProperty('oinf', version = 0, flags = 0){
+        OperatingPointsRecord op_info; // specified in ISO/IEC 14496-15
+    }
+    */
+    public class OperatingPointsInformationProperty : ItemFullProperty
+    {
+        public const string TYPE = "oinf";
+        public override string DisplayName { get { return "OperatingPointsInformationProperty"; } }
+
+        protected OperatingPointsRecord op_info;  //  specified in ISO/IEC 14496-15
+        public OperatingPointsRecord OpInfo { get { return this.op_info; } set { this.op_info = value; } }
+
+        public OperatingPointsInformationProperty() : base("oinf", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new OperatingPointsRecord(), out this.op_info); // specified in ISO/IEC 14496-15
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteClass(this.op_info); // specified in ISO/IEC 14496-15
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateClassSize(op_info); // op_info
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PixelInformationProperty
+    extends ItemFullProperty('pixi', version = 0, flags = 0){
+        unsigned int(8) num_channels;
+        for (i=0; i<num_channels; i++) {
+            unsigned int(8) bits_per_channel;
+        }
+    }
+    */
+    public class PixelInformationProperty : ItemFullProperty
+    {
+        public const string TYPE = "pixi";
+        public override string DisplayName { get { return "PixelInformationProperty"; } }
+
+        protected byte num_channels;
+        public byte NumChannels { get { return this.num_channels; } set { this.num_channels = value; } }
+
+        protected byte[] bits_per_channel;
+        public byte[] BitsPerChannel { get { return this.bits_per_channel; } set { this.bits_per_channel = value; } }
+
+        public PixelInformationProperty() : base("pixi", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.num_channels);
+
+            this.bits_per_channel = new byte[num_channels];
+            for (int i = 0; i < num_channels; i++)
             {
-                boxSize += 3 * 32; // layer_size
+                boxSize += stream.ReadUInt8(out this.bits_per_channel[i]);
             }
+            return boxSize;
+        }
 
-            else
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.num_channels);
+
+            for (int i = 0; i < num_channels; i++)
             {
-                boxSize += 3 * 16; // layer_size
+                boxSize += stream.WriteUInt8(this.bits_per_channel[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // num_channels
+
+            for (int i = 0; i < num_channels; i++)
+            {
+                boxSize += 8; // bits_per_channel
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class RelativeLocationProperty
+    extends ItemFullProperty('rloc', version = 0, flags = 0)
+    {
+        unsigned int(32) horizontal_offset;
+        unsigned int(32) vertical_offset;
+    }
+    */
+    public class RelativeLocationProperty : ItemFullProperty
+    {
+        public const string TYPE = "rloc";
+        public override string DisplayName { get { return "RelativeLocationProperty"; } }
+
+        protected uint horizontal_offset;
+        public uint HorizontalOffset { get { return this.horizontal_offset; } set { this.horizontal_offset = value; } }
+
+        protected uint vertical_offset;
+        public uint VerticalOffset { get { return this.vertical_offset; } set { this.vertical_offset = value; } }
+
+        public RelativeLocationProperty() : base("rloc", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.horizontal_offset);
+            boxSize += stream.ReadUInt32(out this.vertical_offset);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.horizontal_offset);
+            boxSize += stream.WriteUInt32(this.vertical_offset);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // horizontal_offset
+            boxSize += 32; // vertical_offset
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TargetOlsProperty
+    extends ItemFullProperty('tols', version = 0, flags = 0){
+        unsigned int(16) target_ols_idx;
+    }
+    */
+    public class TargetOlsProperty : ItemFullProperty
+    {
+        public const string TYPE = "tols";
+        public override string DisplayName { get { return "TargetOlsProperty"; } }
+
+        protected ushort target_ols_idx;
+        public ushort TargetOlsIdx { get { return this.target_ols_idx; } set { this.target_ols_idx = value; } }
+
+        public TargetOlsProperty() : base("tols", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.target_ols_idx);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.target_ols_idx);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // target_ols_idx
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AutoExposureBracketingEntry
+    extends VisualSampleGroupEntry('aebr') {
+        int(8) exposure_step;
+        int(8) exposure_numerator;
+    }
+    */
+    public class AutoExposureBracketingEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "aebr";
+        public override string DisplayName { get { return "AutoExposureBracketingEntry"; } }
+
+        protected sbyte exposure_step;
+        public sbyte ExposureStep { get { return this.exposure_step; } set { this.exposure_step = value; } }
+
+        protected sbyte exposure_numerator;
+        public sbyte ExposureNumerator { get { return this.exposure_numerator; } set { this.exposure_numerator = value; } }
+
+        public AutoExposureBracketingEntry() : base("aebr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadInt8(out this.exposure_step);
+            boxSize += stream.ReadInt8(out this.exposure_numerator);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteInt8(this.exposure_step);
+            boxSize += stream.WriteInt8(this.exposure_numerator);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // exposure_step
+            boxSize += 8; // exposure_numerator
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FlashExposureBracketingEntry
+    extends VisualSampleGroupEntry('afbr') {
+        int(8) flash_exposure_numerator;
+        int(8) flash_exposure_denominator;
+    }
+    */
+    public class FlashExposureBracketingEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "afbr";
+        public override string DisplayName { get { return "FlashExposureBracketingEntry"; } }
+
+        protected sbyte flash_exposure_numerator;
+        public sbyte FlashExposureNumerator { get { return this.flash_exposure_numerator; } set { this.flash_exposure_numerator = value; } }
+
+        protected sbyte flash_exposure_denominator;
+        public sbyte FlashExposureDenominator { get { return this.flash_exposure_denominator; } set { this.flash_exposure_denominator = value; } }
+
+        public FlashExposureBracketingEntry() : base("afbr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadInt8(out this.flash_exposure_numerator);
+            boxSize += stream.ReadInt8(out this.flash_exposure_denominator);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteInt8(this.flash_exposure_numerator);
+            boxSize += stream.WriteInt8(this.flash_exposure_denominator);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // flash_exposure_numerator
+            boxSize += 8; // flash_exposure_denominator
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AccessibilityTextProperty
+    extends ItemFullProperty('altt', version = 0, flags = 0) {
+        utf8string alt_text;
+        utf8string alt_lang;
+    }
+
+    */
+    public class AccessibilityTextProperty : ItemFullProperty
+    {
+        public const string TYPE = "altt";
+        public override string DisplayName { get { return "AccessibilityTextProperty"; } }
+
+        protected BinaryUTF8String alt_text;
+        public BinaryUTF8String AltText { get { return this.alt_text; } set { this.alt_text = value; } }
+
+        protected BinaryUTF8String alt_lang;
+        public BinaryUTF8String AltLang { get { return this.alt_lang; } set { this.alt_lang = value; } }
+
+        public AccessibilityTextProperty() : base("altt", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.alt_text);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.alt_lang);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteStringZeroTerminated(this.alt_text);
+            boxSize += stream.WriteStringZeroTerminated(this.alt_lang);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(alt_text); // alt_text
+            boxSize += IsoStream.CalculateStringSize(alt_lang); // alt_lang
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class CreationTimeProperty
+    extends ItemFullProperty('crtt', version = 0, flags = 0) {
+        unsigned int(64)  creation_time;
+    }
+
+    */
+    public class CreationTimeProperty : ItemFullProperty
+    {
+        public const string TYPE = "crtt";
+        public override string DisplayName { get { return "CreationTimeProperty"; } }
+
+        protected ulong creation_time;
+        public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
+
+        public CreationTimeProperty() : base("crtt", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt64(out this.creation_time);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt64(this.creation_time);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // creation_time
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class DepthOfFieldBracketingEntry
+    extends VisualSampleGroupEntry('dobr') {
+        int(8) f_stop_numerator;
+        int(8) f_stop_denominator;
+    }
+    */
+    public class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "dobr";
+        public override string DisplayName { get { return "DepthOfFieldBracketingEntry"; } }
+
+        protected sbyte f_stop_numerator;
+        public sbyte fStopNumerator { get { return this.f_stop_numerator; } set { this.f_stop_numerator = value; } }
+
+        protected sbyte f_stop_denominator;
+        public sbyte fStopDenominator { get { return this.f_stop_denominator; } set { this.f_stop_denominator = value; } }
+
+        public DepthOfFieldBracketingEntry() : base("dobr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadInt8(out this.f_stop_numerator);
+            boxSize += stream.ReadInt8(out this.f_stop_denominator);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteInt8(this.f_stop_numerator);
+            boxSize += stream.WriteInt8(this.f_stop_denominator);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // f_stop_numerator
+            boxSize += 8; // f_stop_denominator
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class FocusBracketingEntry
+    extends VisualSampleGroupEntry('fobr') {
+        unsigned int(16) focus_distance_numerator;
+        unsigned int(16) focus_distance_denominator;
+    }
+    */
+    public class FocusBracketingEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "fobr";
+        public override string DisplayName { get { return "FocusBracketingEntry"; } }
+
+        protected ushort focus_distance_numerator;
+        public ushort FocusDistanceNumerator { get { return this.focus_distance_numerator; } set { this.focus_distance_numerator = value; } }
+
+        protected ushort focus_distance_denominator;
+        public ushort FocusDistanceDenominator { get { return this.focus_distance_denominator; } set { this.focus_distance_denominator = value; } }
+
+        public FocusBracketingEntry() : base("fobr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.focus_distance_numerator);
+            boxSize += stream.ReadUInt16(out this.focus_distance_denominator);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.focus_distance_numerator);
+            boxSize += stream.WriteUInt16(this.focus_distance_denominator);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // focus_distance_numerator
+            boxSize += 16; // focus_distance_denominator
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ImageScaling
+    extends ItemFullProperty('iscl', version = 0, flags = 0) {
+        unsigned int(16) target_width_numerator;
+        unsigned int(16) target_width_denominator;
+        unsigned int(16) target_height_numerator;
+        unsigned int(16) target_height_denominator;
+    }
+    */
+    public class ImageScaling : ItemFullProperty
+    {
+        public const string TYPE = "iscl";
+        public override string DisplayName { get { return "ImageScaling"; } }
+
+        protected ushort target_width_numerator;
+        public ushort TargetWidthNumerator { get { return this.target_width_numerator; } set { this.target_width_numerator = value; } }
+
+        protected ushort target_width_denominator;
+        public ushort TargetWidthDenominator { get { return this.target_width_denominator; } set { this.target_width_denominator = value; } }
+
+        protected ushort target_height_numerator;
+        public ushort TargetHeightNumerator { get { return this.target_height_numerator; } set { this.target_height_numerator = value; } }
+
+        protected ushort target_height_denominator;
+        public ushort TargetHeightDenominator { get { return this.target_height_denominator; } set { this.target_height_denominator = value; } }
+
+        public ImageScaling() : base("iscl", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.target_width_numerator);
+            boxSize += stream.ReadUInt16(out this.target_width_denominator);
+            boxSize += stream.ReadUInt16(out this.target_height_numerator);
+            boxSize += stream.ReadUInt16(out this.target_height_denominator);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.target_width_numerator);
+            boxSize += stream.WriteUInt16(this.target_width_denominator);
+            boxSize += stream.WriteUInt16(this.target_height_numerator);
+            boxSize += stream.WriteUInt16(this.target_height_denominator);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // target_width_numerator
+            boxSize += 16; // target_width_denominator
+            boxSize += 16; // target_height_numerator
+            boxSize += 16; // target_height_denominator
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class ModificationTimeProperty
+    extends ItemFullProperty('mdft', version = 0, flags = 0) {
+        unsigned int(64)  modification_time;
+    }
+
+    */
+    public class ModificationTimeProperty : ItemFullProperty
+    {
+        public const string TYPE = "mdft";
+        public override string DisplayName { get { return "ModificationTimeProperty"; } }
+
+        protected ulong modification_time;
+        public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }
+
+        public ModificationTimeProperty() : base("mdft", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt64(out this.modification_time);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt64(this.modification_time);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 64; // modification_time
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PanoramaEntry
+    extends VisualSampleGroupEntry('pano') {
+        unsigned int(16) frame_number;
+    }
+
+    */
+    public class PanoramaEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "pano";
+        public override string DisplayName { get { return "PanoramaEntry"; } }
+
+        protected ushort frame_number;
+        public ushort FrameNumber { get { return this.frame_number; } set { this.frame_number = value; } }
+
+        public PanoramaEntry() : base("pano")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.frame_number);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.frame_number);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // frame_number
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class RequiredReferenceTypesProperty
+    extends ItemFullProperty('rref', version = 0, flags = 0){
+        unsigned int(8) reference_type_count;
+        for (i=0; i< reference_type_count; i++) {
+            unsigned int(32) reference_type[i];
+        }
+    }
+    */
+    public class RequiredReferenceTypesProperty : ItemFullProperty
+    {
+        public const string TYPE = "rref";
+        public override string DisplayName { get { return "RequiredReferenceTypesProperty"; } }
+
+        protected byte reference_type_count;
+        public byte ReferenceTypeCount { get { return this.reference_type_count; } set { this.reference_type_count = value; } }
+
+        protected uint[] reference_type;
+        public uint[] ReferenceType { get { return this.reference_type; } set { this.reference_type = value; } }
+
+        public RequiredReferenceTypesProperty() : base("rref", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.reference_type_count);
+
+            this.reference_type = new uint[reference_type_count];
+            for (int i = 0; i < reference_type_count; i++)
+            {
+                boxSize += stream.ReadUInt32(out this.reference_type[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.reference_type_count);
+
+            for (int i = 0; i < reference_type_count; i++)
+            {
+                boxSize += stream.WriteUInt32(this.reference_type[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // reference_type_count
+
+            for (int i = 0; i < reference_type_count; i++)
+            {
+                boxSize += 32; // reference_type
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class UserDescriptionProperty
+    extends ItemFullProperty('udes', version = 0, flags = 0){
+        utf8string lang;
+        utf8string name;
+        utf8string description;
+        utf8string tags;
+    }
+
+    */
+    public class UserDescriptionProperty : ItemFullProperty
+    {
+        public const string TYPE = "udes";
+        public override string DisplayName { get { return "UserDescriptionProperty"; } }
+
+        protected BinaryUTF8String lang;
+        public BinaryUTF8String Lang { get { return this.lang; } set { this.lang = value; } }
+
+        protected BinaryUTF8String name;
+        public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
+
+        protected BinaryUTF8String description;
+        public BinaryUTF8String Description { get { return this.description; } set { this.description = value; } }
+
+        protected BinaryUTF8String tags;
+        public BinaryUTF8String Tags { get { return this.tags; } set { this.tags = value; } }
+
+        public UserDescriptionProperty() : base("udes", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.lang);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.name);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.description);
+            boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.tags);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteStringZeroTerminated(this.lang);
+            boxSize += stream.WriteStringZeroTerminated(this.name);
+            boxSize += stream.WriteStringZeroTerminated(this.description);
+            boxSize += stream.WriteStringZeroTerminated(this.tags);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateStringSize(lang); // lang
+            boxSize += IsoStream.CalculateStringSize(name); // name
+            boxSize += IsoStream.CalculateStringSize(description); // description
+            boxSize += IsoStream.CalculateStringSize(tags); // tags
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class WhiteBalanceBracketingEntry
+    extends VisualSampleGroupEntry('wbbr') {
+        unsigned int(16) blue_amber;
+        int(8) green_magenta;
+    }
+    */
+    public class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "wbbr";
+        public override string DisplayName { get { return "WhiteBalanceBracketingEntry"; } }
+
+        protected ushort blue_amber;
+        public ushort BlueAmber { get { return this.blue_amber; } set { this.blue_amber = value; } }
+
+        protected sbyte green_magenta;
+        public sbyte GreenMagenta { get { return this.green_magenta; } set { this.green_magenta = value; } }
+
+        public WhiteBalanceBracketingEntry() : base("wbbr")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.blue_amber);
+            boxSize += stream.ReadInt8(out this.green_magenta);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.blue_amber);
+            boxSize += stream.WriteInt8(this.green_magenta);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // blue_amber
+            boxSize += 8; // green_magenta
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class WipeTransitionEffectProperty
+    extends ItemFullProperty('wipe', version=0, flags=0) {
+        unsigned int(8) transition_direction;
+    }
+    */
+    public class WipeTransitionEffectProperty : ItemFullProperty
+    {
+        public const string TYPE = "wipe";
+        public override string DisplayName { get { return "WipeTransitionEffectProperty"; } }
+
+        protected byte transition_direction;
+        public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
+
+        public WipeTransitionEffectProperty() : base("wipe", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.transition_direction);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.transition_direction);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // transition_direction
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ZoomTransitionEffectProperty
+    extends ItemFullProperty('zoom', version=0, flags=0) {
+        unsigned int(1) transition_direction; 
+        unsigned int(7) transition_shape;
+    }
+    */
+    public class ZoomTransitionEffectProperty : ItemFullProperty
+    {
+        public const string TYPE = "zoom";
+        public override string DisplayName { get { return "ZoomTransitionEffectProperty"; } }
+
+        protected bool transition_direction;
+        public bool TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
+
+        protected byte transition_shape;
+        public byte TransitionShape { get { return this.transition_shape; } set { this.transition_shape = value; } }
+
+        public ZoomTransitionEffectProperty() : base("zoom", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBit(out this.transition_direction);
+            boxSize += stream.ReadBits(7, out this.transition_shape);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBit(this.transition_direction);
+            boxSize += stream.WriteBits(7, this.transition_shape);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 1; // transition_direction
+            boxSize += 7; // transition_shape
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class FadeTransitionEffectProperty
+    extends ItemFullProperty('fade', version=0, flags=0) {
+        unsigned int(8) transition_direction;
+    }
+    */
+    public class FadeTransitionEffectProperty : ItemFullProperty
+    {
+        public const string TYPE = "fade";
+        public override string DisplayName { get { return "FadeTransitionEffectProperty"; } }
+
+        protected byte transition_direction;
+        public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
+
+        public FadeTransitionEffectProperty() : base("fade", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.transition_direction);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.transition_direction);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // transition_direction
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class SplitTransitionEffectProperty
+    extends ItemFullProperty('splt', version=0, flags=0) {
+        unsigned int(8) transition_direction;
+    }
+    */
+    public class SplitTransitionEffectProperty : ItemFullProperty
+    {
+        public const string TYPE = "splt";
+        public override string DisplayName { get { return "SplitTransitionEffectProperty"; } }
+
+        protected byte transition_direction;
+        public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
+
+        public SplitTransitionEffectProperty() : base("splt", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.transition_direction);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.transition_direction);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // transition_direction
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class SuggestedTransitionPeriodProperty
+    extends ItemFullProperty('stpe', version=0, flags=0) {
+        unsigned int(8) transition_period;
+    }
+    */
+    public class SuggestedTransitionPeriodProperty : ItemFullProperty
+    {
+        public const string TYPE = "stpe";
+        public override string DisplayName { get { return "SuggestedTransitionPeriodProperty"; } }
+
+        protected byte transition_period;
+        public byte TransitionPeriod { get { return this.transition_period; } set { this.transition_period = value; } }
+
+        public SuggestedTransitionPeriodProperty() : base("stpe", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.transition_period);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.transition_period);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // transition_period
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class SuggestedTimeDisplayDurationProperty
+    extends ItemFullProperty('ssld', version=0, flags=0) {
+        unsigned int(16) duration;
+    }
+    */
+    public class SuggestedTimeDisplayDurationProperty : ItemFullProperty
+    {
+        public const string TYPE = "ssld";
+        public override string DisplayName { get { return "SuggestedTimeDisplayDurationProperty"; } }
+
+        protected ushort duration;
+        public ushort Duration { get { return this.duration; } set { this.duration = value; } }
+
+        public SuggestedTimeDisplayDurationProperty() : base("ssld", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt16(out this.duration);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt16(this.duration);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // duration
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MaskConfigurationProperty
+    extends ItemFullProperty('mskC', version = 0, flags = 0){
+        unsigned int(8) bits_per_pixel;
+    }
+    */
+    public class MaskConfigurationProperty : ItemFullProperty
+    {
+        public const string TYPE = "mskC";
+        public override string DisplayName { get { return "MaskConfigurationProperty"; } }
+
+        protected byte bits_per_pixel;
+        public byte BitsPerPixel { get { return this.bits_per_pixel; } set { this.bits_per_pixel = value; } }
+
+        public MaskConfigurationProperty() : base("mskC", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.bits_per_pixel);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.bits_per_pixel);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // bits_per_pixel
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class VvcSubpicIDProperty
+    extends ItemFullProperty('spid', version = 0, flags = 0){
+        VvcSubpicIDEntry sid_info; // specified in ISO/IEC 14496-15
+    }
+    */
+    public class VvcSubpicIDProperty : ItemFullProperty
+    {
+        public const string TYPE = "spid";
+        public override string DisplayName { get { return "VvcSubpicIDProperty"; } }
+
+        protected VvcSubpicIDEntry sid_info;  //  specified in ISO/IEC 14496-15
+        public VvcSubpicIDEntry SidInfo { get { return this.sid_info; } set { this.sid_info = value; } }
+
+        public VvcSubpicIDProperty() : base("spid", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadEntry(boxSize, readSize, this, TYPE, out this.sid_info); // specified in ISO/IEC 14496-15
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteEntry(this.sid_info); // specified in ISO/IEC 14496-15
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateEntrySize(sid_info); // sid_info
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class VvcSubpicOrderProperty
+    extends ItemFullProperty('spor', version = 0, flags = 0){
+        VvcSubpicOrderEntry sor_info; // specified in ISO/IEC 14496-15
+    }
+    */
+    public class VvcSubpicOrderProperty : ItemFullProperty
+    {
+        public const string TYPE = "spor";
+        public override string DisplayName { get { return "VvcSubpicOrderProperty"; } }
+
+        protected VvcSubpicOrderEntry sor_info;  //  specified in ISO/IEC 14496-15
+        public VvcSubpicOrderEntry SorInfo { get { return this.sor_info; } set { this.sor_info = value; } }
+
+        public VvcSubpicOrderProperty() : base("spor", 0, 0)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadEntry(boxSize, readSize, this, TYPE, out this.sor_info); // specified in ISO/IEC 14496-15
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteEntry(this.sor_info); // specified in ISO/IEC 14496-15
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateEntrySize(sor_info); // sor_info
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class VisualEquivalenceEntry() extends VisualSampleGroupEntry ('eqiv')
+    {
+        signed int(16)   time_offset;
+        unsigned int(16) timescale_multiplier;
+    }
+    */
+    public class VisualEquivalenceEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "eqiv";
+        public override string DisplayName { get { return "VisualEquivalenceEntry"; } }
+
+        protected short time_offset;
+        public short TimeOffset { get { return this.time_offset; } set { this.time_offset = value; } }
+
+        protected ushort timescale_multiplier;
+        public ushort TimescaleMultiplier { get { return this.timescale_multiplier; } set { this.timescale_multiplier = value; } }
+
+        public VisualEquivalenceEntry() : base("eqiv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadInt16(out this.time_offset);
+            boxSize += stream.ReadUInt16(out this.timescale_multiplier);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteInt16(this.time_offset);
+            boxSize += stream.WriteUInt16(this.timescale_multiplier);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 16; // time_offset
+            boxSize += 16; // timescale_multiplier
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class DirectReferenceSamplesList()
+    extends VisualSampleGroupEntry ('refs') {
+        unsigned int(32) sample_id;
+        unsigned int(8) num_direct_reference_samples;
+        for(i = 0; i < num_direct_reference_samples; i++) {
+            unsigned int(32)direct_reference_sample_id;
+        }
+    }
+    */
+    public class DirectReferenceSamplesList : VisualSampleGroupEntry
+    {
+        public const string TYPE = "refs";
+        public override string DisplayName { get { return "DirectReferenceSamplesList"; } }
+
+        protected uint sample_id;
+        public uint SampleId { get { return this.sample_id; } set { this.sample_id = value; } }
+
+        protected byte num_direct_reference_samples;
+        public byte NumDirectReferenceSamples { get { return this.num_direct_reference_samples; } set { this.num_direct_reference_samples = value; } }
+
+        protected uint[] direct_reference_sample_id;
+        public uint[] DirectReferenceSampleId { get { return this.direct_reference_sample_id; } set { this.direct_reference_sample_id = value; } }
+
+        public DirectReferenceSamplesList() : base("refs")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt32(out this.sample_id);
+            boxSize += stream.ReadUInt8(out this.num_direct_reference_samples);
+
+            this.direct_reference_sample_id = new uint[num_direct_reference_samples];
+            for (int i = 0; i < num_direct_reference_samples; i++)
+            {
+                boxSize += stream.ReadUInt32(out this.direct_reference_sample_id[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt32(this.sample_id);
+            boxSize += stream.WriteUInt8(this.num_direct_reference_samples);
+
+            for (int i = 0; i < num_direct_reference_samples; i++)
+            {
+                boxSize += stream.WriteUInt32(this.direct_reference_sample_id[i]);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 32; // sample_id
+            boxSize += 8; // num_direct_reference_samples
+
+            for (int i = 0; i < num_direct_reference_samples; i++)
+            {
+                boxSize += 32; // direct_reference_sample_id
             }
             return boxSize;
         }
@@ -52599,6 +51868,737 @@ namespace SharpMP4
             boxSize += 16; // unknown1
             boxSize += 16; // count
             boxSize += (ulong)count * 8; // version
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1SampleEntry
+    extends VisualSampleEntry('av01')
+    {
+      AV1CodecConfigurationBox config;
+    }
+
+    */
+    public class AV1SampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "av01";
+        public override string DisplayName { get { return "AV1SampleEntry"; } }
+        public AV1CodecConfigurationBox Config { get { return this.children.OfType<AV1CodecConfigurationBox>().FirstOrDefault(); } }
+
+        public AV1SampleEntry() : base("av01")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1CodecConfigurationBox
+    extends Box('av1C')
+    {
+      AV1CodecConfigurationRecord av1Config;
+    }
+
+    */
+    public class AV1CodecConfigurationBox : Box
+    {
+        public const string TYPE = "av1C";
+        public override string DisplayName { get { return "AV1CodecConfigurationBox"; } }
+
+        protected AV1CodecConfigurationRecord av1Config;
+        public AV1CodecConfigurationRecord Av1Config { get { return this.av1Config; } set { this.av1Config = value; } }
+
+        public AV1CodecConfigurationBox() : base("av1C")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadClass(boxSize, readSize, this, new AV1CodecConfigurationRecord(), out this.av1Config);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteClass(this.av1Config);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += IsoStream.CalculateClassSize(av1Config); // av1Config
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class AV1CodecConfigurationRecord
+    {
+      unsigned int(1) marker = 1;
+      unsigned int(7) version = 1;
+      unsigned int(3) seq_profile;
+      unsigned int(5) seq_level_idx_0;
+      unsigned int(1) seq_tier_0;
+      unsigned int(1) high_bitdepth;
+      unsigned int(1) twelve_bit;
+      unsigned int(1) monochrome;
+      unsigned int(1) chroma_subsampling_x;
+      unsigned int(1) chroma_subsampling_y;
+      unsigned int(2) chroma_sample_position;
+      unsigned int(3) reserved = 0;
+
+      unsigned int(1) initial_presentation_delay_present;
+      if(initial_presentation_delay_present) {
+        unsigned int(4) initial_presentation_delay_minus_one;
+      } else {
+        unsigned int(4) reserved = 0;
+      }
+
+      unsigned int(8) configOBUs[];
+    }
+
+    */
+    public class AV1CodecConfigurationRecord : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "AV1CodecConfigurationRecord"; } }
+
+        protected bool marker = true;
+        public bool Marker { get { return this.marker; } set { this.marker = value; } }
+
+        protected byte version = 1;
+        public byte Version { get { return this.version; } set { this.version = value; } }
+
+        protected byte seq_profile;
+        public byte SeqProfile { get { return this.seq_profile; } set { this.seq_profile = value; } }
+
+        protected byte seq_level_idx_0;
+        public byte SeqLevelIdx0 { get { return this.seq_level_idx_0; } set { this.seq_level_idx_0 = value; } }
+
+        protected bool seq_tier_0;
+        public bool SeqTier0 { get { return this.seq_tier_0; } set { this.seq_tier_0 = value; } }
+
+        protected bool high_bitdepth;
+        public bool HighBitdepth { get { return this.high_bitdepth; } set { this.high_bitdepth = value; } }
+
+        protected bool twelve_bit;
+        public bool TwelveBit { get { return this.twelve_bit; } set { this.twelve_bit = value; } }
+
+        protected bool monochrome;
+        public bool Monochrome { get { return this.monochrome; } set { this.monochrome = value; } }
+
+        protected bool chroma_subsampling_x;
+        public bool ChromaSubsamplingx { get { return this.chroma_subsampling_x; } set { this.chroma_subsampling_x = value; } }
+
+        protected bool chroma_subsampling_y;
+        public bool ChromaSubsamplingy { get { return this.chroma_subsampling_y; } set { this.chroma_subsampling_y = value; } }
+
+        protected byte chroma_sample_position;
+        public byte ChromaSamplePosition { get { return this.chroma_sample_position; } set { this.chroma_sample_position = value; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool initial_presentation_delay_present;
+        public bool InitialPresentationDelayPresent { get { return this.initial_presentation_delay_present; } set { this.initial_presentation_delay_present = value; } }
+
+        protected byte initial_presentation_delay_minus_one;
+        public byte InitialPresentationDelayMinusOne { get { return this.initial_presentation_delay_minus_one; } set { this.initial_presentation_delay_minus_one = value; } }
+
+        protected byte reserved0 = 0;
+        public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+        protected byte[] configOBUs;
+        public byte[] ConfigOBUs { get { return this.configOBUs; } set { this.configOBUs = value; } }
+
+        public AV1CodecConfigurationRecord() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadBit(out this.marker);
+            boxSize += stream.ReadBits(7, out this.version);
+            boxSize += stream.ReadBits(3, out this.seq_profile);
+            boxSize += stream.ReadBits(5, out this.seq_level_idx_0);
+            boxSize += stream.ReadBit(out this.seq_tier_0);
+            boxSize += stream.ReadBit(out this.high_bitdepth);
+            boxSize += stream.ReadBit(out this.twelve_bit);
+            boxSize += stream.ReadBit(out this.monochrome);
+            boxSize += stream.ReadBit(out this.chroma_subsampling_x);
+            boxSize += stream.ReadBit(out this.chroma_subsampling_y);
+            boxSize += stream.ReadBits(2, out this.chroma_sample_position);
+            boxSize += stream.ReadBits(3, out this.reserved);
+            boxSize += stream.ReadBit(out this.initial_presentation_delay_present);
+
+            if (initial_presentation_delay_present)
+            {
+                boxSize += stream.ReadBits(4, out this.initial_presentation_delay_minus_one);
+            }
+
+            else
+            {
+                boxSize += stream.ReadBits(4, out this.reserved0);
+            }
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.configOBUs);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteBit(this.marker);
+            boxSize += stream.WriteBits(7, this.version);
+            boxSize += stream.WriteBits(3, this.seq_profile);
+            boxSize += stream.WriteBits(5, this.seq_level_idx_0);
+            boxSize += stream.WriteBit(this.seq_tier_0);
+            boxSize += stream.WriteBit(this.high_bitdepth);
+            boxSize += stream.WriteBit(this.twelve_bit);
+            boxSize += stream.WriteBit(this.monochrome);
+            boxSize += stream.WriteBit(this.chroma_subsampling_x);
+            boxSize += stream.WriteBit(this.chroma_subsampling_y);
+            boxSize += stream.WriteBits(2, this.chroma_sample_position);
+            boxSize += stream.WriteBits(3, this.reserved);
+            boxSize += stream.WriteBit(this.initial_presentation_delay_present);
+
+            if (initial_presentation_delay_present)
+            {
+                boxSize += stream.WriteBits(4, this.initial_presentation_delay_minus_one);
+            }
+
+            else
+            {
+                boxSize += stream.WriteBits(4, this.reserved0);
+            }
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.configOBUs);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 1; // marker
+            boxSize += 7; // version
+            boxSize += 3; // seq_profile
+            boxSize += 5; // seq_level_idx_0
+            boxSize += 1; // seq_tier_0
+            boxSize += 1; // high_bitdepth
+            boxSize += 1; // twelve_bit
+            boxSize += 1; // monochrome
+            boxSize += 1; // chroma_subsampling_x
+            boxSize += 1; // chroma_subsampling_y
+            boxSize += 2; // chroma_sample_position
+            boxSize += 3; // reserved
+            boxSize += 1; // initial_presentation_delay_present
+
+            if (initial_presentation_delay_present)
+            {
+                boxSize += 4; // initial_presentation_delay_minus_one
+            }
+
+            else
+            {
+                boxSize += 4; // reserved0
+            }
+            boxSize += (ulong)configOBUs.Length * 8; // configOBUs
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1ForwardKeyFrameSampleGroupEntry
+    extends VisualSampleGroupEntry('av1f')
+    {
+      unsigned int(8) fwd_distance;
+    }
+
+    */
+    public class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "av1f";
+        public override string DisplayName { get { return "AV1ForwardKeyFrameSampleGroupEntry"; } }
+
+        protected byte fwd_distance;
+        public byte FwdDistance { get { return this.fwd_distance; } set { this.fwd_distance = value; } }
+
+        public AV1ForwardKeyFrameSampleGroupEntry() : base("av1f")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.fwd_distance);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.fwd_distance);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // fwd_distance
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1SwitchFrameSampleGroupEntry
+    extends VisualSampleGroupEntry('av1s')
+    {
+    }
+
+    */
+    public class AV1SwitchFrameSampleGroupEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "av1s";
+        public override string DisplayName { get { return "AV1SwitchFrameSampleGroupEntry"; } }
+
+        public AV1SwitchFrameSampleGroupEntry() : base("av1s")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1MetadataSampleGroupEntry
+    extends VisualSampleGroupEntry('av1M')
+    {
+    }
+
+    */
+    public class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
+    {
+        public const string TYPE = "av1M";
+        public override string DisplayName { get { return "AV1MetadataSampleGroupEntry"; } }
+
+        public AV1MetadataSampleGroupEntry() : base("av1M")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class OperatingPointSelectorProperty extends ItemProperty('a1op') {
+        unsigned int(8) op_index;
+    }
+
+    */
+    public class OperatingPointSelectorProperty : ItemProperty
+    {
+        public const string TYPE = "a1op";
+        public override string DisplayName { get { return "OperatingPointSelectorProperty"; } }
+
+        protected byte op_index;
+        public byte OpIndex { get { return this.op_index; } set { this.op_index = value; } }
+
+        public OperatingPointSelectorProperty() : base("a1op")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.op_index);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.op_index);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // op_index
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1LayeredImageIndexingProperty extends ItemProperty('a1lx') {
+        unsigned int(7) reserved = 0;
+        unsigned int(1) large_size;
+        if(large_size) {
+           unsigned int(32) layer_size[3];
+        }
+        else {
+           unsigned int(16) layer_size[3];
+        }
+    }
+    */
+    public class AV1LayeredImageIndexingProperty : ItemProperty
+    {
+        public const string TYPE = "a1lx";
+        public override string DisplayName { get { return "AV1LayeredImageIndexingProperty"; } }
+
+        protected byte reserved = 0;
+        public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+        protected bool large_size;
+        public bool LargeSize { get { return this.large_size; } set { this.large_size = value; } }
+
+        protected uint[] layer_size;
+        public uint[] LayerSize { get { return this.layer_size; } set { this.layer_size = value; } }
+
+        public AV1LayeredImageIndexingProperty() : base("a1lx")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadBits(7, out this.reserved);
+            boxSize += stream.ReadBit(out this.large_size);
+
+            if (large_size)
+            {
+                boxSize += stream.ReadUInt32Array(3, out this.layer_size);
+            }
+
+            else
+            {
+                boxSize += stream.ReadUInt16Array(3, out this.layer_size);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteBits(7, this.reserved);
+            boxSize += stream.WriteBit(this.large_size);
+
+            if (large_size)
+            {
+                boxSize += stream.WriteUInt32Array(3, this.layer_size);
+            }
+
+            else
+            {
+                boxSize += stream.WriteUInt16Array(3, this.layer_size);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 7; // reserved
+            boxSize += 1; // large_size
+
+            if (large_size)
+            {
+                boxSize += 3 * 32; // layer_size
+            }
+
+            else
+            {
+                boxSize += 3 * 16; // layer_size
+            }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class OpusSampleEntry() extends AudioSampleEntry ('Opus'){
+     OpusSpecificBox();
+     }
+    */
+    public class OpusSampleEntry : AudioSampleEntry
+    {
+        public const string TYPE = "Opus";
+        public override string DisplayName { get { return "OpusSampleEntry"; } }
+        public OpusSpecificBox _OpusSpecificBox { get { return this.children.OfType<OpusSpecificBox>().FirstOrDefault(); } }
+
+        public OpusSampleEntry() : base("Opus")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.OpusSpecificBox); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.OpusSpecificBox); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(OpusSpecificBox); // OpusSpecificBox
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class ChannelMappingTable (unsigned int(8) OutputChannelCount){
+     unsigned int(8) StreamCount;
+     unsigned int(8) CoupledCount;
+     unsigned int(8 * OutputChannelCount) ChannelMapping;
+     }
+
+
+    */
+    public class ChannelMappingTable : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "ChannelMappingTable"; } }
+
+        protected byte StreamCount;
+        public byte _StreamCount { get { return this.StreamCount; } set { this.StreamCount = value; } }
+
+        protected byte CoupledCount;
+        public byte _CoupledCount { get { return this.CoupledCount; } set { this.CoupledCount = value; } }
+
+        protected byte[] ChannelMapping;
+        public byte[] _ChannelMapping { get { return this.ChannelMapping; } set { this.ChannelMapping = value; } }
+
+        protected byte OutputChannelCount;
+        public byte _OutputChannelCount { get { return this.OutputChannelCount; } set { this.OutputChannelCount = value; } }
+
+        public ChannelMappingTable(byte OutputChannelCount) : base()
+        {
+            this.OutputChannelCount = OutputChannelCount;
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt8(out this.StreamCount);
+            boxSize += stream.ReadUInt8(out this.CoupledCount);
+            boxSize += stream.ReadUInt8Array((uint)OutputChannelCount, out this.ChannelMapping);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt8(this.StreamCount);
+            boxSize += stream.WriteUInt8(this.CoupledCount);
+            boxSize += stream.WriteUInt8Array((uint)OutputChannelCount, this.ChannelMapping);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 8; // StreamCount
+            boxSize += 8; // CoupledCount
+            boxSize += (ulong)(OutputChannelCount * 8); // ChannelMapping
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class OpusSpecificBox extends Box('dOps'){
+     unsigned int(8) Version;
+     unsigned int(8) OutputChannelCount;
+     unsigned int(16) PreSkip;
+     unsigned int(32) InputSampleRate;
+     signed int(16) OutputGain;
+     unsigned int(8) ChannelMappingFamily;
+     if (ChannelMappingFamily != 0) {
+     ChannelMappingTable(OutputChannelCount);
+     }
+     }
+    */
+    public class OpusSpecificBox : Box
+    {
+        public const string TYPE = "dOps";
+        public override string DisplayName { get { return "OpusSpecificBox"; } }
+
+        protected byte Version;
+        public byte _Version { get { return this.Version; } set { this.Version = value; } }
+
+        protected byte OutputChannelCount;
+        public byte _OutputChannelCount { get { return this.OutputChannelCount; } set { this.OutputChannelCount = value; } }
+
+        protected ushort PreSkip;
+        public ushort _PreSkip { get { return this.PreSkip; } set { this.PreSkip = value; } }
+
+        protected uint InputSampleRate;
+        public uint _InputSampleRate { get { return this.InputSampleRate; } set { this.InputSampleRate = value; } }
+
+        protected short OutputGain;
+        public short _OutputGain { get { return this.OutputGain; } set { this.OutputGain = value; } }
+
+        protected byte ChannelMappingFamily;
+        public byte _ChannelMappingFamily { get { return this.ChannelMappingFamily; } set { this.ChannelMappingFamily = value; } }
+
+        protected ChannelMappingTable ChannelMappingTable;
+        public ChannelMappingTable _ChannelMappingTable { get { return this.ChannelMappingTable; } set { this.ChannelMappingTable = value; } }
+
+        public OpusSpecificBox() : base("dOps")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8(out this.Version);
+            boxSize += stream.ReadUInt8(out this.OutputChannelCount);
+            boxSize += stream.ReadUInt16(out this.PreSkip);
+            boxSize += stream.ReadUInt32(out this.InputSampleRate);
+            boxSize += stream.ReadInt16(out this.OutputGain);
+            boxSize += stream.ReadUInt8(out this.ChannelMappingFamily);
+
+            if (ChannelMappingFamily != 0)
+            {
+                boxSize += stream.ReadClass(boxSize, readSize, this, new ChannelMappingTable(_OutputChannelCount), out this.ChannelMappingTable);
+            }
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8(this.Version);
+            boxSize += stream.WriteUInt8(this.OutputChannelCount);
+            boxSize += stream.WriteUInt16(this.PreSkip);
+            boxSize += stream.WriteUInt32(this.InputSampleRate);
+            boxSize += stream.WriteInt16(this.OutputGain);
+            boxSize += stream.WriteUInt8(this.ChannelMappingFamily);
+
+            if (ChannelMappingFamily != 0)
+            {
+                boxSize += stream.WriteClass(this.ChannelMappingTable);
+            }
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += 8; // Version
+            boxSize += 8; // OutputChannelCount
+            boxSize += 16; // PreSkip
+            boxSize += 32; // InputSampleRate
+            boxSize += 16; // OutputGain
+            boxSize += 8; // ChannelMappingFamily
+
+            if (ChannelMappingFamily != 0)
+            {
+                boxSize += IsoStream.CalculateClassSize(ChannelMappingTable); // ChannelMappingTable
+            }
             return boxSize;
         }
     }
