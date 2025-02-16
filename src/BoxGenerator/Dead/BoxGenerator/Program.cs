@@ -660,8 +660,8 @@ namespace SharpMP4
             else
             {
                 // try to resolve the conflict using the type size
-                string type1 = GetCalculateSizeMethod(GetFieldType(field));
-                string type2 = GetCalculateSizeMethod(GetFieldType(ret[name]));
+                string type1 = GetCalculateSizeMethod(field);
+                string type2 = GetCalculateSizeMethod(ret[name]);
                 int type1Size;
                 if (int.TryParse(type1, out type1Size))
                 {
@@ -1507,7 +1507,7 @@ namespace SharpMP4
         }
 
         string name = GetFieldName(field);
-        string m = methodType == MethodType.Read ? GetReadMethod(tt) : (methodType == MethodType.Write ? GetWriteMethod(tt) : GetCalculateSizeMethod(tt));
+        string m = methodType == MethodType.Read ? GetReadMethod(tt) : (methodType == MethodType.Write ? GetWriteMethod(tt) : GetCalculateSizeMethod(field as PseudoField));
         string typedef = "";
         typedef = GetFieldTypeDef(field);
 
@@ -2725,8 +2725,12 @@ namespace SharpMP4
             throw new NotSupportedException(type);
     }
 
-    private static string GetCalculateSizeMethod(string type)
+    private static string GetCalculateSizeMethod(PseudoField field)
     {
+        
+
+
+        string type = GetFieldType(field);
         Dictionary<string, string> map = new Dictionary<string, string>
         {
             { "unsigned int(64)[ entry_count ]",        "(ulong)entry_count * 64" },
@@ -3160,31 +3164,52 @@ namespace SharpMP4
     {
         var fieldType = field.Type;
 
-        bool isNumber = false;
-        bool isFloatningPoint = false;
-        bool isString = false;
-        bool isSigned = false;
-        int arrayDimensions = 0;
-        int fieldSize = 0;
+        bool isNumber, isFloatningPoint, isString, isSigned;
+        int arrayDimensions, fieldSize;
+        var info = GetTypeInfo(field);
+
+        string csharpType = GetCSharpType(info);
+        return csharpType;
+    }
+
+    public class FieldTypeInfo
+    {
+        public bool IsNumber { get; set; }
+        public bool IsFloatingPoint { get; set; }
+        public bool IsString { get; set; }
+        public bool IsSigned { get; set; }
+        public int ArrayDimensions { get; set; }
+        public int FieldSize { get; set; }
+        public string TypeName { get; set; }
+        public string FieldArray { get; set; }
+    }
+
+    private static FieldTypeInfo GetTypeInfo(PseudoField field)
+    {
+        PseudoType fieldType = field.Type;
+        FieldTypeInfo info = new FieldTypeInfo();
+
+        info.TypeName = fieldType.Type;
+        info.FieldArray = field.FieldArray;
 
         switch (fieldType.Type)
         {
             case "int":
-                fieldSize = 32; // assume standard int size
-                isNumber = true;
-                isSigned = true;
+                info.FieldSize = 32; // assume standard int size
+                info.IsNumber = true;
+                info.IsSigned = true;
                 break;
-            
+
             case "uint":
             case "uimsbf":
-                isNumber = true;
-                isSigned = false;
+                info.IsNumber = true;
+                info.IsSigned = false;
                 break;
 
             case "bit":
-                fieldSize = 1;
-                isNumber = true;
-                isSigned = false;
+                info.FieldSize = 1;
+                info.IsNumber = true;
+                info.IsSigned = false;
                 break;
 
             case "char":
@@ -3192,17 +3217,17 @@ namespace SharpMP4
             case "bslbf":
             case "vluimsbf8":
             case "byte_alignment":
-                fieldSize = 8;
-                isNumber = true;
-                isSigned = false;
+                info.FieldSize = 8;
+                info.IsNumber = true;
+                info.IsSigned = false;
                 break;
 
             case "double":
             case "fixedpoint1616":
-                fieldSize = 32;
-                isFloatningPoint = true;
-                isNumber = true;
-                isSigned = true;
+                info.FieldSize = 32;
+                info.IsFloatingPoint = true;
+                info.IsNumber = true;
+                info.IsSigned = true;
                 break;
 
             case "base64string":
@@ -3211,7 +3236,7 @@ namespace SharpMP4
             case "utfstring":
             case "utf8list":
             case "string":
-                isString = true;
+                info.IsString = true;
                 break;
 
             default:
@@ -3219,15 +3244,18 @@ namespace SharpMP4
                 break;
         }
 
-        switch(fieldType.Sign)
+        if (info.IsNumber)
         {
-            case "unsigned":
-                isSigned = false;
-                break;
+            switch (fieldType.Sign)
+            {
+                case "unsigned":
+                    info.IsSigned = false;
+                    break;
 
-            case "signed":
-                isSigned = true;
-                break;
+                case "signed":
+                    info.IsSigned = true;
+                    break;
+            }
         }
 
         if (!string.IsNullOrEmpty(field.FieldArray))
@@ -3238,7 +3266,7 @@ namespace SharpMP4
                 if (field.FieldArray[i] == '[')
                 {
                     if (level == 0)
-                        arrayDimensions++;
+                        info.ArrayDimensions++;
 
                     level++;
                 }
@@ -3250,41 +3278,53 @@ namespace SharpMP4
         }
 
         // size
-        if(isNumber && !string.IsNullOrEmpty(fieldType.Param))
+        if (info.IsNumber && !string.IsNullOrEmpty(fieldType.Param))
         {
             string innerParam = fieldType.Param.Substring(1, fieldType.Param.Length - 2);
-            if(innerParam.Length > 0)
+            if (innerParam.Length > 0)
             {
+                int fieldSize;
                 if (!int.TryParse(innerParam, out fieldSize))
                 {
                     // not a number
                     //Debug.WriteLine($"GetType - number: {fieldType.Type} {innerParam}");
                     fieldSize = -1; // we cannot determine the size, we'll use byte[]
                 }
+                info.FieldSize = fieldSize;
             }
         }
 
-        if (isNumber && fieldSize == 0)
+        // workaround: Iso639
+        if (info.TypeName == "int" && !info.IsSigned && info.ArrayDimensions == 1 && info.FieldSize == 5 && info.FieldArray == "[3]")
+        {
+            info.IsString = false;
+            info.IsNumber = false;
+            info.ArrayDimensions = 0;
+            info.FieldArray = "";
+            info.TypeName = "string";
+        }
+
+        if (info.IsNumber && info.FieldSize == 0)
             throw new NotSupportedException($"{fieldType.Type} is unknown");
 
-        string csharpType = GetCSharpType(fieldType.Type, field.FieldArray, isNumber, isFloatningPoint, isString, isSigned, arrayDimensions, fieldSize);
-        return csharpType;
+        return info;
     }
 
-    private static string GetCSharpType(string type, string fieldArray, bool isNumber, bool isFloatingPoint, bool isString, bool isSigned, int arrayDimensions, int fieldSize)
+    private static string GetCSharpType(FieldTypeInfo info)
     {
         string t = "";
-        if (isNumber)
+        int arrayDimensions = info.ArrayDimensions;
+        if (info.IsNumber)
         {
-            if (!isFloatingPoint)
+            if (!info.IsFloatingPoint)
             {
-                if (fieldSize == 1)
+                if (info.FieldSize == 1)
                 {
                     t = "bool";
                 }
-                else if (fieldSize > 1 && fieldSize <= 8)
+                else if (info.FieldSize > 1 && info.FieldSize <= 8)
                 {
-                    if (isSigned)
+                    if (info.IsSigned)
                     {
                         t = "sbyte";
                     }
@@ -3293,9 +3333,9 @@ namespace SharpMP4
                         t = "byte";
                     }
                 }
-                else if (fieldSize > 8 && fieldSize <= 16)
+                else if (info.FieldSize > 8 && info.FieldSize <= 16)
                 {
-                    if (isSigned)
+                    if (info.IsSigned)
                     {
                         t = "short";
                     }
@@ -3304,9 +3344,9 @@ namespace SharpMP4
                         t = "ushort";
                     }
                 }
-                else if (fieldSize > 16 && fieldSize <= 32)
+                else if (info.FieldSize > 16 && info.FieldSize <= 32)
                 {
-                    if (isSigned)
+                    if (info.IsSigned)
                     {
                         t = "int";
                     }
@@ -3315,9 +3355,9 @@ namespace SharpMP4
                         t = "uint";
                     }
                 }
-                else if (fieldSize > 32 && fieldSize <= 64)
+                else if (info.FieldSize > 32 && info.FieldSize <= 64)
                 {
-                    if (isSigned)
+                    if (info.IsSigned)
                     {
                         t = "long";
                     }
@@ -3326,39 +3366,31 @@ namespace SharpMP4
                         t = "ulong";
                     }
                 }
-                else if (fieldSize == -1)
+                else if (info.FieldSize == -1)
                 {
                     t = "byte";
-
                     arrayDimensions++;
-                }
-
-                // workaround: Iso639
-                if (type == "int" && !isSigned && arrayDimensions == 1 && fieldSize == 5 && fieldArray == "[3]")
-                {
-                    t = "string";
-                    arrayDimensions = 0;
                 }
             }
             else
             {
-                if(fieldSize == 32)
+                if(info.FieldSize == 32)
                 {
                     t = "double";
                 }
                 else
                 {
-                    throw new NotSupportedException($"{type} is unknown");
+                    throw new NotSupportedException($"{info.TypeName} is unknown");
                 }
             }
         }
-        else if(isString)
+        else if(info.IsString)
         {
             t = "BinaryUTF8String";
         }
         else
         {
-            t = type;
+            t = info.TypeName;
         }
 
         for (int i = 0; i < arrayDimensions; i++)
