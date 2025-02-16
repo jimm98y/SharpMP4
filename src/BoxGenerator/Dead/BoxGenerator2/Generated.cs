@@ -199,6 +199,7 @@ namespace SharpMP4
                 case "exte": return new MetaDataExtensionsBox();
                 case "fade": return new FadeTransitionEffectProperty();
                 case "fall": return new FallBox();
+                case "fdp ": return new FDHintSampleEntry();
                 case "fecr": return new FECReservoirBox();
                 case "fiel": return new FielBox();
                 case "fiin": return new FDItemInformationBox();
@@ -307,10 +308,13 @@ namespace SharpMP4
                 case "mdri": return new OMAMutableDRMBox();
                 case "mdta": return new MdtaBox();
                 case "mean": return new ITunesMetadataMeanBox();
+                case "mebx": return new BoxedMetaDataSampleEntry();
                 case "meco": return new AdditionalMetadataContainerBox();
                 case "mehd": return new MovieExtendsHeaderBox();
                 case "mere": return new MetaBoxRelationBox();
                 case "meta": return new MetaBox();
+                case "mett": return new TextMetaDataSampleEntry();
+                case "metx": return new XMLMetaDataSampleEntry();
                 case "mfhd": return new MovieFragmentHeaderBox();
                 case "mfra": return new MovieFragmentRandomAccessBox();
                 case "mfro": return new MovieFragmentRandomAccessOffsetBox();
@@ -345,8 +349,8 @@ namespace SharpMP4
                 case "name": return new AppleName2Box(); // TODO: box is ambiguous in between AppleName2Box and FairPlayUserNameBox
                 case "NCTG": return new NikonExifBox();
                 case "nmhd": return new NullMediaHeaderBox();
-                case "npck": return new hintPacketsSentNpck();
-                case "nump": return new hintPacketsSentNump();
+                case "npck": return new hintPacketsSent_npck(); // TODO: fix duplicate
+                case "nump": return new hintPacketsSent();
                 case "odaf": return new OMAAccessUnitFormatBox();
                 case "odda": return new OMAContentObjectBox();
                 case "odhe": return new OMADiscreteMediaHeadersBox();
@@ -371,6 +375,7 @@ namespace SharpMP4
                 case "pgap": return new ApplePlayGapBox();
                 case "pitm": return new PrimaryItemBox();
                 case "pixi": return new PixelInformationProperty();
+                case "pm2t": return new ProtectedMPEG2TransportStreamSampleEntry();
                 case "pmax": return new hintlargestpacket();
                 case "prft": return new ProducerReferenceTimeBox();
                 case "priv": return new FairPlayPrivateKeyBox();
@@ -386,14 +391,17 @@ namespace SharpMP4
                 case "resv": if (parent == "stsd") return new VisualSampleEntry("resv"); break;
                 case "rinf": return new RestrictedSchemeInfoBox();
                 case "rloc": return new RelativeLocationProperty();
+                case "rm2t": return new MPEG2TSReceptionSampleEntry();
                 case "rmda": return new AppleReferenceMovieDescriptorBox();
                 case "rmdr": return new AppleDataRateBox();
                 case "rmra": return new AppleReferenceMovieBox();
                 case "rref": return new RequiredReferenceTypesProperty();
                 case "rrgn": return new RectRegionBox();
+                case "rrtp": return new ReceivedRtpHintSampleEntry();
+                case "rsrp": return new ReceivedSrtpHintSampleEntry();
                 case "rssr": return new ReceivedSsrcBox();
                 case "rtng": return new AppleRatingBox();
-                case "rtp ": return new rtpmoviehintinformation();
+                case "rtp ": return new rtpmoviehintinformation(); // TODO: box is ambiguous in between rtpmoviehintinformation and RtpHintSampleEntry
                 case "s263": if (parent == "stsd") return new VisualSampleEntry("s263"); break;
                 case "saio": return new SampleAuxiliaryInformationOffsetsBox();
                 case "saiz": return new SampleAuxiliaryInformationSizesBox();
@@ -420,6 +428,7 @@ namespace SharpMP4
                 case "sidx": return new SegmentIndexBox(); // TODO: box is ambiguous in between SegmentIndexBox and CompressedSegmentIndexBox
                 case "sinf": return new ProtectionSchemeInfoBox();
                 case "skip": return new FreeSpaceBox_skip(); // TODO: fix duplicate
+                case "sm2t": return new MPEG2TSServerSampleEntry();
                 case "SmDm": return new SMPTE2086MasteringDisplayMetadataBox();
                 case "smhd": return new SoundMediaHeaderBox();
                 case "SMI ": return new SMIBox();
@@ -439,6 +448,7 @@ namespace SharpMP4
                 case "sqcp": if (parent == "stsd") return new AudioSampleEntry("sqcp"); break;
                 case "srat": return new SamplingRateBox();
                 case "srpp": return new SRTPProcessBox();
+                case "srtp": return new SrtpHintSampleEntry();
                 case "ssix": return new CompressedSubsegmentIndexBox();
                 case "ssld": return new SuggestedTimeDisplayDurationProperty();
                 case "ssmv": if (parent == "stsd") return new AudioSampleEntry("ssmv"); break;
@@ -473,6 +483,7 @@ namespace SharpMP4
                 case "svc1": if (parent == "stsd") return new VisualSampleEntry("svc1"); break;
                 case "svc2": if (parent == "stsd") return new VisualSampleEntry("svc2"); break;
                 case "svcC": return new SVCConfigurationBox();
+                case "svcM": return new SVCMetaDataSampleEntry();
                 case "svcP": return new SVCPriorityAssignmentBox();
                 case "svdr": return new SVCDependencyRangeBox();
                 case "svip": return new InitialParameterSetBox();
@@ -480,7 +491,7 @@ namespace SharpMP4
                 case "svpr": return new PriorityRangeBox();
                 case "SVQ3": return new SVQ3Box();
                 case "swtc": return new MultiviewGroupRelationBox();
-                case "swtk": return new SwitchableTracks();
+                case "swtk": return new SwitchableTracksGroupBox();
                 case "sync": return new SyncBox();
                 case "tags": return new NeroMetadataTagsBox();
                 case "tapt": return new AppleTrackApertureBox();
@@ -501,9 +512,9 @@ namespace SharpMP4
                 case "tmin": return new hintminrelativetime();
                 case "tmpo": return new AppleBeatsPerMinuteBox();
                 case "tols": return new TargetOlsProperty();
-                case "totl": return new hintBytesSentTotl();
-                case "tpay": return new hintBytesSentTpay();
-                case "tpyl": return new hintBytesSentTpyl();
+                case "totl": return new hintBytesSent_totl(); // TODO: fix duplicate
+                case "tpay": return new hintBytesSent_tpay(); // TODO: fix duplicate
+                case "tpyl": return new hintBytesSent_tpyl(); // TODO: fix duplicate
                 case "traf": return new TrackFragmentBox();
                 case "trak": return new TrackBox();
                 case "tran": return new TranscodingInfoBox();
@@ -513,7 +524,7 @@ namespace SharpMP4
                 case "trgr": return new TrackGroupBox();
                 case "trik": return new TrickPlayBox();
                 case "trkn": return new TrackNumberBox();
-                case "trpy": return new hintBytesSentTrpy();
+                case "trpy": return new hintBytesSent();
                 case "trun": return new TrackRunBox();
                 case "tsel": return new TrackSelectionBox();
                 case "tsro": return new timeoffset();
@@ -534,6 +545,7 @@ namespace SharpMP4
                 case "ulaw": return new UlawBox();
                 case "uri ": return new URIBox();
                 case "uriI": return new URIInitBox();
+                case "urim": return new URIMetaSampleEntry();
                 case "url ": return new DataEntryUrlBox();
                 case "urn ": return new DataEntryUrnBox();
                 case "user": return new FairPlayUserIDBox();
@@ -560,6 +572,7 @@ namespace SharpMP4
                 case "vsib": return new ViewScalabilityInformationSEIBox();
                 case "vttC": return new WebVTTConfigurationBox();
                 case "vvc1": if (parent == "stsd") return new VisualSampleEntry("vvc1"); break;
+                case "vvcb": return new EntityToGroupBox_vvcb(); // TODO: fix duplicate
                 case "vvcC": return new VvcConfigurationBox();
                 case "vvcN": if (parent == "stsd") return new VisualSampleEntry("vvcN"); break;
                 case "vvi1": if (parent == "stsd") return new VisualSampleEntry("vvi1"); break;
@@ -612,18 +625,13 @@ namespace SharpMP4
                 case "dobr": return new DepthOfFieldBracketingEntry();
                 case "drap": return new VisualDRAPEntry();
                 case "dtrt": return new DecodeRetimingEntry();
-                case "encv": return new GenericSampleEntry();
                 case "eob ": return new EndOfBitstreamSampleEntry();
                 case "eos ": return new EndOfSequenceSampleEntry();
                 case "eqiv": return new VisualEquivalenceEntry();
                 case "fdel": return new FDItemInfoExtension();
-                case "fdp ": return new FDHintSampleEntry();
                 case "fobr": return new FocusBracketingEntry();
                 case "lbli": return new LhvcExternalBaseLayerInfo();
                 case "linf": return new LayerInfoGroupEntry();
-                case "mebx": return new BoxedMetaDataSampleEntry();
-                case "mett": return new TextMetaDataSampleEntry();
-                case "metx": return new XMLMetaDataSampleEntry();
                 case "minp": return new VvcMixedNALUnitTypePicEntry();
                 case "mvif": return new MultiviewGroupEntry();
                 case "nalm": return new NALUMapEntry();
@@ -632,40 +640,30 @@ namespace SharpMP4
                 case "pano": return new PanoramaEntry();
                 case "pase": return new ParameterSetNALUEntry();
                 case "pasr": return new PixelAspectRatioEntry();
-                case "pm2t": return new ProtectedMPEG2TransportStreamSampleEntry();
                 case "prol": return new AudioPreRollEntry();
                 case "prtp": return new ProtectedRtpReceptionHintSampleEntry();
                 case "pss1": return new PSSampleGroupEntry();
                 case "rap ": return new VisualRandomAccessEntry();
                 case "rash": return new RateShareEntry();
                 case "refs": return new DirectReferenceSamplesList();
-                case "rm2t": return new MPEG2TSReceptionSampleEntry();
                 case "roll": return new AudioRollRecoveryEntry();
                 case "rror": return new VvcRectRegionOrderEntry();
-                case "rrtp": return new ReceivedRtpHintSampleEntry();
-                case "rsrp": return new ReceivedSrtpHintSampleEntry();
-                case "rtp ": return new RtpHintSampleEntry();
                 case "sap ": return new SAPEntry();
                 case "scif": return new ScalableGroupEntry();
                 case "scnm": return new ScalableNALUMapEntry();
-                case "sm2t": return new MPEG2TSServerSampleEntry();
                 case "spid": return new VvcSubpicIDEntry();
                 case "spli": return new SubpicLevelInfoEntry();
                 case "spor": return new VvcSubpicOrderEntry();
-                case "srtp": return new SrtpHintSampleEntry();
                 case "stmi": return new SampleToMetadataItemEntry();
                 case "stsa": return new StepwiseTemporalLayerEntry();
                 case "sulm": return new VvcSubpicLayoutMapEntry();
-                case "svcM": return new SVCMetaDataSampleEntry();
                 case "sync": return new SyncSampleEntry();
                 case "tele": return new TemporalLevelEntry();
                 case "trif": return new RectangularRegionGroupEntry();
                 case "tsas": return new TemporalSubLayerEntry();
                 case "tscl": return new TemporalLayerEntry();
-                case "urim": return new URIMetaSampleEntry();
                 case "vipr": return new ViewPriorityEntry();
                 case "vopi": return new VvcOperatingPointsInformation();
-                case "vvcb": return new EntityToGroupBox_vvcb(); // TODO: fix duplicate
                 case "wbbr": return new WhiteBalanceBracketingEntry();
             }
 
@@ -5921,15 +5919,15 @@ namespace SharpMP4
         uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
 
     */
-    public class hintBytesSentTrpy : Box
+    public class hintBytesSent : Box
     {
         public const string TYPE = "trpy";
-        public override string DisplayName { get { return "hintBytesSentTrpy"; } }
+        public override string DisplayName { get { return "hintBytesSent"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSentTrpy() : base("trpy")
+        public hintBytesSent() : base("trpy")
         {
         }
 
@@ -5964,15 +5962,15 @@ namespace SharpMP4
         uint(64)	packetssent; }	// total packets sent
 
     */
-    public class hintPacketsSentNump : Box
+    public class hintPacketsSent : Box
     {
         public const string TYPE = "nump";
-        public override string DisplayName { get { return "hintPacketsSentNump"; } }
+        public override string DisplayName { get { return "hintPacketsSent"; } }
 
         protected ulong packetssent;
         public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
 
-        public hintPacketsSentNump() : base("nump")
+        public hintPacketsSent() : base("nump")
         {
         }
 
@@ -6006,15 +6004,15 @@ namespace SharpMP4
     aligned(8) class hintBytesSent extends Box('tpyl') {
         uint(64)	bytessent; }	// total bytes sent, not including RTP headers
     */
-    public class hintBytesSentTpyl : Box
+    public class hintBytesSent_tpyl : Box
     {
         public const string TYPE = "tpyl";
-        public override string DisplayName { get { return "hintBytesSentTpyl"; } }
+        public override string DisplayName { get { return "hintBytesSent_tpyl"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSentTpyl() : base("tpyl")
+        public hintBytesSent_tpyl() : base("tpyl")
         {
         }
 
@@ -6049,15 +6047,15 @@ namespace SharpMP4
         uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
 
     */
-    public class hintBytesSentTotl : Box
+    public class hintBytesSent_totl : Box
     {
         public const string TYPE = "totl";
-        public override string DisplayName { get { return "hintBytesSentTotl"; } }
+        public override string DisplayName { get { return "hintBytesSent_totl"; } }
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSentTotl() : base("totl")
+        public hintBytesSent_totl() : base("totl")
         {
         }
 
@@ -6092,15 +6090,15 @@ namespace SharpMP4
         uint(32)	packetssent; }	// total packets sent
 
     */
-    public class hintPacketsSentNpck : Box
+    public class hintPacketsSent_npck : Box
     {
         public const string TYPE = "npck";
-        public override string DisplayName { get { return "hintPacketsSentNpck"; } }
+        public override string DisplayName { get { return "hintPacketsSent_npck"; } }
 
         protected uint packetssent;
         public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
 
-        public hintPacketsSentNpck() : base("npck")
+        public hintPacketsSent_npck() : base("npck")
         {
         }
 
@@ -6134,15 +6132,15 @@ namespace SharpMP4
     aligned(8) class hintBytesSent extends Box('tpay') {
         uint(32)	bytessent; }	// total bytes sent, not including RTP headers
     */
-    public class hintBytesSentTpay : Box
+    public class hintBytesSent_tpay : Box
     {
         public const string TYPE = "tpay";
-        public override string DisplayName { get { return "hintBytesSentTpay"; } }
+        public override string DisplayName { get { return "hintBytesSent_tpay"; } }
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSentTpay() : base("tpay")
+        public hintBytesSent_tpay() : base("tpay")
         {
         }
 
@@ -22202,6 +22200,55 @@ namespace SharpMP4
 
 
     /*
+    class IncompleteAVCSampleEntry() extends VisualSampleEntry ('icpv'){
+        CompleteTrackInfoBox();
+        AVCConfigurationBox config;
+    }
+    */
+    public class IncompleteAVCSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "icpv";
+        public override string DisplayName { get { return "IncompleteAVCSampleEntry"; } }
+        public CompleteTrackInfoBox _CompleteTrackInfoBox { get { return this.children.OfType<CompleteTrackInfoBox>().FirstOrDefault(); } }
+        public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
+
+        public IncompleteAVCSampleEntry() : base("icpv")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.CompleteTrackInfoBox); 
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.CompleteTrackInfoBox); 
+            // boxSize += stream.WriteBox( this.config); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(CompleteTrackInfoBox); // CompleteTrackInfoBox
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
     class ProtectedMPEG2TransportStreamSampleEntry
         extends MPEG2TSSampleEntry('pm2t') {
         ProtectionSchemeInfoBox		SchemeInformation;
@@ -24014,6 +24061,2571 @@ namespace SharpMP4
 
 
     /*
+    class HEVCSampleEntry() extends VisualSampleEntry ('hvc1'){
+        HEVCConfigurationBox	config;
+        MPEG4ExtensionDescriptorsBox () descr;	// optional
+    }
+    */
+    public class HEVCSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "hvc1";
+        public override string DisplayName { get { return "HEVCSampleEntry"; } }
+        public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public HEVCSampleEntry() : base("hvc1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {
+        LHEVCConfigurationBox		lhvcconfig;
+    }
+    */
+    public class HEVCLHVCSampleEntry : HEVCSampleEntry
+    {
+        public override string DisplayName { get { return "HEVCLHVCSampleEntry"; } }
+        public LHEVCConfigurationBox Lhvcconfig { get { return this.children.OfType<LHEVCConfigurationBox>().FirstOrDefault(); } }
+
+        public HEVCLHVCSampleEntry() : base()
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.lhvcconfig); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.lhvcconfig); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(lhvcconfig); // lhvcconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HEVCSampleEntry() extends VisualSampleEntry ('hvc2'){
+        HEVCConfigurationBox	config;
+        MPEG4ExtensionDescriptorsBox () descr;	// optional
+    }
+    */
+    public class HEVCSampleEntry_hvc2 : VisualSampleEntry
+    {
+        public const string TYPE = "hvc2";
+        public override string DisplayName { get { return "HEVCSampleEntry_hvc2"; } }
+        public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public HEVCSampleEntry_hvc2() : base("hvc2")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HEVCSampleEntry() extends VisualSampleEntry ('hvc3'){
+        HEVCConfigurationBox	config;
+        MPEG4ExtensionDescriptorsBox () descr;	// optional
+    }
+    */
+    public class HEVCSampleEntry_hvc3 : VisualSampleEntry
+    {
+        public const string TYPE = "hvc3";
+        public override string DisplayName { get { return "HEVCSampleEntry_hvc3"; } }
+        public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public HEVCSampleEntry_hvc3() : base("hvc3")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class LHEVCSampleEntry() extends VisualSampleEntry ('lhv1') {
+        LHEVCConfigurationBox		lhvcconfig;
+        MPEG4ExtensionDescriptorsBox () descr;	// optional
+    }
+    */
+    public class LHEVCSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "lhv1";
+        public override string DisplayName { get { return "LHEVCSampleEntry"; } }
+        public LHEVCConfigurationBox Lhvcconfig { get { return this.children.OfType<LHEVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public LHEVCSampleEntry() : base("lhv1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.lhvcconfig); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.lhvcconfig); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(lhvcconfig); // lhvcconfig
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class LHEVCSampleEntry() extends VisualSampleEntry ('lhe1') {
+        LHEVCConfigurationBox		lhvcconfig;
+        MPEG4ExtensionDescriptorsBox () descr;	// optional
+    }
+    */
+    public class LHEVCSampleEntry_lhe1 : VisualSampleEntry
+    {
+        public const string TYPE = "lhe1";
+        public override string DisplayName { get { return "LHEVCSampleEntry_lhe1"; } }
+        public LHEVCConfigurationBox Lhvcconfig { get { return this.children.OfType<LHEVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public LHEVCSampleEntry_lhe1() : base("lhe1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.lhvcconfig); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.lhvcconfig); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(lhvcconfig); // lhvcconfig
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HEVCSampleEntry() extends VisualSampleEntry ('hev1'){
+        HEVCConfigurationBox	config;
+        MPEG4ExtensionDescriptorsBox () descr;	// optional
+    }
+    */
+    public class HEVCSampleEntry_hev1 : VisualSampleEntry
+    {
+        public const string TYPE = "hev1";
+        public override string DisplayName { get { return "HEVCSampleEntry_hev1"; } }
+        public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public HEVCSampleEntry_hev1() : base("hev1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HEVCSampleEntry() extends VisualSampleEntry ('hev2'){
+        HEVCConfigurationBox	config;
+        MPEG4ExtensionDescriptorsBox () descr;	// optional
+    }
+    */
+    public class HEVCSampleEntry_hev2 : VisualSampleEntry
+    {
+        public const string TYPE = "hev2";
+        public override string DisplayName { get { return "HEVCSampleEntry_hev2"; } }
+        public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public HEVCSampleEntry_hev2() : base("hev2")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HEVCSampleEntry() extends VisualSampleEntry ('hev3'){
+        HEVCConfigurationBox	config;
+        MPEG4ExtensionDescriptorsBox () descr;	// optional
+    }
+    */
+    public class HEVCSampleEntry_hev3 : VisualSampleEntry
+    {
+        public const string TYPE = "hev3";
+        public override string DisplayName { get { return "HEVCSampleEntry_hev3"; } }
+        public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public HEVCSampleEntry_hev3() : base("hev3")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AVCParameterSampleEntry() extends VisualSampleEntry ('avcp'){
+        AVCConfigurationBox	config;
+    }
+    */
+    public class AVCParameterSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "avcp";
+        public override string DisplayName { get { return "AVCParameterSampleEntry"; } }
+        public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
+
+        public AVCParameterSampleEntry() : base("avcp")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AVCSampleEntry() extends VisualSampleEntry (type) {
+        AVCConfigurationBox	config;
+        MPEG4ExtensionDescriptorsBox () descr;	// optional
+    }
+    */
+    public class AVCSampleEntry : VisualSampleEntry
+    {
+        public override string DisplayName { get { return "AVCSampleEntry"; } }
+        public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public AVCSampleEntry(string type) : base(type)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AVCMVCSampleEntry() extends AVCSampleEntry ('avc1') {
+        ViewScalabilityInformationSEIBox	scalability;	// optional
+        ViewIdentifierBox		view_identifiers;	// optional
+        MVCConfigurationBox	mvcconfig;		// optional
+        MVCViewPriorityAssignmentBox	view_priority_method;	// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        MVCDConfigurationBox	mvcdconfig;	// optional
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+    */
+    public class AVCMVCSampleEntry : AVCSampleEntry
+    {
+        public const string TYPE = "avc1";
+        public override string DisplayName { get { return "AVCMVCSampleEntry"; } }
+        public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
+        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return this.children.OfType<MVCViewPriorityAssignmentBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public AVCMVCSampleEntry() : base("avc1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_priority_method); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // optional
+            // boxSize += stream.WriteBox( this.mvcconfig); // optional
+            // boxSize += stream.WriteBox( this.view_priority_method); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.mvcdconfig); // optional
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            // boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AVCMVCSampleEntry() extends AVCSampleEntry ('avc3') {
+        ViewScalabilityInformationSEIBox	scalability;	// optional
+        ViewIdentifierBox		view_identifiers;	// optional
+        MVCConfigurationBox	mvcconfig;		// optional
+        MVCViewPriorityAssignmentBox	view_priority_method;	// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        MVCDConfigurationBox	mvcdconfig;	// optional
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+    */
+    public class AVCMVCSampleEntry_avc3 : AVCSampleEntry
+    {
+        public const string TYPE = "avc3";
+        public override string DisplayName { get { return "AVCMVCSampleEntry_avc3"; } }
+        public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
+        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return this.children.OfType<MVCViewPriorityAssignmentBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public AVCMVCSampleEntry_avc3() : base("avc3")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_priority_method); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // optional
+            // boxSize += stream.WriteBox( this.mvcconfig); // optional
+            // boxSize += stream.WriteBox( this.view_priority_method); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.mvcdconfig); // optional
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            // boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AVC2SampleEntry() extends VisualSampleEntry (type) {
+        AVCConfigurationBox	config;
+        MPEG4ExtensionDescriptorsBox () descr;	// optional
+    }
+    */
+    public class AVC2SampleEntry : VisualSampleEntry
+    {
+        public override string DisplayName { get { return "AVC2SampleEntry"; } }
+        public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public AVC2SampleEntry(string type) : base(type)
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AVC2MVCSampleEntry() extends AVC2SampleEntry ('avc2') {
+        ViewScalabilityInformationSEIBox	scalability;	// optional
+        ViewIdentifierBox		view_identifiers;	// optional
+        MVCConfigurationBox	mvcconfig;		// optional
+        MVCViewPriorityAssignmentBox	view_priority_method;	// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        MVCDConfigurationBox	mvcdconfig;	// optional
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+    */
+    public class AVC2MVCSampleEntry : AVC2SampleEntry
+    {
+        public const string TYPE = "avc2";
+        public override string DisplayName { get { return "AVC2MVCSampleEntry"; } }
+        public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
+        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return this.children.OfType<MVCViewPriorityAssignmentBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public AVC2MVCSampleEntry() : base("avc2")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_priority_method); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // optional
+            // boxSize += stream.WriteBox( this.mvcconfig); // optional
+            // boxSize += stream.WriteBox( this.view_priority_method); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.mvcdconfig); // optional
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            // boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AVC2MVCSampleEntry() extends AVC2SampleEntry ('avc4') {
+        ViewScalabilityInformationSEIBox	scalability;	// optional
+        ViewIdentifierBox		view_identifiers;	// optional
+        MVCConfigurationBox	mvcconfig;		// optional
+        MVCViewPriorityAssignmentBox	view_priority_method;	// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        MVCDConfigurationBox	mvcdconfig;	// optional
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+    */
+    public class AVC2MVCSampleEntry_avc4 : AVC2SampleEntry
+    {
+        public const string TYPE = "avc4";
+        public override string DisplayName { get { return "AVC2MVCSampleEntry_avc4"; } }
+        public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
+        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return this.children.OfType<MVCViewPriorityAssignmentBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public AVC2MVCSampleEntry_avc4() : base("avc4")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_priority_method); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // optional
+            // boxSize += stream.WriteBox( this.mvcconfig); // optional
+            // boxSize += stream.WriteBox( this.view_priority_method); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.mvcdconfig); // optional
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            // boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MVCSampleEntry() extends VisualSampleEntry ('mvc1') {
+        MVCConfigurationBox	mvcconfig; 			// mandatory
+        ViewScalabilityInformationSEIBox	scalability;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        MVCViewPriorityAssignmentBox	view_priority_method;	// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        MVCDConfigurationBox	mvcdconfig;	// optional
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+    */
+    public class MVCSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "mvc1";
+        public override string DisplayName { get { return "MVCSampleEntry"; } }
+        public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
+        public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return this.children.OfType<MVCViewPriorityAssignmentBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public MVCSampleEntry() : base("mvc1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_priority_method); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.mvcconfig); // mandatory
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.view_priority_method); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.mvcdconfig); // optional
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MVCSampleEntry() extends VisualSampleEntry ('mvc2') {
+        MVCConfigurationBox	mvcconfig; 			// mandatory
+        ViewScalabilityInformationSEIBox	scalability;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        MVCViewPriorityAssignmentBox	view_priority_method;	// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        MVCDConfigurationBox	mvcdconfig;	// optional
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+    */
+    public class MVCSampleEntry_mvc2 : VisualSampleEntry
+    {
+        public const string TYPE = "mvc2";
+        public override string DisplayName { get { return "MVCSampleEntry_mvc2"; } }
+        public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
+        public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return this.children.OfType<MVCViewPriorityAssignmentBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public MVCSampleEntry_mvc2() : base("mvc2")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_priority_method); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.mvcconfig); // mandatory
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.view_priority_method); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.mvcdconfig); // optional
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MVCSampleEntry() extends VisualSampleEntry ('mvc3') {
+        MVCConfigurationBox	mvcconfig; 			// mandatory
+        ViewScalabilityInformationSEIBox	scalability;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        MVCViewPriorityAssignmentBox	view_priority_method;	// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        MVCDConfigurationBox	mvcdconfig;	// optional
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+    */
+    public class MVCSampleEntry_mvc3 : VisualSampleEntry
+    {
+        public const string TYPE = "mvc3";
+        public override string DisplayName { get { return "MVCSampleEntry_mvc3"; } }
+        public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
+        public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return this.children.OfType<MVCViewPriorityAssignmentBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public MVCSampleEntry_mvc3() : base("mvc3")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_priority_method); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.mvcconfig); // mandatory
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.view_priority_method); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.mvcdconfig); // optional
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MVCSampleEntry() extends VisualSampleEntry ('mvc4') {
+        MVCConfigurationBox	mvcconfig; 			// mandatory
+        ViewScalabilityInformationSEIBox	scalability;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        MVCViewPriorityAssignmentBox	view_priority_method;	// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        MVCDConfigurationBox	mvcdconfig;	// optional
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+    */
+    public class MVCSampleEntry_mvc4 : VisualSampleEntry
+    {
+        public const string TYPE = "mvc4";
+        public override string DisplayName { get { return "MVCSampleEntry_mvc4"; } }
+        public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
+        public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public MVCViewPriorityAssignmentBox ViewPriorityMethod { get { return this.children.OfType<MVCViewPriorityAssignmentBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public MVCSampleEntry_mvc4() : base("mvc4")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_priority_method); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.mvcconfig); // mandatory
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.view_priority_method); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.mvcdconfig); // optional
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(mvcconfig); // mvcconfig
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(view_priority_method); // view_priority_method
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MVCDSampleEntry() extends VisualSampleEntry ('mvd1') {
+        MVCDConfigurationBox	mvcdconfig;		// mandatory
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+
+    */
+    public class MVCDSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "mvd1";
+        public override string DisplayName { get { return "MVCDSampleEntry"; } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public MVCDSampleEntry() : base("mvd1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.mvcdconfig); // mandatory
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MVCDSampleEntry() extends VisualSampleEntry ('mvd2') {
+        MVCDConfigurationBox	mvcdconfig;		// mandatory
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+
+    */
+    public class MVCDSampleEntry_mvd2 : VisualSampleEntry
+    {
+        public const string TYPE = "mvd2";
+        public override string DisplayName { get { return "MVCDSampleEntry_mvd2"; } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public MVCDSampleEntry_mvd2() : base("mvd2")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.mvcdconfig); // mandatory
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MVCDSampleEntry() extends VisualSampleEntry ('mvd3') {
+        MVCDConfigurationBox	mvcdconfig;		// mandatory
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+
+    */
+    public class MVCDSampleEntry_mvd3 : VisualSampleEntry
+    {
+        public const string TYPE = "mvd3";
+        public override string DisplayName { get { return "MVCDSampleEntry_mvd3"; } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public MVCDSampleEntry_mvd3() : base("mvd3")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.mvcdconfig); // mandatory
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class MVCDSampleEntry() extends VisualSampleEntry ('mvd4') {
+        MVCDConfigurationBox	mvcdconfig;		// mandatory
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+        A3DConfigurationBox	a3dconfig;	// optional
+    }
+
+    */
+    public class MVCDSampleEntry_mvd4 : VisualSampleEntry
+    {
+        public const string TYPE = "mvd4";
+        public override string DisplayName { get { return "MVCDSampleEntry_mvd4"; } }
+        public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+
+        public MVCDSampleEntry_mvd4() : base("mvd4")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvcdconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.mvcdconfig); // mandatory
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.a3dconfig); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(mvcdconfig); // mvcdconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class A3DSampleEntry() extends VisualSampleEntry ('a3d1') {
+        A3DConfigurationBox	a3dconfig;		// mandatory
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+    }
+    */
+    public class A3DSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "a3d1";
+        public override string DisplayName { get { return "A3DSampleEntry"; } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+
+        public A3DSampleEntry() : base("a3d1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.a3dconfig); // mandatory
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class A3DSampleEntry() extends VisualSampleEntry ('a3d2') {
+        A3DConfigurationBox	a3dconfig;		// mandatory
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+    }
+    */
+    public class A3DSampleEntry_a3d2 : VisualSampleEntry
+    {
+        public const string TYPE = "a3d2";
+        public override string DisplayName { get { return "A3DSampleEntry_a3d2"; } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+
+        public A3DSampleEntry_a3d2() : base("a3d2")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.a3dconfig); // mandatory
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class A3DSampleEntry() extends VisualSampleEntry ('a3d3') {
+        A3DConfigurationBox	a3dconfig;		// mandatory
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+    }
+    */
+    public class A3DSampleEntry_a3d3 : VisualSampleEntry
+    {
+        public const string TYPE = "a3d3";
+        public override string DisplayName { get { return "A3DSampleEntry_a3d3"; } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+
+        public A3DSampleEntry_a3d3() : base("a3d3")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.a3dconfig); // mandatory
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class A3DSampleEntry() extends VisualSampleEntry ('a3d4') {
+        A3DConfigurationBox	a3dconfig;		// mandatory
+        MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+        ViewIdentifierBox	view_identifiers;		// mandatory
+        MPEG4ExtensionDescriptorsBox descr;		// optional
+        IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+        ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+    }
+    */
+    public class A3DSampleEntry_a3d4 : VisualSampleEntry
+    {
+        public const string TYPE = "a3d4";
+        public override string DisplayName { get { return "A3DSampleEntry_a3d4"; } }
+        public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
+        public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
+        public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
+
+        public A3DSampleEntry_a3d4() : base("a3d4")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.a3dconfig); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdscalinfosei); // optional
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.view_identifiers); // mandatory
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.intrinsic_camera_params); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extrinsic_camera_params); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.a3dconfig); // mandatory
+            // boxSize += stream.WriteBox( this.mvdscalinfosei); // optional
+            // boxSize += stream.WriteBox( this.view_identifiers); // mandatory
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.intrinsic_camera_params); // optional
+            // boxSize += stream.WriteBox( this.extrinsic_camera_params); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
+            // boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
+            // boxSize += IsoStream.CalculateBoxSize(view_identifiers); // view_identifiers
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
+            // boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AVCSVCSampleEntry() extends AVCSampleEntry ('avc1' or 'avc3') {
+        SVCConfigurationBox	svcconfig;			// optional
+        ScalabilityInformationSEIBox	scalability;	// optional
+        SVCPriorityAssignmentBox	method;			// optional
+    }
+    */
+    public class AVCSVCSampleEntry : AVCSampleEntry
+    {
+        public const string TYPE = "avc1";
+        public override string DisplayName { get { return "AVCSVCSampleEntry"; } }
+        public SVCConfigurationBox Svcconfig { get { return this.children.OfType<SVCConfigurationBox>().FirstOrDefault(); } }
+        public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
+
+        public AVCSVCSampleEntry() : base("avc1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.svcconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.method); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.svcconfig); // optional
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.method); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(method); // method
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+
+    */
+    public class AVCSVCSampleEntry_avc3 : AVCSampleEntry
+    {
+        public const string TYPE = "avc3";
+        public override string DisplayName { get { return "AVCSVCSampleEntry_avc3"; } }
+        public SVCConfigurationBox Svcconfig { get { return this.children.OfType<SVCConfigurationBox>().FirstOrDefault(); } }
+        public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
+
+        public AVCSVCSampleEntry_avc3() : base("avc3")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.svcconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.method); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.svcconfig); // optional
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.method); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(method); // method
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {
+        SVCConfigurationBox	svcconfig;			// optional
+        ScalabilityInformationSEIBox	scalability;	// optional
+        SVCPriorityAssignmentBox	method;			// optional
+    }
+    */
+    public class AVC2SVCSampleEntry : AVC2SampleEntry
+    {
+        public const string TYPE = "avc2";
+        public override string DisplayName { get { return "AVC2SVCSampleEntry"; } }
+        public SVCConfigurationBox Svcconfig { get { return this.children.OfType<SVCConfigurationBox>().FirstOrDefault(); } }
+        public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
+
+        public AVC2SVCSampleEntry() : base("avc2")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.svcconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.method); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.svcconfig); // optional
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.method); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(method); // method
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+
+    */
+    public class AVC2SVCSampleEntry_avc4 : AVC2SampleEntry
+    {
+        public const string TYPE = "avc4";
+        public override string DisplayName { get { return "AVC2SVCSampleEntry_avc4"; } }
+        public SVCConfigurationBox Svcconfig { get { return this.children.OfType<SVCConfigurationBox>().FirstOrDefault(); } }
+        public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
+
+        public AVC2SVCSampleEntry_avc4() : base("avc4")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.svcconfig); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.method); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.svcconfig); // optional
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.method); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(method); // method
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    // Use this if the track is NOT AVC compatible
+    class SVCSampleEntry() extends VisualSampleEntry ('svc1' or 'svc2') {
+        SVCConfigurationBox		svcconfig;
+        MPEG4ExtensionDescriptorsBox descr;	// optional
+        ScalabilityInformationSEIBox	scalability;	// optional
+        SVCPriorityAssignmentBox	method;			// optional
+    }
+    */
+    public class SVCSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "svc1";
+        public override string DisplayName { get { return "SVCSampleEntry"; } }
+        public SVCConfigurationBox Svcconfig { get { return this.children.OfType<SVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
+
+        public SVCSampleEntry() : base("svc1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.svcconfig); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.method); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.svcconfig); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.method); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(method); // method
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+
+    */
+    public class SVCSampleEntry_svc2 : VisualSampleEntry
+    {
+        public const string TYPE = "svc2";
+        public override string DisplayName { get { return "SVCSampleEntry_svc2"; } }
+        public SVCConfigurationBox Svcconfig { get { return this.children.OfType<SVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+        public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
+        public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
+
+        public SVCSampleEntry_svc2() : base("svc2")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.svcconfig); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scalability); // optional
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.method); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.svcconfig); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            // boxSize += stream.WriteBox( this.scalability); // optional
+            // boxSize += stream.WriteBox( this.method); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(svcconfig); // svcconfig
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            // boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
+            // boxSize += IsoStream.CalculateBoxSize(method); // method
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HEVCTileSampleEntry() extends VisualSampleEntry ('hvt1'){
+        HEVCTileConfigurationBox	config(); // optional
+    }
+    */
+    public class HEVCTileSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "hvt1";
+        public override string DisplayName { get { return "HEVCTileSampleEntry"; } }
+        public HEVCTileConfigurationBox Config { get { return this.children.OfType<HEVCTileConfigurationBox>().FirstOrDefault(); } }
+
+        public HEVCTileSampleEntry() : base("hvt1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class LHEVCTileSampleEntry() extends VisualSampleEntry ('lht1'){
+    }
+    */
+    public class LHEVCTileSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "lht1";
+        public override string DisplayName { get { return "LHEVCTileSampleEntry"; } }
+
+        public LHEVCTileSampleEntry() : base("lht1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HEVCTileSSHInfoSampleEntry() extends VisualSampleEntry ('hvt3'){
+        HEVCTileConfigurationBox config(); // optional 
+    }
+    */
+    public class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "hvt3";
+        public override string DisplayName { get { return "HEVCTileSSHInfoSampleEntry"; } }
+        public HEVCTileConfigurationBox Config { get { return this.children.OfType<HEVCTileConfigurationBox>().FirstOrDefault(); } }
+
+        public HEVCTileSSHInfoSampleEntry() : base("hvt3")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); // optional 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); // optional 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class HEVCSliceSegmentDataSampleEntry() extends VisualSampleEntry ('hvt2'){
+        HEVCTileConfigurationBox	config(); // optional
+    }
+    */
+    public class HEVCSliceSegmentDataSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "hvt2";
+        public override string DisplayName { get { return "HEVCSliceSegmentDataSampleEntry"; } }
+        public HEVCTileConfigurationBox Config { get { return this.children.OfType<HEVCTileConfigurationBox>().FirstOrDefault(); } }
+
+        public HEVCSliceSegmentDataSampleEntry() : base("hvt2")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {
+        VvcConfigurationBox	config;
+        MPEG4ExtensionDescriptorsBox () descr;	// optional
+    }
+    */
+    public class VvcSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "vvc1";
+        public override string DisplayName { get { return "VvcSampleEntry"; } }
+        public VvcConfigurationBox Config { get { return this.children.OfType<VvcConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public VvcSampleEntry() : base("vvc1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+
+    */
+    public class VvcSampleEntry_vvi1 : VisualSampleEntry
+    {
+        public const string TYPE = "vvi1";
+        public override string DisplayName { get { return "VvcSampleEntry_vvi1"; } }
+        public VvcConfigurationBox Config { get { return this.children.OfType<VvcConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public VvcSampleEntry_vvi1() : base("vvi1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class VvcSubpicSampleEntry() extends VisualSampleEntry ('vvs1') {
+        VvcNALUConfigBox config;
+    }
+    */
+    public class VvcSubpicSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "vvs1";
+        public override string DisplayName { get { return "VvcSubpicSampleEntry"; } }
+        public VvcNALUConfigBox Config { get { return this.children.OfType<VvcNALUConfigBox>().FirstOrDefault(); } }
+
+        public VvcSubpicSampleEntry() : base("vvs1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class VvcNonVCLSampleEntry() extends VisualSampleEntry ('vvcN') {
+        VvcNALUConfigBox config;
+    }
+    */
+    public class VvcNonVCLSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "vvcN";
+        public override string DisplayName { get { return "VvcNonVCLSampleEntry"; } }
+        public VvcNALUConfigBox Config { get { return this.children.OfType<VvcNALUConfigBox>().FirstOrDefault(); } }
+
+        public VvcNonVCLSampleEntry() : base("vvcN")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class EVCSampleEntry() extends VisualSampleEntry('evc1'){
+        EVCConfigurationBox	config;
+        MPEG4ExtensionDescriptorsBox() descr;	// optional
+    }
+    */
+    public class EVCSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "evc1";
+        public override string DisplayName { get { return "EVCSampleEntry"; } }
+        public EVCConfigurationBox Config { get { return this.children.OfType<EVCConfigurationBox>().FirstOrDefault(); } }
+        public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
+
+        public EVCSampleEntry() : base("evc1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
     class SVCMetaDataSampleEntry () extends MetaDataSampleEntry('svcM')
     {
         SVCMetadataSampleConfigBox	config;
@@ -24062,6 +26674,93 @@ namespace SharpMP4
             // boxSize += IsoStream.CalculateBoxSize(config); // config
             // boxSize += IsoStream.CalculateBoxSize(methods); // methods
             // boxSize += IsoStream.CalculateBoxSize(priorities); // priorities
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class EVCSliceComponentTrackSampleEntry() 
+          extends VisualSampleEntry ('evs1' or 'evs2'){
+        EVCSliceComponentTrackConfigurationBox	config;
+    }
+    */
+    public class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "evs1";
+        public override string DisplayName { get { return "EVCSliceComponentTrackSampleEntry"; } }
+        public EVCSliceComponentTrackConfigurationBox Config { get { return this.children.OfType<EVCSliceComponentTrackConfigurationBox>().FirstOrDefault(); } }
+
+        public EVCSliceComponentTrackSampleEntry() : base("evs1")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
+
+    */
+    public class EVCSliceComponentTrackSampleEntry_evs2 : VisualSampleEntry
+    {
+        public const string TYPE = "evs2";
+        public override string DisplayName { get { return "EVCSliceComponentTrackSampleEntry_evs2"; } }
+        public EVCSliceComponentTrackConfigurationBox Config { get { return this.children.OfType<EVCSliceComponentTrackConfigurationBox>().FirstOrDefault(); } }
+
+        public EVCSliceComponentTrackSampleEntry_evs2() : base("evs2")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
@@ -24760,21 +27459,21 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class SwitchableTracks extends EntityToGroupBox('swtk',0,0)
+    aligned(8) class SwitchableTracksGroupBox extends EntityToGroupBox('swtk',0,0)
     {
         for (i = 0; i < num_entities_in_group; i++)
             unsigned int(16) track_switch_hierarchy_id[i];
     }
     */
-    public class SwitchableTracks : EntityToGroupBox
+    public class SwitchableTracksGroupBox : EntityToGroupBox
     {
         public const string TYPE = "swtk";
-        public override string DisplayName { get { return "SwitchableTracks"; } }
+        public override string DisplayName { get { return "SwitchableTracksGroupBox"; } }
 
         protected ushort[] track_switch_hierarchy_id;
         public ushort[] TrackSwitchHierarchyId { get { return this.track_switch_hierarchy_id; } set { this.track_switch_hierarchy_id = value; } }
 
-        public SwitchableTracks() : base("swtk", 0, 0)
+        public SwitchableTracksGroupBox() : base("swtk", 0, 0)
         {
         }
 
@@ -35478,6 +38177,50 @@ namespace SharpMP4
 
 
     /*
+    class OpusSampleEntry() extends AudioSampleEntry ('Opus'){
+     OpusSpecificBox();
+     }
+    */
+    public class OpusSampleEntry : AudioSampleEntry
+    {
+        public const string TYPE = "Opus";
+        public override string DisplayName { get { return "OpusSampleEntry"; } }
+        public OpusSpecificBox _OpusSpecificBox { get { return this.children.OfType<OpusSpecificBox>().FirstOrDefault(); } }
+
+        public OpusSampleEntry() : base("Opus")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.OpusSpecificBox); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.OpusSpecificBox); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(OpusSpecificBox); // OpusSpecificBox
+            boxSize += IsoStream.CalculateBoxArray(this);
+            return boxSize;
+        }
+    }
+
+
+    /*
     class ChannelMappingTable (unsigned int(8) OutputChannelCount){
      unsigned int(8) StreamCount;
      unsigned int(8) CoupledCount;
@@ -35632,6 +38375,53 @@ namespace SharpMP4
             {
                 boxSize += IsoStream.CalculateClassSize(ChannelMappingTable); // ChannelMappingTable
             }
+            return boxSize;
+        }
+    }
+
+
+    /*
+    class AV1SampleEntry
+    extends VisualSampleEntry('av01')
+    {
+      AV1CodecConfigurationBox config;
+    }
+
+    */
+    public class AV1SampleEntry : VisualSampleEntry
+    {
+        public const string TYPE = "av01";
+        public override string DisplayName { get { return "AV1SampleEntry"; } }
+        public AV1CodecConfigurationBox Config { get { return this.children.OfType<AV1CodecConfigurationBox>().FirstOrDefault(); } }
+
+        public AV1SampleEntry() : base("av01")
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            // boxSize += stream.WriteBox( this.config); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }

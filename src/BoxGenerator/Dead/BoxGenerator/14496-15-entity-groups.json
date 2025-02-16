@@ -36,7 +36,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class SwitchableTracks extends EntityToGroupBox('swtk',0,0)\n{\n\tfor (i = 0; i < num_entities_in_group; i++)\n\t\tunsigned int(16) track_switch_hierarchy_id[i];\n}"
+      "syntax": "aligned(8) class SwitchableTracksGroupBox extends EntityToGroupBox('swtk',0,0)\n{\n\tfor (i = 0; i < num_entities_in_group; i++)\n\t\tunsigned int(16) track_switch_hierarchy_id[i];\n}"
     },
     {
       "fourcc": "vvcb",

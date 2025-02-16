@@ -60,10 +60,6 @@ partial class Program
 
         foreach (var file in jsonFiles)
         {
-            ParsedBoxType parsedBoxType = ParsedBoxType.Entry;
-            if (file.Contains("-boxes") || file.Contains("-properties"))
-                parsedBoxType = ParsedBoxType.Box;
-
             using (var json = File.OpenRead(file))
             using (JsonDocument document = JsonDocument.Parse(json, new JsonDocumentOptions()))
             {
@@ -71,26 +67,27 @@ partial class Program
                 {
                     string fourCC = element.TryGetProperty("fourcc", out _) ? element.GetProperty("fourcc").GetString() : null;
                     string sample = element.GetProperty("syntax").GetString()!;
+
                     string[] cont = element.GetProperty("containers").EnumerateArray().Select(x => x.ToString()).ToArray();
                     foreach (var con in cont)
                     {
-                        if(con.StartsWith("{"))
+                        if (con.StartsWith("{"))
                         {
                             var des = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(con);
-                            foreach(var dc in des.Values)
+                            foreach (var dc in des.Values)
                             {
-                                foreach(var ddd in dc)
-                                    containers.Add(ddd); 
+                                foreach (var ddd in dc)
+                                    containers.Add(ddd);
                             }
-                            continue;
                         }
-                        containers.Add(con);
+                        else
+                        {
+                            containers.Add(con);
+                        }
                     }
 
                     if (string.IsNullOrEmpty(sample))
                     {
-                        Console.WriteLine($"Succeeded parsing: {fourCC} (empty)");
-                        success++;
                         continue;
                     }
 
@@ -99,105 +96,15 @@ partial class Program
                         var result = Parser.Boxes.ParseOrThrow(sample);
                         long offset = 0;
                         result = DeduplicateBoxes(result);
+
                         foreach (var item in result)
                         {
-                            string[] ignoredBoxes = [
-                                    "IncompleteAVCSampleEntry",
-                                    "HEVCSampleEntry",
-                                    "LHEVCSampleEntry",
-                                    "AVCParameterSampleEntry",
-                                    "AVCSampleEntry",
-                                    "AVC2SampleEntry",
-                                    "MVCSampleEntry",
-                                    "MVCDSampleEntry",
-                                    "A3DSampleEntry",
-                                    "SVCSampleEntry",
-                                    "HEVCTileSampleEntry",
-                                    "LHEVCTileSampleEntry",
-                                    "HEVCTileSSHInfoSampleEntry",
-                                    "HEVCSliceSegmentDataSampleEntry",
-                                    "VvcSampleEntry",
-                                    "VvcSubpicSampleEntry",
-                                    "VvcNonVCLSampleEntry",
-                                    "EVCSampleEntry",
-                                    "EVCSliceComponentTrackSampleEntry",
-                                    "AV1SampleEntry",
-                                    "AVC2MVCSampleEntry",
-                                    "AVC2SVCSampleEntry",
-                                    "AVCMVCSampleEntry",
-                                    "AVCSVCSampleEntry",
-                                    "HEVCLHVCSampleEntry",
-                                    "OpusSampleEntry",
-                                ];
-
-                            if (ignoredBoxes.Contains(item.BoxName))
-                                continue;
-
-                            if (item.BoxName == "AutoExposureBracketingEntry" ||
-                                item.BoxName == "FlashExposureBracketingEntry" ||
-                                item.BoxName == "AV1ForwardKeyFrameSampleGroupEntry" ||
-                                item.BoxName == "AV1MetadataSampleGroupEntry" ||
-                                item.BoxName == "AV1SwitchFrameSampleGroupEntry" ||
-                                item.BoxName == "AVCSubSequenceEntry" ||
-                                item.BoxName == "DepthOfFieldBracketingEntry" ||
-                                item.BoxName == "FDItemInfoExtension" ||
-                                item.BoxName == "FocusBracketingEntry" ||
-                                item.BoxName == "PanoramaEntry" ||
-                                item.BoxName == "WhiteBalanceBracketingEntry")
-                            {
-                                item.ParsedBoxType = ParsedBoxType.Entry;
-                            }
-                            else if(
-                                item.BoxName == "SubpicCommonGroupBox" ||
-                                item.BoxName == "TrackGroupTypeBox_alte" ||
-                                item.BoxName == "SubpicMultipleGroupsBox" ||
-                                item.BoxName == "TrackGroupTypeBox_cstg" ||
-                                item.BoxName == "TrackGroupTypeBox" ||
-                                item.BoxName == "OperatingPointGroupBox" ||
-                                item.BoxName == "TrackGroupTypeBox_snut" ||
-                                item.BoxName == "StereoVideoGroupBox" ||
-                                item.BoxName == "SwitchableTracks" ||
-                                item.BoxName == "EntityToGroupBox_vvcb"
-                                )
-                            {
-                                item.ParsedBoxType = ParsedBoxType.Box;
-                            }
-                            else
-                            {
-                                item.ParsedBoxType = parsedBoxType;
-                            }
-
-                            if(item.Extended != null && !string.IsNullOrEmpty(item.Extended.DescriptorTag))
-                            {
-                                item.ParsedBoxType = ParsedBoxType.Descriptor;
-                            }
-
                             item.Syntax = GetSampleCode(sample, offset, item.CurrentOffset);
                             offset = item.CurrentOffset;
-                            if (item.Extended != null)
-                            {
-                                item.FourCC = item.Extended.BoxType;
-                            }
-
-                            // allowed duplicates
-                            if(item.BoxName == "hintPacketsSent"||
-                                item.BoxName == "hintBytesSent")
-                            {
-                                item.BoxName = item.BoxName + item.FourCC.ToCapital();
-                                if (ret.TryAdd(item.BoxName, item))
-                                    success++;
-                                else
-                                {
-                                    duplicated++;
-                                    duplicates.Add(item);
-                                    Console.WriteLine($"Duplicated: {item.BoxName}");
-                                }
-                                continue;
-                            }
-
+                                                        
                             if (ret.TryAdd(item.BoxName, item))
                             {
-                                success++;                                
+                                success++;
                             }
                             else
                             {
@@ -232,11 +139,29 @@ partial class Program
 
         containers = containers.Distinct().ToList();
 
+        // post-processing
+        foreach (var item in ret)
+        {
+            var ancestors = GetAncestors(ret, item);
+
+            if (ancestors.Any())
+            {
+                if (ancestors.LastOrDefault().EndsWith("Box"))
+                    item.Value.ParsedBoxType = ParsedBoxType.Box;
+                else if (ancestors.LastOrDefault().EndsWith("Descriptor"))
+                    item.Value.ParsedBoxType = ParsedBoxType.Descriptor;
+                else if (ancestors.LastOrDefault().EndsWith("Entry"))
+                    item.Value.ParsedBoxType = ParsedBoxType.Entry;
+                else
+                    item.Value.ParsedBoxType = ParsedBoxType.Class;
+            }
+        }
+
         Console.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
         string js = JsonConvert.SerializeObject(ret.Values.ToArray());
         File.WriteAllText("result.json", js);
 
-        string resultCode = 
+        string resultCode =
 @"using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -262,7 +187,7 @@ namespace SharpMP4
         {
             if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.BoxType))
             {
-                if (item.Value.ParsedBoxType == ParsedBoxType.Box) 
+                if (item.Value.ParsedBoxType == ParsedBoxType.Box)
                 {
                     if (!fourccBoxes.ContainsKey(item.Value.Extended.BoxType))
                         fourccBoxes.Add(item.Value.Extended.BoxType, new List<PseudoClass>() { item.Value });
@@ -281,13 +206,15 @@ namespace SharpMP4
 
         // add additional boxes
         string[] audioSampleEntryTypes = new string[]
-        { 
+        {
             "samr","sawb","mp4a","drms","alac","owma","ac-3","ec-3","mlpa","dtsl","dtsh","dtse","Opus","enca","resa","sevc","sqcp","ssmv","lpcm","dtsc","sowt",
         };
-        foreach(var type in audioSampleEntryTypes)
+        foreach (var type in audioSampleEntryTypes)
         {
             if (!fourccBoxes.ContainsKey(type))
                 fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value });
+            else
+                fourccBoxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value };
         }
         string[] visualSampleEntryTypes = new string[]
         {
@@ -299,11 +226,17 @@ namespace SharpMP4
         {
             if (!fourccBoxes.ContainsKey(type))
                 fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
+            else
+                fourccBoxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value };
         }
         if (!fourccBoxes.ContainsKey("mp4s"))
             fourccBoxes.Add("mp4s", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value });
+        else
+            fourccBoxes["mp4s"] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value };
+
         if (!fourccBoxes.ContainsKey("dimg"))
             fourccBoxes.Add("dimg", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "SingleItemTypeReferenceBox").Value });
+
         if (!fourccBoxes.ContainsKey("cdsc"))
             fourccBoxes.Add("cdsc", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "TrackReferenceTypeBox").Value });
 
@@ -412,7 +345,7 @@ namespace SharpMP4
                     item.Value.First().BoxName == "SegmentIndexBox" ||
                     item.Value.First().BoxName == "trackhintinformation" ||
                     item.Value.First().BoxName == "ViewPriorityBox" ||
-                    item.Value.First().BoxName == "rtpmoviehintinformation" 
+                    item.Value.First().BoxName == "rtpmoviehintinformation"
                     )
                 {
                     string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
@@ -452,7 +385,7 @@ namespace SharpMP4
             }
         }
 
-        foreach(var item in descriptors)
+        foreach (var item in descriptors)
         {
             if (!item.Key.StartsWith("0x"))
             {
@@ -479,7 +412,7 @@ namespace SharpMP4
         }
 ";
 
-        factory += 
+        factory +=
 @"
     }
 
@@ -491,10 +424,26 @@ namespace SharpMP4
             string code = BuildCode(b, containers);
             resultCode += code + "\r\n\r\n";
         }
-        resultCode += 
+        resultCode +=
 @"
 }
 ";
+    }
+
+    private static string[] GetAncestors(Dictionary<string, PseudoClass> items, KeyValuePair<string, PseudoClass> item)
+    {
+        List<string> extended = new List<string>();
+        if (item.Value.Extended != null)
+        {
+            var it = item;
+            while (it.Value != null && !string.IsNullOrEmpty(it.Value.Extended.BoxName))
+            {
+                extended.Add(it.Value.Extended.BoxName);
+                it = items.SingleOrDefault(x => x.Value.BoxName == it.Value.Extended.BoxName);
+            }
+        }
+        Debug.WriteLine($"Box {item.Value.BoxName} - {string.Join(':', extended)}");
+        return extended.ToArray();
     }
 
     private static IEnumerable<PseudoClass> DeduplicateBoxes(IEnumerable<PseudoClass> result)
@@ -509,7 +458,10 @@ namespace SharpMP4
                 {
                     string part = parts[i];
                     string key = part.TrimStart('\'').TrimEnd('\'');
-                    var copy = JsonConvert.DeserializeObject<PseudoClass>(JsonConvert.SerializeObject(box, new JsonSerializerSettings() {  TypeNameHandling = TypeNameHandling.All }), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All }); // deep copy
+                    var copy = JsonConvert.DeserializeObject<PseudoClass>(
+                        JsonConvert.SerializeObject(box, 
+                            new JsonSerializerSettings() {  TypeNameHandling = TypeNameHandling.All }), 
+                            new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All }); // deep copy
                     copy.Extended.BoxType = key;
                     boxes.Add(copy);
                 }
@@ -779,7 +731,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Read);
         }
 
-        if ((string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)) && 
+        if ((string.IsNullOrWhiteSpace(b.Abstract) && ((b.Extended != null && containers.Contains(b.Extended.BoxType)) || containers.Contains(b.BoxName) || hasBoxes)) && 
             b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry")
         {
             cls += "\r\n" + "boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);";
@@ -814,7 +766,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Write);
         }
 
-        if ((string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)) &&
+        if ((string.IsNullOrWhiteSpace(b.Abstract) && ((b.Extended != null && containers.Contains(b.Extended.BoxType)) || containers.Contains(b.BoxName) || hasBoxes)) &&
             b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry")
         {
             cls += "\r\n" + "boxSize += stream.WriteBoxArrayTillEnd(this);";
@@ -848,7 +800,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Size);
         }
 
-        if ((string.IsNullOrWhiteSpace(b.Abstract) && (containers.Contains(b.FourCC) || containers.Contains(b.BoxName) || hasBoxes)) &&
+        if ((string.IsNullOrWhiteSpace(b.Abstract) && ((b.Extended != null && containers.Contains(b.Extended.BoxType)) || containers.Contains(b.BoxName) || hasBoxes)) &&
             b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry")
         {
             cls += "\r\n" + "boxSize += IsoStream.CalculateBoxArray(this);";
@@ -2346,7 +2298,8 @@ namespace SharpMP4
             { "MPEG_1_2_SpecificConfig()",              "stream.ReadClass(boxSize, readSize, this, new MPEG_1_2_SpecificConfig(), " },
             { "SLSSpecificConfig()",                    "stream.ReadClass(boxSize, readSize, this, new SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), " },
             { "SymbolicMusicSpecificConfig()",          "stream.ReadClass(boxSize, readSize, this, new SymbolicMusicSpecificConfig(), " },
-        };
+            { "ViewIdentifierBox",                      "stream.ReadBox(boxSize, readSize, this, " },
+       };
 
         if(map.ContainsKey(type))
             return map[type];
@@ -2776,6 +2729,7 @@ namespace SharpMP4
             { "MPEG_1_2_SpecificConfig()",              "IsoStream.CalculateClassSize(value)" },
             { "SLSSpecificConfig()",                    "IsoStream.CalculateClassSize(value)" },
             { "SymbolicMusicSpecificConfig()",          "IsoStream.CalculateClassSize(value)" },
+            { "ViewIdentifierBox",                      "IsoStream.CalculateBoxSize(value)" },
        };
         if (map.ContainsKey(type))
             return map[type];
@@ -3205,6 +3159,7 @@ namespace SharpMP4
             { "MPEG_1_2_SpecificConfig()",              "stream.WriteClass(" },
             { "SLSSpecificConfig()",                    "stream.WriteClass(" },
             { "SymbolicMusicSpecificConfig()",          "stream.WriteClass(" },
+            { "ViewIdentifierBox",                      "stream.WriteBox(" },
         };
         if (map.ContainsKey(type))
             return map[type];
@@ -3676,6 +3631,7 @@ namespace SharpMP4
             { "MPEG_1_2_SpecificConfig()",              "MPEG_1_2_SpecificConfig" },
             { "SLSSpecificConfig()",                    "SLSSpecificConfig" },
             { "SymbolicMusicSpecificConfig()",          "SymbolicMusicSpecificConfig" },
+            { "ViewIdentifierBox",                      "ViewIdentifierBox" },
         };
         if (map.ContainsKey(type))
             return map[type];

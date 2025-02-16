@@ -184,7 +184,8 @@ namespace BoxGenerator
     {
         Box,
         Entry,
-        Descriptor
+        Descriptor,
+        Class
     }
 
     [SuppressMessage("naming", "CA1724:The type name conflicts with the namespace name", Justification = "Example code")]
@@ -223,7 +224,6 @@ namespace BoxGenerator
     public class PseudoClass : PseudoCode
     {
         public ParsedBoxType ParsedBoxType { get; set; }
-        public string FourCC { get; set; }
         public string BoxName { get; set; }
         public string ClassType { get; set; }
         public string Comment { get; set; }
