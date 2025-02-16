@@ -11,6 +11,13 @@ using System.Text.RegularExpressions;
 
 namespace BoxGenerator;
 
+public enum MethodType
+{
+    Read,
+    Write,
+    Size
+}
+
 partial class Program
 {
     static void Main(string[] args)
@@ -131,11 +138,76 @@ partial class Program
 
             // flatten fields
             var fields = FlattenFields(item.Value.Fields);
+
+            // fill-in missing fields
+            // TODO: ctor content is still C#
+            if (item.Value.BoxName == "GASpecificConfig" || item.Value.BoxName == "SLSSpecificConfig")
+            {
+                fields.Add(new PseudoField() { Name = "audioObjectType", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
+                fields.Add(new PseudoField() { Name = "channelConfiguration", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
+                fields.Add(new PseudoField() { Name = "samplingFrequencyIndex", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
+                item.Value.CtorContent = "\t\tthis.audioObjectType = audioObjectType;\r\n\t\tthis.channelConfiguration = channelConfiguration;\r\n\t\tthis.samplingFrequencyIndex = samplingFrequencyIndex;\r\n";
+            }
+            else if (item.Value.BoxName == "CelpSpecificConfig" || item.Value.BoxName == "ER_SC_CelpHeader" || item.Value.BoxName == "ErrorResilientCelpSpecificConfig")
+            {
+                fields.Add(new PseudoField() { Name = "samplingFrequencyIndex", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
+                item.Value.CtorContent = "\t\tthis.samplingFrequencyIndex = samplingFrequencyIndex;\r\n";
+            }
+            else if (item.Value.BoxName == "SSCSpecificConfig" || item.Value.BoxName == "ld_sbr_header" || item.Value.BoxName == "ELDSpecificConfig")
+            {
+                fields.Add(new PseudoField() { Name = "channelConfiguration", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
+                item.Value.CtorContent = "\t\tthis.channelConfiguration = channelConfiguration;\r\n";
+            }
+            else if (item.Value.BoxName == "VvcPTLRecord")
+            {
+                fields.Add(new PseudoField() { Name = "num_sublayers", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
+                item.Value.CtorContent = "\t\tthis.num_sublayers = num_sublayers;\r\n";
+            }
+            else if (item.Value.BoxName == "ChannelMappingTable")
+            {
+                fields.Add(new PseudoField() { Name = "OutputChannelCount", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
+                item.Value.CtorContent = "\t\tthis.OutputChannelCount = OutputChannelCount;\r\n";
+            }
+            else if (item.Value.BoxName == "SampleEncryptionSample")
+            {
+                fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
+                fields.Add(new PseudoField() { Name = "flags", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(24)")) });
+                fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
+                item.Value.CtorContent = "\t\tthis.version = version;\r\n\t\tthis.flags = flags;\r\n\t\tthis.Per_Sample_IV_Size = Per_Sample_IV_Size;\r\n";
+            }
+            else if (item.Value.BoxName == "SampleEncryptionSubsample")
+            {
+                fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
+                item.Value.CtorContent = "\t\tthis.version = version;\r\n";
+            }
+            else if (item.Value.BoxName == "TrunEntry")
+            {
+                fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
+                fields.Add(new PseudoField() { Name = "flags", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(24)")) });
+                item.Value.CtorContent = "\t\tthis.version = version;\r\n\t\t this.flags = flags;";
+            }
+            else if (item.Value.BoxName == "BoxHeader")
+            {
+                item.Value.CtorContent = "\t\tthis.type = IsoStream.FromFourCC(boxtype);\r\n\t\tthis.usertype = extended_type;\r\n";
+            }
+            else if (item.Value.BoxName == "FullBox")
+            {
+                item.Value.CtorContent = "\t\tthis.version = v;\r\n\t\t this.flags = f;";
+            }
+            else if (item.Value.BoxName == "SampleEncryptionBox")
+            {
+                fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")), Value = " = 16; // TODO: get from the 'tenc' box" });
+            }
+            else if (item.Value.BoxName == "SampleGroupDescriptionEntry")
+            {
+                fields.Add(new PseudoField() { Name = "children", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), "Box()", new Maybe<string>()), FieldArray = "[]" });
+            }
+
             item.Value.FlattenedFields = fields;
 
             // determine container
             item.Value.IsContainer =
-                string.IsNullOrEmpty(item.Value.Abstract) && 
+                string.IsNullOrEmpty(item.Value.Abstract) &&
                 item.Value.BoxName != "MetaDataAccessUnit" &&
                 item.Value.BoxName != "ItemReferenceBox" &&
                 item.Value.BoxName != "SampleGroupDescriptionBox" &&
@@ -143,32 +215,32 @@ partial class Program
                 (
                     item.Value.Syntax.Contains("other boxes from derived specifications") ||
                     (item.Value.Extended != null && containers.Contains(item.Value.Extended.BoxType)) || containers.Contains(item.Value.BoxName) ||
-                    item.Value.FlattenedFields.FirstOrDefault(x => 
+                    item.Value.FlattenedFields.FirstOrDefault(x =>
                         x.Type.Type == "Box" || GetAncestors(ret, ret.Values.FirstOrDefault(y => y.BoxName == x.Type.Type)).LastOrDefault(c => c.EndsWith("Box")) != null) != null
                 ) ||
-                item.Value.BoxName == "DefaultHevcExtractorConstructorBox";
+                item.Value.BoxName == "DefaultHevcExtractorConstructorBox"; // DefaultHevcExtractorConstructorBox is a container, but the *constructor boxes have currently unknown syntax
         }
 
         // collect all boxes, entries and descriptors
-        SortedDictionary<string, List<PseudoClass>> fourccBoxes = new SortedDictionary<string, List<PseudoClass>>();
-        SortedDictionary<string, List<PseudoClass>> fourccEntries = new SortedDictionary<string, List<PseudoClass>>();
+        SortedDictionary<string, List<PseudoClass>> boxes = new SortedDictionary<string, List<PseudoClass>>();
+        SortedDictionary<string, List<PseudoClass>> entries = new SortedDictionary<string, List<PseudoClass>>();
         foreach (var item in ret)
         {
             if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.BoxType))
             {
                 if (item.Value.ParsedBoxType == ParsedBoxType.Box)
                 {
-                    if (!fourccBoxes.ContainsKey(item.Value.Extended.BoxType))
-                        fourccBoxes.Add(item.Value.Extended.BoxType, new List<PseudoClass>() { item.Value });
+                    if (!boxes.ContainsKey(item.Value.Extended.BoxType))
+                        boxes.Add(item.Value.Extended.BoxType, new List<PseudoClass>() { item.Value });
                     else
-                        fourccBoxes[item.Value.Extended.BoxType].Add(item.Value);
+                        boxes[item.Value.Extended.BoxType].Add(item.Value);
                 }
                 else
                 {
-                    if (!fourccEntries.ContainsKey(item.Value.Extended.BoxType))
-                        fourccEntries.Add(item.Value.Extended.BoxType, new List<PseudoClass>() { item.Value });
+                    if (!entries.ContainsKey(item.Value.Extended.BoxType))
+                        entries.Add(item.Value.Extended.BoxType, new List<PseudoClass>() { item.Value });
                     else
-                        fourccEntries[item.Value.Extended.BoxType].Add(item.Value);
+                        entries[item.Value.Extended.BoxType].Add(item.Value);
                 }
             }
         }
@@ -190,43 +262,42 @@ partial class Program
         {
             "samr","sawb","mp4a","drms","alac","owma","ac-3","ec-3","mlpa","dtsl","dtsh","dtse","Opus","enca","resa","sevc","sqcp","ssmv","lpcm","dtsc","sowt",
         };
-        foreach (var type in audioSampleEntryTypes)
-        {
-            if (!fourccBoxes.ContainsKey(type))
-                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value });
-            else
-                fourccBoxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value };
-        }
         string[] visualSampleEntryTypes = new string[]
         {
             "mp4v","s263","drmi","encv","resv","icpv","hvc1","hvc2","hvc3","lhv1","lhe1","hev1","hev2","hev3","avcp","mvc1","mvc2","mvc3","mvc4","mvd1","mvd2",
             "mvd3","mvd4","a3d1","a3d2","a3d3","a3d4","svc1","svc2","hvt1","lht1","hvt3","hvt2","vvc1","vvi1","vvs1","vvcN","evc1","evs1","evs2","av01","avc1",
             "avc2","avc3","avc4","vp08","vp09","vp10","apcn","dvhe","dvav",
         };
+
+        foreach (var type in audioSampleEntryTypes)
+        {
+            if (!boxes.ContainsKey(type))
+                boxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value });
+            else
+                boxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value };
+        }
+        
         foreach (var type in visualSampleEntryTypes)
         {
-            if (!fourccBoxes.ContainsKey(type))
-                fourccBoxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
+            if (!boxes.ContainsKey(type))
+                boxes.Add(type, new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value });
             else
-                fourccBoxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value };
+                boxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "VisualSampleEntry").Value };
         }
-        if (!fourccBoxes.ContainsKey("mp4s"))
-            fourccBoxes.Add("mp4s", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value });
+
+        if (!boxes.ContainsKey("mp4s"))
+            boxes.Add("mp4s", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value });
         else
-            fourccBoxes["mp4s"] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value };
+            boxes["mp4s"] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "MpegSampleEntry").Value };
 
-        if (!fourccBoxes.ContainsKey("dimg"))
-            fourccBoxes.Add("dimg", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "SingleItemTypeReferenceBox").Value });
+        if (!boxes.ContainsKey("dimg"))
+            boxes.Add("dimg", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "SingleItemTypeReferenceBox").Value });
 
-        if (!fourccBoxes.ContainsKey("cdsc"))
-            fourccBoxes.Add("cdsc", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "TrackReferenceTypeBox").Value });     
+        if (!boxes.ContainsKey("cdsc"))
+            boxes.Add("cdsc", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "TrackReferenceTypeBox").Value });
 
-        Debug.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
-        Console.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
-        
-        //string js = JsonConvert.SerializeObject(ret.Values.ToArray());
-        //File.WriteAllText("result.json", js);
-
+        LogConsole($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
+                
         string resultCode =
 @"using System;
 using System.Linq;
@@ -246,7 +317,7 @@ namespace SharpMP4
             switch(fourCC)
             {
                ";
-        foreach (var item in fourccBoxes)
+        foreach (var item in boxes)
         {
             string optCondition = "";
 
@@ -329,7 +400,7 @@ namespace SharpMP4
             switch(fourCC)
             {
                ";
-        foreach (var item in fourccEntries)
+        foreach (var item in entries)
         {
             if (item.Value.Count == 1)
             {
@@ -424,6 +495,12 @@ namespace SharpMP4
 ";
     }
 
+    private static void LogConsole(string v)
+    {
+        Debug.WriteLine(v);
+        Console.WriteLine(v);
+    }
+
     private static string[] GetAncestors(Dictionary<string, PseudoClass> items, PseudoClass item)
     {
         List<string> extended = new List<string>();
@@ -435,7 +512,6 @@ namespace SharpMP4
                 extended.Add(it.Extended.BoxName);
                 it = items.Values.SingleOrDefault(x => x.BoxName == it.Extended.BoxName);
             }
-            //Debug.WriteLine($"Box {item.BoxName} - {string.Join(':', extended)}");
         }
         return extended.ToArray();
     }
@@ -570,7 +646,6 @@ namespace SharpMP4
                     updatedName = $"{name}{i}";
                 }
                 field.Name = updatedName;
-                //Debug.WriteLine($"-Resolved: {name} => {updatedName}");
             }
             else if (GetFieldType(field) == GetFieldType(ret[name]) && GetNestedInLoop(field) == GetNestedInLoop(ret[name]))
             {
@@ -635,7 +710,6 @@ namespace SharpMP4
 
         return ret;
     }
-
 
 
 
@@ -719,70 +793,9 @@ namespace SharpMP4
         string ov = ((b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName)) || (b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")) ? "override " : "virtual ";
         cls += $"\tpublic {ov}string DisplayName {{ get {{ return \"{b.BoxName}\"; }} }}";
 
-        string ctorContent = "";
-        var fields = b.FlattenedFields;
-
-        if (b.BoxName == "GASpecificConfig" || b.BoxName == "SLSSpecificConfig")
-        {
-            fields.Add(new PseudoField() { Name = "audioObjectType", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
-            fields.Add(new PseudoField() { Name = "channelConfiguration", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
-            fields.Add(new PseudoField() { Name = "samplingFrequencyIndex", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
-            ctorContent = "\t\tthis.audioObjectType = audioObjectType;\r\n\t\tthis.channelConfiguration = channelConfiguration;\r\n\t\tthis.samplingFrequencyIndex = samplingFrequencyIndex;\r\n";
-        }
-        else if (b.BoxName == "CelpSpecificConfig" || b.BoxName == "ER_SC_CelpHeader" || b.BoxName == "ErrorResilientCelpSpecificConfig")
-        {
-            fields.Add(new PseudoField() { Name = "samplingFrequencyIndex", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
-            ctorContent = "\t\tthis.samplingFrequencyIndex = samplingFrequencyIndex;\r\n";
-        }
-        else if(b.BoxName == "SSCSpecificConfig" || b.BoxName == "ld_sbr_header" || b.BoxName == "ELDSpecificConfig")
-        {
-            fields.Add(new PseudoField() { Name = "channelConfiguration", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
-            ctorContent = "\t\tthis.channelConfiguration = channelConfiguration;\r\n";
-        }
-        else if (b.BoxName == "VvcPTLRecord")
-        {
-            fields.Add(new PseudoField() { Name = "num_sublayers", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
-            ctorContent = "\t\tthis.num_sublayers = num_sublayers;\r\n";
-        }
-        else if (b.BoxName == "ChannelMappingTable")
-        {
-            fields.Add(new PseudoField() { Name = "OutputChannelCount", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
-            ctorContent = "\t\tthis.OutputChannelCount = OutputChannelCount;\r\n";
-        }
-        else if(b.BoxName == "BoxHeader")
-        {
-            ctorContent = "\t\tthis.type = IsoStream.FromFourCC(boxtype);\r\n\t\tthis.usertype = extended_type;\r\n";
-        }
-        else if(b.BoxName == "SampleEncryptionSample")
-        {
-            fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
-            fields.Add(new PseudoField() { Name = "flags", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(32)")) });
-            fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
-            ctorContent = "\t\tthis.version = version;\r\n\t\tthis.flags = flags;\r\n\t\tthis.Per_Sample_IV_Size = Per_Sample_IV_Size;\r\n";
-        }
-        else if(b.BoxName == "SampleEncryptionSubsample")
-        {
-            fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
-            ctorContent = "\t\tthis.version = version;\r\n";
-        }
-        else if(b.BoxName == "SampleEncryptionBox")
-        {
-            fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")), Value = " = 16; // TODO: get from the 'tenc' box" });
-        }
-        else if(b.BoxName == "SampleGroupDescriptionEntry")
-        {
-            fields.Add(new PseudoField() { Name = "children", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), "Box()", new Maybe<string>()), FieldArray = "[]" });
-        }
-        else if(b.BoxName == "FullBox")
-        {
-            ctorContent = "\t\tthis.version = v;\r\n\t\t this.flags = f;";
-        }
-        else if(b.BoxName == "TrunEntry")
-        {
-            fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
-            fields.Add(new PseudoField() { Name = "flags", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(24)")) });
-            ctorContent = "\t\tthis.version = version;\r\n\t\t this.flags = flags;";
-        }
+        string ctorContent = b.CtorContent;
+        var fields = b.FlattenedFields;    
+               
 
         bool hasDescriptors = fields.Select(x => GetReadMethod(GetFieldType(x)).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
 
@@ -1593,13 +1606,6 @@ namespace SharpMP4
         string spacing = GetSpacing(level);
         string text = comment.Comment;
         return $"{spacing}/* {text} */";
-    }
-
-    public enum MethodType
-    {
-        Read,
-        Write,
-        Size
     }
 
     private static string BuildBlock(PseudoClass b, PseudoBlock parent, PseudoBlock block, int level, MethodType methodType)

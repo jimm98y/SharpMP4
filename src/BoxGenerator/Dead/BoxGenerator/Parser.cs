@@ -226,6 +226,7 @@ namespace BoxGenerator
         public ParsedBoxType ParsedBoxType { get; set; }
         public string Syntax { get; set; }
         public bool IsContainer { get; set; }
+        public string CtorContent { get; set; } // TODO: remove C#
 
         public string Comment { get; set; }
         public string Abstract { get; set; }
